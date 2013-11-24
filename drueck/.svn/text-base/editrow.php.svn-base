@@ -1,0 +1,152 @@
+<?
+session_start();
+require "../fns_dotazy.php";
+dbConnect();
+require_once '../db.php';
+
+mysql_query('set names utf8');
+
+require("../libs/Smarty.class.php");
+$smarty = new Smarty;
+
+	// pokud mam nastavene session promennes uzivatelem , nastavim priznak prihlaseni
+	if(isset($_SESSION['user'])&&isset($_SESSION['level']))
+	{
+		$smarty->assign("user",$_SESSION['user']);
+		$smarty->assign("level",$_SESSION['level']);
+		$smarty->assign("prihlasen",1);
+	}
+
+
+	$drueck_id = $_GET['id'];
+
+	$dnesDatum = date('Y-m-d');
+
+	//vytahnu posledni zaznamy
+		
+	$sql = "select drueck_id,auftragsnr,teil,`pos-pal-nr`as pal,taetnr,`Stück` as stk,`auss-stück` as aussstk,`auss-art` as aart,auss_typ as atyp";
+	$sql.= ",`vz-soll` as vzkd,`vz-ist` as vzaby,DATE_FORMAT(datum,'%d.%m.%Y') as datum,persnr,DATE_FORMAT(`verb-von`,'%H:%i') as von,DATE_FORMAT(`verb-bis`,'%H:%i') as bis,`verb-zeit` as verb,`verb-pause` as pause";
+	$sql.= ",schicht,oe,`marke-aufteilung` as aufteilung,comp_user_accessuser as user";
+	$sql.= " from drueck order by stamp desc limit 5";
+
+	$res = mysql_query($sql);
+	while($row=mysql_fetch_array($res))
+	{
+		$stornoRow[$row['drueck_id']]=$row;
+	}
+
+
+	
+	// vytahnu zaznamy patrici k editovanemu id
+	$drueckWhereRow = getDrueckRowFromId($drueck_id);
+	// vrati sadu zaznamu z druecku, ktere patri k sobe
+	$drueckSadaRowset = getDrueckSadaRowset($drueckWhereRow);
+	
+	// vynuluju si hodnoty operaci
+	for($tat=1;$tat<=6;$tat++)
+	{
+		$tat_value="tat".$tat."_value";
+		$tat_abymin_value="tat".$tat."_abymin_value";
+		$tat_kdmin_value="tat".$tat."_kdmin_value";
+
+		$smarty->assign($tat_value,0);
+		$smarty->assign($tat_abymin_value,0);
+		$smarty->assign($tat_kdmin_value,0);
+	}
+
+	
+	$cisloOperace=0;
+        $abgnr = 0;
+        $oeselected = '';
+        
+	foreach($drueckSadaRowset as $row)
+	{
+		$stornoIdArray[$cisloOperace]=$row['drueck_id'];
+		// tyto promenne staci priradit jen pro prvni operaci
+		if($cisloOperace==0)
+		{
+			$smarty->assign("auftragsnr_value",$row['auftragsnr']);
+			$smarty->assign("teil_value",$row['teil']);
+			$smarty->assign("pal_value",$row['pal']);
+			$smarty->assign("datum_value",$row['datum']);
+			$smarty->assign("persnr_value",$row['persnr']);
+			$smarty->assign("schicht_value",$row['schicht']);
+                        $smarty->assign("oe_value",$row['oe']);
+			$smarty->assign("stk_value",$row['stk']);
+			$stkValue=$row['stk'];
+			$smarty->assign("auss_stk_value",$row['aussstk']);
+			$smarty->assign("auss_art_value",$row['aart']);
+			$smarty->assign("auss_typ_value",$row['atyp']);
+			$abgnr = $row['taetnr'];
+                        $oeselected = $row['oe'];
+			$smarty->assign("von_value",$row['von']);
+			$vonCas=$row['von'];
+			$smarty->assign("bis_value",$row['bis']);
+			$bisCas=$row['bis'];
+			$smarty->assign("pause_value",$row['pause']);
+			$pauseCas=$row['pause'];
+		}
+		
+		// vytvorim si nazvy promennych pro cinnosti a odpovidajici casy
+		$cisloTat = $cisloOperace+1;
+		$tat_value="tat".$cisloTat."_value";
+		$tat_abymin_value="tat".$cisloTat."_abymin_value";
+		$tat_kdmin_value="tat".$cisloTat."_kdmin_value";
+
+		$smarty->assign($tat_value,$row['taetnr']);
+		$smarty->assign($tat_abymin_value,$row['vzaby']);
+		$smarty->assign($tat_kdmin_value,$row['vzkd']);
+	
+		$sumaVzAby += $row['vzaby'];
+		$cisloOperace++;
+	}
+
+	$smarty->assign("vzaby_pro_stk_value",$sumaVzAby);
+	
+	// musim spocitat spotrebovanej cas z hodnotvon, bis a pause
+	$spotrebovanyCas=0;
+	$stampVon=strtotime($vonCas);
+	$stampBis=strtotime($bisCas);
+	$spotrebovanyCas = ($stampBis-$stampVon)/60-$pauseCas;
+	
+	$smarty->assign("verb_value",$spotrebovanyCas);
+	
+	// vypocitam hodnoty pro policka s procentama
+	$sumvzaby_value=round($stkValue*$sumaVzAby);
+	$sumverb_value=$spotrebovanyCas;
+	$leist_procent_value=0;
+	if($sumverb_value!=0) $leist_procent_value=round($sumvzaby_value/$sumverb_value*100);
+	
+	$smarty->assign('sumvzaby_value',$sumvzaby_value);
+	$smarty->assign('sumverb_value',$sumverb_value);
+	$smarty->assign('leist_procent_value',$leist_procent_value);
+	
+	//-------------------------------------------------------------------------------------
+	$smarty->assign("stornorows",$stornoRow);
+	$smarty->assign("sql",$sql);
+	$smarty->assign("stornoid",$drueck_id);
+	
+	// v pripade, ze jde o vice opareci musim stornovat vice id, predam jako pole cisel, oddelene carkama
+	$smarty->assign('stornoidarray',implode(':',$stornoIdArray));
+	
+	$smarty->assign("mehr_value",0);
+	$smarty->assign("exportFlag",$_GET['exportflag']);		
+
+        $aplDB = AplDB::getInstance();
+        $oes = $aplDB->getOEForAbgnr($abgnr);
+        $oeArray = split(';', $oes);
+        $oeArrayTrimmed = array();
+        foreach ($oeArray as $oe){
+            array_push($oeArrayTrimmed, trim($oe));
+        }
+        $smarty->assign("oes",$oeArrayTrimmed);
+        $smarty->assign("oeselected",$oeselected);
+        
+	$smarty->display('drueck.tpl');
+
+
+	// TODO: dodelat validaci parametru
+	
+	
+?>
+

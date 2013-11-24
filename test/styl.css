@@ -1,0 +1,28 @@
+#sidebar {
+width: 200px;
+}
+.box {
+background-color: rgb(179,213,197);
+border: 2px solid rgb(93,167,131);
+padding: 8px;
+margin-bottom:20px;
+line-height:1;
+margin-top:20px;
+font-family:sans-serif;
+}
+.box:before {
+content: url(top.gif);
+display: block;
+line-height:0.1;
+margin: -23px -10px -22px -10px;
+}
+.box:after {
+clear: both;
+content: url(bottom.gif);
+display: block;
+line-height: 0.1;
+margin: 0 -10px -10px -10px;
+}
+.box h2 {
+margin-top: 12;
+}

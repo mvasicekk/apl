@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<response>
+	<teile>
+		<teil>
+			<teilnr>7189</teilnr>
+			<teillang>7189</teillang>
+			<bezeichnung>fskdhfdsdj fd</bezeichnung>
+			<gew>1.23</gew>
+		</teil>
+		<teil>
+			<teilnr>06017272</teilnr>
+			<teillang>06017272</teillang>
+			<bezeichnung>ITG</bezeichnung>
+			<gew>3.5</gew>
+		</teil>
+		<teil>
+			<teilnr>14502050</teilnr>
+			<teillang>10033.045</teillang>
+			<bezeichnung>siudhf</bezeichnung>
+			<gew>1.3</gew>
+		</teil>
+	</teile>
+</response>

@@ -1,0 +1,273 @@
+/* CSS Document */
+#souradnice
+{
+	position: absolute;
+	top:0px;
+	left:0px;
+	background-color:rgb(0,255,0);
+	z-index:99;
+}
+
+#formular_telo {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 800px;
+			top: 120px;
+			left: 0px;
+			visibility: visible;
+			margin-left: 5px; 
+		  }
+		  
+
+#formular_header {
+			position: absolute;
+			width: 800px;
+			height: 40px;
+			top: 85px;
+			left: 0px;
+			background-color:rgb(255,255,220);
+			border-bottom: solid 1px black;
+			margin-left: 5px;
+			font-size: 15pt;
+			font-weight:bold;
+			text-align:center;
+		}
+	  
+#header {
+			position: absolute;
+			width: 800px;
+			height: 65px;
+			top: 0px;
+			left: 0px;
+			background-image: url(/img/zahlavi30.jpg);
+			border-bottom: solid 0px black;
+			margin-left: 5px
+		}
+
+#podheader {
+			position: absolute;
+			width: 800px;
+			height: 20px;
+			top: 65px;
+			left: 0px;
+			background-color:rgb(220,220,220);
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+		
+
+#form_footer_tlacitka_reporty {
+			position: absolute;
+			width: 800px;
+			height: 50px;
+			left: 0px;
+			top: 500px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+#dauftr_table {
+			position: absolute;
+			width: 800px;
+		
+			left: 0px;
+			top: 370px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+
+#dauftr_form_footer {
+			position: absolute;
+			width: 800px;
+			left: 0px;
+			bottom: 10px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+table.formulartable
+{
+	position:relative;
+	top:10px;
+	width:800px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 10px;
+	font-size:13px;
+}
+
+#content
+{
+}
+
+
+#scroll
+{
+	
+	left:0;
+	top:0;
+	margin: 0 ;
+	visibility: visible;
+	background-color: white;
+	z-index: 1;
+	height: 0px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-collapse: collapse;
+	border-bottom-style: solid;
+	border-color: #000000;
+	border-width: 0px;
+	overflow: auto
+}
+
+#scroll_apl
+{
+	
+	left:0;
+	top:0;
+	margin: 0 ;
+	visibility: visible;
+	background-color: rgb(179,179,179);
+	z-index: 1;
+	
+	border-top-style: solid;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-collapse: collapse;
+	border-bottom-style: solid;
+	border-color: #000000;
+	border-width: 0px;
+	overflow: auto
+}
+
+#scroll div
+{
+	margin: 0 auto;
+	z-index: 1;
+	text-align:left
+}
+
+
+#suggest table
+{
+	width: 100%;
+	font-size: 11px;
+	font-weight: normal;
+	color: #676767;
+	text-decoration: none;
+	border: 1px;
+	padding: 0px;
+	text-align:left;
+	margin: 0px
+}
+
+
+tr.result_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+tr.dauftr_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+table.dauftr_table
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(220,220,220);
+	border: solid 0px black;
+	padding: 0px;
+	font-size:12px;
+}
+
+
+table.kunde_info
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:12px;
+}
+
+
+
+input.edit_dpos
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(255,255,255);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+	font-weight:bold;
+}
+
+select.edit_dpos
+{
+	width:100%;
+	background-color:rgb(255,255,255);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+	font-weight:bold;
+}
+
+td.int
+{
+	text-align: right;
+}
+
+#exporttable th{
+    font-size: 10px;
+    background-color: #0099FF;
+    color: #ffffff;
+}
+
+#exporttable tbody td{
+    background-color:#FFFFFF;
+    color: #000000;
+    font-size: 10px;;
+}
+
+#exporttable tbody td.number{
+    text-align: right;
+}
+#exporttable tbody td input{
+    background-color:#EBF09E;
+    color: #000000;
+    border: none;
+    font-size: 10px;
+    text-align: right;
+}
+
+#exporttable tbody td.importheader{
+    background-color:#CCFF99;
+    color: #000000;
+    font-weight: bold;
+}
+
+#exporttable tbody td.teilseparator{
+    background-color:#AAAAAA;
+}
+

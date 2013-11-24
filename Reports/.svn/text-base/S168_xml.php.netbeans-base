@@ -1,0 +1,215 @@
+<?php
+session_start();
+require_once('XML/Query2XML.php');
+require_once('DB.php');
+require_once "../fns_dotazy.php";
+
+
+// cast pro vytvoreni XML by mela byt v jinem souboru jmenosestavy_xml.php
+$db = &DB::connect('mysql://root:nuredv@localhost/apl');
+
+global $db;
+
+$db->setFetchMode(DB_FETCHMODE_ASSOC);
+$db->query("set names utf8");
+
+$bTestOE = ((strlen($oe)>0) && ($oe!='%'));
+
+// vytvorim si nekolik pohledu
+
+
+$pcip=get_pc_ip();
+$views=array("v_drueck","v_anwesenheit","v_drueck_gesamt","v_anwesenheit_gesamt");
+//$views=array("v_drueck","v_anwesenheit","v_drueckgesamt","v_anwesenheitgesamt");
+
+
+$viewname=$pcip.$views[0];
+$db->query("drop view $viewname");
+$pt="create view $viewname";
+$pt.=" as SELECT drueck.oe,drueck.PersNr,drueck.Datum,sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,drueck.`Stück`*drueck.`VZ-IST`)) AS vzaby, sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-soll`,drueck.`Stück`*drueck.`VZ-Soll`)) AS vzkd, Sum(drueck.`Verb-Zeit`) AS verb";
+$pt.=" FROM drueck";
+$pt.=" where ((drueck.datum='".$datum."')";
+if($bTestOE)
+    $pt.=" and (drueck.oe like '$oe')";
+$pt.=" )";
+$pt.=" GROUP BY drueck.oe,drueck.PersNr, drueck.Datum";
+
+//echo $pt."<br>";
+$db->query($pt);
+
+$viewname=$pcip.$views[2];
+$db->query("drop view $viewname");
+$pt="create view $viewname";
+$pt.=" as SELECT drueck.PersNr,drueck.Datum,sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,drueck.`Stück`*drueck.`VZ-IST`)) AS vzaby, sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-soll`,drueck.`Stück`*drueck.`VZ-Soll`)) AS vzkd, Sum(drueck.`Verb-Zeit`) AS verbgesamt";
+$pt.=" FROM drueck";
+$pt.=" where ((drueck.datum='".$datum."')";
+//if($bTestOE)
+//    $pt.=" and (drueck.oe like '$oe')";
+$pt.=" )";
+$pt.=" GROUP BY drueck.PersNr, drueck.Datum";
+
+//echo $pt."<br>";
+$db->query($pt);
+
+$viewname=$pcip.$views[1];
+$db->query("drop view $viewname");
+$pt="create view $viewname";
+$pt.=" as SELECT dzeit.tat as oe,persnr,datum,sum(stunden*60) as anwesenheit FROM `dzeit`";
+$pt.=" join dtattypen on dtattypen.tat=dzeit.tat";
+$pt.=" WHERE ((datum='".$datum."') and (dtattypen.oestatus='a'))";
+$pt.=" group by dzeit.tat,persnr,datum";
+//echo $pt."<br>";
+$db->query($pt);
+
+$viewname=$pcip.$views[3];
+$db->query("drop view $viewname");
+$pt="create view $viewname";
+$pt.=" as SELECT persnr,datum,sum(stunden*60) as anwesenheitgesamt FROM `dzeit`";
+$pt.=" join dtattypen on dtattypen.tat=dzeit.tat";
+$pt.=" WHERE ((datum='".$datum."') and (dtattypen.oestatus='a'))";
+$pt.=" group by persnr,datum";
+//echo $pt."<br>";
+$db->query($pt);
+
+// provedu dotaz nad vytvorenymi pohledy
+$v_drueck=$pcip.$views[0];
+$v_anwesenheit=$pcip.$views[1];
+$v_drueck_gesamt=$pcip.$views[2];
+$v_anwesenheit_gesamt=$pcip.$views[3];
+
+
+$sql=" SELECT dtattypen.og,$v_drueck.oe,dtattypen.tatbezeichnung,dtattypen.tatbezdeutsch,dpers.persnr,dpers.name,dpers.vorname,$v_drueck.vzkd,$v_drueck.vzaby,$v_drueck.verb,$v_anwesenheit.anwesenheit,";
+$sql.=" $v_drueck_gesamt.verbgesamt,";
+$sql.=" $v_anwesenheit_gesamt.anwesenheitgesamt,";
+$sql.=" if($v_drueck.verb<>0,$v_drueck.vzaby/$v_drueck.verb*100,0) as fac1,";
+$sql.=" if($v_anwesenheit.anwesenheit<>0,$v_drueck.vzaby/$v_anwesenheit.anwesenheit*100,0) as fac2,";
+$sql.=" if($v_anwesenheit.anwesenheit<>0,$v_drueck.verb/$v_anwesenheit.anwesenheit*100,0) as fac3,";
+$sql.=" if($v_anwesenheit_gesamt.anwesenheitgesamt<>0,$v_drueck_gesamt.verbgesamt/$v_anwesenheit_gesamt.anwesenheitgesamt*100,0) as fac4";
+$sql.=" from $v_drueck join dpers on dpers.persnr=$v_drueck.persnr";
+$sql.=" join dtattypen on dtattypen.tat=$v_drueck.oe";
+$sql.=" left join $v_anwesenheit";
+$sql.=" on $v_drueck.persnr=$v_anwesenheit.persnr and $v_drueck.datum=$v_anwesenheit.datum and $v_drueck.oe=$v_anwesenheit.oe";
+$sql.=" left join $v_drueck_gesamt on $v_drueck.persnr=$v_drueck_gesamt.persnr and $v_drueck.datum=$v_drueck_gesamt.datum";
+$sql.=" left join $v_anwesenheit_gesamt on $v_drueck.persnr=$v_anwesenheit_gesamt.persnr and $v_drueck.datum=$v_anwesenheit_gesamt.datum";
+$sql.=" where (1)";
+$sql.=" ORDER BY dtattypen.og,$v_drueck.oe,dpers.persnr";
+
+//echo "sql=$sql"."<br>";
+
+
+$query2xml = XML_Query2XML::factory($db);
+	
+//echo $sql."<br>";
+// tady se budou tisknout parametry
+
+
+$options = array(
+		'encoder'=>false,
+		'rootTag'=>'S168',
+                'idColumn'=>'og',
+                'rowTag'=>'ogs',
+                'elements'=>array(
+                    'og',
+                    'oes'=>array(
+                        'idColumn'=>'oe',
+                        'rowTag'=>'oes',
+                        'elements'=>array(
+                            'oe',
+                            'mitarbeiter'=>array(
+                                'rootTag'=>'arbeiter',
+                                'rowTag'=>'pers',
+                                'idColumn'=>'persnr',
+                                'elements'=>array(
+                                    'persnr',
+                                    'name',
+                                    'vorname',
+                                    'vzkd',
+                                    'vzaby',
+                                    'verb',
+                                    'anwesenheit',
+                                    'verbgesamt',
+                                    'anwesenheitgesamt',
+                                    'fac1',
+                                    'fac2',
+                                    'fac3',
+                                    'fac4'
+                                 ),
+                             ),
+                         ),
+                     ),
+                  ),
+		);
+					
+
+// vytahnu si parametry z XML souboru
+// tady ziskam vystup dotazu ve forme XML					
+$domxml = $query2xml->getXML($sql,$options);
+//$domxml->encoding="windows-1250";
+
+// pokusy s polem parameters
+// rozkouskovat si ho na jednotlive polozky
+// a vytvorim pole parametru
+// TODO doplnit nejakou moznost zformatovani, napr. datum zadane ve formulari by melo nejak vypadat
+// mozna by bylo lepsi resit to AJAXem uz pri zadavani do formulare
+// ale uz pri generovani formulare budu muset pridat handlery podle planovaneho obsahu formulare
+
+foreach($parameters as $var=>$value)
+{
+	
+	// pokud nazev parametru obsahuje _label, budu hledat hodnotu parametru
+	if(strpos($var,"_label"))
+	{
+		$p[$value]=$last_value;
+	}
+	$last_value=$value;
+	//$promenne.=$var."=".$value."&";
+}
+
+// v promenne p bych mel mit seznam parametru, pridam ho do XML jako node do domxml
+//
+
+$element=$domxml->createElement("parameters");
+$parametry=$domxml->firstChild;
+$parametry->appendChild($element);
+$i=1;
+foreach($p as $var=>$value)
+{
+	$poradinode=$domxml->createElement("N".$i);
+	$labelnode=$domxml->createElement("label",$var);
+	$valuenode=$domxml->createElement("value",$value);
+	$element->appendChild($poradinode);
+	$poradinode->appendChild($labelnode);
+	$poradinode->appendChild($valuenode);
+	$i++;
+}
+
+
+//header('Content-Type: application/xml');
+//echo $proc->transformToXML($domxml);
+
+
+
+// smazu pouzite pohledy
+for($i=0;$i<sizeof($views);$i++)
+{
+	$viewname=$pcip.$views[$i];
+	$sql="drop view ". $viewname;
+	$db->query($sql);
+	//echo $sql."<br>";
+}
+
+
+$db->disconnect();
+
+
+//============================================================+
+// END OF FILE                                                 
+//============================================================+
+//$domxml->save("S168.xml");
+
+//header('Content-Type: application/xml');
+//require_once('XML/Beautifier.php');
+//$beautifier = new XML_Beautifier();
+//print $beautifier->formatString($domxml->saveXML());
+
+?>

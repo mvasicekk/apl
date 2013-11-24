@@ -1,0 +1,56 @@
+// JavaScript Document
+
+$(document).ready(function(){
+
+    $.datepicker.setDefaults($.datepicker.regional["de"]);
+    $(".datepicker" ).datepicker($.datepicker.regional["de"]);
+
+    var inputy = $('#suchen');
+    //na prvni nastavim focus
+    if(inputy[0]!=null){
+        inputy[0].focus();
+        inputy[0].select();
+    }
+
+    $(window).bind('load resize',resizeAdressen);
+    $('#suchen').bind('keyup',searchAdress);
+    $('#adressen').hide();
+
+});
+
+
+function searchAdress(event){
+        var id = $('#suchen').attr('id');
+        var acturl = $('#suchen').attr('acturl');
+
+        $.post(acturl,
+        {
+            id:id,
+            value:$('#suchen').val()
+        },
+        function(data){
+            updateSuchen(data);
+        },
+        'json'
+        );
+}
+
+function updateSuchen(data){
+    if(data.adressenCount>0){
+        $('#adressen').show();
+        $('#adressen').html(data.content);
+        resizeAdressen();
+    }
+    else{
+        $('#adressen').hide();
+    }
+}
+
+function resizeAdressen(){
+    adressenPos = $('#adressen').offset();
+    windowHeight = $(window).height();
+    if($('#adressen').height()>(windowHeight-adressenPos.top-20))
+        $('#adressen').css('height',windowHeight-adressenPos.top-20);
+    else
+        $('#adressen').height('');
+}

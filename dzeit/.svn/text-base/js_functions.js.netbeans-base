@@ -1,0 +1,653 @@
+// JavaScript Document
+
+$(document).ready(function(){
+
+    //---------------------------------------------------------------------------------
+    // nova validace Datum
+    $('#Datum').focus(function(event){
+        this.select();
+        $('#datumold').val($('#Datum').val());
+    });
+
+    $('#Datum').blur(function(event){
+        datumvalue = $('#Datum').val();
+        persnrvalue = $('#PersNr').val();
+        getDataReturnText('./validate.php?what=datum&value='+datumvalue+'&persnr='+persnrvalue, refreshdatum);
+        
+    });
+
+    
+    //---------------------------------------------------------------------------------
+    // nova validace persnr
+
+    $('#PersNr').blur(function(event){
+        persnrvalue = $('#PersNr').val();
+        getDataReturnText('./operace.php?persnr='+this.value, pisjmeno);
+    });
+
+
+    //---------------------------------------------------------------------------------
+    // zadani poctu jizd pro auta
+    $('#dkfzfahrten').click(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+        // test jestli uz nemam tabulku otevrenou
+        if($('#kfzfahrteninfo').length!=0){
+            $('#kfzfahrteninfo').remove();
+            return;
+        }
+
+        $.post(acturl,
+        {
+            id:id
+        },
+        function(data){
+            updateDKfzFahrten(data);
+        },
+        'json'
+        );
+    });
+
+
+});
+
+
+// Ajax update Functions
+
+function updateDKfzFahrten(data){
+//    alert('updateDKfzFahrten ,id='+data.id);
+    var buttonOffset = $('#'+data.id).offset();
+
+//    buttonOffset.top -= $('#'+data.id).outerHeight();
+
+    $(data.divcontent).appendTo('body');
+    $('#kfzfahrteninfo').css({
+        "left":buttonOffset.left+"px"
+    });
+    $('#kfzfahrteninfo').css({
+        "top":buttonOffset.top-$('#kfzfahrteninfo').outerHeight()+"px"
+    });
+
+    $('#kfzfahrteninfo select[id^=kfzfahrten_kfz_id_]').change(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+            $.post(acturl,
+            {
+                id: id,
+                dbfield:'kfz_id',
+                value: $(this).val()
+            },
+            function(data){
+                updateFahrtenAnzahlUpdate(data);
+            },
+            'json'
+            );
+    });
+
+    $('#kfzfahrteninfo input[id^=kfzfahrten_anzahl_]').change(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+            $.post(acturl,
+            {
+                id: id,
+                dbfield:'anzahl_fahrten',
+                value: $(this).val()
+            },
+            function(data){
+                updateFahrtenAnzahlUpdate(data);
+            },
+            'json'
+            );
+    });
+
+    $('#kfzfahrten_add').click(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+        var kfz_id = $('#kfzfahrten_kfz_id').val();
+        var datum = $('#kfzfahrten_datum').val();
+        var fahrten = $('#kfzfahrten_fahrten').val();
+
+        $.post(acturl,
+        {
+            id:id,
+            kfz_id:kfz_id,
+            datum:datum,
+            fahrten:fahrten
+        },
+        function(data){
+            updateKfzFahrtenAdd(data);
+        },
+        'json'
+        );
+    });
+
+    $('[id^=kfzfahrten_delete]').click(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:id
+        },
+        function(data){
+            updateKfzFahrtenDelete(data);
+        },
+        'json'
+        );
+    });
+
+
+}
+
+function updateFahrtenAnzahlUpdate(data){
+
+}
+
+function updateKfzFahrtenDelete(data){
+//    alert('KfzFahrtenId'+data.KfzFahrtenId);
+    $('#kfzfahrtrow_'+data.KfzFahrtenId).remove();
+}
+function updateKfzFahrtenAdd(data){
+    $('#kfzfahrteninfo').remove();
+    data.id = 'dkfzfahrten';
+    
+    updateDKfzFahrten(data);
+}
+function updateAnwesenheit(data){
+
+    //$('#debuginfo').prepend("<br>"+data.toSource()+"<br>"+data.a+"<br>"+data.b);
+    
+    // zjistim si pozici horni a spodni casti formulare
+    var formular_teloOffset = $('#formular_telo').offset();
+    var dzeit_poslednizaznamyOffset = $('#dzeit_poslednizaznamy').offset();
+
+    $('#debuginfo').prepend("<br>"+formular_teloOffset.toSource());
+    var formular_teloHeight = $('#formular_telo').outerHeight();
+    var formular_teloWidth = $('#formular_telo').outerWidth();
+
+    $('#debuginfo').prepend("<br>height="+formular_teloHeight);
+
+    var mezera = 5;
+    var persnrDzeitTop = formular_teloOffset.top + formular_teloHeight + mezera;
+    var persnrDzeitHeight = dzeit_poslednizaznamyOffset.top - persnrDzeitTop - 2*mezera;
+
+    $(data.divcontent).appendTo('body');
+    $('#persnrdzeit').css({"left":formular_teloOffset.left+"px"});
+    $('#persnrdzeit').css({"top":persnrDzeitTop+"px"});
+    $('#persnrdzeit').css({"height":persnrDzeitHeight+"px"});
+    
+//
+    $('[id^=anwesenheit_delete]').click(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:id
+        },
+        function(data){
+            updateAnwesenheitDelete(data);
+        },
+        'json'
+        );
+    });
+//
+//    // udalostni proceduru priradim jen pri otevreni divu
+//
+//
+    $('#persnrdzeit select[id^=anwesenheit_oe_]').change(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        //radek.css({'background-color':'red'});
+        var transport_id = $(this).attr('id');//radek.find('select').attr('id');
+        var transport_value = $(this).val();//radek.find('select').val();
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:transport_id,
+            value:transport_value
+        },
+        function(data){
+            updateAnwesenheitUpdate(data);
+        },
+        'json'
+        );
+    });
+
+    $('#persnrdzeit select[id^=anwesenheit_essentyp_]').change(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        //radek.css({'background-color':'red'});
+        var transport_id = $(this).attr('id');//radek.find('select').attr('id');
+        var transport_value = $(this).val();//radek.find('select').val();
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:transport_id,
+            value:transport_value
+        },
+        function(data){
+            updateAnwesenheitUpdate(data);
+        },
+        'json'
+        );
+    });
+
+
+    $('#persnrdzeit select[id^=transport_kfz_id_]').change(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        //radek.css({'background-color':'red'});
+        var transport_id = $(this).attr('id');//radek.find('select').attr('id');
+        var transport_value = $(this).val();//radek.find('select').val();
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:transport_id,
+            value:transport_value
+        },
+        function(data){
+            updateAnwesenheitUpdate(data);
+        },
+        'json'
+        );
+    });
+
+    $('#persnrdzeit select[id^=transport_newkfz_]').change(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        var kfz_id = $(this).attr('id');//radek.find('select').attr('id');
+        //zjistim si id na konci idcka, 0 nebo 1
+        pozicePodtrzitka = kfz_id.lastIndexOf('_', 0);
+        var id = kfz_id.substr(pozicePodtrzitka, 1);
+        var transport_value = $(this).val();//radek.find('select').val();
+        preisInput = 'input:text[id=transport_newpreis_'+id+']';
+        var preis = radek.find(preisInput).val();
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:kfz_id,
+            jizda:id,
+            preis:preis,
+            value:transport_value
+        },
+        function(data){
+            updateAnwesenheitUpdateNewKfz(data);
+        },
+        'json'
+        );
+    });
+
+    $('#persnrdzeit input:checkbox[id^=anwesenheit_essen]').click(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        //radek.css({'background-color':'red'});
+        var essen_id = radek.find('select[id^=anwesenheit_essentyp_]').attr('id');
+        var essen_value = radek.find('select[id^=anwesenheit_essentyp_]').val();
+        var essen = $(this).attr('checked')?1:0;
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:essen_id,
+            essenId:essen_value,
+            essen:essen
+        },
+        function(data){
+            updateAnwesenheitUpdate(data);
+        },
+        'json'
+        );
+    });
+
+    $('input:text[id^=transport_preis_]').change(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        //radek.css({'background-color':'red'});
+        var transport_id = $(this).attr('id');//radek.find('select').attr('id');
+        var transport_value = $(this).val();//radek.find('select').val();
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:transport_id,
+            value:transport_value
+        },
+        function(data){
+            updateAnwesenheitUpdate(data);
+        },
+        'json'
+        );
+    });
+}
+//---------------------------------------------------------------------------------------------------------------------
+
+function updateAnwesenheitDelete(data){
+    $('#debuginfo').prepend("<br>"+data.toSource());
+    $('#'+data.id).parent().parent().css({
+        'background-color':'red'
+    });
+    $('#anwesenheitrow_'+data.dzeit_id).remove();
+}
+
+function updateAnwesenheitUpdateNewKfz(data){
+    // puvodni prvek puvodni id zmenit na nove id
+    newid = 'transport_kfz_id_'+data.insertedId;
+    $('select[id='+data.oldid+']').attr('id', newid);
+    // eventuelne zmenit i id pro pole se zadanim ceny
+    // zmenit acturl od ted uz ma v id cislo id v tabulce dperstransport
+    $('select[id='+newid+']').attr('acturl', './anwesenheitTransportKfzUpdate.php');
+    // nastavit novou udalostni proceduru
+    $('select[id='+newid+']').change(function(event){
+        // zjistit hodnotu selectboxu
+        var radek = $(this).parent().parent();
+        var transport_id = $(this).attr('id');
+        var transport_value = $(this).val();
+        var acturl = $(this).attr('acturl');
+
+        $.post(acturl,
+        {
+            id:transport_id,
+            value:transport_value
+        },
+        function(data){
+            updateAnwesenheitUpdate(data);
+        },
+        'json'
+        );
+    });
+}
+
+function updateAnwesenheitUpdate(data){
+    $('#debuginfo').prepend("<br>"+data.toSource());
+}
+
+function disableweiter()
+{
+  	var neuE = document.getElementById('weiter');
+  	neuE.disabled=true;
+}
+
+function enableweiter()
+{
+	var neuButton = document.getElementById('weiter').disabled=false;
+}
+function validatedatum()
+{
+	var datum = document.getElementById('Datum');
+	//alert(datum.value);	
+}
+
+function refreshdatum(text)
+{
+    var datum = document.getElementById('Datum');
+    if(text=="ERROR")
+    {
+        //alert('Fehler bei Datumeingabe / chyba pri zadani datumu');
+        datum.value=text;
+        datum.focus();
+        datum.select();
+    }
+    else
+    {
+        //pozice dvojtecky
+        poziceDvojtecky = text.indexOf(':', 0)
+        datum.value = text.substr(0, poziceDvojtecky);
+        oe = text.substr(poziceDvojtecky+1);
+        oeElement = document.getElementById('tatigkeit');
+        oeElement.value = oe;
+        //datum.style.backgroundColor="white";
+        datumvalue = $('#Datum').val();
+        olddatumvalue = $('#datumold').val();
+
+        //String.substr(start, length);
+        monat = datumvalue.substr(3,2);
+        monatOld = olddatumvalue.substr(3,2);
+
+        if(monat==monatOld) return;
+
+        var acturl = './persnrShowDzeit.php';
+
+        // test jestli uz nemam tabulku otevrenou
+        if($('#persnrdzeit').length!=0){
+            $('#persnrdzeit').remove();
+        }
+
+        $.post(acturl,
+        {
+            id:'PersNr',
+            persnr: $('#PersNr').val(),
+            datum: $('#Datum').val()
+        },
+        function(data){
+            updateAnwesenheit(data);
+        },
+        'json'
+        );
+
+    }
+}	
+
+function refreshvon()
+{
+	var von = document.getElementById('Von');
+	var hodiny,minuty;
+	if(von.value.length==4)
+	{
+		hodiny=von.value.substr(0,2);
+		minuty=von.value.substr(2,2);
+		von.value=hodiny+":"+minuty;
+	}	
+}
+
+function refreshbis()
+{
+	var von = document.getElementById('Bis');
+	var hodiny,minuty;
+	if(von.value.length==4)
+	{
+		hodiny=von.value.substr(0,2);
+		minuty=von.value.substr(2,2);
+		von.value=hodiny+":"+minuty;
+	}	
+}
+
+function pisjmeno(text)
+{
+    var jmeno = document.getElementById('persName');
+    var pers = document.getElementById('PersNr');
+    var schicht=document.getElementById('Schicht');
+
+    // test na existenci osobniho cisla
+    // pokud ne, vratim se na pole s osobnim cislem
+    if((text=="nopersnr"))
+    {
+        //alert('PersNr nichtgefunden');
+        pers.style.backgroundColor = 'red';
+        pers.value = 'ERROR'
+        pers.focus();
+        pers.select();
+    }
+    else
+    {
+        pers.style.backgroundColor = '';
+        jmeno.value=text.substring(0,text.indexOf(';'));
+        schicht.value=text.substring(text.indexOf(';')+1);
+        schicht.select();
+        var id = 'PersNr';
+        var acturl = './persnrShowDzeit.php';
+
+        // test jestli uz nemam tabulku otevrenou
+        if($('#persnrdzeit').length!=0){
+            $('#persnrdzeit').remove();
+        }
+
+        $.post(acturl,
+        {
+            id:id,
+            persnr: $('#PersNr').val(),
+            datum: $('#Datum').val()
+        },
+        function(data){
+            updateAnwesenheit(data);
+        },
+        'json'
+        );
+
+    }
+}
+
+function pauza(){
+
+refreshbis();
+var von = document.getElementById("Von");
+var bis = document.getElementById("Bis");
+var vonh= von.value.substr(0,2);
+var vonm= von.value.substr(3,2);
+var bish= bis.value.substr(0,2);
+var bism= bis.value.substr(3,2);
+var vonsc = new Date(0,0,0,vonh,vonm,0);
+var bissc = new Date(0,0,0,bish,bism,0);
+var time = bissc.getTime() - vonsc.getTime();
+var cas = Math.round((time / (60*60*1000))*100)/100;
+var cas1 = time / (60*60*1000);
+var pauza = Math.round((cas1 / 17)*100)/100 ;
+document.getElementById('pause1').value = pauza;
+document.getElementById('stunden').value = cas;
+}
+
+
+function zjistiId(element,pole){
+for(i=0;i<pole.length; i++){
+if(pole[i]== element){return i;}
+}
+}
+
+function encodeControlValue(i)
+{
+	var control = document.getElementById(i);
+	return encodeURI(control.value);
+}
+
+function encodeSelectControlValue(i)
+{
+	var control = document.getElementById(i);
+	var optionarray = control.getElementsByTagName('option');
+	var	selectedvalue=optionarray.item(control.selectedIndex).getAttribute('value');
+	return encodeURIComponent(selectedvalue);
+}
+
+
+function checkCR() {
+	
+	var oEvent = EventUtil.getEvent();
+	
+    var pole = new Array("PersNr","Schicht","Datum","Von","Bis","pause1","pause2","tatigkeit","weiter");
+    var element =  oEvent.target.id;
+    var pocetPrvkuPole = pole.length;
+    
+    if (oEvent.keyCode == 13) {
+//        alert(element);
+		var i = zjistiId(element, pole) +1;
+        if(i<pocetPrvkuPole){
+            document.getElementById(pole[i]).focus();
+            oEvent.preventDefault();
+        }
+	  }
+    else{
+      return true;
+    } 
+	
+}
+  
+EventUtil.addEventHandler(document, "keypress", checkCR);
+
+
+function beforeSubmit(){
+//alert("Pr�v� odes�l�te data!")
+}
+
+function js_validate_float(control)
+{
+
+	var hodnota = control.value
+
+	re = /,/
+	novahodnota=hodnota.replace(re,".");
+
+	floatvalue = parseFloat(novahodnota);
+
+	if(!isNaN(floatvalue)&&(floatvalue>=0))
+	{
+		control.value=floatvalue;
+		control.style.backgroundColor='';
+	}
+	else
+	{
+		//chyba validace
+		control.style.backgroundColor='red';
+		//failed.className='error';
+		//failed.value=error_description;
+	}
+}
+
+
+//----------------------------------------------------------------------
+
+var dzeitupdate = {
+    success:	function(o){
+        var domDocument = o.responseXML;
+
+        var persnrArray = domDocument.getElementsByTagName('persnr');
+        var schichtArray = domDocument.getElementsByTagName('schicht');
+        var autoArray = domDocument.getElementsByTagName('auto');
+        var noaduplicitaArray = domDocument.getElementsByTagName('noaduplicita');
+
+
+        var persnr = persnrArray.item(0).firstChild.data;
+        var schicht = schichtArray.item(0).firstChild.data;
+        var auto = autoArray.item(0).firstChild.data;
+        var noaduplicita = noaduplicitaArray.item(0).firstChild.data;
+
+        // aktualizuju posledni zaznamy
+        zaznamy = domDocument.getElementsByTagName('radek');
+        for (i = 0; i < zaznamy.length; i++) {
+            childs = zaznamy.item(i).childNodes;
+            // zacnu od 1 protoze nechci zobrazovat id
+            for(j=1;j<childs.length;j++){
+                $('#dzeittab tr').eq(i+1).find('td').eq(j-1).html(childs[j].firstChild.data);
+            }
+        }
+
+        // presunu kurzor na persnr a smazu zadane hodnoty
+        document.getElementById('PersNr').value='';
+        document.getElementById('persName').value='';
+        document.getElementById('Schicht').value='';
+        document.getElementById('Von').value='00:00';
+        document.getElementById('Bis').value='00:00';
+        document.getElementById('pause1').value='0';
+        document.getElementById('pause2').value='0';
+        document.getElementById('tatigkeit').value='a';
+        document.getElementById('stunden').value='0';
+
+        // test jestli uz nemam tabulku otevrenou
+        if($('#persnrdzeit').length!=0){
+            $('#persnrdzeit').remove();
+        }
+
+        // povolim tlacitko weiter
+        enableweiter();
+        document.getElementById('PersNr').focus();
+    }
+}
+
+function hideElement(){
+    document.getElementById('insertinfo').style.visibility='hidden';
+}

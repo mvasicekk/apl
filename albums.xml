@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:gphoto='http://schemas.google.com/photos/2007' xmlns:media='http://search.yahoo.com/mrss/' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:gml='http://www.opengis.net/gml' xmlns:georss='http://www.georss.org/georss'>
+    <id>http://picasaweb.google.com/data/feed/api/user/josef.runt</id>
+    <updated>2010-02-04T20:47:38.078Z</updated>
+    <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/photos/2007#user'/>
+    <title type='text'>josef.runt</title>
+    <subtitle type='text'/>
+    <icon>http://lh4.ggpht.com/_BjGQEitUO_M/AAAAnwnqVDA/AAAAAAAAAAA/jCt_1HTJCd8/s64-c/josef.runt.jpg</icon>
+    <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='http://picasaweb.google.com/data/feed/api/user/josef.runt'/>
+    <link rel='alternate' type='text/html' href='http://picasaweb.google.com/josef.runt'/>
+    <link rel='http://schemas.google.com/photos/2007#slideshow' type='application/x-shockwave-flash' href='http://picasaweb.google.com/s/c/bin/slideshow.swf?host=picasaweb.google.com&amp;RGB=0x000000&amp;feed=http%3A%2F%2Fpicasaweb.google.com%2Fdata%2Ffeed%2Fapi%2Fuser%2Fjosef.runt%3Falt%3Drss'/>
+    <link rel='self' type='application/atom+xml' href='http://picasaweb.google.com/data/feed/api/user/josef.runt?start-index=1&amp;max-results=1000'/>
+    <author>
+        <name>Runtici</name>
+        <uri>http://picasaweb.google.com/josef.runt</uri>
+    </author>
+    <generator version='1.00' uri='http://picasaweb.google.com/'>Picasaweb</generator>
+    <openSearch:totalResults>129</openSearch:totalResults>
+    <openSearch:startIndex>1</openSearch:startIndex>
+    <openSearch:itemsPerPage>1000</openSearch:itemsPerPage>
+    <gphoto:user>josef.runt</gphoto:user>
+    <gphoto:nickname>Runtici</gphoto:nickname>
+    <gphoto:thumbnail>http://lh4.ggpht.com/_BjGQEitUO_M/AAAAnwnqVDA/AAAAAAAAAAA/jCt_1HTJCd8/s64-c/josef.runt.jpg</gphoto:thumbnail>
+    <entry>
+        <id>http://picasaweb.google.com/data/entry/api/user/josef.runt/albumid/5428098255226436305</id>
+        <published>2010-01-18T15:58:17.000Z</published>
+        <updated>2010-01-18T15:16:29.181Z</updated>
+        <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/photos/2007#album'/>
+        <title type='text'>Malování prstovými barvami</title>
+        <summary type='text'/>
+        <rights type='text'>public</rights>
+        <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='http://picasaweb.google.com/data/feed/api/user/josef.runt/albumid/5428098255226436305'/>
+        <link rel='alternate' type='text/html' href='http://picasaweb.google.com/josef.runt/MalovaniPrstovymiBarvami'/>
+        <link rel='self' type='application/atom+xml' href='http://picasaweb.google.com/data/entry/api/user/josef.runt/albumid/5428098255226436305'/>
+        <author>
+            <name>Runtici</name>
+            <uri>http://picasaweb.google.com/josef.runt</uri>
+        </author>
+        <gphoto:id>5428098255226436305</gphoto:id>
+        <gphoto:name>MalovaniPrstovymiBarvami</gphoto:name>
+        <gphoto:location/>
+        <gphoto:access>public</gphoto:access>
+        <gphoto:timestamp>1263830297000</gphoto:timestamp>
+        <gphoto:numphotos>5</gphoto:numphotos>
+        <gphoto:user>josef.runt</gphoto:user>
+        <gphoto:nickname>Runtici</gphoto:nickname>
+        <gphoto:commentingEnabled>true</gphoto:commentingEnabled>
+        <gphoto:commentCount>0</gphoto:commentCount>
+        <media:group>
+            <media:content url='http://lh6.ggpht.com/_BjGQEitUO_M/S1R6mpSwetE/AAAAAAAAT90/SGNlJMmOkL4/MalovaniPrstovymiBarvami.jpg' type='image/jpeg' medium='image'/>
+            <media:credit>Runtici</media:credit>
+            <media:description type='plain'/>
+            <media:keywords/>
+            <media:thumbnail url='http://lh6.ggpht.com/_BjGQEitUO_M/S1R6mpSwetE/AAAAAAAAT90/SGNlJMmOkL4/s160-c/MalovaniPrstovymiBarvami.jpg' height='160' width='160'/>
+            <media:title type='plain'>Malování prstovými barvami</media:title>
+         </media:group>
+      </entry>
+</feed>

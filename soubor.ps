@@ -1,0 +1,2745 @@
+%!PS-Adobe-3.0
+%%Title: ex.php, fns_dotazy.php, get_parameters.php, image.php, index_new.php, index.php, index2.php, login.php, phpinfo.php, pokus.php
+%%For: Josef Runt
+%%Creator: a2ps version 4.13
+%%CreationDate: Wed Mar 19 13:34:02 2008
+%%BoundingBox: 24 24 571 818
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 23
+%%PageOrder: Ascend
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontType get 0 eq {
+    currentfont /FontMatrix get 3 get
+  }{
+    currentfont /FontMatrix get 3 get 1000 mul
+  } ifelse
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Define these in case they're not in the FontInfo (also, here
+    % they're easier to get to.
+    /UnderlinePosition 1 def
+    /UnderlineThickness 1 def
+    
+    % Get the underline position and thickness if they're defined.
+    currentdict /FontInfo known {
+      FontInfo
+      
+      dup /UnderlinePosition known {
+	dup /UnderlinePosition get
+	0 exch FontMatrix transform exch pop
+	/UnderlinePosition exch def
+      } if
+      
+      dup /UnderlineThickness known {
+	/UnderlineThickness get
+	0 exch FontMatrix transform exch pop
+	/UnderlineThickness exch def
+      } if
+      
+    } if
+    currentdict 
+  end 
+} bind def
+
+% composite fonts for ASCII-EUC mixed string
+% Version 1.2 1/31/1990
+% Orignal Ken'ichi HANDA (handa@etl.go.jp)
+% Modified Norio Katayama (katayama@rd.nacsis.ac.jp),1998
+% Extend & Fix Koji Nakamaru (maru@on.cs.keio.ac.jp), 1999
+% Anyone can freely copy, modify, distribute this program.
+
+/copyfont {	% font-dic extra-entry-count  copyfont  font-dic
+	1 index maxlength add dict begin
+	{	1 index /FID ne 2 index /UniqueID ne and
+		{def} {pop pop} ifelse
+	} forall
+	currentdict
+	end
+} bind def
+
+/compositefont { % ASCIIFontName EUCFontName RomanScale RomanOffset Rot(T/F) compositefont font
+    /RomanRotation exch def
+    /RomanOffset exch def
+    /RomanScale exch def
+    userdict /fixeucfont_dict known not {
+	userdict begin
+	    /fixeucfont_dict 2 dict begin
+		/UpperByteEncoding [
+		    16#00 1 16#20 { pop 0 } for
+		    16#21 1 16#28 { 16#20 sub } for
+		    16#29 1 16#2F { pop 0 } for
+		    16#30 1 16#74 { 16#27 sub } for
+		    16#75 1 16#FF { pop 0 } for
+		] def
+	        /LowerByteEncoding [
+		    16#00 1 16#A0 { pop /.notdef } for
+		    16#A1 1 16#FE { 16#80 sub 16 2 string cvrs
+				    (cXX) dup 1 4 -1 roll
+				    putinterval cvn } for
+		    /.notdef
+		] def
+		currentdict
+	    end def
+	end
+    } if
+    findfont dup /FontType get 0 eq {
+	14 dict begin
+	    %
+	    % 7+8 bit EUC font
+	    %
+	    12 dict begin
+		/EUCFont exch def
+		/FontInfo (7+8 bit EUC font) readonly def
+		/PaintType 0 def
+		/FontType 0 def
+		/FontMatrix matrix def
+		% /FontName
+		/Encoding fixeucfont_dict /UpperByteEncoding get def
+		/FMapType 2 def
+		EUCFont /WMode known
+		{ EUCFont /WMode get /WMode exch def }
+		{ /WMode 0 def } ifelse
+		/FDepVector [
+		    EUCFont /FDepVector get 0 get
+		    [ 16#21 1 16#28 {} for 16#30 1 16#74 {} for ]
+		    {
+			13 dict begin
+			    /EUCFont EUCFont def
+			    /UpperByte exch 16#80 add def	
+			    % /FontName
+			    /FontInfo (EUC lower byte font) readonly def
+			    /PaintType 0 def
+			    /FontType 3 def
+			    /FontMatrix matrix def
+			    /FontBBox {0 0 0 0} def
+			    /Encoding
+				fixeucfont_dict /LowerByteEncoding get def
+			    % /UniqueID
+			    % /WMode
+			    /BuildChar {
+				gsave
+				exch dup /EUCFont get setfont
+				/UpperByte get
+				2 string
+				dup 0 4 -1 roll put
+				dup 1 4 -1 roll put
+				dup stringwidth setcharwidth
+				0 0 moveto show
+				grestore
+			    } bind def
+			    currentdict
+			end
+			/lowerbytefont exch definefont
+		    } forall
+		] def
+		currentdict
+	    end
+	    /eucfont exch definefont
+	    exch
+	    findfont 1 copyfont dup begin
+		RomanRotation {
+			/FontMatrix FontMatrix
+			[ 0 RomanScale neg RomanScale 0 RomanOffset neg 0 ]
+			matrix concatmatrix def
+		}{
+			/FontMatrix FontMatrix
+			[ RomanScale 0 0 RomanScale 0 RomanOffset ] matrix concatmatrix
+			def
+			/CDevProc
+			    {pop pop pop pop 0 exch -1000 exch 2 div 880} def
+		} ifelse
+	    end
+	    /asciifont exch definefont
+	    exch
+	    /FDepVector [ 4 2 roll ] def
+	    /FontType 0 def
+	    /WMode 0 def
+	    /FMapType 4 def
+	    /FontMatrix matrix def
+	    /Encoding [0 1] def
+	    /FontBBox {0 0 0 0} def
+%	    /FontHeight 1.0 def % XXXX
+	    /FontHeight RomanScale 1.0 ge { RomanScale }{ 1.0 } ifelse def
+	    /Descent -0.3 def   % XXXX
+	    currentdict
+	end
+	/tmpfont exch definefont
+	pop
+	/tmpfont findfont
+    }{
+	pop findfont 0 copyfont
+    } ifelse
+} def	
+
+/slantfont {	% FontName slant-degree  slantfont  font'
+    exch findfont 1 copyfont begin
+    [ 1 0 4 -1 roll 1 0 0 ] FontMatrix exch matrix concatmatrix
+    /FontMatrix exch def
+    currentdict
+    end
+} def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 595 def
+/sw 842 def
+/llx 24 def
+/urx 818 def
+/ury 571 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 8.005733 def
+/cw 4.803440 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   501.959430 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(require\('./fpdf/transform.php'\);) N
+() N
+($pdf = new PDF_Transform\(\);) N
+($pdf->AddPage\(\);) N
+($pdf->SetFont\("Arial", "", 8\);) N
+() N
+(//Scaling) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(50, 20, 40, 10, 'D'\);) N
+($pdf->Text\(50, 19, 'Scale'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//Scale by 150% centered by \(50,30\) which is the lower left corner of the rectan) N
+(gle) N
+($pdf->ScaleXY\(150, 50, 30\);) N
+($pdf->Rect\(50, 20, 40, 10, 'D'\);) N
+($pdf->Text\(50, 19, 'Scale'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+() N
+(//Translation) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(125, 20, 40, 10, 'D'\);) N
+($pdf->Text\(125, 19, 'Translate'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//Translate 7 to the right, 5 to the bottom) N
+($pdf->Translate\(7, 5\);) N
+($pdf->Rect\(125, 20, 40, 10, 'D'\);) N
+($pdf->Text\(125, 19, 'Translate'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+(//Rotation) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(50, 50, 40, 10, 'D'\);) N
+($pdf->Text\(50, 49, 'Rotate'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//Rotate 20 degrees counter-clockwise centered by \(50,60\) which is the lower lef) N
+(t corner of the rectangle) N
+($pdf->Rotate\(20, 50, 60\);) N
+($pdf->Rect\(50, 50, 40, 10, 'D'\);) N
+($pdf->Text\(50, 49, 'Rotate'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+(//Skewing) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(125, 50, 40, 10, 'D'\);) N
+(ex.php) (Str\303\241nka 1/3) (19.02. 08 16:34) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+($pdf->Text\(125, 49, 'Skew'\);) p n
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//skew 30 degrees along the x-axis centered by \(125,60\) which is the lower left ) N
+(corner of the rectangle) N
+($pdf->SkewX\(30, 125, 60\);) N
+($pdf->Rect\(125, 50, 40, 10, 'D'\);) N
+($pdf->Text\(125, 49, 'Skew'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+(//Mirroring horizontally) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(50, 80, 40, 10, 'D'\);) N
+($pdf->Text\(50, 79, 'MirrorH'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//mirror horizontally with axis of reflection at x-position 50 \(left side of the) N
+( rectangle\)) N
+($pdf->MirrorH\(50\);) N
+($pdf->Rect\(50, 80, 40, 10, 'D'\);) N
+($pdf->Text\(50, 79, 'MirrorH'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+(//Mirroring vertically) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(125, 80, 40, 10, 'D'\);) N
+($pdf->Text\(125, 79, 'MirrorV'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//mirror vertically with axis of reflection at y-position 90 \(bottom side of the) N
+( rectangle\)) N
+($pdf->MirrorV\(90\);) N
+($pdf->Rect\(125, 80, 40, 10, 'D'\);) N
+($pdf->Text\(125, 79, 'MirrorV'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+(//Point reflection) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(50, 110, 40, 10, 'D'\);) N
+($pdf->Text\(50, 109, 'MirrorP'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//point reflection at the lower left point of rectangle) N
+($pdf->MirrorP\(50,120\);) N
+($pdf->Rect\(50, 110, 40, 10, 'D'\);) N
+($pdf->Text\(50, 109, 'MirrorP'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+(ex.php) (Str\303\241nka 2/3) (19.02. 08 16:34) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(ex.php) (1/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p n
+(//Mirroring against a straigth line described by a point \(120, 120\) and an angle) N
+( -20\357\277\275) N
+($angle=-20;) N
+($px=120;) N
+($py=120;) N
+() N
+(//just vor visualisation: the straight line to mirror against) N
+($pdf->SetDrawColor\(200\);) N
+($pdf->Line\($px-1,$py-1,$px+1,$py+1\);) N
+($pdf->Line\($px-1,$py+1,$px+1,$py-1\);) N
+($pdf->StartTransform\(\);) N
+($pdf->Rotate\($angle, $px, $py\);) N
+($pdf->Line\($px-5, $py, $px+60, $py\);) N
+($pdf->StopTransform\(\);) N
+() N
+() N
+($pdf->SetDrawColor\(200\);) N
+($pdf->SetTextColor\(200\);) N
+($pdf->Rect\(125, 110, 40, 10, 'D'\);) N
+($pdf->Text\(125, 109, 'MirrorL'\);) N
+($pdf->SetDrawColor\(0\);) N
+($pdf->SetTextColor\(0\);) N
+(//Start Transformation) N
+($pdf->StartTransform\(\);) N
+(//mirror against the straight line) N
+($pdf->MirrorL\($angle, $px, $py\);) N
+($pdf->Rect\(125, 110, 40, 10, 'D'\);) N
+($pdf->Text\(125, 109, 'MirrorL'\);) N
+(//Stop Transformation) N
+($pdf->StopTransform\(\);) N
+() N
+($pdf->Output\(\);) N
+(?>) N
+(ex.php) (Str\303\241nka 3/3) (19.02. 08 16:34) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(ex.php) (2/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(function dbConnect\(\){) N
+(mysql_connect\('abyserver', 'root', 'nuredv'\);) N
+(mysql_select_db\('apl'\);) N
+(mysql_query\('SET names cp1250'\);) N
+(}) N
+() N
+() N
+(// ulozeni pokusu o prihlaseni) N
+(function insertAccessLog\($username,$password,$prihlasen,$host\)) N
+({) N
+() S 8 T (dbConnect\(\);) N
+() S 8 T ($sql = "insert into accesslog \(name,password,login_ok,host\) values \('$us) N
+(ername','$password','$prihlasen','$host'\)";) N
+() S 8 T (mysql_query\('set names utf8'\);) N
+() S 8 T (mysql_query\($sql\);) N
+(}) N
+() N
+(// ma dana pozicevyplneny export ?) N
+(function hasExport\($auftrag,$paleta\)) N
+({) N
+() S 8 T (dbConnect\(\);) N
+() S 8 T ($sql = "select auftragsnr from dauftr where \(\(auftragsnr='$auftrag'\) and) N
+( \(`pos-pal-nr`='$paleta'\) and \(`auftragsnr-exp`>0\) and \(`pal-nr-exp`>0\)\) limit 1) N
+(";) N
+() S 8 T (// dotaz vybere exportovane) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T () S 16 T (return 1;) N
+() S 8 T (else) N
+() S 8 T () S 16 T (return 0;) N
+(}) N
+(// uprava vsech pozic na jedne palete) N
+(// pouziti pri editaci polozek v dauftr) N
+() N
+(function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos\($termin,$a) N
+(uftragsnr_exp,$pos_pal_nr_exp,$fremdauftr,$fremdpos,$dauftr_id\)) N
+({) N
+() S 8 T ($dauftrRow = getDauftrRowFromId\($dauftr_id\);) N
+() S 8 T () N
+() S 8 T ($pos_pal_nr_exp=chop\($_GET['pos_pal_nr_exp']\);) N
+() S 8 T (if\(strlen\($pos_pal_nr_exp\)==0\)) N
+() S 8 T () S 16 T ($pos_pal_nr_exp='NULL';) N
+() S 8 T () S 16 T () N
+() S 8 T ($auftragsnr=$dauftrRow['auftragsnr'];) N
+() S 8 T ($pal=$dauftrRow['pos-pal-nr'];) N
+() S 8 T ($teil=$dauftrRow['teil'];) N
+() S 8 T ($sql = "update dauftr set termin='$termin',`auftragsnr-exp`=$auftragsnr_) N
+(exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";) N
+() S 8 T ($sql.=" where \(\(auftragsnr='$auftragsnr'\) and \(teil='$teil'\) and \(`pos-p) N
+(al-nr`='$pal'\)\) limit 10";) N
+() S 8 T (mysql_query\('set names utf8'\);) N
+() S 8 T (mysql_query\($sql\);) N
+() S 8 T ($mysql_error=mysql_error\(\);) N
+() S 8 T (return $mysql_error;) N
+(}) N
+() N
+(// vrati radek z tabulky dauftr podle zadaneho id) N
+(function getDauftrRowFromId\($dauftr_id\)) N
+({) N
+() S 8 T (dbConnect\(\);) N
+() S 8 T (mysql_query\('set names utf8'\);) N
+(fns_dotazy.php) (Str\303\241nka 1/11) (14.03. 08 10:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T ($sql = "select * from dauftr where \(id_dauftr='$dauftr_id'\)";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T (return $row;) N
+(}) N
+() N
+(// zjistim na kolik mist se zaokrouhluje cena pro daneho zakaznika) N
+(function getRundenFromKunde\($kunde\)) N
+({) N
+() S 8 T (dbConnect\(\);) N
+() S 8 T ($sql = "select preis_runden as r from dksd where \(kunde='$kunde'\)";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T (return $row['r'];) N
+(}) N
+() N
+(// upravi hodnoty vzkd v druecku na novou hodnotu) N
+(function updateDrueckVzKdFromAuftrag\($vzkd_neu,$pal,$teil,$abgnr,$auftragsnr\)) N
+({) N
+() S 8 T (dbConnect\(\);) N
+() S 8 T () N
+() S 8 T ($vzkd_neu=round\($vzkd_neu,4\);) N
+() S 8 T () N
+() S 8 T ($sql="update drueck set `vz-soll`='$vzkd_neu' where \(\(auftragsnr='$auftr) N
+(agsnr'\) and \(`pos-pal-nr`='$pal'\) and \(teil='$teil'\) and \(taetnr='$abgnr'\)\)";) N
+() S 8 T (mysql_query\($sql\);) N
+() S 8 T (return mysql_affected_rows\(\);) N
+(}) N
+() N
+(// prepocita novy cas vzkd podle zadane ceny a cisla zakazky) N
+(function getVzKdFromPreisAuftrag\($preis,$auftrag\)) N
+({) N
+() S 8 T () N
+() S 8 T ($vzkd = 0;) N
+() S 8 T (dbConnect\(\);) N
+() S 8 T (mysql_query\("set names utf8"\);) N
+() S 8 T ($sql = "select minpreis from daufkopf where \(auftragsnr='$auftrag'\)";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($minpreis = $row['minpreis'];) N
+() S 8 T () S 16 T (if\($minpreis!=0\)) N
+() S 8 T () S 16 T () S 24 T ($vzkd = $preis / $minpreis;) N
+() S 8 T (}) N
+() N
+() S 8 T (return $vzkd;) N
+(}) N
+() N
+(// otestuje, zda ma prihlaseny uzivatel se zadaym heslem \(zvysena bezpecnost\) pr) N
+(avo zobrazit report) N
+(function testReportPassword\($reportname,$password,$user\)) N
+({) N
+() S 8 T () N
+() S 8 T (dbConnect\(\);) N
+() S 8 T ($sql = "select user from reportsecurity where\(\(reportname='$reportname'\)) N
+( and \(user='$user'\) and \(password='$password'\)\)";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T (//$row = mysql_fetch_array\($res\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T () S 16 T (return true;) N
+() S 8 T (else) N
+(fns_dotazy.php) (Str\303\241nka 2/11) (14.03. 08 10:24) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(fns_dotazy.php) (3/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (return false;) N
+(}) N
+(////////////////////////////////////////////////////////////////////////////////) N
+(///////////////////) N
+(function get_rechnung_datum\($auftrag\)) N
+({) N
+() S 8 T ($sql="select DATE_FORMAT\(fertig,'%d.%m.%Y'\) as rechdatum from daufkopf w) N
+(here \(auftragsnr='$auftrag'\) limit 1";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T (return $row['rechdatum'];) S 40 T () N
+(}) N
+() N
+(function has_rechnung\($auftrag\)) N
+({) N
+() S 8 T ($sql="select DATE_FORMAT\(fertig,'%d.%m.%Y'\) as fertig from daufkopf wher) N
+(e \(auftragsnr='$auftrag'\) limit 1";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T (if\($row['fertig']=="01.01.2010"\)) N
+() S 8 T () S 16 T (return 0;) N
+() S 8 T (else) N
+() S 8 T () S 16 T (return 1;) S 32 T () N
+(}) N
+() N
+(function set_rechnung_datum\($auftrag,$datum\)) N
+({) N
+() S 8 T ($sql="update daufkopf set fertig='$datum' where \(auftragsnr='$auftrag'\) ) N
+(limit 1";) N
+() S 8 T ($res=mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+(}) N
+() N
+(function get_minpreis_von_auftrag\($auftrag\)) N
+({) N
+() S 8 T ($sql="select minpreis from daufkopf where \(auftragsnr='$auftrag'\)";) N
+() S 8 T ($res=mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+() S 8 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T (return $row['minpreis'];) N
+(}) N
+() N
+(function get_kunde_von_auftrag\($auftrag\)) N
+({) N
+() S 8 T ($sql="select kunde from daufkopf where \(auftragsnr='$auftrag'\)";) N
+() S 8 T ($res=mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+() S 8 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T (return $row['kunde'];) N
+(}) N
+() N
+(function get_teil_bemerk\($teil,$znaku\)) N
+({) N
+() S 8 T ($sql=" SELECT dpos.`TaetBez-Aby-D` as bez_d, dpos.`TaetBez-Aby-T` as bez) N
+(_t";) N
+() S 8 T ($sql.=" FROM dpos";) N
+() S 8 T ($sql.=" WHERE \(\(\(dpos.Teil\)='$teil'\) AND \(\(dpos.`TaetNr-Aby`\)=3\)\) order ) N
+(by stamp desc limit 5";) N
+() N
+() S 8 T ($vystup="";) N
+() S 8 T ($res = mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+() S 8 T () N
+() S 8 T (while\($row=mysql_fetch_array\($res\)\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($vystup.=$row['bez_d']." ".$row['bez_t'].",";) N
+(fns_dotazy.php) (Str\303\241nka 3/11) (14.03. 08 10:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (}) N
+() N
+() S 8 T (return substr\($vystup,0,$znaku\);) N
+(}) N
+() N
+(function lager_von\($teil, $t\)) N
+({) N
+() S 8 T ($sql = "SELECT DPOS.lager_von FROM DPOS WHERE \(\(\(DPOS.teil\) = '" . $teil) N
+( . "'\) And \(\(DPOS.lager_von\) Is Not Null\) and \(DPOS.`taetnr-aby`='" . $t . "'\)\)") N
+(;) N
+() S 8 T ($res = mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+() S 8 T () N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T (if\(strlen\($row['lager_von']\)>0\)) N
+() S 8 T () S 16 T () S 24 T (return $row['lager_von'];) N
+() S 8 T () S 16 T (else) N
+() S 8 T () S 16 T () S 24 T (return "0D";) N
+() S 8 T (}) N
+() S 8 T (else) N
+() S 8 T () S 16 T (return "0D";) N
+(}) N
+() N
+(function get_preis_laut_auftrag\($export\)) N
+({) N
+() S 8 T ($sql = "SELECT sum\(`preis`*\(`stk-exp`+auss4_stk_exp\)\) AS gespreis FROM D) N
+(AUFTR";) N
+() S 8 T ($sql.=" where \(DAUFTR.`auftragsnr-exp`='".$export."'\)";) N
+() S 8 T ($res = mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+() S 8 T () N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T (return $row['gespreis'];) N
+() S 8 T (}) N
+() S 8 T (else) N
+() S 8 T () S 16 T (return 0;) N
+(}) N
+() N
+() N
+(function lager_nach\($teil, $t\)) N
+({) N
+() S 8 T ($sql = "SELECT DPOS.lager_nach FROM DPOS WHERE \(\(\(DPOS.teil\) = '" . $tei) N
+(l . "'\) And \(\(DPOS.lager_nach\) Is Not Null\) and \(DPOS.`taetnr-aby`='" . $t . "'\)) N
+(\)";) N
+() S 8 T ($res = mysql_query\($sql\) or die\(mysql_error\(\)\);) N
+() S 8 T () N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T (if\(strlen\($row['lager_nach']\)>0\)) N
+() S 8 T () S 16 T () S 24 T (return $row['lager_nach'];) N
+() S 8 T () S 16 T (else) N
+() S 8 T () S 16 T () S 24 T (return "0D";) N
+() S 8 T (}) N
+() S 8 T (else) N
+() S 8 T () S 16 T (return "0D";) N
+(}) N
+() N
+(// vrati oznaceni prvniho skladu pro dany dil auftrag a paletu) N
+(function erster_lager\($teil,$auftrag,$paleta\)) N
+(fns_dotazy.php) (Str\303\241nka 4/11) (14.03. 08 10:24) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(fns_dotazy.php) (4/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+({) p n
+() S 8 T (//dbConnect\(\);) N
+() S 8 T (// nejdriv si zjistim cislo operace) N
+() S 8 T ($sql = "select abgnr from dauftr where \(\(teil='$teil'\) and \(auftragsnr=') N
+($auftrag'\) and \(`pos-pal-nr`='$paleta'\) and \(abgnr>3\)\)";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T ($abgnr=0;) N
+() S 8 T ($ela='OD';) N
+() S 8 T () N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($abgnr = $row['abgnr'];) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (// pro zjistinene abgnr si zjistim z tabulky dpos jmeno skladu) N
+() S 8 T (// pokud pro dane abgnr nic nenajdu vratim 0D) N
+() S 8 T ($sql = "select lager_von from dpos where \(\(teil='$teil'\) and \(lager_von ) N
+(is not null\) and \(`taetnr-aby`='$abgnr'\)\)";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($lVon = $row['lager_von'];) N
+() S 8 T () S 16 T (if\(strlen\($lVon\)>0\)) N
+() S 8 T () S 16 T () S 24 T ($ela = $lVon;) N
+() S 8 T (}) N
+() S 8 T (else) N
+() S 8 T ({) N
+() S 8 T () S 16 T (// jeste posledni moznost, jestli nemam jmeno skladu u zaskrtnut) N
+(e G operace) N
+() S 8 T () S 16 T ($sql = "select lager_von from dpos where \(\(teil='$teil'\) and \(kz) N
+(gut='G'\) and \(`kz-druck`<>0\)\)";) N
+() S 8 T () S 16 T ($res = mysql_query\($sql\);) N
+() S 8 T () S 16 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T () S 16 T ({) N
+() S 8 T () S 16 T () S 24 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T () S 24 T ($lVon = $row['lager_von'];) N
+() S 8 T () S 16 T () S 24 T (if\(strlen\($lVon\)>0\)) N
+() S 8 T () S 16 T () S 24 T () S 32 T ($ela = $lVon;) N
+() S 8 T () S 16 T (}) N
+() S 8 T (}) N
+() S 8 T (return $ela;) N
+(}) N
+() N
+() N
+() N
+(function get_pc_ip\(\)) N
+({) N
+( $ip=$_SERVER["REMOTE_ADDR"];) N
+( $ip=strtr\($ip,".","_"\);) N
+( return $ip;) N
+(}) N
+() N
+(function get_user\(\)) N
+({) N
+(  $ident=$_SESSION["user"];) N
+( return $ident;) N
+(}) N
+() N
+(function get_user_pc\(\)) N
+({) N
+(fns_dotazy.php) (Str\303\241nka 5/11) (14.03. 08 10:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+( $pocitac="PHP_".$_SERVER["REMOTE_ADDR"];) p n
+( $ident=$pocitac."/".$_SESSION["user"];) N
+( return $ident;) N
+(}) N
+(function make_DB_datetime\($time,$datum\)) N
+({) N
+() S 8 T ($vonHod = substr\($time,0,2\); // roz\357\277\275e\357\277\275eme p\357\277\275\357\277\275chod na \357\277\275daje) N
+() S 8 T ($vonMin = substr\($time,3,2\); // roz\357\277\275e\357\277\275eme p\357\277\275\357\277\275chod na \357\277\275daje) N
+() S 8 T ($datumRoz = explode\(".",$datum\); // Roz\357\277\275e\357\277\275eme datum na jednotliv\357\277\275 ) N
+(\357\277\275daje) N
+() S 8 T () N
+() S 8 T ($von = date\("Y-m-d H:i:s",mktime\($vonHod, $vonMin, 0, $datumRoz[1], $dat) N
+(umRoz[0], $datumRoz[2]\)\); // sestav\357\277\275me nov\357\277\275 p\357\277\275\357\277\275chod i s datumem) N
+() N
+() S 8 T (return $von;) N
+(}) N
+() N
+(function make_DB_datum\($datum\)) N
+({) N
+() S 8 T ($datumRoz = explode\(".",$datum\); // Roz\357\277\275e\357\277\275eme datum na jednotliv\357\277\275 ) N
+(\357\277\275daje) N
+() S 8 T ($datum = $datumRoz[2]."-".$datumRoz[1]."-".$datumRoz[0]; // Op\357\277\275t ho sp) N
+(oj\357\277\275me) N
+() S 8 T (return $datum;) N
+(}) N
+( ) N
+(function ganzMonatProgress\(\){) N
+(dbConnect\(\);) N
+() N
+($guss = 0;) N
+($alu = 0;) N
+($ne = 0;) N
+($sonst = 0;) N
+() N
+($sql1="SELECT `DProduktGruppen`.`PG_Nr`, `DKSD`.`Kunde`, `DKOPF`.`Teil`) N
+(FROM \(`DKOPF` INNER JOIN `DKSD` ON `DKOPF`.`Kunde`=`DKSD`.`Kunde`\) LEFT JOIN DPr) N
+(oduktGruppen ON `DKSD`.`Kunden_Stat_Nr`=`DProduktGruppen`.`PG_Nr`) N
+(ORDER BY `DProduktGruppen`.`PG_Nr`, `DKSD`.`Kunde`, `DKOPF`.`Teil`;";) N
+() N
+($res1 = mysql_query\($sql1\) or die\(mysql_error\(\)\);) N
+(while\($zaznam1 = mysql_fetch_array\($res1\)\){) N
+(  $sql2="SELECT `Datum`, Sum\(If\(`auss_typ`=4,\(`St\357\277\275ck`+`auss-st\357\277\275ck`\)*`vz-soll) N
+(`,`St\357\277\275ck`*`vz-soll`\)\) AS kdmin) N
+(FROM DRUECK WHERE `Teil` = '".$zaznam1['Teil']."' and month\(`Datum`\) = month\(now) N
+(\(\)\) and year\(`Datum`\) = year\(now\(\)\) GROUP BY `Teil`;";) N
+($res2 = mysql_query\($sql2\) or die\("sql2: ".mysql_error\(\)\); ) N
+($zaznam2 = mysql_fetch_array\($res2\);) N
+() N
+(  Switch \($zaznam1["PG_Nr"]\){) N
+(    case 1: $guss = $guss + $zaznam2["kdmin"]; break;) N
+(    case 3: $alu = $alu + $zaznam2["kdmin"]; break;) N
+(    case 4: $ne = $ne + $zaznam2["kdmin"]; break;) N
+(    case 9: $sonst = $sonst + $zaznam2["kdmin"]; break;) N
+(  }) N
+(}) N
+($summ = $guss + $alu + $ne + $sonst;) N
+() N
+($summ = round\($summ\);) N
+($monat = date\("m"\);) N
+($guss = round\($guss\);) N
+($alu = round\($alu\);) N
+($ne = round\($ne\);) N
+(fns_dotazy.php) (Str\303\241nka 6/11) (14.03. 08 10:24) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(fns_dotazy.php) (5/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-8) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+($sonst = round\($sonst\);) p n
+() N
+() N
+(echo "<table id='table1'>";) N
+(echo "<tr><th>Monat</th><th>1</th><th>3</th><th>4</th><th>Sonst.</th><th>Summe</) N
+(th></tr>";) N
+(echo "<tr><td>$monat</td><td>$guss</td><td>$alu</td><td>$ne</td><td>$sonst</td><) N
+(td>$summ</td></tr>";) N
+(echo "</table>";) N
+(}) N
+() N
+(function ganzMonatProgress2\(\){) N
+(dbConnect\(\);) N
+() N
+($summ = 0;) N
+(mysql_connect\('abyserver', 'root', 'nuredv'\);) N
+(mysql_select_db\('apl'\);) N
+($sql1="select dksd.kunden_stat_nr as pg, sum\(if\(`auss_typ`=4, \(\(`Auss-St\357\277\275ck`+`) N
+(St\357\277\275ck`\)*`VZ-SOLL`\), \(`St\357\277\275ck`*`VZ-SOLL`\)\)\) as summin FROM `drueck` join dkopf) N
+( using \(teil\) join dksd using \(kunde\) where \(month\(datum\)=\(month\(now\(\)\) and year) N
+(\(datum\) = year\(now\(\)\)\)\) group by pg order by pg;";) N
+() N
+($res1 = mysql_query\($sql1\) or die\(mysql_error\(\)\);) N
+() N
+(echo "<table id='table1'>";) N
+(echo "<tr><th>Monat</th><th>1</th><th>3</th><th>4</th><th>Sonst.</th><th>Summe</) N
+(th></tr><tr>";) N
+($monat = date\("M"\);) N
+(echo "<td>$monat</td>";) N
+(while\($zaznam1 = mysql_fetch_array\($res1\)\){) N
+(echo "<td>".round\($zaznam1["summin"]\)."</td>";) N
+($summ += $zaznam1["summin"];) N
+( }) N
+( echo "<td>".round\($summ\)."</td></tr></table>";) N
+(}) N
+() N
+(function lastDayProgress\(\){) N
+(  dbConnect\(\);) N
+(  ) N
+(  $sql="select dksd.kunden_stat_nr as pg, drueck.datum, sum\(if\(`auss_typ`=4, \(\(`) N
+(Auss-St\357\277\275ck`+`St\357\277\275ck`\)*`VZ-SOLL`\), \(`St\357\277\275ck`*`VZ-SOLL`\)\)\) as summin FROM `dru) N
+(eck` join dkopf using \(teil\) join dksd using \(kunde\) where \(month\(datum\)=month\(n) N
+(ow\(\)\) and year\(datum\) = year\(now\(\)\)\) group by pg, drueck.datum order by drueck.d) N
+(atum desc, pg desc;";) N
+(  $res=mysql_query\($sql\) or die\("Last day progres: ". mysql_error\(\)\);) N
+(  echo "<table id='table2'>";) N
+(  echo "<tr><th>Datum</th><th>PG1 - Guss</th><th>PG3 - ALU</th><th>PG4 - NE</th>) N
+(<th>Sonst:</th><th>Summe</th></tr>";) N
+(  ) N
+() N
+(  $summ = 0;) N
+(  $guss = 0;) N
+(  $alu = 0;) N
+(  $ne = 0;) N
+(  $sonst = 0;) N
+(  $i = 0;) N
+(    while\($zaznam = mysql_fetch_array\($res\)\){) N
+(      if\($i==9\){break;}) N
+(      ) N
+(            $datum = substr\($zaznam["datum"],0,10\);) N
+(      if\($zaznam["pg"] == 1\){) N
+(        $guss = round\($zaznam["summin"]\);) N
+(fns_dotazy.php) (Str\303\241nka 7/11) (14.03. 08 10:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(        $summ = $guss + $alu + $ne + $sonst;              ) p n
+(        echo "<tr><td>$datum</td><td>$guss</td><td>$alu</td><td>$ne</td><td>$son) N
+(st</td><td>$summ</td></tr>";          ) N
+(        $summ = 0; $guss = 0; $alu = 0; $ne = 0; $sonst = 0; $i++;}) N
+(      ) N
+(      elseif\($zaznam["pg"] == 3\){$alu = round\($zaznam["summin"]\);}) N
+(      elseif\($zaznam["pg"] == 4\){$ne = round\($zaznam["summin"]\);}) N
+(      elseif\($zaznam["pg"] == 9\){$sonst = round\($zaznam["summin"]\);}) N
+(               ) N
+(    }) N
+(  echo "</table>";) N
+(}) N
+() N
+(function monatProgresGraf\(\){) N
+(dbConnect\(\);) N
+(  ) N
+(  $sql="select dksd.kunden_stat_nr as pg, drueck.datum, sum\(if\(`auss_typ`=4, \(\(`) N
+(Auss-St\357\277\275ck`+`St\357\277\275ck`\)*`VZ-SOLL`\), \(`St\357\277\275ck`*`VZ-SOLL`\)\)\) as summin FROM `dru) N
+(eck` join dkopf using \(teil\) join dksd using \(kunde\) where \(month\(datum\)=month\(n) N
+(ow\(\)\) and year\(datum\) = year\(now\(\)\)\) group by pg, drueck.datum order by drueck.d) N
+(atum desc, pg desc;";) N
+(  $res=mysql_query\($sql\);) N
+(  ) N
+(  $height = 150;) N
+(  $width = 800;) N
+(  $im = ImageCreate\($width,$height\);) N
+() N
+(  $white = imagecolorallocate\($im, 255, 255, 255\);) N
+(  $black = imagecolorallocate\($im, 0, 0, 0\);) N
+(  ) N
+( imagefill\($im, 0, 0, $black\);) N
+(  imageline\($im, 0, 0, $width, $height, $white\);) N
+(  imagestring\($im,54, 50, 150, "sales", $white\);) N
+(  Header\("content-type: image/png"\);) N
+(  imagepng\($im\);) N
+() N
+() N
+(}) N
+() N
+(function tableExists\($table_name\)) N
+(         {) N
+(         $Table = mysql_query\("show tables like '" . ) N
+(                  $table_name . "'"\);) N
+(         ) N
+(         if\(mysql_fetch_row\($Table\) === false\)) N
+(            return\(false\);) N
+(         ) N
+(         return\(true\);) N
+(         }) N
+(    ) N
+(// funkce vrati pole sloupcu obsazenych ve vysledku dotazu     ) N
+(function getFieldsArray\($result\)) N
+({) N
+() S 8 T ($pocetSloupcu = mysql_num_fields\($result\);) N
+() S 8 T () S 16 T (for\($cisloSloupce=0;$cisloSloupce<$pocetSloupcu;$cisloSloupce++\)) N
+() S 8 T () S 16 T () S 24 T ($nodes[$cisloSloupce]=mysql_field_name\($result,$cisloSlo) N
+(upce\);) N
+() S 8 T (return $nodes;) N
+(}) N
+() N
+(function getLagerGutAuftragPalette\($auftrag,$pal,$lager\)) N
+({) N
+(fns_dotazy.php) (Str\303\241nka 8/11) (14.03. 08 10:24) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(fns_dotazy.php) (6/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9-10) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T ($in = 0;) N
+() S 8 T ($out = 0;) N
+() S 8 T () N
+() S 8 T (// zjistim pocet kusu do skladu vlozenych) N
+() S 8 T ($sql = "select sum\(gut_stk\) as nach from dlagerbew where \(\(auftrag_impor) N
+(t='$auftrag'\) and \(pal_import='$pal'\) and \(lager_nach='$lager'\)\)";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($in = $row['nach'];) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (// pocek kusu ze skladu odebranych) N
+() S 8 T ($sql = "select sum\(gut_stk\) as ven from dlagerbew where \(\(auftrag_import) N
+(='$auftrag'\) and \(pal_import='$pal'\) and \(lager_von='$lager'\)\)";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($out = $row['ven'];) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (return $in-$out;) N
+(}) N
+() N
+(function getTeilFromAuftragPal\($import,$pal\)) N
+({) N
+() S 8 T ($dil = "";) N
+() S 8 T ($sql = "select teil from dauftr where \(\(auftragsnr='$import'\) and \(`pos-) N
+(pal-nr`='$pal'\)\) limit 1";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($dil = $row['teil'];) N
+() S 8 T (}) N
+() N
+() S 8 T (return $dil;) N
+(}) N
+() N
+(function getLagerAussAuftragPalette\($auftrag,$pal,$lager\)) N
+({) N
+() S 8 T ($in = 0;) N
+() S 8 T ($out = 0;) N
+() S 8 T () N
+() S 8 T (// zjistim pocet kusu do skladu vlozenych) N
+() S 8 T ($sql = "select sum\(auss_stk\) as nach from dlagerbew where \(\(auftrag_impo) N
+(rt='$auftrag'\) and \(pal_import='$pal'\) and \(lager_nach='$lager'\)\)";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($in = $row['nach'];) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (// pocek kusu ze skladu odebranych) N
+() S 8 T ($sql = "select sum\(auss_stk\) as ven from dlagerbew where \(\(auftrag_impor) N
+(t='$auftrag'\) and \(pal_import='$pal'\) and \(lager_von='$lager'\)\)";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+(fns_dotazy.php) (Str\303\241nka 9/11) (14.03. 08 10:24) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($out = $row['ven'];) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (return $in-$out;) N
+(}) N
+() N
+(function getLagerGutIn\($auftrag,$pal,$lager\)) N
+({) N
+() S 8 T ($in = 0;) N
+() S 8 T () N
+() S 8 T (// zjistim pocet kusu do skladu vlozenych) N
+() S 8 T ($sql = "select sum\(gut_stk\) as nach from dlagerbew where \(\(auftrag_impor) N
+(t=$auftrag\) and \(pal_import=$pal\) and \(lager_nach='$lager'\)\)";) N
+() S 8 T (//echo "sql=$sql";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($in = $row['nach'];) N
+() S 8 T (}) N
+() S 8 T (return $in;) N
+(}) N
+() N
+(function getLagerGesamtOut\($auftrag,$pal,$lager\)) N
+({) N
+() S 8 T ($in = 0;) N
+() S 8 T () N
+() S 8 T (// zjistim pocet kusu do skladu vlozenych) N
+() S 8 T ($sql = "select sum\(gut_stk+auss_stk\) as ven from dlagerbew where \(\(auftr) N
+(ag_import='$auftrag'\) and \(pal_import='$pal'\) and \(lager_von='$lager'\)\)";) N
+() S 8 T (//echo "sql=$sql<br>";) N
+() S 8 T ($res = mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row = mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($in = $row['ven'];) N
+() S 8 T (}) N
+() S 8 T (return $in;) N
+(}) N
+() N
+(function getAussFromDrueckAuftragPalTyp\($auftrag,$pal,$ausstyp\)) N
+({) N
+() S 8 T ($aussCount = 0;) N
+() S 8 T (mysql_query\('set names utf8'\);) N
+() S 8 T ($sql="select sum\(`Auss-St\303\274ck`\) as auss from drueck where \(\(auftragsnr=') N
+($auftrag'\) and \(`pos-pal-nr`='$pal'\) and \(auss_typ='$ausstyp'\)\)";) N
+() S 8 T (//echo "sql=$sql<br>";) N
+() S 8 T ($res=mysql_query\($sql\);) N
+() S 8 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T ($aussCount = $row['auss'];) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (return $aussCount;) N
+(}) N
+() N
+(function moveAussLagerFromA2B\($import,$dil,$pal,$auss,$von,$nach\)) N
+({) N
+() S 8 T ($ident = get_user_pc\(\);) N
+() S 8 T () N
+(fns_dotazy.php) (Str\303\241nka 10/11) (14.03. 08 10:24) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(fns_dotazy.php) (7/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T ($sql = "insert into dlagerbew \(teil,auftrag_import,pal_import,gut_stk,au) N
+(ss_stk,lager_von,lager_nach,comp_user_accessuser\) ";) N
+() S 8 T ($sql.= "values \('$dil','$import','$pal',0,'$auss','$von','$nach','$ident) N
+('\)";) N
+() S 8 T (mysql_query\($sql\);) N
+(}) N
+() N
+(function insertLagerVonNach\($dil,$import,$pal,$gut,$auss,$von,$nach,$ident\)) N
+({) N
+() S 8 T ($sql = "insert into dlagerbew \(teil,auftrag_import,pal_import,gut_stk,au) N
+(ss_stk,lager_von,lager_nach,comp_user_accessuser\) ";) N
+() S 8 T ($sql.= "values \('$dil','$import','$pal','$gut','$auss','$von','$nach','$) N
+(ident'\)";) N
+() S 8 T (mysql_query\($sql\);) N
+(}) N
+() N
+() N
+(?>) N
+(fns_dotazy.php) (Str\303\241nka 11/11) (14.03. 08 10:24) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(fns_dotazy.php) (8/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 9
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?) p n
+(session_start\(\);) N
+(require\("./libs/Smarty.class.php"\);) N
+($smarty = new Smarty;) N
+() N
+(// vytvorit pole popisku) N
+(if\(isset\($_GET['popisky']\)\)) N
+({) N
+() S 8 T ($popisky=split\(";",$_GET['popisky']\);) N
+() S 8 T ($promenne=split\(";",$_GET['promenne']\);) N
+() S 8 T ($values=split\(";",$_GET['values']\);) N
+() S 8 T ($paramok=1;) N
+(}) N
+(else) N
+() S 8 T ($paramok=0;) N
+() S 8 T () N
+($i=0;) N
+() N
+(foreach\($popisky as $popis\)) N
+({) N
+() S 8 T () N
+() S 8 T (// za popisek jeste muze byt podrobnejsi popis typu policka , oddeleno m) N
+(rizkou #) N
+() S 8 T (if\(strpos\($popis,","\)\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($label=substr\($popis,0,strpos\($popis,","\)\);) N
+() S 8 T () S 16 T ($typPole = substr\($popis,strpos\($popis,","\)+1\);) N
+() S 8 T (}) N
+() S 8 T (else) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($label=$popis;) N
+() S 8 T () S 16 T ($typPole = "text";) N
+() S 8 T (}) N
+() S 8 T () S 16 T () N
+() S 8 T ($pop[$i]['typ']=$typPole;) N
+() S 8 T ($pop[$i]['label']=$label;) N
+() S 8 T ($pop[$i]['var']=$promenne[$i];) N
+() S 8 T ($pop[$i]['val']=$values[$i];) N
+() S 8 T ($i++;) N
+(}) N
+() N
+() N
+() N
+(// pokud mam nastavene session promennes uzivatelem , nastavim priznak prihlasen) N
+(i) N
+(if\(isset\($_SESSION['user']\)&&isset\($_SESSION['level']\)\)) N
+({) N
+() S 8 T ($smarty->assign\("user",$_SESSION['user']\);) N
+() S 8 T ($smarty->assign\("level",$_SESSION['level']\);) N
+() S 8 T ($smarty->assign\("prihlasen",1\);) N
+(}) N
+() N
+($smarty->assign\("param",$pop\);) N
+($smarty->assign\("paramok",$paramok\);) N
+($smarty->assign\("report",$_GET['report']\);) N
+($smarty->assign\("nadpis",$_GET['report']." parametry"\);) N
+() N
+() N
+($smarty->display\('get_parameters.tpl'\);) N
+() N
+(?>) N
+() N
+(get_parameters.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(get_parameters.php) (9/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 10
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(/*) N
+( * Created on 12.12.2007) N
+( *) N
+( * To change the template for this generated file go to) N
+( * Window - Preferences - PHPeclipse - PHP - Code Templates) N
+( */) N
+( ) N
+( ) S 8 T (try) N
+( ) S 8 T ({) N
+( ) S 8 T () S 16 T (if\($animage=imagecreate\(500,500\)\)) N
+( ) S 8 T () S 16 T ({) N
+( ) S 8 T () S 16 T () S 24 T ($red = imagecolorallocate\($animage,0,0,255\);) N
+( ) S 8 T () S 16 T () S 24 T ($white = imagecolorallocate\($animage,255,255,255\);) N
+( ) S 8 T () S 16 T () S 24 T ($black = imagecolorallocate\($animage,0,0,0\);) N
+( ) S 8 T () S 16 T () S 24 T () N
+( ) S 8 T () S 16 T () S 24 T (imagefilledrectangle\($animage,0,0,500,500,$red\);) N
+( ) S 8 T () S 16 T () S 24 T (imagefilledrectangle\($animage,5,5,493,493,$black\);) N
+( ) S 8 T () S 16 T () S 24 T () N
+( ) S 8 T () S 16 T () S 24 T ($slovo="neco sem napisu,ofijoejif bla bla bla";) N
+( ) S 8 T () S 16 T () S 24 T (imagestring\($animage,4,500/2-\(imagefontwidth\(4\)*strlen\($) N
+(slovo\)\)/2,50,$slovo,$white\);) N
+( ) S 8 T () S 16 T () S 24 T (imagepng\($animage\);) N
+( ) S 8 T () S 16 T () S 24 T (header\("Content-type: image/png"\);) N
+( ) S 8 T () S 16 T () S 24 T (imagedestroy\($animage\);) N
+( ) S 8 T () S 16 T (}) N
+( ) S 8 T () S 16 T (else) N
+( ) S 8 T () S 16 T ({) N
+( ) S 8 T () S 16 T () S 24 T (throw new exception \("nefunguje GD knihovna !"\);) N
+( ) S 8 T () S 16 T (}) N
+( ) S 8 T (}) N
+( ) S 8 T (catch\(exception $e\)) N
+( ) S 8 T ({) N
+( ) S 8 T () S 16 T (echo $e->getmessage\(\);) N
+( ) S 8 T (}) N
+( ) S 8 T () N
+(?>) N
+(image.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(image.php) (10/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 11
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?) p n
+( session_start\(\);) N
+(?>) N
+() N
+(<?) N
+(include "fns_dotazy.php";) N
+(?>) N
+() N
+() N
+(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">) N
+(<html>) N
+(  <head>) N
+(    <meta http-equiv="content-type" content="text/html; charset=windows-1250">) N
+(    <meta name="generator" content="PSPad editor, www.pspad.com">) N
+(    <meta name="author" content="Orcen; e-mail:orcen@centrum.cz ">    ) N
+(    <title>) N
+(      APL Abydos) N
+(    </title>    ) N
+(    <link rel="stylesheet" href="./styl.css" type="text/css">    ) N
+(<script type="text/javascript">) N
+() N
+(function zavri\(\){) N
+(window.close\(\);) N
+(}) N
+() N
+(</script>) N
+(</head>) N
+(<body>) N
+() N
+(<div id="header">) N
+(<h3>ABYDOS Auftragsabwicklung Produktionssteuerung</h3>) N
+(</div>) N
+() N
+(<div id="leistungtabelle">) N
+(leistungtabelle) N
+(</div>) N
+() N
+() N
+(<div id="tlacitka">) N
+(      <input type="button" value="Personal Pflegen" id="dpers" class="abyStartBu) N
+(tton"  onClick="location.href='./dpers/dpers.php'" />) N
+(      <input type="button" value="Anwesenheitserfassung" id="dpers" class="abySt) N
+(artButton"  onClick="location.href='./dzeit/dzeit.php'" />) N
+(      <br />) N
+(      <input type="button" value="Kunden Pflegen" id="" class="abyStartButton" d) N
+(isabled='disabled' onClick="location.href=''" />) N
+(      <input type="button" value="Personal Karte" id="dzeit" class="abyStartButt) N
+(on"  onClick="location.href=''" />) N
+(      <br />) N
+(      <input type="button" value="Auftraege Pflegen" id="" class="abyStartButton) N
+(" onClick="location.href='./daufkopf/daufkopf.php?auftrNr='" />) N
+(      <input type="button" value="Lager Bewegung" id="" class="abyStartButton" o) N
+(nClick="location.href='./dlagstk/dlagstk.php'" />) N
+(      <br />) N
+(      <input type="button" value="Arbeitsplan Pflegen" id="" class="abyStartButt) N
+(on" disabled='disabled' onClick="location.href=''" />) N
+(      <input type="button" value="CMR" id="" class="abyStartButton" disabled='di) N
+(sabled' onClick="location.href=''" />) N
+(      <br />) N
+(      <input type="button" value="R\374ckmeldung Leist/Unfall" id="" class="abyStar) N
+(tButton" onClick="location.href='./drueck/drueck.php'" />) N
+(      <input type="button" value="Rueckmeldung Mehrarbeit" id="" class="abyStart) N
+(index_new.php) (Str\303\241nka 1/2) (06.02. 08 14:49) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Button" onClick="location.href='./drueckMA/drueckMA.php'" />) p n
+(      <br />) N
+(      <input type="button" value="Berichte Drucken" id="" class="abyStartButton") N
+( onClick="location.href='./Reports/index.php'" />) N
+(      <!-- <input type="button" value="Telefon Buch" id="telBuch" class="abyStar) N
+(tButton" disabled='disabled' onClick="location.href='./telbuch/telbuch.php?telId) N
+(=1&amp;action=first'" />) N
+(      <input type="button" value="Telefon Buch Class" id="telBuchClass" class="a) N
+(byStartButton" onClick="location.href='./telbuch/telBuchClass.php?telId=1&amp;ac) N
+(tion=first'" />) N
+(      <input type="button" value="Teil Lager" id="teilLager" class="abyStartButt) N
+(on" onClick="location.href='./lagrvisacky/vysacky.php?kunde=none'" /> -->) N
+() N
+(      <input type="button" value="Ende/konec" id="ende" style="margin-right: 75p) N
+(x; margin-top: 5px; float: right;" onClick="zavri\(\);">) N
+(</div>) N
+(</body>) N
+(</html>) N
+(index_new.php) (Str\303\241nka 2/2) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(index_new.php) (11/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 12
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?) p n
+(session_start\(\);) N
+(require\("./libs/Smarty.class.php"\);) N
+($smarty = new Smarty;) N
+() N
+(include "fns_dotazy.php";) N
+() N
+(dbConnect\(\);) N
+() N
+() S 8 T ($prihlasen=0;) N
+() S 8 T (// otestuju hodnoty POST promennych user a password) N
+() S 8 T (// pokud budou neco obsahovat, zkusim uzivatele prihlasit) N
+() S 8 T (if\(isset\($_POST['username']\)&&isset\($_POST['password']\)\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T (// podivam se do DB, zda mam odpovidajiciho uzivatele) N
+() S 8 T () S 16 T (// pokud ano, tak ho prihlasim a nastavim SESSION promenne) N
+() S 8 T () S 16 T ($puser=$_POST['username'];) N
+() S 8 T () S 16 T ($ppassword=$_POST['password'];) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T ($sql_select="select name,password,realname,level from dbenutzer ) N
+(where \(\(name='$puser'\) and \(password='$ppassword'\)\)";) N
+() S 8 T () S 16 T ($res = mysql_query\($sql_select\) or die\(mysql_error\(\)\);) N
+() S 8 T () S 16 T (if\(mysql_affected_rows\(\)>0\)) N
+() S 8 T () S 16 T ({) N
+() S 8 T () S 16 T () S 24 T ($row=mysql_fetch_array\($res\);) N
+() S 8 T () S 16 T () S 24 T ($_SESSION['user']=$row['name'];) N
+() S 8 T () S 16 T () S 24 T ($_SESSION['level']=$row['level'];) N
+() S 8 T () S 16 T () S 24 T ($smarty->assign\("prihlasen",1\);) N
+() S 8 T () S 16 T () S 24 T ($prihlasen=1;) N
+() S 8 T () S 16 T () S 24 T ($smarty->assign\("user",$row['name']\);) N
+() S 8 T () S 16 T () S 24 T ($smarty->assign\("level",$row['level']\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (else) N
+() S 8 T () S 16 T ({) N
+() S 8 T () S 16 T () S 24 T (unset \($_SESSION['user']\);) N
+() S 8 T () S 16 T () S 24 T (unset \($_SESSION['level']\);) N
+() S 8 T () S 16 T () S 24 T (session_destroy\(\);) N
+() S 8 T () S 16 T () S 24 T ($smarty->assign\("prihlasen",0\);) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T (insertAccessLog\($_POST['username'],$_POST[password],$prihlasen,g) N
+(et_pc_ip\(\)\);) N
+() S 8 T (}) N
+() S 8 T () N
+() S 8 T (if\(isset\($_GET['akce']\)&&$_GET['akce']=="logout"\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T (unset \($_SESSION['user']\);) N
+() S 8 T () S 16 T (unset \($_SESSION['level']\);) N
+() S 8 T () S 16 T (unset \($_POST['username']\);) N
+() S 8 T () S 16 T (unset \($_POST['password']\);) N
+() S 8 T () S 16 T (session_destroy\(\);) N
+() S 8 T (}) N
+() N
+() S 8 T (// pokud mam nastavene session promennes uzivatelem , nastavim priznak p) N
+(rihlaseni) N
+() S 8 T (if\(isset\($_SESSION['user']\)&&isset\($_SESSION['level']\)\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($smarty->assign\("user",$_SESSION['user']\);) N
+() S 8 T () S 16 T ($smarty->assign\("level",$_SESSION['level']\);) N
+() S 8 T () S 16 T ($smarty->assign\("prihlasen",1\);) N
+() S 8 T (}) N
+() S 8 T () S 16 T () S 24 T () N
+(index.php) (Str\303\241nka 1/2) (05.03. 08 11:07) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(// spocitam hodnoty pro tabulku s aktualnima vykonama pro tento mesic) p n
+() N
+() S 8 T ($sql_leistung="select DATE_FORMAT\(drueck.datum,'%d.%m.%Y'\) as datum,sum\() N
+(if\(kunden_stat_nr=1,if\(auss_typ=4,\(`st\303\274ck`+`auss-st\303\274ck`\)*`vz-soll`,`st\303\274ck`*`v) N
+(z-soll`\),0\)\) as pg1,sum\(if\(kunden_stat_nr=3,if\(auss_typ=4,\(`st\303\274ck`+`auss-st\303\274ck) N
+(`\)*`vz-soll`,`st\303\274ck`*`vz-soll`\),0\)\) as pg3,sum\(if\(kunden_stat_nr=4,if\(auss_typ=) N
+(4,\(`st\303\274ck`+`auss-st\303\274ck`\)*`vz-soll`,`st\303\274ck`*`vz-soll`\),0\)\) as pg4,sum\(if\(kunde) N
+(n_stat_nr=9,if\(auss_typ=4,\(`st\303\274ck`+`auss-st\303\274ck`\)*`vz-soll`,`st\303\274ck`*`vz-soll`\)) N
+(,0\)\) as pg9,sum\(if\(auss_typ=4,\(`st\303\274ck`+`auss-st\303\274ck`\)*`vz-soll`,`st\303\274ck`*`vz-so) N
+(ll`\)\) as celkem from drueck join dkopf using \(teil\) join dksd using \(kunde\) wher) N
+(e \(datum between  subdate\(current_date\(\),day\(current_date\(\)\)-1\) and CURRENT_DATE) N
+(\(\)\) group by drueck.datum order by drueck.datum desc limit 30";) N
+() S 8 T (//echo $sql_leistung;) N
+() S 8 T (mysql_query\('set names utf8'\);) N
+() S 8 T () N
+() S 8 T ($res = mysql_query\($sql_leistung\) or die\(mysql_error\(\)\);) N
+() S 8 T ($i=0;) N
+() S 8 T (while\($row=mysql_fetch_array\($res\)\)) N
+() S 8 T ({) N
+() S 8 T () S 16 T ($datum=$row['datum'];) N
+() S 8 T () S 16 T ($pole[$i]['datum']=$datum;$pg1=$row['pg1'];$pole[$i]['pg1']=$pg1) N
+(;$sum_pg1+=$pg1;) N
+() S 8 T () S 16 T ($pg3=$row['pg3'];$pole[$i]['pg3']=$pg3;$sum_pg3+=$pg3;) N
+() S 8 T () S 16 T ($pg4=$row['pg4'];$pole[$i]['pg4']=$pg4;$sum_pg4+=$pg4;) N
+() S 8 T () S 16 T ($pg9=$row['pg9'];$pole[$i]['pg9']=$pg9;$sum_pg9+=$pg9;) N
+() S 8 T () S 16 T ($celkem=$row['celkem'];$pole[$i]['celkem']=$celkem;$sum_celkem+=) N
+($celkem;) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T ($i++;) N
+() S 8 T (}) N
+() S 8 T ($smarty->assign\("datum",$datum\);) N
+() S 8 T ($smarty->assign\("pole",$pole\);) N
+() S 8 T ($smarty->assign\("sum_pg1",$sum_pg1\);) N
+() S 8 T ($smarty->assign\("sum_pg3",$sum_pg3\);) N
+() S 8 T ($smarty->assign\("sum_pg4",$sum_pg4\);) N
+() S 8 T ($smarty->assign\("sum_pg9",$sum_pg9\);) N
+() S 8 T ($smarty->assign\("sum_celkem",$sum_celkem\);) N
+() S 8 T ($smarty->display\('index.tpl'\);) N
+(?>) N
+() N
+(index.php) (Str\303\241nka 2/2) (05.03. 08 11:07) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(index.php) (12/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 13
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(include "fns_dotazy.php";) N
+() N
+(echo "<br />";) N
+(lastDayProgress\(\);) N
+(?>) N
+(index2.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(index2.php) (13/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 14
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(session_start\(\);) N
+(?>) N
+(<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"?) N
+("http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">) N
+(<html xmlns="http://www.w3.org/1999/xhtml">) N
+() N
+(<head>) N
+(<meta http-equiv="Content-Type" content="text/html; charset=win1250" />) N
+(<title>Apl Anmelden/prihlaseni</title>) N
+(<?php) N
+(//Normally your username and pass would be stored in a database.) N
+(//For this example you will assume that you have already retrieved them.) N
+($GLOBALS['user'] = "jr";) N
+($GLOBALS['pass'] = "jr";) N
+(//Now, check if you have a valid submission.) N
+(if \(isset \($_POST['user']\) && isset \($_POST['pass']\)\){) N
+() S 8 T (//Then check to see if you have a match.) N
+() S 8 T (if \(strcmp \($_POST['user'], $GLOBALS['user']\) == 0 && strcmp \($_POST['pa) N
+(ss'], $GLOBALS['pass']\) == 0\){) N
+() S 8 T (//If you have a valid match, then set the sessions.) N
+() S 8 T ($_SESSION['user'] = $_POST['user'];) N
+() S 8 T ($_SESSION['pass'] = $_POST['pass'];) N
+(} else {) N
+(?><div align="center"><p style="color: #FF0000;">?) N
+(Sorry, you have entered an incorrect login.</p></div><?php) N
+(}) N
+(}) N
+(//Check if you need to logout.) N
+(if \($_POST['logout'] == "yes"\){) N
+(unset \($_SESSION['user']\);) N
+(unset \($_SESSION['pass']\);) N
+(session_destroy\(\);) N
+(}) N
+(//You then use this function on every page to check for a valid login at all) N
+(//times.) N
+(function checkcookies \(\) ) N
+({) N
+(if \(strcmp \($_SESSION['user'], $GLOBALS['user']\) == 0 && strcmp \($_SESSION['pass) N
+('], $GLOBALS['pass']\) == 0\)) N
+({) N
+() S 8 T (return true;) N
+(} ) N
+(else ) N
+({) N
+() S 8 T (return false;) N
+(}) N
+(}) N
+(?>) N
+(</head>) N
+(<body>) N
+(<div align="center">) N
+(<?php) N
+(//Check if you have a valid login.) N
+(if \(checkcookies\(\)\){) N
+(?>) N
+() N
+(<p>Congratulations, you are logged in!</p>) N
+(<form action="login.php" method="post" style="margin: 0px;">) N
+(<input type="hidden" name="logout" value="yes" />) N
+(<input type="submit" value="Logout" />) N
+(</form>) N
+(login.php) (Str\303\241nka 1/2) (11.03. 08 10:38) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(//Or else present a login form.) N
+(} else {) N
+(?>) N
+(<form action="login.php" method="post" style="margin: 0px;">) N
+(<div style="width: 500px; margin-bottom: 10px;">) N
+(<div style="width: 35%; float: left; text-align: left;">) N
+(Username:) N
+(</div>) N
+(<div style="width: 64%; float: right; text-align: left;">) N
+(<input type="text" name="user" maxlength="25" />) N
+(</div>) N
+(<br style="clear: both;" />) N
+(</div>) N
+(<div style="width: 500px; margin-bottom: 10px;">) N
+(<div style="width: 35%; float: left; text-align: left;">) N
+(Password:) N
+(</div>) N
+(<div style="width: 64%; float: right; text-align: left;">) N
+(<input type="password" name="pass" maxlength="25" />) N
+(</div>) N
+(<br style="clear: both;" />) N
+(</div>) N
+(<div style="width: 500px; text-align: left;">?) N
+(<input type="submit" value="Login" /></div>) N
+(</form>) N
+(<?php) N
+(}) N
+(?>) N
+(</div>) N
+(</body>) N
+(</html>) S
+(login.php) (Str\303\241nka 2/2) (11.03. 08 10:38) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(login.php) (14/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 15
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?) p n
+() S 8 T (phpinfo\(\);) N
+(?>) N
+(phpinfo.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(phpinfo.php) (15/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 16
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+() N
+(  ) N
+(  $sql="select dksd.kunden_stat_nr as pg, drueck.datum, sum\(if\(`auss_typ`=4, \(\(`) N
+(Auss-St\374ck`+`St\374ck`\)*`VZ-SOLL`\), \(`St\374ck`*`VZ-SOLL`\)\)\) as summin FROM `drueck` j) N
+(oin dkopf using \(teil\) join dksd using \(kunde\) where \(month\(datum\)=month\(now\(\)\) ) N
+(and year\(datum\) = year\(now\(\)\)\) group by pg, drueck.datum order by drueck.datum d) N
+(esc, pg desc;";) N
+(  $res=mysql_query\($sql\);) N
+(  ) N
+(  $height = 150;) N
+(  $width = 800;) N
+(  $im = ImageCreate\($width,$height\);) N
+() N
+(  $white = imagecolorallocate\($im, 255, 255, 255\);) N
+(  $black = imagecolorallocate\($im, 0, 0, 0\);) N
+(  $red = imagecolorallocate\($im, 255, 0, 0\);) N
+(  $souradnice=array\(10,25,34,45,68,15\);) N
+(  imagepolygon\($im, $souradnice, 3, $black\);) N
+(  imagefill\($im, 0, 0, $white\);) N
+(  imageellipse\($im, 50, 50, 100, 80, $black\);) N
+(  imageline\($im, 0, 87, $width, $height, $black\);) N
+(  imagestring\($im,10, 10, 10, "sales", $black\);) N
+(  Header\("content-type: image/png"\);) N
+() N
+(  imagepng\($im\);) N
+(?>) N
+(pokus.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(pokus.php) (16/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 17
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(/*) N
+( * Created on 13.12.2007) N
+( *) N
+( * To change the template for this generated file go to) N
+( * Window - Preferences - PHPeclipse - PHP - Code Templates) N
+( */) N
+( ) N
+(  echo "promenna SERVER<br>";) N
+(  foreach\($_SERVER as $key=>$polozka\)) N
+(  {) N
+(  ) S 8 T (echo "key=$key,polozka=$polozka<br>";) N
+(  }) N
+(  ) N
+(  echo "promenna GET<br>";) N
+(  foreach\($_GET as $key=>$polozka\)) N
+(  {) N
+(  ) S 8 T (echo "key=$key,polozka=$polozka<br>";) N
+(  }) N
+(  ) N
+(?>) N
+(serverarray.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(serverarray.php) (17/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 18
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(require\("libs/Smarty.class.php"\);) N
+($smarty = new Smarty;) N
+($smarty->assign\("book","pokusny retez"\);) N
+($smarty->display\('smartytest.tpl'\);) N
+(?>) N
+() N
+(smartytest.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(smartytest.php) (18/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 19
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(session_start\(\);) N
+(require "./fns_dotazy.php";) N
+(dbConnect\(\);) N
+() N
+($import=117299;) N
+($pal=10;) N
+() N
+(//$pocetKusu = getLagerGutIn\($import,$pal,"8X"\);) N
+() N
+($pocetKusu = getLagerGutAuftragPalette\($import,$pal,"XX"\);) N
+() N
+($dil = getTeilFromAuftragPal\($import,$pal\);) N
+() N
+($eL = erster_lager\($dil,$import,$pal\);) N
+() N
+($pocetKusuVlozenych = getLagerGutIn\($import,$pal,$eL\);) N
+($pocetKusuOdebranych = getLagerGesamtOut\($import,$pal,$eL\);) N
+($zbyvaKusu = $pocetKusuVlozenych - $pocetKusuOdebranych;) N
+() N
+($auss4 = getAussFromDrueckAuftragPalTyp\($import,$pal,4\);) N
+() N
+(echo "getLagerGutAuftragPalette\($import,$pal,'XX'\)=$pocetKusu<br>";) N
+(echo "getAussFromDrueckAuftragPalTyp\($import,$pal,4\)=$auss4";) N
+(echo "getTeilFromAuftragPal\($import,$pal\)=$dil<br>";) N
+(echo "erster_lager\($dil,$import,$pal\)=$eL<br>";) N
+(echo "getLagerGutIn\($import,$pal,$eL\)=$pocetKusuVlozenych<br>";) N
+(echo "getLagerGesamtOut\($import,$pal,$eL\)=$pocetKusuOdebranych<br>";) N
+(echo "zbyvakusu=$zbyvaKusu<br>";) N
+() N
+() N
+(?>) S
+(test.php) (Str\303\241nka 1/1) (13.03. 08 16:26) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(test.php) (19/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 20
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?php) p n
+(/*) N
+(Version 2) N
+(Changes since version 1:) N
+(- added function MirrorP\(\)) N
+(- added function MirrorL\(\)) N
+(- fixed bug in Translate\(\): the movement is now performed in user units instead ) N
+(of pts) N
+(*/) N
+(//require\('fpdf.php'\);) N
+(require_once\('./tcpdf/tcpdf.php'\);) N
+() N
+(class PDF_Transform extends TCPDF{) N
+() N
+() S 8 T (function StartTransform\(\){) N
+() S 8 T () S 16 T (//save the current graphic state) N
+() S 8 T () S 16 T ($this->_out\('q'\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function ScaleX\($s_x, $x='', $y=''\){) N
+() S 8 T () S 16 T ($this->Scale\($s_x, 100, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function ScaleY\($s_y, $x='', $y=''\){) N
+() S 8 T () S 16 T ($this->Scale\(100, $s_y, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function ScaleXY\($s, $x='', $y=''\){) N
+() S 8 T () S 16 T ($this->Scale\($s, $s, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function Scale\($s_x, $s_y, $x='', $y=''\){) N
+() S 8 T () S 16 T (if\($x === ''\)) N
+() S 8 T () S 16 T () S 24 T ($x=$this->x;) N
+() S 8 T () S 16 T (if\($y === ''\)) N
+() S 8 T () S 16 T () S 24 T ($y=$this->y;) N
+() S 8 T () S 16 T (if\($s_x == 0 || $s_y == 0\)) N
+() S 8 T () S 16 T () S 24 T ($this->Error\('Please use values unequal to zero for Scal) N
+(ing'\);) N
+() S 8 T () S 16 T ($y=\($this->h-$y\)*$this->k;) N
+() S 8 T () S 16 T ($x*=$this->k;) N
+() S 8 T () S 16 T (//calculate elements of transformation matrix) N
+() S 8 T () S 16 T ($s_x/=100;) N
+() S 8 T () S 16 T ($s_y/=100;) N
+() S 8 T () S 16 T ($tm[0]=$s_x;) N
+() S 8 T () S 16 T ($tm[1]=0;) N
+() S 8 T () S 16 T ($tm[2]=0;) N
+() S 8 T () S 16 T ($tm[3]=$s_y;) N
+() S 8 T () S 16 T ($tm[4]=$x*\(1-$s_x\);) N
+() S 8 T () S 16 T ($tm[5]=$y*\(1-$s_y\);) N
+() S 8 T () S 16 T (//scale the coordinate system) N
+() S 8 T () S 16 T ($this->Transform\($tm\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function MirrorH\($x=''\){) N
+() S 8 T () S 16 T ($this->Scale\(-100, 100, $x\);) N
+() S 8 T (}) N
+() S 8 T (function MirrorV\($y=''\){) N
+() S 8 T () S 16 T ($this->Scale\(100, -100, '', $y\);) N
+() S 8 T (}) N
+() S 8 T (function MirrorP\($x='',$y=''\){) N
+() S 8 T () S 16 T ($this->Scale\(-100, -100, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function MirrorL\($angle=0, $x='',$y=''\){) N
+() S 8 T () S 16 T ($this->Scale\(-100, 100, $x, $y\);) N
+(transform.php) (Str\303\241nka 1/3) (19.02. 08 16:34) title
+border
+/v 1 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T ($this->Rotate\(-2*\($angle-90\),$x,$y\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function TranslateX\($t_x\){) N
+() S 8 T () S 16 T ($this->Translate\($t_x, 0, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function TranslateY\($t_y\){) N
+() S 8 T () S 16 T ($this->Translate\(0, $t_y, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function Translate\($t_x, $t_y\){) N
+() S 8 T () S 16 T (//calculate elements of transformation matrix) N
+() S 8 T () S 16 T ($tm[0]=1;) N
+() S 8 T () S 16 T ($tm[1]=0;) N
+() S 8 T () S 16 T ($tm[2]=0;) N
+() S 8 T () S 16 T ($tm[3]=1;) N
+() S 8 T () S 16 T ($tm[4]=$t_x*$this->k;) N
+() S 8 T () S 16 T ($tm[5]=-$t_y*$this->k;) N
+() S 8 T () S 16 T (//translate the coordinate system) N
+() S 8 T () S 16 T ($this->Transform\($tm\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function Rotate\($angle, $x='', $y=''\){) N
+() S 8 T () S 16 T (if\($x === ''\)) N
+() S 8 T () S 16 T () S 24 T ($x=$this->x;) N
+() S 8 T () S 16 T (if\($y === ''\)) N
+() S 8 T () S 16 T () S 24 T ($y=$this->y;) N
+() S 8 T () S 16 T ($y=\($this->h-$y\)*$this->k;) N
+() S 8 T () S 16 T ($x*=$this->k;) N
+() S 8 T () S 16 T (//calculate elements of transformation matrix) N
+() S 8 T () S 16 T ($tm[0]=cos\(deg2rad\($angle\)\);) N
+() S 8 T () S 16 T ($tm[1]=sin\(deg2rad\($angle\)\);) N
+() S 8 T () S 16 T ($tm[2]=-$tm[1];) N
+() S 8 T () S 16 T ($tm[3]=$tm[0];) N
+() S 8 T () S 16 T ($tm[4]=$x+$tm[1]*$y-$tm[0]*$x;) N
+() S 8 T () S 16 T ($tm[5]=$y-$tm[0]*$y-$tm[1]*$x;) N
+() S 8 T () S 16 T (//rotate the coordinate system around \($x,$y\)) N
+() S 8 T () S 16 T ($this->Transform\($tm\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function SkewX\($angle_x, $x='', $y=''\){) N
+() S 8 T () S 16 T ($this->Skew\($angle_x, 0, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function SkewY\($angle_y, $x='', $y=''\){) N
+() S 8 T () S 16 T ($this->Skew\(0, $angle_y, $x, $y\);) N
+() S 8 T (}) N
+() S 8 T (function Skew\($angle_x, $angle_y, $x='', $y=''\){) N
+() S 8 T () S 16 T (if\($x === ''\)) N
+() S 8 T () S 16 T () S 24 T ($x=$this->x;) N
+() S 8 T () S 16 T (if\($y === ''\)) N
+() S 8 T () S 16 T () S 24 T ($y=$this->y;) N
+() S 8 T () S 16 T (if\($angle_x <= -90 || $angle_x >= 90 || $angle_y <= -90 || $angl) N
+(e_y >= 90\)) N
+() S 8 T () S 16 T () S 24 T ($this->Error\('Please use values between -90\357\277\275 and 90\357\277\275) N
+( for skewing'\);) N
+() S 8 T () S 16 T ($x*=$this->k;) N
+() S 8 T () S 16 T ($y=\($this->h-$y\)*$this->k;) N
+() S 8 T () S 16 T (//calculate elements of transformation matrix) N
+() S 8 T () S 16 T ($tm[0]=1;) N
+() S 8 T () S 16 T ($tm[1]=tan\(deg2rad\($angle_y\)\);) N
+() S 8 T () S 16 T ($tm[2]=tan\(deg2rad\($angle_x\)\);) N
+() S 8 T () S 16 T ($tm[3]=1;) N
+() S 8 T () S 16 T ($tm[4]=-$tm[2]*$y;) N
+(transform.php) (Str\303\241nka 2/3) (19.02. 08 16:34) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(transform.php) (20/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 21
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T ($tm[5]=-$tm[1]*$x;) N
+() S 8 T () S 16 T (//skew the coordinate system) N
+() S 8 T () S 16 T ($this->Transform\($tm\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function Transform\($tm\){) N
+() S 8 T () S 16 T ($this->_out\(sprintf\('%.3f %.3f %.3f %.3f %.3f %.3f cm', $tm[0],$) N
+(tm[1],$tm[2],$tm[3],$tm[4],$tm[5]\)\);) N
+() S 8 T (}) N
+() N
+() S 8 T (function StopTransform\(\){) N
+() S 8 T () S 16 T (//restore previous graphic state) N
+() S 8 T () S 16 T ($this->_out\('Q'\);) N
+() S 8 T (}) N
+(}) N
+(?>) N
+(transform.php) (Str\303\241nka 3/3) (19.02. 08 16:34) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(transform.php) (21/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 22
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(<?) p n
+(session_start\(\);) N
+() N
+(// udelam z POST promennych retez GET promennych) N
+($promenne="";) N
+(foreach\($_POST as $var=>$value\)) N
+() S 8 T ($promenne.=$var."=".$value."&";) N
+() N
+(// odstranit posledni & na konci $promenne) N
+($promenne=substr\($promenne,0,strlen\($promenne\)-1\);) N
+() N
+(//echo "print=".$_POST['tl_tisk'];) N
+() N
+($reporturl="Reports/".$_POST['report']."_".$_POST['tl_tisk'].".php?".$promenne;) N
+(//echo $reporturl;) N
+(header\("Location: ".$reporturl\);) N
+() N
+(?>) N
+() N
+(viewreport.php) (Str\303\241nka 1/1) (06.02. 08 14:49) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(viewreport.php) (22/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1) 23
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.362408 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(Table of Contents) K n
+( 1 ) p
+(ex.php..............) k
+( sheets   1 to   2 \( 2\) pages   1-  3  153 lines) p n
+( 2 ) S
+(fns_dotazy.php......) k
+( sheets   3 to   8 \( 6\) pages   4- 14  579 lines) p n
+( 3 ) S
+(get_parameters.php..) k
+( sheets   9 to   9 \( 1\) pages  15- 15   61 lines) p n
+( 4 ) S
+(image.php...........) k
+( sheets  10 to  10 \( 1\) pages  16- 16   37 lines) p n
+( 5 ) S
+(index_new.php.......) k
+( sheets  11 to  11 \( 1\) pages  17- 18   64 lines) p n
+( 6 ) S
+(index.php...........) k
+( sheets  12 to  12 \( 1\) pages  19- 20   89 lines) p n
+( 7 ) S
+(index2.php..........) k
+( sheets  13 to  13 \( 1\) pages  21- 21    7 lines) p n
+( 8 ) S
+(login.php...........) k
+( sheets  14 to  14 \( 1\) pages  22- 23   93 lines) p n
+( 9 ) S
+(phpinfo.php.........) k
+( sheets  15 to  15 \( 1\) pages  24- 24    4 lines) p n
+(10 ) S
+(pokus.php...........) k
+( sheets  16 to  16 \( 1\) pages  25- 25   24 lines) p n
+(11 ) S
+(serverarray.php.....) k
+( sheets  17 to  17 \( 1\) pages  26- 26   22 lines) p n
+(12 ) S
+(smartytest.php......) k
+( sheets  18 to  18 \( 1\) pages  27- 27    8 lines) p n
+(13 ) S
+(test.php............) k
+( sheets  19 to  19 \( 1\) pages  28- 28   33 lines) p n
+(14 ) S
+(transform.php.......) k
+( sheets  20 to  21 \( 2\) pages  29- 31  136 lines) p n
+(15 ) S
+(viewreport.php......) k
+( sheets  22 to  22 \( 1\) pages  32- 32   20 lines) p n
+(Obsah) (Str\303\241nka 1/1) (19.03. 08 13:34) title
+border
+grestore
+(Vytiskl Josef Runt) rhead
+(Obsah) (23/23) (St\305M-^Yeda 19.b\305M-^Yezen 2008) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

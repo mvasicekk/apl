@@ -1,0 +1,115 @@
+<?
+ session_start();
+<?
+
+<?
+include "fns_dotazy.php";
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1250">
+    <meta name="generator" content="PSPad editor, www.pspad.com">
+    <meta name="author" content="Orcen; e-mail:orcen@centrum.cz ">    
+    <title>
+      APL Abydos
+    </title>    
+    <link rel="stylesheet" href="./styl.css" type="text/css">    
+<script type="text/javascript">
+function zavri(){
+window.close();
+}
+
+function godate() {
+var daystuff = new Date();
+c_day = daystuff.getDate();
+c_month = daystuff.getMonth();
+c_year = daystuff.getFullYear();
+c_hour = daystuff.getHours();
+c_minute = daystuff.getMinutes();
+c_second = daystuff.getSeconds();
+switch(c_month){
+case 0: c_month = "Januar";break;
+case 1: c_month = "Februar";break;
+case 2: c_month = "März";break;
+case 3: c_month = "April";break;
+case 4: c_month = "Mai";break;
+case 5: c_month = "Juny";break;
+case 6: c_month = "July";break;
+case 7: c_month = "August";break;
+case 8: c_month = "September";break;
+case 9: c_month = "Oktober";break;
+case 10: c_month = "November";break;
+case 11: c_month = "December";break;
+}
+if (c_hour > 12) {
+c_hour -= 12;
+}
+if (c_hour == 0) {
+c_hour = 12;
+}
+if (c_minute < 10) {
+c_minute = "0" + c_minute;
+}
+if (c_second < 10) {
+c_second = "0" + c_second;
+}
+document.getElementById("raw").firstChild.nodeValue = "Leistung aktuell: " + c_day + "." + c_month + " " + c_year + " " + c_hour + ":" + c_minute + ":" + c_second;
+setTimeout('godate ();', 1000);
+}
+</script>
+  </head>
+  <body>
+    <div id="celek">
+      <span id="tables">
+        <span id="headers">
+          <h1>
+            <span>
+              Abydos
+            </span></h1>
+          <h2>
+            <span>
+              ABYDOS Auftragsabwicklung / 
+              <br />
+              Produktionssteuerung
+            </span></h2>
+        </span>
+        <hr style="clear: both; visibility: hidden; width: 50px;">
+        <span id="raw">
+<script type="text/javascript">
+</script>
+        </span>
+        <br />
+<?
+//ganzMonatProgress();
+//echo "<br />";
+//lastDayProgress();
+        ?>
+      </span>
+      <input type="button" value="Personal Pflegen" id="dpers" class="abyStartButton"  onClick="location.href='./dpers/dpers.php'" />
+      <input type="button" value="Anwesenheitserfassung" id="dpers" class="abyStartButton"  onClick="location.href='./dzeit/dzeit.php'" />
+      <br />
+      <input type="button" value="Kunden Pflegen" id="" class="abyStartButton" disabled='disabled' onClick="location.href=''" />
+      <input type="button" value="Personal Karte" id="dzeit" class="abyStartButton"  onClick="location.href=''" />
+      <br />
+      <input type="button" value="Auftraege Pflegen" id="" class="abyStartButton" onClick="location.href='./daufkopf/daufkopf.php?auftrNr='" />
+      <input type="button" value="Lager Bewegung" id="" class="abyStartButton" onClick="location.href='./dlagstk/dlagstk.php'" />
+      <br />
+      <input type="button" value="Arbeitsplan Pflegen" id="" class="abyStartButton" disabled='disabled' onClick="location.href=''" />
+      <input type="button" value="CMR" id="" class="abyStartButton" disabled='disabled' onClick="location.href=''" />
+      <br />
+      <input type="button" value="Rückmeldung Leist/Unfall" id="" class="abyStartButton" onClick="location.href='./drueck/drueck.php'" />
+      <input type="button" value="Rueckmeldung Mehrarbeit" id="" class="abyStartButton" onClick="location.href='./drueckMA/drueckMA.php'" />
+      <br />
+      <input type="button" value="Berichte Drucken" id="" class="abyStartButton" onClick="location.href='./Reports/index.php'" />
+      <!-- <input type="button" value="Telefon Buch" id="telBuch" class="abyStartButton" disabled='disabled' onClick="location.href='./telbuch/telbuch.php?telId=1&amp;action=first'" />
+      <input type="button" value="Telefon Buch Class" id="telBuchClass" class="abyStartButton" onClick="location.href='./telbuch/telBuchClass.php?telId=1&amp;action=first'" />
+      <input type="button" value="Teil Lager" id="teilLager" class="abyStartButton" onClick="location.href='./lagrvisacky/vysacky.php?kunde=none'" /> -->
+      <hr class="cleaner">
+      <!--<div id="graf">
+
+      </div> -->
+      <input type="button" value="Ende/konec" id="ende" style="margin-right: 75px; margin-top: 5px; float: right;" onClick="zavri();">
+    </div>
+  </body>
+</html>

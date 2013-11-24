@@ -1,0 +1,25 @@
+<?
+require_once '../db.php';
+
+    $id = $_POST['id'];
+    $value = $_POST['value'];
+    $teil = $_POST['teil'];
+    // zjistim zda mam hodnotu value ulozenou v databazi artiklu
+
+    $apl = AplDB::getInstance();
+
+    if($id=="jahr_bedarf_stk_2011") $value = intval($value);
+    if($id=="jahr_bedarf_stk_2012") $value = intval($value);
+    if($id=="preis_stk_gut") $value = floatval(strtr($value, ',', '.'));
+    if($id=="preis_stk_auss") $value = floatval(strtr($value, ',', '.'));
+
+    $ar = $apl->updateDkopfField($id, $value, $teil);
+
+    echo json_encode(array(
+                            'id'=>$id,
+                            'value'=>$value,
+                            'teil'=>$teil,
+                            'ar'=>$ar
+        ));
+
+?>

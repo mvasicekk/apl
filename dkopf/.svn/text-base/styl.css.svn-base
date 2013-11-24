@@ -1,0 +1,322 @@
+/* CSS Document */
+body{
+		background-color: rgb(179,179,179);
+		font-family: Arial;
+		}
+
+/******************************************************************************/
+/* stred formulare */
+#formular_telo {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 800px;
+			top: 60px;
+			left: 0px;
+			visibility: visible;
+			margin-left: 5px;
+		  }
+		  
+#souradnice
+{
+	position: absolute;
+	top:0px;
+	left:0px;
+	background-color:rgb(0,255,0);
+	z-index:99;
+}
+
+
+#formular_header {
+			position: absolute;
+			width: 800px;
+			height: 40px;
+			top: 20px;
+			left: 0px;
+			background-color:rgb(255,255,220);
+			border-bottom: solid 1px black;
+			margin-left: 5px;
+			font-size: 15pt;
+			font-weight:bold;
+			text-align:center;
+		}
+	  
+#header {
+			position: absolute;
+			width: 800px;
+			height: 65px;
+			top: 0px;
+			left: 0px;
+			background-image: url(/img/zahlavi30.jpg);
+			border-bottom: solid 0px black;
+			margin-left: 5px
+		}
+
+#podheader {
+			position: absolute;
+			width: 800px;
+			height: 20px;
+			top: 0px;
+			left: 0px;
+			background-color:rgb(220,220,220);
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+		
+
+#form_footer_tlacitka_reporty {
+			position: absolute;
+			width: 800px;
+			height: 50px;
+			left: 0px;
+			top: 500px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+
+#attach_table {
+			position: absolute;
+			width: 800px;
+			height: 100px;
+			left: 0px;
+			bottom:75px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+
+#dkopf_form_footer {
+			position: absolute;
+			width: 800px;
+			height: 55px;
+			left: 0px;
+			bottom:10px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+table.formulartable
+{
+	position:relative;
+	top:10px;
+	width:800px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 10px;
+	font-size:13px;
+}
+
+.abyStartButton {width:180px; margin:2px 2px 2px 2px;}
+.formularbutton
+{
+	width:180px;
+	font-size:10px;
+}
+
+.formularEndbutton
+{
+	width:180px;
+	font-size:10px;
+	background-color:rgb(255,0,0);
+	color:rgb(255,255,255);
+	font-weight:bold;
+}
+
+#content
+{
+}
+
+#scroll
+{
+	
+	left:0;
+	top:0;
+	margin: 0 ;
+	visibility: visible;
+	background-color: white;
+	z-index: 1;
+	height: 0px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-collapse: collapse;
+	border-bottom-style: solid;
+	border-color: #000000;
+	border-width: 1px;
+	overflow: auto
+}
+
+#scroll_apl
+{
+	
+	left:0;
+	top:0;
+	margin: 0 ;
+	visibility: visible;
+	background-color: rgb(179,179,179);
+	z-index: 1;
+	height: 300px;
+	border-top-style: none;
+	border-right-style: none;
+	border-left-style: none;
+	border-collapse: collapse;
+	border-bottom-style: none;
+	border-color: #000000;
+	border-width: 0px;
+	overflow: auto
+}
+
+div#dposnew
+{
+	position: absolute;
+	left: 90px;
+	bottom: 80px;
+	background-color:rgb(240,240,240);
+	border: solid 2px red;
+	padding:10px;
+	margin-left: 5px;
+	font-size: 7pt;
+	z-index:1500;
+	visibility:hidden;
+}
+
+
+#apl_table {
+			position: absolute;
+			width: 800px;
+			left: 0px;
+			top: 460px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+#scroll_attach
+{
+	
+	left:0;
+	top:0;
+	margin: 0 ;
+	visibility: visible;
+	background-color: rgb(179,179,179);
+	z-index: 1;
+	height: 100px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-collapse: collapse;
+	border-bottom-style: solid;
+	border-color: #000000;
+	border-width: 1px;
+	overflow: auto
+}
+
+#scroll div
+{
+	margin: 0 auto;
+	z-index: 1;
+	text-align:left
+}
+
+
+#suggest table
+{
+	width: 100%;
+	font-size: 11px;
+	font-weight: normal;
+	color: #676767;
+	text-decoration: none;
+	border: 1px;
+	padding: 0px;
+	text-align:left;
+	margin: 0px
+}
+
+.highlightrow
+{
+	background-color: #FFFF00;
+	cursor: pointer
+}
+
+tr.result_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+tr.apl_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+table.apl_table
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+}
+
+.hidden
+{
+	display:none
+}
+.error
+{
+	display:inline;
+	margin-left:0px;
+	border:none;
+	color:#ff0000;
+	background-color:rgb(220,220,220);
+	font-size:10px;
+	font-weight:bold
+}
+
+.disabled_bold
+{
+	font-weight:bold;
+	background-color:white;
+}
+
+tr.Grow
+{
+	background-color:rgb(255,255,0);
+	font-weight:bold;
+}
+
+input.edit_dpos
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(255,255,255);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+	font-weight:bold;
+}
+
+select.edit_dpos
+{
+	width:100%;
+	background-color:rgb(255,255,255);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+	font-weight:bold;
+}

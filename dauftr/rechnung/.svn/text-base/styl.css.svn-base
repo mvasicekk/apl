@@ -1,0 +1,388 @@
+/* CSS Document */
+body{
+		background-color: rgb(179,179,179);
+		font-family: Arial;
+		}
+
+#formular_telo {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 1000px;
+			top: 130px;
+			left: 0px;
+			visibility: visible;
+			margin-left: 5px;
+		  }
+		  
+
+#formular_header {
+			position: absolute;
+			width: 1000px;
+			height: 40px;
+			top: 85px;
+			left: 0px;
+			background-color:rgb(255,255,220);
+			border-bottom: solid 1px black;
+			margin-left: 5px;
+			font-size: 15pt;
+			font-weight:bold;
+			text-align:center;
+		}
+	  
+#header {
+			position: absolute;
+			width: 1000px;
+			height: 65px;
+			top: 0px;
+			left: 0px;
+			background-image: url(/img/zahlavi30.jpg);
+			border-bottom: solid 0px black;
+			margin-left: 5px
+		}
+
+#podheader {
+			position: absolute;
+			width: 1000px;
+			height: 20px;
+			top: 65px;
+			left: 0px;
+			background-color:rgb(220,220,220);
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+		
+
+#form_footer {
+			position: absolute;
+			width: 1000px;
+			height: 140px;
+			left: 0px;
+			bottom: 10px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 20px;
+		}
+#form_footer table{
+ font-size: 12px;
+ padding: 3px;
+ border-collapse: collapse;
+ margin-left: 10px;
+}
+
+#form_footer table td{
+    padding: 3px;
+}
+
+table#rechnung_table td.teil
+{
+	font-weight: bold;
+	text-align: left;
+}
+
+table#rechnung_table tr input{
+	border:solid 1px black;	
+}
+
+table#rechnung_table tr input.auftragsnr
+{
+	width: 6em;
+	background-color: white;
+	text-align: left;
+}
+
+table#rechnung_table tr input.ausschuss
+{
+	width: 4em;
+	background-color: white;
+	text-align: right;
+}
+
+table#rechnung_table tr input.stk
+{
+	width: 4em;
+	background-color: white;
+	text-align: right;
+}
+
+table#rechnung_table tr input.text1
+{
+	width: 10em;
+	background-color: white;
+	text-align: left;
+}
+
+table#rechnung_table tr input.fremdauftr
+{
+	width: 6em;
+	background-color: white;
+	text-align: left;
+}
+
+table#rechnung_table tr input.fremdpos
+{
+	width: 6em;
+	background-color: white;
+	text-align: left;
+}
+
+
+
+#rechumrech_footer {
+			position: absolute;
+			width: 1000px;
+			height: 50px;
+			left: 0px;
+			bottom: 10px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+#tlacitka_reporty
+{
+	position:relative;
+	border-top:solid 2px green;
+	margin-top:2px;
+	margin-left:5px;
+	margin-right:5px;
+	padding:3px;
+}
+
+table#rechnung_table
+{
+	background-color:rgb(220,220,220);
+	font-size:12px;
+	margin-left:0;
+	width:100%;
+}
+
+tr#rechnung_table_hlavicka
+{
+	background-color:rgb(255,100,100);
+	font-weight:bold;
+	font-size:10px;
+}
+
+tr.rechnung_table_position_even
+{
+	background-color:white;
+}
+
+tr.rechnung_table_position_odd
+{
+	background-color:lightgray;
+}
+
+table.formulartable
+{
+	position:relative;
+	top:10px;
+	width:1000px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 10px;
+	font-size:13px;
+}
+
+.abyStartButton {width:180px; margin:2px 2px 2px 2px;}
+.formularbutton {width:180px;}
+
+#content
+{
+}
+
+
+#scroll
+{
+	left:0;
+	top:0;
+	height:300px;
+	margin: 0 ;
+	visibility: visible;
+	background-color: white;
+	z-index: 1;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-collapse: collapse;
+	border-bottom-style: solid;
+	border-color: #000000;
+	border-width: 1px;
+	overflow: auto
+}
+
+
+#scroll div
+{
+	margin: 0 auto;
+	z-index: 1;
+	text-align:left
+}
+
+
+.highlightrow
+{
+	background-color: #FFFF00;
+	cursor: pointer
+}
+
+tr.result_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+tr.dauftr_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+table.dauftr_table
+{
+	position:relative;
+	top:0px;
+	width:350px;
+	background-color:rgb(220,220,220);
+	border: none;
+	padding: 0px;
+	font-size:12px;
+}
+
+
+table.kunde_info
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:12px;
+}
+
+.hidden
+{
+	display:none
+}
+
+.showbutton
+{
+	display:inline;
+}
+
+
+.error
+{
+	display:inline;
+	margin-left:0px;
+	border:none;
+	color:#ff0000;
+	background-color:rgb(220,220,220);
+	font-size:10px;
+	font-weight:bold
+}
+
+.disabled_bold
+{
+	font-weight:bold;
+	background-color:white;
+}
+
+tr.Grow
+{
+	background-color:rgb(255,255,0);
+	font-weight:bold;
+}
+
+input.edit_dpos
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(255,255,255);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+	font-weight:normal;
+	text-align:right;
+}
+
+select.edit_dpos
+{
+	width:100%;
+	background-color:rgb(255,255,255);
+	border: solid 1px black;
+	padding: 0px;
+	font-size:11px;
+	font-weight:bold;
+}
+
+tr.oddel_paletu
+{
+	background-color:rgb(100,100,255);
+	height:3px;
+}
+
+.selected
+{
+	background-color:rgb(255,255,255);
+	font-weight:bold;
+}
+
+.Gselected
+{
+	background-color:rgb(255,255,0);
+	font-weight:bold;
+}
+
+.noselected
+{
+	background-color:rgb(195,195,195);
+	font-weight:normal;
+}
+
+.Gnoselected
+{
+	background-color:rgb(195,195,195);
+	font-weight:normal;
+}
+
+tr.rechnungTeilenHighlight
+{
+    background-color:yellow;
+}
+
+div#rechnungteilenform
+{
+	position: absolute;
+	left: 90px;
+	bottom: 80px;
+	background-color:rgb(240,240,240);
+	border: solid 2px red;
+	padding:10px;
+	margin-left: 5px;
+	font-size: 7pt;
+	z-index:1500;
+	visibility:hidden;
+}
+
+div#rechnung_aby_teilen_form
+{
+	position: absolute;
+	left: 350px;
+	bottom: 80px;
+	background-color:rgb(255,255,230);
+	border: solid 2px yellow;
+	padding:10px;
+	margin-left: 5px;
+	font-size: 7pt;
+	z-index:1500;
+        opacity:0.9;
+}

@@ -1,0 +1,34 @@
+/* CSS Document */
+#souradnice
+{
+display:none;
+}
+
+#formular_telo {
+			position:absolute;
+			left: 0;
+			top:0;
+		  }
+
+#dauftr_table{
+	position:relative;
+	}
+#header {
+display:none;
+}
+
+#podheader {
+display:none;
+}
+		
+#formular_header{
+	display:none;
+}
+#dauftr_form_footer {
+display:none
+}
+
+td.int
+{
+	text-align: right;
+}

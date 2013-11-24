@@ -1,0 +1,300 @@
+/* CSS Document */
+body{
+    background-color: rgb(179,179,179);
+    font-family: Arial;
+}
+
+#formular_telo {
+    background-color:rgb(179,179,179);
+    position: absolute;
+    width: 1000px;
+    top: 60px;
+    left: 0px;
+    visibility: visible;
+    margin-left: 5px;
+}
+
+#teilfilterdiv {
+    position:absolute;
+    width:130px;
+    height: 100px;
+    bottom:0px;
+    left:100px;
+    z-index: 9999;
+    border: 2px solid #0000ff;
+    background-color: #99CCFF;
+}
+
+#formular_header {
+    position: absolute;
+    width: 1000px;
+    height: 40px;
+    top: 20px;
+    left: 0px;
+    background-color:rgb(255,255,220);
+    border-bottom: solid 1px black;
+    margin-left: 5px;
+    font-size: 15pt;
+    font-weight:bold;
+    text-align:center;
+}
+
+
+#podheader {
+    position: absolute;
+    width: 1000px;
+    height: 20px;
+    top: 0px;
+    left: 0px;
+    background-color:rgb(220,220,220);
+    border-bottom: solid 1px black;
+    border-top: solid 1px black;
+    margin-left: 5px;
+    font-size: 7pt;
+}
+
+#import_header	{
+    position:absolute;
+    width:500px;
+    height:25px;
+    left:0px;
+    top:0px;
+    background-color:rgb(220,220,220);
+    border: solid 1px black;
+    margin-left: 0px;
+    font-size: 15pt;
+    font-weight:bold;
+    text-align:center;
+
+}
+
+#export_header	{
+    position:absolute;
+    width:500px;
+    height:25px;
+    left:500px;
+    top:0px;
+    background-color:rgb(220,220,220);
+    border: solid 1px black;
+    margin-left: 0px;
+    font-size: 15pt;
+    font-weight:bold;
+    text-align:center;
+
+}
+
+
+#import_table {
+    position: absolute;
+    width: 500px;
+
+    left: 0px;
+    top:30px;
+    background-color:rgb(220,220,220);
+    border: solid 1px red;
+    margin-left: 0px;
+    font-size: 7pt;
+}
+
+#export_table{
+    position: absolute;
+    width: 500px;
+
+    left: 500px;
+    top:30px;
+    background-color:rgb(220,220,220);
+    border: solid 1px green;
+    margin-left: 0px;
+    font-size: 7pt;
+}
+
+#export_fullen_form_footer{
+    position: absolute;
+    width: 1000px;
+    height: 55px;
+    left: 0px;
+    bottom:10px;
+    background-color:rgb(220,220,220);
+    border: solid 1px black;
+    margin-left: 5px;
+    font-size: 7pt;
+}
+
+#fehlermeldung
+{
+    width:300px;
+    margin:auto;
+    margin-top:50px;
+    background-color:rgb(255,220,220);
+    border: solid 1px red;
+    text-align:center;
+    padding:20px;
+}
+
+table.formulartable
+{
+    position:relative;
+    top:10px;
+    width:1000px;
+    background-color:rgb(220,220,220);
+    border: solid 1px black;
+    padding: 10px;
+    font-size:13px;
+}
+
+.abyStartButton {width:180px; margin:2px 2px 2px 2px;}
+.formularbutton
+{
+    width:180px;
+    font-size:10px;
+}
+
+.formularEndbutton
+{
+    width:180px;
+    font-size:10px;
+    background-color:rgb(255,0,0);
+    color:rgb(255,255,255);
+    font-weight:bold;
+}
+
+
+#scroll_import
+{
+
+    left:0;
+    top:0;
+    margin: 0 ;
+    visibility: visible;
+    background-color: rgb(179,179,179);
+    z-index: 1;
+
+    overflow: auto;
+}
+
+#scroll_export
+{
+
+    left:0;
+    top:0;
+    margin: 0 ;
+    visibility: visible;
+    background-color: rgb(179,179,179);
+    z-index: 1;
+
+    overflow: auto;
+}
+
+.highlightrow
+{
+    background-color: #FFFF00;
+    cursor: pointer
+}
+
+tr.result_table_header
+{
+    background-color: #0000ff;
+    color: #ffffff;
+    font-weight: bold
+}
+
+tr.apl_table_header
+{
+    background-color: #0000ff;
+    color: #ffffff;
+    font-weight: bold
+}
+
+table.import_table
+{
+    position:relative;
+    top:0px;
+    width:100%;
+    background-color:rgb(220,220,220);
+
+    padding: 0px;
+    font-size:11px;
+}
+
+table.export_table
+{
+    position:relative;
+    top:0px;
+    width:100%;
+    background-color:rgb(230,230,230);
+
+    padding: 0px;
+    font-size:11px;
+}
+
+tr.odd	{
+
+    background-color:rgb(230,230,230);
+}
+
+tr.even	{
+
+    background-color:rgb(255,255,255);
+}
+
+
+.hidden
+{
+    display:none
+}
+.error
+{
+    display:inline;
+    margin-left:0px;
+    border:none;
+    color:#ff0000;
+    background-color:rgb(220,220,220);
+    font-size:10px;
+    font-weight:bold
+}
+
+.disabled_bold
+{
+    font-weight:bold;
+    background-color:white;
+}
+
+tr.Grow
+{
+    background-color:rgb(255,255,0);
+    font-weight:bold;
+}
+
+input.edit_dpos
+{
+    position:relative;
+    top:0px;
+    width:100%;
+    background-color:rgb(255,255,255);
+    border: solid 1px black;
+    padding: 0px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+select.edit_dpos
+{
+    width:100%;
+    background-color:rgb(255,255,255);
+    border: solid 1px black;
+    padding: 0px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+input.input_exportnummer {
+    border:none;
+    position:relative;
+    top:-2;
+    font-weight:bold;
+}
+
+td.right
+{
+    text-align:right;
+}

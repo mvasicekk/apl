@@ -1,0 +1,219 @@
+<script>
+
+var promenne = new Array("kz_druck","teil","vzaby","vzkd");
+var old_values = new Array(4);
+
+function canceledit(control)
+{
+	var radek=document.getElementById(control.id).parentNode.parentNode.parentNode;
+	// odbarvim radek
+	radek.style.backgroundColor='';
+	// td element s odkazy edit, save, cancel
+	var tdarray=radek.getElementsByTagName('td');
+	var e_operace = tdarray.item(tdarray.length-1);
+	// odstranim vsechny childs v bunce
+	while(e_operace.hasChildNodes())
+	{
+		//alert(e_operace.firstChild);
+		e_operace.removeChild(e_operace.firstChild);
+	}
+	// vlozim tam odkaz edit
+	var e_edit = document.createElement('a');
+	e_edit.setAttribute('href','#');
+	e_edit.setAttribute('id',control.id);
+	e_edit.setAttribute('onclick','edit(this);');
+	var e_edit_text = document.createTextNode('edit');
+	e_edit.appendChild(e_edit_text);
+	e_operace.appendChild(e_edit);
+	
+	
+	// projdu vsechny input boxy
+	var inputarray=radek.getElementsByTagName('input');
+	pocet_inputu=inputarray.length;
+	for(i=0;i<pocet_inputu;i++)
+	{
+		//obsah_bunky=inputarray.item(0).getAttribute('value');
+		obsah_bunky=old_values[i];
+		// nahradim input box pouze jeho hodnotou
+		var obsah_bunky_textNode = document.createTextNode(obsah_bunky);
+		//alert(inputarray.item(0).nodeName);
+		inputarray.item(0).parentNode.replaceChild(obsah_bunky_textNode,inputarray.item(0));
+		//alert(obsah_bunky_textNode+i);
+	}
+}
+
+function savevalue(control)
+{
+	//alert(control.value+"   id="+control.id);
+	var e_input = document.getElementById(control.id);
+	e_input.setAttribute('value',control.value);
+	//control.value=control.value;
+}
+
+
+
+
+function save(control)
+{
+	var radek=document.getElementById(control.id).parentNode.parentNode.parentNode;
+	// odbarvim radek
+	radek.style.backgroundColor='';
+	var parametry='';
+	
+	// td element s odkazy edit, save, cancel
+	var tdarray=radek.getElementsByTagName('td');
+	var e_operace = tdarray.item(tdarray.length-1);
+	// odstranim vsechny childs v bunce
+	while(e_operace.hasChildNodes())
+	{
+		//alert(e_operace.firstChild);
+		e_operace.removeChild(e_operace.firstChild);
+	}
+	// vlozim tam odkaz edit
+	var e_edit = document.createElement('a');
+	e_edit.setAttribute('href','#');
+	e_edit.setAttribute('id',control.id);
+	e_edit.setAttribute('onclick','edit(this);');
+	var e_edit_text = document.createTextNode('edit');
+	e_edit.appendChild(e_edit_text);
+	e_operace.appendChild(e_edit);
+	
+	// projdu vsechny input boxy
+	var inputarray=radek.getElementsByTagName('input');
+	pocet_inputu=inputarray.length;
+	for(i=0;i<pocet_inputu;i++)
+	{
+		obsah_bunky=inputarray.item(0).getAttribute('value');
+		//obsah_bunky=old_values[i];
+		// nahradim input box pouze jeho hodnotou
+		var obsah_bunky_textNode = document.createTextNode(obsah_bunky);
+		// pripojim k parametrum jmenu inputboxu a hodnotu v nem obsazenou
+		parametry+=inputarray.item(0).getAttribute('name')+"="+obsah_bunky+"&";
+		//alert(parametry);
+		inputarray.item(0).parentNode.replaceChild(obsah_bunky_textNode,inputarray.item(0));
+		//alert(obsah_bunky_textNode+i);
+	}
+}
+
+
+
+
+function edit(control)
+{
+	
+	
+	//alert(control.id);
+	// posunout se z odkazu az na radkovy element, tj. o dve urovne nahoru
+	var radek = document.getElementById(control.id).parentNode.parentNode;
+	
+	// zvyraznim radek barvou pozadi - je editovan
+	radek.style.backgroundColor='yellow';
+	//alert(radek);
+	var bunky_array = radek.getElementsByTagName('td');
+	for(i=0;i<promenne.length;i++)
+	{
+		obsah_bunky=bunky_array.item(i).innerHTML;
+		//obsah bunky ulozim do old_values pro pripad cancel
+		old_values[i]=obsah_bunky;
+		var policko = document.createElement('input');
+		policko.setAttribute('type','text');
+		policko.setAttribute('size','5');
+		policko.setAttribute('value',obsah_bunky);
+		policko.setAttribute('name',promenne[i]);
+		policko.setAttribute('id',promenne[i]);
+		policko.setAttribute('onblur','savevalue(this);');
+		bunky_array.item(i).replaceChild(policko,bunky_array.item(i).firstChild);
+	}
+	// na konci tabulky zmenim edit na save a cancel
+	var list_item_save = document.createElement('li');
+	var list_item_cancel = document.createElement('li');
+	
+	var e_save = document.createElement('a');
+	e_save.setAttribute('href','#');
+	e_save.setAttribute('id',control.id);
+	e_save.setAttribute('onclick','save(this);');
+	var e_save_text = document.createTextNode('save');
+	e_save.appendChild(e_save_text);
+	
+	var e_cancel = document.createElement('a');
+	e_cancel.setAttribute('href','#');
+	e_cancel.setAttribute('id',control.id);
+	e_cancel.setAttribute('onclick','canceledit(this);');
+	var e_cancel_text = document.createTextNode('cancel');
+	e_cancel.appendChild(e_cancel_text);
+	
+	list_item_save.appendChild(e_save);
+	list_item_cancel.appendChild(e_cancel);
+	
+	bunky_array.item(promenne.length).replaceChild(list_item_save,bunky_array.item(promenne.length).firstChild);
+	bunky_array.item(promenne.length).appendChild(list_item_cancel);
+}
+
+</script>
+
+<table border='1' width='100%'>
+<tr id='tr1'>
+	<td>
+	5
+	</td>
+	<td>
+	6
+	</td><td>
+	7
+	</td><td>
+	8
+	</td>
+	<td width='60'><a id='edit1' onclick="edit(this);" href='#'>edit</a></td>
+</tr>
+
+<tr id='tr2'>
+	<td>
+	2
+	</td><td>
+	2
+	</td><td>
+	2
+	</td><td>
+	2
+	</td>
+	<td><a id='edit2' onclick="edit(this);" href='#'>edit</a></td>
+</tr>
+
+<tr id='tr3'>
+	<td>
+	3
+	</td><td>
+	3
+	</td><td>
+	3
+	</td><td>
+	3
+	</td>
+	<td><a id='edit3' onclick="edit(this);" href='#'>edit</a></td>
+</tr>
+
+<tr id='tr4'>
+	<td>
+	4
+	</td><td>
+	4
+	</td><td>
+	4
+	</td><td>
+	4
+	</td>
+	<td><a id='edit4' onclick="edit(this);" href='#'>edit</a></td>
+</tr>
+
+<tr id='tr5'>
+	<td>
+	5
+	</td><td>
+	5
+	</td><td>
+	5
+	</td><td>
+	5
+	</td>
+	<td><a id='edit5' onclick="edit(this);" href='#'>edit</a></td>
+</tr>

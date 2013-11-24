@@ -1,0 +1,54 @@
+<?
+session_start();
+require "../fns_dotazy.php";
+dbConnect();
+
+
+// NEPOUZIVAM !!!!!
+
+	// id prvku, ktery validuju
+	$id = $_GET['id'];
+	
+	// zadana hodnota v policku
+	$value = $_GET['value'];
+	
+	// a jeste budu potrebovat cislo zakazky pro zjisteni ceny za minutu, abych mohl vypocitat novou hodnotu vzkd
+	$auftragsnr = $_GET['auftragsnr'];
+	
+	
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Pragma: nocache');
+	header('Content-Type: text/xml');
+
+
+	// vyberu vsechny sklady ze seznamu skladu
+	$sql="select ";
+	//$result=mysql_query($sql);
+	
+	$output = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+	$output .= '<response>';
+	// pokud mi dotaz vrati nejake zaznamy, tak je projdu
+	if(mysql_affected_rows()>0)
+	{
+		while ($row = mysql_fetch_array($result))
+		{
+			$output.="<lager>";
+			$output .= '<lagernr>' . $row['Lager'] . '</lagernr>';
+			$output .= '<lagerbechreibung>' . $row['LagerBeschreibung'] . '</lagerbeschreibung>';
+			$output.="</lager>";
+		}
+	}
+
+	// pridam dpos_id, abych nasel spravny radek v tabulce
+	
+	$output.="<dauftr_id>";
+	$output.=$id_dauftr;
+	$output.="</dauftr_id>";
+	
+	$output .= '</response>';
+	
+	echo $output;
+?>
+

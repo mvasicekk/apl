@@ -1,0 +1,306 @@
+<?php
+session_start();
+require_once "../fns_dotazy.php";
+//test svn
+$doc_title = "T010";
+$doc_subject = "T010 Report";
+$doc_keywords = "T010";
+
+// necham si vygenerovat XML
+
+$parameters=$_GET;
+
+$teil = $parameters['teil'];
+require_once('T010_xml.php');
+
+
+//exit;
+// vytvorit string s popisem parametru
+// parametry mam v XML souboru, tak je jen vytahnu
+//$parameters=$domxml->getElementsByTagName("parameters");
+//
+//
+//foreach ($parameters as $param)
+//{
+//	$parametry=$param->childNodes;
+//	// v ramci parametru si prectu label a hodnotu
+//	foreach($parametry as $parametr)
+//	{
+//		$parametr=$parametr->childNodes;
+//		foreach($parametr as $par)
+//		{
+//			if($par->nodeName=="label")
+//				$label=$par->nodeValue;
+//			if($par->nodeName=="value")
+//				$value=$par->nodeValue;
+//		}
+//		$params .= $label.": ".$value."  ";
+//	}
+//}
+
+
+// pole s sirkama bunek v mm, poradi v poli urcuje i poradi sloupcu
+// v tabulce
+// "klic" => array ("popisek sloupce",sirka_sloupce_v_mm)
+// klic je shodny se jmenem nodeName v XML souboru
+// poradi urcuje predevsim poradu nodu v XML !!!!!
+// nf = pokus pole obsahuje tento klic bude se cislo v teto bunce formatovat dle parametru v poli 0,1,2
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// funkce k vynulovani pole se sumama
+// jako parametr predam asociativni pole
+function nuluj_sumy_pole(&$pole)
+{
+	foreach($pole as $key=>$prvek)
+	{
+		$pole[$key]=0;
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// funkce ktera vrati hodnotu podle nodename
+// predam ji nodelist a jmeno node ktereho hodnotu hledam
+function getValueForNode($nodelist,$nodename)
+{
+	$nodevalue="";
+	foreach($nodelist as $node)
+	{
+		if($node->nodeName==$nodename)
+		{
+			$nodevalue=$node->nodeValue;
+			return $nodevalue;
+		}
+	}
+	return $nodevalue;
+}
+
+/**
+ *
+ * @param TCPDF $pdf
+ * @param <type> $vyskaradku
+ * @param <type> $rgb
+ * @param <type> $childs
+ * @param <type> $datvon
+ * @param <type> $tagen
+ */
+function stitek($pdf,$vyskaradku,$rgb,$childs)
+{
+
+	$pdf->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$fill=1;
+        $sirkaCelkem = 85;
+        $vyskaCelkem = 45;
+        $x_pocatek=$pdf->GetX();
+	$y_pocatek=$pdf->GetY();
+
+        $popiskyFontSize = 7;
+        // celkovy ramecek
+        $pdf->SetLineWidth(0.5);
+        $pdf->Rect($x_pocatek,$y_pocatek,$sirkaCelkem, $vyskaCelkem);
+
+        // ramecek pro Deska/Plate
+        $pdf->SetLineWidth(0.2);
+        $sirkaDeska = 55;$vyskaDeska = 13;
+        $pdf->Rect($x_pocatek,$y_pocatek,$sirkaDeska, $vyskaDeska);
+        // popisek
+        $pdf->SetFont('FreeSans', 'B',$popiskyFontSize);
+        $pdf->Cell($sirkaDeska, 5, 'Deska/Plate:', '0', 1, 'L', 0);
+        // obsah
+        $obsah = getValueForNode($childs, 'teillang');
+        $pdf->SetFont('FreeSans', 'B',18);
+        $pdf->Cell($sirkaDeska, 8, $obsah, '0', 1, 'L', 0);
+
+        //ramecek pro zakaznik/Kunde
+        $pdf->SetLineWidth(0.2);
+        $sirkaKunde = $sirkaCelkem-$sirkaDeska;$vyskaKunde = $vyskaDeska;
+        $xKunde = $x_pocatek+$sirkaDeska;$yKunde = $y_pocatek;
+        $pdf->Rect($xKunde,$yKunde,$sirkaKunde, $vyskaKunde);
+        $pdf->SetXY($xKunde, $yKunde);
+        // popisek
+        $pdf->SetFont('FreeSans', 'B',$popiskyFontSize);
+        $pdf->Cell($sirkaKunde, 5, 'Zakaznik/Kunde:', '0', 1, 'L', 0);
+        // obsah
+        $obsah = getValueForNode($childs, 'kunde');
+        $pdf->SetFont('FreeSans', 'B',12);
+        $pdf->SetX($xKunde);
+        $pdf->Cell($sirkaKunde, 8, $obsah, '0', 1, 'C', 0);
+
+
+        //ramecek pro teil
+        $pdf->SetLineWidth(0.2);
+        $sirkaTeil = $sirkaCelkem;$vyskaTeil = 16;
+        $xTeil = $x_pocatek;$yTeil = $y_pocatek+$vyskaDeska;
+        $pdf->Rect($xTeil,$yTeil,$sirkaTeil, $vyskaTeil);
+        // popisek
+        $pdf->SetXY($xTeil, $yTeil);
+        $pdf->SetFont('FreeSans', 'B',$popiskyFontSize);
+        $pdf->Cell($sirkaTeil/2, 5, 'Dil/Teil:', '0', 0, 'L', 0);
+        $pdf->Cell(12, 5, 'Freigabe:', '0', 0, 'L', 0);
+        // obsah freigabe
+        $obsah = getValueForNode($childs, 'freigabe1');
+        $pdf->SetFont('FreeSans', '',$popiskyFontSize);
+        //$pdf->SetX($xTeil);
+        $pdf->Cell(13, 3, $obsah, '0', 0, 'L', 0);
+        $obsah = 'am: '.getValueForNode($childs, 'freigabe1_vom');
+        $pdf->Cell(12, 3, $obsah, '0', 1, 'L', 0);
+        $pdf->SetX($xTeil+$sirkaTeil/2+12);
+        $obsah = getValueForNode($childs, 'freigabe2');
+        $pdf->SetFont('FreeSans', '',$popiskyFontSize);
+        $pdf->Cell(13, 3, $obsah, '0', 0, 'L', 0);
+        $obsah = 'am: '.getValueForNode($childs, 'freigabe2_vom');
+        $pdf->Cell(12, 3, $obsah, '0', 1, 'L', 0);
+        $pdf->Rect($xTeil+$sirkaTeil/2, $yTeil, $sirkaTeil/2, 6);
+        //eingelagert am
+        $pdf->SetFont('FreeSans', 'B',$popiskyFontSize);
+        $pdf->SetX($xTeil+$sirkaTeil/2);
+        $pdf->Cell(12+13, 5, 'Einlag.Datum:', 'LB', 0, 'L', 0);
+        $obsah = getValueForNode($childs, 'muster_vom');
+        $pdf->SetFont('FreeSans', '',$popiskyFontSize);
+        $pdf->Cell(17, 5, $obsah, 'B', 1, 'R', 0);
+        // obsah 
+        $obsah = getValueForNode($childs, 'teilnr');
+        $pdf->SetFont('FreeSans', 'B',16);
+        $pdf->SetX($xTeil);$pdf->SetY($yTeil+5);
+        $pdf->Cell($sirkaTeil, 5, $obsah, '0', 1, 'L', 0);
+        // obsah popis dilu
+        $obsah = getValueForNode($childs, 'teilbez');
+        $pdf->SetFont('FreeSans', '',11);
+        $pdf->SetX($xTeil);
+        $pdf->Cell($sirkaTeil, 5, $obsah, '0', 1, 'L', 0);
+
+        //ramecek pro gewicht
+        $pdf->SetLineWidth(0.2);
+        $sirkaGew = 25;$vyskaGew = $vyskaCelkem-$vyskaDeska-$vyskaTeil;
+        $xGew = $x_pocatek;$yGew = $y_pocatek+$vyskaDeska+$vyskaTeil;
+        $pdf->Rect($xGew,$yGew,$sirkaGew, $vyskaGew);
+        // popisek
+        $pdf->SetXY($xGew, $yGew);
+        $pdf->SetFont('FreeSans', 'B',$popiskyFontSize);
+        $pdf->Cell($sirkaGew, 5, 'Hmotnost/Gewicht:', '0', 1, 'L', 0);
+        // obsah hmotnost
+        $obsah = number_format(getValueForNode($childs, 'gew'),3,',',' ')." kg";
+        $pdf->SetFont('FreeSans', '',10);
+        $pdf->SetX($xGew);
+        $pdf->Cell($sirkaGew, 6, $obsah, '0', 1, 'C', 0);
+
+        //ramecek pro regal
+        $pdf->SetLineWidth(0.2);
+        $sirkaRegal = $sirkaCelkem-$sirkaGew;$vyskaRegal = $vyskaCelkem-$vyskaDeska-$vyskaTeil;
+        $xRegal = $x_pocatek+$sirkaGew;$yRegal = $y_pocatek+$vyskaDeska+$vyskaTeil;
+        $pdf->Rect($xRegal,$yRegal,$sirkaRegal, $vyskaRegal);
+        // popisek
+        $pdf->SetXY($xRegal, $yRegal);
+        $pdf->SetFont('FreeSans', 'B',$popiskyFontSize);
+        $pdf->Cell($sirkaRegal, 5, 'Regal:', '0', 1, 'L', 0);
+        // obsah hmotnost
+        // provedu odvedu
+        
+        $obsah = getValueForNode($childs, 'platz');
+        $pdf->SetFont('FreeSans', 'B',16);
+        $pdf->SetX($xRegal);
+        $pdf->Cell($sirkaRegal, 6, $obsah, '0', 1, 'C', 0);
+
+//
+//            $xOld = $pdfobjekt->GetX();
+//            $yOld = $pdfobjekt->GetY();
+//            $pdfobjekt->SetLineWidth(0.5);
+//            $pdfobjekt->Cell($sirkaDochazkoveBunky,$vyskaradku,'','LTR',0,'R',$fill);
+//            $xActual = $pdfobjekt->GetX();
+//            $pdfobjekt->SetLineWidth(0.2);
+//            $pdfobjekt->Line($xOld, $yOld+$vyskaradku, $xActual, $yOld+$vyskaradku);
+//            $time += $denVSekundach;
+//        // eintritt
+//        $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+//        $pdfobjekt->Cell($sirkaDochazkoveBunky,$vyskaradku,$eintritt,'LTR',0,'R',$fill);
+//        $pdfobjekt->Ln();
+//
+//        // 2.radek
+//        $time = strtotime($datvon);
+//        $pdfobjekt->SetFont("FreeSans", "", 6);
+//        $pdfobjekt->Cell($persnrWidth,$vyskaradku,$regeloe,'0',0,'R',$fill);
+//        $pdfobjekt->Cell(15,$vyskaradku,$ort,'0',0,'L',$fill);
+//        //dva telefony
+//        $x1 = $pdfobjekt->GetX();
+//        $y1 = $pdfobjekt->GetY();
+//        $pdfobjekt->Cell(15,$vyskaradku/2,  substr($tel1, 0,15),'0',0,'R',$fill);
+//        $pdfobjekt->SetY($y1+$vyskaradku/2);
+//        $pdfobjekt->SetX($x1);
+//        $pdfobjekt->Cell(15,$vyskaradku/2,substr($tel2, 0,15),'0',0,'R',$fill);
+//        $pdfobjekt->SetY($y1);
+//        $pdfobjekt->SetX($x1+15);
+//
+//        for($i=0;$i<$tagen;$i++){
+//            // TODO jak nastavit sirku oramovani bunky ?
+//            $w = date('w', $time);
+//            if($w==6 || $w==0){
+//                $pdfobjekt->SetFillColor(200,200,200,1);
+//            }
+//            else{
+//                $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+//            }
+//
+//            $xOld = $pdfobjekt->GetX();
+//            $yOld = $pdfobjekt->GetY();
+//            $pdfobjekt->SetLineWidth(0.5);
+//            $pdfobjekt->Cell($sirkaDochazkoveBunky,$vyskaradku,'','LBR',0,'R',$fill);
+//            $pdfobjekt->SetLineWidth(0.2);
+//            $pdfobjekt->Line($xOld+2*$tretinaBunky, $yOld-$vyskaradku, $xOld+2*$tretinaBunky, $yOld+$vyskaradku);
+//            $time += $denVSekundach;
+//        }
+//        // austritt
+//        $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+//        $pdfobjekt->Cell($sirkaDochazkoveBunky,$vyskaradku,$austritt,'LTRB',0,'R',$fill);
+//        $pdfobjekt->Ln();
+}
+
+
+require_once('../tcpdf/config/lang/eng.php');
+require_once('../tcpdf/tcpdf.php');
+
+$pdf = new TCPDF('P','mm','A4',1);
+
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor(PDF_AUTHOR);
+$pdf->SetTitle($doc_title);
+$pdf->SetSubject($doc_subject);
+$pdf->SetKeywords($doc_keywords);
+
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "T010 Lagerzettel", '');
+//set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
+//set auto page breaks
+//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
+
+//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setHeaderFont(Array("FreeSans", '', 9));
+$pdf->setFooterFont(Array("FreeSans", '', 8));
+
+$pdf->setLanguageArray($l); //set language items
+
+//initialize document
+$pdf->AliasNbPages();
+$pdf->SetFont("FreeSans", "", 8);
+
+
+
+// prvni stranka
+$pdf->AddPage();
+
+$teile=$domxml->getElementsByTagName("teil");
+
+foreach ($teile as $teil) {
+    $teilChilds = $teil->childNodes;
+    stitek($pdf, 5, array(255,255,255), $teilChilds);
+}
+
+//Close and output PDF document
+$pdf->Output();
+
+//============================================================+
+// END OF FILE                                                 
+//============================================================+
+
+?>

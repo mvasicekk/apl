@@ -1,0 +1,170 @@
+/* CSS Document */
+body{
+		background-color: rgb(179,179,179);
+		font-family: Arial;
+		}
+
+#formular_telo {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 1000px;
+			top: 130px;
+			left: 0px;
+			visibility: visible;
+			margin-left: 5px;
+		  }
+		  
+#insertinfo{
+    position:absolute;
+    width:200px;
+    height:150px;
+    top:200px;
+    left:530px;
+    background-color:rgb(255,255,255);
+    border:blue solid;
+    padding:1em;
+}
+
+#formular_header {
+			position: absolute;
+			width: 1000px;
+			height: 40px;
+			top: 85px;
+			left: 0px;
+			background-color:rgb(255,255,220);
+			border-bottom: solid 1px black;
+			margin-left: 5px;
+			font-size: 15pt;
+			font-weight:bold;
+			text-align:center;
+		}
+	  
+#header {
+			position: absolute;
+			width: 1000px;
+			height: 65px;
+			top: 0px;
+			left: 0px;
+			background-image: url(/img/zahlavi30.jpg);
+			border-bottom: solid 0px black;
+			margin-left: 5px
+		}
+
+#podheader {
+			position: absolute;
+			width: 1000px;
+			height: 20px;
+			top: 65px;
+			left: 0px;
+			background-color:rgb(220,220,220);
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+		
+
+#form_footer_tlacitka_reporty {
+			position: absolute;
+			width: 1000px;
+			height: 50px;
+			left: 0px;
+			bottom: 10px;
+			background-color:rgb(220,220,220);
+			border: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+
+table.formulartable
+{
+	position:relative;
+	top:10px;
+	width:1000px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+	padding: 10px;
+}
+
+.abyStartButton {width:180px; margin:2px 2px 2px 2px;}
+
+
+#dzeit_poslednizaznamy {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 1000px;
+			bottom: 65px;
+			left: 0px;
+			visibility: visible;
+			margin-left: 5px;
+		  }
+
+table.posledni_table
+{
+	position:relative;
+	top:0px;
+	width:100%;
+	background-color:rgb(220,220,220);
+	padding: 0px;
+	font-size:10px;
+}
+
+
+tr.posledni_table_header
+{
+	background-color: #0000ff;
+	color: #ffffff;
+	font-weight: bold
+}
+
+tr.sudy
+{
+	background-color:#eeeeee;
+}
+
+tr.lichy
+{
+	background-color:#ffffff;
+}
+
+div#persnrdzeit{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:1000px;
+    height:200px;
+    overflow:auto;
+/*    visibility: hidden;*/
+    border:2px solid green;
+    background-color:#dfd;
+    font-size:10px;
+}
+
+div#kfzfahrteninfo{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:400px;
+    height:400px;
+    overflow:auto;
+/*    visibility: hidden;*/
+    border:2px solid green;
+    background-color:#dfd;
+    font-size:10px;
+}
+
+div#persnrdzeit table{
+    font-size:10px;
+}
+
+div#debuginfo{
+    position:fixed;
+    right:0px;
+    bottom:0px;
+    width:400px;
+    height:200px;
+    overflow:auto;
+    border:2px solid green;
+    background-color:#dfd;
+    font-size:10px;
+}

@@ -1,0 +1,33 @@
+<?
+require './../db.php';
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+//-------------------------------------------------------------------------------------------------------------------------
+$ip = $_SERVER['REMOTE_ADDR'];
+$dt = date('Y-m-d H:i');
+$id = $_POST['id'];
+$a = AplDB::getInstance();
+
+$panelyRows = $a->getInfoTabloTextArray($ipKlienta);
+$panelydiv = '<div id="panelytable">';
+$panelydiv.="<table>";
+if($panelyRows!==NULL){
+    foreach ($panelyRows as $panel){
+        $panelydiv.="<tr>";
+        $panelydiv.="<td><strong>".$panel['idpanel']."</strong></td>";
+        $panelydiv.="<td>"."<input acturl='./saveInfoPanelText.php' id='text1_".$panel['itid']."' type='text' value='".$panel['text1']."' size='20' maxlength='20'"."</td>";
+        $panelydiv.="<td>"."<input acturl='./saveInfoPanelText.php' id='text2_".$panel['itid']."' type='text' value='".$panel['text2']."' size='6' maxlength='6'"."</td>";
+        $panelydiv.="</tr>";
+    }
+}
+else{
+    $panelydiv.="<tr><td>No panels defined !!!</td></tr>";
+}
+$panelydiv.="</table>";
+$panelydiv.="</div>";
+ $value = array('divcontent'=>$panelydiv,'ip'=>$ip,'dt'=>$dt,'id'=>$id);
+ 
+ echo json_encode($value);
