@@ -92,6 +92,23 @@ $(document).ready(function(){
                 'json'
                 );
     });
+    
+        $('input[id=jb_lfd_plus_1]').blur(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+         $.post(acturl,
+            {
+                id:id,
+                value:$(this).val(),
+                teil:$('#teil').val()
+            },
+            function(data){
+                    updateDkopf(data);
+                },
+                'json'
+                );
+    });
 
     $('input[id=jb_lfd_j]').blur(function(event){
         var id = $(this).attr('id');

@@ -142,8 +142,8 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 		<label for="preis_stk_gut">Zielpreis gut </label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_gut" value="{$preis_stk_gut_value}"/>
 
-                <label for="jb_lfd_2">Jahresbedarf Vojahr (2011)</label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
+		<label for="preis_stk_auss">Zielpreis auss </label>
+                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_auss" value="{$preis_stk_auss_value}"/>
 
       		<label for="fremdauftr_dkopf">Fremdauftr</label>
                 <input acturl="dkopf_update.php" maxlength='50' size="10" type="text" id="fremdauftr_dkopf" value="{$fremdauftr_dkopf_value}"/>
@@ -153,19 +153,22 @@ Arbeitsplan pflegen / Sprava pracovniho planu
         </tr>
         <tr>
             <td>
-		<label for="preis_stk_auss">Zielpreis auss </label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_auss" value="{$preis_stk_auss_value}"/>
+                <label for="jb_lfd_2">Jahresbedarf (2011)</label>
+                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
 		
-		
-                <label for="jb_lfd_1">Jahresbedarf aktuell (2012)</label>
+                <label for="jb_lfd_1">Jahresbedarf (2012)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
                 
-                <label for="jb_lfd_j">Jahresbedarf naechst. (2013)</label>
+                <label for="jb_lfd_j">Jahresbedarf (2013)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
-
             </td>
         </tr>
-
+	<tr>
+	    <td>
+                <label for="jb_lfd_plus_1">Jahresbedarf (2014)</label>
+                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
+	    </td>
+	</tr>
 	<tr>
 	    <td>
 		<label for="schwierigkeitsgrad_S11">Schwierigkeitsgrad S11 / obtížnost S11</label>

@@ -46,16 +46,13 @@ $sql.= "     dkopf.teillang as teillang,";
 $sql.= "     dkopf.Teilbez as teilbez,";
 $sql.= "     dkopf.Gew as gew,";
 $sql.= "     dkopf.BrGew as brgew,";
-//$sql.= "     dkopf.jahr_bedarf_stk_2011,";
-//$sql.= "     dkopf.jahr_bedarf_stk_2012,";
-
-//$sql.= "     dkopf.jb_lfd_1 as jahr_bedarf_stk_2011,";
-//$sql.= "     dkopf.jb_lfd_j as jahr_bedarf_stk_2012,";
-
 $sql.= "     dkopf.jb_lfd_2,";
 $sql.= "     dkopf.jb_lfd_1,";
 $sql.= "     dkopf.jb_lfd_j,";
-$sql.= "     dkopf.gut_lfd_1,";
+$sql.= "     dkopf.jb_lfd_plus_1,";
+$sql.= "     dkopf.stk_g_ist_2012,";
+$sql.= "     dkopf.stk_g_ist_2013,";
+$sql.= "     dkopf.stk_g_ist_2014,";
 $sql.= "     dkopf.preis_stk_gut,";
 $sql.= "     dkopf.preis_stk_auss,";
 $sql.= "     dkopf.kosten_stk_auss,";
@@ -68,30 +65,30 @@ $sql.= "     DATE_FORMAT(dkopf.`Muster-Freigabe-2-vom`,'%Y-%m-%d') as freigabe2v
 $sql.= "     dpos.`TaetNr-Aby` as abgnr,";
 if ($preise == "neu") {
     $sql.= "     dpos.`vzkd_neu` as vzkd,";
-//    $sql.= "     dpos.`vzkd_neu`*dkopf.jahr_bedarf_stk_2011 as bed_2011_vzkd,";
-//    $sql.= "     dpos.`vzkd_neu`*dkopf.jahr_bedarf_stk_2012 as bed_2012_vzkd,";
-    
+    $sql.= "     dpos.`vzkd_neu`*dkopf.jb_lfd_1 as bed_lfd_1_vzkd,";
+    $sql.= "     dpos.`vzkd_neu`*dkopf.jb_lfd_j as bed_lfd_j_vzkd,";
+    $sql.= "     dpos.`vzkd_neu`*dkopf.jb_lfd_plus_1 as bed_lfd_plus_1_vzkd,";
     $sql.= "     dpos.`vzkd_neu`*dkopf.jb_lfd_1 as bed_2011_vzkd,";
     $sql.= "     dpos.`vzkd_neu`*dkopf.jb_lfd_j as bed_2012_vzkd,";
-
     $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin,4) as preis,";
-//    $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jahr_bedarf_stk_2011,4) as bed_2011_preis,";
-//    $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jahr_bedarf_stk_2012,4) as bed_2012_preis,";
-
+    $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jb_lfd_1,4) as bed_lfd_1_preis,";
+    $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jb_lfd_j,4) as bed_lfd_j_preis,";
+    $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jb_lfd_plus_1,4) as bed_lfd_plus_1_preis,";
     $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jb_lfd_1,4) as bed_2011_preis,";
     $sql.= "     round(dpos.`vzkd_neu`*dksd.preismin*dkopf.jb_lfd_j,4) as bed_2012_preis,";
-
 } else {
     $sql.= "     dpos.`VZ-min-kunde` as vzkd,";
+    $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_1 as bed_lfd_1_vzkd,";
+    $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_j as bed_lfd_j_vzkd,";
+    $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_plus_1 as bed_lfd_plus_1_vzkd,";
     $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_1 as bed_2011_vzkd,";
     $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_j as bed_2012_vzkd,";
-//    $sql.= "     dpos.`VZ-min-kunde`*dkopf.jahr_bedarf_stk_2011 as bed_2011_vzkd,";
-//    $sql.= "     dpos.`VZ-min-kunde`*dkopf.jahr_bedarf_stk_2012 as bed_2012_vzkd,";
     $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin,4) as preis,";
+    $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_1,4) as bed_lfd_1_preis,";
+    $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_j,4) as bed_lfd_j_preis,";
+    $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_plus_1,4) as bed_lfd_plus_1_preis,";
     $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_1,4) as bed_2011_preis,";
     $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_j,4) as bed_2012_preis,";
-//    $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jahr_bedarf_stk_2011,4) as bed_2011_preis,";
-//    $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jahr_bedarf_stk_2012,4) as bed_2012_preis,";
 }
 $sql.= " `dtaetkz-abg`.`Name` as abgnr_name";
 $sql.= " from dkopf";
@@ -109,8 +106,7 @@ if((strlen($abgnr)>0) && ($abgnr!='*'))
 $sql.= "     and dpos.`TaetNr-Aby`=$abgnr";
 
 if($jb===TRUE){
-//    $sql.= " and (dkopf.jahr_bedarf_stk_2012<>0)";
-    $sql.= " and (dkopf.jb_lfd_j<>0 or dkopf.jb_lfd_1<>0 or dkopf.jb_lfd_2<>0)";
+    $sql.= " and (dkopf.jb_lfd_j<>0 or dkopf.jb_lfd_1<>0 or dkopf.jb_lfd_2<>0 or dkopf.jb_lfd_plus_1<>0)";
 }
     
 if($alt==FALSE){
@@ -123,6 +119,7 @@ if(strlen($teil)>1)
 $sql.= "     and dkopf.teil like '$teil'";
 $sql.= " order by";
 $sql.= "     dkopf.Teil,";
+$sql.= "     `dtaetkz-abg`.`stat_nr`,";
 $sql.= "     dpos.`TaetNr-Aby`";
 
 
@@ -153,12 +150,13 @@ $options = array(
                     'teillang',
                     'gew',
                     'brgew',
-//                    'jahr_bedarf_stk_2011',
-//                    'jahr_bedarf_stk_2012',
 		    'jb_lfd_2',
 		    'jb_lfd_1',
+		    'jb_lfd_plus_1',
 		    'jb_lfd_j',
-		    'gut_lfd_1',
+		    'stk_g_ist_2012',
+		    'stk_g_ist_2013',
+		    'stk_g_ist_2014',
                     'preis_stk_gut',
                     'preis_stk_auss',
                     'kosten_stk_auss',
@@ -177,8 +175,14 @@ $options = array(
                             'abgnr_name',
                             'vzkd',
                             'preis',
+			    'bed_lfd_1_vzkd',
+			    'bed_lfd_j_vzkd',
+			    'bed_lfd_plus_1_vzkd',
                             'bed_2011_vzkd',
                             'bed_2012_vzkd',
+			    'bed_lfd_1_preis',
+			    'bed_lfd_j_preis',
+			    'bed_lfd_plus_1_preis',
                             'bed_2011_preis',
                             'bed_2012_preis',
                         ),

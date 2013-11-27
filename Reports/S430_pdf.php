@@ -92,32 +92,22 @@ foreach ($parameters as $param) {
 // nf = pokus pole obsahuje tento klic bude se cislo v teto bunce formatovat dle parametru v poli 0,1,2
 
 
-$cells = 
-array(
-"abgnr"
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-
-"abgnr_name"
-=> array ("substring"=>array(0,30),"popis"=>"","sirka"=>40,"ram"=>'1',"align"=>"L","radek"=>0,"fill"=>0),
-
-"preis"
-=> array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-
-"vzkd"
-=> array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-
-"bed_2011_preis"
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-//"bed_2011_vzkd"
-//=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-"bed_2012_preis"
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-//"bed_2012_vzkd"
-//=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-
-"ln"
-=> array ("popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>0)
-
+$cells =
+	array(
+	    "abgnr"
+	    => array("nf" => array(0, ',', ' '), "popis" => "", "sirka" => 20, "ram" => '1', "align" => "R", "radek" => 0, "fill" => 0),
+	    "abgnr_name"
+	    => array("substring" => array(0, 30), "popis" => "", "sirka" => 40, "ram" => '1', "align" => "L", "radek" => 0, "fill" => 0),
+	    "preis"
+	    => array("nf" => array(4, ',', ' '), "popis" => "", "sirka" => 25, "ram" => '1', "align" => "R", "radek" => 0, "fill" => 0),
+	    "vzkd"
+	    => array("nf" => array(4, ',', ' '), "popis" => "", "sirka" => 25, "ram" => '1', "align" => "R", "radek" => 0, "fill" => 0),
+	    "bed_lfd_j_preis"
+	    => array("nf" => array(0, ',', ' '), "popis" => "", "sirka" => 25, "ram" => '1', "align" => "R", "radek" => 0, "fill" => 0),
+	    "bed_lfd_plus_1_preis"
+	    => array("nf" => array(0, ',', ' '), "popis" => "", "sirka" => 25, "ram" => '1', "align" => "R", "radek" => 0, "fill" => 0),
+	    "ln"
+	    => array("popis" => "", "sirka" => 0, "ram" => '0', "align" => "R", "radek" => 1, "fill" => 0)
 );
 
 
@@ -125,37 +115,49 @@ array(
 $sum_zapati_teil = array(
     'preis'=>0,
     'vzkd'=>0,
-    'bed_2011_vzkd'=>0,
-    'bed_2012_vzkd'=>0,
-    'bed_2011_preis'=>0,
-    'bed_2012_preis'=>0,
+    'bed_lfd_1_vzkd'=>0,
+    'bed_lfd_j_vzkd'=>0,
+    'bed_lfd_plus_1_vzkd',
+    'bed_lfd_1_preis'=>0,
+    'bed_lfd_j_preis'=>0,
+    'bed_lfd_plus_1_preis'=>0,
+    'tonnen_lfd_j'=>0,
+    'tonnen_lfd_plus_1'=>0,
 );
 
 $sum_zapati_sestava = array(
     'preis'=>0,
     'vzkd'=>0,
-    'bed_2011_vzkd'=>0,
-    'bed_2012_vzkd'=>0,
-    'zielpreis_2011'=>0,
-    'zielpreis_2012'=>0,
+    'bed_lfd_1_vzkd'=>0,
+    'bed_lfd_j_vzkd'=>0,
+    'bed_lfd_plus_1_vzkd'=>0,
+    'zielpreis_lfd_1'=>0,
+    'zielpreis_lfd_j'=>0,
+    'zielpreis_lfd_plus_1'=>0,
     'kosten_auss_stk'=>0,
-    'tonnen_2011'=>0,
-    'tonnen_2012'=>0,
-    'bed_2011_preis'=>0,
-    'bed_2012_preis'=>0,
+    'tonnen_lfd_1'=>0,
+    'tonnen_lfd_j'=>0,
+    'tonnen_lfd_plus_1'=>0,
+    'bed_lfd_1_preis'=>0,
+    'bed_lfd_j_preis'=>0,
+    'bed_lfd_plus_1_preis'=>0,
 );
 
 $sum_zapati_sestava_abgnr = array(
     'preis'=>0,
     'vzkd'=>0,
-    'bed_2011_vzkd'=>0,
-    'bed_2012_vzkd'=>0,
-    'zielpreis_2011'=>0,
-    'zielpreis_2012'=>0,
-    'tonnen_2011'=>0,
-    'tonnen_2012'=>0,
-    'bed_2011_preis'=>0,
-    'bed_2012_preis'=>0,
+    'bed_lfd_1_vzkd'=>0,
+    'bed_lfd_j_vzkd'=>0,
+    'bed_lfd_plus_1_vzkd'=>0,
+    'zielpreis_lfd_1'=>0,
+    'zielpreis_lfd_j'=>0,
+    'zielpreis_lfd_plus_1'=>0,
+    'tonnen_lfd_1'=>0,
+    'tonnen_lfd_j'=>0,
+    'tonnen_lfd_plus_1'=>0,
+    'bed_lfd_1_preis'=>0,
+    'bed_lfd_j_preis'=>0,
+    'bed_lfd_plus_1_preis'=>0,
 );
 
 $abgnrArray = array();
@@ -177,15 +179,6 @@ function nuluj_sumy_pole(&$pole)
 
 // funkce pro vykresleni hlavicky na kazde strance
 function pageheader($pdfobjekt, $headervyskaradku) {
-//"abgnr"
-//"abgnr_name"
-//"preis"
-//"vzkd"
-//"bed_2011_preis"
-//"bed_2011_vzkd"
-//"bed_2012_preis"
-//"bed_2012_vzkd"
-
     global $cells;
     $pdfobjekt->SetFont("FreeSans", "B", 7);
     $pdfobjekt->SetFillColor(255, 255, 200, 1);
@@ -195,8 +188,8 @@ function pageheader($pdfobjekt, $headervyskaradku) {
     $pdfobjekt->Cell($cells['preis']['sirka'], $headervyskaradku, "Preis [EUR]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->Cell($cells['vzkd']['sirka'], $headervyskaradku, "VzKd [min]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->SetFont("FreeSans", "B", 5.5);
-    $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $headervyskaradku, "Jahresbedarf2012 [EUR]", 'LRBT', 0, 'R', 1);
-    $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $headervyskaradku, "Jahresbedarf2013 [EUR]", 'LRBT', 0, 'R', 1);
+    $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $headervyskaradku, "JB2013 [EUR]", 'LRBT', 0, 'R', 1);
+    $pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $headervyskaradku, "JB2014 [EUR]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->Ln();
 }
 
@@ -204,16 +197,9 @@ function pageheader($pdfobjekt, $headervyskaradku) {
 //
 function zahlavi_teil($pdfobjekt,$vyskaRadku,$childNodes)
 {
-
-//"abgnr"
-//"abgnr_name"
-//"preis"
-//"vzkd"
-//"bed_2011_preis"
-//"bed_2012_preis"
-//"ln"
-
         global $cells;
+	global $sum_zapati_teil;
+	
         $pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->SetFillColor(255,255,200,1);
 	$fill=1;
@@ -222,33 +208,44 @@ function zahlavi_teil($pdfobjekt,$vyskaRadku,$childNodes)
                 $cells['abgnr_name']['sirka']+$cells['preis']['sirka'],
                 $vyskaRadku,getValueForNode($childNodes,"teilbez"),'BT',0,'L',$fill);
 
+	$a = AplDB::getInstance();
+	$teilnr = getValueForNode($childNodes, 'teilnr');
+	$musterRow = $a->getTeilDokument($teilnr, 0,FALSE);
+	if($musterRow===NULL)
+	    $musterText = "Muster: ????";
+	else
+	    $musterText = $musterRow['doku_nr']."/".$musterRow['doku_beschreibung']."/".$musterRow['einlag_datum']."/".$musterRow['musterplatz']."/".$musterRow['freigabe_am']."/".$musterRow['freigabe_vom'];
+
         //musterplatz
         $pdfobjekt->Cell(
-                $cells['vzkd']['sirka'],
-                $vyskaRadku,'Musterplatz: '.getValueForNode($childNodes,"musterplatz"),'LT',0,'L',$fill);
+                $cells['vzkd']['sirka']+90,
+                $vyskaRadku,$musterText,'LTB',0,'L',$fill);
 
-        // freigabe1
-        $pdfobjekt->Cell(
-                130,
-                $vyskaRadku,
-                ' Freigabe1 am: '.getValueForNode($childNodes,"freigabe1vom").
-                ' von: '.getValueForNode($childNodes,"freigabe1")
-                .' Freigabe2 am: '.getValueForNode($childNodes,"freigabe2vom").
-                ' von: '.getValueForNode($childNodes,"freigabe2")
-                ,'BT',0,'L',$fill);
-
+	$brGew = getValueForNode($childNodes, 'brgew');
+	$nettoGew = getValueForNode($childNodes, 'gew');
+	$jb_stk_j = getValueForNode($childNodes, 'jb_lfd_j');
+	$jb_stk_plus_1 = getValueForNode($childNodes, 'jb_lfd_plus_1');
+	$sum_zapati_teil['tonnen_lfd_j'] = $jb_stk_j * $nettoGew;
+	$sum_zapati_teil['tonnen_lfd_plus_1'] = $jb_stk_plus_1 * $nettoGew / 1000;
+	
+	
+//	$pdfobjekt->SetFont("FreeSans", "B", 7);
+	$obsah = "Kg Brutto / Netto";
+	$pdfobjekt->Cell(25, $vyskaRadku, $obsah, 'LBT', 0, 'L', $fill);
+	$obsah = number_format($brGew, 2, ',', ' ') . " / " . number_format($nettoGew, 2, ',', ' ');
+	$pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'BTR', 0, 'R', $fill);
+	
         // fremdauftr_dkopf
         $pdfobjekt->Cell(
                 0,
                 $vyskaRadku,
                 '['.getValueForNode($childNodes,"fremdauftr_dkopf").']'
-                ,'BTR',1,'L',$fill);
+                ,'BTR',1,'R',$fill);
 
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//zapati_import($pdf,$sum_zapati_teil_array);
 /**
  *
  * @global array $cells
@@ -261,11 +258,6 @@ function zahlavi_teil($pdfobjekt,$vyskaRadku,$childNodes)
  * @param <type> $kundechilds
  */
 function zapati_teil($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $kundechilds) {
-//"abgnr"
-//"abgnr_name"
-//"preis"
-//"vzkd"
-//"ln"
 
     global $cells;
     global $sum_zapati_sestava;
@@ -277,306 +269,133 @@ function zapati_teil($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $kun
     $fill = 1;
 
     if (!$nurKopfZielpreis) {
-        //apl
-        $pdfobjekt->SetFillColor(255, 255, 240, 1);
-        $teillang = getValueForNode($teilchilds, 'teillang');
-        $pdfobjekt->SetFont("FreeSans", "", 6);
-        $pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, $teillang, '1', 0, 'L', 0);
-        $pdfobjekt->SetFont("FreeSans", "B", 8);
-        $pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Summe [APL]: ", 'LBT', 0, 'L', $fill);
-        $preis = $sumArray['preis'];
-        $obsah = number_format($preis, 4, ',', ' ');
-        $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	//apl
+	$pdfobjekt->SetFillColor(255, 255, 240, 1);
+	$teillang = getValueForNode($teilchilds, 'teillang');
+	$pdfobjekt->SetFont("FreeSans", "", 6);
+	$pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, $teillang, '1', 0, 'L', 0);
+	$pdfobjekt->SetFont("FreeSans", "B", 8);
+	$pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Summe [APL]: ", 'LBT', 0, 'L', $fill);
+	$preis = $sumArray['preis'];
+	$obsah = number_format($preis, 4, ',', ' ');
+	$pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $vzkd = $sumArray['vzkd'];
-        $obsah = number_format($vzkd, 4, ',', ' ');
-        $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$vzkd = $sumArray['vzkd'];
+	$obsah = number_format($vzkd, 4, ',', ' ');
+	$pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $b2011_preis = $sumArray['bed_2011_preis'];
-        $obsah = number_format($b2011_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$b_lfd_j_preis = $sumArray['bed_lfd_j_preis'];
+	$obsah = number_format($b_lfd_j_preis, 0, ',', ' ');
+	$pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $b2012_preis = $sumArray['bed_2012_preis'];
-        $obsah = number_format($b2012_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$b_lfd_plus_1_preis = $sumArray['bed_lfd_plus_1_preis'];
+	$obsah = number_format($b_lfd_plus_1_preis, 0, ',', ' ');
+	$pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $pdfobjekt->SetFont("FreeSans", "B", 7);
-        $obsah = "Kg Brutto / Netto";
-        $pdfobjekt->Cell(40, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
-
-        $obsah = number_format(getValueForNode($teilchilds, 'brgew'), 2, ',', ' ') . " / " . number_format(getValueForNode($teilchilds, 'gew'), 2, ',', ' ');
-
-        $pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-
-        $pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
+	$pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
     }
 
     if ($zp == TRUE) {
-        //zielpreis
-        $pdfobjekt->SetFont("FreeSans", "B", 8);
-        $pdfobjekt->SetFillColor(240, 255, 240, 1);
-        $pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, "", '0', 0, 'L', 0);
-        $pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Preis: ", 'LBT', 0, 'L', $fill);
+	//zielpreis
+	$pdfobjekt->SetFont("FreeSans", "B", 8);
+	$pdfobjekt->SetFillColor(240, 255, 240, 1);
+	$pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, "", '0', 0, 'L', 0);
+	$pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Preis: ", 'LBT', 0, 'L', $fill);
 
-        $ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut'));
-        $obsah = number_format($ziel_preis, 4, ',', ' ');
-        $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut'));
+	$obsah = number_format($ziel_preis, 4, ',', ' ');
+	$pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $ziel_vzkd = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) / floatval(getValueForNode($kundechilds, 'preismin'));
-        $obsah = number_format($ziel_vzkd, 4, ',', ' ');
-        $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$ziel_vzkd = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) / floatval(getValueForNode($kundechilds, 'preismin'));
+	$obsah = number_format($ziel_vzkd, 4, ',', ' ');
+	$pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $b2011_ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) * intval(getValueForNode($teilchilds, 'jb_lfd_1'));
-        $sum_zapati_sestava['zielpreis_2011'] += $b2011_ziel_preis;
-        $obsah = number_format($b2011_ziel_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$b_lfd_j_ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) * intval(getValueForNode($teilchilds, 'jb_lfd_j'));
+	$sum_zapati_sestava['zielpreis_lfd_j'] += $b_lfd_j_ziel_preis;
+	$obsah = number_format($b_lfd_j_ziel_preis, 0, ',', ' ');
+	$pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
 
-        $b2012_ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) * intval(getValueForNode($teilchilds, 'jb_lfd_j'));
-        $sum_zapati_sestava['zielpreis_2012'] += $b2012_ziel_preis;
-        $obsah = number_format($b2012_ziel_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	$b_lfd_plus_1_ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) * intval(getValueForNode($teilchilds, 'jb_lfd_plus_1'));
+	$sum_zapati_sestava['zielpreis_lfd_plus_1'] += $b_lfd_plus_1_ziel_preis;
+	$obsah = number_format($b_lfd_plus_1_ziel_preis, 0, ',', ' ');
+	$pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $pdfobjekt->SetFont("FreeSans", "B", 7);
-        $obsah = "Jahresbedarf Stk 2012 / 2013";
-        $pdfobjekt->Cell(40, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
 
-        $obsah = number_format(getValueForNode($teilchilds, 'jb_lfd_1'), 0, ',', ' ') . " / " . number_format(getValueForNode($teilchilds, 'jb_lfd_j'), 0, ',', ' ');
+	// kosten_stk_auss
+	$obsah = "Kosten Auss-Stk [EUR]";
+	$pdfobjekt->Cell(47, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
+	$obsah = number_format(getValueForNode($teilchilds, 'kosten_stk_auss'), 2, ',', ' ');
+	$pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'LBTR', 1, 'R', $fill);
 
-        $pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-        // kosten_stk_auss
-        $obsah = "Kosten Auss-Stk [EUR]";
-        $pdfobjekt->Cell(30, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
-        $obsah = number_format(getValueForNode($teilchilds, 'kosten_stk_auss'), 2, ',', ' ');
-        $pdfobjekt->Cell(0, $vyskaRadku, $obsah, 'LBTR', 1, 'R', $fill);
-        
-        $kosten_stk_auss = floatval(getValueForNode($teilchilds, 'kosten_stk_auss')) * intval(getValueForNode($teilchilds, 'jahr_bedarf_stk_2012'));
-        $sum_zapati_sestava['kosten_stk_auss'] += $kosten_stk_auss;
-        // novy radek
+	$kosten_stk_auss = floatval(getValueForNode($teilchilds, 'kosten_stk_auss')) * intval(getValueForNode($teilchilds, 'jb_lfd_j'));
+	$sum_zapati_sestava['kosten_stk_auss'] += $kosten_stk_auss;
+	// novy radek
 //        $pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
 
-        if (!$nurKopfZielpreis) {
-            //deltas
-            $pdfobjekt->SetFont("FreeSans", "B", 8);
-            $pdfobjekt->SetFillColor(255, 255, 255, 1);
-            $pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, "", '0', 0, 'L', 0);
-            $pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Diff ( Ziel / APL ): ", 'LBT', 0, 'L', $fill);
+	if (!$nurKopfZielpreis) {
+	    //deltas
+	    $pdfobjekt->SetFont("FreeSans", "B", 8);
+	    $pdfobjekt->SetFillColor(255, 255, 255, 1);
+	    $pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, "", '0', 0, 'L', 0);
+	    $pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Diff ( Ziel / APL ): ", 'LBT', 0, 'L', $fill);
 
-            $delta_preis = $ziel_preis - $preis;
-            if (round($delta_preis) < 0)
-                $pdfobjekt->SetTextColor(255, 0, 0);
-            else
-                $pdfobjekt->SetTextColor(0, 0, 0);
+	    $delta_preis = $ziel_preis - $preis;
+	    if (round($delta_preis) < 0)
+		$pdfobjekt->SetTextColor(255, 0, 0);
+	    else
+		$pdfobjekt->SetTextColor(0, 0, 0);
 
-            $obsah = number_format($delta_preis, 4, ',', ' ');
-            $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	    $obsah = number_format($delta_preis, 4, ',', ' ');
+	    $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $delta_vzkd = $ziel_vzkd - $vzkd;
-            if (round($delta_vzkd) < 0)
-                $pdfobjekt->SetTextColor(255, 0, 0);
-            else
-                $pdfobjekt->SetTextColor(0, 0, 0);
+	    $delta_vzkd = $ziel_vzkd - $vzkd;
+	    if (round($delta_vzkd) < 0)
+		$pdfobjekt->SetTextColor(255, 0, 0);
+	    else
+		$pdfobjekt->SetTextColor(0, 0, 0);
 
-            $obsah = number_format($delta_vzkd, 4, ',', ' ');
-            $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	    $obsah = number_format($delta_vzkd, 4, ',', ' ');
+	    $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $b2011_delta_preis = $b2011_ziel_preis - $b2011_preis;
-            if (round($b2011_delta_preis) < 0)
-                $pdfobjekt->SetTextColor(255, 0, 0);
-            else
-                $pdfobjekt->SetTextColor(0, 0, 0);
-            $obsah = number_format($b2011_delta_preis, 0, ',', ' ');
-            $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	    $b_lfd_j_delta_preis = $b_lfd_j_ziel_preis - $b_lfd_j_preis;
+	    if (round($b_lfd_j_delta_preis) < 0)
+		$pdfobjekt->SetTextColor(255, 0, 0);
+	    else
+		$pdfobjekt->SetTextColor(0, 0, 0);
+	    $obsah = number_format($b_lfd_j_delta_preis, 0, ',', ' ');
+	    $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
 
-            $b2012_delta_preis = $b2012_ziel_preis - $b2012_preis;
+	    $b_lfd_plus_1_delta_preis = $b_lfd_plus_1_ziel_preis - $b_lfd_plus_1_preis;
 
-            if (round($b2012_delta_preis) < 0)
-                $pdfobjekt->SetTextColor(255, 0, 0);
-            else
-                $pdfobjekt->SetTextColor(0, 0, 0);
+	    if (round($b_lfd_plus_1_delta_preis) < 0)
+		$pdfobjekt->SetTextColor(255, 0, 0);
+	    else
+		$pdfobjekt->SetTextColor(0, 0, 0);
 
-            $obsah = number_format($b2012_delta_preis, 0, ',', ' ');
-            $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	    $obsah = number_format($b_lfd_plus_1_delta_preis, 0, ',', ' ');
+	    $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $pdfobjekt->SetTextColor(0, 0, 0);
+	    $pdfobjekt->SetTextColor(0, 0, 0);
+	    // kosten_stk_auss zu zielpreis
+	    $obsah = "KostenAussStk Factor";
+	    $pdfobjekt->Cell(47, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
+	    $cislo = $ziel_preis != 0 ? floatval(getValueForNode($teilchilds, 'kosten_stk_auss')) / $ziel_preis : 0;
+	    $obsah = number_format($cislo, 2, ',', ' ');
+	    $pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'LBTR', 1, 'R', $fill);
 
-            $tonnen2011 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_1')) / 1000;
-            $sum_zapati_sestava['tonnen_2011'] += $tonnen2011;
-            $tonnen2012 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_j')) / 1000;
-            $sum_zapati_sestava['tonnen_2012'] += $tonnen2012;
 
-            $pdfobjekt->SetFont("FreeSans", "B", 7);
-            $obsah = "Jahresbedarf Ton 2012 / 2013";
-            $pdfobjekt->Cell(40, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
-
-            $obsah = number_format($tonnen2011, 0, ',', ' ') . " / " . number_format($tonnen2012, 0, ',', ' ');
-
-            $pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-            // kosten_stk_auss zu zielpreis
-        $obsah = "KostenAussStk Factor";
-        $pdfobjekt->Cell(30, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
-        $cislo = $ziel_preis!=0?floatval(getValueForNode($teilchilds, 'kosten_stk_auss'))/$ziel_preis:0;
-        $obsah = number_format($cislo, 2, ',', ' ');
-        $pdfobjekt->Cell(0, $vyskaRadku, $obsah, 'LBTR', 1, 'R', $fill);
-	
-            $pdfobjekt->Cell(
-		    $cells['abgnr']['sirka']
-		    +$cells['abgnr_name']['sirka']
-		    , $vyskaRadku, "Bedarf [Stk] Jahr 2011/2012/2013/gut 2012", 'LRBT', 0, 'L', 0);
-            
-           $cislo = floatval(getValueForNode($teilchilds, 'jb_lfd_2'));
-	   $obsah = number_format($cislo, 0,',', ' ');
-	   $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-           $cislo = floatval(getValueForNode($teilchilds, 'jb_lfd_1'));
-	   $obsah = number_format($cislo, 0,',', ' ');
-	   $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-	    
-           $cislo = floatval(getValueForNode($teilchilds, 'jb_lfd_j'));
-	   $obsah = number_format($cislo, 0,',', ' ');
-	   $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-           $cislo = floatval(getValueForNode($teilchilds, 'gut_lfd_1'));
-	   $obsah = number_format($cislo, 0,',', ' ');
-	   $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-	   
-	   $pdfobjekt->Cell(0, $vyskaRadku, "", '', 1, 'R', 0);
-        }
+	    $pdfobjekt->Cell(0, $vyskaRadku, "", '', 1, 'R', 0);
+	}
     }
-    else{
-        // v pripade, ze nezobrazuju Zielpreis a diff, pokusu kusy s bedarfem doleva
-        //zielpreis
-        $pdfobjekt->SetFont("FreeSans", "B", 8);
-        $pdfobjekt->SetFillColor(240, 255, 240, 1);
-        $pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, "", '0', 0, 'L', 0);
-        $pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Jahresbedarf Stk", 'LBT', 0, 'L', $fill);
-
-        $ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut'));
-        $obsah = '';//number_format($ziel_preis, 4, ',', ' ');
-        $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
-
-        $ziel_vzkd = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) / floatval(getValueForNode($kundechilds, 'preismin'));
-        $obsah = '';//number_format($ziel_vzkd, 4, ',', ' ');
-        $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BTR', 0, 'R', $fill);
-
-        
-        $b2011_ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) * intval(getValueForNode($teilchilds, 'jb_lfd_1'));
-        $sum_zapati_sestava['zielpreis_2011'] += $b2011_ziel_preis;
-        $obsah = number_format($b2011_ziel_preis, 0, ',', ' ');
-        $obsah = number_format(getValueForNode($teilchilds, 'jb_lfd_1'), 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-        $b2012_ziel_preis = floatval(getValueForNode($teilchilds, 'preis_stk_gut')) * intval(getValueForNode($teilchilds, 'jb_lfd_j'));
-        $sum_zapati_sestava['zielpreis_2012'] += $b2012_ziel_preis;
-        $obsah = number_format($b2012_ziel_preis, 0, ',', ' ');
-        $obsah = number_format(getValueForNode($teilchilds, 'jb_lfd_j'), 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-        $pdfobjekt->SetFont("FreeSans", "B", 7);
-        $obsah = '';//"Jahresbedarf Stk 2011 / 2012";
-        $pdfobjekt->Cell(40, $vyskaRadku, $obsah, '0', 0, 'L', 0);
-
-        $obsah = '';
-
-        $pdfobjekt->Cell(20, $vyskaRadku, $obsah, '0', 0, 'R', 0);
-
-        // kosten_stk_auss
-        $obsah = '';//"Kosten Auss-Stk [EUR]";
-        $pdfobjekt->Cell(30, $vyskaRadku, $obsah, '0', 0, 'L', 0);
-        $obsah = '';//number_format(getValueForNode($teilchilds, 'kosten_stk_auss'), 2, ',', ' ');
-        $pdfobjekt->Cell(0, $vyskaRadku, $obsah, '0', 1, 'R', 0);
-        
-        $kosten_stk_auss = floatval(getValueForNode($teilchilds, 'kosten_stk_auss')) * intval(getValueForNode($teilchilds, 'jahr_bedarf_stk_2012'));
-        $sum_zapati_sestava['kosten_stk_auss'] += $kosten_stk_auss;
-        // novy radek
-//        $pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
-
-        if (!$nurKopfZielpreis) {
-            //deltas
-            $pdfobjekt->SetFont("FreeSans", "B", 8);
-            $pdfobjekt->SetFillColor(255, 255, 255, 1);
-            $pdfobjekt->Cell($cells['abgnr']['sirka'], $vyskaRadku, "", '0', 0, 'L', 0);
-            $pdfobjekt->Cell($cells['abgnr_name']['sirka'], $vyskaRadku, "Jahresbedarf to", 'LBT', 0, 'L', $fill);
-
-            $delta_preis = $ziel_preis - $preis;
-//            if (round($delta_preis) < 0)
-//                $pdfobjekt->SetTextColor(255, 0, 0);
-//            else
-//                $pdfobjekt->SetTextColor(0, 0, 0);
-
-            $obsah = '';//number_format($delta_preis, 4, ',', ' ');
-            $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
-
-            $delta_vzkd = $ziel_vzkd - $vzkd;
-//            if (round($delta_vzkd) < 0)
-//                $pdfobjekt->SetTextColor(255, 0, 0);
-//            else
-//                $pdfobjekt->SetTextColor(0, 0, 0);
-
-            $obsah = '';//number_format($delta_vzkd, 4, ',', ' ');
-            $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BTR', 0, 'R', $fill);
-
-            $b2011_delta_preis = $b2011_ziel_preis - $b2011_preis;
-//            if (round($b2011_delta_preis) < 0)
-//                $pdfobjekt->SetTextColor(255, 0, 0);
-//            else
-//                $pdfobjekt->SetTextColor(0, 0, 0);
-            
-            $tonnen2011 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_1')) / 1000;
-            $obsah = number_format($tonnen2011, 0, ',', ' ');
-//            $obsah = number_format($b2011_delta_preis, 0, ',', ' ');
-            $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-//    $b2011_delta_vzkd = $b2011_ziel_vzkd-$b2011_vzkd;
-//    $obsah = number_format($b2011_delta_vzkd, 0, ',', ' ');
-//    $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-            $b2012_delta_preis = $b2012_ziel_preis - $b2012_preis;
-
-//            if (round($b2012_delta_preis) < 0)
-//                $pdfobjekt->SetTextColor(255, 0, 0);
-//            else
-//                $pdfobjekt->SetTextColor(0, 0, 0);
-
-            $obsah = number_format($b2012_delta_preis, 0, ',', ' ');
-            $tonnen2012 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_j')) / 1000;
-            $obsah = number_format($tonnen2012, 0, ',', ' ');
-
-            $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-
-            $pdfobjekt->SetTextColor(0, 0, 0);
-
-            $tonnen2011 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_1')) / 1000;
-            $sum_zapati_sestava['tonnen_2011'] += $tonnen2011;
-            $tonnen2012 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_j')) / 1000;
-            $sum_zapati_sestava['tonnen_2012'] += $tonnen2012;
-
-            $pdfobjekt->SetFont("FreeSans", "B", 7);
-            $obsah = '';//"Jahresbedarf Ton 2011 / 2012";
-            $pdfobjekt->Cell(40, $vyskaRadku, $obsah, '0', 0, 'L', 0);
-
-            $obsah = '';//number_format($tonnen2011, 0, ',', ' ') . " / " . number_format($tonnen2012, 0, ',', ' ');
-
-            $pdfobjekt->Cell(20, $vyskaRadku, $obsah, '0', 0, 'R', 0);
-
-            // kosten_stk_auss zu zielpreis
-        $obsah = '';//"KostenAussStk Factor";
-        $pdfobjekt->Cell(30, $vyskaRadku, $obsah, '0', 0, 'L', 0);
-        $cislo = $ziel_preis!=0?floatval(getValueForNode($teilchilds, 'kosten_stk_auss'))/$ziel_preis:0;
-        $obsah = '';//number_format($cislo, 2, ',', ' ');
-        $pdfobjekt->Cell(0, $vyskaRadku, $obsah, '0', 1, 'R', 0);
-
-//            $pdfobjekt->Cell(0, $vyskaRadku, "", '', 1, 'R', 0);
-        }
-        
+    else {
+	// v pripade, ze nezobrazuju Zielpreis a diff, pokusu kusy s bedarfem doleva
     }
 
-    $pdfobjekt->Ln();
+//    $pdfobjekt->Ln();
 }
+
 
 function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $kundechilds, $abgnrArray, $abgnrTextArray, $sumAbgnrArray) {
 
@@ -609,12 +428,13 @@ function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $
         $obsah = "";
         $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
 
-        $b2011_preis = $sumAbgnrArray[$abgnr]['bed_2011_preis'];
-        $obsah = number_format($b2011_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
-        $b2012_preis = $sumAbgnrArray[$abgnr]['bed_2012_preis'];
-        $obsah = number_format($b2012_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+        $b_lfd_j_preis = $sumAbgnrArray[$abgnr]['bed_lfd_j_preis'];
+        $obsah = number_format($b_lfd_j_preis, 0, ',', ' ');
+        $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+        
+	$b_lfd_plus_1_preis = $sumAbgnrArray[$abgnr]['bed_lfd_plus_1_preis'];
+        $obsah = number_format($b_lfd_plus_1_preis, 0, ',', ' ');
+        $pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
         $pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
     }
 
@@ -633,13 +453,13 @@ function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $
         $obsah = "";
         $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
 
-        $b2011_preis = $sumArray['bed_2011_preis'];
-        $obsah = number_format($b2011_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+        $b_lfd_j_preis = $sumArray['bed_lfd_j_preis'];
+        $obsah = number_format($b_lfd_j_preis, 0, ',', ' ');
+        $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $b2012_preis = $sumArray['bed_2012_preis'];
-        $obsah = number_format($b2012_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+        $b_lfd_plus_1_preis = $sumArray['bed_lfd_plus_1_preis'];
+        $obsah = number_format($b_lfd_plus_1_preis, 0, ',', ' ');
+        $pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
         $pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
     }
@@ -659,13 +479,13 @@ function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $
         $obsah = "";
         $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
 
-        $b2011_ziel_preis = $sumArray['zielpreis_2011'];
-        $obsah = number_format($b2011_ziel_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2011_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+        $b_lfd_j_ziel_preis = $sumArray['zielpreis_lfd_j'];
+        $obsah = number_format($b_lfd_j_ziel_preis, 0, ',', ' ');
+        $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-        $b2012_ziel_preis = $sumArray['zielpreis_2012'];
-        $obsah = number_format($b2012_ziel_preis, 0, ',', ' ');
-        $pdfobjekt->Cell($cells['bed_2012_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+        $b_lfd_plus_1_ziel_preis = $sumArray['zielpreis_lfd_plus_1'];
+        $obsah = number_format($b_lfd_plus_1_ziel_preis, 0, ',', ' ');
+        $pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
         $pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
 
@@ -686,30 +506,30 @@ function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $
             $delta_vzkd = $ziel_vzkd - $vzkd;
             $obsah = "";
             $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
-            $b2011_ziel_preis = $sumArray['zielpreis_2011'];
-            $b2012_ziel_preis = $sumArray['zielpreis_2012'];
-            $b2011_delta_preis = $b2011_ziel_preis - $b2011_preis;
-            $obsah = number_format($b2011_delta_preis, 0, ',', ' ');
+            $b_lfd_j_ziel_preis = $sumArray['zielpreis_lfd_j'];
+            $b_lfd_plus_1_ziel_preis = $sumArray['zielpreis_lfd_plus_1'];
+            $b_lfd_j_delta_preis = $b_lfd_j_ziel_preis - $b_lfd_j_preis;
+            $obsah = number_format($b_lfd_j_delta_preis, 0, ',', ' ');
             $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $b2012_delta_preis = $b2012_ziel_preis - $b2012_preis;
-            $obsah = number_format($b2012_delta_preis, 0, ',', ' ');
+            $b_lfd_plus_1_delta_preis = $b_lfd_plus_1_ziel_preis - $b_lfd_plus_1_preis;
+            $obsah = number_format($b_lfd_plus_1_delta_preis, 0, ',', ' ');
             $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $tonnen2011 = $sumArray['tonnen_2011'];
-            $tonnen2012 = $sumArray['tonnen_2012'];
+            $tonnen_lfd_j = $sumArray['tonnen_lfd_j'];
+            $tonnen_lfd_plus_1 = $sumArray['tonnen_lfd_plus_1'];
 
             $pdfobjekt->SetFont("FreeSans", "B", 7);
-            $obsah = "Jahresbedarf to 2012 / 2013";
+            $obsah = "Jahresbedarf to 2013 / 2014";
             $pdfobjekt->Cell(40, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
 
-            $obsah = number_format($tonnen2011, 0, ',', ' ') . " / " . number_format($tonnen2012, 0, ',', ' ');
+            $obsah = number_format($tonnen_lfd_j, 0, ',', ' ') . " / " . number_format($tonnen_lfd_plus_1, 0, ',', ' ');
 
             $pdfobjekt->Cell(20, $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
             // kosten_stk_auss zu zielpreis
             $obsah = "KostenAussStk Factor";
             $pdfobjekt->Cell(30, $vyskaRadku, $obsah, 'LBTR', 0, 'L', $fill);
-            $cislo = $b2012_ziel_preis!=0?$sumArray['kosten_stk_auss']/$b2012_ziel_preis:0;
+            $cislo = $b_lfd_j_ziel_preis!=0?$sumArray['kosten_stk_auss']/$b_lfd_j_ziel_preis:0;
             $obsah = number_format($cislo, 2, ',', ' ');
             $pdfobjekt->Cell(0, $vyskaRadku, $obsah, 'LBTR', 1, 'R', $fill);
 
@@ -735,24 +555,24 @@ function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $
             $delta_vzkd = $ziel_vzkd - $vzkd;
             $obsah = "";
             $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
-            $b2011_ziel_preis = $sumArray['zielpreis_2011'];
-            $b2012_ziel_preis = $sumArray['zielpreis_2012'];
-            $b2011_delta_preis = $b2011_ziel_preis - $b2011_preis;
+            $b_lfd_j_ziel_preis = $sumArray['zielpreis_lfd_j'];
+            $b_lfd_plus_1_ziel_preis = $sumArray['zielpreis_lfd_plus_1'];
+            $b_lfd_j_delta_preis = $b_lfd_j_ziel_preis - $b_lfd_j_preis;
             
-            $tonnen2011 = $sumArray['tonnen_2011'];
-            $tonnen2012 = $sumArray['tonnen_2012'];
+            $tonnen_lfd_j = $sumArray['tonnen_lfd_j'];
+            $tonnen_lfd_plus_1 = $sumArray['tonnen_lfd_plus_1'];
             
-            $obsah = number_format($b2011_delta_preis, 0, ',', ' ');
-            $obsah = number_format($tonnen2011, 0, ',', ' ');
+            $obsah = number_format($b_lfd_j_delta_preis, 0, ',', ' ');
+            $obsah = number_format($tonnen_lfd_j, 0, ',', ' ');
             $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $b2012_delta_preis = $b2012_ziel_preis - $b2012_preis;
-            $obsah = number_format($b2012_delta_preis, 0, ',', ' ');
-            $obsah = number_format($tonnen2012, 0, ',', ' ');
+            $b_lfd_plus_1_delta_preis = $b_lfd_plus_1_ziel_preis - $b_lfd_plus_1_preis;
+            $obsah = number_format($b_lfd_plus_1_delta_preis, 0, ',', ' ');
+            $obsah = number_format($tonnen_lfd_plus_1, 0, ',', ' ');
             $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-            $tonnen2011 = $sumArray['tonnen_2011'];
-            $tonnen2012 = $sumArray['tonnen_2012'];
+            $tonnen_lfd_j = $sumArray['tonnen_lfd_j'];
+            $tonnen_lfd_plus_1 = $sumArray['tonnen_lfd_plus_1'];
 
             $obsah='';
             $pdfobjekt->Cell(0, $vyskaRadku, $obsah, '0', 1, 'R', 0);
@@ -855,6 +675,79 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 	}
 }
 
+/**
+ *
+ * @param TCPDF $pdf
+ * @param type $left
+ * @param type $top
+ * @param type $vyskaradku 
+ */
+function printBedarfTable($pdf,$left,$top,$vyskaradku,$nodes,$sumArray){
+    $cols = array(
+	array('width'=>20),
+	array('width'=>20),
+	array('width'=>20),
+	array('width'=>20),
+    );
+    
+    // whole width
+    foreach ($cols as $value) {
+	$tableWidth += $value['width'];
+    }
+    //header
+    $pdf->SetY($top);
+    $pdf->SetX(-($tableWidth+PDF_MARGIN_RIGHT));
+    
+    $pdf->SetFont("FreeSans", "B", 8);
+    $pdf->Cell($cols[0]['width'], $vyskaradku, "", 'LRBT', 0, 'L', 0);
+    $pdf->Cell($cols[1]['width'], $vyskaradku, "Stk", 'LRBT', 0, 'R', 0);
+    $pdf->Cell($cols[2]['width'], $vyskaradku, "to", 'LRBT', 0, 'R', 0);
+    $pdf->Cell($cols[3]['width'], $vyskaradku, "EUR", 'LRBT', 1, 'R', 0);
+    
+//    		    'jb_lfd_1',
+//		    'jb_lfd_plus_1',
+//		    'jb_lfd_j',
+//		    'stk_g_ist_2012',
+//		    'stk_g_ist_2013',
+//		    'stk_g_ist_2014',
+
+    $jb_lfd_1 = getValueForNode($nodes, 'jb_lfd_1');
+    $jb_lfd_j = getValueForNode($nodes, 'jb_lfd_j');
+    $jb_lfd_plus_1 = getValueForNode($nodes, 'jb_lfd_plus_1');
+    
+    $stk_g_ist_2012 = getValueForNode($nodes, 'stk_g_ist_2012');
+    $stk_g_ist_2013 = getValueForNode($nodes, 'stk_g_ist_2013');
+    
+    $gew = getValueForNode($nodes, 'gew');
+    
+//    $stk_g_ist_2014 = getValueForNode($nodes, 'stk_g_ist_2014');
+    
+    
+    
+    $rows = array(
+	array("JB - 2012",$jb_lfd_1,0,0),
+	array("Ist - 2012",$stk_g_ist_2012,0,0),
+	array("JB - 2013",$jb_lfd_j,0,0),
+	array("Ist - 2013",$stk_g_ist_2013,0,0),
+	array("JB - 2014",$jb_lfd_plus_1,0,0),
+    );
+    
+    foreach ($rows as $key => $value) {
+	$rows[$key][2] = number_format($rows[$key][1] * $gew/1000,0,',',' ');
+	$rows[$key][3] = number_format($rows[$key][1] * $sumArray['preis'],0,',',' ');
+    }
+    
+    $pdf->SetFont("FreeSans", "", 8);
+    foreach ($rows as $fields) {
+	$pdf->SetX(-($tableWidth+PDF_MARGIN_RIGHT));
+	foreach ($fields as $index=>$value) {
+	    $align = 'R';
+	    if($index==0) $align='L';
+	    $pdf->Cell($cols[$index]['width'], $vyskaradku, $value, 'LRBT', 0, $align, 0);
+	}
+	$pdf->Ln();
+    }
+}
 
 require_once('../tcpdf/config/lang/eng.php');
 require_once('../tcpdf/tcpdf.php');
@@ -888,11 +781,13 @@ $pdf->SetFont("FreeSans", "", 8);
 
 $pdf->AddPage();
 pageheader($pdf, 5);
+$zbyva = $pdf->getPageHeight();
+
 // zacinam po dilech
 $kunden = $domxml->getElementsByTagName("kunde");
 foreach ($kunden as $kunde) {
     $kundeChilds = $kunde->childNodes;
-
+    
     $teile = $kunde->getElementsByTagName("teil");
     foreach ($teile as $teil) {
         nuluj_sumy_pole($sum_zapati_teil);
@@ -900,9 +795,16 @@ foreach ($kunden as $kunde) {
         $taetigkeiten = $teil->getElementsByTagName("tat");
         $tatCount = 0;
         foreach ($taetigkeiten as $tat) $tatCount++;
-        test_pageoverflow_noheader($pdf, 5*($tatCount+1+3));
-        
-        zahlavi_teil($pdf, 5, $teilChildNodes);
+	$maxRadku = max(array($tatCount+5,10));
+	if($zbyva<$maxRadku*5){
+	    $pdf->AddPage();
+	    pageheader($pdf, 5);
+	}
+	zahlavi_teil($pdf, 5, $teilChildNodes);
+	$top = $pdf->GetY();
+	
+	$pocetTat = 0;
+	$neededRows = 5;
         foreach ($taetigkeiten as $tat) {
             $tatChildNodes = $tat->childNodes;
             $abgnr = getValueForNode($tatChildNodes, 'abgnr');
@@ -910,14 +812,31 @@ foreach ($kunden as $kunde) {
             if(!$nurKopfZielpreis) detaily($pdf, $cells, 5, array(255, 255, 255), $tatChildNodes,$abgnr,$vzkd);
             $abgnrArray[$abgnr]++;
             $abgnrTextArray[$abgnr] = getValueForNode($tatChildNodes, 'abgnr_name');;
-            $sum_zapati_sestava_abgnr[$abgnr]['bed_2011_preis'] += floatval(getValueForNode($tatChildNodes, 'bed_2011_preis'));
-            $sum_zapati_sestava_abgnr[$abgnr]['bed_2012_preis'] += floatval(getValueForNode($tatChildNodes, 'bed_2012_preis'));
+            $sum_zapati_sestava_abgnr[$abgnr]['bed_lfd_1_preis'] += floatval(getValueForNode($tatChildNodes, 'bed_lfd_1_preis'));
+            $sum_zapati_sestava_abgnr[$abgnr]['bed_lfd_j_preis'] += floatval(getValueForNode($tatChildNodes, 'bed_lfd_j_preis'));
+	    $sum_zapati_sestava_abgnr[$abgnr]['bed_lfd_plus_1_preis'] += floatval(getValueForNode($tatChildNodes, 'bed_lfd_plus_1_preis'));
+	    $pocetTat++;
             foreach ($sum_zapati_teil as $key => $value) {
                 $hodnota = getValueForNode($tatChildNodes, $key);
                 $sum_zapati_teil[$key]+=$hodnota;
             }
         }
+	// make enough room for bedarf table
+	for($i=0;$i<($neededRows-$pocetTat);$i++){
+	    $pdf->Ln(5);
+	}
+	    
         zapati_teil($pdf, 5, array(255, 255, 240), $sum_zapati_teil, $teilChildNodes, $kundeChilds);
+	$y=$pdf->GetY();
+	//spocitat, klik zbyva mista na strance vertikalne
+	$vyskaStranky = $pdf->getPageHeight()-$pdf->getBreakMargin();
+	$zbyva = $vyskaStranky-$y;
+//	$pdf->Cell(0, 5, "zbyva ".$zbyva,'1');
+	$left = 150;//$pdf->GetX()+$cells['abgnr']['sirka']+$cells['abgnr_name']['sirka']+$cells['preis']['sirka']+$cells['vzkd']['sirka']+$cells['bed_lfd_j_preis']['sirka']+$cells['bed_lfd_plus_1_preis']['sirka'];
+//	$top = $pdf->GetY();
+	printBedarfTable($pdf, $left, $top, 5, $teilChildNodes,$sum_zapati_teil);
+	// abych neovlivnil predchoti tok dokumentu vratim hodnotu y po vykresleni zapati dilu
+	$pdf->SetY($y);
         foreach($sum_zapati_sestava as $key=>$value){
             $hodnota = $sum_zapati_teil[$key];
             $sum_zapati_sestava[$key] += $hodnota;
@@ -928,16 +847,7 @@ foreach ($kunden as $kunde) {
 ksort($abgnrArray);
 $pdf->AddPage();
 pageheader($pdf, 5);
-
 zapati_sestava($pdf, 5, array(240, 240, 255), $sum_zapati_sestava, $teilChildNodes, $kundeChilds,$abgnrArray,$abgnrTextArray,$sum_zapati_sestava_abgnr);
-
-
-//echo "<pre>";
-//var_dump($abgnrArray);
-//echo "</pre>";
-//echo "<pre>";
-//var_dump($sum_zapati_sestava_abgnr);
-//echo "</pre>";
 //Close and output PDF document
 $pdf->Output();
 

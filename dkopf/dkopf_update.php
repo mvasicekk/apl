@@ -11,6 +11,7 @@ require_once '../db.php';
     
     if($id=="jb_lfd_2") $value = intval($value);
     if($id=="jb_lfd_1") $value = intval($value);
+    if($id=="jb_lfd_plus_1") $value = intval($value);
     if($id=="jb_lfd_j") $value = intval($value);
     if($id=="preis_stk_gut") $value = floatval(strtr($value, ',', '.'));
     if($id=="preis_stk_auss") $value = floatval(strtr($value, ',', '.'));

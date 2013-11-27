@@ -53,6 +53,7 @@ $smarty = new Smarty;
                 $smarty->assign("jb_lfd_2_value",$row['jb_lfd_2']);
                 $smarty->assign("jb_lfd_1_value",$row['jb_lfd_1']);
                 $smarty->assign("jb_lfd_j_value",$row['jb_lfd_j']);
+		$smarty->assign("jb_lfd_plus_1_value",$row['jb_lfd_plus_1']);
                 $smarty->assign("restmengen_verw_value",$row['restmengen_verw']);
                 $smarty->assign("fremdauftr_dkopf_value",$row['fremdauftr_dkopf']);
                 $smarty->assign("status_value",$row['status']);
