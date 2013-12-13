@@ -1,6 +1,7 @@
 <?
 session_start();
 require "../../fns_dotazy.php";
+require_once '../../db.php';
 dbConnect();
 
 
@@ -26,6 +27,7 @@ dbConnect();
 	
 	//otestovat, jestli zadany export existuje a neni uz nahodou vyfakturovany
 
+	$a = AplDB::getInstance();
 	mysql_query('set names utf8');
 	
 	$ident = get_user_pc();
@@ -73,10 +75,13 @@ dbConnect();
 			{
 			    //vyber z versandlageru
 			    $palStr = strval($pal);
-			    $dil = getTeilFromAuftragPal($import,$pal);
+//			    $dil = getTeilFromAuftragPal($import,$pal);
+			    $dauftrRow = $a->getDauftrRow($id);
+			    $auftragsnr = $dauftrRow['auftragsnr'];
+			    $dil = $dauftrRow['teil'];
 			    if (substr($palStr, strlen($palStr) - 1) == "7") {
 				$sql_insert = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser) ";
-				$sql_insert.= "values ('$dil','$import','$pal','$gut',0,'8V','9V','$ident')";
+				$sql_insert.= "values ('$dil','$auftragsnr','$pal','$gut',0,'8V','9V','$ident')";
 				mysql_query($sql_insert);
 			    }
 			    //------------------------------------------------------------------
@@ -84,12 +89,12 @@ dbConnect();
 				$lVon = '8E';
 				$lNach = '8X';
 				// pokud mam nenulovy dobrych pocet kusu ve skladu 8X, budu stornovat posledni exportni pozici
-				$pocetKusu = getLagerGutAuftragPalette($import,$pal,$lNach);
+				$pocetKusu = getLagerGutAuftragPalette($auftragsnr,$pal,$lNach);
 				
 				if($pocetKusu>0)
 				{
 					// vystornuju posledni exportni zaznam
-					$sql = "select gut_stk from dlagerbew where ((auftrag_import='$import') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc limit 1";
+					$sql = "select gut_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc limit 1";
 					$res = mysql_query($sql);
 
 					if(mysql_affected_rows()>0)
@@ -97,18 +102,18 @@ dbConnect();
 						$row = mysql_fetch_array($res);
 						$stornoStk = $row['gut_stk'];
 						// 	potrebuju znat cislo dilu, ktery na v dane zakazce na dane palete
-						$dil = getTeilFromAuftragPal($import,$pal);
-						insertLagerVonNach($dil,$import,$pal,$stornoStk,0,$lNach,$lVon,$ident);						
+//						$dil = getTeilFromAuftragPal($import,$pal);
+						insertLagerVonNach($dil,$auftragsnr,$pal,$stornoStk,0,$lNach,$lVon,$ident);						
 					}
 				}
 				
 				// to same pro sklad XX
-				$pocetKusu = getLagerGutAuftragPalette($import,$pal,"XX");
+				$pocetKusu = getLagerGutAuftragPalette($auftragsnr,$pal,"XX");
 				
 				if($pocetKusu>0)
 				{
 					// vystornuju posledni exportni zaznam
-					$sql = "select lager_von,gut_stk from dlagerbew where ((auftrag_import='$import') and (pal_import='$pal') and (lager_nach='XX')) order by date_stamp desc limit 1";
+					$sql = "select lager_von,gut_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_nach='XX')) order by date_stamp desc limit 1";
 					$res = mysql_query($sql);
 
 					if(mysql_affected_rows()>0)
@@ -117,8 +122,8 @@ dbConnect();
 						$stornoStk = $row['gut_stk'];
 						$lVon = $row['lager_von'];
 						// 	potrebuju znat cislo dilu, ktery na v dane zakazce na dane palete
-						$dil = getTeilFromAuftragPal($import,$pal);
-						insertLagerVonNach($dil,$import,$pal,$stornoStk,0,"XX",$lVon,$ident);						
+//						$dil = getTeilFromAuftragPal($import,$pal);
+						insertLagerVonNach($dil,$auftragsnr,$pal,$stornoStk,0,"XX",$lVon,$ident);						
 					}
 				}
 				
@@ -128,11 +133,11 @@ dbConnect();
 				$poradiAussTyp=0;
 				foreach($aussTypenB as $aussTyp)
 				{
-					if(getLagerAussAuftragPalette($import,$pal,$aussTyp)!=0)
+					if(getLagerAussAuftragPalette($auftragsnr,$pal,$aussTyp)!=0)
 					{
 						$lVon = $aussTypenA[$poradiAussTyp];
 						$lNach = $aussTyp;
-						$sql = "select lager_nach,lager_von,auss_stk from dlagerbew where ((auftrag_import='$import') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc";
+						$sql = "select lager_nach,lager_von,auss_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc";
 						$res = mysql_query($sql);
 						if(mysql_affected_rows()>0)
 						{
@@ -140,34 +145,34 @@ dbConnect();
 							$lNach = $row['lager_nach'];
 							$lVon = $row['lager_von'];
 							$aussStk = $row['auss_stk'];
-							$dil = getTeilFromAuftragPal($import,$pal);
-							insertLagerVonNach($dil,$import,$pal,0,$aussStk,$lNach,$lVon,$ident);
+//							$dil = getTeilFromAuftragPal($import,$pal);
+							insertLagerVonNach($dil,$auftragsnr,$pal,0,$aussStk,$lNach,$lVon,$ident);
 						}
 					}
 					$poradiAussTyp++;
 				}
 				
 				// a nakonec vlastni presun do skladu pro export 8E->8X
-				$dil = getTeilFromAuftragPal($import,$pal);
-				insertLagerVonNach($dil,$import,$pal,$gut,0,"8E","8X",$ident);
+//				$dil = getTeilFromAuftragPal($import,$pal);
+				insertLagerVonNach($dil,$auftragsnr,$pal,$gut,0,"8E","8X",$ident);
 				
 				// presun do dummy lagru, aby mi nezbyvalo v prvnim skladu
 				// jmeno prvniho skladu
-				$eL = erster_lager($dil,$import,$pal);
+				$eL = erster_lager($dil,$auftragsnr,$pal);
 				// kolik kusu zbyva v prvnim skladu
-				$pocetKusuVlozenych = getLagerGutIn($import,$pal,$eL);
-				$pocetKusuOdebranych = getLagerGesamtOut($import,$pal,$eL);
+				$pocetKusuVlozenych = getLagerGutIn($auftragsnr,$pal,$eL);
+				$pocetKusuOdebranych = getLagerGesamtOut($auftragsnr,$pal,$eL);
 				$zbyvaKusu = $pocetKusuVlozenych - $pocetKusuOdebranych;
 
-				if($zbyvaKusu!=0)	insertLagerVonNach($dil,$import,$pal,$zbyvaKusu,0,$eL,"XX",$ident);
+				if($zbyvaKusu!=0)	insertLagerVonNach($dil,$auftragsnr,$pal,$zbyvaKusu,0,$eL,"XX",$ident);
 				
 				// presun zmetku ve vyrobe do zmetku vyexportovanych, pocty si beruz tabulky drueck
-				$auss2 = getAussFromDrueckAuftragPalTyp($import,$pal,2);
-				$auss4 = getAussFromDrueckAuftragPalTyp($import,$pal,4);
-				$auss6 = getAussFromDrueckAuftragPalTyp($import,$pal,6);
-				if($auss2!=0) moveAussLagerFromA2B($import,$dil,$pal,$auss2,"A2","B2");
-				if($auss4!=0) moveAussLagerFromA2B($import,$dil,$pal,$auss4,"A4","B4");
-				if($auss6!=0) moveAussLagerFromA2B($import,$dil,$pal,$auss6,"A6","B6");
+				$auss2 = getAussFromDrueckAuftragPalTyp($auftragsnr,$pal,2);
+				$auss4 = getAussFromDrueckAuftragPalTyp($auftragsnr,$pal,4);
+				$auss6 = getAussFromDrueckAuftragPalTyp($auftragsnr,$pal,6);
+				if($auss2!=0) moveAussLagerFromA2B($auftragsnr,$dil,$pal,$auss2,"A2","B2");
+				if($auss4!=0) moveAussLagerFromA2B($auftragsnr,$dil,$pal,$auss4,"A4","B4");
+				if($auss6!=0) moveAussLagerFromA2B($auftragsnr,$dil,$pal,$auss6,"A6","B6");
                 
 			}
 			

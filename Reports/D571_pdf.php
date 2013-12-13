@@ -250,6 +250,46 @@ function telo($pdfobjekt, $pole, $zahlavivyskaradku, $rgb, $funkce, $nodelist, $
     $pdfobjekt->SetFont("FreeSans", "", 7);
 }
 
+function teil_no_doku($pdfobjekt, $pole, $zahlavivyskaradku, $rgb, $funkce, $nodelist) {
+    global $cells;
+    
+    $pdfobjekt->SetFont("FreeSans", "", 6.5);
+    $pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
+
+    $nodes = array('teilnr','teillang','teilbez','brgew','gew','spg');
+    
+    foreach ($nodes as $nodename){
+	$cell = $cells[$nodename];
+	
+	if (array_key_exists("nf", $cell)) {
+	    $cellobsah =
+		    number_format(getValueForNode($nodelist, $nodename), $cell["nf"][0], $cell["nf"][1], $cell["nf"][2]);
+	} else {
+	    $cellobsah = getValueForNode($nodelist, $nodename);
+	}
+
+	/**
+	 * omezeni na pocet znaku
+	 */
+	if (array_key_exists("maxchars", $cell)) {
+	    $maxchars = $cell['maxchars'];
+	    if (strlen($cellobsah) > $maxchars) {
+		$new = substr($cellobsah, 0, $maxchars) . "...";
+		$cellobsah = $new;
+	    }
+	}
+
+//	$cellobsah = getValueForNode($nodelist, $node);
+	$pdfobjekt->Cell($cell["sirka"], $zahlavivyskaradku, $cellobsah, $cell["ram"], $cell["radek"], $cell["align"], $cell["fill"]);
+    }
+
+    $pdfobjekt->SetFont("FreeSans", "B", 6.5);
+    $cellobsah = "KEINE TeileDoku vorhanden !!!";
+    $pdfobjekt->Cell(0, $zahlavivyskaradku, $cellobsah, '1', 1, 'L', 0);
+    $pdfobjekt->SetFillColor($prevFillColor[0], $prevFillColor[1], $prevFillColor[2]);
+    $pdfobjekt->SetFont("FreeSans", "", 7);
+}
+
 // funkce ktera vrati hodnotu podle nodename
 // predam ji nodelist a jmeno node ktereho hodnotu hledam
 function getValueForNode($nodelist,$nodename)
@@ -362,14 +402,21 @@ foreach($kunden as $kunde)
 		$teilChilds=$teil->childNodes;
 		$musterplatz = trim(getValueForNode($teilChilds,"musterplatz"));
 		$dokumente = $teil->getElementsByTagName("dok");
+		$dokumentenAnzahl = 0;
 		foreach($dokumente as $dok)
 		{
 		    $dokChilds=$dok->childNodes;
 		    telo($pdf,$cells,4,array(255,255,255),"",$dokChilds,$newTeil);
 		    test_pageoverflow($pdf,4,$cells_header,4,$kundeChildNodes);
 		    $newTeil = 0;
+		    $dokumentenAnzahl++;
 		}
 		$newTeil = 1;
+		if(($dokumentenAnzahl==0)&&(floatval(getValueForNode($teilChilds, 'gew'))>0)){
+		    // teil hat keine dokumente -> Felhlermaldung zeigen
+		    teil_no_doku($pdf,$cells,4,array(255,255,255),"",$teilChilds);
+		    test_pageoverflow($pdf,4,$cells_header,4,$kundeChildNodes);
+		}
 	}
 }
 test_pageoverflow($pdf,4,$cells_header,4,$kundeChildNodes);
