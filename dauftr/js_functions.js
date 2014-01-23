@@ -229,13 +229,15 @@ function pissuggest(xml)
 		else
 		{
                     // pomoc pri zadavani cisla zakaznika
-                    if(cislo==358)  cislo=355
-                    if(cislo==350)  cislo=355
-		    if(cislo==352)  cislo=355
-                    if(cislo==106)  cislo=107
-                    if(cislo==131)  cislo=130
-		    if(cislo==132)  cislo=130
-		    if(cislo==112)  cislo=111
+                    if(cislo==358)  cislo=355;
+                    if(cislo==350)  cislo=355;
+		    if(cislo==352)  cislo=355;
+                    if(cislo==106)  cislo=107;
+                    if(cislo==131)  cislo=130;
+		    if(cislo==132)  cislo=130;
+		    if(cislo==112)  cislo=111;
+		    if(cislo==113)  cislo=111;
+		    if(cislo==198)  cislo=195;
                     kundeBox.value = cislo;
 		}
 	}

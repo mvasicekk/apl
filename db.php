@@ -1,48 +1,8 @@
 <?php
 
-//function json_encode($a=false)
-//  {
-//    if (is_null($a)) return 'null';
-//    if ($a === false) return 'false';
-//    if ($a === true) return 'true';
-//    if (is_scalar($a))
-//    {
-//      if (is_float($a))
-//      {
-//        // Always use "." for floats.
-//        return floatval(str_replace(",", ".", strval($a)));
-//      }
-//
-//      if (is_string($a))
-//      {
-//        static $jsonReplaces = array(array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
-//        return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
-//      }
-//      else
-//        return $a;
-//    }
-//    $isList = true;
-//    for ($i = 0, reset($a); $i < count($a); $i++, next($a))
-//    {
-//      if (key($a) !== $i)
-//      {
-//        $isList = false;
-//        break;
-//      }
-//    }
-//    $result = array();
-//    if ($isList)
-//    {
-//      foreach ($a as $v) $result[] = json_encode($v);
-//      return '[' . join(',', $result) . ']';
-//    }
-//    else
-//    {
-//      foreach ($a as $k => $v) $result[] = json_encode($k).':'.json_encode($v);
-//      return '{' . join(',', $result) . '}';
-//    }
-//  }
-
+/**
+ * apl main utility class 
+ */
 class AplDB {
 
     private static $instance = null;
@@ -76,8 +36,9 @@ class AplDB {
     const TABLE_DKOPF = 'dkopf';
     const TABLE_DOG = 'dog';
 
+    
     /**
-     *
+     * get an instance of then utility class
      * @return AplDB
      */
     public static function getInstance() {
@@ -104,7 +65,7 @@ class AplDB {
     }
 
 // ------------------------------------------------------------------------
-// verejne metody
+// public methods
 
     /**
      * vrati pole osobnich cisel s nastupem od zadaneho datumu
@@ -129,27 +90,11 @@ class AplDB {
             return NULL;
     }
 
-//    public function getPersnrFromEintritt($dbEintrittVom,$ohneAustritt=TRUE){
-//        if($ohneAustritt===TRUE)
-//            $sql = "select persnr from dpers where eintritt>='$dbEintrittVom' and (austritt is null or austritt<eintritt) order by persnr";
-//        else
-//            $sql = "select persnr from dpers where eintritt>='$dbEintrittVom' order by persnr";
-//        $res = mysql_query($sql);
-//        if(mysql_affected_rows ()>0){
-//            $persnrArray = array();
-//            while($row = mysql_fetch_assoc($res)){
-//                array_push($persnrArray, $row['persnr']);
-//            }
-//            return $persnrArray;
-//        }
-//        else
-//            return NULL;
-//    }
 
     /**
-     * vrati coslo zakaznika podle zadaneho dilu
+     * vrati cislo zakaznika podle zadaneho dilu
      * 
-     * @param type $teil
+     * @param string $teil
      * @return int cislo zakaznika, pokud dil nenajde vrati 0
      */
     public function getKundeFromTeil($teil) {
@@ -163,13 +108,18 @@ class AplDB {
             return 0;
     }
 
+    /**
+     *
+     * @param string $sql 
+     */
     public function query($sql){
 	mysql_query($sql);
     }
+    
     /**
      *
-     * @param type $persnr
-     * @return null 
+     * @param int $persnr
+     * @return array  
      */
     public function getDpersDatumZuschlagArray($persnr) {
         $zuschlagArray = array();
@@ -187,7 +137,7 @@ class AplDB {
 
     /**
      * vrati hmotnost dilu
-     * @param type $teil
+     * @param string $teil
      * @return float hmotnost dilu, pokud dil nenajde vrati 0 
      */
     public function getTeilGewicht($teil) {
@@ -201,14 +151,14 @@ class AplDB {
             return 0;
     }
 
+
     /**
      *
-     * @param type $export
-     * @return null 
+     * @param int $export
+     * @return array or null if $export does not exists
      */
     public function getExDatumSoll($export) {
         $sql = "select auftragsnr as export,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_datum_soll from daufkopf where auftragsnr='$export'";
-        //return $sql;
         $res = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($res);
@@ -221,8 +171,8 @@ class AplDB {
 
     /**
      *
-     * @param type $teil
-     * @return null 
+     * @param string $teil
+     * @return array or null if $teil is not found
      */
     public function getVerpackungMenge($teil) {
         $sql = "select teil,verpackungmenge from dkopf where teil='$teil'";
@@ -240,10 +190,10 @@ class AplDB {
     /**
      * vrati kurs pro prepocet mezi menami, kurs platny pro datum
      * 
-     * @param type $datumDB obdobi, kdy me kurs zajima
-     * @param type $waehrungVon mena z ktere prepocitavam
-     * @param type $waehrungNach mena na kterou chci prepocitat
-     * @return float
+     * @param string $datumDB obdobi, kdy me kurs zajima, in format YYYY-MM-DD
+     * @param string $waehrungVon mena z ktere prepocitavam
+     * @param string $waehrungNach mena na kterou chci prepocitat
+     * @return float if kurs is found, 0 otherwise
      */
     public function getKurs($datumDB, $waehrungVon, $waehrungNach) {
         $sql = "select kurs from dkurs where gilt_von<='$datumDB' and gilt_bis>='$datumDB' and waehr_von='$waehrungVon' and  waehr_nach='$waehrungNach' limit 1";
@@ -288,6 +238,8 @@ class AplDB {
     /**
      *
      * @param type $kunde 
+     * @return number of affected rows
+     * 
      */
     public function saveDauftrTermine($kunde){
 	// smazu predchozi obsah
@@ -306,6 +258,7 @@ class AplDB {
 	$res=mysql_query($sql);
 	return mysql_affected_rows();
     }
+    
     /**
      *
      * oznaci v tabulce drech radky faktury jako mehrarbeit
@@ -330,14 +283,13 @@ class AplDB {
      */
     public function updateMARechnr($export, $ma_rechnr) {
         $sql = "update daufkopf set ma_rechnr='$ma_rechnr' where auftragsnr='$export'";
-        //echo "$sql";
         mysql_query($sql);
     }
 
     /**
-     *
-     * @param <type> $auftragsnr
-     * @return <type> 
+     * gives ma_rechnr for given import
+     * @param int $auftragsnr
+     * @return int ma rechnr 
      */
     public function getMARechNr($auftragsnr) {
         $ma_rechnr = 0;
@@ -369,7 +321,7 @@ class AplDB {
      * @param type $kunde
      * @param type $abgnr
      * @param type $teil
-     * @return type 
+     * @return array
      */
     public function getAbgnrArrayForKundeAbgnr($kunde, $abgnr, $teil = '%') {
         if ($teil == '%') {
@@ -407,7 +359,8 @@ class AplDB {
     }
 
     /**
-     * 
+     *
+     * @return array
      */
     public function getAbyInfoMinuten(){
 	$sql.=" select ";
@@ -433,6 +386,24 @@ class AplDB {
 	$sql.=" where (datum between  subdate(current_date(),day(current_date())-1) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit 30";
 	return $this->getQueryRows($sql);
     }
+    
+    /**
+     * vrati posledni cislo MA faktury ulozene u zakaznika
+     * 
+     * @param type $kunde 
+     */
+    public function getLetzteMARechNrKunde($kunde){
+	$ma_rechnr = 0;
+
+        $sql = "select letzte_ma_rechnr from dksd where kunde='$kunde'";
+        $res = mysql_query($sql);
+        if (mysql_affected_rows() > 0) {
+            $row = mysql_fetch_assoc($res);
+            $ma_rechnr = $row['letzte_ma_rechnr'];
+        }
+        return $ma_rechnr;
+    }
+    
     /**
      *
      * @param type $auftragsnr
@@ -454,6 +425,7 @@ class AplDB {
 
     /**
      *
+     * @return type 
      */
     public function getSchulungenArray() {
         $sql = "select dschulung.beschreibung from dschulung order by dschulung.beschreibung";
@@ -758,11 +730,15 @@ class AplDB {
     }
 
     
+    /**
+     * 
+     */
     public function saveGPalBemerkung($gid,$val){
 	$sql = "update dauftr set bemerkung='$val' where id_dauftr=$gid";
 	mysql_query($sql);
 	return mysql_affected_rows();
     }
+    
     /**
      *
      * @param type $dauftrId 
@@ -1836,8 +1812,14 @@ class AplDB {
      * @param type $value
      * @return type 
      */
-    public function getDokuTypArray($value){
-	$sql = "select doku_nr,doku_beschreibung from dokumenttyp where doku_nr like '$value%' order by doku_nr";
+    public function getDokuTypArray($value=NULL){
+	if($value===NULL){
+	    $sql = "select doku_nr,doku_beschreibung from dokumenttyp order by doku_nr";
+	}
+	else{
+	    $sql = "select doku_nr,doku_beschreibung from dokumenttyp where doku_nr like '$value%' order by doku_nr";
+	}
+	
 	return $this->getQueryRows($sql);
     }
     /**
@@ -3067,7 +3049,7 @@ class AplDB {
      * @return type 
      */
     public function getLetzteReklamation($teil,$limit=5){
-	$sql = "select rekl_nr,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_datum from dreklamation where teil='$teil' order by rekl_datum desc limit $limit";
+	$sql = "select rekl_nr,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_datum,beschr_abweichung,interne_bewertung,giesstag from dreklamation where teil='$teil' order by rekl_datum desc limit $limit";
 	return $this->getQueryRows($sql);
     }
 	
@@ -3646,12 +3628,13 @@ class AplDB {
         // abych pracoval s procentama
 //    echo "<br>$leistfaktor=$leistfaktor";
         $leistfaktor = intval(round($leistfaktor * 100));
-
+// zmena 2014-01-23
+// hranice zustavaji, castky se zmeni 150->200, 100->150, 50->50
 //    echo "<br>$leistfaktor=$leistfaktor";
         if ($leistfaktor >= 115)
-            $betrag = 150;
+            $betrag = 200;
         else if ($leistfaktor >= 100)
-            $betrag = 100;
+            $betrag = 150;
         else if ($leistfaktor >= 85)
             $betrag = 50;
         else

@@ -13,6 +13,8 @@ global $db;
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->query("set names utf8");
 
+// podrobny vyber
+// 
 // vytvorim si nekolik pohledu
 $pcip=get_pc_ip();
 
@@ -139,9 +141,11 @@ $sql.= "     dpos.`TaetNr-Aby` as abgnr,";
 $sql.= "     dpos.`VZ-min-kunde` as vzkd,";
 $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_1 as bed_lfd_1_vzkd,";
 $sql.= "     dpos.`VZ-min-kunde`*dkopf.jb_lfd_j as bed_lfd_j_vzkd,";
+$sql.= "     dpos.`VZ-min-kunde`*dkopf.gut_lfd_1 as gut_lfd_1_vzkd,";
 $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin,4) as preis,";
 $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_1,4) as bed_lfd_1_preis,";
 $sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.jb_lfd_j,4) as bed_lfd_j_preis,";
+$sql.= "     round(dpos.`VZ-min-kunde`*dksd.preismin*dkopf.gut_lfd_1,4) as gut_lfd_1_preis,";
 $sql.= " `dtaetkz-abg`.`Name` as abgnr_name";
 $sql.= " from dkopf";
 $sql.= " join dksd on dksd.Kunde=dkopf.Kunde";
@@ -416,8 +420,10 @@ $options = array(
                             'preis',
                             'bed_lfd_1_vzkd',
                             'bed_lfd_j_vzkd',
+			    'gut_lfd_1_vzkd',
                             'bed_lfd_1_preis',
                             'bed_lfd_j_preis',
+			    'gut_lfd_1_preis',
                         ),
                     ),
                 ),

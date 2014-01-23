@@ -119,7 +119,12 @@ Arbeitsplan pflegen / Sprava pracovniho planu
         </tr>
         <tr>
                 <td>
-			letzte Reklamationen : <input readonly="readonly" type="text" value='{$letzte_reklamationen}' size="80" />
+                        <label for="reklamation">Reklamation J/N</label>
+			<input maxlength='1' onblur="js_validate_jn(this);" size="2" type="text" id="reklamation" name="reklamation" value="{$reklamation_value}"/>
+
+			<label for="letzte_reklamation">Lieferung Reklamation</label>
+			<input maxlength='6' size="6" type="text" id="letzte_reklamation" name="letzte_reklamation" value="{$letzte_reklamation_value}"/>
+	
 		</td>
 	</tr>
 	
@@ -186,17 +191,53 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	<tr>
 		<td>
 			<fieldset>
-			<legend>Musterlager / sklad vzoru</legend>
+			    <legend>Musterlager / sklad vzoru</legend>
                         <table>
                             <tr>
-				 <td>
-				     <input id='showteildoku' type='button' value="TeilDoku" acturl='./showTeilDoku.php' /> <label>( Anzahl Dokumenten : {$pocet_teildoku} )</label>
-				 </td>
-                                  <td>
-<!--				      <label>Ersteller : </label><input type='text' id='ersteller' size='10' maxlength='10'/>-->
-				     <input class='' type='button' value='Lagerzettel' onclick="location.href='../get_parameters.php?popisky=Teil;DokuNr&promenne=teil;dokunr&values={$teil_value};{29}&report=D515'" />
+                                <td>
+                                    <legend>Musterlager / sklad vzoru</legend>
+                                    <label for="muster_vom">vom</label>
+                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_vom" name="muster_vom" value="{$muster_vom_value}"/>
+                                </td>
+                                <td>
+                                    <label for="muster_platz">LagerPlatz</label>
+                                    <input size="10" type="text" id="muster_platz" name="muster_platz" value="{$muster_platz_value}"/>
+                                </td>
+                                <td>
+                                    <label for="muster_vorher_vom">vorheriges Muster vom</label>
+                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&allownull=1&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_vorher_vom" name="muster_vorher_vom" value="{$muster_vorher_vom_value}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="muster_freigabe1_vom">1. freigeben am</label>
+                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&allownull=1&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_freigabe1_vom" name="muster_freigabe1_vom" value="{$muster_freigabe1_vom_value}"/>
+                                </td>
+                                <td>
+                                    <label for="muster_freigabe1">vom1</label>
+                                    <select id="muster_freigabe1" name="muster_freigabe1">
+                                        {html_options options=$vom1_options selected=$vom1_selected}
+                                    </select>
                                  </td>
-
+				 <td>
+				     <input id='showteildoku' type='button' value="TeilDoku" acturl='./showTeilDoku.php' />
+				 </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="muster_freigabe2_vom">2. freigeben am</label>
+                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&allownull=1&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_freigabe2_vom" name="muster_freigabe2_vom" value="{$muster_freigabe2_vom_value}"/>
+                                </td>
+                                <td>
+                                    <label for="muster_freigabe2">vom2</label>
+                                    <select id="muster_freigabe2" name="muster_freigabe2">
+                                    {html_options options=$vom2_options selected=$vom2_selected}
+                                    </select>
+                                 </td>
+                                 <td>
+				     Ersteller : <input type='text' id='ersteller' size='10' maxlength='10'/>
+				     <input class='' type='button' value='Lagerzettel' onclick="document.location.href='../Reports/T010_pdf.php?teil={$teil_value}&ersteller='+document.getElementById('ersteller').value;"
+                                 </td>
                             </tr>
                         </table>
 			</fieldset>
@@ -227,7 +268,6 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 		{if $polozka.KzGut eq "G"}
 		<tr id='tr{$polozka.dpos_id}' class='Grow'>
 		{else}
-		    <!-- otevreni reklamaci z tabulky dreklamation -->
 		<tr id='tr{$polozka.dpos_id}' bgcolor='{cycle values="#eeeeee,#dddddd"}'>
 		{/if}
 		
@@ -436,17 +476,17 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 												+'&fa='+encodeControlValue('fa')
 												+'&vm='+encodeControlValue('vm')
                                                                                                 +'&spg='+encodeControlValue('spg')
-//												+'&reklamation='+encodeControlValue('reklamation')
-//												+'&letzte_reklamation='+encodeControlValue('letzte_reklamation')
+												+'&reklamation='+encodeControlValue('reklamation')
+												+'&letzte_reklamation='+encodeControlValue('letzte_reklamation')
 												+'&bemerk='+encodeControlValue('bemerk')
 												+'&art_guseisen='+encodeControlValue('art_guseisen')
-//												+'&muster_vom='+encodeControlValue('muster_vom')
-//												+'&muster_platz='+encodeControlValue('muster_platz')
-//												+'&muster_vorher_vom='+encodeControlValue('muster_vorher_vom')
-//												+'&muster_freigabe1_vom='+encodeControlValue('muster_freigabe1_vom')
-//												+'&muster_freigabe1='+encodeSelectControlValue('muster_freigabe1')
-//												+'&muster_freigabe2_vom='+encodeControlValue('muster_freigabe2_vom')
-//												+'&muster_freigabe2='+encodeSelectControlValue('muster_freigabe2')
+												+'&muster_vom='+encodeControlValue('muster_vom')
+												+'&muster_platz='+encodeControlValue('muster_platz')
+												+'&muster_vorher_vom='+encodeControlValue('muster_vorher_vom')
+												+'&muster_freigabe1_vom='+encodeControlValue('muster_freigabe1_vom')
+												+'&muster_freigabe1='+encodeSelectControlValue('muster_freigabe1')
+												+'&muster_freigabe2_vom='+encodeControlValue('muster_freigabe2_vom')
+												+'&muster_freigabe2='+encodeSelectControlValue('muster_freigabe2')
 												, saverefresh);"/>
 	</td>
 	<td>

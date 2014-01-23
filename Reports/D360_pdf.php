@@ -19,7 +19,7 @@ require_once('D360_xml.php');
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
 $parameters=$domxml->getElementsByTagName("parameters");
-
+/* prirazeni k parametrum let it be */
 
 foreach ($parameters as $param)
 {

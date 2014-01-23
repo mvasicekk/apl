@@ -79,7 +79,7 @@ $cells =
 array(
 
 "dummy1"
-=> array ("popis"=>"","sirka"=>60,"ram"=>'L',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>40,"ram"=>'L',"align"=>"L","radek"=>0,"fill"=>0),
 
 "datum"
 => array ("popis"=>"","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
@@ -99,6 +99,9 @@ array(
 "preisdiff"
 => array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>25,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
+"bemerkung"
+=> array ("popis"=>"","sirka"=>20,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+
 "preisausgabe"
 => array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>0,"ram"=>'R',"align"=>"R","radek"=>1,"fill"=>0),
 );
@@ -107,7 +110,7 @@ $cells_header =
 array(
 
 "dummy1"
-=> array ("popis"=>"","sirka"=>60,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>40,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "datum"
 => array ("popis"=>"\nDatum","sirka"=>20,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
@@ -121,11 +124,15 @@ array(
 "rueckgabestk"
 => array ("popis"=>"Rueck\ngabe","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
+
 "differenz"
 => array ("popis"=>"\nDiff","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "preisdiff"
 => array ("popis"=>"Preis\naushgabe","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+
+"bemerkung"
+=> array ("popis"=>"\nBemerkung","sirka"=>20,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "preisausgabe"
 => array ("popis"=>"Preis\naushgabe","sirka"=>0,"ram"=>'B',"align"=>"R","radek"=>1,"fill"=>1),
@@ -194,6 +201,9 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
         $pdfobjekt->Cell($cells['rueckgabestk']['sirka'],$zahlavivyskaradku,'Rueck-','T',0,'R',$fill);
         $pdfobjekt->Cell($cells['differenz']['sirka'],$zahlavivyskaradku,'Diff','T',0,'R',$fill);
         $pdfobjekt->Cell($cells['preisdiff']['sirka'],$zahlavivyskaradku,'PreisDiff','T',0,'R',$fill);
+	if($reporttyp!='summe')
+	    $pdfobjekt->Cell($cells['bemerkung']['sirka'],$zahlavivyskaradku,'Bemerkung','T',0,'R',$fill);
+
         $pdfobjekt->Cell($cells['preisausgabe']['sirka'],$zahlavivyskaradku,'Preis-','T',1,'R',$fill);
 
         $pdfobjekt->Cell($cells['dummy1']['sirka'],$zahlavivyskaradku,'','B',0,'L',$fill);
@@ -204,6 +214,8 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
         $pdfobjekt->Cell($cells['rueckgabestk']['sirka'],$zahlavivyskaradku,'gabe','B',0,'R',$fill);
         $pdfobjekt->Cell($cells['differenz']['sirka'],$zahlavivyskaradku,'','B',0,'R',$fill);
         $pdfobjekt->Cell($cells['preisdiff']['sirka'],$zahlavivyskaradku,'','B',0,'R',$fill);
+	if($reporttyp!='summe')
+	    $pdfobjekt->Cell($cells['bemerkung']['sirka'],$zahlavivyskaradku,'','B',0,'R',$fill);
         $pdfobjekt->Cell($cells['preisausgabe']['sirka'],$zahlavivyskaradku,'ausgabe','B',1,'R',$fill);
 
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);

@@ -67,6 +67,7 @@ else{
 $sql= "select dambew.id,DATE_FORMAT(dambew.`Datum`,'%y-%m-%d') as datum,dambew.`PersNr` as persnr,dtattypen.og,dambew.oe,CONCAT(dpers.`Name`,' ',dpers.`Vorname`) as name,dambew.`AMNr` as amnr,";
 $sql.=" `eink-artikel`.`art-name1` as artikelname,";
 $sql.=" dambew.`AusgabeStk` as ausgabestk,dambew.`RueckgabeStk` as rueckgabestk,";
+$sql.=" dambew.bemerkung,";
 $sql.=" dambew.`AusgabeStk`-dambew.`RueckgabeStk` as differenz,";
 $sql.=" (dambew.`AusgabeStk`-dambew.`RueckgabeStk`)*(`eink-artikel`.`art-vr-preis`) as preisdiff,";
 //$sql.=" (dambew.`AusgabeStk`*`eink-artikel`.`art-vr-preis`-dambew.`RueckgabeStk`*`eink-artikel`.`art-vr-preis`) as preisausgabe";
@@ -153,6 +154,7 @@ if (strstr($reporttyp, "sort lt.og-oe") != FALSE) {
                             'datum',
                             'og',
                             'oe',
+			    'bemerkung',
                             'preisausgabe',
                             'ausgabestk',
                             'rueckgabestk',

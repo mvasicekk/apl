@@ -59,7 +59,6 @@ if ($typ == 'PREIS/STK') {
 }
 
 require_once('S430_xml.php');
-
 //exit;
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
@@ -180,6 +179,7 @@ function nuluj_sumy_pole(&$pole)
 // funkce pro vykresleni hlavicky na kazde strance
 function pageheader($pdfobjekt, $headervyskaradku) {
     global $cells;
+    global $jb;
     $pdfobjekt->SetFont("FreeSans", "B", 7);
     $pdfobjekt->SetFillColor(255, 255, 200, 1);
     $fill = 1;
@@ -188,8 +188,16 @@ function pageheader($pdfobjekt, $headervyskaradku) {
     $pdfobjekt->Cell($cells['preis']['sirka'], $headervyskaradku, "Preis [EUR]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->Cell($cells['vzkd']['sirka'], $headervyskaradku, "VzKd [min]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->SetFont("FreeSans", "B", 5.5);
-    $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $headervyskaradku, "JB2013 [EUR]", 'LRBT', 0, 'R', 1);
-    $pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $headervyskaradku, "JB2014 [EUR]", 'LRBT', 0, 'R', 1);
+    if($jb===TRUE){
+	$pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $headervyskaradku, "JB2013 [EUR]", 'LRBT', 0, 'R', 1);
+	$pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $headervyskaradku, "JB2014 [EUR]", 'LRBT', 0, 'R', 1);
+    }
+    else{
+	$pdfobjekt->Cell(
+		$cells['bed_lfd_j_preis']['sirka']
+		+$cells['bed_lfd_plus_1_preis']['sirka']
+		, $headervyskaradku, "", '0', 0, 'R', 0);
+    }
     $pdfobjekt->Ln();
 }
 
@@ -263,6 +271,7 @@ function zapati_teil($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $kun
     global $sum_zapati_sestava;
     global $zp;
     global $nurKopfZielpreis;
+    global $jb;
 
     $pdfobjekt->SetFont("FreeSans", "B", 8);
     $pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
@@ -284,13 +293,15 @@ function zapati_teil($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $kun
 	$obsah = number_format($vzkd, 4, ',', ' ');
 	$pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-	$b_lfd_j_preis = $sumArray['bed_lfd_j_preis'];
-	$obsah = number_format($b_lfd_j_preis, 0, ',', ' ');
-	$pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	if ($jb === TRUE) {
+	    $b_lfd_j_preis = $sumArray['bed_lfd_j_preis'];
+	    $obsah = number_format($b_lfd_j_preis, 0, ',', ' ');
+	    $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-	$b_lfd_plus_1_preis = $sumArray['bed_lfd_plus_1_preis'];
-	$obsah = number_format($b_lfd_plus_1_preis, 0, ',', ' ');
-	$pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	    $b_lfd_plus_1_preis = $sumArray['bed_lfd_plus_1_preis'];
+	    $obsah = number_format($b_lfd_plus_1_preis, 0, ',', ' ');
+	    $pdfobjekt->Cell($cells['bed_lfd_plus_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+	}
 
 	$pdfobjekt->Cell(0, $vyskaRadku, "", '0', 1, 'R', 0);
     }
@@ -392,8 +403,8 @@ function zapati_teil($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $kun
     else {
 	// v pripade, ze nezobrazuju Zielpreis a diff, pokusu kusy s bedarfem doleva
     }
-
-//    $pdfobjekt->Ln();
+    $pdfobjekt->Ln();
+    $pdfobjekt->Ln(2);
 }
 
 
@@ -588,7 +599,7 @@ function zapati_sestava($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds, $
 // funkce pro vykresleni tela
 function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist,$abgnr,$vzkd)
 {
-    
+	global $jb;
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
@@ -621,7 +632,14 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist,$abgnr,$vzkd
                 else
                     $pdfobjekt->SetFont("FreeSans", "", 7);
 
+	    // pokud nechci jahresbedaf vynecham jeste vybrane sloupce
+	    if(($jb===FALSE)&&(($nodename=="bed_lfd_j_preis")||($nodename=="bed_lfd_plus_1_preis"))){
+		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,"",'0',$cell["radek"],$cell["align"],$cell["fill"]);
+	    }
+	    else{
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
+	    }
+//	    $pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
         $pdfobjekt->SetTextColor(0,0,0);
@@ -821,20 +839,21 @@ foreach ($kunden as $kunde) {
                 $sum_zapati_teil[$key]+=$hodnota;
             }
         }
-	// make enough room for bedarf table
-	for($i=0;$i<($neededRows-$pocetTat);$i++){
-	    $pdf->Ln(5);
+	if ($jb === TRUE) {
+	    // make enough room for bedarf table
+	    for ($i = 0; $i < ($neededRows - $pocetTat); $i++) {
+		$pdf->Ln(5);
+	    }
 	}
-	    
-        zapati_teil($pdf, 5, array(255, 255, 240), $sum_zapati_teil, $teilChildNodes, $kundeChilds);
+
+	zapati_teil($pdf, 5, array(255, 255, 240), $sum_zapati_teil, $teilChildNodes, $kundeChilds);
 	$y=$pdf->GetY();
 	//spocitat, klik zbyva mista na strance vertikalne
 	$vyskaStranky = $pdf->getPageHeight()-$pdf->getBreakMargin();
 	$zbyva = $vyskaStranky-$y;
-//	$pdf->Cell(0, 5, "zbyva ".$zbyva,'1');
 	$left = 150;//$pdf->GetX()+$cells['abgnr']['sirka']+$cells['abgnr_name']['sirka']+$cells['preis']['sirka']+$cells['vzkd']['sirka']+$cells['bed_lfd_j_preis']['sirka']+$cells['bed_lfd_plus_1_preis']['sirka'];
 //	$top = $pdf->GetY();
-	printBedarfTable($pdf, $left, $top, 5, $teilChildNodes,$sum_zapati_teil);
+	if($jb===TRUE) printBedarfTable($pdf, $left, $top, 5, $teilChildNodes,$sum_zapati_teil);
 	// abych neovlivnil predchoti tok dokumentu vratim hodnotu y po vykresleni zapati dilu
 	$pdf->SetY($y);
         foreach($sum_zapati_sestava as $key=>$value){
@@ -854,5 +873,4 @@ $pdf->Output();
 //============================================================+
 // END OF FILE                                                 
 //============================================================+
-
 ?>

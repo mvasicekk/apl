@@ -3,6 +3,8 @@
 ?>
 <?
 include "../fns_dotazy.php";
+require_once '../db.php';
+
 dbConnect();
 require("../libs/Smarty.class.php");
 $smarty = new Smarty;
@@ -18,6 +20,7 @@ $smarty = new Smarty;
 	// stranka je kodovana v utf8, tak chci vysledky z databaze taky v utf8 , protoze je mam ulozene v cp1250
 	mysql_query('set character_set_results = utf8');
 
+	$teil = $_GET['teil'];
 	if(isset($_GET['teil']))
 	{
 		$sql="select * from dkopf where (teil='".$_GET['teil']."')";
@@ -124,7 +127,10 @@ $smarty = new Smarty;
 		}
 		$smarty->assign("dpos",$dpos_rows);
 		
-		
+		// zjistim pocet radku v teildoku pro dany dil
+		$a = AplDB::getInstance();
+		$teilDokuArray = $a->getTeilDokuArray($teil);
+		$smarty->assign("pocet_teildoku",count($teilDokuArray));
 		// zjistit zda ma dil nejake prilohy
 		// plus upravim cestu k souborum , aby byly pouzitelne i na webu
 		// mam vytvoreny aslias /kunden/ na \\abyserver\Dat\Dat\11 Kunden , takze tuto cast odriznout a nahradit cestou kunden/
@@ -140,6 +146,9 @@ $smarty = new Smarty;
 		$smarty->assign("dattach",$dattach_rows);
 		$smarty->assign("pocet_priloh",$pocet_priloh);
 		
+		//zjistim posledni reklamace k dilu
+		$letzteReklamationen = $a->getLetzteReklamationString($teil,5);
+		$smarty->assign("letzte_reklamationen",$letzteReklamationen);
 	}
 	$smarty->display('dkopf.tpl');
 ?>

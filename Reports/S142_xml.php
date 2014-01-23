@@ -93,19 +93,30 @@ $pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck
 $pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
 
 // prepocet na kc podle faktoru u OE v tabulce dtattypen
-$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor)) as vzaby_kc,";
-$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor),0)) as vzaby_akkord_kc,";
+// zmena 2014-01-23
+// prepocet na kc bude podle faktoru ulozeneho u operace
+$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor,(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor)) as vzaby_kc,";
+$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor,(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor),0)) as vzaby_akkord_kc,";
+
+//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor)) as vzaby_kc,";
+//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor),0)) as vzaby_akkord_kc,";
 
 // qpraemie prozent
 //$pt .= " if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von>=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie) as qpraemie_prozent,";
 // qpraemie
-$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
-$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
-$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
+$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
+$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
+$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
 $pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
+
+//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
+//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
+//$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
+//$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
 
 $pt.=" from drueck";
 $pt.=" join dtattypen on drueck.oe=dtattypen.tat";
+$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.taetnr";
 $pt.=" join dpers on dpers.persnr=drueck.persnr";
 $pt.=" left join dpersstempel on dpersstempel.persnr=drueck.persnr and dpersstempel.oe=drueck.oe";
 $pt.=" where";
@@ -210,7 +221,9 @@ $viewname=$pcip.$views[8];
 $pt=" create view $viewname";
 $pt.=" as select";
 $pt.="    drueck.PersNr as persnr,";
-$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
+// zmena 2013-01-23 misto verb-zeit se bude pro vypocet pouzivat vzaby
+//$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
+$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`VZ-IST`/60) as risiko_zuschlag";
 $pt.=" from";
 $pt.="     drueck";
 $pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";

@@ -416,11 +416,13 @@ foreach($persnrArray as $persnr){
        $name = $nameArray['name'].' '.$nameArray['vorname'];
    else
        $name = '';
-   $plusminusStunden1 = number_format($apl->getPlusMinusStunden(12, 2011, $persnr),1,'.','');
-   $arbstunden = number_format($apl->getArbStundenBetweenDatums($persnr,'2012-01-01','2012-12-31'),1,'.','');
-   $plusminusStunden2 = number_format($apl->getPlusMinusStunden(12, 2012, $persnr),1,'.','');
+   $plusminusStunden2011 = number_format($apl->getPlusMinusStunden(12, 2011, $persnr),1,'.','');
+   $arbstunden2012 = number_format($apl->getArbStundenBetweenDatums($persnr,'2012-01-01','2012-12-31'),1,'.','');
+   $plusminusStunden2012 = number_format($apl->getPlusMinusStunden(12, 2012, $persnr),1,'.','');
+   $arbstunden2013 = number_format($apl->getArbStundenBetweenDatums($persnr,'2013-01-01','2013-12-31'),1,'.','');
+   $plusminusStunden2013 = number_format($apl->getPlusMinusStunden(12, 2013, $persnr),1,'.','');
 //   $plusminusStunden3 = number_format($apl->getPlusMinusStunden(7, 2011, $persnr),1,',',' ');
-   echo "$persnr,$eintritt,$name,$plusminusStunden1,$arbstunden,$plusminusStunden2<br>";
+   echo "$persnr,$eintritt,$name,$plusminusStunden2011,$arbstunden2012,$plusminusStunden2012,$arbstunden2013,$plusminusStunden2013<br>";
 //    $apl->addQualifikationen($persnr, $qArray, 0, 0);
 }
 //foreach ($persnrArray as $persnr) {

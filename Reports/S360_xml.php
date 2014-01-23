@@ -272,27 +272,27 @@ if (array_key_exists(0, $imports))
 
 // inserting calculated value: count*price = cost of reparation
 // if there is no Ausschuss for client number 195 then use the value from database
-$kunden=$domxml->getElementsByTagName("kunde");
-foreach($kunden as $kunde)
-{
-    $kundeChildNodes = $kunde->childNodes;
-    
-    $kundenr = getValueForNode($kundeChildNodes, 'kundenr');
-    if ($kundenr == 195)
-    {
-        $reklamationen = $kunde->getElementsByTagName("reklamation");
-        foreach($reklamationen as $reklamation)
-        {           
-            $reklChilds = $reklamation->childNodes;
-            $price = round(getValueForNode($reklChilds,'kosten_auss') * getValueForNode($reklChilds,'anerkannt_stk_ausschuss') * $EUR_CZK,0);
-            foreach($reklChilds as $reklChild)
-            {
-                if ($reklChild->nodeName == 'anerkannt_wert_ausschuss')
-                    $reklChild->nodeValue = $price;
-            }
-        }
-    }
-}
+//$kunden=$domxml->getElementsByTagName("kunde");
+//foreach($kunden as $kunde)
+//{
+//    $kundeChildNodes = $kunde->childNodes;
+//    
+//    $kundenr = getValueForNode($kundeChildNodes, 'kundenr');
+//    if ($kundenr == 195)
+//    {
+//        $reklamationen = $kunde->getElementsByTagName("reklamation");
+//        foreach($reklamationen as $reklamation)
+//        {           
+//            $reklChilds = $reklamation->childNodes;
+//            $price = round(getValueForNode($reklChilds,'kosten_auss') * getValueForNode($reklChilds,'anerkannt_stk_ausschuss') * $EUR_CZK,0);
+//            foreach($reklChilds as $reklChild)
+//            {
+//                if ($reklChild->nodeName == 'anerkannt_wert_ausschuss')
+//                    $reklChild->nodeValue = $price;
+//            }
+//        }
+//    }
+//}
 
 // replace person.nr. 9999 with -
 $kunden=$domxml->getElementsByTagName("kunde");

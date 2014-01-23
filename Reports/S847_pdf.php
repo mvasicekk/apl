@@ -346,7 +346,7 @@ array(
 "vzkd"
 => array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
-"bed_lfd_1_preis"
+"gut_lfd_1_preis"
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 //"bed_2011_vzkd"
 //=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>25,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
@@ -390,6 +390,7 @@ $sum_zapati_teil = array(
     'bed_lfd_1_vzkd'=>0,
     'bed_lfd_j_vzkd'=>0,
     'bed_lfd_1_preis'=>0,
+    'gut_lfd_1_preis'=>0,
     'bed_lfd_j_preis'=>0,
 );
 
@@ -533,8 +534,8 @@ function pageheader_S430($pdfobjekt, $headervyskaradku) {
     $pdfobjekt->Cell($cells['preis']['sirka'], $headervyskaradku, "Preis [EUR]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->Cell($cells['vzkd']['sirka'], $headervyskaradku, "VzKd [min]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->SetFont("FreeSans", "B", 5.5);
-    $pdfobjekt->Cell($cells['bed_lfd_1_preis']['sirka'], $headervyskaradku, "Jahresbedarf2012 [EUR]", 'LRBT', 0, 'R', 1);
-    $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $headervyskaradku, "Jahresbedarf2013 [EUR]", 'LRBT', 0, 'R', 1);
+    $pdfobjekt->Cell($cells['gut_lfd_1_preis']['sirka'], $headervyskaradku, "Ist 2013 [EUR]", 'LRBT', 0, 'R', 1);
+    $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $headervyskaradku, "JB  2014 [EUR]", 'LRBT', 0, 'R', 1);
     $pdfobjekt->Ln();
 }
 
@@ -877,9 +878,9 @@ function zapati_teil_S430($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds,
     $obsah = number_format($vzkd, 4, ',', ' ');
     $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
-    $b2011_preis = $sumArray['bed_lfd_1_preis'];
+    $b2011_preis = $sumArray['gut_lfd_1_preis'];
     $obsah = number_format($b2011_preis, 0, ',', ' ');
-    $pdfobjekt->Cell($cells['bed_lfd_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+    $pdfobjekt->Cell($cells['gut_lfd_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
 
     $b2012_preis = $sumArray['bed_lfd_j_preis'];
     $obsah = number_format($b2012_preis, 0, ',', ' ');
@@ -902,8 +903,8 @@ function zapati_teil_S430($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds,
     $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
     $obsah = '';
     $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BTR', 0, 'R', $fill);
-    $obsah = number_format(getValueForNode($teilchilds, 'jb_lfd_1'), 0, ',', ' ');
-    $pdfobjekt->Cell($cells['bed_lfd_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
+    $obsah = number_format(getValueForNode($teilchilds, 'gut_lfd_1'), 0, ',', ' ');
+    $pdfobjekt->Cell($cells['gut_lfd_1_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
     $obsah = number_format(getValueForNode($teilchilds, 'jb_lfd_j'), 0, ',', ' ');
     $pdfobjekt->Cell($cells['bed_lfd_j_preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
     // novy radek
@@ -916,7 +917,7 @@ function zapati_teil_S430($pdfobjekt, $vyskaRadku, $rgb, $sumArray, $teilchilds,
     $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'BT', 0, 'R', $fill);
     $obsah = '';
     $pdfobjekt->Cell($cells['vzkd']['sirka'], $vyskaRadku, $obsah, 'BTR', 0, 'R', $fill);
-    $tonnen2011 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_1')) / 1000;
+    $tonnen2011 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'gut_lfd_1')) / 1000;
     $obsah = number_format($tonnen2011, 0, ',', ' ');
     $pdfobjekt->Cell($cells['preis']['sirka'], $vyskaRadku, $obsah, 'LBTR', 0, 'R', $fill);
     $tonnen2012 = floatval(getValueForNode($teilchilds, 'gew')) * intval(getValueForNode($teilchilds, 'jb_lfd_j')) / 1000;

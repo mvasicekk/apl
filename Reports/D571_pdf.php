@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 $doc_title = "D571";
 $doc_subject = "D571 Report";
@@ -307,19 +308,12 @@ function getValueForNode($nodelist,$nodename)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function zapati_sestava($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$childNodes,$pocetPozic,$pocetMustru,$pocetFreigabe)
+function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$pocetDilu,$pocetDokumentu)
 {
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
-
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
-	// dummy
-	$obsah="";
-	//$obsah=number_format($obsah,0,',',' ');
-	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
-
-	$pdfobjekt->Cell(0,$vyskaradku,$popis." ".$pocetPozic.", davon mit Muster : $pocetMustru, mit Freigabe : $pocetFreigabe",'B',0,'L',$fill);
-	
+	$pdfobjekt->Cell(0,$vyskaradku,"Anzahl TeileNr: ".$pocetDilu.", Anzahl Dokumente: ".$pocetDokumentu,'B',0,'L',$fill);
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 
@@ -393,10 +387,10 @@ foreach($kunden as $kunde)
     $kundeChildNodes = $kunde->childNodes;
 	$pdf->AddPage();
 	pageheader($pdf,$cells_header,4,$kundeChildNodes);
-
-	
 	$teile=$kunde->getElementsByTagName("teil");
 	$newTeil = 1;
+	$citacDilu = 0;
+	$citacDokumentu = 0;
 	foreach($teile as $teil)
 	{
 		$teilChilds=$teil->childNodes;
@@ -410,6 +404,7 @@ foreach($kunden as $kunde)
 		    test_pageoverflow($pdf,4,$cells_header,4,$kundeChildNodes);
 		    $newTeil = 0;
 		    $dokumentenAnzahl++;
+		    $citacDokumentu++;
 		}
 		$newTeil = 1;
 		if(($dokumentenAnzahl==0)&&(floatval(getValueForNode($teilChilds, 'gew'))>0)){
@@ -417,11 +412,29 @@ foreach($kunden as $kunde)
 		    teil_no_doku($pdf,$cells,4,array(255,255,255),"",$teilChilds);
 		    test_pageoverflow($pdf,4,$cells_header,4,$kundeChildNodes);
 		}
+		$citacDilu++;
 	}
 }
-test_pageoverflow($pdf,4,$cells_header,4,$kundeChildNodes);
-//zapati_sestava($pdf,$import,5,"Positionenanzahl ",array(200,200,255),$kundeChildNodes,$pocetpozic,$pocetpozicSMustrem,$pocetpozicSFreigabe);
 
+test_pageoverflow($pdf,5,$cells_header,4,$kundeChildNodes);
+zapati_sestava($pdf,5,array(200,200,255),$citacDilu,$citacDokumentu);
+$pdf->Ln(10);
+// legenda k typum dokumentu
+$a = AplDB::getInstance();
+$docTypenArray = $a->getDokuTypArray();
+$pocetTypu = count($docTypenArray);
+test_pageoverflow($pdf,($pocetTypu+1)*4,$cells_header,4,$kundeChildNodes);
+if ($pocetTypu > 0) {
+    
+    $pdf->Cell(20, 4, "DokuNr", '1', 0, 'R', 0);
+    $pdf->Cell(60, 4, "Beschreibung", '1', 1, 'L', 0);
+    
+    foreach ($docTypenArray as $key => $value) {
+	$pdf->Cell(20, 4, $value['doku_nr'], '1', 0, 'R', 0);
+	$pdf->Cell(60, 4, $value['doku_beschreibung'], '1', 0, 'L', 0);
+	$pdf->Ln();
+    }
+}
 
 //Close and output PDF document
 $pdf->Output();

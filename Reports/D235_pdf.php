@@ -205,11 +205,11 @@ function getValueForNode($nodelist,$nodename)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // zobraz_cinnosti($pdf,$taetigkeiten);
 //
-function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil)
+function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 {
 	// vytahnu si jeste vsechny zaskrtnute komentace pro dany dil, vrati mi asociativni pole
         $k2 = getTatAktivFromTeilDpos($teil,2,1);
-        $k3 = getTatAktivFromTeilDpos($teil,3,1);
+//        $k3 = getTatAktivFromTeilDpos($teil,3,1);
         $komentare = array();
         if(is_array($k2))
             $komentare = array_merge($komentare,$k2);
@@ -217,13 +217,13 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil)
             $komentare = array_merge($komentare,$k3);
 	
 		
-	$x_pocatek=130;
-	$y_pocatek=25;
+	$x_pocatek=125;
+	$y_pocatek=23+$yOffset;
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	$pdfobjekt->SetXY($x_pocatek,$y_pocatek);
 	$pdfobjekt->Cell(10,3,"taetnr",'B',0,'L');
-	$pdfobjekt->Cell(50,3,"Bezeichnung",'B',0,'L');
-	$pdfobjekt->Cell(50,3,"oznaceni",'B',0,'L');
+	$pdfobjekt->Cell(55,3,"Bezeichnung",'B',0,'L');
+	$pdfobjekt->Cell(55,3,"oznaceni",'B',0,'L');
 	$pdfobjekt->Cell(15,3,"ks/hod",'B',0,'R');
 	$pdfobjekt->Cell(15,3,"min/stk",'B',1,'R');
 	$pdfobjekt->SetX($x_pocatek);
@@ -236,8 +236,8 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil)
 		foreach($komentare as $komentar)
 		{
 			$pdfobjekt->Cell(10,3,$komentar["taetnr"],0,0,'L');
-			$pdfobjekt->Cell(50,3,$komentar["tatbez_d"],0,0,'L');
-			$pdfobjekt->Cell(50,3,$komentar["tatbez_t"],0,0,'L');
+			$pdfobjekt->Cell(55,3,$komentar["tatbez_d"],0,0,'L');
+			$pdfobjekt->Cell(55,3,$komentar["tatbez_t"],0,0,'L');
 
 			$obsah=number_format($komentar["ks_hod"],0,',',' ');
 			$pdfobjekt->Cell(15,3,$obsah,0,0,'R');
@@ -251,8 +251,8 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil)
 	{
 		$taetigkeitChildNodes = $taetigkeit->childNodes;
 		$pdfobjekt->Cell(10,3,getValueForNode($taetigkeitChildNodes,"taetnr"),0,0,'L');
-		$pdfobjekt->Cell(50,3,getValueForNode($taetigkeitChildNodes,"tatbez_d"),0,0,'L');
-		$pdfobjekt->Cell(50,3,getValueForNode($taetigkeitChildNodes,"tatbez_t"),0,0,'L');
+		$pdfobjekt->Cell(55,3,getValueForNode($taetigkeitChildNodes,"tatbez_d"),0,0,'L');
+		$pdfobjekt->Cell(55,3,getValueForNode($taetigkeitChildNodes,"tatbez_t"),0,0,'L');
 
 		$obsah=number_format(getValueForNode($taetigkeitChildNodes,"ks_hod"),0,',',' ');
 		$pdfobjekt->Cell(15,3,$obsah,0,0,'R');
@@ -261,6 +261,53 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil)
 		$pdfobjekt->SetX($x_pocatek);
 	}
 }
+
+/**
+ *
+ * @param TCPDF $pdfobjekt
+ * @param type $teil 
+ * @return pocet zobrazenych reklamaci
+ */
+function zobraz_reklamace($pdfobjekt, $teil) {
+
+    // vytahnu seznam reklamaci pro zadany dil
+    $a = AplDB::getInstance();
+    $reklArray = $a->getLetzteReklamation($teil, 5);
+    if ($reklArray === NULL)
+	return 0;
+
+    $x_pocatek = 125;
+    $y_pocatek = 23;
+    $pdfobjekt->SetFont("FreeSans", "B", 7);
+    $pdfobjekt->SetXY($x_pocatek, $y_pocatek);
+    $pdfobjekt->Cell(12, 3, "Rekl-Nr", 'B', 0, 'L');
+    $pdfobjekt->Cell(15, 3, "Erhalten am", 'B', 0, 'L');
+    $pdfobjekt->Cell(95, 3, "Abweichung", 'B', 0, 'L');
+    $pdfobjekt->Cell(17, 3, "Giesstag", 'B', 0, 'L');
+    $pdfobjekt->Cell(10, 3, "Bewert.", 'B', 1, 'R');
+    $pdfobjekt->SetX($x_pocatek);
+
+    $pdfobjekt->SetFont("FreeSans", "", 7);
+
+    foreach ($reklArray as $rekl) {
+	$pdfobjekt->Cell(12, 3, $rekl["rekl_nr"], 0, 0, 'L');
+	$reklDatum = substr($rekl['rekl_datum'],6)."-".substr($rekl['rekl_datum'],3,2)."-".substr($rekl['rekl_datum'],0,2);
+	$pdfobjekt->Cell(15, 3, $reklDatum, 0, 0, 'L');
+	$abweichung = str_replace('\n', ' ', $rekl["beschr_abweichung"]);
+	$pdfobjekt->Cell(95, 3, $abweichung, 0, 0, 'L');
+	$pdfobjekt->Cell(17, 3, $rekl["giesstag"], 0, 0, 'L');
+	$pdfobjekt->Cell(10, 3, $rekl["interne_bewertung"], 0, 1, 'R');
+	$pdfobjekt->SetX($x_pocatek);
+    }
+    // cerveny ramecek okolo
+    $pdfobjekt->SetDrawColor(255,0,0);
+    $pdfobjekt->SetLineWidth(0.5);
+    $pdfobjekt->Rect($x_pocatek, $y_pocatek-0.5, 150, $pdfobjekt->GetY()-$y_pocatek+0.5, 'D');
+    $pdfobjekt->SetDrawColor(0,0,0);
+    $pdfobjekt->SetLineWidth(0.2);
+    return count($reklArray);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // zobraz_paletu($pdf,$paletteChildNodes,$importChildNodes);
 function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
@@ -568,8 +615,17 @@ foreach($importe as $import)
 		// ted jdu po cinnostech = tabulka s operacema
 		$teil = getValueForNode($paletteChildNodes,"teil");
 		$taetigkeiten = $palette->getElementsByTagName("taetigkeit");
-		zobraz_cinnosti($pdf,$taetigkeiten,$teil);
-
+		$reklRadku = 0;
+		$reklRadku = zobraz_reklamace($pdf,$teil);
+		
+		// $reklRadku - number of row displayed for reklamation
+		// if there are no reklamation rows, it returns 0
+		// block cinnost should be moved to bottom $reklRadku + 1 free row + 1 heading row
+		// height of reklradek = 3
+		
+		if($reklRadku>0) $reklRadku+=2;
+		zobraz_cinnosti($pdf,$taetigkeiten,$teil,($reklRadku)*3);  
+		
                 $pdf->SetHeaderData('', 0, "", '');
                 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
                 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);

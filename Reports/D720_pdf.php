@@ -24,7 +24,11 @@ $ex = $export;
 
 $exString = "$ex";
 
-if(($kunde==195) && ($typ=='Ausschuss')) $exF = "196".substr ($exString, 3);
+if(($kunde==195) && ($typ=='Ausschuss')){
+    $exNummer = intval($ex);
+    $exNummer+=1000;
+    $exF = "$exNummer";
+}
 
 require_once('D720_xml.php');
 // vytvorit string s popisem parametru

@@ -105,9 +105,9 @@ $sql.= "     and dpos.`kz-druck`<>0";
 if((strlen($abgnr)>0) && ($abgnr!='*'))
 $sql.= "     and dpos.`TaetNr-Aby`=$abgnr";
 
-if($jb===TRUE){
-    $sql.= " and (dkopf.jb_lfd_j<>0 or dkopf.jb_lfd_1<>0 or dkopf.jb_lfd_2<>0 or dkopf.jb_lfd_plus_1<>0)";
-}
+//if($jb===TRUE){
+//    $sql.= " and (dkopf.jb_lfd_j<>0 or dkopf.jb_lfd_1<>0 or dkopf.jb_lfd_2<>0 or dkopf.jb_lfd_plus_1<>0)";
+//}
     
 if($alt==FALSE){
     $sql.= " and (dkopf.status not like '%ALT%' or dkopf.status is null)";

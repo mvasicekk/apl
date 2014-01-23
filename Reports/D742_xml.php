@@ -43,7 +43,8 @@ $pt.=" sum(if(kzgut='G',drech.`stück`,0)) as gut_stk,";
 $pt.=" sum(ausschuss) as auss";
 $pt.=" from drech";
 $pt.=" join daufkopf on drech.auftragsnr=daufkopf.auftragsnr";
-$pt.=" join dauftr on dauftr.`auftragsnr-exp`=drech.auftragsnr and dauftr.teil=drech.teil and dauftr.`pos-pal-nr`=drech.`pos-pal-nr` and dauftr.abgnr=drech.abgnr";
+// 2013-12-18 pridano  and drech.origauftrag=dauftr.auftragsnr
+$pt.=" join dauftr on dauftr.`auftragsnr-exp`=drech.auftragsnr and dauftr.teil=drech.teil and dauftr.`pos-pal-nr`=drech.`pos-pal-nr` and dauftr.abgnr=drech.abgnr and drech.origauftrag=dauftr.auftragsnr";
 $pt.=" where (((drech.AuftragsNr)='$export') and (`Taet-kz`<>'I'))";
 $pt.=" GROUP BY daufkopf.kunde, drech.auftragsnr,drech.fremdauftr,drech.fremdpos,drech.teil, drech.teilbez, drech.`Taet-kz`, drech.DM, drech.abgnr";
 

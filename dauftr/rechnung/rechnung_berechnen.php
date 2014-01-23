@@ -62,10 +62,15 @@ $smarty = new Smarty;
                 $hatMARechnung = $apl->hatMARechnung($auftragsnr);
                 $hatMARechnung=$hatMARechnung==TRUE?1:0;
                 $smarty->assign("hat_MARechnung",$hatMARechnung);
-                if($hatMARechnung)
-                    $letzte_MA_RECHNR = $apl->getMARechNr ($auftragsnr);
-                else
-                    $letzte_MA_RECHNR = $auftragsnr+450;
+                if($hatMARechnung){
+		    $letzte_MA_RECHNR = $apl->getMARechNr ($auftragsnr);
+		}
+                else{
+		    // uprava vezmu podledni hodnotu ma faktury a zvetsim o jednicku
+		    $kunde = $apl->getKundeFromAuftransnr($auftragsnr);
+		    $letzteMARechnung = $apl->getLetzteMARechNrKunde($kunde);
+		    $letzte_MA_RECHNR = $letzteMARechnung + 1;
+		}
 
                 $ma_rechnrVorschlag = $letzte_MA_RECHNR;
                 $smarty->assign("ma_rechnr",$ma_rechnrVorschlag);
