@@ -1,6 +1,7 @@
 <?
 session_start();
 require "../../fns_dotazy.php";
+require_once "../../db.php";
 dbConnect();
 
 
@@ -39,6 +40,9 @@ dbConnect();
 	$output .= '</affectedrows>';
 	$output .= '<export>'.$export.'</export>';
 	
+	$ident = get_user_pc();
+	$a = AplDB::getInstance();
+	
 	foreach($listArray as $idArray)
 	{
 	    
@@ -60,7 +64,11 @@ dbConnect();
 		// smazat zaznam z versand lagru
 		$sql_delete= "delete from dlagerbew where auftrag_import='$auftragsnr' and pal_import=$pal and lager_von='8V' and lager_nach='9V'";
 		mysql_query($sql_delete);
-
+		// zjistit cislo dilu podle importu a palety
+		$dauftrRow = $a->getDauftrRow($a->getDauftrIdGPal1($auftragsnr, $pal));
+		$dil = $dauftrRow['teil'];
+		// storno v dlagerbew
+		$a->stornoLastDlagerBewExport($auftragsnr, $pal, $dil, $ident);
 	}
 
 	$output .= '</response>';

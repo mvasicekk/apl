@@ -5,13 +5,14 @@ require_once '../db.php';
 dbConnect();
 
 $aplDB = AplDB::getInstance();
+$a = $aplDB;
 
 	// TODO: dodelat validaci parametru
 	
 	$dauftr_id = $_GET['id'];
 	
 	$teil=trim($_GET['teil']);
-    $dil = $teil;
+	$dil = $teil;
 	
 	$pos_pal_nr=chop($_GET['pos_pal_nr']);
 	$stk=chop($_GET['stk']);
@@ -47,7 +48,10 @@ $aplDB = AplDB::getInstance();
 	if(strlen($KzGut)>0)
 		$KzGut='G';
 
-
+	$dauftrRow = $a->getDauftrRow($dauftr_id);
+	$auftragsnrExpDB = $dauftrRow['ex'];
+	$expStkDB = $dauftrRow['ex_stk'];
+	
 	//foreach($_GET as $prvek=>$klic)
 	//	echo "$prvek = $klic<br>";
 		
@@ -60,7 +64,7 @@ $aplDB = AplDB::getInstance();
 	updateDrueckVzKdFromAuftrag($vzkd_neu,$pos_pal_nr,$teil,$abgnr,$auftragsnr);
 	
 	$pocitac=$_SERVER["REMOTE_ADDR"];
-	$ident=$pocitac."/".$_SESSION["user"]; 
+	$ident = get_user_pc();
 	
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
@@ -81,25 +85,58 @@ $aplDB = AplDB::getInstance();
 	// $fremdpos
 	// podle dauftr_id si zjistim auftrag atd
 
-    $invDatum = "";
+	$invDatum = "";
     
-	if($KzGut=='G'){
-		$myerror=updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk,$termin,$auftragsnr_exp,$pos_pal_nr_exp,$fremdauftr,$fremdpos,$dauftr_id);
-        // zjistitit, zda uz dil nahodou nemel inventuru
-        $invDatum = $aplDB->getInventurDatumForTeil($aplDB->getTeilFromDauftrId($dauftr_id));
-        $dauftrStampRow = $aplDB->getRowFromDauftrId($dauftr_id);
-        $dauftrStamp = $dauftrStampRow['stamp1'];
-        $invtime=strtotime($invDatum);
-        $dauftrtime=strtotime($dauftrStamp);
-        if($invtime>$dauftrtime)
-            $timeBeachten = 1;
-        else
-            $timeBeachten = 0;
+	if ($KzGut == 'G') {
+	    $myerror = updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id);
+	    // zjistitit, zda uz dil nahodou nemel inventuru
+	    $invDatum = $aplDB->getInventurDatumForTeil($aplDB->getTeilFromDauftrId($dauftr_id));
+	    $dauftrStampRow = $aplDB->getRowFromDauftrId($dauftr_id);
+	    $dauftrStamp = $dauftrStampRow['stamp1'];
+	    $invtime = strtotime($invDatum);
+	    $dauftrtime = strtotime($dauftrStamp);
+	    if ($invtime > $dauftrtime)
+		$timeBeachten = 1;
+	    else
+		$timeBeachten = 0;
+	    
+	    // 2014-02-05
+	    // podle puvodniho obsahu musim rozhodnout, co udelat s polozkami v dlagerbew
+	    $strlenExDB = strlen(trim($auftragsnrExpDB));
+	    $strlenEx = strlen(trim($auftragsnr_exp));
+	    // 1, ex geloescht -> storno v dlagerbew
+	    $storno=0;
+	    if(($strlenExDB>0) && ($auftragsnr_exp=='NULL')){
+		$storno=1;
+		$a->stornoLastDlagerBewExport($dauftrRow['auftragsnr'], $dauftrRow['pal'], $dauftrRow['teil'], $ident);
+	    }
+	    else if(($strlenExDB==0)&&($strlenEx)>0){
+		// 2, vyplnen prazdny export, pohyb v dlagerbew jako u export fullen
+		$gut = intval($stk_exp);
+		$a->insertDlagerBew($dauftrRow['teil'], $dauftrRow['auftragsnr'], $dauftrRow['pal'], $gut, 0, "8E", "8X", $ident);
+		// presun do dummy lagru, aby mi nezbyvalo v prvnim skladu
+		$a->insertDlagerBewXXDummy($dauftrRow['teil'], $dauftrRow['auftragsnr'], $dauftrRow['pal'], $ident);
+		// presun zmetku ve vyrobe do zmetku vyexportovanych, pocty si beruz tabulky drueck
+		$a->moveAussLagerA2B($dauftrRow['auftragsnr'], $dauftrRow['pal'], $dauftrRow['teil'], $ident);
+	    }
+	    else if(($strlenExDB>0)&&($strlenEx>0)&&(intval($stk_exp)!=intval($expStkDB))){
+		// 3, zmena poctu kusu -> storno + export fullen
+		// storno
+		$a->stornoLastDlagerBewExport($dauftrRow['auftragsnr'], $dauftrRow['pal'], $dauftrRow['teil'], $ident);
+		//insert
+		$gut = intval($stk_exp);
+		$a->insertDlagerBew($dauftrRow['teil'], $dauftrRow['auftragsnr'], $dauftrRow['pal'], $gut, 0, "8E", "8X", $ident);
+		// presun do dummy lagru, aby mi nezbyvalo v prvnim skladu
+		$a->insertDlagerBewXXDummy($dauftrRow['teil'], $dauftrRow['auftragsnr'], $dauftrRow['pal'], $ident);
+		// presun zmetku ve vyrobe do zmetku vyexportovanych, pocty si beruz tabulky drueck
+		$a->moveAussLagerA2B($dauftrRow['auftragsnr'], $dauftrRow['pal'], $dauftrRow['teil'], $ident);
+	    }
+	    
     }
 
 
-    
-	$sql="update dauftr";
+
+$sql="update dauftr";
 	$sql.=" set ";
 	if(strlen($teil)>0)
 		$sql.="`Teil`='".$teil."',";
@@ -141,6 +178,9 @@ $aplDB = AplDB::getInstance();
 	$output .= '</mysqlerror>';
 
     $output .="<invdatum>$invDatum</invdatum>";
+    $output .="<exDB>$auftragsnrExpDB</exDB>";
+    $output .="<strlenex>$strlenExDB-$strlenEx</strlenex>";
+    $output .="<storno>$storno</storno>";
     $output .="<dauftrstamp>$dauftrStamp</dauftrstamp>";
     $output .="<timebeachten>$timeBeachten</timebeachten>";
 	$output .= '</response>';

@@ -18,7 +18,7 @@
 </head>
 
 <body onload="rebuildpage();">
-{popup_init src="../js/overlib.js"}
+{popup_init src="../../js/overlib.js"}
 
 <div id="formular_header">
 Exportloeschen / mazani Exportu

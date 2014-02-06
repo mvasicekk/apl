@@ -26,7 +26,9 @@ $smarty = new Smarty;
 		$auftragsnr=$_GET['auftragsnr'];
 		$sql="SELECT dauftr.AuftragsNr, dauftr.`pos-pal-nr` as pal, dauftr.Teil, ";
 	       	$sql.=" dauftr.id_dauftr as id,`stk-exp` AS gut_stk";
-		$sql.=" from dauftr left join drech on drech.auftragsnr=dauftr.auftragsnr and drech.`pos-pal-nr`=dauftr.`pos-pal-nr`";
+		$sql.=" from dauftr left join drech on drech.auftragsnr=dauftr.`auftragsnr-exp` and drech.`pos-pal-nr`=dauftr.`pos-pal-nr`";
+		// oprava 2014-01-24
+		//$sql.=" from dauftr left join drech on drech.auftragsnr=dauftr.`auftragsnr` and drech.`pos-pal-nr`=dauftr.`pos-pal-nr`";
 		$sql.=" where (((dauftr.`auftragsnr-exp`)='$auftragsnr') and (drech.`auftragsnr` is null) and (dauftr.kzgut='G'))";
 		$sql.=" GROUP BY dauftr.AuftragsNr, dauftr.`pos-pal-nr`, dauftr.Teil";
 		$sql.=" order by dauftr.AuftragsNr,pal,dauftr.Teil";

@@ -16,6 +16,7 @@ $parameters=$_GET;
 $kd = trim($_GET['kunde']);
 $teil = trim($_GET['teil']);
 $zeitpunkt = trim($_GET['zeitpunkt']);
+$datumvonDB = trim($_GET['datumvon']);
 
 //$stampVon = getLagerInventurDatum($dil);
 //$stampBis = date('Y-m-d H:i:s');
@@ -24,7 +25,7 @@ $zeitpunkt = trim($_GET['zeitpunkt']);
 
 require_once('S395_xml.php');
 
-
+//exit;
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
 $parameters=$domxml->getElementsByTagName("parameters");
@@ -172,7 +173,7 @@ $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S395 Lagerbestand - Teil - Datum", $params);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S395 Lagerbestand - Teil - Datum (Bewegungen ab letzte Inv. bzw. $datumvonDB)", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT-10, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 //set auto page breaks
@@ -197,7 +198,8 @@ $teile = $domxml->getElementsByTagName("teil");
 foreach($teile as $teil){
     $teilChilds = $teil->childNodes;
     $teilnr = getValueForNode($teilChilds,"teilnr");
-    $errorText = getValueForNode($teilChilds,"error");
+    $inventurError = getValueForNode($teilChilds,"inventur_error");
+    $dlagerbewError = getValueForNode($teilChilds,"dlagerbew_error");
 
     test_pageoverflow_noheader($pdf, 5*5);
     // hlavicka
@@ -209,14 +211,6 @@ foreach($teile as $teil){
             $cell = $klic;
         $pdf->Cell($header["sirka"],5,$cell,$header["ram"],$header["radek"],$header["align"],$header["fill"]);
     }
-    //zkouska na error
-    if(strlen($errorText)>0){
-        // je tam nejaka chyba
-        $cell = $errorText;
-        $pdf->Cell(0,5,$cell,'1',1,'L',0);
-        $pdf->Ln();
-    }
-    else{
 
         //mam nejaky obsah skladu, tak jdu na kresleni obsahu skladu
         $sklady = $teil->getElementsByTagName("sklady");
@@ -228,7 +222,10 @@ foreach($teile as $teil){
         $pdf->SetFont("FreeSans", "", 6);
         foreach($cells_header as $klic=>$header){
             if($klic=='teilnr'){
-                $cell = "I:".getValueForNode($teilChilds, 'inventurdatum');
+		if($inventurError=="NO_INVENTUR")
+		    $cell = "keine Inventur";
+		else
+		    $cell = "I:".getValueForNode($teilChilds, 'inventurdatum');
             }
             else{
                     $nodeName = "inventur_".$klic;
@@ -304,7 +301,6 @@ foreach($teile as $teil){
         }
         $pdf->Ln();
         unset($summeArray);
-    }
 }
 // tabulka s prehledem definovanych skladu
 $pdf->AddPage();

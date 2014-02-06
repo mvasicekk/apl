@@ -209,7 +209,7 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 {
 	// vytahnu si jeste vsechny zaskrtnute komentace pro dany dil, vrati mi asociativni pole
         $k2 = getTatAktivFromTeilDpos($teil,2,1);
-//        $k3 = getTatAktivFromTeilDpos($teil,3,1);
+        $k3 = getTatAktivFromTeilDpos($teil,3,1);
         $komentare = array();
         if(is_array($k2))
             $komentare = array_merge($komentare,$k2);
@@ -272,10 +272,12 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 
     // vytahnu seznam reklamaci pro zadany dil
     $a = AplDB::getInstance();
-    $reklArray = $a->getLetzteReklamation($teil, 5);
+    $reklArray = $a->getLetzteReklamation($teil, 1000);
     if ($reklArray === NULL)
 	return 0;
-
+    $restAnzahl = 0;
+    if(count($reklArray)>5) $restAnzahl = count ($reklArray)-5;
+    
     $x_pocatek = 125;
     $y_pocatek = 23;
     $pdfobjekt->SetFont("FreeSans", "B", 7);
@@ -299,13 +301,17 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 	$pdfobjekt->Cell(10, 3, $rekl["interne_bewertung"], 0, 1, 'R');
 	$pdfobjekt->SetX($x_pocatek);
     }
+    
+    if($restAnzahl>0)
+	$pdfobjekt->Cell(12+15+95+17+10, 3, "+ weitere $restAnzahl Reklamationen", 0, 0, 'L');
     // cerveny ramecek okolo
     $pdfobjekt->SetDrawColor(255,0,0);
     $pdfobjekt->SetLineWidth(0.5);
     $pdfobjekt->Rect($x_pocatek, $y_pocatek-0.5, 150, $pdfobjekt->GetY()-$y_pocatek+0.5, 'D');
     $pdfobjekt->SetDrawColor(0,0,0);
     $pdfobjekt->SetLineWidth(0.2);
-    return count($reklArray);
+    $rest = $restAnzahl>0?1:0;
+    return count($reklArray)+$rest;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -352,12 +358,16 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Rect($x_pocatek,$y_pocatek-10+30+3,52,24);
 	$pdfobjekt->SetXY($x_pocatek,$y_pocatek-10+30+3);
 	$pdfobjekt->SetFont("FreeSans", "BU", 10);
-	$pdfobjekt->Write(5,"Teil / cislo dilu:");$pdfobjekt->Ln();
+	$pdfobjekt->Write(5,"");$pdfobjekt->Ln(1);
 	$pdfobjekt->SetX($x_pocatek);
-	$pdfobjekt->SetFont("FreeSans", "B", 20);
-	$pdfobjekt->Write(10,getValueForNode($paletteChildNodes,"teil"));$pdfobjekt->Ln();
-	$pdfobjekt->SetFont("FreeSans", "B", 12);
-	$pdfobjekt->Write(10,getValueForNode($paletteChildNodes,"teilbez"));$pdfobjekt->Ln();
+	$pdfobjekt->SetFont("FreeSans", "B", 25);
+	$pdfobjekt->Write(10,getValueForNode($paletteChildNodes,"teil"));$pdfobjekt->Ln(10);
+	$pdfobjekt->SetFont("FreeSans", "B", 9);
+	$teilbez = getValueForNode($paletteChildNodes,"teilbez");
+	$suffix = '';
+	if(strlen($teilbez)>25) $suffix = '...';
+	$teilbez = substr($teilbez, 0, 25).$suffix;
+	$pdfobjekt->Write(10,$teilbez);$pdfobjekt->Ln(5);
 
 	// pole pro pocet kusu
 	$pdfobjekt->Rect($x_pocatek+52+3,$y_pocatek-10+30+3,52,24);
@@ -366,13 +376,18 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Write(5,"Stuck / pocet kusu:");$pdfobjekt->Ln();
 	$pdfobjekt->SetX($x_pocatek+52+5+15);
 	$pdfobjekt->SetFont("FreeSans", "B", 18);
-	$pdfobjekt->Write(10,getValueForNode($paletteChildNodes,"stk"));$pdfobjekt->Ln();
+	$pdfobjekt->Write(10,getValueForNode($paletteChildNodes,"stk"));$pdfobjekt->Ln(8);
 	$pdfobjekt->SetX($x_pocatek+52+5);
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->Write(5,"Druh litiny:".getValueForNode($paletteChildNodes,"artguseisen"));
 	$pdfobjekt->SetX($x_pocatek+52+5+30);
 	$pdfobjekt->SetFont("FreeSans", "B", 12);
-	$pdfobjekt->Write(5,getValueForNode($paletteChildNodes,"gew")." kg");
+	$pdfobjekt->Write(5,getValueForNode($paletteChildNodes,"gew")." kg");$pdfobjekt->Ln(5);
+	$pdfobjekt->SetFont("FreeSans", "", 10);
+	$pdfobjekt->SetX($x_pocatek+52+3);
+	$vpe = "VPE: ".getValueForNode($paletteChildNodes,"verpackungmenge")." Stk"."  VPA: . . .";
+	$pdfobjekt->Write(5,$vpe);$pdfobjekt->Ln();
+
 
 	// pole pro muster
 	$a = AplDB::getInstance();

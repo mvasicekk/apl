@@ -11,6 +11,10 @@ $doc_keywords = "D571";
 
 $parameters=$_GET;
 
+$dokunr = $parameters['dokunr'];
+if($dokunr=='*') $dokunr='';
+$dokunr=  strtr($dokunr, '*', '%');
+
 $von = $_GET['datumvon'];
 $bis = $_GET['datumbis'];
 $alleTeile = FALSE;
@@ -41,9 +45,16 @@ else
     $parameters['teillangsort']="Nein";
 
 
+//echo "pred XML";
+//echo "<br>kunde:$kunde";
+//echo "<br>alleTeile:$alleTeile";
+//echo "<br>von:$von";
+//echo "<br>bis:$bis";
+
+
 
 require_once('D571_xml.php');
-
+//echo "po XML";
 //exit;
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
@@ -381,6 +392,7 @@ dbConnect();
 //$pocetpozicSFreigabe1=0;
 //$pocetpozicSFreigabe2=0;
 
+$pocetDilu = 0;
 $kunden=$domxml->getElementsByTagName("kunde");
 foreach($kunden as $kunde)
 {
@@ -393,6 +405,8 @@ foreach($kunden as $kunde)
 	$citacDokumentu = 0;
 	foreach($teile as $teil)
 	{
+		$pocetDilu++;
+//		echo "teil $pocetDilu";
 		$teilChilds=$teil->childNodes;
 		$musterplatz = trim(getValueForNode($teilChilds,"musterplatz"));
 		$dokumente = $teil->getElementsByTagName("dok");

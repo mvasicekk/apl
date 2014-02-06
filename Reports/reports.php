@@ -36,6 +36,7 @@ $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $akt_mesic, $akt_rok);
 $tagbis = $pocetDnuVMesici;
 
 $prvniDenAktualnihoRoku = date('d.m.Y',mktime(1,1,1,1,1,$akt_rok));
+$prvniDenAktualnihoRokuDB = date('Y-m-d',mktime(1,1,1,1,1,$akt_rok));
 $prvniDenAktualnihoMesice = date('d.m.Y',mktime(1,1,1,$akt_mesic,1,$akt_rok));
 $dnes = date('d.m.Y');
 
@@ -130,6 +131,7 @@ $smarty->assign("now",date("d.m.Y"));
 $smarty->assign("nowtime",date("Y-m-d H:i:s"));
 $smarty->assign("dnes",$dnes);
 $smarty->assign("prvnidenroku",$prvniDenAktualnihoRoku);
+$smarty->assign("prvnidenrokuDB",$prvniDenAktualnihoRokuDB);
 $smarty->assign("prvnidenmesice",$prvniDenAktualnihoMesice);
 $smarty->assign("aktualniMesic",$akt_mesic);
 $smarty->assign("aktualniRok",$akt_rok);

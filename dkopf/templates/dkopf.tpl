@@ -148,19 +148,19 @@ Arbeitsplan pflegen / Sprava pracovniho planu
         </tr>
         <tr>
             <td>
-                <label for="jb_lfd_2">Jahresbedarf (2011)</label>
+                <label for="jb_lfd_2">Jahresbedarf (2012)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
 		
-                <label for="jb_lfd_1">Jahresbedarf (2012)</label>
+                <label for="jb_lfd_1">Jahresbedarf (2013)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
                 
-                <label for="jb_lfd_j">Jahresbedarf (2013)</label>
+                <label for="jb_lfd_j">Jahresbedarf (2014)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
             </td>
         </tr>
 	<tr>
 	    <td>
-                <label for="jb_lfd_plus_1">Jahresbedarf (2014)</label>
+                <label for="jb_lfd_plus_1">Jahresbedarf (2015)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
 	    </td>
 	</tr>

@@ -13,9 +13,14 @@ global $db;
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->query("set names utf8");
 
-// podrobny vyber
-// 
+//podrobny vyber
 // vytvorim si nekolik pohledu
+
+//jb_lfd_j
+//jb_lfd_1
+//jb_lfd_2
+//jb_lfd_plus_1
+
 $pcip=get_pc_ip();
 
 $datebis = date('Y-m-d');
@@ -251,7 +256,7 @@ $query2xml = XML_Query2XML::factory($db);
 	
 //echo $sql."<br>";
 // tady se budou tisknout parametry
-
+//{}
 function get_kdmin_zu_verb($record)
 {
 	if($record['sum_verb']!=0)

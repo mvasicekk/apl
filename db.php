@@ -829,13 +829,308 @@ class AplDB {
 	$sql.=" dauftr.abgnr";
 	return $this->getQueryRows($sql);
     }
-    
+
+    /**
+     *
+     * @param type $auftrag
+     * @param type $pal
+     * @param type $lager
+     * @return type 
+     */
+    public function getLagerAussAuftragPalette($auftrag, $pal, $lager) {
+	$in = 0;
+	$out = 0;
+
+	// zjistim pocet kusu do skladu vlozenych
+	$sql = "select sum(auss_stk) as nach from dlagerbew where ((auftrag_import='$auftrag') and (pal_import='$pal') and (lager_nach='$lager'))";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $in = $row['nach'];
+	}
+
+	// pocek kusu ze skladu odebranych
+	$sql = "select sum(auss_stk) as ven from dlagerbew where ((auftrag_import='$auftrag') and (pal_import='$pal') and (lager_von='$lager'))";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $out = $row['ven'];
+	}
+
+	return $in - $out;
+    }
+
+    /**
+     *
+     * @param type $auftrag
+     * @param type $pal
+     * @param type $lager
+     * @return type 
+     */
+    public function getLagerGutAuftragPalette($auftrag, $pal, $lager) {
+	$in = 0;
+	$out = 0;
+
+	// zjistim pocet kusu do skladu vlozenych
+	$sql = "select sum(gut_stk) as nach from dlagerbew where ((auftrag_import='$auftrag') and (pal_import='$pal') and (lager_nach='$lager'))";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $in = $row['nach'];
+	}
+
+	// pocek kusu ze skladu odebranych
+	$sql = "select sum(gut_stk) as ven from dlagerbew where ((auftrag_import='$auftrag') and (pal_import='$pal') and (lager_von='$lager'))";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $out = $row['ven'];
+	}
+
+	return $in - $out;
+    }
+
+    /**
+     *
+     * @param type $auftragsnr
+     * @param type $pal
+     * @param type $dil
+     * @param type $ident 
+     */
+    public function stornoLastDlagerBewExport($auftragsnr, $pal,$dil,$ident) {
+	// pokud mam nenulovy dobrych pocet kusu ve skladu 8X, budu stornovat posledni exportni pozici
+	$lVon = '8E';
+	$lNach = '8X';
+	$pocetKusu = $this->getLagerGutAuftragPalette($auftragsnr, $pal, $lNach);
+
+	if ($pocetKusu > 0) {
+	    // vystornuju posledni exportni zaznam
+	    $sql = "select gut_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc limit 1";
+	    $res = mysql_query($sql);
+
+	    if (mysql_affected_rows() > 0) {
+		$row = mysql_fetch_array($res);
+		$stornoStk = $row['gut_stk'];
+		$this->insertDlagerBew($dil,$auftragsnr,$pal,$stornoStk,0,$lNach,$lVon,$ident);
+	    }
+	}
+
+	// to same pro sklad XX
+	$pocetKusu = $this->getLagerGutAuftragPalette($auftragsnr, $pal, "XX");
+
+	if ($pocetKusu > 0) {
+	    // vystornuju posledni exportni zaznam
+	    $sql = "select lager_von,gut_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_nach='XX')) order by date_stamp desc limit 1";
+	    $res = mysql_query($sql);
+
+	    if (mysql_affected_rows() > 0) {
+		$row = mysql_fetch_array($res);
+		$stornoStk = $row['gut_stk'];
+		$lVon = $row['lager_von'];
+		$this->insertDlagerBew($dil, $auftragsnr, $pal, $stornoStk, 0, "XX", $lVon, $ident);
+	    }
+	}
+
+	// a jeste jednou pro vyexportovane ausschussy (B2,B4,B6)
+	$aussTypenB = array("B2", "B4", "B6");
+	$aussTypenA = array("A2", "A4", "A6");
+	$poradiAussTyp = 0;
+	foreach ($aussTypenB as $aussTyp) {
+	    if ($this->getLagerAussAuftragPalette($auftragsnr, $pal, $aussTyp) != 0) {
+		$lVon = $aussTypenA[$poradiAussTyp];
+		$lNach = $aussTyp;
+		$sql = "select lager_nach,lager_von,auss_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc";
+		$res = mysql_query($sql);
+		if (mysql_affected_rows() > 0) {
+		    $row = mysql_fetch_array($res);
+		    $lNach = $row['lager_nach'];
+		    $lVon = $row['lager_von'];
+		    $aussStk = $row['auss_stk'];
+		    $this->insertDlagerBew($dil, $auftragsnr, $pal, 0, $aussStk, $lNach, $lVon, $ident);
+		}
+	    }
+	    $poradiAussTyp++;
+	}
+    }
+
+    /**
+     *
+     * @param type $teil
+     * @param type $auftrag
+     * @param type $paleta
+     * @return type 
+     */
+    public function erster_lager($teil, $auftrag, $paleta) {
+	//dbConnect();
+	// nejdriv si zjistim cislo operace
+	$sql = "select abgnr from dauftr where ((teil='$teil') and (auftragsnr='$auftrag') and (`pos-pal-nr`='$paleta') and (abgnr>3)) order by abgnr";
+	$res = mysql_query($sql);
+	$abgnr = 0;
+	$ela = 'OD';
+
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $abgnr = $row['abgnr'];
+	}
+
+	// pro zjistinene abgnr si zjistim z tabulky dpos jmeno skladu
+	// pokud pro dane abgnr nic nenajdu vratim 0D
+	$sql = "select lager_von from dpos where ((teil='$teil') and (lager_von is not null) and (lager_von<>'0D') and (`taetnr-aby`='$abgnr'))";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $lVon = $row['lager_von'];
+	    if (strlen($lVon) > 0)
+		$ela = $lVon;
+	}
+	else {
+	    // jeste posledni moznost, jestli nemam jmeno skladu u zaskrtnute G operace
+	    $sql = "select lager_von from dpos where ((teil='$teil') and (kzgut='G') and (`kz-druck`<>0))";
+	    $res = mysql_query($sql);
+	    if (mysql_affected_rows() > 0) {
+		$row = mysql_fetch_array($res);
+		$lVon = $row['lager_von'];
+		if (strlen($lVon) > 0)
+		    $ela = $lVon;
+	    }
+	}
+	return $ela;
+    }
+
+    public function getLagerGutIn($auftrag, $pal, $lager) {
+	$in = 0;
+
+	// zjistim pocet kusu do skladu vlozenych
+	$sql = "select sum(gut_stk) as nach from dlagerbew where ((auftrag_import=$auftrag) and (pal_import=$pal) and (lager_nach='$lager'))";
+	//echo "sql=$sql";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $in = $row['nach'];
+	}
+	return $in;
+    }
+
+    /**
+     *
+     * @param type $auftrag
+     * @param type $pal
+     * @param type $lager
+     * @return type 
+     */
+    public function getLagerGesamtOut($auftrag, $pal, $lager) {
+	$in = 0;
+
+	// zjistim pocet kusu do skladu vlozenych
+	$sql = "select sum(gut_stk+auss_stk) as ven from dlagerbew where ((auftrag_import='$auftrag') and (pal_import='$pal') and (lager_von='$lager'))";
+	//echo "sql=$sql<br>";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $in = $row['ven'];
+	}
+	return $in;
+    }
+
+    /**
+     *
+     * @param type $auftrag
+     * @param type $pal
+     * @param type $ausstyp
+     * @return type 
+     */
+    public function getAussFromDrueckAuftragPalTyp($auftrag, $pal, $ausstyp) {
+	$aussCount = 0;
+	mysql_query('set names utf8');
+	$sql = "select sum(`Auss-Stück`) as auss from drueck where ((auftragsnr='$auftrag') and (`pos-pal-nr`='$pal') and (auss_typ='$ausstyp'))";
+	//echo "sql=$sql<br>";
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() > 0) {
+	    $row = mysql_fetch_array($res);
+	    $aussCount = $row['auss'];
+	}
+
+	return $aussCount;
+    }
+
+    /**
+     *
+     * @param type $import
+     * @param type $dil
+     * @param type $pal
+     * @param type $auss
+     * @param type $von
+     * @param type $nach 
+     */
+    public function moveAussLagerFromA2B($import, $dil, $pal, $auss, $von, $nach) {
+	$ident = get_user_pc();
+
+	$sql = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser) ";
+	$sql.= "values ('$dil','$import','$pal',0,'$auss','$von','$nach','$ident')";
+	mysql_query($sql);
+    }
+
+    /**
+     *
+     * @param type $auftragsnr
+     * @param type $pal
+     * @param type $dil
+     * @param type $ident 
+     */
+    public function moveAussLagerA2B($auftragsnr, $pal, $dil, $ident) {
+	$auss2 = $this->getAussFromDrueckAuftragPalTyp($auftragsnr, $pal, 2);
+	$auss4 = $this->getAussFromDrueckAuftragPalTyp($auftragsnr, $pal, 4);
+	$auss6 = $this->getAussFromDrueckAuftragPalTyp($auftragsnr, $pal, 6);
+	if ($auss2 != 0)
+	    $this->moveAussLagerFromA2B($auftragsnr, $dil, $pal, $auss2, "A2", "B2");
+	if ($auss4 != 0)
+	    $this->moveAussLagerFromA2B($auftragsnr, $dil, $pal, $auss4, "A4", "B4");
+	if ($auss6 != 0)
+	    $this->moveAussLagerFromA2B($auftragsnr, $dil, $pal, $auss6, "A6", "B6");
+    }
+
+    /**
+     *
+     * @param type $dil
+     * @param type $auftragsnr
+     * @param type $pal
+     * @param type $ident 
+     */
+    public function insertDlagerBewXXDummy($dil, $auftragsnr, $pal, $ident) {
+	// jmeno prvniho skladu
+
+	$eL = $this->erster_lager($dil, $auftragsnr, $pal);
+	// kolik kusu zbyva v prvnim skladu
+	$pocetKusuVlozenych = $this->getLagerGutIn($auftragsnr, $pal, $eL);
+	$pocetKusuOdebranych = $this->getLagerGesamtOut($auftragsnr, $pal, $eL);
+	$zbyvaKusu = $pocetKusuVlozenych - $pocetKusuOdebranych;
+
+	if ($zbyvaKusu != 0)
+	    $this->insertDlagerBew($dil, $auftragsnr, $pal, $zbyvaKusu, 0, $eL, "XX", $ident);
+    }
+
+    /**
+     *
+     * @param type $dil
+     * @param type $auftragsnr
+     * @param type $gut
+     * @param type $auss
+     * @param type $von
+     * @param type $nach
+     * @param type $ident 
+     */
+    public function insertDlagerBew($dil,$auftragsnr,$pal,$gut,$auss,$von,$nach,$ident){
+	$sql_insert = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser) ";
+	$sql_insert.= "values ('$dil','$auftragsnr','$pal','$gut','$auss','$von','$nach','$ident')";
+	mysql_query($sql_insert);
+    }
+
     /**
      *
      * @param type $dauftrId 
      */
     public function getDauftrRow($dauftrId){
-	$sql = "select id_dauftr as id,auftragsnr,`pos-pal-nr` as pal,teil,`stück` as stk,abgnr from dauftr where id_dauftr='$dauftrId'";
+	$sql = "select id_dauftr as id,auftragsnr,`pos-pal-nr` as pal,teil,`stück` as stk,abgnr,`auftragsnr-exp` as ex,`stk-exp` as ex_stk from dauftr where id_dauftr='$dauftrId'";
         $res = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($res);
@@ -1918,6 +2213,26 @@ class AplDB {
     }
 
     /**
+     *
+     * @param type $ex
+     * @param type $im
+     * @param type $teil 
+     */
+    public function getExpStkExImTeil($ex,$im,$teil){
+	$sql.=" select sum(dauftr.`stk-exp`) as sumexp";
+	$sql.=" from";
+	$sql.=" dauftr";
+	$sql.=" where";
+	$sql.=" dauftr.`auftragsnr-exp`=$ex";
+	$sql.=" and dauftr.auftragsnr=$im";
+	$sql.=" and teil='$teil'";
+	$sql.=" and KzGut='G'";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sumexp']);
+    }
+    
+    /**
      * 
      */
     public function getBehaelterLagerplatzArray($mitKdKonto = 0, $platz = NULL) {
@@ -2167,6 +2482,47 @@ class AplDB {
         $sql = "update dkopf set $dbField='$value' where teil='$teil' limit 1";
         mysql_query($sql);
         return mysql_affected_rows();
+    }
+
+    /**
+     *
+     * @param type $von
+     * @param type $nach 
+     */
+    public function changePersNr($von, $nach) {
+	$tableFieldArray = array(
+	    'dabmahnung' => 'persnr',
+	    'dambew' => 'persnr',
+	    'dpers' => 'persnr',
+	    'dpersbewerber' => 'persnr',
+	    'dpersdatumzuschlag' => 'persnr',
+	    'dpersdetail1' => 'persnr',
+	    'dpersfaehigkeit' => 'persnr',
+	    'dperspremie' => 'persnr',
+	    'dpersschulung' => 'persnr',
+	    'dpersstempel' => 'persnr',
+	    'dperstransport' => 'persnr',
+	    'dpersuntersuchungdatum' => 'persnr',
+	    'dpersvertrag' => 'persnr',
+	    'dpraemie' => 'persnr',
+	    'dreparaturkopf' => 'persnr_ma',
+	    'drueck' => 'persnr',
+	    'dstddif' => 'persnr',
+	    'dunterkunft' => 'persnr',
+	    'durlaub1' => 'persnr',
+	    'dvertrag' => 'persnr',
+	    'dvorschuss' => 'persnr',
+	    'dzeit' => 'persnr',
+	    'dzeitsoll' => 'persnr',
+	    'dzeitsoll2' => 'persnr',
+	    'persunfall' => 'persnr',
+	    'schutzmittelausgabe' => 'persnr'
+	);
+	
+	foreach ($tableFieldArray as $table=>$field){
+	    $sql = "update `$table` set `$field`=$nach where `$field`=$von";
+	    mysql_query($sql);
+	}
     }
 
     /**
@@ -3007,6 +3363,17 @@ class AplDB {
 //    }
     }
 
+    public function isUniversalista($persnr){
+	$sql.= " select * from dpersstempel";
+	$sql.= " where";
+	$sql.= " oe like 'G%11'";
+	$sql.= " and persnr=$persnr";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL)    
+	    return FALSE;
+	else
+	    return TRUE;
+    }
     /**
      *
      * @param <type> $monat
@@ -3047,9 +3414,10 @@ class AplDB {
      *
      * @param type $teil
      * @return type 
+     * {}
      */
     public function getLetzteReklamation($teil,$limit=5){
-	$sql = "select rekl_nr,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_datum,beschr_abweichung,interne_bewertung,giesstag from dreklamation where teil='$teil' order by rekl_datum desc limit $limit";
+	$sql = "select rekl_datum as rd,rekl_nr,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_datum,beschr_abweichung,interne_bewertung,giesstag from dreklamation where teil='$teil' order by rd desc limit $limit";
 	return $this->getQueryRows($sql);
     }
 	
@@ -4345,10 +4713,13 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
      *
      * @param <type> $teil cislo dilu, pro ktery chci vratit obsahy jednotlivych skladu
      */
-    function getLagerBestandForTeil($teil, $stampbis) {
+    function getLagerBestandForTeil($teil, $stampbis,$von=NULL) {
 
         // zjistim si datum inventury
-        $datumVon = $this->getInventurDatumForTeil($teil);
+        if($von===NULL) 
+	    $datumVon = $this->getInventurDatumForTeil($teil);
+	else
+	    $datumVon = $von;
 
         $sql = "select";
         $sql.=" dlagerbew.teil,";
@@ -4410,11 +4781,11 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
         $result = mysql_query($sql, $this->con) or die(mysql_errno());
         if (mysql_num_rows($result) > 0) {
             $rowLagerBestand = mysql_fetch_array($result);
-            $rowInventur = $this->getInventurStandForTeil($teil);
-            if ($rowInventur == null)
-                return "NO_INVENTUR";
-            else
-                $rowLagerBestand['inventur'] = $rowInventur;
+//            $rowInventur = $this->getInventurStandForTeil($teil);
+//            if ($rowInventur == null)
+//                return "NO_INVENTUR";
+//            else
+//                $rowLagerBestand['inventur'] = $rowInventur;
         }
         return $rowLagerBestand;
     }
@@ -4522,6 +4893,71 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
     }
 
     /**
+     *
+     * @param type $stk
+     * @param type $termin
+     * @param type $auftragsnr_exp
+     * @param type $pos_pal_nr_exp
+     * @param type $fremdauftr
+     * @param type $fremdpos
+     * @param type $dauftr_id
+     * @return type 
+     */
+    public function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id) {
+	$dauftrRow = $this->getDauftrRow($dauftr_id);
+
+	$pos_pal_nr_exp = chop($_GET['pos_pal_nr_exp']);
+	if (strlen($pos_pal_nr_exp) == 0)
+	    $pos_pal_nr_exp = 'NULL';
+	
+//	$stkImportUrsprung = $dauftrRow['stk'];
+	
+	$auftragsnr = $dauftrRow['auftragsnr'];
+	$pal = $dauftrRow['pos-pal-nr'];
+	$teil = $dauftrRow['teil'];
+	$sql = "update dauftr set `stück`='$stk',termin='$termin',`auftragsnr-exp`=$auftragsnr_exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";
+	$sql.=" where ((auftragsnr='$auftragsnr') and (teil='$teil') and (`pos-pal-nr`='$pal')) limit 20";
+	mysql_query('set names utf8');
+	mysql_query($sql);
+	$mysql_error = mysql_error();
+
+	// musim vzhledem ke zmene poctu importnich kusu udelat i zmenu v dlagerbew
+	// najdu di odpovidajici import_auftrag,teil,import_pal
+	// mam z predesla
+	// zmena nemuzu udelat jednoduchy update, protoze v pripade, ze mam udelanou inventuru, tak se mi posune
+	// pri updatu i timestamp a ten nemuzu natvrdo zapsat.
+	// musim udelat storno zaznam a vytvorit novy
+	// nejdriv si vytahnu stary zaznam
+	// musim vystornovat sumu vsech kusu daneho dilu
+	// TODO: nemusi spravne fungovat pokud se v prubehu zmeni prvni sklad
+	// to cele provedu jen v pripade ze se zmenil pocet importnich kusu
+
+//	if ($stk != $stkImportUrsprung) {
+	    $sql_select = "select sum(gut_stk) as gut_stk,max(lager_nach) as lager_nach from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
+	    $res = mysql_query($sql_select);
+	    $row = mysql_fetch_array($res);
+	    $gut_stk = $row['gut_stk'];
+	    $storno_stk = $gut_stk * (-1);
+	    $lager_nach = $row['lager_nach'];
+	    $user = get_user_pc();
+
+	    // pripravim storno zaznam
+	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
+	    // pokud je co stornovat, provedu prikaz
+	    if ($storno_stk != 0)
+		mysql_query($sql_insert_storno);
+
+	    // pripravim novy zaznam
+	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
+	    mysql_query($sql_insert_storno);
+//	}
+
+	return $mysql_error;
+    }
+
+    /**
      * vrati datum inventury pro dany dil
      * pokud dil nemam inventuru vratim null
      * 
@@ -4601,10 +5037,10 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
                             $vonDB = $this->make_DB_datetime($von, $datum);
                             $bisDB = $this->make_DB_datetime($bis, $datum);
                             $datumDB = $this->make_DB_datum($datum);
-
-                            // pokud jsem tam nejaky stejny zaznam se stejnym datumem, operaci a persnr, tak ho smazu
-//                            $sql_delete = "delete from drueck where ((auftragsnr='$auftrag') and (teil='$teil') and (persnr='$persnr') and (datum='$datumDB') and (taetnr='$abgnr')) limit 1";
-                            //mysql_query($sql_delete,$this->con) or die ("chyba".mysql_error());
+			    // 
+                            // pokud jsem tam nejaky stejny zaznam se stejnym datumem, operaci a persnr, tak ho smazu	    
+			    // $sql_delete = "delete from drueck where ((auftragsnr='$auftrag') and (teil='$teil') and (persnr='$persnr') and (datum='$datumDB') and (taetnr='$abgnr')) limit 1";
+                            // mysql_query($sql_delete,$this->con) or die ("chyba".mysql_error());
 
                             $user = $this->get_user_pc();
                             // spozitam spotrebovany cas
@@ -4613,7 +5049,7 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
 
                             // 2010-05-31 uprava / pauzu nepocitam , ale vlozim zadanou uzivatelem
                             //$pause1 = round(1/17*$this->getVerbMinuten($von, $bis)) + $pause2*60;
-                            $pause1 = round($pause1 * 60 + $pause2 * 60);
+			    $pause1 = round($pause1 * 60 + $pause2 * 60);
                             $verb = $this->getVerbMinuten($von, $bis) - $pause1;
                             $sql = "insert into drueck ";
                             $sql.=" (auftragsnr,teil,taetnr,`verb-zeit`,persnr,datum,`verb-von`,`verb-bis`,`verb-pause`,schicht,oe,comp_user_accessuser,insert_stamp) ";

@@ -38,14 +38,18 @@ if ($alleTeile === TRUE) {
     $sql.=" from dkopf";
     $sql.=" join dksd on dkopf.kunde=dksd.kunde";
     $sql.=" left join dteildokument on dteildokument.teil=dkopf.teil";
-    $sql.=" where ((dkopf.kunde='$kunde'))";
+    $sql.=" where ( 1";
+    $sql.=" and (dkopf.kunde='$kunde')";
+    if(strlen($dokunr)>0)
+    $sql.=" and (dteildokument.doku_nr like '$dokunr')";	
+    $sql.= " )";
     if ($teillangsort != 0)
         $sql.=" order by dkopf.teillang,dteildokument.einlag_datum desc,dteildokument.doku_nr asc";
     else
         $sql.=" order by dkopf.teil,dteildokument.einlag_datum desc,dteildokument.doku_nr asc";
 }
 else {
-    $sql = "select";
+    $sql = "select distinct";
     $sql.=" dkopf.kunde,";
     $sql.="dkopf.teil,";
     $sql.="dkopf.teilbez,";
@@ -66,7 +70,11 @@ else {
     $sql.=" join dkopf on dauftr.teil=dkopf.teil";
     $sql.=" left join dteildokument on dteildokument.teil=dkopf.teil";
     $sql.=" join dksd on daufkopf.kunde=dksd.kunde";
-    $sql.=" where ((daufkopf.aufdat between '$datumvom' and '$datumbis') and (dkopf.kunde='$kunde'))";
+    $sql.=" where ( 1";
+    $sql.=" and (daufkopf.aufdat between '$datumvom' and '$datumbis') and (dkopf.kunde='$kunde')";
+    if(strlen($dokunr)>0)
+	$sql.=" and (dteildokument.doku_nr like '$dokunr')";	
+    $sql.=" )";
     if ($teillangsort != 0)
         $sql.=" order by dkopf.teillang,dteildokument.einlag_datum desc,dteildokument.doku_nr asc";
     else
@@ -75,7 +83,7 @@ else {
 
 
 //echo "sql=$sql"."<br>";
-
+//exit;
 
 $query2xml = XML_Query2XML::factory($db);
 	
@@ -193,8 +201,6 @@ for($i=0;$i<sizeof($views);$i++)
 
 
 $db->disconnect();
-
-
 //============================================================+
 // END OF FILE                                                 
 //============================================================+

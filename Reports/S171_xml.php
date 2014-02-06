@@ -3,12 +3,15 @@ session_start();
 require_once('XML/Query2XML.php');
 require_once('DB.php');
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 
 // cast pro vytvoreni XML by mela byt v jinem souboru jmenosestavy_xml.php
 $db = &DB::connect('mysql://root:nuredv@localhost/apl');
 
-global $db;
+$a = AplDB::getInstance();
+
+//global $db;
 
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->query("set names utf8");
@@ -54,7 +57,16 @@ $sql.= "    dpersfaehigkeit.faehigkeit_id";
 
 
 $query2xml = XML_Query2XML::factory($db);
-	
+
+function get_univ($record)
+{
+    global $a;
+    $u = $a->isUniversalista($record['persnr']);
+    if($u===TRUE)
+	return "1";
+    else
+	return "0";
+}
 
 $options = array(
 		'encoder'=>false,
@@ -74,6 +86,7 @@ $options = array(
                             'name',
                             'vorname',
                             'regeloe',
+			    'univerzalista'=>'#get_univ();',
                             'faehigkeiten'=>array(
                                 'rootTag'=>'faehigkeiten',
                                 'idColumn'=>'id_faehigkeit',
@@ -150,7 +163,7 @@ for($i=0;$i<sizeof($views);$i++)
 }
 
 
-$db->disconnect();
+//$db->disconnect();
 
 
 //============================================================+

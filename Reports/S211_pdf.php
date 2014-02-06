@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 $doc_title = "S211";
 $doc_subject = "S211 Report";
@@ -468,7 +469,7 @@ pageheader($pdf,$cells_header,5);
 $pdf->Ln();
 $pdf->Ln();
 
-
+$a = AplDB::getInstance();
 // a ted pujdu po dilech
 $teile=$domxml->getElementsByTagName("teil");
 foreach($teile as $teil)
@@ -507,15 +508,21 @@ foreach($teile as $teil)
 				$sum_zapati_auftrag_array[$key]+=$hodnota;
 			}
 			// a jeste pripoctu dobre kusy v pripade, ze mam cinnost G
-			if(getValueForNode($taetigkeit_childs,'kzgut')=='G')
-				$sum_zapati_auftrag_array['gutstk']+=getValueForNode($taetigkeit_childs,'stk');
+//			if(getValueForNode($taetigkeit_childs,'kzgut')=='G')
+//				$sum_zapati_auftrag_array['gutstk']+=getValueForNode($taetigkeit_childs,'stk');
 		}
 		
 		if($sum_zapati_auftrag_array['verb']!=0)
 			$fac1=$sum_zapati_auftrag_array['vzkd']/$sum_zapati_auftrag_array['verb'];
 		else
 			$fac1=0;
-
+		
+		$ex = $export;
+		$im = getValueForNode($import_childs, 'auftragsnr');
+		$teil = $teilnr;
+		
+		$sum_zapati_auftrag_array['gutstk'] = $a->getExpStkExImTeil($ex,$im,$teil);
+		
 		test_pageoverflow($pdf,5,$cells_header);
 		zapati_auftrag($pdf,$teilnode,5,"Summe Auftrag",array(235,235,235),$sum_zapati_auftrag_array,$fac1);
 		

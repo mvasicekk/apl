@@ -154,12 +154,16 @@ function person_zeile($pdfobjekt,$vyskaradku,$rgb,$persnr,$personQualifikationen
         $vorname = $personQualifikationen['vorname'];
         $name = $name." ".$vorname;
         $regelOE = $personQualifikationen['regeloe'];
+	$univ = $personQualifikationen['univerzalista']=="0"?"":"UNI";
 
         $pdfobjekt->SetFont("FreeSans", "", 7);
         $pdfobjekt->Cell(PERSNRWIDTH*3,$vyskaradku,$name,'LRBT',0,'L',$fill);
 
         $pdfobjekt->SetFont("FreeSans", "", 4.5);
         $pdfobjekt->Cell($qWidth/2,$vyskaradku,$regelOE,'LRBT',0,'L',$fill);
+
+        $pdfobjekt->SetFont("FreeSans", "", 4.5);
+        $pdfobjekt->Cell($qWidth/2,$vyskaradku,$univ,'LRBT',0,'L',$fill);
 
         //vytvorim si pole kvalifikaci pro konkretniho cloveka
         $persQArray = array();
@@ -202,7 +206,8 @@ function zahlavi_Qualifikationen($pdfobjekt,$vyskaradku,$rgb,$QArray,$sirkaQ){
         // nakreslim zahlavi pro statnr
         //misto pro persnr
         $pdfobjekt->SetFont("FreeSans", "B", 6);
-        $pdfobjekt->Cell(PERSNRWIDTH*4+$sirkaQ/2,$vyskaradku,'','LRT',0,'L',$fill);
+        //$pdfobjekt->Cell(PERSNRWIDTH*4+$sirkaQ/2,$vyskaradku,'','LRT',0,'L',$fill);
+	$pdfobjekt->Cell(PERSNRWIDTH*4+$sirkaQ,$vyskaradku,'','LRT',0,'L',$fill);
         foreach ($statnrArray as $statnr=>$pocetsloupcu){
             $obsah = $statnr;//.' - '.$statnrNameArray[$statnr];
             $pdfobjekt->Cell($sirkaQ*$pocetsloupcu,$vyskaradku,$obsah,'LRBT',0,'C',$fill);
@@ -210,7 +215,7 @@ function zahlavi_Qualifikationen($pdfobjekt,$vyskaradku,$rgb,$QArray,$sirkaQ){
         $pdfobjekt->Ln();
         //misto pro persnr
         $pdfobjekt->SetFont("FreeSans", "B", 5);
-        $pdfobjekt->Cell(PERSNRWIDTH*4+$sirkaQ/2,$vyskaradku,'','LR',0,'L',$fill);
+        $pdfobjekt->Cell(PERSNRWIDTH*4+$sirkaQ,$vyskaradku,'','LR',0,'L',$fill);
         foreach ($QArray as $qualifikation){
             $id = $qualifikation['id'];
             $abkrz = $qualifikation['faeh_abkrz'];
@@ -226,6 +231,7 @@ function zahlavi_Qualifikationen($pdfobjekt,$vyskaradku,$rgb,$QArray,$sirkaQ){
         // druhy radek zahlavi s popiskama ist, soll
         $pdfobjekt->SetFont("FreeSans", "", 5);
         $pdfobjekt->Cell(PERSNRWIDTH*4+$sirkaQ/2,$vyskaradku,'Person','LRBT',0,'L',$fill);
+	$pdfobjekt->Cell($sirkaQ/2,$vyskaradku,'Uni','LRBT',0,'L',$fill);
         foreach ($QArray as $qualifikation){
             $pdfobjekt->Cell($sirkaQ/2,$vyskaradku,'soll','LRBT',0,'R',$fill);
             $pdfobjekt->Cell($sirkaQ/2,$vyskaradku,'ist','LRBT',0,'R',$fill);
@@ -240,7 +246,7 @@ function zapati_Qualifikationen($pdfobjekt,$vyskaradku,$rgb,$QArray,$anzahlArray
 
         // radek Anzahl Aktuell
         $pdfobjekt->SetFont("FreeSans", "", 7);
-        $pdfobjekt->Cell(PERSNRWIDTH*4+$qWidth/2,$vyskaradku,'Anzahl(>=7) Aktuell','LRBT',0,'L',$fill);
+        $pdfobjekt->Cell(PERSNRWIDTH*4+$qWidth,$vyskaradku,'Anzahl(>=7) Aktuell','LRBT',0,'L',$fill);
         foreach ($QArray as $qualifikation){
             $id = $qualifikation['id'];
             if(array_key_exists($id, $anzahlArrayAktuell)){
@@ -259,7 +265,7 @@ function zapati_Qualifikationen($pdfobjekt,$vyskaradku,$rgb,$QArray,$anzahlArray
 
         // radek Anzahl Alle
         $pdfobjekt->SetFont("FreeSans", "", 7);
-        $pdfobjekt->Cell(PERSNRWIDTH*4+$qWidth/2,$vyskaradku,'Anzahl(>=7) Alle','LRBT',0,'L',$fill);
+        $pdfobjekt->Cell(PERSNRWIDTH*4+$qWidth,$vyskaradku,'Anzahl(>=7) Alle','LRBT',0,'L',$fill);
         foreach ($QArray as $qualifikation){
             $id = $qualifikation['id'];
             if(array_key_exists($id, $anzahlArrayAll)){
@@ -464,6 +470,7 @@ foreach($Q_typen as $qtyp){
         $personalQualifikationen[$persnr]['name'] = getValueForNode($personChilds, 'name');
         $personalQualifikationen[$persnr]['vorname'] = getValueForNode($personChilds, 'vorname');
         $personalQualifikationen[$persnr]['regeloe'] = getValueForNode($personChilds, 'regeloe');
+	$personalQualifikationen[$persnr]['univerzalista'] = getValueForNode($personChilds, 'univerzalista');
         $personQualifikationen = $person->getElementsByTagName("faehigkeit");
         // aktualizovat pocty kvalifikaci
         $QTypCounted = FALSE;

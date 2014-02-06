@@ -99,28 +99,7 @@ foreach ($teilArray as $dil=>$hodnota){
     $node->appendChild($node1);
 
 
-    $row = AplDB::getInstance()->getLagerBestandForTeil($dil, $now);
-    $inventurDatum = AplDB::getInstance()->getInventurDatumForTeil($dil);
-
-    if(is_array($row)){
-        $node1 = $domxml->createElement('inventurdatum');
-        $data1 = $domxml->createTextNode($inventurDatum);
-        $node1->appendChild($data1);
-        $node->appendChild($node1);
-    }
-
-    if(!is_array($row)){
-        $node1 = $domxml->createElement('error');
-        $data1 = $domxml->createTextNode($row);
-        $node1->appendChild($data1);
-        $node->appendChild($node1);
-    }
-    else{
-        $node1 = $domxml->createElement('sklady');
-//        $data1 = $domxml->createTextNode("mam hodnoty skladu");
-//        $node1->appendChild($data1);
-
-        $lagerArray = array(
+    $lagerArray = array(
                             "0D",
 //                            "0S",
                             "1R",
@@ -145,12 +124,62 @@ foreach ($teilArray as $dil=>$hodnota){
                             "B6",
         );
 
-        foreach($lagerArray as $lager){
+    $rowInventur = AplDB::getInstance()->getInventurStandForTeil($dil);
+    if ($rowInventur == null)
+	$invRow = "NO_INVENTUR";
+    else
+        $invRow = $rowInventur;
+    
+    if($invRow=="NO_INVENTUR"){
+	$inventurDatum = $datumvonDB;
+    }
+    else{
+	$inventurDatum = AplDB::getInstance()->getInventurDatumForTeil($dil);
+    }
+    
+    $row = AplDB::getInstance()->getLagerBestandForTeil($dil, $now,$inventurDatum);
+    
 
+    $node1 = $domxml->createElement('inventurdatum');
+    $data1 = $domxml->createTextNode($inventurDatum);
+    $node1->appendChild($data1);
+    $node->appendChild($node1);
+
+    $node1 = $domxml->createElement('inventur_error');
+    if($rowInventur==NULL)
+	$iE = "NO_INVENTUR";
+    else
+	$iE = "INVENTUR";
+    $data1 = $domxml->createTextNode($iE);
+    $node1->appendChild($data1);
+    $node->appendChild($node1);
+
+    $node1 = $domxml->createElement('dlagerbew_error');
+    if(!is_array($row))
+	$iE = "NO_DLAGERBEW";
+    else
+	$iE = "DLAGERBEW";
+    $data1 = $domxml->createTextNode($iE);
+    $node1->appendChild($data1);
+    $node->appendChild($node1);
+
+//    if(!is_array($row)){
+//        $node1 = $domxml->createElement('error');
+//        $data1 = $domxml->createTextNode($row);
+//        $node1->appendChild($data1);
+//        $node->appendChild($node1);
+//    }
+//    else{
+        $node1 = $domxml->createElement('sklady');
+        foreach($lagerArray as $lager){
             // bewegung plus
             $lager1 = "plus_".$lager;
             $node2 = $domxml->createElement($lager1);
-            $data2 = $domxml->createTextNode($row[$lager1]);
+	    if(!is_array($row))
+		$lStk = 0;
+	    else
+		$lStk = $row[$lager1];
+            $data2 = $domxml->createTextNode($lStk);
             $node2->appendChild($data2);
             $node1->appendChild($node2);
             $node->appendChild($node1);
@@ -158,7 +187,11 @@ foreach ($teilArray as $dil=>$hodnota){
             // bewegung minus
             $lager1 = "minus_".$lager;
             $node2 = $domxml->createElement($lager1);
-            $data2 = $domxml->createTextNode($row[$lager1]);
+   	    if(!is_array($row))
+		$lStk = 0;
+	    else
+		$lStk = $row[$lager1];
+            $data2 = $domxml->createTextNode($lStk);
             $node2->appendChild($data2);
             $node1->appendChild($node2);
             $node->appendChild($node1);
@@ -166,16 +199,17 @@ foreach ($teilArray as $dil=>$hodnota){
             //inventur
             $lager1 = "inventur_".$lager;
             $node2 = $domxml->createElement($lager1);
-            $data2 = $domxml->createTextNode($row['inventur'][$lager]);
+	    if($invRow=="NO_INVENTUR")
+		$invStk = 0;
+	    else
+		$invStk = $invRow[$lager];
+            $data2 = $domxml->createTextNode($invStk);
             $node2->appendChild($data2);
             $node1->appendChild($node2);
             $node->appendChild($node1);
         }
-    }
-
+//    }
     $root->appendChild($node);
-
-
 }
 
 // pokusy s polem parameters

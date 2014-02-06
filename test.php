@@ -402,29 +402,29 @@ $apl = AplDB::getInstance();
 //    $pmStunden = $apl->getPlusMinusStunden(12, 2011, $persnr);
 //    echo "<br>+-Stunden zu 31.12.2011:$pmStundenE, +-StundenGesamt zu 31.12.2011:$pmStunden";
 //}
-$persnrArray = $apl->getPersnrFromEintritt('1990-01-01',TRUE);
+//$persnrArray = $apl->getPersnrFromEintritt('1990-01-01',TRUE);
 //$persnrArray = array(104);
 //
 //    $qArray = $apl->getQualifikationenProQTyp(NULL);
 //    foreach ($qArray as $q){
 //        echo "<br>qualifid = ".$q['id'];
 //    }
-foreach($persnrArray as $persnr){
-   $eintritt = substr($apl->getEintrittsDatumDB($persnr),0,10);
-   $nameArray = $apl->getNameVorname($persnr);
-   if($nameArray!==NULL)
-       $name = $nameArray['name'].' '.$nameArray['vorname'];
-   else
-       $name = '';
-   $plusminusStunden2011 = number_format($apl->getPlusMinusStunden(12, 2011, $persnr),1,'.','');
-   $arbstunden2012 = number_format($apl->getArbStundenBetweenDatums($persnr,'2012-01-01','2012-12-31'),1,'.','');
-   $plusminusStunden2012 = number_format($apl->getPlusMinusStunden(12, 2012, $persnr),1,'.','');
-   $arbstunden2013 = number_format($apl->getArbStundenBetweenDatums($persnr,'2013-01-01','2013-12-31'),1,'.','');
-   $plusminusStunden2013 = number_format($apl->getPlusMinusStunden(12, 2013, $persnr),1,'.','');
-//   $plusminusStunden3 = number_format($apl->getPlusMinusStunden(7, 2011, $persnr),1,',',' ');
-   echo "$persnr,$eintritt,$name,$plusminusStunden2011,$arbstunden2012,$plusminusStunden2012,$arbstunden2013,$plusminusStunden2013<br>";
-//    $apl->addQualifikationen($persnr, $qArray, 0, 0);
-}
+//foreach($persnrArray as $persnr){
+//   $eintritt = substr($apl->getEintrittsDatumDB($persnr),0,10);
+//   $nameArray = $apl->getNameVorname($persnr);
+//   if($nameArray!==NULL)
+//       $name = $nameArray['name'].' '.$nameArray['vorname'];
+//   else
+//       $name = '';
+//   $plusminusStunden2011 = number_format($apl->getPlusMinusStunden(12, 2011, $persnr),1,'.','');
+//   $arbstunden2012 = number_format($apl->getArbStundenBetweenDatums($persnr,'2012-01-01','2012-12-31'),1,'.','');
+//   $plusminusStunden2012 = number_format($apl->getPlusMinusStunden(12, 2012, $persnr),1,'.','');
+//   $arbstunden2013 = number_format($apl->getArbStundenBetweenDatums($persnr,'2013-01-01','2013-12-31'),1,'.','');
+//   $plusminusStunden2013 = number_format($apl->getPlusMinusStunden(12, 2013, $persnr),1,'.','');
+////   $plusminusStunden3 = number_format($apl->getPlusMinusStunden(7, 2011, $persnr),1,',',' ');
+//   echo "$persnr,$eintritt,$name,$plusminusStunden2011,$arbstunden2012,$plusminusStunden2012,$arbstunden2013,$plusminusStunden2013<br>";
+////    $apl->addQualifikationen($persnr, $qArray, 0, 0);
+//}
 //foreach ($persnrArray as $persnr) {
 //
 //    echo "<hr>PersNr: $persnr";
@@ -787,3 +787,5 @@ $id_dauftr=477914;
 //    $ar=$apl->updateUrlaubField($person,'rest',$u['rest']);
 //    echo ", ar=$ar";
 //}
+
+//$apl->changePersNr(99555, 5135);
