@@ -223,7 +223,7 @@ $pt.=" as select";
 $pt.="    drueck.PersNr as persnr,";
 // zmena 2013-01-23 misto verb-zeit se bude pro vypocet pouzivat vzaby
 //$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
-$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`VZ-IST`/60) as risiko_zuschlag";
+$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
 $pt.=" from";
 $pt.="     drueck";
 $pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";

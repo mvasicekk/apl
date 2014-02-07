@@ -60,6 +60,8 @@ $sql.=" where";
 $sql.="     ( dreklamation.kunde between '$kundevon' and '$kundebis')";
 $sql.="     and";
 $sql.="     ( dreklamation.rekl_datum between '$erhvon' and '$erhbis')";
+if(strlen($reklnr)>0)
+$sql.="     and ( dreklamation.rekl_nr like '$reklnr')";
 $sql.=" order by";
 $sql.="     dreklamation.kunde,";
 $sql.="     dreklamation.rekl_nr,";
@@ -320,6 +322,6 @@ foreach($kunden as $kunde)
 //============================================================+
 // END OF FILE                                                 
 //============================================================+
-$domxml->save("S360.xml");
-$domxml2->save("S360_2.xml");
+//$domxml->save("S360.xml");
+//$domxml2->save("S360_2.xml");
 ?>

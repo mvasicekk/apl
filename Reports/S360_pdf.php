@@ -20,6 +20,10 @@ $kundevon=$_GET['kundevon'];
 $kundebis=$_GET['kundebis'];
 $erhvon = $a->make_DB_datum($_GET['erhvon']);
 $erhbis = $a->make_DB_datum($_GET['erhbis']);
+$reklnr = $_GET['reklnr'];
+
+if($reklnr=='*') $reklnr="";
+else $reklnr = strtr ($reklnr, '*', '%');
 
 $user = $_SESSION['user'];
 
@@ -58,11 +62,13 @@ foreach ($parameters as $param)
                 $value2 = $parametry->item(1)->lastChild->nodeValue;
                 $value3 = $parametry->item(2)->lastChild->nodeValue;
                 $value4 = $parametry->item(3)->lastChild->nodeValue;
+		$value5 = $parametry->item(4)->lastChild->nodeValue;
                 
                 $params =   "Kunde von: "       . $value1 .
                             " Kunde bis: "      . $value2 .
                             " Erhalten am: "    . $value3 .
-                            " - "               . $value4 ;
+                            " - "               . $value4 .
+			    " ReklNr: "         . $value5 ;
                 
 		//if(strtolower($label)!="password")
                 //   if ($label = " - ");
