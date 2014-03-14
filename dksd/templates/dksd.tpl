@@ -169,6 +169,20 @@ Kunden pflegen / Sprava zakazniku
 </td>
 </tr>
 </table>
+
+{if $showDocsTable eq 1}	
+<div style="height: 150px;width:100%;overflow-y: auto;border: 1px solid blue;">
+    <table id='kddocs'>
+    {foreach from=$docs item=doc}
+    <tr>
+	<td>{$doc.filename}</td>
+	<td><a href='{$doc.url}'>offnen</a></td>
+    </tr>
+    {/foreach}
+    </table>
+</div>
+{/if}	    
+
 <table id='ehemaligepreise'>
 	<thead>
 	<tr>

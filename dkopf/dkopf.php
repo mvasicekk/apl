@@ -149,6 +149,9 @@ $smarty = new Smarty;
 		//zjistim posledni reklamace k dilu
 		$letzteReklamationen = $a->getLetzteReklamationString($teil,5);
 		$smarty->assign("letzte_reklamationen",$letzteReklamationen);
+		$letzteReklamationArray = $a->getLetzteReklamation($teil);
+		$smarty->assign("letzte_reklamationen_array",$letzteReklamationArray);
+		
 	}
 	$smarty->display('dkopf.tpl');
 ?>

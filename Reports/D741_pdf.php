@@ -525,7 +525,7 @@ $pdf->SetMargins(PDF_MARGIN_LEFT+5, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 //set auto page breaks
 //$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER+7);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
 
 //$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));

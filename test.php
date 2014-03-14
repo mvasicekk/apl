@@ -789,3 +789,21 @@ $id_dauftr=477914;
 //}
 
 //$apl->changePersNr(99555, 5135);
+
+//vypsani souboru v danem adresari
+
+$kundeGdatPath = $apl->getKundeGdatPath(111);
+echo $kundeGdatPath."<br>";
+if ($kundeGdatPath !== NULL) {
+    foreach (new DirectoryIterator('/mnt/gdat/Dat/' . $kundeGdatPath) as $file) {
+	// if the file is not this file, and does not start with a '.' or '..',
+	// then store it for later display
+	if ((!$file->isDot()) && ($file->getFilename() != basename($_SERVER['PHP_SELF']))) {
+	    // if the element is a directory add to the file name "(Dir)"
+	    //echo ($file->isDir()) ? "(Dir) ".$file->getFilename() : $file->getFilename()."<br>";
+	    if (!$file->isDir()) {
+		echo "<a href='/gdat" . substr($file->getPath(), 13) . "/" . $file->getFilename() . "'>" . $file->getFilename() . "</a><br>";
+	    }
+	}
+    }
+}

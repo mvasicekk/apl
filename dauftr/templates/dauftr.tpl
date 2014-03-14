@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="./styl.css" type="text/css">
 <link rel="stylesheet" href="../styldesign.css" type="text/css">
 <link rel='stylesheet' href='./print.css' type='text/css' media="print"/>
+<link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.14.custom.css" type="text/css">
 
 <script type="text/javascript" src="../js/detect.js"></script>
 <script type="text/javascript" src="../js/eventutil.js"></script>
@@ -21,7 +22,10 @@
 <script charset="windows-1250" src="js_functions.js" type="text/javascript"></script>
 <script type = "text/javascript" src = "../js/ajaxgold.js"></script>
 
-<script type="text/javascript" src="../js/jquery.js"></script>
+<script type = "text/javascript" src = "../js/jquery-1.5.1.min.js"></script>
+<script type = "text/javascript" src = "../js/jquery-ui-1.8.14.custom.min.js"></script>
+<script type = "text/javascript" src = "../js/jquery.ui.datepicker-cs.js"></script>
+<!--<script type="text/javascript" src="../js/jquery.js"></script>-->
 <script type="text/javascript" src="./dauftr.js"></script>
 <script>
 
@@ -96,15 +100,44 @@ Aufträge pflegen / zadání zakázky
 	<form method="post" action='' name="auftragsuchen_formular" onsubmit="">
     <tr>
 		<td>
-	
-			<label for="auftragsnr">Auftragsnr</label>
-			<input class='disabled_bold' disabled readonly  maxlength='6' size="6" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
-	
-			<label for="bestellnr">Bestellnr</label>
-			<input maxlength='30' size="6" type="text" id="bestellnr" name="bestellnr" value="{$bestellnr_value}"/>
-
-			<label for="aufdat">Auftragseingang / datum zakázky</label>
-			<input onblur="getDataReturnText('./validate_datum.php?what=datum&value='+this.value+'&controlid='+this.id, refreshdatum);" maxlength='10' size="10" type="text" id="aufdat" name="aufdat" value="{$aufdat_value}"/>
+		    <table border="0">
+			<tr>
+			    <td>
+				<label for="auftragsnr">Auftragsnr</label>
+			    </td>
+			    <td>
+				<input class='disabled_bold' disabled readonly  maxlength='6' size="6" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
+			    </td>
+			    <td>
+				<label for="bestellnr">Bestellnr</label>
+			    </td>
+			    <td>
+				<input maxlength='30' size="6" type="text" id="bestellnr" name="bestellnr" value="{$bestellnr_value}"/>
+			    </td>
+			    <td>
+				<label for="aufdat">Auftragseingang / datum zakázky</label>
+			    </td>
+			    <td>
+				<input onblur="getDataReturnText('./validate_datum.php?what=datum&value='+this.value+'&controlid='+this.id, refreshdatum);" maxlength='10' size="10" type="text" id="aufdat" name="aufdat" value="{$aufdat_value}"/>
+			    </td>
+			</tr>
+			<tr>
+			    <td>
+				<label for="ex_datum_soll">Ex Soll</label>
+			    </td>
+			    <td>
+				<input  acturl='./updateSollEx.php?auftragsnr={$auftragsnr_value}' class='datepicker' maxlength='10' size="10" type="text" id="ex_datum_soll" name="ex_datum_soll" value="{$ex_datum_soll_value}"/>
+				<input  acturl='./updateSollEx.php?auftragsnr={$auftragsnr_value}' maxlength='5' size="5" type="text" id="ex_zeit_soll" name="ex_zeit_soll" value="{$ex_zeit_soll_value}"/>
+			    </td>
+			    <td colspan="2">
+				<label for="zielort">Zielort</label>
+			    </td>
+			    <td>
+				<input acturl='./zielortChange.php?auftragsnr={$auftragsnr_value}' value='{$zielort_value}' type="text" id="zielort" name="zielort" value="{$zielort}"/>
+				<input type="hidden" id="ziel_value" />
+			    </td>
+			</tr>
+		    </table>
 		</td>
 		<td width='150px'>
 			<input class='formularbutton' accesskey='h' title='Alt+h' type='button' value='suchen / hledat' onclick="document.location.href='auftragsuchen.php';"/>
@@ -126,9 +159,6 @@ Aufträge pflegen / zadání zakázky
 			<label for="ausliefer_datum">ausgeliefert am</label>
 			<input class='disabled_bold' disabled readonly maxlength='10' size="10" type="text" id="ausliefer_datum" name="ausliefer_datum" value="{$ausliefer_datum_value}"/>
 
-			<label for="ex_datum_soll">Ex SOLL</label>
-			<input onblur="getDataReturnText('./validate_datum.php?what=datumtime&value='+this.value+'&controlid='+this.id, refreshdatum);" maxlength='30' size="20" type="text" id="ex_datum_soll" name="ex_datum_soll" value="{$ex_datum_soll_value}"/>
-
                         <label for="bemerkung">Bemerkung</label>
 			<input acturl="./saveBemerkung.php" maxlength='255' size="20" type="text" id="bemerkung" name="bemerkung" value="{$bemerkung}"/>
 
@@ -142,6 +172,7 @@ Aufträge pflegen / zadání zakázky
 			<tr>
 				<td>
 					KundeNR :<b>{$kunde_value}</b>
+					<input type="hidden" id="kundenr" value="{$kunde_value}" />
 				</td>
 				<td>
 					Preis/Minute :{$minpreis_value|string_format:"%.4f"}

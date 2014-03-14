@@ -21,7 +21,9 @@ $pcip=get_pc_ip();
 
 
 $sql="select auftragsnr,dauftr.teil,`pos-pal-nr` as pal, `stück` as stk,daufkopf.kunde,name1,name2,";
-$sql.=" dkopf.verpackungmenge,teilbez,teillang,gew,`art guseisen` as artguseisen,`muster-platz` as musterplatz,DATE_FORMAT(`muster-vom`,'%d.%m.%Y') as mustervom,";
+$sql.=" dkopf.verpackungmenge,teilbez,teillang,gew,`art guseisen` as artguseisen,";
+$sql.=" dkopf.brgew,dkopf.restmengen_verw,";
+$sql.="`muster-platz` as musterplatz,DATE_FORMAT(`muster-vom`,'%d.%m.%Y') as mustervom,";
 $sql.=" dpos_id,`abgnr` as taetnr,`TaetBez-Aby-D` as tatbez_d,`TaetBez-Aby-T` as tatbez_t,vzaby,fremdpos,";
 $sql.=" if(`vz-min-aby`<>0,round(60/`vz-min-aby`),0) as ks_hod";
 $sql.=" from dauftr";
@@ -66,6 +68,8 @@ $options = array(
 								'teilbez',
 								'teillang',
 								'gew',
+								'brgew',
+								'restmengen_verw',
 								'verpackungmenge',
 								'artguseisen',
 								'musterplatz',

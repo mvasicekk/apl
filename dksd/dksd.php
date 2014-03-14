@@ -3,6 +3,7 @@
 ?>
 <?
 include "../fns_dotazy.php";
+require_once '../db.php';
 
 dbConnect();
 require("../libs/Smarty.class.php");
@@ -101,6 +102,33 @@ $smarty = new Smarty;
 		}		
 		
 		$smarty->assign('ehemaligepreise',$preiseRows);
+		
+		// dokumenty z gdatu
+		$apl = AplDB::getInstance();
+		$docsArray = array();
+		$kundeGdatPath = $apl->getKundeGdatPath($kunde);
+		if ($kundeGdatPath !== NULL) {
+		    $i=0;
+		foreach (new DirectoryIterator('/mnt/gdat/Dat/' . $kundeGdatPath) as $file) {
+		    // if the file is not this file, and does not start with a '.' or '..',
+		    // then store it for later display
+		    if ( (!$file->isDot()) && ($file->getFilename() != basename($_SERVER['PHP_SELF'])) ) {
+			// if the element is a directory add to the file name "(Dir)"
+			//echo ($file->isDir()) ? "(Dir) ".$file->getFilename() : $file->getFilename()."<br>";
+			    if(!$file->isDir()){
+				$docsArray[$i]['filename']=$file->getFilename();
+				$docsArray[$i]['url']="/gdat".substr($file->getPath(),13) ."/". $file->getFilename();
+				//echo "<a href='/gdat".substr($file->getPath(),13) ."/". $file->getFilename()."'>".$file->getFilename()."</a><br>";
+				$i++;
+			    }
+		    }
+		}
+		}
+		$smarty->assign('docs',$docsArray);
+		if(count($docsArray)>0)
+		    $smarty->assign('showDocsTable',1);
+		else
+		    $smarty->assign('showDocsTable',0);
 	}
 	$smarty->display('dksd.tpl');
 ?>

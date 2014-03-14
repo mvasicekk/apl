@@ -6,6 +6,10 @@ $(document).ready(function(){
     $(".datepicker" ).datepicker($.datepicker.regional["de"]);
 
     $('#showteildoku').bind('click',showTeilDoku);
+    // shows Teil Attachment
+    $('#show_att_ppa').bind('click',showTeilAtt);
+    $('#show_att_vpa').bind('click',showTeilAtt);
+    $('#show_att_rekl').bind('click',showTeilAtt);
     
     $('input[id=preis_stk_gut]').blur(function(event){
         var id = $(this).attr('id');
@@ -185,6 +189,22 @@ $('input[id=restmengen_verw]').blur(function(event){
 // Ajax update Functions
 //---------------------------------------------------------------------------------------------------------------------
 
+function showTeilAtt(event){
+    element = $(this);
+    var id=element.attr('id');
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowTeilAtt(data);
+        },
+        'json'
+        );    
+}
+
 function showTeilDoku(event){
     element = $('#showteildoku');
     var id=element.attr('id');
@@ -201,6 +221,54 @@ function showTeilDoku(event){
         );    
 }
 
+/**
+ *
+ */
+function updateshowTeilAtt(data){
+    if($('#dokuform').length!=0){
+	$('#dokuform').remove();
+	if(data.id=='show_att_ppa') return;
+	if(data.id=='show_att_vpa') return;
+	if(data.id=='show_att_rekl') return;
+    }
+    if(data.docsArray!=null){
+	$('body').append(data.formDiv);
+	//priradim udalostni procedury pro slozky
+	$('a.dir').bind('click',updateFolder);
+	$('a.prevdir').bind('click',updateFolder);
+	$('a.jpg').colorbox({
+	    rel:'gal',
+	    current:'{current} z/von {total}',
+	    maxWidth:'90%',
+	    maxHeight:'90%'
+	});
+    }
+}
+
+function updateFolder(event){
+    event.preventDefault();
+    var url = $(this).attr('href');
+    var rootPath =  parseInt($('#rootPath').val());
+    var trida = $(this).attr('class');
+    if($(this).hasClass('dir')) rootPath++;
+    if($(this).hasClass('prevdir')) rootPath--;
+    //alert('klik na slozku'+url);
+    var acturl = $(this).attr('acturl');
+    $.post(acturl,
+        {
+	    url:url,
+	    rootPath:rootPath
+        },
+        function(data){
+            updateshowTeilAtt(data);
+        },
+        'json'
+        );    
+}
+
+/**
+ * 
+ */
 function updateshowTeilDoku(data){
     // zobrazit editovaci div
     if($('#dokuform').length!=0){

@@ -19,6 +19,10 @@ $db->query("set names utf8");
 $pcip=get_pc_ip();
 $views=array("pt_D362","pt_D362_gutstk");
 
+if($datumtyp=="drueck") 
+    $datum = 'drueck.datum';
+else
+    $datum = 'daufkopf.aufdat';
 
 $viewname=$pcip.$views[0];
 $db->query("drop view $viewname");
@@ -34,7 +38,7 @@ if($reporttyp=='IM'){
     $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
     $pt.=" join dkopf on dkopf.teil=drueck.teil";
     $pt.=" where";
-    $pt.="     daufkopf.aufdat between '$date_von' and '$date_bis'";
+    $pt.="     $datum between '$date_von' and '$date_bis'";
     $pt.="     and daufkopf.kunde='$kunde'";
 //  $pt.="     and drueck.`auss-art`<>0";
     $pt.=" group by";
@@ -76,7 +80,7 @@ if($reporttyp=='IM'){
     $pt.=" FROM `drueck`";
     $pt.=" join dauftr on drueck.teil=dauftr.teil and drueck.taetnr=dauftr.abgnr and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.auftragsnr=dauftr.auftragsnr";
     $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
-    $pt.=" WHERE ((daufkopf.aufdat between '$date_von' and '$date_bis') and (daufkopf.kunde='$kunde') and (dauftr.kzgut='G'))";
+    $pt.=" WHERE (($datum between '$date_von' and '$date_bis') and (daufkopf.kunde='$kunde') and (dauftr.kzgut='G'))";
     $pt.=" group by drueck.teil,drueck.auftragsnr";
 }
 else{

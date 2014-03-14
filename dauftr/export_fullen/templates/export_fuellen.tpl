@@ -14,7 +14,11 @@
 <script src="js_functions.js" type="text/javascript"></script>
 <script type = "text/javascript" src = "../../js/ajaxgold.js"></script>
 
-<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type = "text/javascript" src = "../../js/jquery-1.5.1.min.js"></script>
+<script type = "text/javascript" src = "../../js/jquery-ui-1.8.14.custom.min.js"></script>
+<script type = "text/javascript" src = "../../js/jquery.ui.datepicker-cs.js"></script>
+
+<!--<script type="text/javascript" src="../../js/jquery.js"></script>-->
 <script type="text/javascript" src="../dauftr.js"></script>
 </head>
 

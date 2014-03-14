@@ -449,12 +449,15 @@ function radek_personE($objPHPExcel, $vyskaradku, $rgb, $person, $monat, $jahr) 
     $hodCasove = $stundenA - $stundenAkkord;
     $hodUkolove = $stundenAkkord;
 
+    $bErschwerniss = intval(trim($person->premie_za_prasnost)) != 0 ? TRUE : FALSE;
     $bleistungsPraemie = intval(trim($person->premie_za_vykon)) != 0 ? TRUE : FALSE;
     $bQPraemie_akkord = intval(trim($person->qpremie_akkord)) != 0 ? TRUE : FALSE;
     $bQPraemie_zeit = intval(trim($person->qpremie_zeit)) != 0 ? TRUE : FALSE;
     $bQTLPraemie = intval(trim($person->premie_za_3_mesice)) != 0 ? TRUE : FALSE;
     $bMAStunden = intval(trim($person->MAStunden)) != 0 ? TRUE : FALSE;
 
+    $erschwerniss = $bErschwerniss===TRUE?$erschwerniss:0;
+    
     $d = intval(trim($person->tage_d));
     $p = intval(trim($person->tage_p));
     $z = intval(trim($person->tage_z));

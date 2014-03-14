@@ -15,7 +15,13 @@ $parameters=$_GET;
 
 $dil=$_GET['teil'];
 
+$inventur = TRUE;
 $stampVon = getLagerInventurDatum($dil);
+if($stampVon=='2099-01-01 00:00:00'){
+    $stampVon = $_GET['datumvon'];
+    $inventur = FALSE;
+}
+    
 $stampBis = date('Y-m-d H:i:s');
 
 
@@ -143,6 +149,15 @@ $pdf->SetAuthor(PDF_AUTHOR);
 $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
+
+if($inventur===TRUE){
+    $inventurDate = " von: ".$stampVon;
+}
+else{
+    $inventurDate = " ( keine Inventur ) von: ".$stampVon;
+}
+
+$params = "Teil: ".$dil.$inventurDate." bis: ".$stampBis;
 
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S390 Lagerbestand - Teil - Datum", $params);
 //set margins

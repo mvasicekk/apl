@@ -130,40 +130,41 @@ function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk,$term
 	// najdu di odpovidajici import_auftrag,teil,import_pal
 	// mam z predesla
 
-    // zmena nemuzu udelat jednoduchy update, protoze v pripade, ze mam udelanou inventuru, tak se mi posune
-    // pri updatu i timestamp a ten nemuzu natvrdo zapsat.
+	// zmena nemuzu udelat jednoduchy update, protoze v pripade, ze mam udelanou inventuru, tak se mi posune
+	// pri updatu i timestamp a ten nemuzu natvrdo zapsat.
 
-    // musim udelat storno zaznam a vytvorit novy
-    // nejdriv si vytahnu stary zaznam
-    // musim vystornovat sumu vsech kusu daneho dilu
-    // TODO: nemusi spravne fungovat pokud se v prubehu zmeni prvni sklad
-    $sql_select = "select sum(gut_stk) as gut_stk,max(lager_nach) as lager_nach from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
-    $res = mysql_query($sql_select);
-    $row = mysql_fetch_array($res);
-    $gut_stk = $row['gut_stk'];
-    $storno_stk = $gut_stk * (-1);
-    $lager_nach = $row['lager_nach'];
-    $user = get_user_pc();
+	// musim udelat storno zaznam a vytvorit novy
+	// nejdriv si vytahnu stary zaznam
+	// musim vystornovat sumu vsech kusu daneho dilu
+	// TODO: nemusi spravne fungovat pokud se v prubehu zmeni prvni sklad
+	$sql_select = "select sum(gut_stk) as gut_stk,max(lager_nach) as lager_nach from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
+	$res = mysql_query($sql_select);
+	$row = mysql_fetch_array($res);
+	$gut_stk = $row['gut_stk'];
+	$storno_stk = $gut_stk * (-1);
+	$lager_nach = $row['lager_nach'];
+	$user = get_user_pc();
 
-    // pripravim storno zaznam
-    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
-    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
-    // pokud je co stornovat, provedu prikaz
-    if($storno_stk!=0)
+	// pripravim storno zaznam
+	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
+	// pokud je co stornovat, provedu prikaz
+	if($storno_stk!=0)
         mysql_query($sql_insert_storno);
 
-    // pripravim novy zaznam
-    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
-    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
-    mysql_query($sql_insert_storno);
+	// pripravim novy zaznam
+	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
+	mysql_query($sql_insert_storno);
 
-    // pri uprave poctu kusu u dilu, ktery uz ma inventuru zobrazim hlaseni
-    // co mam vratit za hodnotu a jak ji vyhodnotit ?
-    // 1. zjistim si datum inventury dilu
+	$archiv = $potvrzeni - (45 * $kolem);
+	// pri uprave poctu kusu u dilu, ktery uz ma inventuru zobrazim hlaseni
+	// co mam vratit za hodnotu a jak ji vyhodnotit ?
+	// 1. zjistim si datum inventury dilu
 
-//
-//	$sql_update = "update dlagerbew set gut_stk='$stk' where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0')) limit 1";
-//	mysql_query($sql_update);
+	//
+	//	$sql_update = "update dlagerbew set gut_stk='$stk' where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0')) limit 1";
+	//	mysql_query($sql_update);
 	
 	return $mysql_error;
 }

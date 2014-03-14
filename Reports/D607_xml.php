@@ -88,7 +88,8 @@ $pt="create view $viewname";
 $pt.=" as SELECT drueck.AuftragsNr, drueck.teil, drueck.`pos-pal-nr` as import_pal,  sum(drueck.`Stück`)  as sum_stk_Gtat,  sum(drueck.`Stück`*dkopf.gew)  as sum_Ggew ";
 $pt.=" FROM drueck ";
 $pt.=" join dkopf on dkopf.teil=drueck.teil";
-$pt.=" JOIN dauftr on  (drueck.auftragsnr=dauftr.auftragsnr) and (drueck.teil=dauftr.teil) and (drueck.`pos-pal-nr`=dauftr.`pos-pal-nr`) and (drueck.taetnr=dauftr.abgnr) where (((dauftr.`termin`) between '$von' and '$bis') and (dauftr.kzgut='G') and (dauftr.`auftragsnr-exp` is null)) group BY drueck.AuftragsNr,drueck.teil,import_pal";
+$pt.=" JOIN dauftr on  (drueck.auftragsnr=dauftr.auftragsnr) and (drueck.teil=dauftr.teil) and (drueck.`pos-pal-nr`=dauftr.`pos-pal-nr`) and (drueck.taetnr=dauftr.abgnr)";
+$pt.=" where (((dauftr.`termin`) between '$von' and '$bis' or dauftr.termin is null  or LENGTH(dauftr.termin)=0) and (dauftr.kzgut='G') and (dauftr.`auftragsnr-exp` is null)) group BY drueck.AuftragsNr,drueck.teil,import_pal";
 //echo $pt."<br>";
 $db->query($pt);
 

@@ -8,12 +8,12 @@
     </title>
 
 <link rel="stylesheet" href="./styl.css" type="text/css">
-
+<link rel="stylesheet" href="../colorbox.css" type="text/css">
 <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.14.custom.css" type="text/css">
+
 <script type = "text/javascript" src = "../js/jquery-1.5.1.min.js"></script>
 <script type = "text/javascript" src = "../js/jquery-ui-1.8.14.custom.min.js"></script>
 <script type = "text/javascript" src = "../js/jquery.ui.datepicker-cs.js"></script>
-
 
 <script type="text/javascript" src="./js/init_controls.js"></script>
 <script type="text/javascript" src="../js/detect.js"></script>
@@ -25,8 +25,8 @@ var promenne = new Array("kz_druck","taetnr","bez_d","bez_t","vzkd","vzaby","KzG
 var onblur_function = new Array("","getDataReturnXml('./validate_taetnr.php?value='+this.value, validate_taetnr);savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);");
 var editovat = new Array(0,0,1,1,1,1,1,1,0,0);
 </script>
-
 <script type = "text/javascript" src = "js_tablegrid.js"></script>
+<script type="text/javascript" src="../js/colorbox/jquery.colorbox-min.js"></script>
 <script type="text/javascript" src="./dkopf.js"></script>
 
 
@@ -117,12 +117,14 @@ Arbeitsplan pflegen / Sprava pracovniho planu
                         <input acturl="dkopf_update.php" maxlength="6" size="5" type="text" id="restmengen_verw" name="restmengen_verw" value="{$restmengen_verw_value}"/>
                 </td>
         </tr>
-        <tr>
-                <td>
-			letzte Reklamationen : <input readonly="readonly" type="text" value='{$letzte_reklamationen}' size="80" />
-		</td>
+	<tr>
+	    <td>
+		letzte Reklamationen :
+		{foreach from=$letzte_reklamationen_array item=reklamation}
+		    <a class='abutton' href='../Reports/S362_pdf.php?report=S362&reklnr={$reklamation.rekl_nr}&reklnr_label=ReklNr&tl_tisk=pdf'>{$reklamation.rekl_nr} ({$reklamation.rekl_datum})</a>&nbsp;
+		{/foreach}
+	    </td>
 	</tr>
-	
 	<tr>
 		<td>
 			<label for="bemerk">Anderungen/Bemerkung / poznamka</label>
@@ -197,6 +199,26 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 				     <input class='' type='button' value='Lagerzettel' onclick="location.href='../get_parameters.php?popisky=Teil;DokuNr&promenne=teil;dokunr&values={$teil_value};{29}&report=D515'" />
                                  </td>
 
+                            </tr>
+                        </table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+			<legend>GDat Anlagen / GDat přílohy</legend>
+                        <table>
+                            <tr>
+				 <td>
+				     <input id='show_att_ppa' type='button' value="PPA" acturl='./showTeilAtt.php?att=ppa' />
+				 </td>
+ 				 <td>
+				     <input id='show_att_vpa' type='button' value="VPA" acturl='./showTeilAtt.php?att=vpa' />
+				 </td>
+ 				 <td>
+				     <input id='show_att_rekl' type='button' value="Reklamation" acturl='./showTeilAtt.php?att=rekl' />
+				 </td>
                             </tr>
                         </table>
 			</fieldset>

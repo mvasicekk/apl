@@ -18,6 +18,7 @@ $date_bis=$a->make_DB_datum($_GET['date_bis']);
 $kunde=$_GET['kunde'];
 
 $reporttyp = $_GET['reporttyp'];
+$datumtyp = $_GET['datumtyp'];
 
 require_once('D362_xml.php');
 

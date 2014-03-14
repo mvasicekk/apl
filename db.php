@@ -36,7 +36,14 @@ class AplDB {
     const TABLE_DKOPF = 'dkopf';
     const TABLE_DOG = 'dog';
 
-    
+    static $DIRS_FOR_TEIL = array(
+	"001"=>"001 Zeitwirtschaft",
+	"030"=>"030 PPA",
+	"050"=>"050 VPA",
+	"060"=>"060 Reklamation",
+	"070"=>"070 Reklamation(Intern)",
+	"080"=>"080 Mehrarbeit",
+    );    
     /**
      * get an instance of then utility class
      * @return AplDB
@@ -158,7 +165,7 @@ class AplDB {
      * @return array or null if $export does not exists
      */
     public function getExDatumSoll($export) {
-        $sql = "select auftragsnr as export,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_datum_soll from daufkopf where auftragsnr='$export'";
+        $sql = "select auftragsnr as export,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_datum_soll,DATE_FORMAT(ex_datum_soll,'%Y-%m-%d %H:%i') as ex_datetime_soll from daufkopf where auftragsnr='$export'";
         $res = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($res);
@@ -712,6 +719,90 @@ class AplDB {
         return mysql_affected_rows();
     }
 
+    public function getPlanSollTagMinuten($plan,$statnr,$dbDatum){
+	$sql="select minuten from plansolltag where (plan='$plan') and (statnr='$statnr') and (datum='$dbDatum')";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return NULL;
+	return intval($rows[0]['minuten']);
+    }
+    
+    /**
+     *
+     * @param type $dbDatum
+     * @param type $kd_von
+     * @param type $kd_bis 
+     */
+    public function getPlanSollTagKundeSumme($dbDatum,$kd_von,$kd_bis){
+	$sql.=" select sum(minuten) as sum_minuten ";
+	$sql.=" from plansolltag ";
+	$sql.=" join daufkopf on daufkopf.auftragsnr=plansolltag.plan";
+	$sql.=" where ";
+	$sql.="     (datum='$dbDatum')";
+	$sql.="     and daufkopf.kunde between $kd_von and $kd_bis";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sum_minuten']);
+    }
+    /**
+     *
+     * @param type $dbDatum
+     * @param type $statnr
+     * @param type $kd_von
+     * @param type $kd_bis 
+     */
+    public function getPlanSollStatnrSumme($dbDatum, $statnr, $kd_von, $kd_bis) {
+	$sql.=" select sum(minuten) as sum_minuten ";
+	$sql.=" from plansolltag ";
+	$sql.=" join daufkopf on daufkopf.auftragsnr=plansolltag.plan";
+	$sql.=" where ";
+	$sql.="     (datum='$dbDatum') and (statnr='$statnr')";
+	$sql.="     and daufkopf.kunde between $kd_von and $kd_bis";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sum_minuten']);
+    }
+
+    /**
+     *
+     * @param type $dbDatum 
+     */
+    public function getPlanSollTagAll($dbDatum){
+	$sql = "select sum(minuten) as sum_minuten from plansolltag where (datum='$dbDatum')";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sum_minuten']);
+    }
+    /**
+     *
+     * @param type $plan
+     * @param type $dbDatum 
+     */
+    public function getPlanSollTagSumme($plan,$dbDatum){
+	$sql = "select sum(minuten) as sum_minuten from plansolltag where (plan='$plan') and (datum='$dbDatum')";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sum_minuten']);
+    }
+    /**
+     *
+     * @param type $plan
+     * @param type $statnr
+     * @param type $dbDatum 
+     */
+    public function updatePlanSollTag($plan,$statnr,$dbDatum,$minuten){
+	$min = $this->getPlanSollTagMinuten($plan,$statnr,$dbDatum);
+	if($min===NULL){
+	    //insert
+	    $sql = "insert into plansolltag (plan,statnr,datum,minuten) values('$plan','$statnr','$dbDatum','$minuten')";
+	    $this->query($sql);
+	}
+	else{
+	    //update
+   	    $sql = "update plansolltag set minuten='$minuten' where (plan='$plan') and (statnr='$statnr') and (datum='$dbDatum') limit 1";
+	    $this->query($sql);
+	}
+	return $sql;
+    }
     /**
      *
      * @param type $im
@@ -903,7 +994,7 @@ class AplDB {
 	$lNach = '8X';
 	$pocetKusu = $this->getLagerGutAuftragPalette($auftragsnr, $pal, $lNach);
 
-	if ($pocetKusu > 0) {
+//	if ($pocetKusu != 0) {
 	    // vystornuju posledni exportni zaznam
 	    $sql = "select gut_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_von='$lVon') and (lager_nach='$lNach')) order by date_stamp desc limit 1";
 	    $res = mysql_query($sql);
@@ -913,12 +1004,14 @@ class AplDB {
 		$stornoStk = $row['gut_stk'];
 		$this->insertDlagerBew($dil,$auftragsnr,$pal,$stornoStk,0,$lNach,$lVon,$ident);
 	    }
-	}
+//	}
+	    // XX se bude stornovat opravdu jen pro neulovy pocet kusu
+	    
 
 	// to same pro sklad XX
 	$pocetKusu = $this->getLagerGutAuftragPalette($auftragsnr, $pal, "XX");
 
-	if ($pocetKusu > 0) {
+	if ($pocetKusu != 0) {
 	    // vystornuju posledni exportni zaznam
 	    $sql = "select lager_von,gut_stk from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (lager_nach='XX')) order by date_stamp desc limit 1";
 	    $res = mysql_query($sql);
@@ -1051,6 +1144,59 @@ class AplDB {
 	}
 
 	return $aussCount;
+    }
+
+    /**
+     * 
+     */
+    public function getFilesForPath($path,$filter=NULL,$inclusivFolders=FALSE) {
+	$docsArray = array();
+	$fileArray = array();
+	
+	try{
+	if($filter==NULL) 
+	    $iterator = new DirectoryIterator($path);
+	else{
+	    //$iterator = new GlobIterator($path, FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS);
+	    $iterator = new FilesystemIterator($path, FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS);
+	    $iterator = new RegexIterator($iterator, $filter);
+	}
+	    
+	
+	//if($iterator->count()==0) return NULL;
+	foreach ( $iterator as $file) {
+	    // if the file is not this file, and does not start with a '.' or '..',
+	    // then store it for later display
+	    //if ((!$file->isDot()) && ($file->getFilename() != basename($_SERVER['PHP_SELF']))) {
+	    if (($file->getFilename() != basename($_SERVER['PHP_SELF']))) {
+		// if the element is a directory add to the file name "(Dir)"
+		//echo ($file->isDir()) ? "(Dir) ".$file->getFilename() : $file->getFilename()."<br>";
+		    $fileArray['filename'] = utf8_encode($file->getFilename());
+		    $fileArray['mtime'] = $file->getMTime();
+		    $fileArray['size'] = $file->getSize();
+		    $fileArray['type'] = $file->getType();
+		    $fileName = $file->getFilename();
+		    $ext = substr($fileName, strrpos($fileName, '.')+1);
+		    $fileArray['ext'] = strtoupper($ext);
+		    $fileArray['url'] = "/gdat" . substr($file->getPath(), 13) . "/" . $fileArray['filename'];
+		    if(
+			    ($fileArray['type']=='file')
+			    ||(($fileArray['type']=='dir')&&($inclusivFolders))
+		    ){
+			//vynechat odkaz na aktualni slozku '.'
+			if($fileArray['filename']!='.')
+			    array_push ($docsArray, $fileArray);
+		    }
+			
+	    }
+	}
+	}
+	catch(Exception $e){
+	    return NULL;
+	}
+	
+	if(count($docsArray)==0) return NULL;
+	return $docsArray;
     }
 
     /**
@@ -1661,6 +1807,20 @@ class AplDB {
 
     /**
      *
+     * @param type $kunde 
+     */
+    public function getKundeGdatPath($kunde){
+	  $sql = "select dksd.gdat_path from dksd where kunde=$kunde";
+	  $rows = $this->getQueryRows($sql);
+	  if($rows!==NULL){
+	      $row = $rows[0];
+	      $path = trim($row['gdat_path']);
+	      if(strlen($path)>0) return $path;
+	  }
+	  return NULL;
+    }
+    /**
+     *
      * @param <type> $behaelterNr
      * @param <type> $kunde
      * @return <type> 
@@ -2104,6 +2264,22 @@ class AplDB {
     
     /**
      *
+     * @param type $kd
+     * @param type $value
+     * @return type 
+     */
+    public function getZielorteArray($kd,$value=NULL){
+	if($value===NULL){
+	    $sql = "select id,zielort from zielorte where kunde=$kd order by zielort";
+	}
+	else{
+	    $sql = "select id,zielort from zielorte where kunde=$kd and zielort like '%$value%' order by zielort";
+	}
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     *
      * @param type $value
      * @return type 
      */
@@ -2457,6 +2633,45 @@ class AplDB {
         }
     }
 
+    /**
+     *
+     * @param type $val 
+     */
+    public function validateZeit($val){
+	$returnValue = "00:00";
+	// test na prazdnou hodnotu
+	if(strlen((trim($val)))==0) return $returnValue;
+	// zkusim najit oddelovac hodin a minut
+	if(($pozice=strpos($val,":"))!==FALSE){
+	    //nasel jsem oddelovac, oddelim hodiny a minuty
+	    list($hodiny,$minuty) = explode(":", $val);
+	    $hodinyVal = intval($hodiny);
+	    $minutyVal = intval($minuty);
+	}
+	else{
+	    // nemam oddelovac, delka musi byt alespon 3 znaky
+	    if(strlen(trim($val))>=3){
+		// budu nacitat odzadu, tj. nejdriv minuty 2 znaky, co zbyde budou hodiny
+		$val = trim($val);
+		$minuty = substr($val, -2);
+		$hodiny = substr($val, 0,strlen($val)-2);
+		$hodinyVal = intval($hodiny);
+		$minutyVal = intval($minuty);
+	    }
+	    else{
+		$hodinyVal=0;
+		$minutyVal=0;
+	    }
+	}
+	
+	// ted mam v promennych nejaka cisl, zkontroluju jejich rozsahy
+	if(($hodinyVal>=0) && ($hodinyVal<=23) && ($minutyVal<=59) && ($minutyVal>=0)){
+	    $returnValue = sprintf("%02d:%02d",$hodinyVal,$minutyVal);
+	}
+	
+	return $returnValue;
+    }
+    
     /**
      *
      * @param <type> $dbField
@@ -3604,6 +3819,203 @@ class AplDB {
 	$sql.=" join adresy_kategorie on adresy_kategorie.id=adresyinkategorie.adresy_kategorie_id";
 	$sql.=" where adresy_id='$adressId'";
 	$sql.=" order by adresy_kategorie.sort,adresy_kategorie.id";
+	return $this->getQueryRows($sql);
+    }
+    
+    public function getPlanIstFertig($termin,$datum){
+	    $sql.=" select ";
+	    $sql.=" dauftr.termin,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
+	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
+	    $sql.=" from ";
+	    $sql.=" drueck";
+	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr";
+	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	    $sql.=" where";
+	    $sql.=" (dauftr.termin='$termin')";
+	    $sql.=" and (drueck.Datum<='$datum')";
+	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	    $sql.=" group by";
+	    $sql.=" dauftr.termin";
+	    return $this->getQueryRows($sql);
+    }
+
+        public function getIstFertig($termin,$datum){
+	    $sql.=" select ";
+	    $sql.=" dauftr.termin,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
+	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
+	    $sql.=" from ";
+	    $sql.=" drueck";
+	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr";
+	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	    $sql.=" where";
+	    $sql.=" dauftr.termin='$termin'";
+	    $sql.=" and (drueck.Datum='$datum')";
+	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	    $sql.=" group by";
+	    $sql.=" dauftr.termin";
+	    return $this->getQueryRows($sql);
+    }
+    
+    /**
+     *
+     * @param type $terminAktual 
+     */
+    public function getPlanVzKd($terminAktual){
+	$sql.=" select ";
+	$sql.=" dauftr.termin,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0041,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0051,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0061,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0081,";
+	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as sum_vzkd";
+	$sql.=" from ";
+	$sql.=" dauftr";
+	$sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	$sql.=" where";
+	$sql.=" (dauftr.termin='$terminAktual')";
+	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	$sql.=" group by";
+	$sql.=" dauftr.termin";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     *
+     * @param type $terminAktual
+     * @param type $von
+     * @param type $bis
+     * @param type $time 
+     */
+    public function getPlanInfoArray($terminAktual,$von,$bis,$time){
+	$pIA = array();
+	// pokud uz ma termin po exportu vratim NULL
+	$exSoll = $this->getExDatumSoll(substr($terminAktual,1));
+	
+	if(strlen(trim($exSoll['ex_datum_soll']))==0) 
+	    $exTime = strtotime ('2099-01-01');
+	else
+	    $exTime = strtotime($this->make_DB_datum($exSoll['ex_datum_soll']));
+	
+	if($time>$exTime) return NULL;
+	//1. vzkdplan
+	$vzkdPlanArray = $this->getPlanVzKd($terminAktual);
+	$columnIndex = "vzkdplan";
+	if($vzkdPlanArray!==NULL){
+	    $r = $vzkdPlanArray[0];
+	    $pIA["S0011"][$columnIndex] = $r['sum_vzkd_S0011'];
+	    $pIA["S0041"][$columnIndex] = $r['sum_vzkd_S0041'];
+	    $pIA["S0051"][$columnIndex] = $r['sum_vzkd_S0051'];
+	    $pIA["S0061"][$columnIndex] = $r['sum_vzkd_S0061'];
+	    $pIA["S0081"][$columnIndex] = $r['sum_vzkd_S0081'];
+	    $pIA["sum"][$columnIndex] = $r['sum_vzkd'];
+	}
+	else{
+	    $pIA["S0011"][$columnIndex] = NULL;
+	    $pIA["S0041"][$columnIndex] = NULL;
+	    $pIA["S0051"][$columnIndex] = NULL;
+	    $pIA["S0061"][$columnIndex] = NULL;
+	    $pIA["S0081"][$columnIndex] = NULL;
+	    $pIA["sum"][$columnIndex] = NULL;
+	}
+	//2. fertig
+	$fertigPlanArray = $this->getPlanIstFertig($terminAktual, date('Y-m-d',$time));
+	$columnIndex = "fertig";
+	if($fertigPlanArray!==NULL){
+	    $r = $fertigPlanArray[0];
+	    $pIA["S0011"][$columnIndex] = $r['sum_vzkd_S0011'];
+	    $pIA["S0041"][$columnIndex] = $r['sum_vzkd_S0041'];
+	    $pIA["S0051"][$columnIndex] = $r['sum_vzkd_S0051'];
+	    $pIA["S0061"][$columnIndex] = $r['sum_vzkd_S0061'];
+	    $pIA["S0081"][$columnIndex] = $r['sum_vzkd_S0081'];
+	    $pIA["sum"][$columnIndex] = $r['sum_vzkd'];
+	}
+	else{
+	    $pIA["S0011"][$columnIndex] = NULL;
+	    $pIA["S0041"][$columnIndex] = NULL;
+	    $pIA["S0051"][$columnIndex] = NULL;
+	    $pIA["S0061"][$columnIndex] = NULL;
+	    $pIA["S0081"][$columnIndex] = NULL;
+	    $pIA["sum"][$columnIndex] = NULL;
+	}
+	//3.soll/tag
+	$columnIndex = "solltag";
+	$plan = substr($terminAktual,1);
+	$pIA["S0011"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0011", date('Y-m-d',$time)));
+	$pIA["S0041"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0041", date('Y-m-d',$time)));
+	$pIA["S0051"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0051", date('Y-m-d',$time)));
+	$pIA["S0061"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0061", date('Y-m-d',$time)));
+	$pIA["S0081"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0081", date('Y-m-d',$time)));
+	$pIA["sum"][$columnIndex] = intval($this->getPlanSollTagSumme($plan, date('Y-m-d',$time)));
+	
+
+	//4.ist 
+	$istArray = $this->getIstFertig($terminAktual, date('Y-m-d',$time));
+	$columnIndex = "ist";
+	if($istArray!==NULL){
+	    $r = $istArray[0];
+	    $pIA["S0011"][$columnIndex] = $r['sum_vzkd_S0011'];
+	    $pIA["S0041"][$columnIndex] = $r['sum_vzkd_S0041'];
+	    $pIA["S0051"][$columnIndex] = $r['sum_vzkd_S0051'];
+	    $pIA["S0061"][$columnIndex] = $r['sum_vzkd_S0061'];
+	    $pIA["S0081"][$columnIndex] = $r['sum_vzkd_S0081'];
+	    $pIA["sum"][$columnIndex] = $r['sum_vzkd'];
+	}
+	else{
+	    $pIA["S0011"][$columnIndex] = NULL;
+	    $pIA["S0041"][$columnIndex] = NULL;
+	    $pIA["S0051"][$columnIndex] = NULL;
+	    $pIA["S0061"][$columnIndex] = NULL;
+	    $pIA["S0081"][$columnIndex] = NULL;
+	    $pIA["sum"][$columnIndex] = NULL;
+	}
+
+	return $pIA;
+    }
+    
+    /**
+     *
+     * @param type $kd_von
+     * @param type $kd_bis 
+     */
+    public function getPlaene($kd_von,$kd_bis,$timeVon,$timeBis,$nurOffene = TRUE){
+	
+	$vonDB = date('Y-m-d',$timeVon);
+	$bisDB = date('Y-m-d',$timeBis);
+	$timeVonMinusMonat = $timeVon - 60*60*24*30;
+	$vonMinusMonatDB = date('Y-m-d',$timeVonMinusMonat);
+	
+	if($nurOffene===TRUE){
+	    $sql.=" select auftragsnr,ex_datum_soll,zielorte.zielort";
+	    $sql.=" from daufkopf";
+	    $sql.=" left join zielorte on zielorte.id=daufkopf.zielort_id";
+	    $sql.=" where";
+	    $sql.=" (daufkopf.ausliefer_datum is null)";
+	    $sql.=" and (daufkopf.kunde between $kd_von and $kd_bis)";
+	    //$sql.=" and ex_datum_soll is not null";
+	    $sql.=" and ((ex_datum_soll>='$vonDB') or (ex_datum_soll is null))";
+	    $sql.=" and ((aufdat>'$vonMinusMonatDB') or (ex_datum_soll>='$vonDB'))";
+	    $sql.=" order by auftragsnr";
+	}
+	else{
+	    $sql.=" select auftragsnr,ex_datum_soll";
+	    $sql.=" from daufkopf";
+	    $sql.=" where";
+	    $sql.=" daufkopf.kunde between $kd_von and $kd_bis";
+	    $sql.=" and ex_datum_soll is not null";
+	    $sql.=" and ex_datum_soll>='$vonDB'";
+//	    $sql.=" and ex_datum_soll<=$bisDB";
+	    $sql.=" order by auftragsnr";
+	}
 	return $this->getQueryRows($sql);
     }
     

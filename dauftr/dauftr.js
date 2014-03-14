@@ -2,10 +2,42 @@
 
 $(document).ready(function(){
 
+	$.datepicker.setDefaults($.datepicker.regional["de"]);
+	$(".datepicker" ).datepicker($.datepicker.regional["de"]);
 
+	$('#ex_datum_soll').bind('change',exSoll);
+	$('#ex_zeit_soll').bind('blur',exSoll);
 
-//	$('td[id^=td_pal]').css({"background-color":"red"});
 	
+	$( "#zielort" ).autocomplete({
+			source: "getZielorte.php?kd="+$('#kundenr').val(),
+			minLength: 0,
+                        autoFocus: true,
+			select: function( event, ui ) {
+                                    if(ui.item){
+					event.preventDefault();
+					this.value = ui.item.label;
+					$('#ziel_value').val(ui.item.value);
+                                    }
+                                    else{
+                                        // polozka neni v seznamu
+                                    }
+			},
+			open: function(event, ui) {
+				$(this).autocomplete("widget").css(
+				    {"width": 300,"color":"black","font-size":"12px"}
+				);
+			},
+			change: zielortChange
+		}).focus(function(){
+		    if ($(this).autocomplete("widget").is(":visible")) {
+			return;
+		    }
+		    $(this).data("autocomplete").search($(this).val());
+		    });
+		    
+//******************************************************************************
+
 	$('td[id^=td_pal]').click(function(e){
         var id = $(this).attr('id');
         var acturl = $(this).attr('acturl');
@@ -73,6 +105,44 @@ $(document).ready(function(){
 
 // Ajax update Functions
 //---------------------------------------------------------------------------------------------------------------------
+function zielortChange(event){
+    var acturl = $(this).attr('acturl');
+    $.post(acturl,
+        {
+            id:$(this).attr('id'),
+	    val:$('#ziel_value').val()
+        },
+        function(data){
+            updateZielortChange(data);
+        },
+        'json'
+        );        
+}
+
+function updateZielortChange(data){
+    
+}
+
+function exSoll(event){
+    var id = $(this).attr('id');
+    var acturl = $(this).attr('acturl');
+
+    $.post(acturl,
+    {
+	id:id,
+	val:$(this).val()
+    },
+    function(data){
+	updateExSoll(data);
+    },
+    'json'
+    );
+}
+
+function updateExSoll(data){
+    if(data.zeit!=null)
+	$('#ex_zeit_soll').val(data.zeit);
+}
 
 
 function updatePalBemerkung(data){

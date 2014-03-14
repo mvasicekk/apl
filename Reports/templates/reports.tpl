@@ -44,7 +44,7 @@ Berichte / vystupni sestavy
 			<input id="D360" onClick="location.href='../get_parameters.php?popisky=AuftragsNr&promenne=auftragsnr&values=&report=D360'"class='reportbutton' type="button"  name="D360" value="D360 - Ausschuss Auftrag"/>
 			<input id="D361" onClick="location.href='../get_parameters.php?popisky=AuftragsNr von;AuftragsNr bis&promenne=auftragsnr_von;auftragsnr_bis&values=&report=D361'"class='reportbutton' type="button"  name="D361" value="D361 - Summe Auschuss nach Ausschussarten"/>
 <!--                        <input id="D362" onClick="location.href='../get_parameters.php?popisky=AuftragsNr von;AuftragsNr bis;Reporttyp,*RA&promenne=auftragsnr_von;auftragsnr_bis;reporttyp&values=;;IM,EX&report=D362'"class='reportbutton' type="button"  name="D362" value="D362 - Teil/Auftrag Ausschussarten"/>-->
-                        <input id="D362" onClick="location.href='../get_parameters.php?popisky=Kunde;Datum von,*DATE;Datum bis,*DATE;Reporttyp,*RA&promenne=kunde;date_von;date_bis;reporttyp&values=;;;IM,EX&report=D362'"class='reportbutton' type="button"  name="D362" value="D362 - Teil/Auftrag Ausschussarten"/>
+                        <input id="D362" onClick="location.href='../get_parameters.php?popisky=Kunde;Datum von,*DATE;Datum bis,*DATE;Reporttyp,*RA;Datum,*RA&promenne=kunde;date_von;date_bis;reporttyp;datumtyp&values=;;;IM,EX;import,drueck&report=D362'"class='reportbutton' type="button"  name="D362" value="D362 - Teil/Auftrag Ausschussarten"/>
 			<input id="D370" onClick="location.href='../get_parameters.php?popisky=AuftragsNr&promenne=auftragsnr&values=&report=D370'"class='reportbutton' type="button"  name="D370" value="D370 - Ausschuss Auftrag mit Palette nach Aussuchsstypen"/>
 			<input id="D516" onClick="location.href='../get_parameters.php?popisky=Kunde;Teil;DokuNr&promenne=kunde;teil;dokunr&values=0;*;29&report=D516'"class='reportbutton' type="button"  name="D516" value="D516 - Lagerzettel"/>
                         <input id="D520" onClick="location.href='../get_parameters.php?popisky=Import&promenne=import&values=&report=D520'"class='reportbutton' type="button"  name="D520" value="D520 - Arbeitsplan für Auftra"/>
@@ -119,7 +119,7 @@ Berichte / vystupni sestavy
                         <input id="S357" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;BehaelterNr von;BehaelterNr bis;Zeitpunkt,*DATE&promenne=kundevon;kundebis;behnrvon;behnrbis;zeitpunkt&values=111;999;0;9999999;{$now}&report=S357'" class='reportbutton' type="button"  name="S357" value="S357 - Behaelter Kdkonto Stand"/>
 			<input id="S360" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Erhalten am von,*DATE;Erhalten am bis,*DATE;ReklNr&promenne=kundevon;kundebis;erhvon;erhbis;reklnr&values=111;999;{$prvnidenroku};{$now};*&report=S360'" class='reportbutton' type="button"  name="S360" value="S360 - Übersicht Mängelrüge"/>
 			<input id="S362" onClick="location.href='../get_parameters.php?popisky=ReklNr&promenne=reklnr&values=&report=S362'" class='reportbutton' type="button"  name="S362" value="S362 - Mängelrüge"/>
-			<input id="S390" onClick="location.href='../get_parameters.php?popisky=Teil&promenne=teil&values=&report=S390'" class='reportbutton' type="button"  name="S390" value="S390 - Lagerbestand - Teil"/>
+			<input id="S390" onClick="location.href='../get_parameters.php?popisky=Teil;Datum von (wenn keine Inventur)&promenne=teil;datumvon&values=;{$prvnidenrokuDB} 00:00:00&report=S390'" class='reportbutton' type="button"  name="S390" value="S390 - Lagerbestand - Teil"/>
                         <input id="S395" onClick="location.href='../get_parameters.php?popisky=Teil;Kunde;Datum von (wenn keine Inventur);Zeitpunkt&promenne=teil;kunde;datumvon;zeitpunkt&values=;111;{$prvnidenrokuDB} 00:00:00;{$nowtime}&report=S395'" class='reportbutton' type="button"  name="S395" value="S395 - Lagerbestand - Teil"/>
                         <input id="S410" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis&promenne=kundevon;kundebis&values=0;999&report=S410'" class='reportbutton' type="button"  name="S410" value="S410 - Teil - Schwierigkeitsgrad"/>
                         <input id="S420" onClick="location.href='../get_parameters.php?popisky=Import&promenne=import&values=&report=S420'" class='reportbutton' type="button"  name="S420" value="S420 - Import - Gewicht"/>
@@ -132,6 +132,7 @@ Berichte / vystupni sestavy
 			
 	<div id='S6XX'>
 			<input id='S610' class='reportbutton' type="button" id="S610" name="S610" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE&promenne=datevon;datebis&values={$now};{$now}&report=S610'" value="S610 - VzKd pro Lieferung und Taetigkeitsgruppe"/>
+			<input id='S617' class='reportbutton' type="button" id="S617" name="S617" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE&promenne=datevon;datebis&values={$now};{$now}&report=S617'" value="S617 - VzKd pro Plan und Taetigkeitsgruppe"/>
 	</div>
 		
 	<div id='S7XX'>

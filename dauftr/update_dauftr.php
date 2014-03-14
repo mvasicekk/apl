@@ -25,7 +25,7 @@ $a = $aplDB;
 	$auftragsnr=chop($_GET['auftragsnr']);
 
 	// pokud neni auftragsnr_exp cislo nastavim ho na null
-	if(strlen($auftragsnr_exp)==0)
+	if(strlen(trim($auftragsnr_exp))==0)
 		$auftragsnr_exp='NULL';
 		
 	// pokud neni pos_pal_nr_exp cislo nastavim ho na null	
@@ -100,10 +100,16 @@ $a = $aplDB;
 	    else
 		$timeBeachten = 0;
 	    
+	    // 2014-02-18
+	    // pri vkladani do dlagerbew pripravid debug retez pro zobrazeni v debug okne
+	    // podle toho, kterou casti podminky projdu, vytvorim debug retez
+	    // zobrazeni info okna bude pomoc jquery-ui
+	    
 	    // 2014-02-05
 	    // podle puvodniho obsahu musim rozhodnout, co udelat s polozkami v dlagerbew
 	    $strlenExDB = strlen(trim($auftragsnrExpDB));
 	    $strlenEx = strlen(trim($auftragsnr_exp));
+	    if($auftragsnr_exp=="NULL") $strlenEx = 0;
 	    // 1, ex geloescht -> storno v dlagerbew
 	    $storno=0;
 	    if(($strlenExDB>0) && ($auftragsnr_exp=='NULL')){

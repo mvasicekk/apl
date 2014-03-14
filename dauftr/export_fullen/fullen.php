@@ -76,7 +76,7 @@ if ($pocet_vysledku > 0) {
 	    $auftragsnr = $dauftrRow['auftragsnr'];
 	    $dil = $dauftrRow['teil'];
 	    if (substr($palStr, strlen($palStr) - 1) == "7") {
-		$a->insertDlagerBew($dil, $auftragsnr, $gut, 0, '8V', '9V', $ident);
+		$a->insertDlagerBew($dil, $auftragsnr, $pal,$gut, 0, '8V', '9V', $ident);
 	    }
 	    //------------------------------------------------------------------
 

@@ -45,7 +45,6 @@ foreach($parameters as $var=>$value)
 // v promenne p bych mel mit seznam parametru, pridam ho do XML jako node do domxml
 //
 
-
 $root=$domxml->createElement("S390");
 $domxml->appendChild($root);
 

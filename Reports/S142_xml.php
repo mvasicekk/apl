@@ -218,24 +218,43 @@ $db->query($pt);
 
 // risiko
 $viewname=$pcip.$views[8];
+//$pt=" create view $viewname";
+//$pt.=" as select";
+//$pt.="    drueck.PersNr as persnr,";
+//// zmena 2013-01-23 misto verb-zeit se bude pro vypocet pouzivat vzaby
+////$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
+//$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
+//$pt.=" from";
+//$pt.="     drueck";
+//$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
+//$pt.=" join dpers on dpers.PersNr=drueck.PersNr";
+//$pt.=" join abgnr_risiko_zuschlag on abgnr_risiko_zuschlag.abgnr=drueck.TaetNr";
+//$pt.=" left join risikozuschlag on risikozuschlag.id=abgnr_risiko_zuschlag.risiko_zuschlag_id";
+//$pt.=" where";
+//$pt.="     drueck.Datum between '$von' and '$bis'";
+//$pt.="     and drueck.persnr between $persvon and $persbis";
+//$pt.=" group by";
+//$pt.="     drueck.PersNr";
+
+// 2014-03-11 vzpocet rizikoveho priplatku podle OE
 $pt=" create view $viewname";
 $pt.=" as select";
 $pt.="    drueck.PersNr as persnr,";
 // zmena 2013-01-23 misto verb-zeit se bude pro vypocet pouzivat vzaby
 //$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
-$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
+$pt.="     sum(oe_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
 $pt.=" from";
 $pt.="     drueck";
-$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
+//$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
 $pt.=" join dpers on dpers.PersNr=drueck.PersNr";
-$pt.=" join abgnr_risiko_zuschlag on abgnr_risiko_zuschlag.abgnr=drueck.TaetNr";
-$pt.=" left join risikozuschlag on risikozuschlag.id=abgnr_risiko_zuschlag.risiko_zuschlag_id";
+$pt.=" join oe_risiko_zuschlag on oe_risiko_zuschlag.oe=drueck.oe";
+$pt.=" left join risikozuschlag on risikozuschlag.id=oe_risiko_zuschlag.risiko_zuschlag_id";
 $pt.=" where";
 $pt.="     drueck.Datum between '$von' and '$bis'";
 $pt.="     and drueck.persnr between $persvon and $persbis";
 $pt.=" group by";
 $pt.="     drueck.PersNr";
-
+//echo $pt;
 $db->query($pt);
 
 // dpp

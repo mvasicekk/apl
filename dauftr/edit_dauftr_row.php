@@ -66,5 +66,8 @@ dbConnect();
 	$output .= '</response>';
 	
 	echo $output;
+	
+	// vystup pro debug pri vkladani do dlagerbew
+	
 ?>
 
