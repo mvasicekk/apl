@@ -152,6 +152,25 @@ $smarty = new Smarty;
 		$letzteReklamationArray = $a->getLetzteReklamation($teil);
 		$smarty->assign("letzte_reklamationen_array",$letzteReklamationArray);
 		
+		
+		//security
+		$elementsIdArray = array(
+		    "show_att_muster",
+		    "show_att_empb",
+		    "show_att_ppa",
+		    "show_att_gpa",
+		    "show_att_vpa",
+		    "show_att_qanf",
+		    "show_att_zeit",
+		    "show_att_liefer",
+		    "show_att_mehr",
+		    "show_att_rekl",
+		);
+		$puser = $_SESSION['user'];
+		foreach ($elementsIdArray as $elementId){
+		    $display_sec[$elementId] = $a->getDisplaySec('dkopf',$elementId,$puser)?'block':'none';
+		}
+		$smarty->assign("display_sec",$display_sec);
 	}
 	$smarty->display('dkopf.tpl');
 ?>

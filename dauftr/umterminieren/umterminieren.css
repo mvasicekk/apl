@@ -33,6 +33,7 @@ table#changedtable th{
 
 table#termine_table1{
     border-collapse: collapse;
+    width: 100%;
 }   
 
 table#termine_table1 td{

@@ -321,7 +321,10 @@ function zahlavi_termin($pdfobjekt,$vyskaradku,$rgb,$cells_header,$termin,$exdat
 function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$cells_header,$teilnr,$gew,$muster_platz,$teillang,$abnr,$verpackungmenge)
 {
 	$a = AplDB::getInstance();
-	$musterRow = $a->getTeilDokument($teilnr, 29, TRUE);
+	// dokunrchange
+	//$musterRow = $a->getTeilDokument($teilnr, 29, TRUE);
+	$musterRow = $a->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
+	//$musterRow = $a->getTeilDokument($teilnr, 12, TRUE);
 	if($musterRow===NULL)
 	    $musterText = "";
 	else

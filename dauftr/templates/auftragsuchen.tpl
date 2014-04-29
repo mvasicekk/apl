@@ -56,6 +56,7 @@ Aufträge pflegen / zadani zakazky
         <td>
             <input type='button' id='b_infopanely1' value='Infopanel Halle B1N'/>
 	    <input type='button' id='b_infopanely2' value='Infopanel Halle B1SO'/>
+	    <input type='button' id='b_infopanely3' value='Infopanel Halle B1W'/>
         </td>
     </tr>
 

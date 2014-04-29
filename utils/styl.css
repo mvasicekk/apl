@@ -1,0 +1,24 @@
+/* CSS Document */
+#spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -100px 0 0 -100px;
+	height: 200px;
+	width: 200px;
+	text-indent: 250px;
+	white-space: nowrap;
+	overflow: hidden;
+	background-image: url(../images/spinner2.gif);
+	background-repeat: no-repeat;
+	z-index: 9999;
+}
+
+table.teilchange{
+    border-collapse: collapse;
+}    
+
+table.teilchange td{
+    padding: 5px;
+    border: 1px solid black;
+}    

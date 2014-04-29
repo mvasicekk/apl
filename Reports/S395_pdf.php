@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 dbConnect();
 
@@ -18,6 +19,7 @@ $teil = trim($_GET['teil']);
 $zeitpunkt = trim($_GET['zeitpunkt']);
 $datumvonDB = trim($_GET['datumvon']);
 
+if($teil=='*') $teil='';
 //$stampVon = getLagerInventurDatum($dil);
 //$stampBis = date('Y-m-d H:i:s');
 
@@ -53,7 +55,9 @@ foreach ($parameters as $param)
 $cells_header = 
 array(
 "teilnr"
-=>array("sirka"=>22,"ram"=>'LBT',"align"=>"L","radek"=>0,"fill"=>1),
+=>array("sirka"=>22,"ram"=>'LBTR',"align"=>"L","radek"=>0,"fill"=>1),
+"gew"
+=>array("sirka"=>18,"ram"=>'LBTR',"align"=>"R","radek"=>0,"fill"=>1),
 "0D"
 =>array("sirka"=>11,"ram"=>'BT',"align"=>"R","radek"=>0,"fill"=>1),
 //"0S"
@@ -80,8 +84,8 @@ array(
 =>array("sirka"=>10,"ram"=>'BT',"align"=>"R","radek"=>0,"fill"=>1),
 "A6"
 =>array("sirka"=>10,"ram"=>'BTR',"align"=>"R","radek"=>0,"fill"=>1),
-"Summe i.A."
-=>array("sirka"=>29,"ram"=>'BTR',"align"=>"R","radek"=>0,"fill"=>1),
+"SumAuftr"
+=>array("sirka"=>15,"ram"=>'BTR',"align"=>"R","radek"=>0,"fill"=>1),
 "XX"
 =>array("sirka"=>10,"ram"=>'BT',"align"=>"R","radek"=>0,"fill"=>1),
 "XY"
@@ -89,7 +93,7 @@ array(
 "8V"
 =>array("sirka"=>10,"ram"=>'BT',"align"=>"R","radek"=>0,"fill"=>1),
 "8X"
-=>array("sirka"=>15,"ram"=>'BT',"align"=>"R","radek"=>0,"fill"=>1),
+=>array("sirka"=>12,"ram"=>'BT',"align"=>"R","radek"=>0,"fill"=>1),
 "B2"
 =>array("sirka"=>10,"ram"=>'LBT',"align"=>"R","radek"=>0,"fill"=>1),
 "B4"
@@ -194,6 +198,8 @@ $pdf->SetFont("FreeSans", "", 8);
 
 $pdf->AddPage();
 
+$a = AplDB::getInstance();
+
 $teile = $domxml->getElementsByTagName("teil");
 foreach($teile as $teil){
     $teilChilds = $teil->childNodes;
@@ -207,6 +213,8 @@ foreach($teile as $teil){
     foreach($cells_header as $klic=>$header){
         if($klic=='teilnr')
             $cell = $teilnr;
+	else if($klic=='gew')
+	    $cell = number_format ($a->getTeilGewicht ($teilnr), 2, ',', ' ')." kg";
         else
             $cell = $klic;
         $pdf->Cell($header["sirka"],5,$cell,$header["ram"],$header["radek"],$header["align"],$header["fill"]);
@@ -272,7 +280,9 @@ foreach($teile as $teil){
             if($klic=='teilnr'){
                 $cell = "Sum.Teil";
             }
-            elseif($klic=="Summe i.A."){
+	    elseif($klic=="gew")
+		$cell="";
+            elseif($klic=="SumAuftr"){
                 $cell = $summeArray['0D']+
                         $summeArray['0S']+
                         $summeArray['1R']+

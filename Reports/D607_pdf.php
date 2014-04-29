@@ -559,12 +559,14 @@ function zahlavi_termin($pdfobjekt,$childNodes,$pole,$vyskaradku)
         $termin = substr(getValueForNode($childNodes,"terminF"),1);
         $a = AplDB::getInstance();
         $bemerkungA = $a->getAuftragInfoArray($termin);
+	$zielort = $a->getZielortAuftrag($termin);
+	
         if($bemerkungA===NULL)
             $bemerkung='';
         else
             $bemerkung = $bemerkungA[0]['bemerkung'];
 
-	$pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,"terminF")." ( ".getValueForNode($childNodes,"geplanntdatum")." ) $bemerkung",'RBT',1,'L',1);
+	$pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,"terminF")." ( ".getValueForNode($childNodes,"geplanntdatum")." ) $zielort $bemerkung",'RBT',1,'L',1);
 }
 
 /*
@@ -649,6 +651,7 @@ function zapati_termin($pdfobjekt,$childNodes,$pole,$sumy,$vyskaradku)
         else
             $bemerkung = $bemerkungA[0]['bemerkung'];
 
+	$zielort = $a->getZielortAuftrag($termin);
 	$pdfobjekt->Cell(
 		$pole['teilnr']['sirka']+
 		$pole['import_pal']['sirka']+
@@ -664,7 +667,7 @@ function zapati_termin($pdfobjekt,$childNodes,$pole,$sumy,$vyskaradku)
 //		$pole['auss6']['sirka']+
 //		$pole['GDiff']['sirka']
 		,$vyskaradku,
-		getValueForNode($childNodes,"terminF")." ( ".getValueForNode($childNodes,"geplanntdatum")." ) $bemerkung"
+		getValueForNode($childNodes,"terminF")." ( ".getValueForNode($childNodes,"geplanntdatum")." ) $zielort"
 		,'RBT',0,'L',1);
 	
 	$pdfobjekt->SetFont("FreeSans", "B", 6.5);

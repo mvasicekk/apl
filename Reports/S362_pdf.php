@@ -724,7 +724,10 @@ function printAFO($pdf,$left,$top,$childs){
     $pdf->Ln(1);
     $a = AplDB::getInstance();
     $teil = getValueForNode($childs, 'teil');
-    $musterRow = $a->getTeilDokument($teil, 29);
+    // dokunrchange
+    //$musterRow = $a->getTeilDokument($teil, 29);
+    $musterRow = $a->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER);
+    //$musterRow = $a->getTeilDokument($teil, 12);
     if($musterRow===NULL)
 	$musterText = "";
     else

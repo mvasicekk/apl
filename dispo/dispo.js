@@ -16,7 +16,7 @@ $(document).ready(function(){
 	$(window).bind("resize", updateSize);
 	updateSize();
 	$('#spinner').hide();
-	$('input[type=text]:first').focus();
+	//$('input[type=text]:first').focus();
 
 });
 
@@ -50,16 +50,26 @@ function datumChanged(event){
 function updateDatumChanged(data){
     $('#spinner').hide();
     $('#dispodiv').html(data.divcontent);
+//    $('table.dispotable').tinytbl({
+//            direction: 'ltr',      // text-direction (default: 'ltr')
+//            //thead:     true,       // fixed table thead
+//            //tfoot:     true,       // fixed table tfoot
+//            cols:      1,          // fixed number of columns
+//            width:     'auto',     // table width (default: 'auto')
+//            height:    'auto'      // table height (default: 'auto')
+//        });
     //pridat udalostni procedury
-    $('input[id^=solltag_').bind('change',sollTagChanged);
+    $('input[id^=solltag_]').bind('change',sollTagChanged);
 }
 
 function sollTagChanged(event){
+    //alert('solltag changed');
     var acturl = $(this).attr('acturl');
     $.post(acturl,
     {
 	id:$(this).attr('id'),
 	val:$(this).val(),
+	bis:$('#datum_bis').val(),
 	kd_von:$('#kunde_von').val(),
 	kd_bis:$('#kunde_bis').val()
     },
@@ -76,6 +86,14 @@ function updateSollTagChanged(data){
     $('#'+data.summetagId).html(data.summetagValue);
     $('#'+data.summestatnrtagId).html(data.summestatnrtagValue);
     $('#'+data.summinAllId).html(data.summinAllValue);
+    
+    $.each( data.zubearbarray, function(i, n){
+	$('#'+i).html(n);
+	if(n<0) 
+	    $('#'+i).addClass('negativ');
+	else
+	    $('#'+i).removeClass('negativ');
+    });
 }
 
 function kundeChanged(event){

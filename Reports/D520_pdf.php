@@ -251,7 +251,10 @@ function zahlavi_teil($pdfobjekt,$cells,$childs,$vyskaRadku,$rgb){
 
 	$a = AplDB::getInstance();
 	$teilnr = getValueForNode($childs, 'teilnr');
-	$musterRow = $a->getTeilDokument($teilnr, 29, TRUE);
+	// dokunrchange
+	//$musterRow = $a->getTeilDokument($teilnr, 29, TRUE);
+	$musterRow = $a->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
+	//$musterRow = $a->getTeilDokument($teilnr, 12, TRUE);
 	if($musterRow===NULL)
 	    $musterText = "Muster: ????";
 	else

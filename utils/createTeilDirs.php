@@ -5,22 +5,21 @@ require '../db.php';
 
 $apl = AplDB::getInstance();
 
-
 //var_dump(AplDB::$DIRS_FOR_TEIL);
-
-$kundeGdatPath = $apl->getKundeGdatPath(111);
+$kunde = 355;
+$kundeGdatPath = $apl->getKundeGdatPath($kunde);
 $gdatPath = "/mnt/gdat/Dat/";
 // seznam dilu
 if ($kundeGdatPath !== NULL) {
-    $teileArray = $apl->getTeileNrArrayForKunde(111);
+    $teileArray = $apl->getTeileNrArrayForKunde($kunde);
     if ($teileArray !== NULL) {
 	foreach ($teileArray as $row) {
-	    $teilDir = $gdatPath . $kundeGdatPath . "/" . $row["teil"];
+	    $teilDir = $gdatPath . $kundeGdatPath . "/200 Teile/" . $row["teil"];
 	    // test zda uz takova slozka existuje
 	    $dirExists = file_exists($teilDir)?"exists":"not exists";
 	    if($dirExists=="not exists"){
 		// vytvorit slozku pro dil
-		if(mkdir($teilDir)){
+		if(mkdir($teilDir,0777,TRUE)){
 		    echo $teilDir." created<br>";
 		}
 		else{
@@ -28,7 +27,7 @@ if ($kundeGdatPath !== NULL) {
 		}
 	    }
 	    if(file_exists($teilDir)){
-		foreach (AplDB::$DIRS_FOR_TEIL as $dirForTeil){
+		foreach (AplDB::$DIRS_FOR_TEIL_FINAL as $dirForTeil){
 		    $dirForTeilPath = $teilDir."/".$dirForTeil;
 		    if(!file_exists($dirForTeilPath)){
 			mkdir($dirForTeilPath);
@@ -43,18 +42,36 @@ if ($kundeGdatPath !== NULL) {
     }
 }
 
+echo "<hr>";
 
-//echo $kundeGdatPath."<br>";
-//if ($kundeGdatPath !== NULL) {
-//    foreach (new DirectoryIterator('/mnt/gdat/Dat/' . $kundeGdatPath) as $file) {
-//	// if the file is not this file, and does not start with a '.' or '..',
-//	// then store it for later display
-//	if ((!$file->isDot()) && ($file->getFilename() != basename($_SERVER['PHP_SELF']))) {
-//	    // if the element is a directory add to the file name "(Dir)"
-//	    //echo ($file->isDir()) ? "(Dir) ".$file->getFilename() : $file->getFilename()."<br>";
-//	    if (!$file->isDir()) {
-//		echo "<a href='/gdat" . substr($file->getPath(), 13) . "/" . $file->getFilename() . "'>" . $file->getFilename() . "</a><br>";
-//	    }
-//	}
-//    }
-//}
+// 5. uroven Archived, in Arbeit
+$dirsWhereToMake5Level = array(	"020"=>"020 EMPB",
+	"030"=>"030 PPA",
+	"040"=>"040 GPA",
+	"050"=>"050 VPA",
+);
+
+$level5Dirs = array("010 Ausgearbeitet","020 Archiv");
+
+if ($kundeGdatPath !== NULL) {
+    $teileArray = $apl->getTeileNrArrayForKunde($kunde);
+    if ($teileArray !== NULL) {
+	foreach ($teileArray as $row) {
+	    $teilDir = $gdatPath . $kundeGdatPath . "/200 Teile/" . $row["teil"];
+	    if (file_exists($teilDir)) {
+		foreach ($dirsWhereToMake5Level as $index => $dirForDoku) {
+		    $dirForTeilPath = $teilDir . "/" . $dirForDoku;
+		    foreach ($level5Dirs as $level5Dir) {
+			$level5DirPath = $dirForTeilPath . "/" . $level5Dir;
+			if (!file_exists($level5DirPath)) {
+			    mkdir($level5DirPath, 0777, TRUE);
+			    echo "$level5DirPath created<br>";
+			} else {
+			    echo "$level5DirPath exists<br>";
+			}
+		    }
+		}
+	    }
+	}
+    }
+}

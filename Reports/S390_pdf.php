@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 dbConnect();
 
@@ -14,6 +15,12 @@ $parameters=$_GET;
 
 
 $dil=$_GET['teil'];
+$bewegungen = $_GET['bewegungen'];
+
+if($bewegungen=="a")
+    $bDetails = TRUE;
+
+//exit();
 
 $inventur = TRUE;
 $stampVon = getLagerInventurDatum($dil);
@@ -104,6 +111,17 @@ function nuluj_sumy_pole(&$pole)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function test_pageoverflow($pdfobjekt,$vysradku)
+{
+	global $cells;
+	// pokud bych prelezl s nasledujicim vystupem vysku stranky
+	// tak vytvorim novou stranku i se zahlavim
+	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
+	{
+		$pdfobjekt->AddPage();
+		pageHeader($pdfobjekt,5,$cells);
+	}
+}
 
 // funkce ktera vrati hodnotu podle nodename
 // predam ji nodelist a jmeno node ktereho hodnotu hledam
@@ -120,6 +138,15 @@ function getValueForNode($nodelist,$nodename)
 	}
 	return $nodevalue;
 }
+
+
+function pageHeader($pdf,$h,$cells){
+    $pdf->SetFont("FreeSans", "B", 8);
+    foreach ($cells as $index => $cell) {
+    $pdf->Cell($cell['width'], $h, $cell['label'], '1', $cell['ln'], $cell['align']);
+ }
+}
+ 
 
 function getChildValueForLagerKz($skladyNodes,$childvalue,$lagerkz)
 {
@@ -343,6 +370,72 @@ foreach($seznamSkladu as $sklad)
 	$pdf->Cell(0,5,$obsahBunky,'0',1,'L',0);
 }
 
+if(($bDetails)&&($inventur===TRUE)){
+  $vonVorInventur5 = date('Y-m-d H:i:s',strtotime("-5 day",  strtotime($stampVon)));
+//  echo "stampvon:".$stampVon;
+//  echo "vorinv:".$vonVorInventur5;
+  $order = "lager_nach,auftrag_import,abgnr,date_stamp";
+  $sqlVor = "select * from dlagerbew where (teil='$dil') and (date_stamp>'$vonVorInventur5') and  (date_stamp<'$stampVon') order by $order";
+  $sqlNach = "select * from dlagerbew where (teil='$dil') and (date_stamp>'$stampVon') order by $order";
+//  echo "sel vor: ".$sqlVor;
+//  echo "sel nach: ".$sqlNach;
+  $a = AplDB::getInstance();
+  
+  $rowVor = $a->getQueryRows($sqlVor);
+  $rowNach = $a->getQueryRows($sqlNach);
+  
+  $cells = array(
+      "teil"
+      =>array("width"=>20,"label"=>"teil","align"=>"L","ln"=>0),
+      "auftrag_import"
+      =>array("width"=>25,"label"=>"auftrag_import","align"=>"L","ln"=>0),
+      "pal_import"
+      =>array("width"=>20,"label"=>"pal_import","align"=>"L","ln"=>0),
+      "gut_stk"
+      =>array("width"=>15,"label"=>"gut_stk","align"=>"R","ln"=>0),
+      "auss_stk"
+      =>array("width"=>15,"label"=>"auss_stk","align"=>"R","ln"=>0),
+      "lager_von"
+      =>array("width"=>20,"label"=>"lager_von","align"=>"L","ln"=>0),
+      "lager_nach"
+      =>array("width"=>20,"label"=>"lager_nach","align"=>"L","ln"=>0),
+      "date_stamp"
+      =>array("width"=>35,"label"=>"date_stamp","align"=>"L","ln"=>0),
+      "comp_user_accessuser"
+      =>array("width"=>45,"label"=>"user","align"=>"L","ln"=>0),
+      "abgnr"
+      =>array("width"=>0,"label"=>"abgnr","align"=>"R","ln"=>1),
+  );
+  
+  $rowHeight = 4;
+  $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
+  $pdf->AddPage();
+  pageHeader($pdf, 5,$cells);
+  if ($rowVor !== NULL) {
+      $pdf->Cell(0, $rowHeight, "Bewegungen 5 Tage vor der Inventur ( sort: $order )", '1', 1, 'L');
+	foreach ($rowVor as $r) {
+	    foreach ($cells as $index => $cell) {
+		test_pageoverflow($pdf, $rowHeight);
+		$pdf->SetFont("FreeSans", "", 7);
+		$pdf->Cell($cell['width'], $rowHeight, $r[$index], '1', $cell['ln'], $cell['align']);
+	    }
+	}
+	$pdf->Ln();
+    }
+    
+   
+   
+   if ($rowNach !== NULL) {
+       $pdf->Cell(0, $rowHeight, "Bewegungen nach der Inventur ( sort: $order )", '1', 1, 'L');
+	foreach ($rowNach as $r) {
+	    foreach ($cells as $index => $cell) {
+		test_pageoverflow($pdf, $rowHeight);
+		$pdf->SetFont("FreeSans", "", 7);
+		$pdf->Cell($cell['width'], $rowHeight, $r[$index], '1', $cell['ln'], $cell['align']);
+	    }
+	}
+    }
+}
 //Close and output PDF document
 $pdf->Output();
 

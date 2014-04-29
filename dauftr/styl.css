@@ -19,6 +19,82 @@ div.palbemerkungdiv
 	z-index:99;
 }
 
+/* -------------------------------------------------------------------------- */
+table#lagertable3{
+    margin-left: 30px;
+    margin-top: 20px;
+    background-color: white;
+    border-collapse: collapse;
+    padding: 10px;
+}    
+
+table#lagertable3 td.ulicka{
+    background-color: lightgray;
+    height: 30px;
+    border-top:  1px solid black;
+    border-bottom: 1px solid black;
+}    
+
+table#lagertable3 td.lagesplatz{
+    background-color: lightsteelblue;
+    height: 60px;
+    border: 1px solid black;
+    padding: 5px;
+}    
+
+table#lagertable3 td>input{
+    background-color: lightcyan;
+    border-style: none;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    width:75px;
+    height: 18px;
+}    
+
+table#lagertable3 td>input.text1{
+    background-color: black;
+    font-size: 10px;
+    color: white;
+}    
+
+table#lagertable3 td>input.text2{
+    background-color: black;
+    font-size: 10px;
+    color: white;
+}    
+
+table#lagertable3 td>input.text3{
+    background-color: black;
+    color: lawngreen;
+}    
+
+table#lagertable3 td>input.text4{
+    background-color: black;
+    font-size: 10px;
+    color: white;
+}    
+
+table#lagertable3 td>input.text5{
+    background-color: black;
+    font-size: 9px;
+    color: orange;
+}    
+
+div#panelytable3{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:920px;
+    height:145px;
+    overflow:auto;
+    border:2px solid green;
+    background-color:#dfd;
+    font-size:10px;
+}
+
+/* -------------------------------------------------------------------------- */
+
 table#lagertable1{
     margin-left: 30px;
     margin-top: 20px;

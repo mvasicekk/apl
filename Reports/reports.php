@@ -129,6 +129,7 @@ $smarty->assign("predchozi_den",$predchozi_den);
 $smarty->assign("predtricetidny",date('d.m.Y',$predTricetiDny));
 $smarty->assign("now",date("d.m.Y"));
 $smarty->assign("nowtime",date("Y-m-d H:i:s"));
+$smarty->assign("nowZeit",date("H:i"));
 $smarty->assign("dnes",$dnes);
 $smarty->assign("prvnidenroku",$prvniDenAktualnihoRoku);
 $smarty->assign("prvnidenrokuDB",$prvniDenAktualnihoRokuDB);

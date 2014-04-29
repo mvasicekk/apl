@@ -6,10 +6,20 @@ $(document).ready(function(){
     $(".datepicker" ).datepicker($.datepicker.regional["de"]);
 
     $('#showteildoku').bind('click',showTeilDoku);
+    $('#showvpm').bind('click',showVPM);
     // shows Teil Attachment
+    $('#show_att_muster').bind('click',showTeilAtt);
+    $('#show_att_empb').bind('click',showTeilAtt);
     $('#show_att_ppa').bind('click',showTeilAtt);
+    $('#show_att_gpa').bind('click',showTeilAtt);
     $('#show_att_vpa').bind('click',showTeilAtt);
+    $('#show_att_qanf').bind('click',showTeilAtt);
+    $('#show_att_zeit').bind('click',showTeilAtt);
+    $('#show_att_liefer').bind('click',showTeilAtt);
+    $('#show_att_mehr').bind('click',showTeilAtt);
     $('#show_att_rekl').bind('click',showTeilAtt);
+
+    $('#accordion').accordion();
     
     $('input[id=preis_stk_gut]').blur(function(event){
         var id = $(this).attr('id');
@@ -221,14 +231,36 @@ function showTeilDoku(event){
         );    
 }
 
+function showVPM(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowVPM(data);
+        },
+        'json'
+        );    
+}
+
 /**
  *
  */
 function updateshowTeilAtt(data){
     if($('#dokuform').length!=0){
 	$('#dokuform').remove();
+	if(data.id=='show_att_muster') return;
+	if(data.id=='show_att_empb') return;	
+	if(data.id=='show_att_gpa') return;	
 	if(data.id=='show_att_ppa') return;
 	if(data.id=='show_att_vpa') return;
+	if(data.id=='show_att_qanf') return;	
+	if(data.id=='show_att_zeit') return;	
+	if(data.id=='show_att_liefer') return;	
+	if(data.id=='show_att_mehr') return;	
 	if(data.id=='show_att_rekl') return;
     }
     if(data.docsArray!=null){
@@ -243,6 +275,66 @@ function updateshowTeilAtt(data){
 	    maxHeight:'90%'
 	});
     }
+    else{
+	//alert('Keine Dateien / žádné soubory');
+	$('body').append(data.formDiv);
+//	$("#dokuform").fadeIn('slow').animate({opacity: 1.0}, 1500).effect("pulsate", { times: 2 }, 800).fadeOut('slow');
+//	if($('#dokuform').length!=0) $('#dokuform').remove();
+    }
+
+    ppaDir = $('#uploader').attr('folder');
+    var uploader = new plupload.Uploader({
+	    runtimes: 'html5,flash,browserplus',
+	    flash_swf_url: '../plupload/js/plupload.flash.swf',
+	    browse_button: 'pickfiles',
+	    container: 'uploader',
+	    url: '../upload.php?savepath='+ppaDir
+	});
+    
+	uploader.init();
+	uploader.bind('FilesAdded', function(up, files) {
+	    $.each(files, function(i, file) {
+		$('#filelist').append(
+		    '<div id="' + file.id + '">' +
+		    file.name + ' (' + plupload.formatSize(file.size) + ') <b></b>' + '</div>');
+	    });
+	    up.start();
+	});
+
+	uploader.bind('UploadProgress', function(up, file) {
+	    $('#' + file.id + " b").html(file.percent + "%");
+	});
+
+	uploader.bind('Error', function(up, err) {
+	    $('#filelist').append("<div>Error: " + err.code +
+            ", popis chyby: " + err.message +
+            (err.file ? ", soubor: " + err.file.name : "") +
+            "</div>"
+	    );
+	    up.refresh(); // Reposition Flash/Silverlight
+	});
+	uploader.bind('FileUploaded', function(up, file) {
+	    //$('#' + file.id + " b").html("uloženo");
+	    $('#' + file.id).remove();
+	    // pomoci ajaxu udelam zaznam do DB
+	    acturl = '{!$acturl}';
+	    $.post(
+		acturl,
+		{
+		    filename:file.name
+		},
+		function(data){
+		    updateSaveDokument(data);
+		},
+		'json'
+	    );
+	});
+
+}
+
+
+function updateSaveDokument(data){
+    console.log(data);
 }
 
 function updateFolder(event){
@@ -267,6 +359,49 @@ function updateFolder(event){
 }
 
 /**
+ *
+ *
+ */
+
+function updateshowVPM(data){
+    // zobrazit editovaci div
+    if($('#vpmform').length!=0){
+            $('#vpmform').remove();
+	    if(data.id=='showvpm') return;
+        }
+    $('body').append(data.formDiv);
+    $(".datepicker" ).datepicker($.datepicker.regional["de"]);
+    
+    $( "#n_vpm_nr" ).autocomplete({
+			source: "getVPM.php",
+			minLength: 0,
+                        autoFocus: true,
+			select: function( event, ui ) {
+                                    if(ui.item){
+                                    }
+                                    else{
+                                        // polozka neni v seznamu
+                                    }
+			},
+			open: function(event, ui) {
+				$(this).autocomplete("widget").css(
+				    {"width": "500px","color":"black","font-size":"12px","height":"200px","overflow-y":"auto"}
+				);
+			}
+		}).focus(function(){
+		    if ($(this).autocomplete("widget").is(":visible")) {
+			return;
+		    }
+		    $(this).data("autocomplete").search($(this).val());
+		    });
+		
+   $('#n_vpm_add').bind('click',vpmAdd);
+   $('input[id^=i_vpm_del_]').bind('click',vpmDel);
+   $('input[id^=r_stk_]').bind('blur',vpmFieldChange);
+   $('input[id^=r_bemerkung_]').bind('blur',vpmFieldChange);
+}
+
+/**
  * 
  */
 function updateshowTeilDoku(data){
@@ -278,28 +413,6 @@ function updateshowTeilDoku(data){
     $('body').append(data.formDiv);
     $(".datepicker" ).datepicker($.datepicker.regional["de"]);
     
-//    $( "input[id^=r_doku_nr_]" ).autocomplete({
-//			source: "getDokuTyp.php",
-//			minLength: 0,
-//                        autoFocus: true,
-//			select: function( event, ui ) {
-//                                    if(ui.item){
-//                                    }
-//                                    else{
-//                                        // polozka neni v seznamu
-//                                    }
-//			},
-//			open: function(event, ui) {
-//				$(this).autocomplete("widget").css(
-//				    {"width": 300,"color":"black","font-size":"12px"}
-//				);
-//			}
-//		}).focus(function(){
-//		    if ($(this).autocomplete("widget").is(":visible")) {
-//			return;
-//		    }
-//		    $(this).data("autocomplete").search($(this).val());
-//		    });
 
     $( "#n_doku_nr" ).autocomplete({
 			source: "getDokuTyp.php",
@@ -380,6 +493,23 @@ function updateshowTeilDoku(data){
    
 }
 
+
+function vpmFieldChange(event){
+    element = event.target;
+    var id=element.id;
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:id,
+	    val:$(element).val()
+        },
+        function(data){
+            updatevpmFieldChange(data);
+        },
+        'json'
+        );        
+}
+
 function dokuFieldChange(event){
     element = event.target;
     var id=element.id;
@@ -407,6 +537,17 @@ function updatedokuFieldChange(data){
     }
 }
 
+function updatevpmFieldChange(data){
+    if(data.goUpdate==false){
+	$('#'+data.id).val('');
+	$('#'+data.id).css({"border-color":"red"});
+	$('#'+data.id).focus();
+    }
+    else{
+	$('#'+data.id).css({"border-color":""});
+    }
+}
+
 function dokuDel(event){
     element = event.target;
     var id=element.id;
@@ -417,6 +558,21 @@ function dokuDel(event){
         },
         function(data){
             updatedokuAdd(data);
+        },
+        'json'
+        );        
+}
+
+function vpmDel(event){
+    element = event.target;
+    var id=element.id;
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:id
+        },
+        function(data){
+            updatevpmAdd(data);
         },
         'json'
         );        
@@ -442,6 +598,25 @@ function dokuAdd(event){
         );        
 }
 
+function vpmAdd(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    //alert(acturl);
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val(),
+	    n_vpm_nr:$('#n_vpm_nr').val(),
+	    n_anzahl:$('#n_anzahl').val(),
+	    n_bemerkung:$('#n_bemerkung').val()
+        },
+        function(data){
+            updatevpmAdd(data);
+        },
+        'json'
+        );        
+}
+
 function updatedokuAdd(data){
     element = $('#showteildoku');
     var id=element.id;
@@ -453,6 +628,22 @@ function updatedokuAdd(data){
         },
         function(data){
             updateshowTeilDoku(data);
+        },
+        'json'
+        );    
+}
+
+function updatevpmAdd(data){
+    element = $('#showvpm');
+    var id=element.id;
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:'n_vpm_add',
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowVPM(data);
         },
         'json'
         );    

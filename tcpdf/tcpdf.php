@@ -1460,6 +1460,7 @@ if(!class_exists('TCPDF', false)) {
                         $ident=$pocitac."/".$_SESSION["user"];
 //                        $stamp = date("d.m.Y H:i:s",mktime(10, 36, 36, 2, 5, 2010))."  (".$ident.")";
                         $stamp = date("d.m.Y H:i:s")."  (".$ident.")";
+			//$stamp = '';
                         $this->Write($footer_height,$stamp);
                         $this->SetXY($this->original_lMargin, $footer_y); 
 				

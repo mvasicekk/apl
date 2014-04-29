@@ -716,7 +716,7 @@ function zahlavi_teil_D510($pdfobjekt,$vyskaRadku,$childNodes)
 //	$p->Cell(30,$vyskaRadku,  $o,'B',0,'L',$fill);
 
 	$pdfobjekt->SetFont("FreeSans", "", 7);
-	$p->Cell(40,$vyskaRadku,"letzte Reklamation:",'B',0,'L',$fill);
+	$p->Cell(40,$vyskaRadku,"letzte Reklamation:",'0',0,'L',$fill);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 //	$o = getValueForNode($childNodes, 'letzte_reklamation');
 	$o = $letzteReklString;
@@ -758,17 +758,20 @@ function zahlavi_teil_D510($pdfobjekt,$vyskaRadku,$childNodes)
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$p->Cell(30,$vyskaRadku,"Preis-Gut:",'0',0,'L',$fill);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
-	$o = getValueForNode($childNodes, 'preis_stk_gut');
+	$o = floatval(getValueForNode($childNodes, 'preis_stk_gut'));
+	$o = number_format($o, 2, ',', ' ');
 	$p->Cell(30,$vyskaRadku,  $o,'0',0,'L',$fill);
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$p->Cell(30,$vyskaRadku,"Preis-Auss:",'0',0,'L',$fill);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
-	$o = getValueForNode($childNodes, 'preis_stk_auss');
+	$o = floatval(getValueForNode($childNodes, 'preis_stk_auss'));
+	$o = number_format($o, 2, ',', ' ');
 	$p->Cell(30,$vyskaRadku,  $o,'0',0,'L',$fill);
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$p->Cell(30,$vyskaRadku,"Kosten-Auss:",'0',0,'L',$fill);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
-	$o = getValueForNode($childNodes, 'kosten_stk_auss');
+	$o = floatval(getValueForNode($childNodes, 'kosten_stk_auss'));
+	$o = number_format($o, 2, ',', ' ');
 	$p->Cell(30,$vyskaRadku,  $o,'0',0,'L',$fill);
 	$p->Ln();
 	$pdfobjekt->SetFont("FreeSans", "", 7);

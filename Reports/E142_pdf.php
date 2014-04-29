@@ -544,7 +544,7 @@ function radek_personE($objPHPExcel, $vyskaradku, $rgb, $person, $monat, $jahr) 
 
     if ($reporttyp == 'lohn') {
         $leistPraemieBerechnet1 = $aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) * $aTageProMonat;
-        if ($aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) == 150)
+        if ($aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) == 200)
             $leistPraemieBerechnet = $leistPraemieBerechnet1;
         else {
             if ($aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGrad) > $aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat))

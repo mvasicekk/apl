@@ -27,6 +27,7 @@ var editovat = new Array(0,0,1,1,1,1,1,1,0,0);
 </script>
 <script type = "text/javascript" src = "js_tablegrid.js"></script>
 <script type="text/javascript" src="../js/colorbox/jquery.colorbox-min.js"></script>
+<script type="text/javascript" src="../plupload/js/plupload.full.js"></script>
 <script type="text/javascript" src="./dkopf.js"></script>
 
 
@@ -198,7 +199,9 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 <!--				      <label>Ersteller : </label><input type='text' id='ersteller' size='10' maxlength='10'/>-->
 				     <input class='' type='button' value='Lagerzettel' onclick="location.href='../get_parameters.php?popisky=Teil;DokuNr&promenne=teil;dokunr&values={$teil_value};{29}&report=D515'" />
                                  </td>
-
+				 <td>
+				     <input id='showvpm' type='button' value="VPM" acturl='./showVPM.php' />
+				 </td>
                             </tr>
                         </table>
 			</fieldset>
@@ -211,13 +214,34 @@ Arbeitsplan pflegen / Sprava pracovniho planu
                         <table>
                             <tr>
 				 <td>
-				     <input id='show_att_ppa' type='button' value="PPA" acturl='./showTeilAtt.php?att=ppa' />
+				     <input style="display:{$display_sec.show_att_muster};" id='show_att_muster' type='button' value="Muster" acturl='./showTeilAtt.php?att=muster' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_empb};" id='show_att_empb' type='button' value="EMPB" acturl='./showTeilAtt.php?att=empb' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_ppa};" id='show_att_ppa' type='button' value="PPA" acturl='./showTeilAtt.php?att=ppa' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_gpa};" id='show_att_gpa' type='button' value="GPA" acturl='./showTeilAtt.php?att=gpa' />
 				 </td>
  				 <td>
-				     <input id='show_att_vpa' type='button' value="VPA" acturl='./showTeilAtt.php?att=vpa' />
+				     <input style="display:{$display_sec.show_att_vpa};" id='show_att_vpa' type='button' value="VPA" acturl='./showTeilAtt.php?att=vpa' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_qanf};" id='show_att_qanf' type='button' value="Q-Anforderungen" acturl='./showTeilAtt.php?att=qanf' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_zeit};" id='show_att_zeit' type='button' value="Zeit" acturl='./showTeilAtt.php?att=zeit' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_liefer};" id='show_att_liefer' type='button' value="Liefer" acturl='./showTeilAtt.php?att=liefer' />
+				 </td>
+				 <td>
+				     <input style="display:{$display_sec.show_att_mehr};" id='show_att_mehr' type='button' value="Mehrarbeit" acturl='./showTeilAtt.php?att=mehr' />
 				 </td>
  				 <td>
-				     <input id='show_att_rekl' type='button' value="Reklamation" acturl='./showTeilAtt.php?att=rekl' />
+				     <input style="display:{$display_sec.show_att_rekl};" id='show_att_rekl' type='button' value="Reklamation" acturl='./showTeilAtt.php?att=rekl' />
 				 </td>
                             </tr>
                         </table>

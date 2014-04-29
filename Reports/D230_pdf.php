@@ -331,7 +331,9 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	// pole pro muster
     	$a = AplDB::getInstance();
 	$teilnr = getValueForNode($paletteChildNodes, 'teil');
-	$musterRow = $a->getTeilDokument($teilnr, 29, TRUE);
+	// dokunrchange
+	//$musterRow = $a->getTeilDokument($teilnr, 29, TRUE);
+	$musterRow = $a->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
 	if($musterRow===NULL)
 	    $musterText = "Muster: ????";
 	else

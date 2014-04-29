@@ -499,9 +499,10 @@ foreach($behaelters as $behaelter){
             }
         }
         zapati_kunde($pdf, 4, array(255,255,240),$kunde,$lagerPlatzArray,$summeKunde,$invdatumDB,$behaelternr);
+	$pdf->Ln(2);
     }
 }
-
+//pd
 $pdf->Ln();
 zahlavi_gesamtSummen($pdf, 5, array(240,255,240), NULL);
 // a nakonec soucty celkem

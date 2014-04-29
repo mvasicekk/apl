@@ -5,6 +5,7 @@ require_once '../db.php';
     $val = $_POST['val'];
     $kd_von = $_POST['kd_von'];
     $kd_bis = $_POST['kd_bis'];
+    $bis = $_POST['bis'];
     
     // zjistim zda mam hodnotu value ulozenou v databazi artiklu
 
@@ -16,9 +17,30 @@ require_once '../db.php';
     $statnr = substr($id, $planNrPosition+8, 5);
     $datum = substr($id, $planNrPosition+14);
     $dbDatum = substr($datum, 0,4)."-".  substr($datum, 4,2)."-".  substr($datum, 6,2);
-    
+    $dbDatum_von = date('Y-m-d',strtotime("+1 day", strtotime($dbDatum)));
+    $bisTime = strtotime($apl->make_DB_datum($bis));
+    $exSollTime = $bisTime;
+    $exDateTimeSollRow = $apl->getExDatumSoll($plan);
+    if($exDateTimeSollRow!==NULL){
+	$exDateTimeSoll = $exDateTimeSollRow['ex_datetime_soll'];
+	$exSollTime = strtotime($exDateTimeSoll);
+    }
+    if($exSollTime<$bisTime) $bisTime = $exSollTime;
+    $dbDatum_bis = date('Y-m-d',$bisTime);
+
     $sql = $apl->updatePlanSollTag($plan,$statnr,$dbDatum,$minuten);
     $summeProPlanTag = $apl->getPlanSollTagSumme($plan,$dbDatum);
+
+    $time = strtotime($dbDatum_von);
+    $zuBearbArray = array();
+    while($time<=$bisTime){
+	$index = "zubearbeiten_P".$plan."_".$statnr."_".date('Ymd',$time);
+	$zuBearbArray[$index] = number_format($apl->getPlanZuBearbeiten("P".$plan, $statnr, $time),0,',',' ');
+	$index = "zubearbeiten_P".$plan."_sum_".date('Ymd',$time);
+	$zuBearbArray[$index] = number_format($apl->getPlanZuBearbeiten("P".$plan, "sum", $time),0,',',' ');
+	$time = strtotime("+1 day",$time);
+    }
+    
     
     $summeProTatNrTag = $apl->getPlanSollStatnrSumme($dbDatum,$statnr,$kd_von,$kd_bis);
     $summeProTag = $apl->getPlanSollTagKundeSumme($dbDatum,$kd_von,$kd_bis);
@@ -53,6 +75,9 @@ require_once '../db.php';
 	'summetagValue'=>number_format($summeProTag, 0, ',', ' '),
 	'summinAllId'=>$summinAllId,
 	'summinAllValue'=>number_format($summinAll, 0, ',', ' '),
+	'datum_von_DB'=>$dbDatum_von,
+	'datum_bis_DB'=>$dbDatum_bis,
+	'zubearbarray'=>$zuBearbArray,
     );
 
     

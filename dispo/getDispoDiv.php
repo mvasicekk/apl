@@ -20,8 +20,9 @@ require_once '../db.php';
     if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	$time = $timeVon;
 	$dispoDiv.="<table class='dispotable'>";
+	$dispoDiv.="<tbody>";
 	while ($time <= $timeBis) {
-	    
+	    $sollProTagArray = $apl->getPlanSollProTagArray($kd_von,$kd_bis);
     	    foreach ($planyArray as $plan) {
 		$planT = $plan['auftragsnr'];
 		$pIA = $apl->getPlanInfoArray("P".$planT,$von,$bis,$time);
@@ -32,9 +33,14 @@ require_once '../db.php';
 		foreach ($pIA as $statnr=>$pI){
 		    $summeIA[$timeID][$statnr]['ist']+=$pI['ist'];
 		    $summeIA[$timeID][$statnr]['solltag']+=$pI['solltag'];
+		    $summeIA[$timeID][$statnr]['sollprotag']=$sollProTagArray[$statnr];
+		    //$summeIA[$timeID]['sum']['sollprotag']+=$sollProTagArray[$statnr];
+		    
 		}
 		}
 	    }
+	    foreach ($sollProTagArray as $sV)
+		$summeIA[$timeID]['sum']['sollprotag']+=$sV;
 
 	    $dayClass = date('D', $time);
 	    $todayTime = strtotime($apl->make_DB_datum(date('d.m.Y')));
@@ -42,17 +48,18 @@ require_once '../db.php';
 	    if ($time == $todayTime)
 		$dayClass = "today";
 	    $dispoDiv.="<tr>";
-	    $dispoDiv.="<td class='$dayClass'>";
+	    $dispoDiv.="<th class='$dayClass'>";
 	    $dispoDiv.="<table class='tagsummetable'>";
-		    $dispoDiv.="<tr><td class='datumheader' colspan='3'>".date('d.m.Y', $time)."</td></tr>";
+		    $dispoDiv.="<tr><td class='datumheader' colspan='4'>".date('d.m.Y', $time)."</td></tr>";
 		    //radek pod datumem , suma minut pro vsechny zakazniky i nezobrazene
 		    $dispoDiv.="<tr>";
 		    $dispoDiv.="<td class='summinheader'>Soll(ALL)</td>";
-		    $dispoDiv.="<td class='summinvalue' colspan='2' id='summinall_$timeID'>".  number_format($summinAll, 0, ',', ' ')."</td>";
+		    $dispoDiv.="<td class='summinvalue' colspan='3' id='summinall_$timeID'>".  number_format($summinAll, 0, ',', ' ')."</td>";
 		    $dispoDiv.="</tr>";
 		    //------------------------------------------------------------------
 		    $dispoDiv.="<tr>";
 		    $dispoDiv.="<td class='statnr'>Statnr</td>";
+		    $dispoDiv.="<td class='solltag'>SollproTag</td>";
 		    $dispoDiv.="<td class='solltag'>Soll/Tag</td>";
 		    $dispoDiv.="<td class='ist'>Ist</td>";
 		    $dispoDiv.="</tr>";
@@ -61,6 +68,9 @@ require_once '../db.php';
 			$dispoDiv.="<tr class='$rowClass'>";
 			$dispoDiv.="<td class='statnr'>";
 			$dispoDiv.=$statnr;
+			$dispoDiv.="</td>";
+			$dispoDiv.="<td class='sollprotag'>";
+			$dispoDiv.=number_format($pi['sollprotag'], 0, ',', ' ');
 			$dispoDiv.="</td>";
 			$dispoDiv.="<td id='solltagsum"."_".$statnr."_".$timeID."' class='solltag'>";
 			$sollTagValue = number_format($pi['solltag'], 0, ',', ' ');
@@ -94,7 +104,10 @@ require_once '../db.php';
 		if($planInfoArray!==NULL){
 		    $dispoDiv.="<table class='exporttable $exTagClass'>";
 		    $dispoDiv.="<tr><td class='planheader' colspan='6'>$planT ($planExDatum) $zielort</td></tr>";
-		    $dispoDiv.="<tr><td class='planheader' colspan='6'></td></tr>";
+		    $dispoDiv.="<tr>";
+		    $dispoDiv.="<td class='planheader' colspan='2'>".date('d.m.Y',$time)."</td>";
+		    $dispoDiv.="<td class='planheader' colspan='4'></td>";
+		    $dispoDiv.="</tr>";
 		    $dispoDiv.="<tr>";
 		    $dispoDiv.="<td class='statnr'>Statnr</td>";
 		    $dispoDiv.="<td class='vzkdplan'>VzKdPlan</td>";
@@ -119,16 +132,21 @@ require_once '../db.php';
 			$dispoDiv.="<td class='istfertig'>";
 			$dispoDiv.=number_format($pi['fertig'], 0, ',', ' ');
 			$dispoDiv.="</td>";
-			$dispoDiv.="<td class='zubearbeiten'>";
-			$zubearbeiten = $pi['vzkdplan'] - $pi['fertig'];
+			// 2014-04-01 odecist predesle naplanovane minuty ------
+			
+			if($statnr=="sum")
+			    $beforeMins = floatval($apl->getPlanSollTagSumme($planT, date('Y-m-d',$time), TRUE));
+			else
+			    $beforeMins = floatval($apl->getPlanSollTagMinuten($planT, $statnr, date('Y-m-d',$time), TRUE));
+			
+			$zubearbeiten = $pi['vzkdplan'] - $pi['fertig'] - $beforeMins;
+			$negativClass = $zubearbeiten<0?'negativ':'';
+			$dispoDiv.="<td class='zubearbeiten $negativClass' id='zubearbeiten_".$terminAktual.'_'.$statnr.'_'.$timeID."'>";
 			$dispoDiv.=number_format($zubearbeiten, 0, ',', ' ');
+			// -----------------------------------------------------
 			$dispoDiv.="</td>";
 			$dispoDiv.="<td class='solltag'>";
 			$sollTagValue = number_format($pi['solltag'], 0, ',', ' ');
-//			if($statnr=='sum')
-//			    $sollTagValue = intval($apl->getPlanSollTagSumme($planT, date('Y-m-d',$time)));
-//			else
-//			    $sollTagValue = intval($apl->getPlanSollTagMinuten($planT, $statnr, date('Y-m-d',$time)));
 			$dispoDiv.= "<input $readonly maxlength='10' acturl='./sollTagChanged.php' type='text' id='solltag_".$terminAktual."_".$statnr."_".$timeID."' value='".$sollTagValue."'/>";
 			$dispoDiv.="</td>";
 			$dispoDiv.="<td class='ist'>";
@@ -145,8 +163,10 @@ require_once '../db.php';
 	    }
 	    $dispoDiv.="</tr>";
 	    //pridam 1 den
-	    $time+=60 * 60 * 24;
+	    //$time+=60 * 60 * 24;
+	    $time = strtotime("+1 day", $time);
 	}
+	$dispoDiv.="</tbody>";
 	$dispoDiv.="</table>";
     }
 }
@@ -154,6 +174,7 @@ require_once '../db.php';
 $returnArray = array(
 	'von'=>$von,
 	'bis'=>$bis,
+	'sollProTagArray'=>$sollProTagArray,
 	'planyArray'=>$planyArray,
 	'summeIA'=>$summeIA,
 	'divcontent'=>$dispoDiv,

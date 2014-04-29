@@ -1,4 +1,8 @@
+<?
+ session_start();
+?>
 <?php
+
 //pri prvnim otervreni seznamu souboru
 require_once '../db.php';
 
@@ -8,23 +12,15 @@ require_once '../db.php';
 
     $apl = AplDB::getInstance();
 
-    
-    $att2FolderArray = array(
-	"ppa"=>"030",
-	"vpa"=>"050",
-	"rekl"=>"060",
-    );
-    
-    
+    $att2FolderArray = AplDB::$ATT2FOLDERARRAY;
     
     $kunde = $apl->getKundeFromTeil($teil);
     $kundeGdatPath = $apl->getKundeGdatPath($kunde);
     $ppaDir='';
-//    $vpaDir = '/mnt/gdat/Dat/';
     $gdatPath = "/mnt/gdat/Dat/";
     // seznam dilu
     if ($kundeGdatPath !== NULL) {
-	$ppaDir = $gdatPath . $kundeGdatPath . "/" . $teil . "/" . AplDB::$DIRS_FOR_TEIL[$att2FolderArray[$att]];
+	$ppaDir = $gdatPath . $kundeGdatPath . "/200 Teile/" . $teil . "/" . AplDB::$DIRS_FOR_TEIL_FINAL[$att2FolderArray[$att]];
 	$extensions = 'JPG|jpg|pdf|txt';
 	$filter = "/.*.($extensions)$/";
 	if($att=='rekl'){
@@ -35,9 +31,19 @@ require_once '../db.php';
 	    $docsArray = $apl->getFilesForPath($ppaDir,$filter);
 	}
     }
-
+ 
+    $upDiv="<div id='uploader' folder='$ppaDir'>";
+    $upDiv.="<a id='pickfiles' href='javascript:;'>Dateien auswaehlen</a>";
+    $upDiv.="<div id='filelist'></div>";
+    $upDiv.="</div>";
+    
+    $puser = $_SESSION['user'];
+    if($apl->getDisplaySec('dkopf','uploader',$puser)===FALSE) $upDiv='';
+    
+    //$upDiv.="$puser";
     
     $formDiv = "<div id='dokuform'>";
+    $formDiv.=$upDiv;
     $formDiv.="<table id='dokutable'>";
     $formDiv.="<tr><td style='font-size:x-small;' colspan='5'>";
     $formDiv.="<input type='hidden' id='rootPath' value='0' />";
@@ -81,6 +87,13 @@ require_once '../db.php';
 }
 $formDiv.="</table>";
 $formDiv.= "</div>";
+    
+if($docsArray===NULL){
+    $formDiv = "<div id='dokuform'>";
+    $formDiv.=$upDiv;
+    $formDiv.= "<div class='nodocsinfo'>keine Dateien / žádné soubory k dispozici</div>";
+    $formDiv.= "</div>";
+}
     
     echo json_encode(array(
                             'id'=>$id,

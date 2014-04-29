@@ -35,15 +35,34 @@ class AplDB {
     const TABLE_DZEITSOLL = 'dzeitsoll';
     const TABLE_DKOPF = 'dkopf';
     const TABLE_DOG = 'dog';
+    const DOKUNR_MUSTER = 12; // soll 12
 
-    static $DIRS_FOR_TEIL = array(
-	"001"=>"001 Zeitwirtschaft",
+    static $ATT2FOLDERARRAY = array(
+	"muster"=>"010",
+	"empb"=>"020",
+	"ppa"=>"030",
+	"gpa"=>"040",
+	"vpa"=>"050",
+	"qanf"=>"060",
+	"zeit"=>"070",
+	"liefer"=>"080",
+	"mehr"=>"090",
+	"rekl"=>"100",
+    );
+    
+    static $DIRS_FOR_TEIL_FINAL = array(
+	"010"=>"010 Muster",
+	"020"=>"020 EMPB",
 	"030"=>"030 PPA",
+	"040"=>"040 GPA",
 	"050"=>"050 VPA",
-	"060"=>"060 Reklamation",
-	"070"=>"070 Reklamation(Intern)",
-	"080"=>"080 Mehrarbeit",
+	"060"=>"060 Q-Anforderungen",
+	"070"=>"070 Zeitwirtschaft",
+	"080"=>"080 Lieferbedingung",
+	"090"=>"090 Mehrarbeit",
+	"100"=>"100 Reklamation",
     );    
+
     /**
      * get an instance of then utility class
      * @return AplDB
@@ -535,6 +554,17 @@ class AplDB {
 
     /**
      *
+     * @param type $aussNr 
+     */
+    public function getAussArtArray($arbpapier=FALSE){
+        if($arbpapier===TRUE)
+	    $sql = "select `a-nr` as aussnr,`a-bez` as aussbeschreibung from `auss-art` where druck_arbpapier<>0 order by `a-nr`";
+	else
+	    $sql = "select `a-nr` as aussnr,`a-bez` as aussbeschreibung from `auss-art` where 1 order by `a-nr`";
+        return $this->getQueryRows($sql);
+    }
+    /**
+     *
      * @return type 
      */
     public function getGeeignetArray() {
@@ -719,8 +749,19 @@ class AplDB {
         return mysql_affected_rows();
     }
 
-    public function getPlanSollTagMinuten($plan,$statnr,$dbDatum){
+    /**
+     *
+     * @param type $plan
+     * @param type $statnr
+     * @param type $dbDatum
+     * @param type $beforeDatum if TRUE, get plan for previous Date
+     * @return null 
+     */
+    public function getPlanSollTagMinuten($plan,$statnr,$dbDatum,$beforeDatum=FALSE){
+	$nowDB = date('Y-m-d');
 	$sql="select minuten from plansolltag where (plan='$plan') and (statnr='$statnr') and (datum='$dbDatum')";
+	if($beforeDatum===TRUE)
+		$sql="select sum(minuten) as minuten from plansolltag where (plan='$plan') and (statnr='$statnr') and ((datum<'$dbDatum') and (datum>='$nowDB'))";
 	$rows = $this->getQueryRows($sql);
 	if($rows===NULL) return NULL;
 	return intval($rows[0]['minuten']);
@@ -777,8 +818,11 @@ class AplDB {
      * @param type $plan
      * @param type $dbDatum 
      */
-    public function getPlanSollTagSumme($plan,$dbDatum){
+    public function getPlanSollTagSumme($plan,$dbDatum,$beforeDatum=FALSE){
+	$nowDatumDb = date('Y-m-d');
 	$sql = "select sum(minuten) as sum_minuten from plansolltag where (plan='$plan') and (datum='$dbDatum')";
+	if($beforeDatum===TRUE)
+	    $sql = "select sum(minuten) as sum_minuten from plansolltag where (plan='$plan') and ((datum>='$nowDatumDb') and (datum<'$dbDatum'))";
 	$rows = $this->getQueryRows($sql);
 	if($rows===NULL) return 0;
 	return intval($rows[0]['sum_minuten']);
@@ -2283,6 +2327,22 @@ class AplDB {
      * @param type $value
      * @return type 
      */
+    public function getVPMArray($value=NULL){
+	if($value===NULL){
+	    $sql = "select `art-nr` as verp,`art-name1` as name1,`art-name2` as name2,`art-name3` as name3 from `eink-artikel` where (`art-grp-nr`=1170 or `art-grp-nr`=1175) order by `art-nr`";
+	}
+	else{
+	    $sql = "select `art-nr` as verp,`art-name1` as name1,`art-name2` as name2,`art-name3` as name3 from `eink-artikel` where (`art-grp-nr`=1170 or `art-grp-nr`=1175) and (`art-nr` like '$value%') order by `art-nr`";
+	}
+	
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     *
+     * @param type $value
+     * @return type 
+     */
     public function getDokuTypArray($value=NULL){
 	if($value===NULL){
 	    $sql = "select doku_nr,doku_beschreibung from dokumenttyp order by doku_nr";
@@ -2377,13 +2437,27 @@ class AplDB {
 
     /**
      *
+     * @param type $termin 
+     */
+    public function getZielortAuftrag($termin){
+	$sql.=" select if(zielorte.zielort is null,'',zielorte.zielort) as zielort";
+	$sql.=" from daufkopf";
+	$sql.=" left join zielorte on zielorte.id=daufkopf.zielort_id";
+	$sql.=" where";
+	$sql.=" auftragsnr=$termin";
+	$r = $this->getQueryRows($sql);
+	if($r===NULL) return '';
+	return $r[0]['zielort'];
+    }
+    /**
+     *
      * @param <type> $auftrag
      */
     public function getAuftragInfoArray($auftrag,$kunde=NULL) {
 	if($kunde===NULL)
-	    $sql = "select  auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
+	    $sql = "select  zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
 	else
-	    $sql = "select  auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
+	    $sql = "select  zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
         //echo $sql;
         return $this->getQueryRows($sql);
     }
@@ -2512,10 +2586,13 @@ class AplDB {
 	$sql.=" dauftr.termin,";
 	$sql.=" da1.ausliefer_datum,";
 	$sql.=" da1.ex_datum_soll,";
-	$sql.=" da1.bemerkung";
+	$sql.=" da1.bemerkung,";
+	$sql.=" da1.zielort_id,";
+	$sql.=" zielorte.zielort";
 	$sql.=" from dauftr";
 	$sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
 	$sql.=" left join daufkopf da1 on da1.auftragsnr=substring(dauftr.termin,2)";
+	$sql.=" left join zielorte on da1.zielort_id=zielorte.id";
 	$sql.=" where";
 	$sql.=" daufkopf.kunde='$kunde'";
 	$sql.=" and (dauftr.`auftragsnr-exp` is null and dauftr.`pal-nr-exp` is null)";
@@ -2621,7 +2698,7 @@ class AplDB {
      * @return array 
      */
     public function getTeileNrArrayForKunde($kunde) {
-        $query = "select dkopf.`Teil` as teil from dkopf where dkopf.`Kunde`='$kunde' order by dkopf.`Teil`";
+        $query = "select dkopf.`Teil` as teil,teillang from dkopf where dkopf.`Kunde`='$kunde' order by dkopf.`Teil`";
         $res = mysql_query($query);
         if (mysql_affected_rows() == 0)
             return NULL;
@@ -3605,6 +3682,8 @@ class AplDB {
             $vorjahr = $jahr;
         }
 
+
+	
         $pocetdnu = cal_days_in_month(CAL_GREGORIAN, $vormonat, $vorjahr);
         $bisDatum = sprintf("%04d-%02d-%02d", $vorjahr, $vormonat, $pocetdnu);
         //$sql = "select DATE_FORMAT(datum,'%y%m%d') as datum,stunden from dstddif join dpers on dpers.persnr=dstddif.persnr where dpers.persnr='$persnr' and dstddif.datum<='$bisDatum' and dstddif.datum>=dpers.eintritt  order by datum desc";
@@ -3625,6 +3704,14 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    public function getTeilSchwierigkeiten($teil){
+	$sql = "select schwierigkeitsgrad_S11 as S11,schwierigkeitsgrad_S51 as S51,schwierigkeitsgrad_SO as SO from dkopf where teil='$teil'";
+	$rows=$this->getQueryRows($sql);
+	if($rows===NULL) return NULL;
+	$row = $rows[0];
+	return $row;
+    }
+    
     /**
      *
      * @param type $teil
@@ -3662,10 +3749,10 @@ class AplDB {
     public function getTeilDokument($teil,$dokunr,$newest=TRUE){
 	if($newest===TRUE)
 	    // nejnovejsi zaznam zvoleneho typu
-	    $sql = "select doku_beschreibung,musterplatz,DATE_FORMAT(einlag_datum,'%d.%m.%Y') as einlag_datum,dokumenttyp.doku_nr,if(freigabe_am is not null,DATE_FORMAT(freigabe_am,'%d.%m.%Y'),'') as freigabe_am,freigabe_vom from dteildokument join dokumenttyp on dokumenttyp.doku_nr=dteildokument.doku_nr where teil='$teil' and dteildokument.doku_nr=$dokunr order by einlag_datum desc limit 1";
+	    $sql = "select doku_beschreibung,musterplatz,einlag_datum as ed,DATE_FORMAT(einlag_datum,'%d.%m.%Y') as einlag_datum,dokumenttyp.doku_nr,if(freigabe_am is not null,DATE_FORMAT(freigabe_am,'%d.%m.%Y'),'') as freigabe_am,freigabe_vom from dteildokument join dokumenttyp on dokumenttyp.doku_nr=dteildokument.doku_nr where teil='$teil' and dteildokument.doku_nr=$dokunr order by ed desc limit 1";
 	else
 	    // nejstarsi zaznam bez ohledu na typ dokumentu
-	    $sql = "select doku_beschreibung,musterplatz,DATE_FORMAT(einlag_datum,'%d.%m.%Y') as einlag_datum,dokumenttyp.doku_nr,if(freigabe_am is not null,DATE_FORMAT(freigabe_am,'%d.%m.%Y'),'') as freigabe_am,freigabe_vom from dteildokument join dokumenttyp on dokumenttyp.doku_nr=dteildokument.doku_nr where teil='$teil' order by einlag_datum asc limit 1";
+	    $sql = "select doku_beschreibung,musterplatz,einlag_datum as ed,DATE_FORMAT(einlag_datum,'%d.%m.%Y') as einlag_datum,dokumenttyp.doku_nr,if(freigabe_am is not null,DATE_FORMAT(freigabe_am,'%d.%m.%Y'),'') as freigabe_am,freigabe_vom from dteildokument join dokumenttyp on dokumenttyp.doku_nr=dteildokument.doku_nr where teil='$teil' order by ed asc limit 1";
 	$rows = $this->getQueryRows($sql);
 	if($rows===NULL) 
 	    return NULL;
@@ -3673,6 +3760,23 @@ class AplDB {
 	    $row = $rows[0];
 	    return $row;
 	}
+    }
+    
+    
+    /**
+     *
+     * @param type $dokuId
+     * @param type $fieldName
+     * @param type $val
+     * @return type 
+     */
+    public function updateVPMField($dokuId,$fieldName,$val){
+	if($val===NULL)
+	    $sql = "update dverp set `$fieldName`=null where id=$dokuId limit 1";
+	else
+	    $sql = "update dverp set `$fieldName`='$val' where id=$dokuId limit 1";
+	mysql_query($sql);
+        return mysql_affected_rows();
     }
     
     /**
@@ -3748,6 +3852,17 @@ class AplDB {
         return mysql_affected_rows();
     }
     
+
+    /**
+     *
+     * @param type $teil
+     * @return type 
+     */
+    public function getTeilVPMArray($teil){
+	$sql = "select dverp.id,teil_id as teil,verp_id as verp,verp_stk,bemerkung from dverp where teil_id='$teil' order by verp_id";
+	return $this->getQueryRows($sql);
+    }
+
     /**
      *
      * @param type $teil 
@@ -3759,11 +3874,37 @@ class AplDB {
 
     /**
      *
+     * @param type $dokuId
+     * @return type 
+     */
+    public function delVPM($dokuId){
+	$sql = "delete from dverp where id='$dokuId' limit 1";
+	mysql_query($sql);
+        return mysql_affected_rows();
+    }
+
+    /**
+     *
      * @param type $dokuId 
      */
     public function delTeilDokument($dokuId){
 	$sql = "delete from dteildokument where id='$dokuId' limit 1";
 	mysql_query($sql);
+        return mysql_affected_rows();
+    }
+
+    /**
+     *
+     * @param type $teil
+     * @param type $n_vpm_nr
+     * @param type $n_anzahl
+     * @param type $n_bemerkung
+     * @param type $user
+     * @return type 
+     */
+    public function addTeilVPM($teil,$n_vpm_nr,$n_anzahl,$n_bemerkung,$user){
+	$sql = "insert into dverp (teil_id,verp_id,verp_stk,bemerkung,user) values('$teil','$n_vpm_nr','$n_anzahl','$n_bemerkung','$user')";
+        mysql_query($sql);
         return mysql_affected_rows();
     }
     /**
@@ -3822,7 +3963,7 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
     
-    public function getPlanIstFertig($termin,$datum){
+    public function getPlanIstFertig($termin,$datum,$rmDateTime=NULL){
 	    $sql.=" select ";
 	    $sql.=" dauftr.termin,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
@@ -3838,13 +3979,15 @@ class AplDB {
 	    $sql.=" where";
 	    $sql.=" (dauftr.termin='$termin')";
 	    $sql.=" and (drueck.Datum<='$datum')";
+	    if($rmDateTime!==NULL)
+	    $sql.=" and (drueck.insert_stamp<='$rmDateTime')";
 	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
 	    $sql.=" group by";
 	    $sql.=" dauftr.termin";
 	    return $this->getQueryRows($sql);
     }
 
-        public function getIstFertig($termin,$datum){
+        public function getIstFertig($termin,$datum,$rmDateTime=NULL){
 	    $sql.=" select ";
 	    $sql.=" dauftr.termin,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
@@ -3860,6 +4003,8 @@ class AplDB {
 	    $sql.=" where";
 	    $sql.=" dauftr.termin='$termin'";
 	    $sql.=" and (drueck.Datum='$datum')";
+	    if($rmDateTime!==NULL)
+	    $sql.=" and (drueck.insert_stamp<='$rmDateTime')";
 	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
 	    $sql.=" group by";
 	    $sql.=" dauftr.termin";
@@ -3889,6 +4034,82 @@ class AplDB {
 	$sql.=" dauftr.termin";
 	return $this->getQueryRows($sql);
     }
+    
+    /**
+     *
+     * @param int $von kunde von
+     * @param int $bis kunde bis
+     * @param timestamp $time 
+     */
+    public function getPlanSollProTagArray($von,$bis,$time=NULL,$getsql=FALSE){
+	if($time===NULL){
+	    $sql.=" select ";
+	    $sql.=" dstat.stat_nr as statnr, ";
+	    $sql.=" sum(dispostatnrkunde.vzkd) as sumvzkd";
+	    $sql.=" from dstat";
+	    $sql.=" left join dispostatnrkunde on dispostatnrkunde.statnr=dstat.Stat_Nr";
+	    $sql.=" where";
+	    $sql.=" dispostatnrkunde.kunde between $von and $bis";
+	    $sql.=" group by";
+	    $sql.=" dstat.Stat_Nr";
+	    if($getsql===TRUE) return $sql;
+	    $arr = $this->getQueryRows($sql);
+	    if($arr!==NULL){
+		$rA = array();
+		foreach ($arr as $a){
+		    $rA[$a['statnr']] = $a['sumvzkd'];
+		}
+		return $rA;
+	    }
+	}
+	return NULL;
+    }
+    
+    /**
+     *
+     * @param type $terminAktual
+     * @param type $statnr
+     * @param type $time 
+     */
+    public function getPlanZuBearbeiten($terminAktual,$statnr,$time,$rmDateTime=NULL){
+	$zubearbeiten = 0;
+	
+	// vzkdplan
+	$vzkdPlanArray = $this->getPlanVzKd($terminAktual);
+	if($vzkdPlanArray===NULL)
+	    $vzkdPlan = 0;
+	else{
+	    $index = 'sum_vzkd_'.$statnr;
+	    if($statnr=='sum')
+		$index = 'sum_vzkd';
+	    $vzkdPlan = floatval($vzkdPlanArray[0][$index]);
+	}
+	
+	
+
+	// fertig
+	$fertigPlanArray = $this->getPlanIstFertig($terminAktual, date('Y-m-d',$time),$rmDateTime);
+	if($fertigPlanArray===NULL)
+	    $fertigPlan = 0;
+	else{
+	    $index = 'sum_vzkd_'.$statnr;
+	    if($statnr=='sum')
+		$index = 'sum_vzkd';
+	    $fertigPlan = floatval($fertigPlanArray[0][$index]);
+	}
+	
+	
+	// solltag
+	if($statnr=='sum')
+	    $beforeMins = floatval($this->getPlanSollTagSumme(substr($terminAktual,1), date('Y-m-d',$time), TRUE));
+	else
+	    $beforeMins = floatval($this->getPlanSollTagMinuten(substr($terminAktual,1), $statnr, date('Y-m-d',$time), TRUE));
+	
+	$zubearbeiten = $vzkdPlan-$fertigPlan-$beforeMins;
+	
+	return $zubearbeiten;
+    }
+    
     /**
      *
      * @param type $terminAktual
@@ -3896,7 +4117,7 @@ class AplDB {
      * @param type $bis
      * @param type $time 
      */
-    public function getPlanInfoArray($terminAktual,$von,$bis,$time){
+    public function getPlanInfoArray($terminAktual,$von,$bis,$time,$rmDateTime=NULL){
 	$pIA = array();
 	// pokud uz ma termin po exportu vratim NULL
 	$exSoll = $this->getExDatumSoll(substr($terminAktual,1));
@@ -3907,6 +4128,9 @@ class AplDB {
 	    $exTime = strtotime($this->make_DB_datum($exSoll['ex_datum_soll']));
 	
 	if($time>$exTime) return NULL;
+	
+	if($rmDateTime===NULL) $rmDateTime = date('Y-m-d H:i:s');
+	
 	//1. vzkdplan
 	$vzkdPlanArray = $this->getPlanVzKd($terminAktual);
 	$columnIndex = "vzkdplan";
@@ -3928,7 +4152,7 @@ class AplDB {
 	    $pIA["sum"][$columnIndex] = NULL;
 	}
 	//2. fertig
-	$fertigPlanArray = $this->getPlanIstFertig($terminAktual, date('Y-m-d',$time));
+	$fertigPlanArray = $this->getPlanIstFertig($terminAktual, date('Y-m-d',$time),$rmDateTime);
 	$columnIndex = "fertig";
 	if($fertigPlanArray!==NULL){
 	    $r = $fertigPlanArray[0];
@@ -3959,7 +4183,7 @@ class AplDB {
 	
 
 	//4.ist 
-	$istArray = $this->getIstFertig($terminAktual, date('Y-m-d',$time));
+	$istArray = $this->getIstFertig($terminAktual, date('Y-m-d',$time),$rmDateTime);
 	$columnIndex = "ist";
 	if($istArray!==NULL){
 	    $r = $istArray[0];

@@ -23,6 +23,7 @@ $pcip=get_pc_ip();
 $sql="select auftragsnr,dauftr.teil,`pos-pal-nr` as pal, `stück` as stk,daufkopf.kunde,name1,name2,";
 $sql.=" dkopf.verpackungmenge,teilbez,teillang,gew,`art guseisen` as artguseisen,";
 $sql.=" dkopf.brgew,dkopf.restmengen_verw,";
+$sql.=" dverp.id,dverp.verp_id,dverp.verp_stk,`eink-artikel`.`art-name1` as verp_name,";  
 $sql.="`muster-platz` as musterplatz,DATE_FORMAT(`muster-vom`,'%d.%m.%Y') as mustervom,";
 $sql.=" dpos_id,`abgnr` as taetnr,`TaetBez-Aby-D` as tatbez_d,`TaetBez-Aby-T` as tatbez_t,vzaby,fremdpos,";
 $sql.=" if(`vz-min-aby`<>0,round(60/`vz-min-aby`),0) as ks_hod";
@@ -31,10 +32,12 @@ $sql.=" join daufkopf using(auftragsnr)";
 $sql.=" join dksd on daufkopf.kunde=dksd.kunde";
 $sql.=" join dkopf on dauftr.teil=dkopf.teil";
 $sql.=" join dpos on dauftr.teil=dpos.teil and dauftr.abgnr=dpos.`taetnr-aby`";
+$sql.=" join `dtaetkz-abg` on dpos.`taetnr-aby`=`dtaetkz-abg`.`abg-nr`";
+$sql.=" left join dverp on dauftr.teil=dverp.teil_id";
+$sql.=" left join `eink-artikel` on `eink-artikel`.`art-nr`=dverp.verp_id";
 $sql.=" where ((auftragsnr='$auftragsnr') and (`pos-pal-nr` between '$palvon' and '$palbis') and (`auftragsnr-exp` is null)";
-$sql.=" and (1))";
-$sql.=" order by auftragsnr,pal,taetnr;";
-
+$sql.=" and (1) and (`dtaetkz-abg`.druck_arbpapier<>0))";
+$sql.=" order by auftragsnr,pal,taetnr,id;";
 
 //echo "sql=$sql"."<br>";
 
@@ -75,7 +78,7 @@ $options = array(
 								'musterplatz',
 								'mustervom',
 								'fremdpos',
-								'taetigkeiten'=>array(
+        							'taetigkeiten'=>array(
 									'rootTag'=>'taetigkeiten',
 									'rowTag'=>'taetigkeit',
 									'idColumn'=>'dpos_id',
@@ -84,13 +87,24 @@ $options = array(
 										'tatbez_d',
 										'tatbez_t',
 										'vzaby',
-										'ks_hod'
+										'ks_hod',
+                                                                                'verpackungen'=>array(
+                                                                                        'rootTag'=>'verpackungen',
+                                                                                        'rowTag'=>'verpackung',
+                                                                                        'idColumn'=>'id',
+                                                                                        'elements'=>array(
+                                                                                                'verp_id',
+                                                                                                'verp_stk',
+                                                                                                'verp_name'
+                                                                                        ),
 									),
+                                                                
 								),
 							),
 						),
-					)
-				);
+					),
+                                ),
+			);
 
 // vytahnu si parametry z XML souboru
 // tady ziskam vystup dotazu ve forme XML					

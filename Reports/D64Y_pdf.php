@@ -436,7 +436,8 @@ function drawBehaelterBoxChildsA5($pdf,$row,$column,$popisek,$watermark,$dil,$ex
 
     $pdf->SetFont("Arial", "B", 62);
     if($dil['kunde']==111)
-        $teilnr = substr($dil['teil'], 0, 7).'.'.substr($dil['teil'], 8);
+        //$teilnr = substr($dil['teil'], 0, 7).'.'.substr($dil['teil'], 8);
+	$teilnr = $dil['teil'];
     else
         $teilnr = $dil['teil'];
     
