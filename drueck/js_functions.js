@@ -4,7 +4,8 @@
 var drueck = {};
 
 EventUtil.addEventHandler(window,"resize",rebuildpage);
-EventUtil.addEventHandler(document, "keypress", checkCR);
+//EventUtil.addEventHandler(document, "keypress", checkCR);
+EventUtil.addEventHandler(document, "keydown", checkCR);
 
 $(document).ready(function(){
 
@@ -372,18 +373,22 @@ if(drueck.pole[i]== element){return i;}
 
 function checkCR() {
 	
-	var oEvent = EventUtil.getEvent();
-	
-	//alert("checkCR:oEvent.keyCode="+oEvent.keyCode);			
+    var oEvent = EventUtil.getEvent();
+    //alert("checkCR:oEvent.keyCode="+oEvent.keyCode);			
     var element =  oEvent.target.id;
 
     if (oEvent.keyCode == 13)
     {
 		var i = zjistiId(element) +1;
+		//alert('i='+i+'element='+element);
 		if(i<drueck.pole.length)
 			document.getElementById(drueck.pole[i]).focus();
-		//oEvent.preventDefault();
-	}
+		if(element!='neu'){
+		    oEvent.preventDefault();
+		    return false;
+		}    
+		    
+    }
     else
     {
     	if (oEvent.keyCode == 27) 

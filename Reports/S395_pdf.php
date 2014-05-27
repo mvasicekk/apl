@@ -235,6 +235,15 @@ foreach($teile as $teil){
 		else
 		    $cell = "I:".getValueForNode($teilChilds, 'inventurdatum');
             }
+	    else if($klic=='gew'){
+		$pdf->SetFont("FreeSans", "B", 8);
+		$ob = $a->getVerpackungMenge($teilnr);
+		if($ob!==NULL){
+		    $cell = "VPE=".$ob['verpackungmenge'];
+		}
+		else
+		    $cell = '';
+	    }
             else{
                     $nodeName = "inventur_".$klic;
                     $cell = getValueForNode($skladChilds, $nodeName);

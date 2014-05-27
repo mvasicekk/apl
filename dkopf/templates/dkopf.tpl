@@ -21,9 +21,9 @@
 <script src="js_functions.js" type="text/javascript"></script>
 <script type = "text/javascript" src = "../js/ajaxgold.js"></script>
 <script>
-var promenne = new Array("kz_druck","taetnr","bez_d","bez_t","vzkd","vzaby","KzGut","bedarf_typ","lager_von","lager_nach");
-var onblur_function = new Array("","getDataReturnXml('./validate_taetnr.php?value='+this.value, validate_taetnr);savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);");
-var editovat = new Array(0,0,1,1,1,1,1,1,0,0);
+var promenne = new Array("kz_druck","taetnr","bez_d","bez_t","mittel","vzkd","vzaby","KzGut","bedarf_typ","lager_von","lager_nach");
+var onblur_function = new Array("","getDataReturnXml('./validate_taetnr.php?value='+this.value, validate_taetnr);savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);");
+var editovat = new Array(0,0,1,1,1,1,1,1,1,0,0);
 </script>
 <script type = "text/javascript" src = "js_tablegrid.js"></script>
 <script type="text/javascript" src="../js/colorbox/jquery.colorbox-min.js"></script>
@@ -59,18 +59,22 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 <div id="formular_telo">
 	<form action="">
 	<table cellpadding="1px" class="formulartable" border="0">
-    <tr>
+	<tr>
 		<td>
 	
 			<label for="kunde">Kunde/zakaznik</label>
 			<input onblur="getDataReturnXml('./validate_kunde.php?value='+this.value, validate_kunde);" maxlength='3' size="3" type="text" id="kunde" name="kunde" value="{$kunde_value}"/>
 			<input size='45' type='text' class='hidden' id='kunde_failed' value='Falsche Kundennummer / spatne cislo zakaznika' />
-	
-			<label for="teillang">Originalteilnummer/originalni cislo</label>
-			<input maxlength='35' size="35" type="text" id="teillang" name="teillang" value="{$teillang_value}"/>
 
-            <label for="status">Status</label>
-            <input acturl="dkopf_update.php" maxlength='3' size="3" type="text" id="status" name="status" value="{$status_value}"/>
+			<span style="display:{$display_sec.teillang_sec};" id="teillang_sec">
+			    <label for="teillang">Originalteilnummer/originalni cislo</label>
+			    <input maxlength='35' size="35" type="text" id="teillang" name="teillang" value="{$teillang_value}"/>
+			</span>
+
+			<span style="display:{$display_sec.status_sec};" id="status_sec">
+			    <label for="status">Status</label>
+			    <input acturl="dkopf_update.php" maxlength='3' size="3" type="text" id="status" name="status" value="{$status_value}"/>
+			</span>
 		</td>
 	</tr>
 	<tr>
@@ -87,19 +91,25 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	</tr>
 	<tr>
 		<td>
-	
-			<label for="gew">Nettogewicht/netto vaha</label>
-			<input onblur="js_validate_float(this);" size="6" type="text" id="gew" name="gew" value="{$gew_value}"/>
-	
-			<label for="brgew">Bruttogewicht/brutto vaha</label>
-			<input onblur="js_validate_float(this);" size="6" type="text" id="brgew" name="brgew" value="{$brgew_value}"/>
+			<span style="display:{$display_sec.gew_sec};" id="gew_sec">
+			    <label for="gew">Nettogewicht/netto vaha</label>
+			    <input onblur="js_validate_float(this);" size="6" type="text" id="gew" name="gew" value="{$gew_value}"/>
+			</span>
+			
+			<span style="display:{$display_sec.brgew_sec};" id="brgew_sec">
+			    <label for="brgew">Bruttogewicht/brutto vaha</label>
+			    <input onblur="js_validate_float(this);" size="6" type="text" id="brgew" name="brgew" value="{$brgew_value}"/>
+			</span>
+			
+			<span style="display:{$display_sec.wst_sec};" id="wst_sec">
+			    <label for="wst">Werkst. / material</label>
+			    <input size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>
+			</span>
 
-			<label for="wst">Werkst. / material</label>
-			<input size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>
-
-			<label for="fa">FA</label>
-			<input size="3" type="text" id="fa" name="fa" value="{$fa_value}"/>
-
+			<span style="display:{$display_sec.fa_sec};" id="fa_sec">
+			    <label for="fa">FA</label>
+			    <input size="3" type="text" id="fa" name="fa" value="{$fa_value}"/>
+			</span>
 		</td>
 	</tr>
 	<tr>
@@ -108,82 +118,109 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<label for="jb">Jahresbedarf / rocni spotreba</label>
 			<input size="6" type="text" id="jb" name="jb" value="{$jb_value}"/>
  		-->
-			<label for="vm">Verpackungsmenge / balící předpis</label>
-			<input size="6" type="text" id="vm" name="vm" value="{$vm_value}"/>
-
-			<label for="spg">Stk pro Gehänge</label>
-			<input size="4" type="text" id="spg" name="spg" value="{$spg_value}"/>
-                        
-                        <label for="spg">Restmengenverw.</label>
-                        <input acturl="dkopf_update.php" maxlength="6" size="5" type="text" id="restmengen_verw" name="restmengen_verw" value="{$restmengen_verw_value}"/>
-                </td>
+			<span style="display:{$display_sec.vm_sec};" id="vm_sec">
+			    <label for="vm">Verpackungsmenge / balící předpis</label>
+			    <input size="6" type="text" id="vm" name="vm" value="{$vm_value}"/>
+			</span>
+			
+			<span style="display:{$display_sec.spg_sec};" id="spg_sec">
+			    <label for="spg">Stk pro Gehänge</label>
+			    <input size="4" type="text" id="spg" name="spg" value="{$spg_value}"/>
+                        </span>
+			
+			<span style="display:{$display_sec.restmengen_verw_sec};" id="restmengen_verw_sec">
+			    <label for="restmengen_verw">Restmengenverw.</label>
+			    <input acturl="dkopf_update.php" maxlength="6" size="5" type="text" id="restmengen_verw" name="restmengen_verw" value="{$restmengen_verw_value}"/>
+			</span>
+                </td>	
         </tr>
 	<tr>
 	    <td>
-		letzte Reklamationen :
-		{foreach from=$letzte_reklamationen_array item=reklamation}
-		    <a class='abutton' href='../Reports/S362_pdf.php?report=S362&reklnr={$reklamation.rekl_nr}&reklnr_label=ReklNr&tl_tisk=pdf'>{$reklamation.rekl_nr} ({$reklamation.rekl_datum})</a>&nbsp;
-		{/foreach}
+		<span style="display:{$display_sec.letzterekl_sec};" id="letzterekl_sec">
+		    letzte Reklamationen :
+		    {foreach from=$letzte_reklamationen_array item=reklamation}
+			<a class='abutton' href='../Reports/S362_pdf.php?report=S362&reklnr={$reklamation.rekl_nr}&reklnr_label=ReklNr&tl_tisk=pdf'>{$reklamation.rekl_nr} ({$reklamation.rekl_datum})</a>&nbsp;
+		    {/foreach}
+		</span>
 	    </td>
 	</tr>
 	<tr>
 		<td>
+		    <span style="display:{$display_sec.bemerk_sec};" id="bemerk_sec">
 			<label for="bemerk">Anderungen/Bemerkung / poznamka</label>
 			<input maxlength='55' size="30" type="text" id="bemerk" name="bemerk" value="{$bemerk_value}"/>
-
+		    </span>
+		    
+		    <span style="display:{$display_sec.art_guseisen_sec};" id="art_guseisen_sec">
 			<label for="art_guseisen">Art Gusseisen / druh litiny</label>
 			<input size="10" type="text" id="art_guseisen" name="art_guseisen" value="{$art_guseisen_value}"/>
+		    </span>
 		</td>
 	</tr>
         <tr>
             <td>
-		<label for="preis_stk_gut">Zielpreis gut </label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_gut" value="{$preis_stk_gut_value}"/>
+		<span style="display:{$display_sec.preis_stk_gut_sec};" id="preis_stk_gut_sec">
+		    <label for="preis_stk_gut">Zielpreis gut </label>
+		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_gut" value="{$preis_stk_gut_value}"/>
+		</span>
 
-		<label for="preis_stk_auss">Zielpreis auss </label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_auss" value="{$preis_stk_auss_value}"/>
+		<span style="display:{$display_sec.preis_stk_auss_sec};" id="preis_stk_auss_sec">
+		    <label for="preis_stk_auss">Zielpreis auss </label>
+		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_auss" value="{$preis_stk_auss_value}"/>
+		</span>
 
-      		<label for="fremdauftr_dkopf">Fremdauftr</label>
-                <input acturl="dkopf_update.php" maxlength='50' size="10" type="text" id="fremdauftr_dkopf" value="{$fremdauftr_dkopf_value}"/>
-
+		<span style="display:{$display_sec.fremdauftr_dkopf_sec};" id="fremdauftr_dkopf_sec">
+		    <label for="fremdauftr_dkopf">Fremdauftr</label>
+		    <input acturl="dkopf_update.php" maxlength='50' size="10" type="text" id="fremdauftr_dkopf" value="{$fremdauftr_dkopf_value}"/>
+		</span>
             </td>
 
         </tr>
         <tr>
             <td>
-                <label for="jb_lfd_2">Jahresbedarf (2012)</label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
+		<span style="display:{$display_sec.jbvor_sec};" id="jbvor_sec">
+		    <label for="jb_lfd_2">Jahresbedarf (2012)</label>
+		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
 		
-                <label for="jb_lfd_1">Jahresbedarf (2013)</label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
+		    <label for="jb_lfd_1">Jahresbedarf (2013)</label>
+		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
                 
-                <label for="jb_lfd_j">Jahresbedarf (2014)</label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
+		    <label for="jb_lfd_j">Jahresbedarf (2014)</label>
+		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
+		</span>
             </td>
         </tr>
 	<tr>
 	    <td>
-                <label for="jb_lfd_plus_1">Jahresbedarf (2015)</label>
-                <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
+		<span style="display:{$display_sec.jbfuture_sec};" id="jbfuture_sec">
+		    <label for="jb_lfd_plus_1">Jahresbedarf (2015)</label>
+		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
+		</span>
 	    </td>
 	</tr>
 	<tr>
 	    <td>
-		<label for="schwierigkeitsgrad_S11">Schwierigkeitsgrad S11 / obtížnost S11</label>
-                <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S11" value="{$schwierigkeitsgrad_S11_value}"/>
+		<span style="display:{$display_sec.schwierigkeitsgrad_S11_sec};" id="schwierigkeitsgrad_S11_sec">
+		    <label for="schwierigkeitsgrad_S11">Schwierigkeitsgrad S11 / obtížnost S11</label>
+		    <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S11" value="{$schwierigkeitsgrad_S11_value}"/>
+		</span>
 	    </td>
 	</tr>
 	<tr>
 	    <td>
-		<label for="schwierigkeitsgrad_S51">Schwierigkeitsgrad S51 / obtížnost S51</label>
-                <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S51" value="{$schwierigkeitsgrad_S51_value}"/>
+		<span style="display:{$display_sec.schwierigkeitsgrad_S51_sec};" id="schwierigkeitsgrad_S51_sec">
+		    <label for="schwierigkeitsgrad_S51">Schwierigkeitsgrad S51 / obtížnost S51</label>
+		    <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S51" value="{$schwierigkeitsgrad_S51_value}"/>
+		</span>
 	    </td>
 	</tr>
 
 	<tr>
 	    <td>
-		<label for="schwierigkeitsgrad_SO">Schwierigkeitsgrad SO / obtížnost SO</label>
-                <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_SO" value="{$schwierigkeitsgrad_SO_value}"/>
+		<span style="display:{$display_sec.schwierigkeitsgrad_SO_sec};" id="schwierigkeitsgrad_SO_sec">
+		    <label for="schwierigkeitsgrad_SO">Schwierigkeitsgrad SO / obtížnost SO</label>
+		    <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_SO" value="{$schwierigkeitsgrad_SO_value}"/>
+		</span>
 	    </td>
 	</tr>
 	<tr>
@@ -193,14 +230,19 @@ Arbeitsplan pflegen / Sprava pracovniho planu
                         <table>
                             <tr>
 				 <td>
-				     <input id='showteildoku' type='button' value="TeilDoku" acturl='./showTeilDoku.php' /> <label>( Anzahl Dokumenten : {$pocet_teildoku} )</label>
+				     <span style="display:{$display_sec.showteildoku_sec};" id="showteildoku_sec">
+					<input id='showteildoku' type='button' value="TeilDoku" acturl='./showTeilDoku.php' /> <label>( Anzahl Dokumenten : {$pocet_teildoku} )</label>
+				     </span>
 				 </td>
                                   <td>
-<!--				      <label>Ersteller : </label><input type='text' id='ersteller' size='10' maxlength='10'/>-->
-				     <input class='' type='button' value='Lagerzettel' onclick="location.href='../get_parameters.php?popisky=Teil;DokuNr&promenne=teil;dokunr&values={$teil_value};{29}&report=D515'" />
+				      <span style="display:{$display_sec.showlagerzettel_sec};" id="showlagerzettel_sec">
+					<input id='showlagerzettel' class='' type='button' value='Lagerzettel' onclick="location.href='../get_parameters.php?popisky=Teil;DokuNr&promenne=teil;dokunr&values={$teil_value};{29}&report=D515'" />
+				      </span>
                                  </td>
 				 <td>
-				     <input id='showvpm' type='button' value="VPM" acturl='./showVPM.php' />
+				     <span style="display:{$display_sec.showvpm_sec};" id="showvpm_sec">
+					<input id='showvpm' type='button' value="VPM" acturl='./showVPM.php' />
+				     </span>
 				 </td>
                             </tr>
                         </table>
@@ -261,6 +303,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td>teatnr</td>
 			<td>Bezeichnung (Deutsch)</td>
 			<td>oznaceni (cesky)</td>
+			<td>Mittel</td>
 			<td>vzkd</td>
 			<td>vzaby</td>
 			<td>G</td>
@@ -286,6 +329,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td id='td_select_taetnr{$polozka.dpos_id}' align='right'>{$polozka.taetnr}</td>
 			<td>{$polozka.bez_d}</td>
 			<td>{$polozka.bez_t}</td>
+			<td>{$polozka.mittel}</td>
 			<td align='right'>
 				{if $level gte 9}
 					{$polozka.vzkd|string_format:"%.4f"}
@@ -339,6 +383,15 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td>
 				<input onblur="" maxlength='30' size="30" type="text" id="newbez_t" name="newbez_t" value=""/>
 				<input type='text' class='hidden' id='newbez_t_failed' value='tatnrfehler' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="mittel">Mittel</label>
+			</td>
+			<td>
+				<input onblur="" maxlength='50' size="30" type="text" id="mittel" name="mittel" value=""/>
+				<input type='text' class='hidden' id='mittel_failed' value='tatnrfehler' />
 			</td>
 		</tr>
 		

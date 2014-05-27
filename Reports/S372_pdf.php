@@ -116,13 +116,17 @@ function nuluj_sumy_pole(&$pole)
  * @param int $vyskaradku
  * @param array $rgb
  */
-function pageHeader($pdfobjekt,$aussArtenArray,$vyskaradku,$rgb){
+function pageHeader($pdfobjekt,$aussArtenArray,$vyskaradku,$rgb,$kundenr=NULL){
         global $cells;
         global $reporttyp;
 
     	$pdfobjekt->SetFont("FreeSans", "B", 8.2);
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 
+	//kunde
+	$pdfobjekt->SetFillColor(200,255,200,1);
+	$pdfobjekt->Cell(0,$vyskaradku,'Kunde :'.$kundenr,'0',1,'L',1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
         //teil
         $pdfobjekt->Cell($cells['teil']['sirka'],$vyskaradku,'Teil','0',0,'L',1);
 
@@ -151,10 +155,15 @@ function pageHeader($pdfobjekt,$aussArtenArray,$vyskaradku,$rgb){
         $pdfobjekt->Cell($cells['procent']['sirka'],$vyskaradku,'%Auss','0',0,'R',1);
 
         //a50kg
-        $pdfobjekt->Cell($cells['a50kg']['sirka'],$vyskaradku,'A50[kg]','0',0,'R',1);
+        $pdfobjekt->Cell($cells['a50kg']['sirka'],$vyskaradku,'AT6[kg]','0',0,'R',1);
 
         //gkg
-        $pdfobjekt->Cell($cells['gkg']['sirka'],$vyskaradku,'Gut[kg]','0',0,'R',1);
+	if($reporttyp=='IM')
+	    $obsah = "IM[kg]";
+	else
+	    $obsah = "Gut[kg]";
+	
+        $pdfobjekt->Cell($cells['gkg']['sirka'],$vyskaradku,$obsah,'0',0,'R',1);
 
         $pdfobjekt->Ln();
 }
@@ -196,6 +205,7 @@ function radek_auftrag($pdfobjekt,$vyskaradku,$rgb,$childs,$aussArtArray,$auftra
             $value = 0;
             foreach($aussartenNodes as $aussA){
                 $aussAA = getValueForNode($aussA->childNodes, 'auss_art');
+		$aussTyp = getValueForNode($aussA->childNodes, 'auss_typ');
                 if($aussAA==$aussart){
                     $value = intval (getValueForNode($aussA->childNodes, 'auss_stk'));
                     break;
@@ -203,7 +213,8 @@ function radek_auftrag($pdfobjekt,$vyskaradku,$rgb,$childs,$aussArtArray,$auftra
             }
             
             $summeAuss += $value;
-            if($aussart==50) $summeAuss50 += $value;
+            //if($aussart==50) $summeAuss50 += $value;
+	    if($aussTyp==6) $summeAuss50 += $value;
             $summenTeilArray[$teilnr][$aussart] += $value;
 	    $summenBerichtArray[$aussart] += $value;
 	    $summenKgBerichtArray[$aussart] += ($value*$gew);
@@ -431,7 +442,13 @@ function test_pageoverflow($pdfobjekt,$testvysradku,$cellhead,$vysradku)
 function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$summenArray,$aussArtArray,$summenBerichtArray,$childs)
 {
         global $cells;
+	global $reporttyp;
 
+	if($reporttyp=='IM')
+	    $vonAussText = "von IM";
+	else
+	    $vonAussText = "von (Gut+Auss)";
+	
 	$kundenr = getValueForNode($childs, 'kunde');
         $a50kg = $summenArray['a50kg'];
         $gkg = $summenArray['gkg'];
@@ -441,8 +458,13 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$summenArray,$aussArtArray,$
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 
+	//summe Kunde
+	$pdfobjekt->SetFillColor(200,255,200,1);
+	$pdfobjekt->Cell(0,$vyskaradku,"Summe Kunde ($kundenr)",'0',1,'L',$fill);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	
         // teil
-        $pdfobjekt->Cell($cells['teil']['sirka']+$cells['auftragsnr']['sirka'],$vyskaradku,"Summe Kunde ($kundenr) [Stk]",'0',0,'L',$fill);
+        $pdfobjekt->Cell($cells['teil']['sirka']+$cells['auftragsnr']['sirka'],$vyskaradku,"[Stk]",'0',0,'L',$fill);
 
 	//aussarten
         $sirka = $cells['auss']['sirka'];
@@ -527,8 +549,11 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$summenArray,$aussArtArray,$
 
         // a jeste radek s procentama
         // teil
-        $pdfobjekt->Cell($cells['teil']['sirka']+$cells['auftragsnr']['sirka'],$vyskaradku,'A Gewicht in %','B',0,'L',$fill);
-	$gewGesamt = $summeAuss + $gkg;
+        $pdfobjekt->Cell($cells['teil']['sirka']+$cells['auftragsnr']['sirka'],$vyskaradku,'A Gewicht in % '.$vonAussText,'B',0,'L',$fill);
+	if($reporttyp=='IM')
+	    $gewGesamt = $gkg;
+	else
+	    $gewGesamt = $summeAuss + $gkg;
 	//aussarten
 	$value="";
         $sirka = $cells['auss']['sirka'];
@@ -625,16 +650,18 @@ sort($aussArtenArrayKeys);
 // a ted pujdu po produkt dilech
 $kunden = $domxml->getElementsByTagName("k");
 foreach ($kunden as $kunde) {
+    $kundeChilds = $kunde->childNodes;
+    $kundenr = getValueForNode($kundeChilds, 'kunde');
     // next kunde on new page
     $pdf->AddPage();
-    pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240));
-    $kundeChilds = $kunde->childNodes;
+    pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240),$kundenr);
+    
     $teile = $kunde->getElementsByTagName("teil");
     foreach ($teile as $teil) {
 	$teilChilds = $teil->childNodes;
 	if (test_pageoverflow_nopage($pdf, 5)) {
 	    $pdf->AddPage();
-	    pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240));
+	    pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240),$kundenr);
 	}
 	zahlavi_teil($pdf, 5, array(255, 255, 255), $teilChilds);
 	$auftrags = $teil->getElementsByTagName("auftrag");
@@ -642,20 +669,20 @@ foreach ($kunden as $kunde) {
 	    $auftragChilds = $auftrag->childNodes;
 	    if (test_pageoverflow_nopage($pdf, 5)) {
 		$pdf->AddPage();
-		pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240));
+		pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240),$kundenr);
 	    }
 	    radek_auftrag($pdf, 5, array(255, 255, 255), $auftragChilds, $aussArtenArrayKeys, $auftrag, $teilChilds);
 	}
 
 	if (test_pageoverflow_nopage($pdf, 3 * 5)) {
 	    $pdf->AddPage();
-	    pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240));
+	    pageHeader($pdf, $aussArtenArrayKeys, 5, array(255, 255, 240),$kundenr);
 	}
 	zapati_teil($pdf, 5, array(255, 255, 220), getValueForNode($teilChilds, 'teilnr'), $summenTeilArray, $aussArtenArrayKeys);
     }
-    if(test_pageoverflow_nopage($pdf, 3*5)){
+    if(test_pageoverflow_nopage($pdf, 4*5)){
         $pdf->AddPage();
-        pageHeader($pdf,$aussArtenArrayKeys, 5, array(255,255,240));
+        pageHeader($pdf,$aussArtenArrayKeys, 5, array(255,255,240),$kundenr);
     }
     zapati_sestava($pdf, 5, array(255,255,220), $summenKgBerichtArray, $aussArtenArrayKeys,$summenBerichtArray,$kundeChilds);
     // vzresetovat sumy pro zakaznika

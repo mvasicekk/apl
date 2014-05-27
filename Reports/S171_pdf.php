@@ -15,6 +15,8 @@ $password = $_GET['password'];
 //$qtyp = $_GET['qtyp'];
 $persvon = $_GET['persvon'];
 $persbis = $_GET['persbis'];
+$qtyp = $_GET['qtyp'];
+$qt = $qtyp;
 
 $fullAccess = testReportPassword("S170",$password,$user,0);
 
@@ -577,9 +579,6 @@ foreach ($osobniCisla as $persnr){
         }
     person_zeile($pdf,5,array(255,255,255),$persnr,$personalQualifikationen[$persnr],$qArray,$sirkaKvalifikace);
 }
-//riuh  fiihue  owijoiwj owfiuwhw
-//woij   oijoij nd n
-//
 // a nakonec soucty pro kvalifikace
 if(test_pageoverflow_noNewPage($pdf, 10)){
     $pdf->AddPage();
@@ -587,8 +586,10 @@ if(test_pageoverflow_noNewPage($pdf, 10)){
 }
 zapati_Qualifikationen($pdf,5,array(255,255,200),$qArray,$anzahlQualifikationenAktuell,$anzahlQualifikationenAll,$sirkaKvalifikace);
 
+if($qt=='*'){
 $pdf->AddPage();
 zapati_QualifikationenQTyp($pdf,5,array(240,255,240),$anzQualifikationenQTypAktuell,$anzQualifikationenQTypAll,$anzQualifikationenQTypAll0,$sirkaKvalifikace);
+}
 
 //Close and output PDF document
 $pdf->Output();

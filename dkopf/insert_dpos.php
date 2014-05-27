@@ -12,6 +12,7 @@ dbConnect();
 	
 	$bez_d=urldecode(chop($_GET['bez_d']));
 	$bez_t=urldecode(chop($_GET['bez_t']));
+	$mittel=urldecode(chop($_GET['mittel']));
 	
 	$vzkd=chop($_GET['vzkd']);
 	if($vzkd!='error')
@@ -52,9 +53,9 @@ dbConnect();
 	/////////////////////////////////////////////////////////////////////////////////////
 	
 	mysql_query('set names utf8');
-	$sql="insert into dpos (teil,kzgut,`taetnr-aby`,`taetbez-aby-d`,`taetbez-aby-t`,`vz-min-kunde`,`vz-min-aby`,";
+	$sql="insert into dpos (teil,kzgut,`taetnr-aby`,`taetbez-aby-d`,`taetbez-aby-t`,`mittel`,`vz-min-kunde`,`vz-min-aby`,";
 	$sql.="lager_von,lager_nach,bedarf_typ)";
-	$sql.=" values ('$teil','$kzgut','$taetnr','$bez_d','$bez_t','$vzkd','$vzaby',";
+	$sql.=" values ('$teil','$kzgut','$taetnr','$bez_d','$bez_t','$mittel','$vzkd','$vzaby',";
 	$sql.=" '$lager_von','$lager_nach','$bedarf_typ')";
 	
 	$result=mysql_query($sql);

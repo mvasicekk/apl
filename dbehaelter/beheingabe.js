@@ -19,7 +19,7 @@ $(document).ready(function(){
     }
 
 
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();
@@ -212,7 +212,7 @@ function addEventHandlerrToStkInputs(){
         this.select();
     });
 
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();

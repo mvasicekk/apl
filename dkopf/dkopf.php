@@ -116,7 +116,7 @@ $smarty = new Smarty;
 
   
 		// vytahnout informace o pracovnim planu
-		$sql="select dpos_id,`kz-druck` as kz_druck,`TaetNr-Aby` as taetnr,`TaetBez-Aby-D` as bez_d,
+		$sql="select dpos_id,`kz-druck` as kz_druck,mittel,`TaetNr-Aby` as taetnr,`TaetBez-Aby-D` as bez_d,
 		`TaetBez-Aby-T` as bez_t,`VZ-min-kunde` as vzkd,`VZ-min-aby` as vzaby,
 		KzGut,bedarf_typ,lager_von,lager_nach from dpos where (teil='".$_GET['teil']."') order by taetnr asc,stamp desc";
 		
@@ -165,10 +165,14 @@ $smarty = new Smarty;
 		    "show_att_liefer",
 		    "show_att_mehr",
 		    "show_att_rekl",
+		    "teillang_sec",
+		    "status_sec",
+		    "gew_sec",
+		    "brgew_sec",
 		);
 		$puser = $_SESSION['user'];
 		foreach ($elementsIdArray as $elementId){
-		    $display_sec[$elementId] = $a->getDisplaySec('dkopf',$elementId,$puser)?'block':'none';
+		    $display_sec[$elementId] = $a->getDisplaySec('dkopf',$elementId,$puser)?'inline-block':'none';
 		}
 		$smarty->assign("display_sec",$display_sec);
 	}

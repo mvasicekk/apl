@@ -34,6 +34,7 @@ if($reporttyp=='IM'){
     $pt.="     dkopf.gew as netto_gew,";
     $pt.="     drueck.AuftragsNr as auftragsnr,";
     $pt.="     drueck.`auss-art` as auss_art,";
+    $pt.="     drueck.`auss_typ`,";
     $pt.="     sum(drueck.`Auss-Stück`) as auss_stk";
     $pt.=" from drueck";
     $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
@@ -56,6 +57,7 @@ else{
     $pt.="     dkopf.gew as netto_gew,";
     $pt.="     dauftr.`auftragsnr-exp` as auftragsnr,";
     $pt.="     drueck.`auss-art` as auss_art,";
+    $pt.="     drueck.`auss_typ`,";
     $pt.="     sum(drueck.`Auss-Stück`) as auss_stk";
     $pt.=" from drueck";
     $pt.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.teil=drueck.teil and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.taetnr";
@@ -80,12 +82,17 @@ $db->query("drop view $viewname");
 
 if($reporttyp=='IM'){
     $pt="create view $viewname";
-    $pt.=" as SELECT drueck.teil,drueck.auftragsnr,sum(drueck.`Stück`) as gut_stk";
-    $pt.=" FROM `drueck`";
-    $pt.=" join dauftr on drueck.teil=dauftr.teil and drueck.taetnr=dauftr.abgnr and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.auftragsnr=dauftr.auftragsnr";
-    $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
-    $pt.=" WHERE (($datum between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G'))";
-    $pt.=" group by drueck.teil,drueck.auftragsnr";
+//    $pt.=" as SELECT drueck.teil,drueck.auftragsnr,sum(drueck.`Stück`) as gut_stk";
+//    $pt.=" FROM `drueck`";
+//    $pt.=" join dauftr on drueck.teil=dauftr.teil and drueck.taetnr=dauftr.abgnr and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.auftragsnr=dauftr.auftragsnr";
+//    $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
+//    $pt.=" WHERE (($datum between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G'))";
+//    $pt.=" group by drueck.teil,drueck.auftragsnr";
+    $pt.=" as SELECT dauftr.teil,dauftr.auftragsnr,sum(dauftr.`Stück`) as gut_stk";
+    $pt.=" FROM `dauftr`";
+    $pt.=" join daufkopf on daufkopf.auftragsnr=dauftr.AuftragsNr";
+    $pt.=" WHERE ((daufkopf.aufdat between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G'))";
+    $pt.=" group by dauftr.teil,dauftr.auftragsnr";
 }
 else{
     $pt="create view $viewname";
@@ -105,7 +112,7 @@ $db->query($pt);
 $pt_D362=$pcip.$views[0];
 $pt_D362_gutstk=$pcip.$views[1];
 
-$sql=" select kunde,teil,netto_gew,auftragsnr,auss_art,auss_stk,";
+$sql=" select kunde,teil,netto_gew,auftragsnr,auss_art,auss_typ,auss_stk,";
 $sql.=" gut_stk";
 $sql.=" from $pt_D362 left join $pt_D362_gutstk using(teil,auftragsnr)";
 
@@ -147,6 +154,7 @@ $options = array(
 			    'idColumn' => 'auss_art',
 			    'elements' => array(
 				'auss_art',
+				'auss_typ',
 				'auss_stk',
 				'netto_gew',
 			    )

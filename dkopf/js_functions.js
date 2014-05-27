@@ -391,7 +391,7 @@ function checkCR() {
 	}
 }
   
-EventUtil.addEventHandler(document, "keypress", checkCR);
+EventUtil.addEventHandler(document, "keydown", checkCR);
 EventUtil.addEventHandler(window,"load",init);
 EventUtil.addEventHandler(window,"resize",rebuildpage);
 
@@ -710,6 +710,7 @@ function insertposition()
 	parametry+='tatnr='+encodeControlValue('newtatnr');
 	parametry+='&bez_d='+encodeControlValue('newbez_d');
 	parametry+='&bez_t='+encodeControlValue('newbez_t');
+	parametry+='&mittel='+encodeControlValue('mittel');
 	parametry+='&vzkd='+encodeControlValue('newvzkd');
 	parametry+='&vzaby='+encodeControlValue('newvzaby');
 	parametry+='&kzgut='+encodeControlValue('newkzgut');

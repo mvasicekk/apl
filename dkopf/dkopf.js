@@ -247,7 +247,8 @@ function showVPM(event){
 }
 
 /**
- *
+ * vlastni zobrazeni divu s prilohama + odkazy ke stazeni
+ * 
  */
 function updateshowTeilAtt(data){
     if($('#dokuform').length!=0){
@@ -263,6 +264,7 @@ function updateshowTeilAtt(data){
 	if(data.id=='show_att_mehr') return;	
 	if(data.id=='show_att_rekl') return;
     }
+    // data jsou k dispozici
     if(data.docsArray!=null){
 	$('body').append(data.formDiv);
 	//priradim udalostni procedury pro slozky
@@ -274,20 +276,24 @@ function updateshowTeilAtt(data){
 	    maxWidth:'90%',
 	    maxHeight:'90%'
 	});
+	console.log(data.docsArray);
     }
     else{
+	//automaticke zavreni divu pri neaktivite
 	//alert('Keine Dateien / žádné soubory');
 	$('body').append(data.formDiv);
 //	$("#dokuform").fadeIn('slow').animate({opacity: 1.0}, 1500).effect("pulsate", { times: 2 }, 800).fadeOut('slow');
 //	if($('#dokuform').length!=0) $('#dokuform').remove();
     }
 
-    ppaDir = $('#uploader').attr('folder');
+    ppaDir = $('div[id^=uploader_]').attr('folder');
+    upid = $('div[id^=uploader_]').attr('id');
+    //alert(ppaDir+':'+upid);
     var uploader = new plupload.Uploader({
 	    runtimes: 'html5,flash,browserplus',
 	    flash_swf_url: '../plupload/js/plupload.flash.swf',
 	    browse_button: 'pickfiles',
-	    container: 'uploader',
+	    container: upid,
 	    url: '../upload.php?savepath='+ppaDir
 	});
     
@@ -316,18 +322,23 @@ function updateshowTeilAtt(data){
 	uploader.bind('FileUploaded', function(up, file) {
 	    //$('#' + file.id + " b").html("uloženo");
 	    $('#' + file.id).remove();
-	    // pomoci ajaxu udelam zaznam do DB
-	    acturl = '{!$acturl}';
-	    $.post(
-		acturl,
-		{
-		    filename:file.name
-		},
-		function(data){
-		    updateSaveDokument(data);
-		},
-		'json'
-	    );
+	    console.log('file uploaded');
+//	    // pomoci ajaxu udelam zaznam do DB
+//	    acturl = '{!$acturl}'; // neni definovano v sablone
+//	    zapis do db udelam na pozadi
+//	    pokusny zaznam bude mit 87 bytu
+//	    $.post(
+//		acturl,
+//		{
+//		    filename:file.name
+//		},
+//		function(data){
+//		    updateSaveDokument(data);
+//		},
+//		'json'
+//	    );
+//	tretina scrollbaru pujde nahoru
+
 	});
 
 }

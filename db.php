@@ -135,7 +135,7 @@ class AplDB {
     }
 
     /**
-     *
+     * wrapper pro mysql_query
      * @param string $sql 
      */
     public function query($sql){
@@ -385,7 +385,7 @@ class AplDB {
     }
 
     /**
-     *
+     * pro uvodni stranku apl
      * @return array
      */
     public function getAbyInfoMinuten(){
@@ -431,7 +431,8 @@ class AplDB {
     }
     
     /**
-     *
+     * get the last ma_rechnr from daufkopf
+     * 
      * @param type $auftragsnr
      * @return type 
      */
@@ -518,10 +519,20 @@ class AplDB {
 
     /**
      *
-     * @param type $persnr
-     * @param type $qalid
-     * @param type $soll
-     * @param type $ist 
+     * @return type 
+     */
+    public function getQualifikationsTypenArrayS171() {
+        $sql = "select dfaehigkeittyp.beschreibung as typ from dfaehigkeittyp where stat_nr between 'Q0011G' and 'Q0061' order by stat_nr";
+        
+        return $this->getQueryRows($sql);
+    }
+
+    /**
+     *
+     * @param int $persnr
+     * @param array $qalid
+     * @param int $soll
+     * @param int $ist 
      */
     public function addQualifikationen($persnr, $qalid, $soll, $ist) {
         if (is_array($qalid)) {
@@ -542,7 +553,7 @@ class AplDB {
 
     /**
      *
-     * @param <type> $typid 
+     * @param int $typid 
      */
     public function getQualifikationenProQTyp($typid) {
         if ($typid === NULL)
@@ -563,6 +574,7 @@ class AplDB {
 	    $sql = "select `a-nr` as aussnr,`a-bez` as aussbeschreibung from `auss-art` where 1 order by `a-nr`";
         return $this->getQueryRows($sql);
     }
+
     /**
      *
      * @return type 
@@ -2694,11 +2706,62 @@ class AplDB {
 
     /**
      *
+     * @param type $teil
+     * @param type $im
+     * @param type $term 
+     */
+    public function getPaletteMitAuftragTeil($term, $im = NULL, $teil = NULL) {
+	if (($im === NULL) || ($teil === NULL))
+	    return NULL;
+	$sql = "select distinct `pos-pal-nr` as pal from dauftr where (auftragsnr='$im') and (teil='$teil') and (`pos-pal-nr' like '$term%')";
+	if ($term == '')
+	    $sql = "select distinct `pos-pal-nr` as pal from dauftr where (auftragsnr='$im') and (teil='$teil')";
+
+	$res = mysql_query($sql);
+	if (mysql_affected_rows() == 0 || $res === FALSE)
+	    return NULL;
+	else {
+	    $rows = array();
+	    while ($row = mysql_fetch_assoc($res))
+		array_push($rows, $row);
+	    return $rows;
+	}
+    }
+
+    /**
+     *
+     * @param type $teil
+     * @param type $term 
+     */
+    public function getImporteMitTeil($teil=NULL,$term=NULL){
+	$sql = "select distinct auftragsnr from dauftr where (auftragsnr like '$term%') and (teil='$teil') order by auftragsnr";
+	if($term=='')
+	    $sql = "select distinct auftragsnr from dauftr where (teil='$teil') order by auftragsnr";
+	if($teil===NULL){
+	    $sql = "select auftragsnr from daufkopf where (auftragsnr like '$term%') order by auftragsnr";
+	}
+	
+	$res = mysql_query($sql);
+        if (mysql_affected_rows() == 0 || $res===FALSE)
+            return NULL;
+        else {
+            $rows = array();
+            while ($row = mysql_fetch_assoc($res))
+                array_push($rows, $row);
+            return $rows;
+        }
+    }
+    
+    
+    /**
+     *
      * @param <type> $kunde
      * @return array 
      */
-    public function getTeileNrArrayForKunde($kunde) {
+    public function getTeileNrArrayForKunde($kunde=NULL,$teil=NULL) {
         $query = "select dkopf.`Teil` as teil,teillang from dkopf where dkopf.`Kunde`='$kunde' order by dkopf.`Teil`";
+	if($kunde===NULL)
+	    $query = "select dkopf.`Teil` as teil,teillang,kunde,teilbez from dkopf where (teil like '%$teil%') order by dkopf.kunde,dkopf.`Teil`";
         $res = mysql_query($query);
         if (mysql_affected_rows() == 0)
             return NULL;
@@ -5518,8 +5581,10 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
     /**
      * vrati seznam skladu z tabulky dlager 
      */
-    function getLagerArray() {
-        $sql = "select dlager.`Lager` as kz,dlager.`LagerBeschreibung` as beschreibung from dlager order by dlager.`Lager`";
+    function getLagerArray($lager=NULL) {
+	$sql = "select dlager.`Lager` as kz,dlager.`LagerBeschreibung` as beschreibung from dlager where dlager.lager like '$lager%' order by dlager.`Lager`";
+	if($lager===NULL)
+	    $sql = "select dlager.`Lager` as kz,dlager.`LagerBeschreibung` as beschreibung from dlager order by dlager.`Lager`";
         $result = mysql_query($sql, $this->con) or die(mysql_errno());
         $lagerArray = null;
         while ($row = mysql_fetch_array($result)) {

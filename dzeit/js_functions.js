@@ -580,7 +580,7 @@ function checkCR() {
 	
 }
   
-EventUtil.addEventHandler(document, "keypress", checkCR);
+EventUtil.addEventHandler(document, "keydown", checkCR);
 
 
 function beforeSubmit(){

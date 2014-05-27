@@ -16,7 +16,7 @@ $(document).ready(function(){
     }
 
 
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();
@@ -31,7 +31,7 @@ $(document).ready(function(){
     });
 
 //    $('#repneu').hide();
-    $('#repneu').keypress(function(event){
+    $('#repneu').keydown(function(event){
         if(event.keyCode==13) $('#repneu').click();
     });
 

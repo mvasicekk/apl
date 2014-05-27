@@ -44,11 +44,11 @@ $(document).ready(function(){
         );
     });
 
-    $('input[id=enter]').keypress(function(event){
+    $('input[id=enter]').keydown(function(event){
         if(event.keyCode==13) $('#enter').click();
     });
 
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();

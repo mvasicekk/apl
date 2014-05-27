@@ -37,7 +37,7 @@ function updateInfoPanelClick(data){
     }
     //inputy.css({'background-color':'green'});
     //alert(inputy);
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();
@@ -103,7 +103,7 @@ function updateInfoPanelClick2(data){
     }
     //inputy.css({'background-color':'green'});
     //alert(inputy);
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();
@@ -169,7 +169,7 @@ function updateInfoPanelClick3(data){
     }
     //inputy.css({'background-color':'green'});
     //alert(inputy);
-    inputy.bind('keypress',function(e){
+    inputy.bind('keydown',function(e){
         var key = e.which;
         if(key==13){
             e.preventDefault();

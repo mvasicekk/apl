@@ -74,6 +74,14 @@ if($qTA!==NULL){
 }
 $smarty->assign("qtypen",join(',',$qtypenA));
 
+$qtypenA = array();
+array_push($qtypenA, '*');
+$qTA = $apl->getQualifikationsTypenArrayS171();
+if($qTA!==NULL){
+    foreach ($qTA as $typ) array_push ($qtypenA, $typ['typ']);
+}
+$smarty->assign("qtypenS171",join(',',$qtypenA));
+
 
 // seznam vsech OES
 $oes = array();

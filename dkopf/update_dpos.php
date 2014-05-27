@@ -12,6 +12,7 @@ dbConnect();
 
 	$bez_d=chop($_GET['bez_d']);
 	$bez_t=chop($_GET['bez_t']);
+	$mittel=chop($_GET['mittel']);
 	
 	$vzkd=chop($_GET['vzkd']);
 	// nahradit desetinnou carku teckama
@@ -44,7 +45,7 @@ dbConnect();
 	/////////////////////////////////////////////////////////////////////////////////////
 	
 	mysql_query('set names utf8');
-	$sql="update dpos set `TaetNr-Aby`='".$taetnr."' ,`TaetBez-Aby-D`='".$bez_d."' ,`TaetBez-Aby-T`='".$bez_t."' ,`VZ-min-kunde`='".$vzkd."' ,`vz-min-aby`='".$vzaby."' ";
+	$sql="update dpos set `TaetNr-Aby`='".$taetnr."' ,`TaetBez-Aby-D`='".$bez_d."' ,`TaetBez-Aby-T`='".$bez_t."' ,`mittel`='".$mittel."' ,`VZ-min-kunde`='".$vzkd."' ,`vz-min-aby`='".$vzaby."' ";
 	$sql.=" ,`kzgut`='".$KzGut."',lager_von='".$lager_von."' ,lager_nach='".$lager_nach."' ,bedarf_typ='".$bedarf_typ."'";
 	$sql.=" where (dpos_id=".$dpos_id.")";
 	

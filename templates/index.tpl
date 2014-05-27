@@ -195,7 +195,7 @@ function logout()
 		</td>
 	</tr>
 	<tr>
-		<td><input disabled {popup text="pridat do skladu"} type="button" value="Lagerzugänge / pridani do skladu" id="lagerbew" class="abyStartButton" onClick="location.href='./dlager/dlager_zugang.php'" /></td>
+		<td><input disabled {popup text="lagerumbuchung"} type="button" value="Lagerumbuchung / pridani do skladu" id="lagerbew" class="abyStartButton" onClick="location.href='./dlager/umbuchung.php'" /></td>
 		<td><input disabled {popup text="Sprava skladu .."} type="button" value="Lager Inventur" id="lagerstk" class="abyStartButton" onClick="location.href='./dlagstk/dlagstk.php'" /></td>
 	</tr>
 	<tr>

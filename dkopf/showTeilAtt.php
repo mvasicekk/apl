@@ -32,13 +32,14 @@ require_once '../db.php';
 	}
     }
  
-    $upDiv="<div id='uploader' folder='$ppaDir'>";
+    $upDiv="<div id='uploader_$att' folder='$ppaDir'>";
     $upDiv.="<a id='pickfiles' href='javascript:;'>Dateien auswaehlen</a>";
     $upDiv.="<div id='filelist'></div>";
     $upDiv.="</div>";
     
     $puser = $_SESSION['user'];
-    if($apl->getDisplaySec('dkopf','uploader',$puser)===FALSE) $upDiv='';
+    $upid = 'uploader_'.$att;
+    if($apl->getDisplaySec('dkopf',$upid,$puser)===FALSE) $upDiv='';
     
     //$upDiv.="$puser";
     

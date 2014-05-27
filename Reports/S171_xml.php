@@ -46,8 +46,12 @@ $sql.= " where";
 $sql.= "    (dpers.austritt is null or dpers.eintritt>dpers.austritt)";
 $sql.= "    and (dpers.dpersstatus='MA')";
 $sql.= "    and (dpersfaehigkeit.persnr between '$persvon' and '$persbis')";
-if($qtyp!='*')
-    $sql .= " and dfaehigkeittyp.stat_nr between 'Q0011' and 'Q0061'";
+//2014-04-30
+if($qtyp!='*'){
+    $sql.= "    and (dpersfaehigkeit.soll<>0)";
+    $sql.= "   and (dfaehigkeittyp.beschreibung='$qtyp')";
+}
+$sql .= " and (dfaehigkeittyp.stat_nr between 'Q0011G' and 'Q0061')";
 $sql.= " order by";
 $sql.= "    dfaehigkeittyp.stat_nr,";
 $sql.= "    dpersfaehigkeit.persnr,";

@@ -432,7 +432,7 @@ function checkCR() {
     } 
 }
   
-EventUtil.addEventHandler(document, "keypress", checkCR);
+EventUtil.addEventHandler(document, "keydown", checkCR);
 EventUtil.addEventHandler(window,"onload",init);
 
 

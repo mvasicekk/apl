@@ -72,7 +72,7 @@ $sql.= "    (dpers.austritt is null or dpers.eintritt>dpers.austritt)";
 $sql.= "    and (dpers.dpersstatus='MA')";
 $sql.= "    and (dpersfaehigkeit.persnr between '$persvon' and '$persbis')";
 if($qtyp!='*')
-    $sql .= " and dfaehigkeittyp.beschreibung='$qtyp'";
+    $sql .= " and (dfaehigkeittyp.beschreibung='$qtyp')";
 $sql.= " order by";
 $sql.= "    dfaehigkeittyp.stat_nr,";
 $sql.= "    dpersfaehigkeit.persnr,";

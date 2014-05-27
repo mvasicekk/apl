@@ -43,7 +43,15 @@ if ((trim($latest_filename) != trim($lastParsedFileFromDB)) || ($latest_filesize
         echo "chyba pri parsovani dokumentu\n";
         exit;
     }
-    
+   
+// casove servery
+//IP: 212.65.193.4
+//IP: 212.65.242.210
+//IP: 147.228.57.10
+//IP: 147.228.52.11
+//IP: 62.24.64.9
+//IP: 193.85.3.51
+//IP: 81.95.96.3
 // projit vsechny elementy event
 // <event> </event>
 // // vzdy pro  jeden import
@@ -57,7 +65,8 @@ if ((trim($latest_filename) != trim($lastParsedFileFromDB)) || ($latest_filesize
         $datetime = date('Y-m-d H:i:s', intval($time));
         $type = $event->getAttribute('type');
         $address = $event->getAttribute('address');
-        $badgenumber = $event->getAttribute('badgenumber');
+	// misto badgenumber je ted jen number
+        $badgenumber = $event->getAttribute('number');
         $reason = $event->getAttribute('reason');
         $persnr = intval($event->getAttribute('persno'));
 
@@ -65,7 +74,8 @@ if ((trim($latest_filename) != trim($lastParsedFileFromDB)) || ($latest_filesize
         $insertedRows = $a->insertEdataEvent($class, $idevent, $time, $datetime, $type, $address, $badgenumber, $reason, $persnr);
 //    echo "insertedRows = $insertedRows\n";
     }
-
+    // ukladani do logu jde dolu
+    // 
     //nakonec ulozim info o parsovani do edatalogs
     echo "vkladam $latest_filename do DB\n";
     $info = $a->insertLastEdataFile(trim($latest_filename),$latest_filesize);
