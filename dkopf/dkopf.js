@@ -7,6 +7,7 @@ $(document).ready(function(){
 
     $('#showteildoku').bind('click',showTeilDoku);
     $('#showvpm').bind('click',showVPM);
+    $('#showima').bind('click',showIMA);
     // shows Teil Attachment
     $('#show_att_muster').bind('click',showTeilAtt);
     $('#show_att_empb').bind('click',showTeilAtt);
@@ -18,6 +19,7 @@ $(document).ready(function(){
     $('#show_att_liefer').bind('click',showTeilAtt);
     $('#show_att_mehr').bind('click',showTeilAtt);
     $('#show_att_rekl').bind('click',showTeilAtt);
+    
 
     $('#accordion').accordion();
     
@@ -215,6 +217,11 @@ function showTeilAtt(event){
         );    
 }
 
+function showImaNewDiv(event){
+    //alert('showimanewdiv');
+    $('#imanewdiv').toggle(500);
+}
+
 function showTeilDoku(event){
     element = $('#showteildoku');
     var id=element.attr('id');
@@ -226,6 +233,130 @@ function showTeilDoku(event){
         },
         function(data){
             updateshowTeilDoku(data);
+        },
+        'json'
+        );    
+}
+
+
+/**
+ *
+ *
+ *
+ */
+
+function imaSelectAuftragsnrArray(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    var imarrayValue = $('#ima_imarray').val();
+    if(id=='ima_select_auftragsnr_e') imarrayValue = $('#ima_imarray_e').val();
+    $.post(acturl,
+    {
+	id:id,
+	teil:$('#teil').val(),
+	imarray:imarrayValue
+    },
+    function(data){
+	updateshowSelectAuftragsnrArray(data);
+    },
+    'json'
+    );    
+}
+
+/**
+ *
+ *
+ *
+ */
+
+function imaSelectTatArray(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    var	imVal = $('#ima_imarray').val();
+    var	palVal = $('#ima_palarray').val();
+    var tatVal = $('#ima_tatarray').val();
+    
+    if(id=='ima_select_tat_e'){
+	imVal = $('#ima_imarray_e').val();
+	palVal = $('#ima_palarray_e').val();
+	tatVal = $('#ima_tatarray_e').val();
+    }
+
+    $.post(acturl,
+    {
+	id:id,
+	teil:$('#teil').val(),
+	imarray:imVal,
+	palarray:palVal,
+	tatarray:tatVal
+    },
+    function(data){
+	updateshowSelectTatArray(data);
+    },
+    'json'
+    );    
+}
+
+/**
+ *
+ *
+ *
+ */
+
+function imaSelectPalArray(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    imarrayValue = $('#ima_imarray').val();
+    palarrayValue = $('#ima_palarray').val();
+    
+    if(id=='ima_select_pal_e'){
+	imarrayValue = $('#ima_imarray_e').val();
+	palarrayValue = $('#ima_palarray_e').val();
+    }
+    
+    $.post(acturl,
+    {
+	id:id,
+	teil:$('#teil').val(),
+	imarray:imarrayValue,
+	palarray:palarrayValue
+    },
+    function(data){
+	updateshowSelectPalArray(data);
+    },
+    'json'
+    );    
+}
+/**
+ *
+ *
+ */
+
+function showIMA(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowIMA(data);
+        },
+        'json'
+        );    
+}
+
+function imaEdit(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowEditIMA(data);
         },
         'json'
         );    
@@ -244,6 +375,12 @@ function showVPM(event){
         },
         'json'
         );    
+}
+
+function removeSelectForms(){
+    if($('#imaselectimform').length!=0)	$('#imaselectimform').remove();
+    if($('#imaselectpalform').length!=0) $('#imaselectpalform').remove();
+    if($('#imaselecttatform').length!=0) $('#imaselecttatform').remove();
 }
 
 /**
@@ -367,6 +504,321 @@ function updateFolder(event){
         },
         'json'
         );    
+}
+
+
+function updateshowSelectAuftragsnrArray(data){
+    // zobrazit editovaci div
+    if($('#imaselectimform').length!=0){
+            $('#imaselectimform').remove();
+	    return;
+        }
+    $('body').append(data.formDiv);
+    $('input:checkbox[id^=selim]').bind('click',imselectclick);
+}
+
+function updateshowSelectPalArray(data){
+    // zobrazit editovaci div
+    if($('#imaselectpalform').length!=0){
+            $('#imaselectpalform').remove();
+	    return;
+        }
+    $('body').append(data.formDiv);
+    $('input:checkbox[id^=selpal]').bind('click',palselectclick);
+}
+
+function updateshowSelectTatArray(data){
+    // zobrazit editovaci div
+    if($('#imaselecttatform').length!=0){
+            $('#imaselecttatform').remove();
+	    return;
+        }
+    $('body').append(data.formDiv);
+    $('input:checkbox[id^=seltat]').bind('click',tatselectclick);
+    $('input[id^=seltatvzaby]').bind('change',tatselectclick);
+}
+
+function imselectclick(event){
+    //seznam vsech zaskrtnutych checkboxu
+    var idcko = $(this).attr('id');
+    //musim najit posledni podtrzitko v retezci
+    podtrzitkoIndex = idcko.lastIndexOf('_');
+    //test jestli pred podtrzitkem e
+    var e = idcko.substr(podtrzitkoIndex-1,1);
+    var suffix='';
+    var selector = 'input:checkbox[id^=selim_]:checked';
+    if(e=='e'){
+	suffix='_e';
+	selector = 'input:checkbox[id^=selime_]:checked';
+    }
+
+    //alert('imselectclick '+$(this).attr('id'));
+    var imlist = '';
+    $(selector).each(function(){
+	imnr = $(this).attr('id').substr(podtrzitkoIndex+1);
+	imlist+=imnr+';';
+    });
+    if(imlist.length>0) imlist = imlist.substring(0,imlist.length-1);
+    //alert(e);
+    $('#ima_imarray'+suffix).val(imlist);
+    if(e=='e') imaEditFieldChanged(idcko);
+}
+
+function palselectclick(event){
+    var idcko = $(this).attr('id');
+    //musim najit posledni podtrzitko v retezci
+    podtrzitkoIndex = idcko.lastIndexOf('_');
+    //test jestli pred podtrzitkem e
+    var e = idcko.substr(podtrzitkoIndex-1,1);
+    var suffix='';
+    var selector = 'input:checkbox[id^=selpal_]:checked';
+    if(e=='e'){
+	suffix='_e';
+	selector = 'input:checkbox[id^=selpale_]:checked';
+    }
+
+    //seznam vsech zaskrtnutych checkboxu
+    var imlist = '';
+    $(selector).each(function(){
+	imnr = $(this).attr('id').substr(podtrzitkoIndex+1);
+	imlist+=imnr+';';
+    });
+    if(imlist.length>0) imlist = imlist.substring(0,imlist.length-1);
+    $('#ima_palarray'+suffix).val(imlist);
+    if(e=='e') imaEditFieldChanged(idcko);
+}
+
+function tatselectclick(event){
+    var idcko = $(this).attr('id');
+    //musim najit posledni podtrzitko v retezci
+    podtrzitkoIndex = idcko.lastIndexOf('_');
+    //test jestli pred podtrzitkem e
+    var e = idcko.substr(podtrzitkoIndex-1,1);
+    var suffix='';
+    var esuffix='';
+    var selector = 'input:checkbox[id^=seltat_]:checked';
+    if(e=='e'){
+	suffix='_e';
+	esuffix='e';
+	selector = 'input:checkbox[id^=seltate_]:checked';
+    }
+
+    //alert('suffix='+suffix+'\nesuffix='+esuffix+'\nselector='+selector);
+    
+    //seznam vsech zaskrtnutych checkboxu
+    var tatlist = '';
+    $(selector).each(function(){
+	idcko = $(this).attr('id');
+	podtrzitkoIndex = idcko.lastIndexOf('_');
+	tatnr = idcko.substr(podtrzitkoIndex+1);
+	//alert('tatnr = '+tatnr);
+	//pribrat hodnotu vzaby
+	vzaby = $('#'+'seltatvzaby'+esuffix+'_'+tatnr).val();
+	vzaby = parseFloat(vzaby);
+	if(isNaN(vzaby)) vzaby = 0
+	$('#'+'seltatvzaby'+esuffix+'_'+tatnr).val(vzaby);
+	tatlist+=tatnr+':'+vzaby+';'
+    });
+    if(tatlist.length>0) tatlist = tatlist.substring(0,tatlist.length-1);
+    $('#ima_tatarray'+suffix).val(tatlist);
+    if(e=='e') imaEditFieldChanged(idcko);
+}
+
+function updateshowEditIMA(data){
+    if($('#imaeditform').length!=0){
+            $('#imaeditform').remove();
+	    return;
+        }
+    $('body').append(data.formDiv);
+
+    // zapnuti colorboxu pro obrazky
+    $('a.jpg').colorbox({
+	    rel:'gal',
+	    current:'{current} z/von {total}',
+	    maxWidth:'90%',
+	    maxHeight:'90%'
+	});
+
+    //inicializace uploaderu
+    ppaDir = $('div[id^=uploader_]').attr('folder');
+    upid = $('div[id^=uploader_]').attr('id');
+    //alert(ppaDir+':'+upid);
+    var uploader = new plupload.Uploader({
+	    runtimes: 'html5,flash,browserplus',
+	    flash_swf_url: '../plupload/js/plupload.flash.swf',
+	    browse_button: 'pickfiles',
+	    container: upid,
+	    url: '../upload.php?savepath='+ppaDir
+	});
+    
+	uploader.init();
+	uploader.bind('FilesAdded', function(up, files) {
+	    $.each(files, function(i, file) {
+		$('#filelist').append(
+		    '<div id="' + file.id + '">' +
+		    file.name + ' (' + plupload.formatSize(file.size) + ') <b></b>' + '</div>');
+	    });
+	    up.start();
+	});
+
+	uploader.bind('UploadProgress', function(up, file) {
+	    $('#' + file.id + " b").html(file.percent + "%");
+	});
+
+	uploader.bind('Error', function(up, err) {
+	    $('#filelist').append("<div>Error: " + err.code +
+            ", popis chyby: " + err.message +
+            (err.file ? ", soubor: " + err.file.name : "") +
+            "</div>"
+	    );
+	    up.refresh(); // Reposition Flash/Silverlight
+	});
+	uploader.bind('FileUploaded', function(up, file) {
+	    //$('#' + file.id + " b").html("uloženo");
+	    $('#' + file.id).remove();
+	    console.log('file uploaded');
+	    getNewFileTable(ppaDir,data.teil,data.imaid);
+	});
+	
+	//----------------------------------------------------
+	// navazani udalosti
+	$('div#imaeditform input[id^=imabemerkung_]').bind('change',imaBemerkungChanged);
+	$('div#imaeditform input[id^=ima_select_auftragsnr]').bind('click',imaSelectAuftragsnrArray);
+	$('div#imaeditform input[id^=ima_select_pal]').bind('click',imaSelectPalArray);
+	$('div#imaeditform input[id^=ima_select_tat]').bind('click',imaSelectTatArray);
+	$('input[id^=emanr_]').bind('focus',emaNrFocus);
+}
+
+
+function emaNrFocus(event){
+    var url = $(this).attr('focusurl');
+
+    $.post(url,
+    {
+	id:$(this).attr('id'),
+	value:$(this).val()
+    },
+    function(data){
+	updateEmaNrFocus(data);
+    },
+    'json'
+    );    
+}
+
+function updateEmaNrFocus(data){
+    $('#'+data.id).val(data.newValue);
+}
+
+function getNewFileTable(ppaDir,teil,imaid){
+    var acturl = './getNewFileTable.php';
+
+    $.post(acturl,
+    {
+	id:id,
+	ppaDir:ppaDir,
+	teil:teil,
+	imaid:imaid
+    },
+    function(data){
+	updateNewFileTable(data);
+    },
+    'json'
+    );    
+}
+
+function updateNewFileTable(data){
+    $('#dokutable_edit').html(data.formDiv);
+    	$('a.jpg').colorbox({
+	    rel:'gal',
+	    current:'{current} z/von {total}',
+	    maxWidth:'90%',
+	    maxHeight:'90%'
+	});
+
+}
+
+function imaEditFieldChanged(id){
+    //alert('fieldChanged:'+id);
+    var acturl = './updateDMAField.php';
+    var bemerkid = $('input[id^=imabemerkung_]').attr('id');
+    
+    $.post(acturl,
+        {
+	    id:id,
+	    imarray:$('#ima_imarray_e').val(),
+	    palarray:$('#ima_palarray_e').val(),
+	    tatarray:$('#ima_tatarray_e').val(),
+	    bemerkungid:bemerkid
+        },
+        function(data){
+            updateEditFieldChanged(data);
+        },
+        'json'
+        );    
+}
+
+function updateEditFieldChanged(data){
+    
+}
+
+/**
+ *
+ *
+ *
+ */
+
+function imaBemerkungChanged(event){
+    var acturl = $(this).attr('acturl');
+    var id = $(this).attr('id');
+    
+    $.post(acturl,
+        {
+	    id:id,
+	    value:$(this).val()
+        },
+        function(data){
+            updateBemerkungChanged(data);
+        },
+        'json'
+        );    
+}
+
+
+/**
+ *
+ *
+ *
+ */
+
+function updateBemerkungChanged(data){
+    if(data.ar>0){
+	$('#r_bemerkung_'+data.imaid).val(data.value);
+    }
+}
+
+/**
+ *
+ *
+ *
+ */
+
+function updateshowIMA(data){
+    // zobrazit editovaci div
+    if($('#imaform').length!=0){
+            $('#imaform').remove();
+	    if($('#imaeditform').length!=0){
+		$('#imaeditform').remove();
+	    }
+	    if(data.id=='showima') return;
+        }
+    $('body').append(data.formDiv);
+    $('#ima_add').bind('click',imaAdd);
+    $('#ima_select_auftragsnr').bind('click',imaSelectAuftragsnrArray);
+    $('#ima_select_pal').bind('click',imaSelectPalArray);
+    $('#ima_select_tat').bind('click',imaSelectTatArray);
+    $('input[id^=i_ima_edit_]').bind('click',imaEdit);
+    $('#showimanewdiv').bind('click',showImaNewDiv);
+    $('#imanewdiv').hide();
 }
 
 /**
@@ -609,6 +1061,27 @@ function dokuAdd(event){
         );        
 }
 
+function imaAdd(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    //alert(acturl);
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val(),
+	    imanr:$('#imanr').val(),
+	    ima_imarray:$('#ima_imarray').val(),
+	    ima_palarray:$('#ima_palarray').val(),
+	    ima_tatarray:$('#ima_tatarray').val(),
+	    bemerkung:$('#imabemerkung').val()
+        },
+        function(data){
+            updateimaAdd(data);
+        },
+        'json'
+        );        
+}
+
 function vpmAdd(event){
     var id=$(this).attr('id');
     var acturl = $(this).attr('acturl');
@@ -639,6 +1112,23 @@ function updatedokuAdd(data){
         },
         function(data){
             updateshowTeilDoku(data);
+        },
+        'json'
+        );    
+}
+
+function updateimaAdd(data){
+    removeSelectForms();
+    element = $('#showima');
+    var id=element.id;
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:'ima_add',
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowIMA(data);
         },
         'json'
         );    

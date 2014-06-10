@@ -552,7 +552,14 @@ function erster_lager($teil,$auftrag,$paleta)
 	
 	// pro zjistinene abgnr si zjistim z tabulky dpos jmeno skladu
 	// pokud pro dane abgnr nic nenajdu vratim 0D
-	$sql = "select lager_von from dpos where ((teil='$teil') and (lager_von is not null) and (lager_von<>'0D') and (`taetnr-aby`='$abgnr'))";
+	//$sql = "select lager_von from dpos where ((teil='$teil') and (lager_von is not null) and (lager_von<>'0D') and (`taetnr-aby`='$abgnr'))";
+	// zmena 2014-05-29, prvni lager se hleda podle vzestupne setridenych lager_von
+	$sql = "select dpos.lager_von from dpos ";
+	$sql.= " join dauftr on dauftr.teil=dpos.teil and dauftr.abgnr=dpos.`taetnr-aby`";
+	$sql.= " where ((dpos.teil='$teil') and (dpos.lager_von is not null)";
+	$sql.= " and (dauftr.auftragsnr='$auftrag') and (dauftr.`pos-pal-nr`='$paleta')";
+	$sql.= " and (dpos.lager_von<>'0D'))";
+	$sql.=" order by dpos.lager_von";
 	$res = mysql_query($sql);
 	if(mysql_affected_rows()>0)
 	{

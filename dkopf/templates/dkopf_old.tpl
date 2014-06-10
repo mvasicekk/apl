@@ -8,12 +8,12 @@
     </title>
 
 <link rel="stylesheet" href="./styl.css" type="text/css">
-
+<link rel="stylesheet" href="../colorbox.css" type="text/css">
 <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.14.custom.css" type="text/css">
+
 <script type = "text/javascript" src = "../js/jquery-1.5.1.min.js"></script>
 <script type = "text/javascript" src = "../js/jquery-ui-1.8.14.custom.min.js"></script>
 <script type = "text/javascript" src = "../js/jquery.ui.datepicker-cs.js"></script>
-
 
 <script type="text/javascript" src="./js/init_controls.js"></script>
 <script type="text/javascript" src="../js/detect.js"></script>
@@ -25,8 +25,8 @@ var promenne = new Array("kz_druck","taetnr","bez_d","bez_t","vzkd","vzaby","KzG
 var onblur_function = new Array("","getDataReturnXml('./validate_taetnr.php?value='+this.value, validate_taetnr);savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);");
 var editovat = new Array(0,0,1,1,1,1,1,1,0,0);
 </script>
-
 <script type = "text/javascript" src = "js_tablegrid.js"></script>
+<script type="text/javascript" src="../js/colorbox/jquery.colorbox-min.js"></script>
 <script type="text/javascript" src="./dkopf.js"></script>
 
 
@@ -117,17 +117,14 @@ Arbeitsplan pflegen / Sprava pracovniho planu
                         <input acturl="dkopf_update.php" maxlength="6" size="5" type="text" id="restmengen_verw" name="restmengen_verw" value="{$restmengen_verw_value}"/>
                 </td>
         </tr>
-        <tr>
-                <td>
-                        <label for="reklamation">Reklamation J/N</label>
-			<input maxlength='1' onblur="js_validate_jn(this);" size="2" type="text" id="reklamation" name="reklamation" value="{$reklamation_value}"/>
-
-			<label for="letzte_reklamation">Lieferung Reklamation</label>
-			<input maxlength='6' size="6" type="text" id="letzte_reklamation" name="letzte_reklamation" value="{$letzte_reklamation_value}"/>
-	
-		</td>
+	<tr>
+	    <td>
+		letzte Reklamationen :
+		{foreach from=$letzte_reklamationen_array item=reklamation}
+		    <a class='abutton' href='../Reports/S362_pdf.php?report=S362&reklnr={$reklamation.rekl_nr}&reklnr_label=ReklNr&tl_tisk=pdf'>{$reklamation.rekl_nr} ({$reklamation.rekl_datum})</a>&nbsp;
+		{/foreach}
+	    </td>
 	</tr>
-	
 	<tr>
 		<td>
 			<label for="bemerk">Anderungen/Bemerkung / poznamka</label>
@@ -153,19 +150,19 @@ Arbeitsplan pflegen / Sprava pracovniho planu
         </tr>
         <tr>
             <td>
-                <label for="jb_lfd_2">Jahresbedarf (2011)</label>
+                <label for="jb_lfd_2">Jahresbedarf (2012)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
 		
-                <label for="jb_lfd_1">Jahresbedarf (2012)</label>
+                <label for="jb_lfd_1">Jahresbedarf (2013)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
                 
-                <label for="jb_lfd_j">Jahresbedarf (2013)</label>
+                <label for="jb_lfd_j">Jahresbedarf (2014)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
             </td>
         </tr>
 	<tr>
 	    <td>
-                <label for="jb_lfd_plus_1">Jahresbedarf (2014)</label>
+                <label for="jb_lfd_plus_1">Jahresbedarf (2015)</label>
                 <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
 	    </td>
 	</tr>
@@ -191,53 +188,37 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	<tr>
 		<td>
 			<fieldset>
-			    <legend>Musterlager / sklad vzoru</legend>
+			<legend>Musterlager / sklad vzoru</legend>
                         <table>
                             <tr>
-                                <td>
-                                    <legend>Musterlager / sklad vzoru</legend>
-                                    <label for="muster_vom">vom</label>
-                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_vom" name="muster_vom" value="{$muster_vom_value}"/>
-                                </td>
-                                <td>
-                                    <label for="muster_platz">LagerPlatz</label>
-                                    <input size="10" type="text" id="muster_platz" name="muster_platz" value="{$muster_platz_value}"/>
-                                </td>
-                                <td>
-                                    <label for="muster_vorher_vom">vorheriges Muster vom</label>
-                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&allownull=1&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_vorher_vom" name="muster_vorher_vom" value="{$muster_vorher_vom_value}"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="muster_freigabe1_vom">1. freigeben am</label>
-                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&allownull=1&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_freigabe1_vom" name="muster_freigabe1_vom" value="{$muster_freigabe1_vom_value}"/>
-                                </td>
-                                <td>
-                                    <label for="muster_freigabe1">vom1</label>
-                                    <select id="muster_freigabe1" name="muster_freigabe1">
-                                        {html_options options=$vom1_options selected=$vom1_selected}
-                                    </select>
-                                 </td>
 				 <td>
-				     <input id='showteildoku' type='button' value="TeilDoku" acturl='./showTeilDoku.php' />
+				     <input id='showteildoku' type='button' value="TeilDoku" acturl='./showTeilDoku.php' /> <label>( Anzahl Dokumenten : {$pocet_teildoku} )</label>
 				 </td>
+                                  <td>
+<!--				      <label>Ersteller : </label><input type='text' id='ersteller' size='10' maxlength='10'/>-->
+				     <input class='' type='button' value='Lagerzettel' onclick="location.href='../get_parameters.php?popisky=Teil;DokuNr&promenne=teil;dokunr&values={$teil_value};{29}&report=D515'" />
+                                 </td>
+
                             </tr>
+                        </table>
+			</fieldset>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<fieldset>
+			<legend>GDat Anlagen / GDat přílohy</legend>
+                        <table>
                             <tr>
-                                <td>
-                                    <label for="muster_freigabe2_vom">2. freigeben am</label>
-                                    <input onblur="getDataReturnText('./validate_datum.php?what=datum&allownull=1&value='+this.value+'&controlid='+this.id, refreshdatum);" size="10" type="text" id="muster_freigabe2_vom" name="muster_freigabe2_vom" value="{$muster_freigabe2_vom_value}"/>
-                                </td>
-                                <td>
-                                    <label for="muster_freigabe2">vom2</label>
-                                    <select id="muster_freigabe2" name="muster_freigabe2">
-                                    {html_options options=$vom2_options selected=$vom2_selected}
-                                    </select>
-                                 </td>
-                                 <td>
-				     Ersteller : <input type='text' id='ersteller' size='10' maxlength='10'/>
-				     <input class='' type='button' value='Lagerzettel' onclick="document.location.href='../Reports/T010_pdf.php?teil={$teil_value}&ersteller='+document.getElementById('ersteller').value;"
-                                 </td>
+				 <td>
+				     <input id='show_att_ppa' type='button' value="PPA" acturl='./showTeilAtt.php?att=ppa' />
+				 </td>
+ 				 <td>
+				     <input id='show_att_vpa' type='button' value="VPA" acturl='./showTeilAtt.php?att=vpa' />
+				 </td>
+ 				 <td>
+				     <input id='show_att_rekl' type='button' value="Reklamation" acturl='./showTeilAtt.php?att=rekl' />
+				 </td>
                             </tr>
                         </table>
 			</fieldset>
@@ -268,6 +249,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 		{if $polozka.KzGut eq "G"}
 		<tr id='tr{$polozka.dpos_id}' class='Grow'>
 		{else}
+		    <!-- otevreni reklamaci z tabulky dreklamation -->
 		<tr id='tr{$polozka.dpos_id}' bgcolor='{cycle values="#eeeeee,#dddddd"}'>
 		{/if}
 		
@@ -295,7 +277,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td id='td_select_lager_nach{$polozka.dpos_id}'>{$polozka.lager_nach}</td>
 			
 			{if $level gte 9}
-				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a id='edit{$polozka.dpos_id}' onclick="getDataReturnXml('./edit_dpos_row.php?dpos_id={$polozka.dpos_id}', edit);" href='#'>edit</a></td>
+				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a style="display:{$display_sec.dposedit}" id='edit{$polozka.dpos_id}' onclick="getDataReturnXml('./edit_dpos_row.php?dpos_id={$polozka.dpos_id}', edit);" href='#'>edit</a></td>
 			{else}
 				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a id='edit{$polozka.dpos_id}' href='#'>l9</a></td>
 			{/if}
@@ -476,17 +458,17 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 												+'&fa='+encodeControlValue('fa')
 												+'&vm='+encodeControlValue('vm')
                                                                                                 +'&spg='+encodeControlValue('spg')
-												+'&reklamation='+encodeControlValue('reklamation')
-												+'&letzte_reklamation='+encodeControlValue('letzte_reklamation')
+//												+'&reklamation='+encodeControlValue('reklamation')
+//												+'&letzte_reklamation='+encodeControlValue('letzte_reklamation')
 												+'&bemerk='+encodeControlValue('bemerk')
 												+'&art_guseisen='+encodeControlValue('art_guseisen')
-												+'&muster_vom='+encodeControlValue('muster_vom')
-												+'&muster_platz='+encodeControlValue('muster_platz')
-												+'&muster_vorher_vom='+encodeControlValue('muster_vorher_vom')
-												+'&muster_freigabe1_vom='+encodeControlValue('muster_freigabe1_vom')
-												+'&muster_freigabe1='+encodeSelectControlValue('muster_freigabe1')
-												+'&muster_freigabe2_vom='+encodeControlValue('muster_freigabe2_vom')
-												+'&muster_freigabe2='+encodeSelectControlValue('muster_freigabe2')
+//												+'&muster_vom='+encodeControlValue('muster_vom')
+//												+'&muster_platz='+encodeControlValue('muster_platz')
+//												+'&muster_vorher_vom='+encodeControlValue('muster_vorher_vom')
+//												+'&muster_freigabe1_vom='+encodeControlValue('muster_freigabe1_vom')
+//												+'&muster_freigabe1='+encodeSelectControlValue('muster_freigabe1')
+//												+'&muster_freigabe2_vom='+encodeControlValue('muster_freigabe2_vom')
+//												+'&muster_freigabe2='+encodeSelectControlValue('muster_freigabe2')
 												, saverefresh);"/>
 	</td>
 	<td>
@@ -500,6 +482,5 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 </table>
 </form>
 </div>
-
 </body>
 </html>

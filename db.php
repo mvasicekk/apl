@@ -140,6 +140,7 @@ class AplDB {
      */
     public function query($sql){
 	mysql_query($sql);
+	return;
     }
     
     /**
@@ -2141,6 +2142,39 @@ class AplDB {
         return $this->getQueryRows($sql);
     }
 
+    
+    /**
+     * pomoci privilegii budu jen zakazovat, pokud nezakazu je privilegium povolene
+     * 
+     * @param type $form_id
+     * @param type $element_id
+     * @param type $puser
+     * @param type $privilege 
+     */
+    public function getPrivilegeSec($form_id,$element_id,$puser,$privilege='lesen'){
+	$sql = " select dbenutzerroles.benutzername,acl.allowed";
+	$sql.= " from acl";
+	$sql.= " join resources on resources.id=acl.resource_id";
+	$sql.= " join dbenutzerroles on dbenutzerroles.role_id=acl.role_id";
+	$sql.= " join privileges on privileges.id=acl.privilege_id";
+	$sql.= " where";
+	$sql.= " resources.form_id='$form_id'";
+	$sql.= " and resources.element_id='$element_id'";
+	$sql.= " and dbenutzerroles.benutzername='$puser'";
+	$sql.= " and privileges.`name`='$privilege'";
+
+	$rows = $this->getQueryRows($sql);
+        if ($rows === NULL)
+            return TRUE;
+        else{
+	    if($rows[0]['allowed']=='N')
+		return FALSE;
+	    else
+		return TRUE;
+	}
+
+    }
+    
     /**
      *
      * @param type $form_id
@@ -2334,6 +2368,28 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     */
+    public function getLastEMANr($kunde=NULL){
+	$sql = "select emanr from dma order by emanr desc";
+	if($kunde!==NULL)
+	    $sql = "select emanr from dma where emanr like '%_".$kunde."_%'order by emanr desc";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	$row = $rows[0];
+	$emanr = $row['emanr'];
+	$cislo = intval(substr($emanr, strrpos($emanr, '_')+1));
+	return $cislo;
+    }
+    /**
+     *
+     * @param type $imaid 
+     */
+    public function getIMAInfoArray($imaid){
+	$sql = "select * from dma where id='$imaid'";
+	return $this->getQueryRows($sql);
+    }
     /**
      *
      * @param type $value
@@ -2706,16 +2762,30 @@ class AplDB {
 
     /**
      *
+     * @param type $von
+     * @param type $bis 
+     */
+    public function getTatInfoArray($von,$bis){
+	$sql = "select `dtaetkz-abg`.`abg-nr` as tatnr,`dtaetkz-abg`.`Name` as tatbez from `dtaetkz-abg` where `dtaetkz-abg`.`abg-nr` between '$von' and '$bis' order by `dtaetkz-abg`.`abg-nr`";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     *
      * @param type $teil
      * @param type $im
      * @param type $term 
      */
-    public function getPaletteMitAuftragTeil($term, $im = NULL, $teil = NULL) {
+    public function getPaletteMitAuftragTeil($term, $im = NULL, $teil = NULL,$ohneEx=FALSE) {
 	if (($im === NULL) || ($teil === NULL))
 	    return NULL;
 	$sql = "select distinct `pos-pal-nr` as pal from dauftr where (auftragsnr='$im') and (teil='$teil') and (`pos-pal-nr' like '$term%')";
-	if ($term == '')
+	if ($term == ''){
 	    $sql = "select distinct `pos-pal-nr` as pal from dauftr where (auftragsnr='$im') and (teil='$teil')";
+	    if($ohneEx===TRUE)
+		$sql = "select distinct `pos-pal-nr` as pal,auftragsnr from dauftr where (auftragsnr='$im') and (teil='$teil') and (`auftragsnr-exp` is null) and (`pal-nr-exp` is null)";
+		//return $sql;
+	}
+	    
 
 	$res = mysql_query($sql);
 	if (mysql_affected_rows() == 0 || $res === FALSE)
@@ -2733,10 +2803,13 @@ class AplDB {
      * @param type $teil
      * @param type $term 
      */
-    public function getImporteMitTeil($teil=NULL,$term=NULL){
+    public function getImporteMitTeil($teil=NULL,$term=NULL,$ohneEx = FALSE){
 	$sql = "select distinct auftragsnr from dauftr where (auftragsnr like '$term%') and (teil='$teil') order by auftragsnr";
-	if($term=='')
+	if($term==''){
 	    $sql = "select distinct auftragsnr from dauftr where (teil='$teil') order by auftragsnr";
+	    if($ohneEx===TRUE)
+		$sql = "select distinct auftragsnr from dauftr where (teil='$teil') and (`auftragsnr-exp` is null) order by auftragsnr";
+	}
 	if($teil===NULL){
 	    $sql = "select auftragsnr from daufkopf where (auftragsnr like '$term%') order by auftragsnr";
 	}
@@ -3916,6 +3989,21 @@ class AplDB {
     }
     
 
+    public function updateIMAField($field,$value,$imaid){
+	$sql = "update dma set `$field`='$value' where id='$imaid'";
+	$this->query($sql);
+	return mysql_affected_rows();
+    }
+        /**
+     *
+     * @param type $teil
+     * @return type 
+     */
+    public function getTeilIMAArray($teil){
+	$sql = "select dma.id,teil,imanr,emanr,auftragsnrarray,palarray,tatundzeitarray,bemerkung,imavon,stamp from dma where teil='$teil' order by imanr desc";
+	return $this->getQueryRows($sql);
+    }
+
     /**
      *
      * @param type $teil
@@ -3956,6 +4044,17 @@ class AplDB {
         return mysql_affected_rows();
     }
 
+    /**
+     * 
+     */
+    public function addTeilIMA($teil,$imanr,$bemerkung,$auftragsarray,$palarray,$tatarray,$user){
+	$sql = "insert into dma";
+	$sql.=" (imanr,teil,auftragsnrarray,palarray,tatundzeitarray,bemerkung,imavon)";
+	$sql.=" values('$imanr','$teil','$auftragsarray','$palarray','$tatarray','$bemerkung','$user')";
+        mysql_query($sql);
+        return mysql_insert_id();
+    }
+    
     /**
      *
      * @param type $teil

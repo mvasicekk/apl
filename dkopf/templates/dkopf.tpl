@@ -68,47 +68,45 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 
 			<span style="display:{$display_sec.teillang_sec};" id="teillang_sec">
 			    <label for="teillang">Originalteilnummer/originalni cislo</label>
-			    <input maxlength='35' size="35" type="text" id="teillang" name="teillang" value="{$teillang_value}"/>
+			    <input {$edit_sec.teillang_sec} maxlength='35' size="35" type="text" id="teillang" name="teillang" value="{$teillang_value}"/>
 			</span>
 
 			<span style="display:{$display_sec.status_sec};" id="status_sec">
 			    <label for="status">Status</label>
-			    <input acturl="dkopf_update.php" maxlength='3' size="3" type="text" id="status" name="status" value="{$status_value}"/>
+			    <input {$edit_sec.status_sec} acturl="dkopf_update.php" maxlength='3' size="3" type="text" id="status" name="status" value="{$status_value}"/>
 			</span>
 		</td>
 	</tr>
 	<tr>
 		<td>
-	
 			<label for="teil">Teil/Dil</label>
 			<input class='disabled_bold' disabled readonly onblur="getDataReturnXml('./validate_teil.php?value='+this.value, validate_teil);" maxlength='10' size="10" type="text" id="teil" name="teil" value="{$teil_value}"/>
 			<input size='45' type='text' class='hidden' id='teil_failed' value='Teilnummerfehler' />
 	
 			<label for="bezeichnung">Bezeichnung/oznaceni</label>
 			<input size="40" type="text" id="bezeichnung" name="bezeichnung" value="{$bezeichnung_value}"/>
-	
 		</td>
 	</tr>
 	<tr>
 		<td>
 			<span style="display:{$display_sec.gew_sec};" id="gew_sec">
 			    <label for="gew">Nettogewicht/netto vaha</label>
-			    <input onblur="js_validate_float(this);" size="6" type="text" id="gew" name="gew" value="{$gew_value}"/>
+			    <input {$edit_sec.gew_sec} onblur="js_validate_float(this);" size="6" type="text" id="gew" name="gew" value="{$gew_value}"/>
 			</span>
 			
 			<span style="display:{$display_sec.brgew_sec};" id="brgew_sec">
 			    <label for="brgew">Bruttogewicht/brutto vaha</label>
-			    <input onblur="js_validate_float(this);" size="6" type="text" id="brgew" name="brgew" value="{$brgew_value}"/>
+			    <input {$edit_sec.brgew_sec} onblur="js_validate_float(this);" size="6" type="text" id="brgew" name="brgew" value="{$brgew_value}"/>
 			</span>
 			
 			<span style="display:{$display_sec.wst_sec};" id="wst_sec">
 			    <label for="wst">Werkst. / material</label>
-			    <input size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>
+			    <input {$edit_sec.wst_sec} size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>
 			</span>
 
 			<span style="display:{$display_sec.fa_sec};" id="fa_sec">
 			    <label for="fa">FA</label>
-			    <input size="3" type="text" id="fa" name="fa" value="{$fa_value}"/>
+			    <input {$edit_sec.fa_sec} size="3" type="text" id="fa" name="fa" value="{$fa_value}"/>
 			</span>
 		</td>
 	</tr>
@@ -120,17 +118,17 @@ Arbeitsplan pflegen / Sprava pracovniho planu
  		-->
 			<span style="display:{$display_sec.vm_sec};" id="vm_sec">
 			    <label for="vm">Verpackungsmenge / balící předpis</label>
-			    <input size="6" type="text" id="vm" name="vm" value="{$vm_value}"/>
+			    <input {$edit_sec.vm_sec} size="6" type="text" id="vm" name="vm" value="{$vm_value}"/>
 			</span>
 			
 			<span style="display:{$display_sec.spg_sec};" id="spg_sec">
 			    <label for="spg">Stk pro Gehänge</label>
-			    <input size="4" type="text" id="spg" name="spg" value="{$spg_value}"/>
+			    <input {$edit_sec.spg_sec} size="4" type="text" id="spg" name="spg" value="{$spg_value}"/>
                         </span>
 			
 			<span style="display:{$display_sec.restmengen_verw_sec};" id="restmengen_verw_sec">
 			    <label for="restmengen_verw">Restmengenverw.</label>
-			    <input acturl="dkopf_update.php" maxlength="6" size="5" type="text" id="restmengen_verw" name="restmengen_verw" value="{$restmengen_verw_value}"/>
+			    <input {$edit_sec.restmengen_verw_sec} acturl="dkopf_update.php" maxlength="6" size="5" type="text" id="restmengen_verw" name="restmengen_verw" value="{$restmengen_verw_value}"/>
 			</span>
                 </td>	
         </tr>
@@ -148,12 +146,12 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 		<td>
 		    <span style="display:{$display_sec.bemerk_sec};" id="bemerk_sec">
 			<label for="bemerk">Anderungen/Bemerkung / poznamka</label>
-			<input maxlength='55' size="30" type="text" id="bemerk" name="bemerk" value="{$bemerk_value}"/>
+			<input {$edit_sec.bemerk_sec} maxlength='55' size="30" type="text" id="bemerk" name="bemerk" value="{$bemerk_value}"/>
 		    </span>
 		    
 		    <span style="display:{$display_sec.art_guseisen_sec};" id="art_guseisen_sec">
 			<label for="art_guseisen">Art Gusseisen / druh litiny</label>
-			<input size="10" type="text" id="art_guseisen" name="art_guseisen" value="{$art_guseisen_value}"/>
+			<input {$edit_sec.art_guseisen_sec} size="10" type="text" id="art_guseisen" name="art_guseisen" value="{$art_guseisen_value}"/>
 		    </span>
 		</td>
 	</tr>
@@ -161,17 +159,17 @@ Arbeitsplan pflegen / Sprava pracovniho planu
             <td>
 		<span style="display:{$display_sec.preis_stk_gut_sec};" id="preis_stk_gut_sec">
 		    <label for="preis_stk_gut">Zielpreis gut </label>
-		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_gut" value="{$preis_stk_gut_value}"/>
+		    <input {$edit_sec.preis_stk_gut_sec} acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_gut" value="{$preis_stk_gut_value}"/>
 		</span>
 
 		<span style="display:{$display_sec.preis_stk_auss_sec};" id="preis_stk_auss_sec">
 		    <label for="preis_stk_auss">Zielpreis auss </label>
-		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_auss" value="{$preis_stk_auss_value}"/>
+		    <input {$edit_sec.preis_stk_auss_sec} acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="preis_stk_auss" value="{$preis_stk_auss_value}"/>
 		</span>
 
 		<span style="display:{$display_sec.fremdauftr_dkopf_sec};" id="fremdauftr_dkopf_sec">
 		    <label for="fremdauftr_dkopf">Fremdauftr</label>
-		    <input acturl="dkopf_update.php" maxlength='50' size="10" type="text" id="fremdauftr_dkopf" value="{$fremdauftr_dkopf_value}"/>
+		    <input {$edit_sec.fremdauftr_dkopf_sec} acturl="dkopf_update.php" maxlength='50' size="10" type="text" id="fremdauftr_dkopf" value="{$fremdauftr_dkopf_value}"/>
 		</span>
             </td>
 
@@ -180,13 +178,13 @@ Arbeitsplan pflegen / Sprava pracovniho planu
             <td>
 		<span style="display:{$display_sec.jbvor_sec};" id="jbvor_sec">
 		    <label for="jb_lfd_2">Jahresbedarf (2012)</label>
-		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
+		    <input {$edit_sec.jbvor_sec} acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_2" value="{$jb_lfd_2_value}"/>
 		
 		    <label for="jb_lfd_1">Jahresbedarf (2013)</label>
-		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
+		    <input {$edit_sec.jbvor_sec} acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_1" value="{$jb_lfd_1_value}"/>
                 
 		    <label for="jb_lfd_j">Jahresbedarf (2014)</label>
-		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
+		    <input {$edit_sec.jbvor_sec} acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_j" value="{$jb_lfd_j_value}"/>
 		</span>
             </td>
         </tr>
@@ -194,7 +192,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	    <td>
 		<span style="display:{$display_sec.jbfuture_sec};" id="jbfuture_sec">
 		    <label for="jb_lfd_plus_1">Jahresbedarf (2015)</label>
-		    <input acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
+		    <input {$edit_sec.jbfuture_sec} acturl="dkopf_update.php" maxlength='10' size="6" type="text" id="jb_lfd_plus_1" value="{$jb_lfd_plus_1_value}"/>
 		</span>
 	    </td>
 	</tr>
@@ -202,7 +200,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	    <td>
 		<span style="display:{$display_sec.schwierigkeitsgrad_S11_sec};" id="schwierigkeitsgrad_S11_sec">
 		    <label for="schwierigkeitsgrad_S11">Schwierigkeitsgrad S11 / obtížnost S11</label>
-		    <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S11" value="{$schwierigkeitsgrad_S11_value}"/>
+		    <input {$edit_sec.schwierigkeitsgrad_S11_sec} acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S11" value="{$schwierigkeitsgrad_S11_value}"/>
 		</span>
 	    </td>
 	</tr>
@@ -210,7 +208,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	    <td>
 		<span style="display:{$display_sec.schwierigkeitsgrad_S51_sec};" id="schwierigkeitsgrad_S51_sec">
 		    <label for="schwierigkeitsgrad_S51">Schwierigkeitsgrad S51 / obtížnost S51</label>
-		    <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S51" value="{$schwierigkeitsgrad_S51_value}"/>
+		    <input {$edit_sec.schwierigkeitsgrad_S51_sec} acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_S51" value="{$schwierigkeitsgrad_S51_value}"/>
 		</span>
 	    </td>
 	</tr>
@@ -219,14 +217,14 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	    <td>
 		<span style="display:{$display_sec.schwierigkeitsgrad_SO_sec};" id="schwierigkeitsgrad_SO_sec">
 		    <label for="schwierigkeitsgrad_SO">Schwierigkeitsgrad SO / obtížnost SO</label>
-		    <input acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_SO" value="{$schwierigkeitsgrad_SO_value}"/>
+		    <input {$edit_sec.schwierigkeitsgrad_SO_sec} acturl="dkopf_update.php" maxlength='255' size="25" type="text" id="schwierigkeitsgrad_SO" value="{$schwierigkeitsgrad_SO_value}"/>
 		</span>
 	    </td>
 	</tr>
 	<tr>
 		<td>
 			<fieldset>
-			<legend>Musterlager / sklad vzoru</legend>
+			<legend>Musterlager / sklad vzoru / TeileDoku</legend>
                         <table>
                             <tr>
 				 <td>
@@ -244,6 +242,12 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 					<input id='showvpm' type='button' value="VPM" acturl='./showVPM.php' />
 				     </span>
 				 </td>
+ 				 <td>
+				     <span style="display:{$display_sec.showima_sec};" id="showima_sec">
+					<input id='showima' type='button' value="IMA" acturl='./showIMA.php' />
+				     </span>
+				 </td>
+
                             </tr>
                         </table>
 			</fieldset>
@@ -345,7 +349,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td id='td_select_lager_nach{$polozka.dpos_id}'>{$polozka.lager_nach}</td>
 			
 			{if $level gte 9}
-				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a id='edit{$polozka.dpos_id}' onclick="getDataReturnXml('./edit_dpos_row.php?dpos_id={$polozka.dpos_id}', edit);" href='#'>edit</a></td>
+				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a style="display:{$display_sec.dposedit}" id='edit{$polozka.dpos_id}' onclick="getDataReturnXml('./edit_dpos_row.php?dpos_id={$polozka.dpos_id}', edit);" href='#'>edit</a></td>
 			{else}
 				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a id='edit{$polozka.dpos_id}' href='#'>l9</a></td>
 			{/if}
@@ -469,37 +473,6 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	</table>
 </form>
 </div>
-
-{if $pocet_priloh gt 0}
-<div id='attach_table'>
-<div id='scroll_attach'>	
-		<table class='apl_table' border='0'>
-		<tr class='apl_table_header'>
-			<td>TYP</td>
-			<td>PATH</td>
-			<td>STAMP</td>
-		</tr>
-		{foreach from=$dattach item=polozka}
-		<tr id='tr{$polozka.dpos_id}' bgcolor='{cycle values="#eeeeee,#dddddd"}'>
-			<td id='td{$polozka.id_attachment}'>{$polozka.attachment_typ}</td>
-			<td>
-			<a href='{$polozka.attachment_path}'>
-				{if $polozka.attachment_typ eq "FOTO" }
-					<img src='{$polozka.attachment_path}' width='60' border='0'>
-				{else}
-					{$polozka.beschreibung}
-				{/if}
-			</a>
-			</td>
-			<td width='60'>{$polozka.stamp}</td>
-		</tr>
-		{/foreach}
-		</table>
-</div>
-</div>
-{/if}
-
-
 
 <div id='dkopf_form_footer'>
 <form action="">

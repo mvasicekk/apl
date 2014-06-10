@@ -1,7 +1,7 @@
 // JavaScript Document
 
 //EventUtil.addEventHandler(window,"resize",rebuildpage);
-EventUtil.addEventHandler(document, "keypress", checkCR);
+EventUtil.addEventHandler(document, "keydown", checkCR);
 
 // Removes leading whitespaces
 function LTrim( value ) {

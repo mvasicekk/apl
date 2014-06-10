@@ -236,7 +236,7 @@ Aufträge pflegen / zadání zakázky
 			<td id='td_select_teil{$polozka.id_dauftr}'>{$polozka.Teil}</td>
 			<td title='{$polozka.bemerkung}' id='td_pal{$polozka.id_dauftr}' acturl='./updatePalBemerkung.php?id={$polozka.id_dauftr}' align='right'>{$polozka.pos_pal_nr}</td>
 			<td align='right'>{$polozka.stk}</td>
-			<td {if !$polozka.hasrechnung}ondblclick="YAHOO.util.Connect.asyncRequest('GET','./preisupdate.php?auftragsnr={$auftragsnr_value}&id_dauftr={$polozka.id_dauftr}&level={$level}', preisupdate);"{/if} align='right'>{$polozka.Preis|string_format:"%.4f"}</td>
+			<td {if $canpreisupdate}{if !$polozka.hasrechnung}ondblclick="YAHOO.util.Connect.asyncRequest('GET','./preisupdate.php?auftragsnr={$auftragsnr_value}&id_dauftr={$polozka.id_dauftr}&level={$level}', preisupdate);"{/if}{/if} align='right'>{$polozka.Preis|string_format:"%.4f"}</td>
 			<td id='td_select_mehrarb_kz{$polozka.id_dauftr}'>{$polozka.mehrarb_kz}</td>
 			<td id='td_select_abgnr{$polozka.id_dauftr}' align='right'>{$polozka.abgnr}</td>
 			<td>{$polozka.KzGut}</td>
@@ -311,9 +311,9 @@ Aufträge pflegen / zadání zakázky
 		</td>
 
 		<td>
-			<input id="D710" onClick="location.href='../get_parameters.php?popisky=Export;Termin&promenne=export;termin&values={$auftragsnr_value};{$ausliefer_datum_value}&report=D710'" class='formularbutton' type="button"  name="D710" value="D710 - Lieferungsübersicht"/>
+			<input id="D710" onClick="location.href='../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={$auftragsnr_value};{$ausliefer_datum_value}&report=D710'" class='formularbutton' type="button"  name="D710" value="D710 - Lieferungsübersicht"/>
 		</td>
-		<td>
+		<td>	
 			<input id="importrechnung" onClick="location.href='./rechnung_umrechnen/import.php'" class='formularbutton' type="button"  name="" value="Rechnung importieren"/>
 		</td>
 </tr>

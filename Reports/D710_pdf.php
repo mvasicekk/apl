@@ -521,6 +521,38 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 	}
 }
 
+/**
+ *
+ * @param type $teil
+ * @return type 
+ */
+
+function getGutAussStkTeil($teil) {
+    
+    $importe = $teil->getElementsByTagName("import");
+    foreach ($importe as $import) {
+	list($gut,$auss) = getGutAussStkImport($import);
+	$aussSum+=$auss;
+	$sumGut+=$gut;
+    }
+    return array($sumGut,$aussSum);
+}
+
+
+/**
+ *
+ * @param type $import
+ * @return type 
+ */
+function getGutAussStkImport($import) {
+    $taetigkeiten = $import->getElementsByTagName("tat");
+    foreach ($taetigkeiten as $tat) {
+	$tatChildNodes = $tat->childNodes;
+	$aussSum+=(intval(getValueForNode($tatChildNodes, 'auss2_stk_exp'))+intval(getValueForNode($tatChildNodes, 'auss4_stk_exp'))+intval(getValueForNode($tatChildNodes, 'auss6_stk_exp')));
+	$sumGut+=(intval(getValueForNode($tatChildNodes, 'expstk')));
+    }
+    return array($sumGut,$aussSum);
+}
 
 
 require_once('../tcpdf/config/lang/eng.php');
@@ -586,6 +618,9 @@ foreach($exporte as $export)
 	foreach($teile as $teil)
 	{
 		$teilChildNodes = $teil->childNodes;
+		list($summeGut,$summeAuss) = getGutAussStkTeil($teil);
+		if(($summeAuss+$summeGut)==0) continue;
+
 		test_pageoverflow($pdf,5,$cells_header);
 		zahlavi_teil($pdf,5,array(255,255,255),$teilChildNodes);
                 nuluj_sumy_pole($sum_zapati_teil_array);
@@ -595,6 +630,9 @@ foreach($exporte as $export)
 		foreach($importe as $import)
 		{
 			$importChildNodes = $import->childNodes;
+			list($summeGut,$summeAuss) = getGutAussStkImport($import);
+			if(($summeAuss+$summeGut)==0) continue;
+
 			test_pageoverflow($pdf,5,$cells_header);
 			zahlavi_import($pdf,5,array(255,255,255),$importChildNodes);
 			nuluj_sumy_pole($sum_zapati_import_array);

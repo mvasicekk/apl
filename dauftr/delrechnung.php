@@ -79,7 +79,7 @@ mysql_query('set names utf8');
 		$headers = "From: <apl@abydos.cz>\n";
 		$headers = "Content-Type: text/html; charset=UTF-8\n";
 		
-		@mail($recipient,$subject,$message,$headers);
+		//@mail($recipient,$subject,$message,$headers);
 	}
 	
 	$doc->appendChild($root);

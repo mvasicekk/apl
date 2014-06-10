@@ -4,7 +4,7 @@
 <?
 include "../fns_dotazy.php";
 require_once '../db.php';
-
+// pripojit k DB
 dbConnect();
 require("../libs/Smarty.class.php");
 $smarty = new Smarty;
@@ -116,7 +116,7 @@ $smarty = new Smarty;
 
   
 		// vytahnout informace o pracovnim planu
-		$sql="select dpos_id,`kz-druck` as kz_druck,mittel,`TaetNr-Aby` as taetnr,`TaetBez-Aby-D` as bez_d,
+		$sql="select dpos_id,`kz-druck` as kz_druck,`TaetNr-Aby` as taetnr,`TaetBez-Aby-D` as bez_d,
 		`TaetBez-Aby-T` as bez_t,`VZ-min-kunde` as vzkd,`VZ-min-aby` as vzaby,
 		KzGut,bedarf_typ,lager_von,lager_nach from dpos where (teil='".$_GET['teil']."') order by taetnr asc,stamp desc";
 		
@@ -151,34 +151,16 @@ $smarty = new Smarty;
 		$smarty->assign("letzte_reklamationen",$letzteReklamationen);
 		$letzteReklamationArray = $a->getLetzteReklamation($teil);
 		$smarty->assign("letzte_reklamationen_array",$letzteReklamationArray);
-		
-		
+	
 		//security
 		$elementsIdArray = array(
-		    "show_att_muster",
-		    "show_att_empb",
-		    "show_att_ppa",
-		    "show_att_gpa",
-		    "show_att_vpa",
-		    "show_att_qanf",
-		    "show_att_zeit",
-		    "show_att_liefer",
-		    "show_att_mehr",
-		    "show_att_rekl",
-		    "showima_sec",
-		    "teillang_sec",
-		    "status_sec",
-		    "gew_sec",
-		    "brgew_sec",
-		    "dposedit",
+		    "dposedit"
 		);
 		$puser = $_SESSION['user'];
 		foreach ($elementsIdArray as $elementId){
 		    $display_sec[$elementId] = $a->getDisplaySec('dkopf',$elementId,$puser)?'inline-block':'none';
-		    $edit_sec[$elementId] = $a->getPrivilegeSec('dkopf',$elementId,$puser,"schreiben")?'':'readonly="readonly"';
 		}
 		$smarty->assign("display_sec",$display_sec);
-		$smarty->assign("edit_sec",$edit_sec);
 	}
-	$smarty->display('dkopf.tpl');
+	$smarty->display('dkopf_old.tpl');
 ?>

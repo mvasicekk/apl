@@ -18,7 +18,7 @@ require_once '../db.php';
     $docsArray = $apl->getFilesForPath($ppaDir,NULL,TRUE);
     $formDiv = "<div id='dokuform'>";
     $formDiv.="<table id='dokutable'>";
-    $formDiv.="<tr><td style='font-size:x-small;' colspan='5'></td>";
+    $formDiv.="<tr><td style='font-size:x-small;' colspan='5'><input type='button' id='pickfiles' href='javascript:;' value='Dateien auswaehlen' /></td>";
     $formDiv.="<input type='hidden' id='rootPath' value='$rootPath' />";
     $formDiv.="<td style='text-align:right;font-size:x-small;' >"." (".$extensions.")</td></tr>";
     if ($docsArray !== NULL) {

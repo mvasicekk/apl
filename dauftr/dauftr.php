@@ -3,6 +3,8 @@
 ?>
 <?
 include "../fns_dotazy.php";
+require_once '../db.php';
+
 dbConnect();
 require("../libs/Smarty.class.php");
 $smarty = new Smarty;
@@ -84,7 +86,11 @@ $smarty = new Smarty;
 		// ma tato zakazka hotovou fakturu ?
 		$hasrechnung = has_rechnung($_GET['auftragsnr']);
 		$smarty->assign("hasrechnung",$hasrechnung);
-	
+
+		$a = AplDB::getInstance();
+		$puser = $_SESSION['user'];
+		$preisupdate = $a->getDisplaySec('dauftr', 'preisupdate', $puser);
+		$smarty->assign("canpreisupdate",$preisupdate);
 		
 	}
 	$smarty->display('dauftr.tpl');

@@ -546,7 +546,7 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$summenArray,$aussArtArray,$
 
         
         $pdfobjekt->Ln();
-
+	// label pro sumu
         // a jeste radek s procentama
         // teil
         $pdfobjekt->Cell($cells['teil']['sirka']+$cells['auftragsnr']['sirka'],$vyskaradku,'A Gewicht in % '.$vonAussText,'B',0,'L',$fill);

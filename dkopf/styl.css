@@ -80,10 +80,16 @@ a.abutton{
 	z-index:99;
 }
 
+#docutablescroller{
+    max-height: 200px;
+    overflow-y: auto;
+}    
+
+
 #dokutable{
     border-collapse: collapse;
 /*    border: 1px solid black;*/
-    width: 100%;
+    width: 90%;
 }    
 
 td.filetableheader{
@@ -105,11 +111,11 @@ tr.lichy{
     background-color:rgb(220,220,220);
 }    
 
-#dokutable td{
+#dokutable #dokutable_edit td{
 /*    border: 1px solid black;*/
     padding-bottom: 4px;
     padding-top: 4px;
-
+    font-size: 11px;
 }    
 
 
@@ -139,6 +145,84 @@ tr.lichy{
     padding: 5px;
     opacity: 0.95;
     z-index: 999;
+}    
+
+#imapart{
+    background-color: #ffd;
+    border: 2px solid #ff0;
+}
+
+#emapart{
+    background-color: #dfd;
+    border: 2px solid #0f0;
+}
+
+#imaform{
+    position: absolute;
+    left: 10px;
+    top: 76px;
+    width: 775px;
+    height: 320px;
+    overflow:auto;
+    background-color:rgb(255,255,180);
+    border: 2px solid #000;
+    padding: 5px;
+    opacity: 0.95;
+    z-index: 999;
+}    
+
+#imaeditform{
+    position: absolute;
+    left: 10px;
+    top: 76px;
+    width: 706px;
+    background-color:rgb(230,230,255);
+    border: 2px solid #00f;
+    padding: 5px;
+    opacity: 1;
+    z-index: 999;
+}    
+
+#imaselectimform{
+    position: absolute;
+    left: 74px;
+    top: 136px;
+    background-color:rgb(255,255,180);
+    border: 2px solid #ff0;
+    padding: 5px;
+    opacity: 0.75;
+    z-index: 999;
+}    
+
+#imaselectpalform{
+    position: absolute;
+    left: 78px;
+    top: 162px;
+    background-color:rgb(255,255,180);
+    border: 2px solid #ff0;
+    padding: 5px;
+    opacity: 0.75;
+    z-index: 999;
+}    
+
+#imaselecttatform{
+    position: absolute;
+    left: 78px;
+    top: 187px;
+    height: 200px;
+    overflow-y: auto;
+    background-color:rgb(255,255,180);
+    border: 2px solid #ff0;
+    padding: 5px;
+/*    opacity: 0.75;*/
+    z-index: 999;
+}    
+
+#imanewdiv{
+    width: 90%;
+    background-color:rgb(230,255,230);
+    border: 1px solid #000;
+    padding: 5px;
 }    
 
 #formular_header {

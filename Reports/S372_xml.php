@@ -66,7 +66,7 @@ else{
     $pt.=" where";
     $pt.="     daufkopf.`ausliefer_datum` between '$date_von' and '$date_bis'";
     $pt.="     and daufkopf.kunde between '$kundevon' and '$kundebis'";
-    $pt.="     and drueck.`auss-art`<>0";
+//    $pt.="     and drueck.`auss-art`<>0";
     $pt.=" group by";
     $pt.="     daufkopf.kunde,";
     $pt.="     drueck.Teil,";

@@ -258,6 +258,8 @@ function getStk($bewArray,$behnr,$zustand){
 function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
         global $ex;
+	global $typ;
+	
         $apl = AplDB::getInstance();
         
 
@@ -305,6 +307,13 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
                 $behnr = $behaelter['behaelternr'];
                 $zustand = $spalte['zustand_id'];
                 $stk = getStk($stkArray, $behnr, $zustand);
+		//v pripade reportu jen pro ausschuss zubrazit jen sloupce "mit Ausschuss"=13,"mit Zweifler"=15
+		if($typ=="Ausschuss"){
+		    if($zustand==13 || $zustand==15) 
+			$stk=$stk;
+		    else
+			$stk='';
+		}
                 $pdfobjekt->Cell(20,$vyskaradku,$stk,'1',0,'C',$fill);
             }
             $pdfobjekt->Ln();
@@ -593,6 +602,36 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 	}
 }
 
+/**
+ *
+ * @param type $teil
+ * @return type 
+ */
+function getGutAussStkTeil($teil) {
+    
+    $importe = $teil->getElementsByTagName("import");
+    foreach ($importe as $import) {
+	list($gut,$auss) = getGutAussStkImport($import);
+	$aussSum+=$auss;
+	$sumGut+=$gut;
+    }
+    return array($sumGut,$aussSum);
+}
+
+/**
+ *
+ * @param type $import
+ * @return type 
+ */
+function getGutAussStkImport($import) {
+    $taetigkeiten = $import->getElementsByTagName("tat");
+    foreach ($taetigkeiten as $tat) {
+	$tatChildNodes = $tat->childNodes;
+	$aussSum+=(intval(getValueForNode($tatChildNodes, 'auss2_stk_exp'))+intval(getValueForNode($tatChildNodes, 'auss4_stk_exp'))+intval(getValueForNode($tatChildNodes, 'auss6_stk_exp')));
+	$sumGut+=(intval(getValueForNode($tatChildNodes, 'expstk')));
+    }
+    return array($sumGut,$aussSum);
+}
 
 
 require_once('../tcpdf/config/lang/eng.php');
@@ -659,6 +698,9 @@ foreach($exporte as $export)
 	foreach($teile as $teil)
 	{
 		$teilChildNodes = $teil->childNodes;
+		list($summeGut,$summeAuss) = getGutAussStkTeil($teil);
+		if(($typ=='Ausschuss') && ($summeAuss==0)) continue;
+		if(($typ=='Gute Teile'||$typ=='Mehrarbeit') && (($summeAuss+$summeGut)==0)) continue;
 		test_pageoverflow($pdf,5,$cells_header);
 		zahlavi_teil($pdf,5,array(255,255,255),$teilChildNodes);
                 nuluj_sumy_pole($sum_zapati_teil_array);
@@ -668,6 +710,10 @@ foreach($exporte as $export)
 		foreach($importe as $import)
 		{
 			$importChildNodes = $import->childNodes;
+			// zkontroluju zda radek neobsahuje jen same nuly
+			list($summeGut,$summeAuss) = getGutAussStkImport($import);
+			if(($typ=='Ausschuss') && ($summeAuss==0)) continue;
+			if(($typ=='Gute Teile'||$typ=='Mehrarbeit') && (($summeAuss+$summeGut)==0)) continue;
 			test_pageoverflow($pdf,5,$cells_header);
 			zahlavi_import($pdf,5,array(255,255,255),$importChildNodes);
 			nuluj_sumy_pole($sum_zapati_import_array);
