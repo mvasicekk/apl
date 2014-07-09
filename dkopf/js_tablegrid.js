@@ -172,17 +172,11 @@ function deletedpos(control)
 
 function edit(xml)
 {
-	
-	//alert(xml);
-	//alert(control.id);
 	var radekid='edit'+xml.getElementsByTagName('dpos_id').item(0).firstChild.data;
 	// posunout se z odkazu az na radkovy element, tj. o dve urovne nahoru
-	//alert(radekid);
 	var radek = document.getElementById(radekid).parentNode.parentNode;
-	
 	// zvyraznim radek barvou pozadi - je editovan
 	radek.style.backgroundColor='red';
-	//alert(radek);
 	var bunky_array = radek.getElementsByTagName('td');
 	for(i=0;i<promenne.length;i++)
 	{
@@ -222,13 +216,17 @@ function edit(xml)
 	// select pro lager_von
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	var td_select_lager_von = document.getElementById('td_select_lager_von'+dpos_id);
-	//td_select_lager_von.style.backgroundColor='red';
 	var lagerselect_von = document.createElement('select');
 	lagerselect_von.setAttribute('class','edit_dpos');
 	lagerselect_von.setAttribute('name','lager_von');
 	lagerselect_von.setAttribute('id','lager_von');
 	
-	lager_select_von_obsah_old=old_values[8];
+	
+	// index selectboxu s lager_von
+	// index selectboxu s lager_von// index selectboxu s lager_von
+	
+	
+	lager_select_von_obsah_old=old_values[9];
 	//alert('old_values[8]='+trim(lager_select_von_obsah_old));
 	// prvni bude prazdnej
 	lagerselect_innerHTML="<option> </option>";
@@ -266,7 +264,8 @@ function edit(xml)
 	lagerselect_nach.setAttribute('name','lager_nach');
 	lagerselect_nach.setAttribute('id','lager_nach');
 	
-	lager_select_nach_obsah_old=old_values[9];
+	// index selectboxu s lager_nach
+	lager_select_nach_obsah_old=old_values[10];
 	
 	// prvni bude prazdnej
 	lagerselect_innerHTML="<option> </option>";

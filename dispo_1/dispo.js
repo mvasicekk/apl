@@ -71,6 +71,12 @@ function updateDatumChanged(data){
 
 
     $('input[id^=solltag_]').bind('change',sollTagChanged);
+    $('input[id^=solltag_]').bind('click',sollTagFocus);
+}
+
+function sollTagFocus(event){
+    //alert('focus');
+    $(this).select();
 }
 
 function sollTagChanged(event){

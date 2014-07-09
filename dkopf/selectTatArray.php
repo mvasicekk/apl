@@ -27,7 +27,7 @@ require_once '../db.php';
 	foreach ($tatArrayBox as $tA){
 	    list($tnr,$vzaby) = split(':',$tA);
 	    array_push($tatnrArray, $tnr);
-	    $tatBoxArray[$tnr]=  floatval($vzaby);
+	    $tatBoxArray[$tnr]=  floatval(strtr($vzaby,',','.'));
 	}
     }
     $apl = AplDB::getInstance();

@@ -61,10 +61,12 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 	<table cellpadding="1px" class="formulartable" border="0">
 	<tr>
 		<td>
-	
+
+			<span style="display:{$display_sec.kunde_sec};" id="kunde_sec">
 			<label for="kunde">Kunde/zakaznik</label>
-			<input onblur="getDataReturnXml('./validate_kunde.php?value='+this.value, validate_kunde);" maxlength='3' size="3" type="text" id="kunde" name="kunde" value="{$kunde_value}"/>
+			<input {$edit_sec.kunde_sec} onblur="getDataReturnXml('./validate_kunde.php?value='+this.value, validate_kunde);" maxlength='3' size="3" type="text" id="kunde" name="kunde" value="{$kunde_value}"/>
 			<input size='45' type='text' class='hidden' id='kunde_failed' value='Falsche Kundennummer / spatne cislo zakaznika' />
+			</span>
 
 			<span style="display:{$display_sec.teillang_sec};" id="teillang_sec">
 			    <label for="teillang">Originalteilnummer/originalni cislo</label>
@@ -82,9 +84,11 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<label for="teil">Teil/Dil</label>
 			<input class='disabled_bold' disabled readonly onblur="getDataReturnXml('./validate_teil.php?value='+this.value, validate_teil);" maxlength='10' size="10" type="text" id="teil" name="teil" value="{$teil_value}"/>
 			<input size='45' type='text' class='hidden' id='teil_failed' value='Teilnummerfehler' />
-	
+
+			<span style="display:{$display_sec.bezeichnung_sec};" id="bezeichnung_sec">
 			<label for="bezeichnung">Bezeichnung/oznaceni</label>
-			<input size="40" type="text" id="bezeichnung" name="bezeichnung" value="{$bezeichnung_value}"/>
+			<input {$edit_sec.bezeichnung_sec} size="40" type="text" id="bezeichnung" name="bezeichnung" value="{$bezeichnung_value}"/>
+			</span>
 		</td>
 	</tr>
 	<tr>
@@ -277,15 +281,6 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 				 <td>
 				     <input style="display:{$display_sec.show_att_qanf};" id='show_att_qanf' type='button' value="Q-Anforderungen" acturl='./showTeilAtt.php?att=qanf' />
 				 </td>
-				 <td>
-				     <input style="display:{$display_sec.show_att_zeit};" id='show_att_zeit' type='button' value="Zeit" acturl='./showTeilAtt.php?att=zeit' />
-				 </td>
-				 <td>
-				     <input style="display:{$display_sec.show_att_liefer};" id='show_att_liefer' type='button' value="Liefer" acturl='./showTeilAtt.php?att=liefer' />
-				 </td>
-				 <td>
-				     <input style="display:{$display_sec.show_att_mehr};" id='show_att_mehr' type='button' value="Mehrarbeit" acturl='./showTeilAtt.php?att=mehr' />
-				 </td>
  				 <td>
 				     <input style="display:{$display_sec.show_att_rekl};" id='show_att_rekl' type='button' value="Reklamation" acturl='./showTeilAtt.php?att=rekl' />
 				 </td>
@@ -308,13 +303,19 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td>Bezeichnung (Deutsch)</td>
 			<td>oznaceni (cesky)</td>
 			<td>Mittel</td>
-			<td>vzkd</td>
+			{if $display_sec.dposvzkd_sec=="inline-block"}
+			<td>
+			    vzkd
+			</td>
+			{/if}
 			<td>vzaby</td>
 			<td>G</td>
 			<td>Bedarf</td>
 			<td>l. von</td>
 			<td>l. nach</td>
+			{if $display_sec.dposedit=="inline-block"}
 			<td width='60'>&nbsp;</td>
+			{/if}
 		</tr>
 		{foreach from=$dpos item=polozka}
 		{if $polozka.KzGut eq "G"}
@@ -324,23 +325,23 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 		<tr id='tr{$polozka.dpos_id}' bgcolor='{cycle values="#eeeeee,#dddddd"}'>
 		{/if}
 		
-			{if $level gte 9}
+			{if $display_sec.kzdruck_sec=="inline-block"}
 				<td onmouseover="this.style.cursor='pointer';" onclick="getDataReturnText('./toggle_kz_druck.php?dpos_id={$polozka.dpos_id}', toggle_kz_druck);" id='druck{$polozka.dpos_id}' {if $polozka.kz_druck==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
 			{else}
-				<td onmouseover="this.style.cursor='pointer';" id='druck{$polozka.dpos_id}' {if $polozka.kz_druck==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
+				<td id='druck{$polozka.dpos_id}' {if $polozka.kz_druck==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
 			{/if}
 			
 			<td id='td_select_taetnr{$polozka.dpos_id}' align='right'>{$polozka.taetnr}</td>
 			<td>{$polozka.bez_d}</td>
 			<td>{$polozka.bez_t}</td>
 			<td>{$polozka.mittel}</td>
-			<td align='right'>
-				{if $level gte 9}
+			{if $display_sec.dposvzkd_sec=="inline-block"}
+			    <td align='right'>
+				
 					{$polozka.vzkd|string_format:"%.4f"}
-				{else}
-					l9
-				{/if}
-			</td>
+			    </td>
+			{/if}
+			
 			<td align='right'>{$polozka.vzaby|string_format:"%.4f"}</td>
 			<td>{$polozka.KzGut|string_format:"%2s"}</td>
 			<td>{$polozka.bedarf_typ|string_format:"%2s"}</td>
@@ -348,10 +349,8 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 			<td id='td_select_lager_von{$polozka.dpos_id}'>{$polozka.lager_von}</td>
 			<td id='td_select_lager_nach{$polozka.dpos_id}'>{$polozka.lager_nach}</td>
 			
-			{if $level gte 9}
+			{if $display_sec.dposedit=="inline-block"}
 				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a style="display:{$display_sec.dposedit}" id='edit{$polozka.dpos_id}' onclick="getDataReturnXml('./edit_dpos_row.php?dpos_id={$polozka.dpos_id}', edit);" href='#'>edit</a></td>
-			{else}
-				<td onmouseover="this.style.cursor='pointer';" id='tdedit{$polozka.dpos_id}'><a id='edit{$polozka.dpos_id}' href='#'>l9</a></td>
 			{/if}
 		</tr>
 		{/foreach}
@@ -479,23 +478,24 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 <table width='100%' border='0' cellspacing='0'>
 <tr>
 	<td>
+	    <span style="display:{$display_sec.teilsuchen_sec};" id="teilsuchen_sec">
 		<input class='formularbutton' type='button' value='teil suchen / hledat dil' onclick="document.location.href='teilsuchen.php';"/>
+	    </span>
 	</td>
 	<td>
+	    <span style="display:{$display_sec.posneu_sec};" id="posneu_sec">
 		<input class='formularbutton' id='position_neu' type='button' value='Neue Position / nova operace' onclick="positionneu();"/>
-	</td>
-	<td>
-		<input class='formularbutton' id='teil_neu' disabled='disabled' type='button' value='teil neu / novy dil' onclick="document.location.href='teilsuchen.php';"/>
-	</td>
-	<td>
-		<input class='formularbutton' id='teil_edit' disabled type='button' value='Teil aendern' onclick="document.location.href='teilnraendern.php?teil={$teil_value}';"/>
+	    </span>
 	</td>
 </tr>
 <tr>
 	<td>
+	    <span style="display:{$display_sec.D510info_sec};" id="D510info_sec">
 		<input class='formularbutton' id='info_D510' type='button' value='Info APL D510' onClick="location.href='../get_parameters.php?popisky=Teil&promenne=teil&values={$teil_value}&report=D510'"/>
+	    </span>
 	</td>
 	<td>
+	    <span style="display:{$display_sec.teilsave_sec};" id="teilsave_sec">
 		<input id='teil_save' class='formularbutton' type='button' value='Aenderungen speichern' 
 		onclick="getDataReturnXml('./save_dkopf.php?teil='+encodeControlValue('teil')
 												+'&kunde='+encodeControlValue('kunde')
@@ -520,9 +520,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 //												+'&muster_freigabe2_vom='+encodeControlValue('muster_freigabe2_vom')
 //												+'&muster_freigabe2='+encodeSelectControlValue('muster_freigabe2')
 												, saverefresh);"/>
-	</td>
-	<td>
-		<input id='lager_zugang' class='formularbutton' disabled='true' type='button' value='Lager1 Zugang / vlozeni do skladusss' onclick="rebuildpage();"/>
+	    </span>
 	</td>
 	<td>
 		<input class='formularEndbutton' type='button' value='Ende / konec' onclick="document.location.href='../index.php';"/>

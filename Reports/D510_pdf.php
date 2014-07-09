@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once "../db.php";
 
 $doc_title = "D510";
 $doc_subject = "D510 Report";
@@ -85,13 +86,16 @@ array(
 => array ("popis"=>"","sirka"=>10,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "KzGut" 
-=> array ("popis"=>"","sirka"=>10,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>7,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_d" 
-=> array ("popis"=>"","sirka"=>45,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>35,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_t" 
-=> array ("popis"=>"","sirka"=>45,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>35,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+
+"mittel" 
+=> array ("popis"=>"","sirka"=>25,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd" 
 => array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -122,10 +126,13 @@ array(
 => array ("popis"=>"taetkz\nRE   Stat.","sirka"=>15,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "KzGut" 
-=> array ("popis"=>"Kz\nGut","sirka"=>10,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"Kz\nGut","sirka"=>7,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_d" 
-=> array ("popis"=>"Bezeichnung\noznaceni","sirka"=>90,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"Bezeichnung\noznaceni","sirka"=>70,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+
+"mittel" 
+=> array ("popis"=>"\nAM","sirka"=>25,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd" 
 => array ("nf"=>array(4,',',' '),"popis"=>"VzKd\nmin/stk","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -137,7 +144,7 @@ array(
 => array ("popis"=>"Lager\nvon   nach","sirka"=>20,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "bedarf_typ" 
-=> array ("popis"=>"\nBedarf","sirka"=>0,"ram"=>'B',"align"=>"R","radek"=>1,"fill"=>0)
+=> array ("popis"=>"Be-\ndarf","sirka"=>0,"ram"=>'B',"align"=>"R","radek"=>1,"fill"=>0)
 
 );
 
@@ -306,10 +313,20 @@ function zahlavi_teil($pdfobjekt,$childNodes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_pozice($pdfobjekt,$cells)
 {
-	$pdfobjekt->SetFont("FreeSans", "B", 7);
-	foreach($cells as $cell)
+		$a = AplDB::getInstance();
+		$puser = $_SESSION['user'];
+
+    $pdfobjekt->SetFont("FreeSans", "B", 7);
+	foreach($cells as $nodename=>$cell)
 	{
-		$pdfobjekt->MyMultiCell($cell["sirka"],5,$cell['popis'],$cell["ram"],$cell["align"],$cell['fill']);
+		$cellobsah = $cell['popis'];
+    		// security
+		if($nodename=='vzkd'){
+		    $elementId = 'vzkd';
+		    $cellobsah=$a->getDisplaySec('d510',$elementId,$puser)?$cellobsah:"\n";
+		}
+
+		$pdfobjekt->MyMultiCell($cell["sirka"],5,$cellobsah,$cell["ram"],$cell["align"],$cell['fill']);
 	}
 	$pdfobjekt->Ln();
 	$pdfobjekt->Ln();
@@ -321,33 +338,46 @@ function zapati_teil($pdfobjekt,$summe_array)
 {
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	//$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	$pdfobjekt->Cell(5+10+5+10+10+45+45,6,"Summe alle Taetigkeiten",'T',0,'L',0);
+	$pdfobjekt->Cell(5+7+5+10+10+35+35+25,6,"Summe alle Taetigkeiten",'T',0,'L',0);
 
 	$obsah=number_format($summe_array['vzkd'],4,',',' ');
+	// security
+	$a = AplDB::getInstance();
+	$puser = $_SESSION['user'];
+	$elementId = 'vzkd';
+	$obsah=$a->getDisplaySec('d510',$elementId,$puser)?$obsah:'';
 	$pdfobjekt->Cell(15,6,$obsah,'T',0,'R',0);
 	$obsah=number_format($summe_array['vzaby'],4,',',' ');
 	$pdfobjekt->Cell(15,6,$obsah,'T',1,'R',0);
 
-	$pdfobjekt->Cell(5+10+5+10+10+45+45,6,"VzKd/VzAby",'T',0,'L',0);
+	$obsah = "VzKd/VzAby";
+	$obsah=$a->getDisplaySec('d510',$elementId,$puser)?$obsah:'';
+	$pdfobjekt->Cell(5+7+5+10+10+35+35+25,6,$obsah,'T',0,'L',0);
 
 	if($summe_array['vzaby']==0)
 		$cislo=0;
 	else
 		$cislo=$summe_array['vzkd']/$summe_array['vzaby'];
 		
+	
 	$obsah=number_format($cislo,4,',',' ');
+	$obsah=$a->getDisplaySec('d510',$elementId,$puser)?$obsah:'';
 	$pdfobjekt->Cell(30,6,$obsah,'T',1,'R',0);
 
     // podminene sumy
     $pdfobjekt->Ln();
-	$pdfobjekt->Cell(5+10+5+10+10+45+45,6,"Summe Regel-Taetigkeiten",'T',0,'L',0);
+	$pdfobjekt->Cell(5+7+5+10+10+35+35+25,6,"Summe Regel-Taetigkeiten",'T',0,'L',0);
 
 	$obsah=number_format($summe_array['sumvzkd_regel'],4,',',' ');
+	$obsah=$a->getDisplaySec('d510',$elementId,$puser)?$obsah:'';
 	$pdfobjekt->Cell(15,6,$obsah,'T',0,'R',0);
 	$obsah=number_format($summe_array['sumvzaby_regel'],4,',',' ');
 	$pdfobjekt->Cell(15,6,$obsah,'T',1,'R',0);
 
-	$pdfobjekt->Cell(5+10+5+10+10+45+45,6,"VzKd/VzAby",'T',0,'L',0);
+	$obsah = "VzKd/VzAby";
+	$obsah=$a->getDisplaySec('d510',$elementId,$puser)?$obsah:'';
+	
+	$pdfobjekt->Cell(5+7+5+10+10+35+35+25,6,$obsah,'T',0,'L',0);
 
 	if($summe_array['sumvzaby_regel']==0)
 		$cislo=0;
@@ -355,6 +385,7 @@ function zapati_teil($pdfobjekt,$summe_array)
 		$cislo=$summe_array['sumvzkd_regel']/$summe_array['sumvzaby_regel'];
 
 	$obsah=number_format($cislo,4,',',' ');
+	$obsah=$a->getDisplaySec('d510',$elementId,$puser)?$obsah:'';
 	$pdfobjekt->Cell(30,6,$obsah,'T',0,'R',0);
 
 }
@@ -362,14 +393,12 @@ function zapati_teil($pdfobjekt,$summe_array)
 //zobraz_pozice($pdf,$tatChildNodes,$cells);
 function zobraz_pozice($pdfobjekt,$childNodes,$cells)
 {
-
-
 	
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
 	foreach($cells as $nodename=>$cell)
 	{
-                $pdfobjekt->SetFont("FreeSans", "", 8);
+                $pdfobjekt->SetFont("FreeSans", "", 7);
 		if(array_key_exists("nf",$cell))
 		{
 			$cellobsah = 
@@ -383,7 +412,7 @@ function zobraz_pozice($pdfobjekt,$childNodes,$cells)
                if($nodename=="kzdruck"){
                     $cellobsah=getValueForNode($childNodes,$nodename);
                     if($cellobsah!=0){
-                            $pdfobjekt->SetFont("FreeSans", "B", 8);
+                            $pdfobjekt->SetFont("FreeSans", "B", 7);
                             $cellobsah="x";
                     }
                     else{
@@ -391,7 +420,15 @@ function zobraz_pozice($pdfobjekt,$childNodes,$cells)
                     }
                 }
 
-                // napadny odlepenec
+		// security
+		$a = AplDB::getInstance();
+		$puser = $_SESSION['user'];
+
+		if($nodename=='vzkd'){
+		    $elementId = 'vzkd';
+		    $cellobsah=$a->getDisplaySec('d510',$elementId,$puser)?$cellobsah:'';
+		}
+
                 
 		$pdfobjekt->Cell($cell["sirka"],6,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}

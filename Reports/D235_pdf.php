@@ -220,8 +220,9 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	$pdfobjekt->SetXY($x_pocatek,$y_pocatek);
 	$pdfobjekt->Cell(10,3,"taetnr",'B',0,'L');
-	$pdfobjekt->Cell(55,3,"Bezeichnung",'B',0,'L');
-	$pdfobjekt->Cell(55,3,"oznaceni",'B',0,'L');
+	$pdfobjekt->Cell(45,3,"Bezeichnung",'B',0,'L');
+	$pdfobjekt->Cell(45,3,"oznaceni",'B',0,'L');
+	$pdfobjekt->Cell(20,3,"AM",'B',0,'L');
 	$pdfobjekt->Cell(15,3,"ks/hod",'B',0,'R');
 	$pdfobjekt->Cell(15,3,"min/stk",'B',1,'R');
 	$pdfobjekt->SetX($x_pocatek);
@@ -234,9 +235,9 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 		foreach($komentare as $komentar)
 		{
 			$pdfobjekt->Cell(10,3,$komentar["taetnr"],0,0,'L');
-			$pdfobjekt->Cell(55,3,$komentar["tatbez_d"],0,0,'L');
-			$pdfobjekt->Cell(55,3,$komentar["tatbez_t"],0,0,'L');
-
+			$pdfobjekt->Cell(45,3,$komentar["tatbez_d"],0,0,'L');
+			$pdfobjekt->Cell(45,3,$komentar["tatbez_t"],0,0,'L');
+			$pdfobjekt->Cell(20,3,$komentar["mittel"],0,0,'L');
 			$obsah=number_format($komentar["ks_hod"],0,',',' ');
 			$pdfobjekt->Cell(15,3,$obsah,0,0,'R');
 			$obsah=number_format($komentar["vzaby"],2,',',' ');
@@ -249,9 +250,9 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 	{
 		$taetigkeitChildNodes = $taetigkeit->childNodes;
 		$pdfobjekt->Cell(10,3,getValueForNode($taetigkeitChildNodes,"taetnr"),0,0,'L');
-		$pdfobjekt->Cell(55,3,getValueForNode($taetigkeitChildNodes,"tatbez_d"),0,0,'L');
-		$pdfobjekt->Cell(55,3,getValueForNode($taetigkeitChildNodes,"tatbez_t"),0,0,'L');
-
+		$pdfobjekt->Cell(45,3,getValueForNode($taetigkeitChildNodes,"tatbez_d"),0,0,'L');
+		$pdfobjekt->Cell(45,3,getValueForNode($taetigkeitChildNodes,"tatbez_t"),0,0,'L');
+		$pdfobjekt->Cell(20,3,getValueForNode($taetigkeitChildNodes,"mittel"),0,0,'L');
 		$obsah=number_format(getValueForNode($taetigkeitChildNodes,"ks_hod"),0,',',' ');
 		$pdfobjekt->Cell(15,3,$obsah,0,0,'R');
 		$obsah=number_format(getValueForNode($taetigkeitChildNodes,"vzaby"),2,',',' ');
@@ -273,11 +274,11 @@ function show_DokuLegend($pdf,$teil,$xOffset,$yOffset,$height){
     // prepare legend array
     $a = AplDB::getInstance();
     $pdf->SetFont("FreeSans", "", 6);
-    $dokLegendArray = $a->getTeilDokuArray($teil);
+    $dokLegendArray = $a->getTeilDokuDistinctDokuArray($teil);
     //$aussLegendArray = array(array("aussnr"=>"10"),array("aussnr"=>"20"));
     if($dokLegendArray!==NULL){
 	$dokCount = count($dokLegendArray);
-	$rowHeight = $height/5;
+	$rowHeight = $height/10;
 	$y=$yOffset;
 	$pocet=0;
         $vpa79=0;
@@ -289,7 +290,7 @@ function show_DokuLegend($pdf,$teil,$xOffset,$yOffset,$height){
             {
                 if ($dokunr == 50)
                 {
-                    $pdf->SetXY($xOffset, $yOffset+$rowHeight*6-1);
+                    $pdf->SetXY($xOffset, $yOffset+$rowHeight*11-2);
                     $vpa79 = 1;
                 }
                 else
@@ -304,12 +305,12 @@ function show_DokuLegend($pdf,$teil,$xOffset,$yOffset,$height){
                 $y+=$rowHeight;
                 // pojistka na max. 5 dokumentu
                 $pocet++;
-                if($pocet>5) break;
+                if($pocet>10) break;
             }
 	}
         if ($vpa79 == 0)
         {
-            $pdf->SetXY($xOffset, $yOffset+$rowHeight*6-1);
+            $pdf->SetXY($xOffset, $yOffset+$rowHeight*11-2);
             $pdf->Write($rowHeight, "50 - ?");
         }
     }    
@@ -405,6 +406,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 
     $pdfobjekt->SetFont("FreeSans", "", 7);
 
+    $citac=0;
     foreach ($reklArray as $rekl) {
 	$pdfobjekt->Cell(12, 3, $rekl["rekl_nr"], 0, 0, 'L');
 	$reklDatum = substr($rekl['rekl_datum'],6)."-".substr($rekl['rekl_datum'],3,2)."-".substr($rekl['rekl_datum'],0,2);
@@ -414,6 +416,8 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 	$pdfobjekt->Cell(17, 3, $rekl["giesstag"], 0, 0, 'L');
 	$pdfobjekt->Cell(10, 3, $rekl["interne_bewertung"], 0, 1, 'R');
 	$pdfobjekt->SetX($x_pocatek);
+	$citac++;
+	if($citac>4) break;
     }
     
     if($restAnzahl>0)
@@ -425,7 +429,9 @@ function zobraz_reklamace($pdfobjekt, $teil) {
     $pdfobjekt->SetDrawColor(0,0,0);
     $pdfobjekt->SetLineWidth(0.2);
     $rest = $restAnzahl>0?1:0;
-    return count($reklArray)+$rest;
+    $celkPocet = count($reklArray);
+    if($celkPocet>5) $celkPocet=5;
+    return $celkPocet+$rest;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -553,24 +559,24 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->MultiCell(0,4,"SYS (PersNr)\nSYS (o.č.)",1,'L',0);
 	// radky tabulky
 	$table = array(
-	    array(25,'1',10),
-	    array(20,'1',10),
-	    array(13,'B',10),
-	    array(13,'B',10),
-	    array(13,'B',10),
-	    array(13,'B',10),
-	    array(13,'B',10),
-	    array(28,'1',10),
-	    array(15,'1',10),
-	    array(25,'1',10),
-	    array(20,'1',10),
-	    array(20,'1',10),
-	    array(25,'1',10),
-	    array(0,'1',10),
+	    array(25,'1',9),
+	    array(20,'1',9),
+	    array(13,'B',9),
+	    array(13,'B',9),
+	    array(13,'B',9),
+	    array(13,'B',9),
+	    array(13,'B',9),
+	    array(28,'1',9),
+	    array(15,'1',9),
+	    array(25,'1',9),
+	    array(20,'1',9),
+	    array(20,'1',9),
+	    array(25,'1',9),
+	    array(0,'1',9),
 	);
 	
 	$yProCarky = 0;
-	for ($i = 0; $i < 9; $i++) {
+	for ($i = 0; $i < 8; $i++) {
 	    if($i==0) $yProCarky=$pdfobjekt->GetY();
 	    foreach ($table as $poradi => $cell) {
 		$pdfobjekt->MyMultiCell($cell[0],$cell[2],"",$cell[1],'C',0);
@@ -579,13 +585,13 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	}
 
 	// oddelovaci carky pro operace / aussarten
-	for($i=0;$i<9;$i++){
+	for($i=0;$i<8;$i++){
 	    for($j=0;$j<4;$j++){
 		$pdfobjekt->Line(
 			$x_pocatek+25+20+$table[2][0]*($j+1), 
-			$yProCarky+9+$i*10, 
+			$yProCarky+8+$i*9, 
 			$x_pocatek+25+20+$table[2][0]*($j+1), 
-			$yProCarky+10+$i*10
+			$yProCarky+9+$i*9
 			);
 	    }
 	    // aussarten
@@ -597,7 +603,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 		    +$table[7][0]
 		    +$table[8][0]
 		    +$table[9][0]/2, 
-		    $yProCarky+7+$i*10, 
+		    $yProCarky+7+$i*9, 
 		    $x_pocatek
 		    +$table[0][0]
 		    +$table[1][0]
@@ -605,7 +611,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 		    +$table[7][0]
 		    +$table[8][0]
 		    +$table[9][0]/2, 
-		    $yProCarky+10+$i*10);
+		    $yProCarky+9+$i*9);
 	}
 
 	// spodni ramecek s poznamkou
@@ -614,17 +620,17 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	// aussLegend
 	$pdfobjekt->SetFont("FreeSans", "", 8);
 	$yTemp = $pdfobjekt->GetY();
-	$pdfobjekt->Rect($x_pocatek,$yTemp,45,15);
+	$pdfobjekt->Rect($x_pocatek,$yTemp,45,15+21);
 	show_AussLegend($pdfobjekt,$x_pocatek,$yTemp+1,15-2);
 	//$pdfobjekt->SetY($yTemp);
 
 	// dokumente
-	$pdfobjekt->Rect($x_pocatek+45, $yTemp, 5*13+28+15+25,15 );
-	show_DokuLegend($pdfobjekt,$teilnr,$x_pocatek+45+0,$yTemp+1,15-2);
+	$pdfobjekt->Rect($x_pocatek+45, $yTemp, 5*13+28+15+25,15+21 );
+	show_DokuLegend($pdfobjekt,$teilnr,$x_pocatek+45+0,$yTemp+1,15+21-2);
 	
 	
 	// vpa + verpackung
-	$pdfobjekt->Rect($x_pocatek+45, $yTemp, $xHranice-($x_pocatek+45),15 );
+	$pdfobjekt->Rect($x_pocatek+45, $yTemp, $xHranice-($x_pocatek+45),15+21 );
         $verpackungen;
         foreach($paletteChildNodes as $paletteChildNode)
             if ($paletteChildNode->nodeName == "taetigkeiten")
@@ -648,12 +654,6 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
         $pdfobjekt->SetXY(150, $yTemp + 1);
         $verpackungsmenge = getValueForNode($paletteChildNodes, "verpackungmenge");
         $pdfobjekt->Cell(45, 2.5, "1x VPE = " . $verpackungsmenge . " stk/ks", "", 0 , "L");
-//	$pdfobjekt->SetY($pdfobjekt->GetY()+2);
-//	$pdfobjekt->SetX($x_pocatek+45);
-//	$vpe = "VPE: ".getValueForNode($paletteChildNodes,"verpackungmenge")." Stk"."  VPA: . . .";
-//	$pdfobjekt->Write(5,$vpe);
-//	$x=$pdfobjekt->GetX();
-//	$y=$pdfobjekt->GetY();
 }
 
 

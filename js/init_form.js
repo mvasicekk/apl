@@ -59,9 +59,9 @@ function init_level(level)
 	}
 	
 	// nastavim fokus na username pokud ho teda mam
-	var usercontrol = document.getElementById('username');
-	//alert('usercontrol='+usercontrol);
-	if(usercontrol)
-		usercontrol.focus();
+//	var usercontrol = document.getElementById('username');
+//	//alert('usercontrol='+usercontrol);
+//	if(usercontrol)
+//		usercontrol.focus();
 		
 }

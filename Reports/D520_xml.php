@@ -36,6 +36,7 @@ $sql.=" dpos.`TaetBez-Aby-T` as tatbez_t,";
 $sql.=" dpos.lager_von,";
 $sql.=" dpos.lager_nach,";
 $sql.=" dpos.bedarf_typ,";
+$sql.=" dpos.mittel,";
 $sql.=" d.`mehrarb-kz` as tat,";
 $sql.=" d.`abgnr`,";
 $sql.=" d.`preis`, ";
@@ -97,6 +98,7 @@ $options = array(
                                         'lager_von',
                                         'lager_nach',
                                         'bedarf_typ',
+					'mittel',
                                         'preis',
                                         'vzkd',
                                         'vzaby',

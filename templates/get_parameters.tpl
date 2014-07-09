@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-     
+    <meta name="viewport" content="width=device-width, initial-scale=1" />          
     <title>
       APL Abydos
     </title>    
@@ -12,9 +12,6 @@
     <script type = "text/javascript" src = "./js/jquery-ui-1.8.14.custom.min.js"></script>
     <script type = "text/javascript" src = "./js/jquery.ui.datepicker-cs.js"></script>
     <script type = "text/javascript" src = "./js_functions.js"></script>
-
-	
-
 {literal}
 <script type="text/javascript">
 function setvar(hodnota)
@@ -27,8 +24,6 @@ function setvar(hodnota)
 {/literal}
 </head>
 <body>
-<!-- pomocna procedura k vyzkouseni -->
-
 <div id="header">
 <h3 align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Auftragsabwicklung Produktionssteuerung</h3>
 </div>
@@ -42,8 +37,8 @@ function setvar(hodnota)
 
 </div>
 
-<div align="center" id="parametry">
-{ if $paramok==1 }
+<div id="parametry">
+{if $paramok==1 }
 <form action="viewreport.php" method="POST">
 	<table class="paramtable" border="0" cellspacing="0">
 	<tr>
@@ -57,7 +52,7 @@ function setvar(hodnota)
         {if $parametr.typ eq "*CB"||$parametr.typ eq "*RA"||$parametr.typ eq "*CH"}
         <tr><td colspan="2"><hr/></td></tr>
         {/if}
-		<td>&nbsp;{$parametr.label}</td>
+		<td class='paramlabel'>&nbsp;{$parametr.label}</td>
         <!-- ted se budu rohodovat podle typu -->
         {if $parametr.typ eq "*CB"}
             <td>
@@ -65,7 +60,7 @@ function setvar(hodnota)
             </td>
         {elseif $parametr.typ eq "*CH"}
             <td>
-             <input  type="checkbox" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="abyStartButton"  />
+             <input  type="checkbox" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  />
 <!--             {html_checkboxes separator="<br/>" name=$parametr.var values=$parametr.val output=$parametr.val}-->
             </td>
         {elseif $parametr.typ eq "*RA"}
@@ -73,20 +68,19 @@ function setvar(hodnota)
              {html_radios separator="<br/>" name=$parametr.var values=$parametr.val output=$parametr.val selected=$parametr.val[0]}
             </td>
         {else}
-		<td><input  {if $parametr.typ eq "*DATE"}class="datepicker"{/if} type="{$parametr.typ}" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="abyStartButton"  /></td>
+		<td><input  {if $parametr.typ eq "*DATE"}class="datepicker"{/if} type="{$parametr.typ}" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  /></td>
         {/if}
 		<input type="hidden" name="{$parametr.var}_label" value="{$parametr.label}"/>
 	</tr>
 	{/foreach}
     <tr><td colspan="2"><hr/></td></tr>
 	<tr>
-<!--		<td><input disabled='disabled' type="button" name="" value="Vorschau / nahled" id="tl_html" class="abyStartButton" onClick="setvar('html');form.submit();" /></td>-->
-		<td><input type="button" name="" value="Druck / tisk" id="tl_pdf" class="abyStartButton" onClick="setvar('pdf');form.submit();" /></td>
+		<td colspan="2"><input type="button" name="" value="Druck / tisk" id="tl_pdf" class="abyStartButton" onClick="setvar('pdf');form.submit();" /></td>
 		<input type="hidden" name="tl_tisk" id="tl_tisk" value="html"/>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<input type="button" value="Ende / konec" id="ende" style="margin-top: 15px;"  onClick="history.back();">
+	    <td colspan="2">
+			<input type="button" class="abyStartButton" value="Ende / konec" id="ende" style="margin-top: 15px;"  onClick="history.back();">
 		</td>
 	</tr>
 	</table>

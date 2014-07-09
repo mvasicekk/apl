@@ -16,6 +16,9 @@ $smarty = new Smarty;
 		$smarty->assign("level",$_SESSION['level']);
 		$smarty->assign("prihlasen",1);
 	}
+	else{
+	    header("Location: ../index.php");
+	}
 
 	// stranka je kodovana v utf8, tak chci vysledky z databaze taky v utf8 , protoze je mam ulozene v cp1250
 	mysql_query('set character_set_results = utf8');
@@ -155,22 +158,46 @@ $smarty = new Smarty;
 		
 		//security
 		$elementsIdArray = array(
+		    'kunde_sec',
+		    "teillang_sec",
+		    "status_sec",
+		    'bezeichnung_sec',
+		    "gew_sec",
+		    "brgew_sec",
+		    "wst_sec",
+		    "fa_sec",
+		    "vm_sec",
+		    "spg_sec",
+		    "restmengen_verw_sec",
+		    "letzterekl_sec",
+		    "bemerk_sec",
+		    "art_guseisen_sec",
+		    "preis_stk_gut_sec",
+		    "preis_stk_auss_sec",
+		    "fremdauftr_dkopf_sec",
+		    "jbvor_sec",
+		    "jbfuture_sec",
+		    "schwierigkeitsgrad_S11_sec",
+		    "schwierigkeitsgrad_S51_sec",
+		    "schwierigkeitsgrad_SO_sec",
+		    "showteildoku_sec",
+		    "showlagerzettel_sec",
+		    "showvpm_sec",
+		    "showima_sec",
 		    "show_att_muster",
 		    "show_att_empb",
 		    "show_att_ppa",
 		    "show_att_gpa",
 		    "show_att_vpa",
 		    "show_att_qanf",
-		    "show_att_zeit",
-		    "show_att_liefer",
-		    "show_att_mehr",
 		    "show_att_rekl",
-		    "showima_sec",
-		    "teillang_sec",
-		    "status_sec",
-		    "gew_sec",
-		    "brgew_sec",
 		    "dposedit",
+		    "teilsuchen_sec",
+		    "posneu_sec",
+		    "D510info_sec",
+		    "teilsave_sec",
+		    "kzdruck_sec",
+		    "dposvzkd_sec",
 		);
 		$puser = $_SESSION['user'];
 		foreach ($elementsIdArray as $elementId){

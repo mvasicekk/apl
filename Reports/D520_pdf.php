@@ -61,10 +61,13 @@ array(
 => array ("format"=>array(6,''),"popis"=>"","sirka"=>3,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_d"
-=> array ("trim"=>35,"format"=>array(6,''),"popis"=>"","sirka"=>40,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("trim"=>35,"format"=>array(6,''),"popis"=>"","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_t"
-=> array ("trim"=>35,"format"=>array(6,''),"popis"=>"","sirka"=>40,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("trim"=>35,"format"=>array(6,''),"popis"=>"","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+
+"mittel"
+=> array ("trim"=>20,"format"=>array(6,''),"popis"=>"","sirka"=>20,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd" 
 => array ("format"=>array(6,''),"nf"=>array(4,',',' '),"popis"=>"","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -111,10 +114,13 @@ array(
 => array ("format"=>array(6,''),"popis"=>"G","sirka"=>3,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_d"
-=> array ("format"=>array(6,''),"popis"=>"bez D","sirka"=>40,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("format"=>array(6,''),"popis"=>"bez D","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "tatbez_t"
-=> array ("format"=>array(6,''),"popis"=>"bez T","sirka"=>40,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("format"=>array(6,''),"popis"=>"bez T","sirka"=>30,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
+
+"mittel"
+=> array ("format"=>array(6,''),"popis"=>"AM","sirka"=>20,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd"
 => array ("format"=>array(6,''),"nf"=>array(4,',',' '),"popis"=>"vzkd","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -342,6 +348,7 @@ function zapati_teil($pdfobjekt,$cells,$childs,$vyskaRadku,$rgb,$sumArray){
     $obsah=number_format($sumArray[$typ],2,',',' ');
     $pdfobjekt->Cell(
                         $cells['tatbez_t']['sirka']
+			+$cells['mittel']['sirka']
                         ,$vyskaRadku
                         ,"SumGew [kg]: ".$obsah
                         ,'LTBR'
@@ -466,6 +473,7 @@ function zapati_sestava($pdfobjekt,$cells,$childs,$vyskaRadku,$rgb,$sumArray){
     $obsah=number_format($sumArray[$typ],2,',',' ');
     $pdfobjekt->Cell(
                         $cells['tatbez_t']['sirka']
+			+$cells['mittel']['sirka']
                         ,$vyskaRadku
                         ,"SumGew [kg]: ".$obsah
                         ,'LTBR'

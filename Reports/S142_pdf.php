@@ -2354,7 +2354,12 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
 
     if ($reporttyp == 'lohn') {
         if ($bMAStunden) {
-
+	    $stddiff = $aplDB->getStdDiff($monat, $jahr, $persnr);
+	    if($stddiff===NULL) 
+		$startStd = 0;
+	    else
+		$startStd = floatval ($stddiff['stunden']);
+	    
             $mehrarb = $aplDB->getPlusMinusStunden($monat, $jahr, $persnr);
             $vorjahr = $jahr;
             $vormonat = $monat - 1;
@@ -2404,7 +2409,14 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     $pdf->Cell($headerCells['frage']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
     $pdf->Cell($headerCells['nachtstd']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
     $pdf->Cell($headerCells['sonestd']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
-    $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
+    
+    // radek s pocatecni hodnotou prescasovych hodin
+    if ($reporttyp == 'lohn')
+        $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, number_format($startStd, 1, ',', ' '), 'TLR', 0, 'R', $fill);
+    else
+        $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
+
+//    $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
     $pdf->Cell($headerCells['vjRst']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
     $pdf->Cell($headerCells['jAnsp']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
     $pdf->Cell($headerCells['kor']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);

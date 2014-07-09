@@ -144,6 +144,47 @@ class AplDB {
     }
     
     /**
+     * 
+     */
+    public function getLeistungTable() {
+	$sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),day(current_date())-1) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit 30";
+	//echo $sql_leistung;
+	mysql_query('set names utf8');
+
+	$res = mysql_query($sql_leistung) or die(mysql_error());
+	$i = 0;
+	while ($row = mysql_fetch_array($res)) {
+	    $datum = $row['datum'];
+	    $pole[$i]['datum'] = $datum;
+	    $pg1 = $row['pg1'];
+	    $pole[$i]['pg1'] = $pg1;
+	    $sum_pg1+=$pg1;
+	    $pg3 = $row['pg3'];
+	    $pole[$i]['pg3'] = $pg3;
+	    $sum_pg3+=$pg3;
+	    $pg4 = $row['pg4'];
+	    $pole[$i]['pg4'] = $pg4;
+	    $sum_pg4+=$pg4;
+	    $pg9 = $row['pg9'];
+	    $pole[$i]['pg9'] = $pg9;
+	    $sum_pg9+=$pg9;
+	    $celkem = $row['celkem'];
+	    $pole[$i]['celkem'] = $celkem;
+	    $sum_celkem+=$celkem;
+	    $i++;
+	}
+	return array(
+	    'datum'=>$datum,
+	    'pole'=>$pole,
+	    'sum_pg1'=>$sum_pg1,
+	    'sum_pg3'=>$sum_pg3,
+	    'sum_pg4'=>$sum_pg4,
+	    'sum_pg9'=>$sum_pg9,
+	    'sum_celkem'=>$sum_celkem,
+	    );
+    }
+
+    /**
      *
      * @param int $persnr
      * @return array  
@@ -344,6 +385,89 @@ class AplDB {
     }
 
     /**
+ * zkontroluje, zda podle zadanych udaju povolit pristup do databaze
+ * 
+ *
+ * @param unknown_type $user
+ * @param unknown_type $pass
+ * @param unknown_type $ip
+ */
+public function grantAccess($user,$pass,$ip){
+	$sql_select="select name,password,realname,level from dbenutzer where ((name='$user') and (password='$pass'))";
+		$res = mysql_query($sql_select) or die(mysql_error());
+		if(mysql_affected_rows()>0){
+			// nasel jsem jmeno v databazi uzivatelu
+			$row=mysql_fetch_array($res);
+			$pole['realname']=$row['realname'];
+			$pole['name']=$row['name'];
+			$pole['level']=$row['level'];
+			// jeste zkontroluju ip adresu
+			// vytahnu si seznam povolenych adres z databaze
+			$sql = "select ip from ipaccess";
+			$res = mysql_query($sql);
+			$i=0;
+			while($row=mysql_fetch_array($res)){
+				// vemu jen cast adresy k prvni hvezdicce
+				$delka = strpos($row['ip'],"*");
+				if($delka>0)
+					$poleIPAdres[$i] = substr($row['ip'],0,$delka);
+				else
+					$poleIPAdres[$i] = $row['ip'];
+					
+				//echo "poleipadres[$i]=".$poleIPAdres[$i]."<br>";
+				$i++;
+			}
+			$ip = str_replace("_",".",$ip);
+			//echo "ip = $ip<br>";
+			// zkontrolu zda mi adresa padne do pole se vzorkama
+			foreach($poleIPAdres as $vzorek){
+				$vysledek = strstr($ip,$vzorek);
+				//echo "vysledek = $vysledek<br>";
+				if(strlen($vysledek)>0) break;
+			}
+			if(strlen($vysledek)>0){
+				// kontrola ip probehl uspesne
+				$pole['loginok']=1;
+				
+			}
+			else{
+				// ip naprosla kontrolou
+				$pole['loginok']=0;
+			}
+		}
+		else
+		{
+			$pole['loginok']=0;
+		}
+		
+		return $pole;
+    }
+
+    /**
+     *
+     * @return type 
+     */
+    public function get_pc_ip() {
+	$ip = $_SERVER["REMOTE_ADDR"];
+	$ip = strtr($ip, ".", "_");
+	return $ip;
+    }
+
+    /**
+     *
+     * @param type $username
+     * @param type $password
+     * @param type $prihlasen
+     * @param type $host 
+     */
+public function insertAccessLog($username,$password,$prihlasen,$host)
+{
+	$sql = "insert into accesslog (name,password,login_ok,host) values ('$username','$password','$prihlasen','$host')";
+	mysql_query('set names utf8');
+	mysql_query($sql);
+}
+
+    /**
      *
      * @param type $kunde
      * @param type $abgnr
@@ -460,6 +584,31 @@ class AplDB {
         return $this->getQueryRows($sql);
     }
 
+    public function getInfoPanelsForPlaceId($place_id){
+    $sql.=" select ";
+    $sql.=" dinfotable.id,";
+    $sql.=" dinfotable.text1,";
+    $sql.=" dinfotable.text2,";
+    $sql.=" dinfotable.text3,";
+    $sql.=" dinfotable.text4,";
+    $sql.=" dinfotable.text5";
+    $sql.=" from dinfotable";
+    $sql.=" join dinfopanel on dinfopanel.dinfotable_id=dinfotable.id";
+    $sql.=" join dinfopanelplaces on dinfopanelplaces.id=dinfopanel.place_id";
+    $sql.=" where";
+    $sql.=" dinfopanelplaces.id=$place_id";
+    $sql.=" order by";
+    //CAST(field_name as SIGNED INTEGER)
+    $sql.=" CAST(dinfotable.text1 as SIGNED INTEGER),";
+    $sql.=" dinfotable.id";
+    
+    return $this->getQueryRows($sql);
+    }
+    
+    public function getInfoPanelPlaces(){
+	$sql = "select dinfopanelplaces.id,dinfopanelplaces.place from dinfopanelplaces order by place";
+        return $this->getQueryRows($sql);
+    }
     /**
      *
      * @param type $datumDB 
@@ -626,6 +775,21 @@ class AplDB {
             return NULL;
     }
 
+    /**
+     *
+     * @param type $formid 
+     */
+    public function getResourcesForFormId($formid){
+	$sql = "select element_id from resources where form_id='$formid'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $elements = array();
+	    foreach ($r as $row) array_push($elements, $row['element_id']);
+	    return $elements;
+	}
+	return NULL;
+    }
+    
     /**
      *
      * @param type $auftragsnr
@@ -1393,6 +1557,15 @@ class AplDB {
         }
     }
 
+    public function getUserRolesArray($user){
+	$sql.=" select dbenutzerroles.benutzername,dbenutzerroles.role_id,roles.`name` as rolename";
+	$sql.=" from dbenutzerroles";
+	$sql.=" join roles on roles.id=dbenutzerroles.role_id";
+	$sql.=" where dbenutzerroles.benutzername='$user'";
+	$sql.=" order by roles.`name`";
+	
+	return $this->getQueryRows($sql);
+    }
     /**
      *
      * @param <type> $reparaturID
@@ -1910,7 +2083,7 @@ class AplDB {
         $sql.=" values";
         $sql.=" ('$class','$idevent',$time,'$datetime','$type','$address','$badgenumber',$persnr,'$reason')";
         mysql_query($sql);
-        $ar = mysql_affected_rows();
+        $ar = mysql_insert_id();
         if ($ar > 0)
             return $ar;
         else
@@ -1948,7 +2121,7 @@ class AplDB {
     public function insertLastEdataFile($latest_filename, $size) {
         $sql = "insert into edatalogs (filename,size) values('$latest_filename',$size);";
         mysql_query($sql);
-        $ar = mysql_affected_rows();
+        $ar = mysql_insert_id();
         if ($ar > 0)
             return $ar;
         else
@@ -2224,6 +2397,10 @@ class AplDB {
             return TRUE;
     }
 
+    public function getPersInfoArray($persnr){
+	$sql = "select * from dpers where persnr=$persnr";
+	return $this->getQueryRows($sql);
+    }
     /**
      *
      * @param <type> $value
@@ -2386,8 +2563,12 @@ class AplDB {
      *
      * @param type $imaid 
      */
-    public function getIMAInfoArray($imaid){
+    public function getIMAInfoArray($imaid=NULL,$emanr=NULL){
 	$sql = "select * from dma where id='$imaid'";
+	if($imaid===NULL){
+	    if($emanr!==NULL)
+		$sql = "select * from dma where emanr='$emanr'";
+	}
 	return $this->getQueryRows($sql);
     }
     /**
@@ -2676,7 +2857,7 @@ class AplDB {
      * @param type $ipKlienta
      * @return type 
      */
-    public function getInfoTabloTextArray($ipKlienta) {
+    public function getInfoTabloTextArray($ipKlienta=NULL,$table_id=NULL) {
         if ($ipKlienta !== NULL) {
             $sql = "";
             $sql.=" select";
@@ -2691,17 +2872,30 @@ class AplDB {
             $sql.=" where";
             $sql.=" dinfopanel.ip='$ipKlienta'";
         } else {
-            $sql.=" select";
-            $sql.=" dinfopanel.idpanel,";
-            $sql.=" dinfopanel.dinfotable_id as itid,";
-            $sql.=" dinfotable.text1,";
-            $sql.=" dinfotable.text2,";
-            $sql.=" dinfotable.text3,";
-	    $sql.=" dinfotable.text4,";
-	    $sql.=" dinfotable.text5";
-            $sql.=" from dinfopanel";
-            $sql.=" left join dinfotable on dinfotable.id=dinfopanel.dinfotable_id";
-            $sql.=" order by dinfopanel.idpanel";
+	    if($table_id===NULL){
+		$sql.=" select";
+		$sql.=" dinfopanel.idpanel,";
+		$sql.=" dinfopanel.dinfotable_id as itid,";
+		$sql.=" dinfotable.text1,";
+		$sql.=" dinfotable.text2,";
+		$sql.=" dinfotable.text3,";
+		$sql.=" dinfotable.text4,";
+		$sql.=" dinfotable.text5";
+		$sql.=" from dinfopanel";
+		$sql.=" left join dinfotable on dinfotable.id=dinfopanel.dinfotable_id";
+		$sql.=" order by dinfopanel.idpanel";
+	    }
+	    else{
+		$sql.=" select";
+		$sql.=" dinfotable.id,";
+		$sql.=" dinfotable.text1,";
+		$sql.=" dinfotable.text2,";
+		$sql.=" dinfotable.text3,";
+		$sql.=" dinfotable.text4,";
+		$sql.=" dinfotable.text5";
+		$sql.=" from dinfotable";
+		$sql.=" where dinfotable.id=$table_id";
+	    }
         }
         return $this->getQueryRows($sql);
     }
@@ -3994,7 +4188,38 @@ class AplDB {
 	$this->query($sql);
 	return mysql_affected_rows();
     }
-        /**
+
+    public function getIMAStkForIMANr($imanr){
+	$stk = 0;
+	$sql = "select dma.id,teil,imanr,emanr,auftragsnrarray,palarray,tatundzeitarray,bemerkung,imavon,stamp from dma where imanr='$imanr'";
+	$imaRows = $this->getQueryRows($sql);
+	if($imaRows!==NULL){
+	    $imaRow = $imaRows[0];
+	    $imarray = $imaRow['auftragsnrarray'];
+	    $palarray = $imaRow['palarray'];
+	    if((strlen($imarray)>0)&&(strlen($palarray)>0)){
+		$imarray1 = strtr($imarray, ';', ',');
+		$palarray1 = strtr($palarray, ';', ',');
+    		$sql=" select ";
+		$sql.=" sum(dauftr.`stück`) as sum_stk";
+		$sql.=" from dauftr";
+		$sql.=" where";
+		$sql.=" (dauftr.auftragsnr in ($imarray1))";
+		$sql.=" and ";
+		$sql.=" (dauftr.`pos-pal-nr` in ($palarray1))";
+		$sql.=" and";
+		$sql.=" (dauftr.KzGut='G')";
+		$stkRows = $this->getQueryRows($sql);
+		if($stkRows!==NULL){
+		    $stkRow = $stkRows[0];
+		    $stk = intval($stkRow['sum_stk']);
+		}
+	    }
+	}
+	return $stk;
+    }
+
+    /**
      *
      * @param type $teil
      * @return type 
@@ -4004,6 +4229,11 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    
+    public function getArtikelBezeichnung($artnr){
+	$sql = "select `art-name1` as name1,`art-name2` as name2,`art-name3` as name3 from `eink-artikel` where `art-nr`='$artnr'";
+	return $this->getQueryRows($sql);
+    }
     /**
      *
      * @param type $teil
@@ -4014,11 +4244,36 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    public function getTeilDokuDistinctDokuArray($teil){
+	$sql=" select td1.id,td1.doku_nr,td1.teil,if(einlag_datum is null,'',DATE_FORMAT(einlag_datum,'%d.%m.%Y')) as einlag_datum,doku_beschreibung,if(freigabe_am is null,'',DATE_FORMAT(freigabe_am,'%d.%m.%Y')) as freigabe_am,freigabe_vom,musterplatz";
+	$sql.=" from dteildokument td1";
+	$sql.=" join dokumenttyp on dokumenttyp.doku_nr=td1.doku_nr";
+	$sql.=" where";
+	$sql.=" (einlag_datum=(select max(einlag_datum) from dteildokument td2 where (td1.doku_nr=td2.doku_nr) and (td2.teil='$teil')))";
+	$sql.=" and";
+	$sql.=" (td1.teil='$teil')";
+	$sql.=" order by";
+	$sql.=" td1.doku_nr";
+		
+	//$sql = "select dteildokument.id,doku_nr,teil,if(einlag_datum is null,'',DATE_FORMAT(einlag_datum,'%d.%m.%Y')) as einlag_datum,if(freigabe_am is null,'',DATE_FORMAT(freigabe_am,'%d.%m.%Y')) as freigabe_am,freigabe_vom,musterplatz from dteildokument where teil='$teil' order by einlag_datum desc,doku_nr asc";
+	return $this->getQueryRows($sql);
+    }
+
     /**
      *
      * @param type $teil 
      */
     public function getTeilDokuArray($teil){
+//	$sql=" select td1.id,td1.doku_nr,td1.teil,if(einlag_datum is null,'',DATE_FORMAT(einlag_datum,'%d.%m.%Y')) as einlag_datum,doku_beschreibung,if(freigabe_am is null,'',DATE_FORMAT(freigabe_am,'%d.%m.%Y')) as freigabe_am,freigabe_vom,musterplatz";
+//	$sql.=" from dteildokument td1";
+//	$sql.=" join dokumenttyp on dokumenttyp.doku_nr=td1.doku_nr";
+//	$sql.=" where";
+//	$sql.=" (einlag_datum=(select max(einlag_datum) from dteildokument td2 where (td1.doku_nr=td2.doku_nr) and (td2.teil='$teil')))";
+//	$sql.=" and";
+//	$sql.=" (td1.teil='$teil')";
+//	$sql.=" order by";
+//	$sql.=" td1.doku_nr";
+		
 	$sql = "select dteildokument.id,doku_nr,teil,if(einlag_datum is null,'',DATE_FORMAT(einlag_datum,'%d.%m.%Y')) as einlag_datum,if(freigabe_am is null,'',DATE_FORMAT(freigabe_am,'%d.%m.%Y')) as freigabe_am,freigabe_vom,musterplatz from dteildokument where teil='$teil' order by einlag_datum desc,doku_nr asc";
 	return $this->getQueryRows($sql);
     }

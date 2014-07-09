@@ -44,11 +44,15 @@ require_once '../db.php';
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";
-	$formDiv.="<input type='text' readonly='readonly' id='r_emanr_".$ima['id']."' value='".$ima['emanr']."' size='8'/>";
+	$formDiv.="<input type='text' readonly='readonly' id='r_emanr_".$ima['id']."' value='".$ima['emanr']."' size='12'/>";
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";
 	$formDiv.="<input type='text' readonly='readonly' id='r_bemerkung_".$ima['id']."' value='".$ima['bemerkung']."' size='50'/>";
+	$formDiv.="</td>";
+
+	$formDiv.="<td>";
+	$formDiv.="(".$apl->getIMAStkForIMANr($ima['imanr'])." Stk)";
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";

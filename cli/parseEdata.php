@@ -31,6 +31,7 @@ $lastParsedFileArrayFromDB = $a->getLastParsedEdataFile();
 $lastParsedFileFromDB = $lastParsedFileArrayFromDB['filename'];
 $lastParsedFileSizeFromDB = intval($lastParsedFileArrayFromDB['size']);
 
+echo "Stamp: ".date('Y-m-d H:i:s')."\n";
 echo "latest filename : $latest_filename ($latest_filesize), latest Parsed File from DB : $lastParsedFileFromDB ($lastParsedFileSizeFromDB)\n";
 
 if ((trim($latest_filename) != trim($lastParsedFileFromDB)) || ($latest_filesize!=$lastParsedFileSizeFromDB)) {
@@ -72,13 +73,13 @@ if ((trim($latest_filename) != trim($lastParsedFileFromDB)) || ($latest_filesize
 
         echo "class=$class, idevent=$idevent, time=$time, datetime=$datetime, type=$type, address=$address, badgenumber=$badgenumber, reason=$reason\n";
         $insertedRows = $a->insertEdataEvent($class, $idevent, $time, $datetime, $type, $address, $badgenumber, $reason, $persnr);
-//    echo "insertedRows = $insertedRows\n";
+	echo "insertedID = $insertedRows\n";
     }
     // ukladani do logu jde dolu
     // 
     //nakonec ulozim info o parsovani do edatalogs
     echo "vkladam $latest_filename do DB\n";
     $info = $a->insertLastEdataFile(trim($latest_filename),$latest_filesize);
-    echo "info=$info\n";
+    echo "insertedID=$info\n";
 }
 ?>

@@ -19,6 +19,8 @@ $(document).ready(function(){
     $('#show_att_liefer').bind('click',showTeilAtt);
     $('#show_att_mehr').bind('click',showTeilAtt);
     $('#show_att_rekl').bind('click',showTeilAtt);
+    $(window).bind('resize',documentResized);
+    $(window).bind('keydown',keyDownHandler);
     
 
     $('#accordion').accordion();
@@ -194,12 +196,50 @@ $('input[id=restmengen_verw]').blur(function(event){
                 );
     });
 
-
+    // nastaveni velikosti tabulky s operacema
+    documentResized();
 });
 
 
 // Ajax update Functions
 //---------------------------------------------------------------------------------------------------------------------
+function keyDownHandler(event){
+    if(event.keyCode==27){
+	// jen v pripade, ze neni zobrazen overlay s obrazkem
+	var cboxDisplay = $('div#cboxOverlay').css('display');
+	//alert('cboxDisplay='+cboxDisplay);
+	if(cboxDisplay=='none'){
+	    $('#dokuform').remove();
+	    $('#vpmform').remove();
+	    $('#imaform').remove();
+	    $('#imaeditform').remove();
+	}
+    }
+}
+
+function documentResized(event){
+//        var buttonOffset = $('#'+data.tdid).offset();
+//    alert(data.tdid);
+//    $(data.div).appendTo('body');
+//    buttonOffset.top += $('#'+data.tdid).outerHeight();
+//    $('div.palbemerkungdiv').css({
+//        "left":buttonOffset.left+"px"
+//    });
+//    $('div.palbemerkungdiv').css({
+//        "top":buttonOffset.top+"px"
+//    });
+
+
+    var teloOffset = $('#formular_telo').offset();
+    var teloHeight = $('#formular_telo').outerHeight();
+    var aplTableNewTop = teloOffset.top+teloHeight;
+    
+    $('#apl_table').css({
+        "top":aplTableNewTop+"px"
+    });
+//    alert('documentResized telo: left:'+teloOffset.left+'top:'+teloOffset.top+'outerHeight:'+teloHeight);
+}
+
 
 function showTeilAtt(event){
     element = $(this);
@@ -588,6 +628,7 @@ function palselectclick(event){
     if(e=='e') imaEditFieldChanged(idcko);
 }
 
+
 function tatselectclick(event){
     var idcko = $(this).attr('id');
     //musim najit posledni podtrzitko v retezci
@@ -614,7 +655,8 @@ function tatselectclick(event){
 	//alert('tatnr = '+tatnr);
 	//pribrat hodnotu vzaby
 	vzaby = $('#'+'seltatvzaby'+esuffix+'_'+tatnr).val();
-	vzaby = parseFloat(vzaby);
+	//nahradit desetinnou carku desetinnou teckou
+	vzaby = parseFloat(vzaby.replace(',','.'));
 	if(isNaN(vzaby)) vzaby = 0
 	$('#'+'seltatvzaby'+esuffix+'_'+tatnr).val(vzaby);
 	tatlist+=tatnr+':'+vzaby+';'
@@ -687,8 +729,32 @@ function updateshowEditIMA(data){
 	$('div#imaeditform input[id^=ima_select_pal]').bind('click',imaSelectPalArray);
 	$('div#imaeditform input[id^=ima_select_tat]').bind('click',imaSelectTatArray);
 	$('input[id^=emanr_]').bind('focus',emaNrFocus);
+	$('input[id^=emanr_]').bind('blur',emaNrChange);
 }
 
+
+function emaNrChange(event){
+    //alert('emaNrChange');
+    var url = $(this).attr('changeurl');
+
+    $.post(url,
+    {
+	id:$(this).attr('id'),
+	value:$(this).val()
+    },
+    function(data){
+	updateEmaNrChange(data);
+    },
+    'json'
+    );    
+}
+
+function updateEmaNrChange(data){
+    //$('#'+data.id).val(data.newValue);
+        if((data.ar>0)&&(data.valueOK==true)){
+	$('#r_emanr_'+data.imaid).val(data.value);
+    }
+}
 
 function emaNrFocus(event){
     var url = $(this).attr('focusurl');

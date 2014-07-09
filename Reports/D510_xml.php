@@ -65,7 +65,7 @@ $pt_D510_teil_letzter_auftrag=$pcip.$views[0];
 $sql=" SELECT dkopf.Teilbez, dkopf.Teil,dkopf.kunde,dkopf.`Art Guseisen` as age,";
 $sql.=" dkopf.restmengen_verw,dkopf.fremdauftr_dkopf,";
 $sql.=" dksd.name1,dksd.name2,dkopf.status, dkopf.verpackungmenge,dkopf.stk_pro_gehaenge,dpos.`kz-druck` as kzdruck,dpos.KzGut, dpos.`TaetNr-Aby` as tatnr,dpos.dpos_id,";
-$sql.=" `dtaetkz-abg`.dtaetkz as tatkz, dpos.`TaetBez-Aby-D` as tatbez_d, dpos.`TaetBez-Aby-T` as tatbez_t,";
+$sql.=" `dtaetkz-abg`.dtaetkz as tatkz, dpos.`TaetBez-Aby-D` as tatbez_d, dpos.`TaetBez-Aby-T` as tatbez_t,dpos.mittel,";
 $sql.=" dpos.`VZ-min-kunde` as vzkd, dpos.`vz-min-aby` as vzaby, dkopf.Gew, dkopf.teillang, dkopf.`Muster-Platz` as musterplatz,";
 $sql.=" DATE_FORMAT(dkopf.`muster-vom`,'%d.%m.%Y') as mustervom,dpos.lager_von, dpos.lager_nach, dpos.bedarf_typ,dpos.`kz-druck` as kzdruck,";
 $sql.=" $pt_D510_teil_letzter_auftrag.auftragsnr, DATE_FORMAT($pt_D510_teil_letzter_auftrag.aufdat,'%d.%m.%Y') as aufdat, `dtaetkz-abg`.Stat_Nr, dkopf.BrGew";
@@ -130,6 +130,7 @@ $options = array(
                 'lager_nach',
                 'bedarf_typ',
                 'kzdruck',
+		'mittel',
                 'Stat_Nr'
             ),
         ),

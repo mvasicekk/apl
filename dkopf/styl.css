@@ -89,7 +89,8 @@ a.abutton{
 #dokutable{
     border-collapse: collapse;
 /*    border: 1px solid black;*/
-    width: 90%;
+    width: 100%;
+    
 }    
 
 td.filetableheader{
@@ -111,13 +112,18 @@ tr.lichy{
     background-color:rgb(220,220,220);
 }    
 
-#dokutable #dokutable_edit td{
+#dokutable td{
 /*    border: 1px solid black;*/
     padding-bottom: 4px;
     padding-top: 4px;
     font-size: 11px;
+    
 }    
 
+#dokutable input{
+/*    border: 1px solid black;*/
+    font-size: 11px;
+}    
 
 #dokuform{
     position: absolute;

@@ -1,4 +1,5 @@
 <?
+session_start();
 require_once '../db.php';
 
     $id = $_POST['id'];
@@ -86,8 +87,15 @@ require_once '../db.php';
 	$lastEmaNr = $apl->getLastEMANr($kunde);
 	$emaNr = '';
 	//$emaNr = 'EMA_'.$kunde.'_'.sprintf("%04d",$lastEmaNr+1);
+	$puser = $_SESSION['user'];
+	$elementId='emanr';
+	$display_sec[$elementId] = $apl->getDisplaySec('dkopf',$elementId,$puser)?'inline-block':'none';
+	$edit_sec[$elementId] = $apl->getPrivilegeSec('dkopf',$elementId,$puser,"schreiben")?'':'readonly="readonly"';
+
 	if(strlen(trim($ir['emanr']))>0) $emaNr=$ir['emanr'];
-	$formDiv.="<label for='emanr'>EMA_Nr:</label><input focusurl='./emaFocus.php' style='text-align:left;' type='text' size='12' maxlength='15' id='emanr_$imaid' acturl='./updateDMAField.php' value='".$emaNr."' /><br>";
+	$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+	$formDiv.="<label for='emanr'>EMA_Nr:</label><input ".$edit_sec[$elementId]." changeurl='./emaNrChange.php' focusurl='./emaFocus.php' style='text-align:left;' type='text' size='12' maxlength='15' id='emanr_$imaid' acturl='./updateDMAField.php' value='".$emaNr."' /><br>";
+	$formDiv.="</span>";
 	$formDiv.="</fieldset>";
 //------------------------------------------------------------------------------	
 	$formDiv.= "</div>";

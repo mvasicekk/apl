@@ -844,9 +844,9 @@ $pdf->AddPage();
 
 // zacinam po rechnungach
 
-$z1 = "Abydos s.r.o.                  Hazlov 247                 Tel:+420 354 595 337               DIC / Ust/Id/Nr:CZ25206958";
-$z2 = "                                       35132 Hazlov             Fax:+420 354 596 993                                         ";
-$z3 = "";
+$z1 = "Abydos s.r.o.                                    DIC / Ust/Id/Nr:CZ25206958                          Raiffeisenbank Riedenburg-Lobsig eG";
+$z2 = "Hazlov 247                                       Tel:+420 354 595 337                                    KontoNr. 62251, BLZ 72169831";
+$z3 = "35132 Hazlov                                   Fax:+420 354 596 993                                   IBAN: DE43 7216 9831 0000 0622 51 BIC: GENODEF1RBL";
 
 $pdf->setRechnungZeilen($z1, $z2, $z3);
 

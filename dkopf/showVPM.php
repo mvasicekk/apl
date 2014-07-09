@@ -12,7 +12,7 @@ require_once '../db.php';
     $formDiv.="<table id='dokutable'>";
     $formDiv.="<tr style='background-color:#eef;'>";
     $formDiv.="<th style='text-align:left;'>ArtikelNr</th>";
-    $formDiv.="<th style='text-align:left;'>Anzahl</th>";
+    $formDiv.="<th colspan='2' style='text-align:left;'>Anzahl</th>";
     $formDiv.="<th style='text-align:left;'>Bemerkung</th>";
     $formDiv.="<th>&nbsp;</th>";
     $formDiv.="</tr>";
@@ -22,7 +22,7 @@ require_once '../db.php';
     $formDiv.="<input style='text-align:left;' type='text' id='n_vpm_nr' size='8' maxlength='8' />";
     $formDiv.="</td>";
 
-    $formDiv.="<td style='text-align:left;'>";
+    $formDiv.="<td colspan='2' style='text-align:left;'>";
     $formDiv.="<input style='text-align:left;' type='text' id='n_anzahl' size='4' maxlength='4' />";
     $formDiv.="</td>";
 
@@ -50,6 +50,16 @@ require_once '../db.php';
 	$formDiv.="<tr $rowStyle>";
 	$formDiv.="<td>";
 	$formDiv.="<input type='text' readonly='readonly' id='r_vpm_nr_".$teilDoku['id']."' value='".$teilDoku['verp']."' size='8' maxlength='8' />";
+	$formDiv.="</td>";
+
+	$formDiv.="<td>";
+	$bezArr = $apl->getArtikelBezeichnung($teilDoku['verp']);
+	$artBez = '';
+	if($bezArr!==NULL){
+	    $bezRow = $bezArr[0];
+	    $artBez = $bezRow['name1'].' '.$bezRow['name2'].' '.$bezRow['name3'];
+	}
+	$formDiv.=$artBez;
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";
