@@ -192,15 +192,11 @@ for($i=0;$i<sizeof($views);$i++)
 	//echo $sql."<br>";
 }
 
-
-$db->disconnect();
-
-
+//$db->disconnect();
 //============================================================+
 // END OF FILE                                                 
 //============================================================+
 //$domxml->save("S820.xml");
-
 //header('Content-Type: application/xml');
 //require_once('XML/Beautifier.php');
 //$beautifier = new XML_Beautifier();

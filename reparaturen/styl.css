@@ -1,4 +1,28 @@
 /* CSS Document */
+table#ettable{
+    border-collapse: collapse;
+    background-color: #ddd;
+    border: 1px solid black;
+}
+
+table#ettable td{
+    padding: 5px;
+    border-bottom: 1px solid gray;
+}
+
+.lichy{
+    background-color: #eee;
+}
+
+table#ettable th{
+    padding: 5px;
+    background-color: lightblue;
+    border-bottom: 2px solid gray;
+}
+
+table#ettable input{
+    width: 100%;
+}
 #souradnice
 {
 	position: absolute;

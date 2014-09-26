@@ -183,7 +183,9 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$invDatum,$kdKontoStand,$bew
         $obsah = "Inventurdatum:";
         $pdfobjekt->Cell($cells['behaelternr']['sirka'],$vyskaradku,$obsah,'LBT',0,'L',$fill);
 
+	$invDatumPlusDay = strtotime("+1 day",  strtotime($invDatum));
         $invdatumF = date('d.m.Y',strtotime($invDatum));
+	$invdatumF = date('d.m.Y',$invDatumPlusDay);
         $obsah = date('d.m.Y',strtotime($invDatum));
 //        $obsah = substr($invDatum, 0, 10);
         $pdfobjekt->Cell($cells['datum']['sirka'],$vyskaradku,$obsah,'BTR',0,'L',$fill);

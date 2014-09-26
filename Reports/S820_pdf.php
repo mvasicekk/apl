@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 $doc_title = "S820";
 $doc_subject = "S820 Report";
@@ -26,7 +27,7 @@ if(!testReportPassword("S820",$password,$user))
 else
 {
 
-
+$apl = AplDB::getInstance();
 /*
 if($password!="")
 	echo "password";
@@ -291,27 +292,33 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku,$popisek)
 
 
 // funkce pro vykresleni tela
-function telo($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
-{
+    function telo($pdfobjekt, $pole, $zahlavivyskaradku, $rgb, $funkce, $nodelist) {
+	global $apl;
 	$pdfobjekt->SetFont("FreeSans", "", 5.6);
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
-	foreach($pole as $nodename=>$cell)
-	{
-		if(array_key_exists("nf",$cell))
-		{
-			$cellobsah = 
-			number_format(getValueForNode($nodelist,$nodename), $cell["nf"][0],$cell["nf"][1],$cell["nf"][2]);
+	foreach ($pole as $nodename => $cell) {
+	    if (array_key_exists("nf", $cell)) {
+		$cellobsah = number_format(getValueForNode($nodelist, $nodename), $cell["nf"][0], $cell["nf"][1], $cell["nf"][2]);
+	    } else {
+		$cellobsah = getValueForNode($nodelist, $nodename);
+	    }
+
+	    if ($nodename == "mustervom") {
+		$teilnr = getValueForNode($nodelist, "teilnr");
+		$musterRow = $apl->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
+		if ($musterRow === NULL) {
+		    $cellobsah = "";
+		} else {
+		    $cellobsah = $musterRow['einlag_datum'];
 		}
-		else
-		{
-			$cellobsah=getValueForNode($nodelist,$nodename);
-		}
-		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
+	    }
+
+	    $pdfobjekt->Cell($cell["sirka"], $zahlavivyskaradku, $cellobsah, $cell["ram"], $cell["radek"], $cell["align"], $cell["fill"]);
 	}
 	//$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 	$pdfobjekt->SetFont("FreeSans", "", 7);
-}
+    }
 
 // funkce ktera vrati hodnotu podle nodename
 // predam ji nodelist a jmeno node ktereho hodnotu hledam

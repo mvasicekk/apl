@@ -1,11 +1,14 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
+
 
 $doc_title = "S313";
 $doc_subject = "S313 Report";
 $doc_keywords = "S313";
 
+$apl = AplDB::getInstance();
 // necham si vygenerovat XML
 
 $parameters = $_GET;
@@ -248,6 +251,14 @@ function zahlavi_auftrag($pdfobjekt, $vyskaradku, $rgb, $cells_header, $auftrags
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_teil($pdfobjekt, $vyskaradku, $rgb, $cells_header, $teilnr, $gew, $brgew, $muster_platz, $muster_vom, $bemerk) {
+    global $apl;
+    
+    	$musterRow = $apl->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
+	if($musterRow===NULL)
+	    $musterText = "Muster: ????";
+	else
+	    $musterText = "Muster: ".$musterRow['musterplatz'].' Einlager.: '.$musterRow['einlag_datum'];
+
     $pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
     $fill = 1;
     $pdfobjekt->SetFont("FreeSans", "", 8);
@@ -255,7 +266,7 @@ function zahlavi_teil($pdfobjekt, $vyskaradku, $rgb, $cells_header, $teilnr, $ge
     $pdfobjekt->Cell(30, $vyskaradku, $teilnr, '1', 0, 'L', $fill);
 
     $pdfobjekt->SetFont("FreeSans", "", 6);
-    $pdfobjekt->Cell(50, $vyskaradku, " Muster: " . $muster_platz . "  Einlager. " . $muster_vom, '1', 0, 'L', $fill);
+    $pdfobjekt->Cell(50, $vyskaradku, $musterText, '1', 0, 'L', $fill);
 
 
     $pdfobjekt->Cell(30, $vyskaradku, "  Gew: " . $gew . "kg  BrGew. " . $brgew . "kg", '1', 0, 'L', $fill);

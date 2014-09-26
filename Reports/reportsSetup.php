@@ -151,9 +151,13 @@ $smarty->assign('tagbis', $tagbis);
 $smarty->assign('user', $_SESSION['user']);
 
 // security
-$elementsIdArray = array(
-    "D550_sec",
-);
+
+//$elementsIdArray = array(
+//    "D550_sec",
+//);
+
+$elementsIdArray = $apl->getResourcesForFormId('berichte');
+
 $puser = $_SESSION['user'];
 foreach ($elementsIdArray as $elementId) {
     $display_sec[$elementId] = $apl->getDisplaySec('berichte', $elementId, $puser) ? 'inline-block' : 'none';

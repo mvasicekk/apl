@@ -1,0 +1,134 @@
+/* CSS Document */
+html{
+    font-size: 100%;
+}    
+
+div.inputform{
+    margin-top: 1em;
+    background-color: rgb(220,220,220);
+    border: solid 1px black;
+    padding: 0.5em;
+}    
+
+div.flashmessage{
+width: 80%;
+margin: auto;
+border-color: yellow;
+background-color: lightyellow;
+border-style: ridge;
+border-width: 3px;
+padding: 1em;
+margin-top: 1em;
+}    
+
+body{
+    background-color: rgb(179,179,179);
+    font-family: Arial;
+    font-size: 100%;
+    margin: 0px;
+}
+
+h3{
+    margin: 0px
+}
+
+#header {
+    width: 100%;
+    height: 65px;
+    background-image: url('/img/zahlavi30.jpg');
+    margin: 0px
+}
+
+#podheader {
+    width: 100%;
+    background-color:rgb(220,220,220);
+    border-bottom: solid 1px black;
+    font-size: 1em;
+    text-align: center;
+}
+
+#formular_header {
+    width: 100%;
+    background-color: rgb(255,255,220);
+    border-bottom: solid 1px black;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;		
+}
+
+#formular_telo {
+    background-color: rgb(179,179,179);
+    width: 100%;
+    margin-top: 0.5em;
+}
+
+div#formular_telo div
+{
+    margin-bottom:1em;
+}
+
+input.abyStartButton{
+    font-size: 1em;
+    width: 49%;
+    margin: 0px;
+    display: inline-block;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    margin-top: 0.2em;
+}
+
+table.paramtable
+{
+    width: 100%;
+    background-color:rgb(220,220,220);
+    border: solid 1px black;
+}
+		
+table.paramtable td.paramlabel{
+    width: 60%;
+}    
+
+input.paraminput{
+    width: 95%;
+    font-size: 1em;
+    margin: 0px;
+    display: inline-block;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    margin-top: 0.2em;
+}    
+
+
+table.paramtable select{
+    width: 95%;
+    font-size: 1em;
+    margin: 0px;
+    display: inline-block;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    margin-top: 0.2em;
+}    
+
+table.paramtable input.datepicker{
+    width: 95%;
+    font-size: 1em;
+    margin: 0px;
+    display: inline-block;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    margin-top: 0.2em;
+}    
+
+#header{
+	display: none;
+    }
+
+.cleaner{clear: both; visibility: hidden;}
+
+@media screen and (min-width:780px){
+    #header{
+	display: block;
+    }
+}

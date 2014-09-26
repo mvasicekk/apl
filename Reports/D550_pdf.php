@@ -158,10 +158,6 @@ function stripPHP($s){
   return substr($s, strpos($s, '/')+1);
 }
 
-
-
-
-
 function maxCountMore5($s,$maxCount=5){
     return maxCountMore($s,$maxCount);
 }
@@ -401,8 +397,9 @@ foreach($kunden as $kunde){
 		    }
 		}
 		if($showCount>0) $pdf->Ln(($imgRow+1)*$imgHeight+$mezera);
-		$pdf->Ln(2);
+		
 	    }
+	    $pdf->Ln(2);
 	}
 	$pdf->Ln();
 }

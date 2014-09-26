@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>
+Udalosti
+</title>
+<style type="text/css">
+
+.zakazka {
+    display: table-cell;
+    vertical-align: middle;
+    color:greenyellow;
+    font-size: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 400px;
+    text-align: center;
+}
+
+.container{
+    display: table;
+}
+</style>
+<script type = "text/javascript" src = "./js/jquery.js"></script>
+
+
+
+
+
+
+
+
+
+<script type = "text/javascript" language="Javascript">
+
+
+function pis(){
+    var d = Date();
+    text = d.toString();
+    $('#k1').html(text);
+}
+
+
+
+
+$(document).ready(function(){
+
+    //$('#k1').css({"background-color":"#ddffdd"});
+    v = pis();
+    setInterval(pis, 500);
+    
+});
+
+
+</script>
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="zakazka" id="k1">
+            neco
+        </div>
+    </div>
+</body>
+</html>

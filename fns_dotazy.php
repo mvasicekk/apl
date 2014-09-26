@@ -386,14 +386,15 @@ function getVzKdFromPreisAuftrag($preis,$auftrag)
  * @param int $usePassword <>0 kontrolovat podle hesla zadaneho v tabulce reportsecurity, 0 zkontroluje podle uzivatelova prihlasovaciho hesla do programu
  * @return boolean - true pokud ma uzivatel pristup k reportu
  */
-function testReportPassword($reportname,$password,$user,$usePassword=1)
+function testReportPassword($reportname,$password,$user,$usePassword=0)
 {
 	dbConnect();
         if($usePassword!=0)
             $sql = "select user from reportsecurity where((reportname='$reportname') and (user='$user') and (password='$password'))";
         else
             $sql = "select user from reportsecurity where((reportname='$reportname') and (user='$user'))";
-            
+
+//	echo $sql;
 	$res=mysql_query($sql);
 
         if(mysql_affected_rows()>0){

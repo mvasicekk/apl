@@ -114,7 +114,7 @@ if($panelyRows!==NULL){
     $panelydiv.="<br><input class='text5' acturl='./saveInfoPanelText.php' id='text5_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text5']."' size='$text5len' maxlength='$text5maxlen'/>";
     $panelydiv.="</td>";
 	
-    $panelId = 1;
+    $panelId = 33;
     $panelydiv.="<td class='lagesplatz'>";
     $panelydiv.="<input class='text1' acturl='./saveInfoPanelText.php' id='text1_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text1']."' size='$text1len' maxlength='$text1maxlen'/>";
     $panelydiv.="<br><input class='text2' acturl='./saveInfoPanelText.php' id='text2_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text2']."' size='$text2len' maxlength='$text2maxlen'/>";
@@ -248,6 +248,6 @@ else{
 }
 $panelydiv.="</table>";
 $panelydiv.="</div>";
- $value = array('divcontent'=>$panelydiv,'ip'=>$ip,'dt'=>$dt,'id'=>$id);
+ $value = array('divcontent'=>$panelydiv,'ip'=>$ip,'dt'=>$dt,'id'=>$id,'panelyRows'=>$panelyRows);
  
  echo json_encode($value);

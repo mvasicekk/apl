@@ -1,0 +1,218 @@
+/* CSS Document */
+body{
+		background-color: rgb(179,179,179);
+		font-family: Arial;
+		}
+
+#tlacitka {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 400px;
+			top: 100px;
+			left: 400px;
+			visibility: visible;
+			
+		  }
+		  
+
+#parametry {
+			background-color:rgb(179,179,179);
+			position: absolute;
+			width: 400px;
+			top: 100px;
+			left: 0px;
+			visibility: visible;
+			
+		  }
+	  
+#header {
+			position: absolute;
+			width: 800px;
+			height: 65px;
+			top: 0px;
+			left: 0px;
+			background-image: url(img/zahlavi30.jpg);
+			border-bottom: solid 0px black;
+			margin-left: 5px
+		}
+
+#podheader {
+			position: absolute;
+			width: 800px;
+			height: 20px;
+			top: 65px;
+			left: 0px;
+			background-color:rgb(220,220,220);
+			border-bottom: solid 1px black;
+			border-top: solid 1px black;
+			margin-left: 5px;
+			font-size: 7pt;
+		}
+		
+#leistungtabelle {
+					background-color:rgb(179,179,179);
+					margin-left: 5px;
+					position: absolute; 
+					width: 400px; 
+					top: 100px; 
+					left: 0px;
+					
+				}
+
+
+#celek{width:1020px;}
+#headers{width: 400px;}
+#headers h1 { width: 200px; height: 30px; color: rgb(255,51,102);float:left; font: normal small-caps bolder 30px bolder Verdana;}
+
+#headers h2{width: 200px; float:left; height: 30px; font: normal normal bold 13px bold Verdana;}
+
+#raw{color: rgb(0,255,0); font-weight: bold; }
+
+#tables{float: left; margin-right: 30px;}
+#table1{ background-color: rgb(179,179,179); clear: left;}
+#table1 th{width: 75px; font: normal normal bold 15px bold Verdana;}
+#table1 td{text-align: right; border-right: solid 1px black; border-top: solid 1px black; font: normal normal bold 20px bold Verdana;}
+
+#table2{}
+#table2 th{width: 70px; font: normal normal normal 13px normal Verdana;}
+#table2 td{text-align: right;    background-color: rgb(255,255,255); border-right: solid 1px black; border-top: solid 1px black; font: normal normal normal 13px normal Verdana; margin:0px;}
+
+
+
+table.logintable
+{
+	position:relative;
+	top:10px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+}
+
+table.formulartable
+{
+	position:relative;
+	top:10px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+}
+
+table.monatleistungtable
+{
+	position:relative;
+	top:10px;
+	width:360px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+}
+
+
+tr.login_username
+{
+	background-color:rgb(220,220,220);
+	
+}
+
+tr.login_username
+{
+	background-color:rgb(220,220,220);
+	
+}
+
+td.progresspopis
+{
+	background-color:rgb(200,200,255);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
+td.ganzmonat
+{
+	background-color:rgb(255,200,200);
+	text-align:right;
+	font-size:10pt;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 1px;
+}
+
+td.progresspolozka
+{
+	background-color:rgb(255,255,255);
+	text-align:right;
+	font-weight: normal;
+	font-size:8pt;
+	border-bottom: none 1px black;
+	padding: 1px;
+}
+
+td.personalpopis
+{
+	background-color:rgb(255,255,200);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
+td.kundenpopis
+{
+	background-color:rgb(255,255,200);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
+td.auftragpopis
+{
+	background-color:rgb(255,255,200);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
+td.hlasenipopis
+{
+	background-color:rgb(255,255,200);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
+td.sestavypopis
+{
+	background-color:rgb(255,255,200);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
+table.paramtable
+{
+	position:relative;
+	top:10px;
+	background-color:rgb(220,220,220);
+	border: solid 1px black;
+}
+
+.cleaner{clear: both; visibility: hidden;}
+
+.abyStartButton {font-size: 10px;width:180px; margin:2px 2px 2px 2px;}
+
+.formularbutton
+{
+	width:180px;
+	font-size:10px;
+}
+.formularEndbutton
+{
+	width:180px;
+	font-size:10px;
+	background-color:rgb(255,0,0);
+	color:rgb(255,255,255);
+	font-weight:bold;
+}

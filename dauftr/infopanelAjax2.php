@@ -25,83 +25,7 @@ if($panelyRows!==NULL){
     
     $panelydiv.="<tr>";
     
-    $panelId = 38;
-    $panelydiv.="<td class='lagesplatz'>";
-    $panelydiv.="<input class='text1' acturl='./saveInfoPanelText.php' id='text1_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text1']."' size='$text1len' maxlength='$text1maxlen'/>";
-    $panelydiv.="<br><input class='text2' acturl='./saveInfoPanelText.php' id='text2_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text2']."' size='$text2len' maxlength='$text2maxlen'/>";
-    $panelydiv.="<br><input class='text3' acturl='./saveInfoPanelText.php' id='text3_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text3']."' size='$text3len' maxlength='$text3maxlen'/>";
-    $panelydiv.="<br><input class='text4' acturl='./saveInfoPanelText.php' id='text4_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text4']."' size='$text4len' maxlength='$text4maxlen'/>";
-    $panelydiv.="<br><input class='text5' acturl='./saveInfoPanelText.php' id='text5_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text5']."' size='$text5len' maxlength='$text5maxlen'/>";
-    $panelydiv.="</td>";
-
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-    
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-	
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-
-    
-    $panelydiv.="</tr>";
-    
-
-    // ulicka
-//    $panelydiv.="<tr>";
-//    $panelydiv.="<td class='ulicka' colspan='12'>&nbsp;";$panelydiv.="</td>";
-//    $panelydiv.="</tr>";
-
-    
-    $panelydiv.="<tr>";
-    
-    $panelId = 32;
+    $panelId = 34;
     $panelydiv.="<td class='lagesplatz'>";
     $panelydiv.="<input class='text1' acturl='./saveInfoPanelText.php' id='text1_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text1']."' size='$text1len' maxlength='$text1maxlen'/>";
     $panelydiv.="<br><input class='text2' acturl='./saveInfoPanelText.php' id='text2_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text2']."' size='$text2len' maxlength='$text2maxlen'/>";
@@ -245,11 +169,6 @@ if($panelyRows!==NULL){
     $panelydiv.="&nbsp;";
     $panelydiv.="</td>";
 
-    $panelId = 0;
-    $panelydiv.="<td class='noplatz'>";
-    $panelydiv.="&nbsp;";
-    $panelydiv.="</td>";
-
     $panelId = 40;
     $panelydiv.="<td class='lagesplatz'>";
     $panelydiv.="<input class='text1' acturl='./saveInfoPanelText.php' id='text1_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text1']."' size='$text1len' maxlength='$text1maxlen'/>";
@@ -285,36 +204,23 @@ if($panelyRows!==NULL){
     $panelydiv.="<br><input class='text4' acturl='./saveInfoPanelText.php' id='text4_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text4']."' size='$text4len' maxlength='$text4maxlen'/>";
     $panelydiv.="<br><input class='text5' acturl='./saveInfoPanelText.php' id='text5_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text5']."' size='$text5len' maxlength='$text5maxlen'/>";
     $panelydiv.="</td>";
-    
-    // 34 , druha rada,	
-    // druha
-    $panelId = 34;
-    $panelydiv.="<td class='lagesplatz'>";
-    $panelydiv.="<input class='text1' acturl='./saveInfoPanelText.php' id='text1_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text1']."' size='$text1len' maxlength='$text1maxlen'/>";
-    $panelydiv.="<br><input class='text2' acturl='./saveInfoPanelText.php' id='text2_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text2']."' size='$text2len' maxlength='$text2maxlen'/>";
-    $panelydiv.="<br><input class='text3' acturl='./saveInfoPanelText.php' id='text3_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text3']."' size='$text3len' maxlength='$text3maxlen'/>";
-    $panelydiv.="<br><input class='text4' acturl='./saveInfoPanelText.php' id='text4_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text4']."' size='$text4len' maxlength='$text4maxlen'/>";
-    $panelydiv.="<br><input class='text5' acturl='./saveInfoPanelText.php' id='text5_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text5']."' size='$text5len' maxlength='$text5maxlen'/>";
+
+    $panelId = 0;
+    $panelydiv.="<td class='noplatz'>";
+    $panelydiv.="&nbsp;";
     $panelydiv.="</td>";
-	
-    $panelId = 33;
-    $panelydiv.="<td class='lagesplatz'>";
-    $panelydiv.="<input class='text1' acturl='./saveInfoPanelText.php' id='text1_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text1']."' size='$text1len' maxlength='$text1maxlen'/>";
-    $panelydiv.="<br><input class='text2' acturl='./saveInfoPanelText.php' id='text2_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text2']."' size='$text2len' maxlength='$text2maxlen'/>";
-    $panelydiv.="<br><input class='text3' acturl='./saveInfoPanelText.php' id='text3_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text3']."' size='$text3len' maxlength='$text3maxlen'/>";
-    $panelydiv.="<br><input class='text4' acturl='./saveInfoPanelText.php' id='text4_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text4']."' size='$text4len' maxlength='$text4maxlen'/>";
-    $panelydiv.="<br><input class='text5' acturl='./saveInfoPanelText.php' id='text5_".$panelyRows[$panelId-1]['itid']."' type='text' value='".$panelyRows[$panelId-1]['text5']."' size='$text5len' maxlength='$text5maxlen'/>";
+
+    $panelId = 0;
+    $panelydiv.="<td class='noplatz'>";
+    $panelydiv.="&nbsp;";
     $panelydiv.="</td>";
-	
+
+    $panelId = 0;
+    $panelydiv.="<td class='noplatz'>";
+    $panelydiv.="&nbsp;";
+    $panelydiv.="</td>";
+
     $panelydiv.="</tr>";
-    
-//    foreach ($panelyRows as $panel){
-//        $panelydiv.="<tr>";
-//        $panelydiv.="<td><strong>".$panel['idpanel']."</strong></td>";
-//        $panelydiv.="<td>"."<input acturl='./saveInfoPanelText.php' id='text1_".$panel['itid']."' type='text' value='".$panel['text1']."' size='20' maxlength='20'"."</td>";
-//        $panelydiv.="<td>"."<input acturl='./saveInfoPanelText.php' id='text2_".$panel['itid']."' type='text' value='".$panel['text2']."' size='6' maxlength='6'"."</td>";
-//        $panelydiv.="</tr>";
-//    }
 }
 else{
     $panelydiv.="<tr><td>No panels defined !!!</td></tr>";

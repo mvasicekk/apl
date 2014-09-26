@@ -11,11 +11,10 @@ $doc_keywords = "S169";
 $parameters=$_GET;
 
 $user = $_SESSION['user'];
-
-$user = $_SESSION['user'];
 $password = $_GET['password'];
 
-$fullAccess = testReportPassword("S169",$password,$user,1);
+//echo "user:$user,pass:$password<br>";
+$fullAccess = testReportPassword("S169",$password,$user,0);
 
 if(!$fullAccess)
 {

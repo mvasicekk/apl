@@ -1,10 +1,13 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 $doc_title = "S311";
 $doc_subject = "S311 Report";
 $doc_keywords = "S311";
+
+$apl = AplDB::getInstance();
 
 // necham si vygenerovat XML
 
@@ -262,20 +265,25 @@ function getValueForNode($nodelist,$nodename)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
+	global $apl;
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	
 	$teilnr = getValueForNode($childNodes,"teilnr");
 	$gew = number_format(getValueForNode($childNodes,"gew"),3,',',' ');
 	$brgew = number_format(getValueForNode($childNodes,"brgew"),3,',',' ');
-	$musterplatz = getValueForNode($childNodes,"f_muster_platz");
-	$mustervom = getValueForNode($childNodes,"f_muster_vom");
-	
+
+    	$musterRow = $apl->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
+	if($musterRow===NULL)
+	    $musterText = "Muster: ????";
+	else
+	    $musterText = "Muster: ".$musterRow['musterplatz'].' Einlager.: '.$musterRow['einlag_datum'];
+
 	
 	$pdfobjekt->Cell(30,$vyskaradku,$teilnr,'LBT',0,'L',1);
 	
 	$pdfobjekt->SetFont("FreeSans", "", 7);
-	$pdfobjekt->Cell(40,$vyskaradku,"Muster: $musterplatz Einlager: $mustervom",'LBT',0,'L',1);
+	$pdfobjekt->Cell(60,$vyskaradku,$musterText,'LBT',0,'L',1);
 	$pdfobjekt->Cell(0,$vyskaradku,"Gew: $gew kg, BrGew: $brgew kg",'LBTR',1,'L',1);
 }
 

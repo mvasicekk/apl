@@ -198,6 +198,7 @@ $smarty = new Smarty;
 		    "teilsave_sec",
 		    "kzdruck_sec",
 		    "dposvzkd_sec",
+		    "apl_table",
 		);
 		$puser = $_SESSION['user'];
 		foreach ($elementsIdArray as $elementId){

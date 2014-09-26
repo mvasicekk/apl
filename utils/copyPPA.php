@@ -11,7 +11,7 @@ $kundeGdatPath = $apl->getKundeGdatPath($kunde);
 $gdatPath = "/mnt/gdat/Dat/";
 
 $teileArray = $apl->getTeileNrArrayForKunde($kunde);
-$ppaPath = $gdatPath.'Aby 11 Kunden ab 19.02.2014/355/Putzanweisungen ab 10-07-19 neu';
+$ppaPath = $gdatPath.'Aby 11 Kunden ab 19.02.2014/355/Putzanweisungen ab 10-07-19 neu/pdf';
 $ppaArray = $apl->getFilesForPath($ppaPath);
 
 foreach ($teileArray as $teil){
@@ -24,7 +24,7 @@ foreach ($teileArray as $teil){
 	    $source = $ppaPath.'/'.$ppa['filename'];
 	    $dest = $gdatPath.$kundeGdatPath."/200 Teile/".$teil['teil'].'/030 PPA/'.$ppa['filename'];
 	    echo "<br>from: $source".", to: $dest";
-	    //copy($source, $dest);
+	    copy($source, $dest);
 	}
 	    
     }

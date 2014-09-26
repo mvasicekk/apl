@@ -25,7 +25,7 @@ if($tat=='*')
 else
 	$tatwhere=" and (drueck.taetnr='$tat')";
 	
-if($persnr=='*')
+if($persnr=='*' || $persnr=='')
 	$perswhere="";
 else
 	$perswhere=" and (drueck.persnr='$persnr')";

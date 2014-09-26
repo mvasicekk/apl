@@ -313,59 +313,43 @@ function reparaturPosAnzahlInputEventsAdd(){
             'json'
             );
     });
+    
+        $('input[id^=etinvnummer_]').change(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+            $.post(acturl,
+            {
+                id:id,
+                value:$(this).val()
+            },
+            function(data){
+                updateReparaturPosAnzahl(data);
+            },
+            'json'
+            );
+    });
+    
+        $('input[id^=etbem_]').change(function(event){
+        var id = $(this).attr('id');
+        var acturl = $(this).attr('acturl');
+
+            $.post(acturl,
+            {
+                id:id,
+                value:$(this).val()
+            },
+            function(data){
+                updateReparaturPosAnzahl(data);
+            },
+            'json'
+            );
+    });
 }
 
 function updateReparaturPosAnzahl(data){
 
 }
-//function addEventHandlerrToStkInputs(){
-//    $('input[id^=beheingabe_stk_]').change(function(e){
-//        var id = $(this).attr('id');
-//        var acturl = $(this).attr('acturl');
-//
-//         $.post(acturl,
-//            {
-//                id:id,
-//                value:$(this).val(),
-//                im:$('#im').val(),
-//                ex:$('#ex').val(),
-//                datum:$('#datum').val(),
-//                von:$('#kundevon').val(),
-//                nach:$('#kundenach').val()
-//            },
-//            function(data){
-//                    updateStkInput(data);
-//                },
-//                'json'
-//                );
-//    });
-//
-//    // pridat pohyb pomoci enter
-//    var inputy = $('#beheingabetable input[class=entermove]');
-//    $('input:text[class=entermove]').bind('focus',function(e){
-//        this.select();
-//    });
-//
-//    inputy.bind('keypress',function(e){
-//        var key = e.which;
-//        if(key==13){
-//            e.preventDefault();
-//
-//            var nextIndex = inputy.index(this) + 1;
-//            if(inputy[nextIndex]!=null){
-//                var nextBox = inputy[nextIndex];
-//                nextBox.focus();
-//                nextBox.select();
-//            }
-//        }
-//    });
-//
-//}
-//
-//function updateStkInput(data){
-//
-//}
-
 
 function js_validate_float(control)
 {

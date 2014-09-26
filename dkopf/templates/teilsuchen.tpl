@@ -2,12 +2,14 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="generator" content="Bluefish 1.0.5">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />          
     <title>
-      DLager
+      Teil suchen / hledat dil
     </title>
 
+<link rel="stylesheet" href="../styl_common.css" type="text/css">
 <link rel="stylesheet" href="./styl.css" type="text/css">
+
 <script type="text/javascript" src="../js/detect.js"></script>
 <script type="text/javascript" src="../js/eventutil.js"></script>
 <script src="js_functions.js" type="text/javascript"></script>

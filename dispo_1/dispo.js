@@ -14,6 +14,7 @@ $(document).ready(function(){
 	$('#datum_bis').bind('change', datumChanged);
 	$('#rm_bis').bind('change', datumChanged);
 	$('#disporefresh').bind('click', datumChanged);
+	$('#nurMitMin').bind('click', datumChanged);
 
 	$(window).bind("resize", updateSize);
 	updateSize();
@@ -42,7 +43,8 @@ function datumChanged(event){
 	bis:$('#datum_bis').val(),
 	kd_von:$('#kunde_von').val(),
 	kd_bis:$('#kunde_bis').val(),
-	rm_bis:$('#rm_bis').val()
+	rm_bis:$('#rm_bis').val(),
+	nurMitMin:$('#nurMitMin').attr('checked')?1:0
     },
     function(data){
 	updateDatumChanged(data);
@@ -100,13 +102,29 @@ function sollTagChanged(event){
 
 function updateSollTagChanged(data){
     $('#'+data.id).val(data.minuten);
-    $('#'+data.summeid).val(data.summeplan);
+    
+    // misto na id se odkazuju na atribut name, protoze kvuli ukotvenym radkum/sloupcum
+    // mam na jedne strance vice elementu se stejnym id, coz je illegal a vyber
+    // potom nefunguje jak ma
+    // 
+    //$('#'+data.summeid).val(data.summeplan);
+    var att1 = 'input[name="'+data.summeid+'"]';
+    $(att1).val(data.summeplan);
+    
     $('#'+data.summetagId).html(data.summetagValue);
     $('#'+data.summestatnrtagId).html(data.summestatnrtagValue);
     $('#'+data.summinAllId).html(data.summinAllValue);
     
     $.each( data.zubearbarray, function(i, n){
 	$('#'+i).html(n);
+	
+	// taky vyber podle atributu name kvuli nasobnym id na jedne strance
+	var att='td[data-name="'+i+'"]';
+	$(att).html(n);
+	
+	var att='input[name="'+i+'"]';
+	$(att).val(n);
+
 	if(n<0) 
 	    $('#'+i).addClass('negativ');
 	else

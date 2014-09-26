@@ -18,11 +18,11 @@ require_once '../db.php';
     $imanewvalue = "IMA_$kunde"."_".date('ymdHi');
     $formDiv.="<label for='imanr'>IMA_Nr:</label><input style='text-align:left;' type='text' id='imanr' size='17' readonly='readonly' value='$imanewvalue'/>";
     $formDiv.="<label for='imabemerkung'>Bemerkung:</label><input style='text-align:left;' type='text' size='50' maxlength='255' id='imabemerkung' /><br>";
-    $formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php' id='ima_select_auftragsnr' value='IM ...' />";
+    $formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php?anforderung=1&ma=ima' id='ima_select_auftragsnr' value='IM ...' />";
     $formDiv.="<input type='text' size='80' readonly='readonly' id='ima_imarray' value='' /><br>";
-    $formDiv.="<input type='button' acturl='./selectPalArray.php' id='ima_select_pal' value='Pal ...' />";
+    $formDiv.="<input type='button' acturl='./selectPalArray.php?anforderung=1&ma=ima' id='ima_select_pal' value='Pal ...' />";
     $formDiv.="<input type='text' size='80'  readonly='readonly' id='ima_palarray' value='' /><br>";
-    $formDiv.="<input type='button' acturl='./selectTatArray.php' id='ima_select_tat' value='Tat ...' />";
+    $formDiv.="<input type='button' acturl='./selectTatArray.php?anforderung=1&ma=ima' id='ima_select_tat' value='Tat ...' />";
     $formDiv.="<input type='text' size='80'  readonly='readonly' id='ima_tatarray' value='' /><br>";
     $formDiv.="<br><input type='button' acturl='./addIMA.php' id='ima_add' value='+' />";
     $formDiv.="</div>";
@@ -38,9 +38,11 @@ require_once '../db.php';
 	else
 	    $rowStyle = "class='lichy'";
 	
+	$imagenehmigtClass = $ima['ima_genehmigt']>0?'genehmigt':'';
+		
 	$formDiv.="<tr $rowStyle>";
 	$formDiv.="<td>";
-	$formDiv.="<input type='text' readonly='readonly' id='r_imanr_".$ima['id']."' value='".$ima['imanr']."' size='17'/>";
+	$formDiv.="<input class='$imagenehmigtClass' type='text' readonly='readonly' id='r_imanr_".$ima['id']."' value='".$ima['imanr']."' size='17'/>";
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";
@@ -61,11 +63,11 @@ require_once '../db.php';
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";
-	$formDiv.="<input type='text' readonly='readonly' id='r_stamp_".$ima['id']."' value='".substr($ima['stamp'],0,10)."' size='6'/>";
+	$formDiv.="<input type='text' readonly='readonly' id='r_stamp_".$ima['id']."' value='".substr($ima['stamp'],0,10)."' size='8'/>";
 	$formDiv.="</td>";
 
 	$formDiv.="<td>";
-	$formDiv.="<input type='button' acturl='./editIMA.php' id='i_ima_edit_".$ima['id']."' value='edit' />";
+	$formDiv.="<input type='button' acturl='./editIMA.php' id='i_ima_edit_".$ima['id']."' value='detail' />";
 	$formDiv.="</td>";
 	$formDiv.="</tr>";
 	$cisloRadku++;

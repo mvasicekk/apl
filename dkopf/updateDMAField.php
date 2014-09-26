@@ -8,8 +8,19 @@ require_once '../db.php';
 
     $id=$_POST['id'];
     $imarray = $_POST['imarray'];
+    $imarray_g = $_POST['imarray_g'];
+    $imarray_a = $_POST['imarray_a'];
+    $imarray_gem = $_POST['imarray_gem'];
     $palarray = $_POST['palarray'];
+    $palarray_g = $_POST['palarray_g'];
+    $palarray_gem = $_POST['palarray_gem'];
+    $palarray_a = $_POST['palarray_a'];
     $tatarray = $_POST['tatarray'];
+    $tatarray_g = $_POST['tatarray_g'];
+    $tatarray_a = $_POST['tatarray_a'];
+    $tatarray_gem = $_POST['tatarray_gem'];
+    $ema_antrag_text = $_POST['ema_antrag_text'];
+    $ema_genehmigt_bemerkung = $_POST['ema_genehmigt_bemerkung'];
     $bemerkungid = $_POST['bemerkungid'];
     
 
@@ -31,7 +42,108 @@ require_once '../db.php';
 	$field="tatundzeitarray";
 	$value = $tatarray;
     }
+
+    if(strstr($id,"ima_select_auftragsnr_gen")){
+	$field="ima_auftragsnrarray_genehmigt";
+	$value = $imarray_g;
+    }
+
     
+    if(strstr($id,"ema_select_auftragsnr_anf")){
+	$field="ema_auftragsarray";
+	$value = $imarray_a;
+    }
+
+    if(strstr($id,"ema_select_auftragsnr_gem")){
+	$field="ema_auftragsarray_genehmigt";
+	$value = $imarray_gem;
+    }
+
+    if(strstr($id,"selimanf")){
+	$field="ema_auftragsarray";
+	$value = $imarray_a;
+    }
+
+    if(strstr($id,"selimgem")){
+	$field="ema_auftragsarray_genehmigt";
+	$value = $imarray_gem;
+    }
+
+    if(strstr($id,"selimgen")){
+	$field="ima_auftragsnrarray_genehmigt";
+	$value = $imarray_g;
+    }
+
+    if(strstr($id,"ima_select_pal_gen")){
+	$field="ima_palarray_genehmigt";
+	$value = $palarray_g;
+    }
+
+    if(strstr($id,"ema_select_pal_anf")){
+	$field="ema_palarray";
+	$value = $palarray_a;
+    }
+
+    if(strstr($id,"ema_select_pal_gem")){
+	$field="ema_palarray_genehmigt";
+	$value = $palarray_gem;
+    }
+
+    if(strstr($id,"selpalgen")){
+	$field="ima_palarray_genehmigt";
+	$value = $palarray_g;
+    }
+
+    if(strstr($id,"selpalanf")){
+	$field="ema_palarray";
+	$value = $palarray_a;
+    }
+
+    if(strstr($id,"selpalgem")){
+	$field="ema_palarray_genehmigt";
+	$value = $palarray_gem;
+    }
+
+    if(strstr($id,"ima_select_tat_gen")){
+	$field="ima_tatundzeitarray_genehmigt";
+	$value = $tatarray_g;
+    }
+
+    if(strstr($id,"seltatgen")){
+	$field="ima_tatundzeitarray_genehmigt";
+	$value = $tatarray_g;
+    }
+    
+    if(strstr($id,"ema_select_tat_anf")){
+	$field="ema_tatundzeitarray";
+	$value = $tatarray_a;
+    }
+    
+    if(strstr($id,"ema_select_tat_gem")){
+	$field="ema_tatundzeitarray_genehmigt";
+	$value = $tatarray_gem;
+    }
+
+    if(strstr($id,"seltatanf")){
+	$field="ema_tatundzeitarray";
+	$value = $tatarray_a;
+    }
+
+    if(strstr($id,"seltatgem")){
+	$field="ema_tatundzeitarray_genehmigt";
+	$value = $tatarray_gem;
+    }
+
+    if(strstr($id,"ema_antrag_text")){
+	$field="ema_antrag_text";
+	$value = $ema_antrag_text;
+    }
+
+    if(strstr($id,"ema_genehmigt_bemerkung")){
+	$field="ema_genehmigt_bemerkung";
+	$value = $ema_genehmigt_bemerkung;
+    }
+
     $imaid = substr($bemerkungid, strrpos($bemerkungid, '_')+1);
     if($field)
 	$ar = $apl->updateIMAField($field,$value,$imaid);

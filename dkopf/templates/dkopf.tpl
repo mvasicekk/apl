@@ -2,11 +2,12 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="generator" content="Bluefish 1.0.5">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />          
     <title>
       DKopf
     </title>
 
+<link rel="stylesheet" href="../styl_common.css" type="text/css">    
 <link rel="stylesheet" href="./styl.css" type="text/css">
 <link rel="stylesheet" href="../colorbox.css" type="text/css">
 <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.14.custom.css" type="text/css">
@@ -294,7 +295,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 </div>
 
 
-<div id='apl_table'>
+<div id='apl_table' style="display:{$display_sec.apl_table};">
 	<div id='scroll_apl'>	
 		<table id='apltable' class='apl_table' border='0'>
 		<tr class='apl_table_header'>

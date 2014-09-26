@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>
+Udalosti
+</title>
+<script language="Javascript">
+
+		function piskod(sekce)
+		{
+			var s = document.getElementById(sekce);
+			var oEvent = arguments[0];
+			
+			s.innerHTML="<p><b>stisk</b></p>";
+		}
+		
+		function zmenbarvu(sekce)
+		{
+			vas s = document.getElementById(sekce);
+			s.style.backgroundColor='blue';
+		}
+</script>
+
+</head>
+<body>
+
+
+<div style="background-color:yellow" onmousemove="zmenbarvu('k1');" onclick="piskod('k1');" id="k1">
+<p>
+ pokusny text
+</p>
+</div>
+</body>
+</html>

@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
     <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>
 	    APL Abydos
 	</title>    
+	<link rel="stylesheet" href="./styl_common.css" type="text/css">
 	<link rel="stylesheet" href="./styl.css" type="text/css">
 	<script type="text/javascript" src="./js/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="./apl.js"></script>
+	{literal}
+	<style>
+	    input.abyStartButton{
+/*		width: 10em;*/
+	    }
+	</style>
+	{/literal}
     </head>
     <body>
 	{include file='heading.tpl'}
-
 	{if $prihlasen}
-	    <div align="center" id="tlacitka">
+	    <div id="tlacitka">
 		<fieldset class='buttonsection personal'>
 		    <legend>Personal</legend>
 		    <input style="display:{$display_sec.dzeitedata};" type="button" value="Anwesenheitserfassung lt. Leistung" id="dzeitedata" class="abyStartButton"  onClick="location.href='./personal/doc_root/index.php?action=edataAnw&presenter=DpersAnwesenheit'" />
@@ -32,10 +40,12 @@
 		<fieldset class='buttonsection auftraege'>
 		    <legend>Auftraege / zakazky</legend>
 		    <input style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dauftr/auftragsuchen.php'" />
+{*		    <input style="" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dauftr/auftragsuchen.php'" />*}
 		    <input style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" />
 		    <input style="display:{$display_sec.umtermin};" type="button" value="Umterminieren" id="umtermin" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./dauftr/umterminieren/umterminieren.php'" />
 	<!--	    <input style="display:{$display_sec.cmr};" type="button" value="CMR" id="cmr" class="abyStartButton" onClick="location.href=''" />-->
 		    <input style="display:{$display_sec.rundlauf};" type="button" value="Rundlauf" id="rundlauf"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=rundlauf&presenter=Dispo'" />
+		    <input style="display:{$display_sec.dispo};" type="button" value="Dispo" id="dispo"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./dispo_1/dispo.php'" />
 		    <input style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=reklamation&presenter=Reklamation&uziv={$user}'" />
 		    <input style="display:{$display_sec.infopanely};" type="button" value="Infopanely" id="infopanely" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./infopanely/places.php'" />
 		</fieldset>
@@ -49,7 +59,7 @@
 		    <legend>Laeger / sklady</legend>
 		    <input style="display:{$display_sec.lagerbew};" type="button" value="Lagerumbuchung / pridani do skladu" id="lagerbew" class="abyStartButton" onClick="location.href='./dlager/umbuchung.php'" />
 		    <input style="display:{$display_sec.lagerstk};" type="button" value="Lager Inventur" id="lagerstk" class="abyStartButton" onClick="location.href='./dlagstk/dlagstk.php'" />
-		    <input style="display:{$display_sec.behlagerbew};" type="button" value="Behaelterbewegung / palety pohyby" id="behlagerbew" class="abyStartButton" onClick="location.href='./dbehaelter/bewegung.php'" />
+{*		    <input style="display:{$display_sec.behlagerbew};" type="button" value="Behaelterbewegung / palety pohyby" id="behlagerbew" class="abyStartButton" onClick="location.href='./dbehaelter/bewegung.php'" />*}
 		    <input style="display:{$display_sec.behlagerinv};" type="button" value="Behaelterinventur / palety inventura" id="behlagerinv" class="abyStartButton" onClick="location.href='./dbehaelter/inventur.php'" />
 		</fieldset>
 
@@ -58,11 +68,19 @@
 		    <input style="display:{$display_sec.berichte};" type="button" value="Berichte Drucken" id="berichte" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/reports.php'" />
 		    <input style="display:{$display_sec.phpexcel};" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" />
 		    <input style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/querys.php'" />
+{*		    <input style="" type="button" value="Berichte Drucken" id="berichte" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/reports.php'" />
+		    <input style="" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" />
+		    <input style="" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/querys.php'" />
+*}
 		</fieldset>
 
 		<fieldset class='buttonsection reparatur'>
 		    <legend>Reparaturen</legend>
 		    <input style="display:{$display_sec.repeingabe};" type="button" value="Reparaturen" id="repeingabe" class="abyStartButton" onClick="okno=window.open();okno.location.href='./reparaturen/repeingabe.php'" />
+		</fieldset>
+		<fieldset class='buttonsection einkauf'>
+		    <legend>Einkauf / nákup</legend>
+		    <input style="display:{$display_sec.eink_anforderung};" type="button" value="Anforderung/požadavek" id="eink_anforderung" class="abyStartButton" onClick="okno=window.open();okno.location.href='./einkauf/anforderung.php'" />
 		</fieldset>
 	    </div>
 	{else}
@@ -100,9 +118,9 @@
 	{/if}
 
 	{if $prihlasen}
-	    <div align="center" id="leistungtabelle">
+	    <div id="leistungtabelle">
 
-		<!--	<a title="kundenminuten aktuell" href="graph/leistung_akt_monat_gross.php" ><img border=0 src="graph/leistung_akt_monat.php"></a>-->
+<!--		<a title="kundenminuten aktuell" href="graph/leistung_akt_monat_gross.php" ><img border=0 src="graph/leistung_akt_monat.php"></a>-->
 		<table class="monatleistungtable" border="0">
 
 		    <tr>
@@ -135,7 +153,7 @@
 		    {/foreach}
 		</table>
 
-		<table class="monatleistungtable" border="0">
+{*		<table class="monatleistungtable" border="0">
 		    <tr>
 			<td colspan="5" class="progresspopis">Importe - Heute</td>
 		    </tr>
@@ -178,7 +196,7 @@
 			</tr>
 		    {/foreach}
 		</table>
-
+*}
 	    </div>
 	{/if}
 

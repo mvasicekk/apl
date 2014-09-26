@@ -6,8 +6,12 @@ require_once '../db.php';
     $kd_von = $_POST['kd_von'];
     $kd_bis = $_POST['kd_bis'];
     $rm_bis = $_POST['rm_bis'];
+    $nurMitMinutenCheck = $_POST['nurMitMin'];
 
-    
+    if($nurMitMinutenCheck==1)
+	$nurMitMinutenFlag = TRUE;
+    else
+	$nurMitMinutenFlag = FALSE;
     // zjistim zda mam hodnotu value ulozenou v databazi artiklu
 
     $apl = AplDB::getInstance();
@@ -22,7 +26,8 @@ require_once '../db.php';
     
     $timeVon = strtotime($apl->make_DB_datum($von));
     $timeBis = strtotime($apl->make_DB_datum($bis));
-    $planyArray = $apl->getPlaene($kd_von,$kd_bis,$timeVon,$timeBis);
+    //getPlaene($kd_von,$kd_bis,$timeVon,$timeBis,$nurOffene = TRUE,$nurMitMinuten=TRUE)
+    $planyArray = $apl->getPlaene($kd_von,$kd_bis,$timeVon,$timeBis,TRUE,$nurMitMinutenFlag);
     $summeIA = array();
     $columns = array();
     
@@ -47,7 +52,7 @@ require_once '../db.php';
 	$dispoDiv.="<thead>";
 	$dispoDiv.="<tbody>";
 	while ($time <= $timeBis) {
-	    $sollProTagArray = $apl->getPlanSollProTagArray($kd_von,$kd_bis);
+	    $sollProTagArray = $apl->getPlanSollProTagArray($kd_von,$kd_bis,$time,FALSE);
     	    foreach ($planyArray as $plan) {
 		$planT = $plan['auftragsnr'];
 		$pIA = $apl->getPlanInfoArray("P".$planT,$von,$bis,$time,$rmDateTime);
@@ -166,13 +171,13 @@ require_once '../db.php';
 			
 			$zubearbeiten = $pi['vzkdplan'] - $pi['fertig'] - $beforeMins;
 			$negativClass = $zubearbeiten<0?'negativ':'';
-			$dispoDiv.="<td class='zubearbeiten $negativClass' id='zubearbeiten_".$terminAktual.'_'.$statnr.'_'.$timeID."'>";
+			$dispoDiv.="<td class='zubearbeiten $negativClass' data-name='zubearbeiten_".$terminAktual.'_'.$statnr.'_'.$timeID."' id='zubearbeiten_".$terminAktual.'_'.$statnr.'_'.$timeID."'>";
 			$dispoDiv.=number_format($zubearbeiten, 0, ',', ' ');
 			// -----------------------------------------------------
 			$dispoDiv.="</td>";
 			$dispoDiv.="<td class='solltag'>";
 			$sollTagValue = number_format($pi['solltag'], 0, ',', ' ');
-			$dispoDiv.= "<input $readonly maxlength='10' acturl='./sollTagChanged.php' type='text' id='solltag_".$terminAktual."_".$statnr."_".$timeID."' value='".$sollTagValue."'/>";
+			$dispoDiv.= "<input $readonly maxlength='10' acturl='./sollTagChanged.php' type='text' id='solltag_".$terminAktual."_".$statnr."_".$timeID."' name='solltag_".$terminAktual."_".$statnr."_".$timeID."' value='".$sollTagValue."'/>";
 			$dispoDiv.="</td>";
 			$dispoDiv.="<td class='ist'>";
 			$dispoDiv.=number_format($pi['ist'], 0, ',', ' ');

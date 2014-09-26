@@ -148,6 +148,7 @@ Aufträge pflegen / zadání zakázky
 												+'&ex_datum_soll='+encodeControlValue('ex_datum_soll')
 												, saverefresh);"/>
                         <input type="button" class='formularbutton' accesskey='b' title='Alt+b' value='Behaelter bew.' onclick="document.location.href='../dbehaelter/beheingabe.php?auftrag={$auftragsnr_value}';"/>
+			<input type="button" class='formularbutton' accesskey='b' title='Alt+e' value='edit Auftrpositionen' onclick="document.location.href='./editDauftrForm.php?import={$auftragsnr_value}';"/>
 		</td>
 	</tr>
 	<tr>
@@ -303,7 +304,7 @@ Aufträge pflegen / zadání zakázky
 
 <tr>
 		<td>
-			<input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={$auftragsnr_value};0;9999&report=D230'" class='formularbutton' type="button" id="D230" name="D230" value="D230 - Arbeitspapiere"/>	
+{*			<input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={$auftragsnr_value};0;9999&report=D230'" class='formularbutton' type="button" id="D230" name="D230" value="D230 - Arbeitspapiere"/>	*}
 		</td>
 
 		<td>
@@ -320,7 +321,7 @@ Aufträge pflegen / zadání zakázky
 
 <tr>
 	<td>
-		<input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis;A->Z(0) Z->A(1)&promenne=auftragsnr;palvon;palbis;order&values={$auftragsnr_value};0;9999;0&report=D210'" class='formularbutton' type="button" id="D231" name="D210" value="D210 - Arbeitspapiere / Rückseite"/>
+{*		<input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis;A->Z(0) Z->A(1)&promenne=auftragsnr;palvon;palbis;order&values={$auftragsnr_value};0;9999;0&report=D210'" class='formularbutton' type="button" id="D231" name="D210" value="D210 - Arbeitspapiere / Rückseite"/>*}
 	</td>
 	
 		<td>

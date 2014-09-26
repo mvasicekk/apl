@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -6,7 +6,7 @@
     <title>
       Schlüsseltabellen / tabulky s klíči
     </title>
-
+<link rel="stylesheet" href="../styl_common.css" type="text/css">
 <link rel="stylesheet" href="./styl.css" type="text/css">
 <link rel="stylesheet" href="../styldesign.css" type="text/css">
 <script type="text/javascript" src="../js/detect.js"></script>

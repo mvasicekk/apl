@@ -148,6 +148,7 @@ function edit(xml)
 	//alert(xml);
 	//alert(control.id);
 	var radekid='edit'+xml.getElementsByTagName('dauftr_id').item(0).firstChild.data;
+	var imstkedit=xml.getElementsByTagName('imstkedit').item(0).firstChild.data;
 	// posunout se z odkazu az na radkovy element, tj. o dve urovne nahoru
 	//alert(radekid);
 	var radek = document.getElementById(radekid).parentNode.parentNode;
@@ -184,7 +185,12 @@ function edit(xml)
 		}
 	}
 	
-	
+	//zabranit editaci importnich kusu pokud mam export
+	if(imstkedit==0){
+	    document.getElementById('stk').setAttribute('readonly','readonly');
+	    document.getElementById('stk').setAttribute('title','nelze editovat, ma Export !');
+	}
+	    
 	// rucne musim pridat selecty pro pole u kterych chci vybirat hodnoty ze seznamu
 
 	dauftr_id=radekid.substring(4,radekid.length);

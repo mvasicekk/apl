@@ -607,9 +607,16 @@ function printAFO($pdf,$left,$top,$childs){
     
     $pdf->Ln(1);
     
+    $a = AplDB::getInstance();
+    $musterRow = $apl->getTeilDokument($teilnr, AplDB::DOKUNR_MUSTER, TRUE);
+	if($musterRow===NULL)
+	    $musterText = "Muster: ????";
+	else
+	    $musterText = "Muster: ".$musterRow['musterplatz'].' Einlager.: '.$musterRow['einlag_datum'];
+
     $pdf->SetX($left);
     $pdf->Cell($dW+25, 5, 'Muster / Eingelagert. am:', '0', 0, 'L', 0);
-    $o =  getValueForNode($childs, 'muster_platz').' / '.getValueForNode($childs, 'muster_vom');
+    $o =  $musterRow['musterplatz'].' / '.$musterRow['einlag_datum'];
     $pdf->Cell(70-5, 5, $o, 'B', 1, 'L', 0);
 
     $pdf->SetX($left);

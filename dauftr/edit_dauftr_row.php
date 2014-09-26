@@ -14,17 +14,20 @@ dbConnect();
 
 
 	// zjistim jaky dil je napozici s id_dauftr
-	$sql="select teil,kunde from dauftr join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr where (id_dauftr='".$dauftr_id."')";
+	$sql="select teil,kunde,`auftragsnr-exp` as ex from dauftr join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr where (id_dauftr='".$dauftr_id."')";
 	$result=mysql_query($sql);
 	$row=mysql_fetch_array($result);
 	$teil=$row['teil'];
 	$kunde=$row['kunde'];
-	
+	$ex=$row['ex'];
+	$imStkEdit = strlen(trim($ex))>0?0:1;
 	
 	//hlavicka xml souboru
 	$output = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 	$output .= '<response>';
-
+	$output .= '<imstkedit>';
+	$output .= $imStkEdit;
+	$output .= '</imstkedit>';
 
 	mysql_query('set names utf8');
 	// vyberu vsechny mozne cinnosti pro dil 

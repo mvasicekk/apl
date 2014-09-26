@@ -6,6 +6,7 @@
     <title>
       APL Abydos
     </title>    
+    <link rel="stylesheet" href="./styl_common.css" type="text/css">
     <link rel="stylesheet" href="./styl.css" type="text/css">
     <link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.8.14.custom.css" type="text/css">
     <script type = "text/javascript" src = "./js/jquery-1.5.1.min.js"></script>
@@ -36,23 +37,28 @@ function setvar(hodnota)
 {/if}
 
 </div>
-
 <div id="parametry">
 {if $paramok==1 }
 <form action="viewreport.php" method="POST">
-	<table class="paramtable" border="0" cellspacing="0">
+    <table class="paramtable" border="0" cellspacing="0">
 	<tr>
-		<td class="sestavypopis" colspan="2">
-		&nbsp;{$nadpis}
+	    <td class="sestavypopis" colspan="2">
+		{$nadpis}
 		<input type="hidden" name="report" value="{$report}"/>
-		</td>
+	    </td>
 	</tr>
+	
 	{foreach item=parametr from=$param}
+
 	<tr>
-        {if $parametr.typ eq "*CB"||$parametr.typ eq "*RA"||$parametr.typ eq "*CH"}
-        <tr><td colspan="2"><hr/></td></tr>
+        
+	{if $parametr.typ eq "*CB"||$parametr.typ eq "*RA"||$parametr.typ eq "*CH"}
+        <tr>
+	    <td colspan="2"><hr></td>
+	</tr>
         {/if}
-		<td class='paramlabel'>&nbsp;{$parametr.label}</td>
+	
+	<td class='paramlabel'>&nbsp;{$parametr.label}</td>
         <!-- ted se budu rohodovat podle typu -->
         {if $parametr.typ eq "*CB"}
             <td>
@@ -68,7 +74,8 @@ function setvar(hodnota)
              {html_radios separator="<br/>" name=$parametr.var values=$parametr.val output=$parametr.val selected=$parametr.val[0]}
             </td>
         {else}
-		<td><input  {if $parametr.typ eq "*DATE"}class="datepicker"{/if} type="{$parametr.typ}" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  /></td>
+<!--		<td><input  {if $parametr.typ eq "*DATE"}class="datepicker"{/if} type="{$parametr.typ}" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  /></td>-->
+		<td><input  {if $parametr.typ eq "*DATE"}class="datepicker"{/if} type="{$parametr.inputtype}" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  /></td>
         {/if}
 		<input type="hidden" name="{$parametr.var}_label" value="{$parametr.label}"/>
 	</tr>

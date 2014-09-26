@@ -6,7 +6,7 @@
 	<title>
 	    Berichtswesen / vystupni sestavy
 	</title>
-	
+	<link rel="stylesheet" href="../styl_common.css" type="text/css">
 	<link rel="stylesheet" href="./styl.css" type="text/css">
     </head>
 

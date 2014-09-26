@@ -137,7 +137,9 @@ $a = AplDB::getInstance();
 			{
 				// pokud mam operaci, ktera ma nulovy cas vzaby a je jen jedna, nebudu verb rozpocitavat a dam do
 				// spotrebovaneho casu celou hodnotu verb
-				if(sizeof($tat_array)==1)
+				//2014-09-01, pokud je celk soucet vzaby=0, dam komplet spotrebovany cas k prvni operaci
+				if($i==0)
+				//if(sizeof($tat_array)==1)
 					$cast_verb = $verb;
 				else
 					$cast_verb =0;

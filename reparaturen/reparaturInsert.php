@@ -30,24 +30,30 @@ require_once '../fns_dotazy.php';
         $reparaturID = $apl->insertReparaturKopf($invnummer, $datumDB, $persnr_ma, $persnr_reparatur, $user, $repzeit, $repbemerkung);
         $reparaturPositionen = $apl->getReparaturPositionenArray($reparaturID);
         if ($reparaturPositionen !== NULL) {
-            $reparaturPositionenDiv = "<table border='1'>";
-            $reparaturPositionenDiv.= "<tr>";
-            $reparaturPositionenDiv.= "<th>ET-Typ</th>";
-            $reparaturPositionenDiv.= "<th>ETNr</th>";
-            $reparaturPositionenDiv.= "<th>Name</th>";
-            $reparaturPositionenDiv.= "<th>Anzahl benutzt</th>";
-            $reparaturPositionenDiv.= "<th>ET - Alt</th>";
-
-            $reparaturPositionenDiv.= "</tr>";
+            $reparaturPositionenDiv = "<table id='ettable'>";
+                $reparaturPositionenDiv.= "<tr>";
+//                $reparaturPositionenDiv.= "<th>ET-Typ</th>";
+                $reparaturPositionenDiv.= "<th>ETNr</th>";
+                $reparaturPositionenDiv.= "<th>Name</th>";
+                $reparaturPositionenDiv.= "<th>Anzahl</th>";
+                $reparaturPositionenDiv.= "<th>Alt</th>";
+		$reparaturPositionenDiv.= "<th>Invnummer</th>";
+		$reparaturPositionenDiv.= "<th style='width:16em;'>Bemerkung</th>";
+                $reparaturPositionenDiv.= "</tr>";
             foreach ($reparaturPositionen as $repPos) {
                 $reparaturPositionenDiv.= "<tr>";
-                $reparaturPositionenDiv.= "<td>".$repPos['et_typ']."</td>";
+//                $reparaturPositionenDiv.= "<td>".$repPos['et_typ']."</td>";
                 $reparaturPositionenDiv.= "<td>" . $repPos['artnr'] . "</td>";
                 $reparaturPositionenDiv.= "<td>" . $repPos['name1'] . ' - ' . $repPos['name2'] . "</td>";
                 $anzahlInput = "<input acturl='./reparaturPosAnzahlUpdate.php' type='text' size='3' maxlength='6' id='etpos_" . $reparaturID . "_" . $repPos['artnr'] . "' value='" . $repPos['anzahl'] . "' style='text-align:right;'/>";
                 $reparaturPositionenDiv.= "<td style='text-align:right;'>" . $anzahlInput . "</td>";
                 $etAlt = "<input acturl='./reparaturPosAltUpdate.php' type='checkbox' id='etalt_" . $reparaturID . "_" . $repPos['artnr'] . "' />";
                 $reparaturPositionenDiv.= "<td style=''>" . $etAlt . "</td>";
+		$etInvnummer = "<input acturl='./reparaturPosInvnummerUpdate.php' type='text' size='6' maxlength='32' id='etinvnummer_" . $reparaturID . "_" . $repPos['artnr'] . "' value='" . $repPos['et_invnummer'] . "' style='text-align:left;'/>";
+		$reparaturPositionenDiv.= "<td style=''>" . $etInvnummer . "</td>";
+		$etBemerkung = "<input acturl='./reparaturPosBemerkungUpdate.php' type='text' size='15' maxlength='255' id='etbem_" . $reparaturID . "_" . $repPos['artnr'] . "' value='" . $repPos['bemerkung'] . "' style='text-align:left;'/>";
+		$reparaturPositionenDiv.= "<td style=''>" . $etBemerkung . "</td>";
+
                 $reparaturPositionenDiv.= "</tr>";
             }
             $reparaturPositionenDiv.= "</table>";

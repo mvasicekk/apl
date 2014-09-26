@@ -120,8 +120,15 @@ dbConnect();
 		{
 			if($vzaby_pro_stk!=0)
 				$cast_verb = round($vz_array[$i]/$vzaby_pro_stk*$verb);
-			else
-				$cast_verb =0;
+			else{
+				//2014-09-01, pokud je celk soucet vzaby=0, dam komplet spotrebovany cas k prvni operaci
+				if($i==0)
+				//if(sizeof($tat_array)==1)
+					$cast_verb = $verb;
+				else
+					$cast_verb =0;
+			}	
+				//$cast_verb =0;
 			
 			if(($i==0)&&(sizeof($tat_array)>1))
 				$marke_aufteilung='A';

@@ -1,9 +1,9 @@
 <div id="header">
 <h3 align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Auftragsabwicklung Produktionssteuerung</h3>
 </div>
-<div align="center" id="podheader">
+<div id="podheader">
 {if $prihlasen}
-	{$user}  ({$roles}) l{$level}<a href="./index.php?akce=logout">abmelden/odhlasit</a>
+	{$user}  ({$roles})<a href="./index.php?akce=logout">&nbsp;abmelden/odhlasit</a>
 {else}
 	Benutzer nicht angemeldet/neprihlaseny uzivatel
 {/if}

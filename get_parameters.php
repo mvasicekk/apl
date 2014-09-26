@@ -16,9 +16,9 @@ $smarty = new Smarty;
 // vytvorit pole popisku
 if(isset($_GET['popisky']))
 {
-	$popisky=split(";",$_GET['popisky']);
-	$promenne=split(";",$_GET['promenne']);
-	$values=split(";",$_GET['values']);
+	$popisky=explode(";",$_GET['popisky']);
+	$promenne=explode(";",$_GET['promenne']);
+	$values=explode(";",$_GET['values']);
 	$paramok=1;
 }
 else
@@ -26,10 +26,12 @@ else
 	
 $i=0;
 
+//echo "<pre>";
+//var_dump($promenne);
+//echo "</pre>";
 foreach($popisky as $popis)
 {
-	
-	// za popisek jeste muze byt podrobnejsi popis typu policka , oddeleno mrizkou #
+	// za popisek jeste muze byt podrobnejsi popis typu policka
 	if(strpos($popis,","))
 	{
 		$label=substr($popis,0,strpos($popis,","));
@@ -43,37 +45,47 @@ foreach($popisky as $popis)
 		
 	$pop[$i]['typ']=$typPole;
 	$pop[$i]['label']=$label;
-	$pop[$i]['var']=$promenne[$i];
+	// rozsireni pro nove input type
+	$promenna = $promenne[$i];
+	
+	if(strpos($promenna, '!')){
+	    $varName = substr($promenna, 0,strpos($promenna, '!'));
+	    $varType = substr($promenna, strpos($promenna, '!')+1);
+	}
+	else{
+	    $varName = $promenna;
+	    $varType = 'text';
+	}
+	
+	$pop[$i]['var']=$varName;
+	if($typPole!="text")
+	    $pop[$i]['inputtype']=$typPole;
+	else
+	    $pop[$i]['inputtype']=$varType;
+
 
     // pokud je policko
     // *CB combo box
     // *RA radiobutton
     // tak hodnotu predam jako pole
 
-    if ($typPole == '*CB' || $typPole == '*RA')
-        $pop[$i]['val'] = split(",", $values[$i]);
+    if ($typPole == '*CB' || $typPole == '*RA'){
+	$pop[$i]['val'] = explode(",", $values[$i]);
+	$i++;
+    }
     else {
         $pop[$i]['val'] = $values[$i];
         $i++;
     }
 }
 
-
-
-// pokud mam nastavene session promennes uzivatelem , nastavim priznak prihlaseni
-if(isset($_SESSION['user'])&&isset($_SESSION['level']))
-{
-	$smarty->assign("user",$_SESSION['user']);
-	$smarty->assign("level",$_SESSION['level']);
-	$smarty->assign("prihlasen",1);
-}
-
+//echo "<pre>";
+//var_dump($pop);
+//echo "</pre>";
 $smarty->assign("param",$pop);
 $smarty->assign("paramok",$paramok);
 $smarty->assign("report",$_GET['report']);
 $smarty->assign("nadpis",$_GET['report']." parametry");
-
-
 $smarty->display('get_parameters.tpl');
 
 ?>

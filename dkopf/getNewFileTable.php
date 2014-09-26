@@ -9,6 +9,18 @@ $imaid = $_POST['imaid'];
 
 $apl = AplDB::getInstance();
 
+//vzgenerovat novou tabulku se souborama k IMA
+$imaInfoArray = $apl->getIMAInfoArray($imaid);
+$emaAnlagenArray = array();
+    
+if ($imaInfoArray !== NULL) {
+    $ir = $imaInfoArray[0];
+    $emaAnlagenStr = $ir['ema_anlagen_array'];
+    if(strlen($emaAnlagenStr)>0){
+        $emaAnlagenArray = explode(';', $emaAnlagenStr);
+    }
+}
+
 $extensions = 'JPG|jpg|pdf|txt';
 $filter = "/.*.($extensions)$/";
 $docsArray = $apl->getFilesForPath($ppaDir, $filter);
@@ -22,6 +34,7 @@ if ($docsArray !== NULL) {
     $formDiv.="<td class='filetableheader' style='' colspan='4'>Datei / soubor</td>";
     $formDiv.="<td class='filetableheader' style='width:160px;'>Datum</td>";
     $formDiv.="<td class='filetableheader' style='width:120px;text-align:right;'>Size</td>";
+    $formDiv.="<td class='filetableheader' style='width:120px;text-align:center;'>als EMA Anlage</td>";
     $formDiv.="</tr>";
     $i = 0;
     foreach ($docsArray as $doc) {
@@ -29,6 +42,7 @@ if ($docsArray !== NULL) {
 	$trclass = $i++% 2 == 0 ? 'sudy' : 'lichy';
 	$typeclass = $doc['type'];
 	$filetypeclass = $doc['ext'];
+	$checkBoxId = 'anlage_'.$doc['filename'];
 	if($typeclass=='file') $target = "_blank";
 	$formDiv.="<tr class='$trclass'>";
 	$fN = $doc['filename'];
@@ -45,6 +59,14 @@ if ($docsArray !== NULL) {
 	    $formDiv.="<td class='filetableitem' style='text-align:right;'>" . number_format(floatval($doc['size']), 0, ',', ' ') . "</td>";
 	if($doc['type']=='dir')
 	    $formDiv.="<td class='filetableitem' style='text-align:right;'>" . "DIR" . "</td>";
+	
+	$checked = '';
+	if(in_array($doc['filename'], $emaAnlagenArray)) $checked = "checked='checked'";
+	if($filetypeclass=='JPG')
+	    $formDiv.="<td class='filetableitem' style='text-align:center;'>" . "<input acturl='./updateEmaAnlage.php' id='$checkBoxId' type='checkbox' $checked>" . "</td>";
+	else
+	    $formDiv.="<td class='filetableitem' style='text-align:center;'></td>";
+
 	$formDiv.="</tr>";
     }
 }

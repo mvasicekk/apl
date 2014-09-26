@@ -205,6 +205,8 @@ function getValueForNode($nodelist,$nodename)
 //
 function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 {
+    $a = AplDB::getInstance();
+    $cinnostMaxLen = 38;
 	// vytahnu si jeste vsechny zaskrtnute komentace pro dany dil, vrati mi asociativni pole
         $k2 = getTatAktivFromTeilDpos($teil,2,1);
         $k3 = getTatAktivFromTeilDpos($teil,3,1);
@@ -220,11 +222,11 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	$pdfobjekt->SetXY($x_pocatek,$y_pocatek);
 	$pdfobjekt->Cell(10,3,"taetnr",'B',0,'L');
-	$pdfobjekt->Cell(45,3,"Bezeichnung",'B',0,'L');
-	$pdfobjekt->Cell(45,3,"oznaceni",'B',0,'L');
-	$pdfobjekt->Cell(20,3,"AM",'B',0,'L');
+	$pdfobjekt->Cell(42,3,"Bezeichnung",'B',0,'L');
+	$pdfobjekt->Cell(43,3,"oznaceni",'B',0,'L');
+	$pdfobjekt->Cell(37,3,"AM / MM",'B',0,'L');
 	$pdfobjekt->Cell(15,3,"ks/hod",'B',0,'R');
-	$pdfobjekt->Cell(15,3,"min/stk",'B',1,'R');
+	$pdfobjekt->Cell(0,3,"min/stk",'B',1,'R');
 	$pdfobjekt->SetX($x_pocatek);
 
 	$pdfobjekt->SetFont("FreeSans", "", 7);
@@ -234,14 +236,17 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 	{
 		foreach($komentare as $komentar)
 		{
+			$abgnr = intval($komentar["taetnr"]);
 			$pdfobjekt->Cell(10,3,$komentar["taetnr"],0,0,'L');
-			$pdfobjekt->Cell(45,3,$komentar["tatbez_d"],0,0,'L');
-			$pdfobjekt->Cell(45,3,$komentar["tatbez_t"],0,0,'L');
-			$pdfobjekt->Cell(20,3,$komentar["mittel"],0,0,'L');
+			$pdfobjekt->Cell(42,3,AplDB::aplSubstr($komentar["tatbez_d"],$cinnostMaxLen),0,0,'L');
+			$pdfobjekt->Cell(43,3,AplDB::aplSubstr($komentar["tatbez_t"],$cinnostMaxLen),0,0,'L');
+			$mittel = $a->getAMMMList($teil, $abgnr);
+//			$pdfobjekt->Cell(37,3,$komentar["mittel"],0,0,'L');
+			$pdfobjekt->Cell(37,3,$mittel,0,0,'L');
 			$obsah=number_format($komentar["ks_hod"],0,',',' ');
 			$pdfobjekt->Cell(15,3,$obsah,0,0,'R');
 			$obsah=number_format($komentar["vzaby"],2,',',' ');
-			$pdfobjekt->Cell(15,3,$obsah,0,1,'R');
+			$pdfobjekt->Cell(0,3,$obsah,0,1,'R');
 			$pdfobjekt->SetX($x_pocatek);
 		}
 	}
@@ -249,14 +254,17 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 	foreach($taetigkeiten as $taetigkeit)
 	{
 		$taetigkeitChildNodes = $taetigkeit->childNodes;
+		$abgnr = intval(getValueForNode($taetigkeitChildNodes,"taetnr"));
 		$pdfobjekt->Cell(10,3,getValueForNode($taetigkeitChildNodes,"taetnr"),0,0,'L');
-		$pdfobjekt->Cell(45,3,getValueForNode($taetigkeitChildNodes,"tatbez_d"),0,0,'L');
-		$pdfobjekt->Cell(45,3,getValueForNode($taetigkeitChildNodes,"tatbez_t"),0,0,'L');
-		$pdfobjekt->Cell(20,3,getValueForNode($taetigkeitChildNodes,"mittel"),0,0,'L');
+		$pdfobjekt->Cell(42,3,AplDB::aplSubstr(getValueForNode($taetigkeitChildNodes,"tatbez_d"),$cinnostMaxLen),0,0,'L');
+		$pdfobjekt->Cell(43,3,AplDB::aplSubstr(getValueForNode($taetigkeitChildNodes,"tatbez_t"),$cinnostMaxLen),0,0,'L');
+		$mittel = $a->getAMMMList($teil, $abgnr);
+//		$pdfobjekt->Cell(37,3,getValueForNode($taetigkeitChildNodes,"mittel"),0,0,'L');
+		$pdfobjekt->Cell(37,3,$mittel,0,0,'L');
 		$obsah=number_format(getValueForNode($taetigkeitChildNodes,"ks_hod"),0,',',' ');
 		$pdfobjekt->Cell(15,3,$obsah,0,0,'R');
 		$obsah=number_format(getValueForNode($taetigkeitChildNodes,"vzaby"),2,',',' ');
-		$pdfobjekt->Cell(15,3,$obsah,0,1,'R');
+		$pdfobjekt->Cell(0,3,$obsah,0,1,'R');
 		$pdfobjekt->SetX($x_pocatek);
 	}
 }
@@ -274,7 +282,10 @@ function show_DokuLegend($pdf,$teil,$xOffset,$yOffset,$height){
     // prepare legend array
     $a = AplDB::getInstance();
     $pdf->SetFont("FreeSans", "", 6);
-    $dokLegendArray = $a->getTeilDokuDistinctDokuArray($teil);
+    
+    // *************************************************************************
+    // second param = TRUE, use druck_arbpapier flag in dokumenttyp ************
+    $dokLegendArray = $a->getTeilDokuDistinctDokuArray($teil,TRUE);
     //$aussLegendArray = array(array("aussnr"=>"10"),array("aussnr"=>"20"));
     if($dokLegendArray!==NULL){
 	$dokCount = count($dokLegendArray);
@@ -354,7 +365,7 @@ function zobraz_schwierigkeit($pdf,$teil,$yOffset=0){
     if ($sArray === NULL)
 	return 0;
     
-    $wholeWidth = 150;
+    $wholeWidth = 150+7;
     $schWidth = $wholeWidth/3;
     $schLabel = $schWidth*(1/4);
     $schValue = $schWidth*(3/4);
@@ -401,7 +412,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
     $pdfobjekt->Cell(15, 3, "Erhalten am", 'B', 0, 'L');
     $pdfobjekt->Cell(95, 3, "Abweichung", 'B', 0, 'L');
     $pdfobjekt->Cell(17, 3, "Giesstag", 'B', 0, 'L');
-    $pdfobjekt->Cell(10, 3, "Bewert.", 'B', 1, 'R');
+    $pdfobjekt->Cell(0, 3, "Bewert.", 'B', 1, 'R');
     $pdfobjekt->SetX($x_pocatek);
 
     $pdfobjekt->SetFont("FreeSans", "", 7);
@@ -414,7 +425,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 	$abweichung = str_replace('\n', ' ', $rekl["beschr_abweichung"]);
 	$pdfobjekt->Cell(95, 3, $abweichung, 0, 0, 'L');
 	$pdfobjekt->Cell(17, 3, $rekl["giesstag"], 0, 0, 'L');
-	$pdfobjekt->Cell(10, 3, $rekl["interne_bewertung"], 0, 1, 'R');
+	$pdfobjekt->Cell(0, 3, $rekl["interne_bewertung"], 0, 1, 'R');
 	$pdfobjekt->SetX($x_pocatek);
 	$citac++;
 	if($citac>4) break;
@@ -425,7 +436,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
     // cerveny ramecek okolo
     $pdfobjekt->SetDrawColor(255,0,0);
     $pdfobjekt->SetLineWidth(0.5);
-    $pdfobjekt->Rect($x_pocatek, $y_pocatek-0.5, 150, $pdfobjekt->GetY()-$y_pocatek+0.5, 'D');
+    $pdfobjekt->Rect($x_pocatek, $y_pocatek-0.5, 150+7, $pdfobjekt->GetY()-$y_pocatek+0.5, 'D');
     $pdfobjekt->SetDrawColor(0,0,0);
     $pdfobjekt->SetLineWidth(0.2);
     $rest = $restAnzahl>0?1:0;
@@ -533,7 +544,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	    $musterText = $musterRow['doku_nr']."/".$musterRow['doku_beschreibung']."/".$musterRow['einlag_datum']."/".$musterRow['musterplatz']."/".$musterRow['freigabe_am']."/".$musterRow['freigabe_vom'];
 
 	$pdfobjekt->SetFont("FreeSans", "", 7);
-	$pdfobjekt->Rect($x_pocatek+52+3+52+3,$y_pocatek-10,150,5);
+	$pdfobjekt->Rect($x_pocatek+52+3+52+3,$y_pocatek-10,150+7,5);
 	$pdfobjekt->SetXY($x_pocatek+52+3+52+3,$y_pocatek-10);
 	$pdfobjekt->Write(5,$musterText);
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
@@ -726,7 +737,12 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Text($paletaPoziceX,50+$y_offset,getValueForNode($paletteChildNodes,"pal"));
 	$pdfobjekt->SetFont("FreeSans", "", 15);
 	$pdfobjekt->Text($paletaPoziceX+5,28+$y_offset,"Palette / paleta");
-
+	$pdfobjekt->SetFont("FreeSans", "B", 35);
+	$pdfobjekt->SetX($paletaPoziceX+5);
+	$pdfobjekt->SetY(28+$y_offset+25);
+	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"fremdpos"), "0", 0 , "R");
+	
+	
 	$pdfobjekt->SetFont("FreeSans", "", 20);
 	//$pdfobjekt->SetXY(10,10);
 	$pdfobjekt->Text(10,70+$y_offset,"Teil / dil");
@@ -759,6 +775,10 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Text($paletaPoziceX,50+$y_offset,getValueForNode($paletteChildNodes,"pal"));
 	$pdfobjekt->SetFont("FreeSans", "", 15);
 	$pdfobjekt->Text($paletaPoziceX+5,28+$y_offset,"Palette / paleta");
+	$pdfobjekt->SetFont("FreeSans", "B", 35);
+	$pdfobjekt->SetX($paletaPoziceX+5);
+	$pdfobjekt->SetY(28+$y_offset+25);
+	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"fremdpos"), "0", 0 , "R");
 
 	$pdfobjekt->SetFont("FreeSans", "", 20);
 	//$pdfobjekt->SetXY(10,10);
