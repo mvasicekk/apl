@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 
 $doc_title = "S190";

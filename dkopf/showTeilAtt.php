@@ -44,6 +44,7 @@ require_once '../db.php';
     //$upDiv.="$puser";
     
     $formDiv = "<div id='dokuform'>";
+    $formDiv.="<div class='closebutton' id='closebutton_dokuform'>X</div>";
     $formDiv.=$upDiv;
     $formDiv.="<table id='dokutable'>";
     $formDiv.="<tr><td style='font-size:x-small;' colspan='5'>";

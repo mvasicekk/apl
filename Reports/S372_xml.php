@@ -40,8 +40,10 @@ if($reporttyp=='IM'){
     $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
     $pt.=" join dkopf on dkopf.teil=drueck.teil";
     $pt.=" where";
-    $pt.="     $datum between '$date_von' and '$date_bis'";
-    $pt.="     and daufkopf.kunde between '$kundevon' and '$kundebis'";
+    $pt.="     ($datum between '$date_von' and '$date_bis')";
+    $pt.="     and (daufkopf.kunde between '$kundevon' and '$kundebis')";
+    if($bTeil)
+	$pt.="     and (dkopf.teil like '$teil')";
 //  $pt.="     and drueck.`auss-art`<>0";
     $pt.=" group by";
     $pt.="     daufkopf.kunde,";
@@ -64,8 +66,11 @@ else{
     $pt.=" join daufkopf on daufkopf.auftragsnr=dauftr.`auftragsnr-exp`";
     $pt.=" join dkopf on dkopf.teil=drueck.teil";
     $pt.=" where";
-    $pt.="     daufkopf.`ausliefer_datum` between '$date_von' and '$date_bis'";
-    $pt.="     and daufkopf.kunde between '$kundevon' and '$kundebis'";
+    $pt.="     (daufkopf.`ausliefer_datum` between '$date_von' and '$date_bis')";
+    $pt.="     and (daufkopf.kunde between '$kundevon' and '$kundebis')";
+    if($bTeil)
+	$pt.="     and (dkopf.teil like '$teil')";
+
 //    $pt.="     and drueck.`auss-art`<>0";
     $pt.=" group by";
     $pt.="     daufkopf.kunde,";
@@ -91,7 +96,10 @@ if($reporttyp=='IM'){
     $pt.=" as SELECT dauftr.teil,dauftr.auftragsnr,sum(dauftr.`Stück`) as gut_stk";
     $pt.=" FROM `dauftr`";
     $pt.=" join daufkopf on daufkopf.auftragsnr=dauftr.AuftragsNr";
-    $pt.=" WHERE ((daufkopf.aufdat between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G'))";
+    $pt.=" WHERE ((daufkopf.aufdat between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G')";
+    if($bTeil)
+	$pt.="     and (dauftr.teil like '$teil')";
+    $pt.=" )";
     $pt.=" group by dauftr.teil,dauftr.auftragsnr";
 }
 else{
@@ -100,7 +108,10 @@ else{
     $pt.=" FROM `drueck`";
     $pt.=" join dauftr on drueck.teil=dauftr.teil and drueck.taetnr=dauftr.abgnr and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.auftragsnr=dauftr.auftragsnr";
     $pt.=" join daufkopf on daufkopf.auftragsnr=dauftr.`auftragsnr-exp`";
-    $pt.=" WHERE ((daufkopf.ausliefer_datum between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G'))";
+    $pt.=" WHERE ((daufkopf.ausliefer_datum between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G')";
+    if($bTeil)
+	$pt.="     and (dauftr.teil like '$teil')";
+    $pt.=" )";
     $pt.=" group by drueck.teil,dauftr.`auftragsnr-exp`";
 }
 //echo $pt."<br>";

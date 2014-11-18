@@ -18,6 +18,14 @@ require_once '../db.php';
     $palarray_g = trim($_POST['palarray_g']);
     $palarray_a = trim($_POST['palarray_a']);
     $palarray_gem = trim($_POST['palarray_gem']);
+    $palarrayValue_e = trim($_POST['palarrayValue_e']);
+    $palarrayValue_anf = trim($_POST['palarrayValue_anf']);
+    $palarrayValue_gem = trim($_POST['palarrayValue_gem']);
+
+    $dauftrIdValue_e = trim($_POST['dauftrIdValue_e']);
+    $dauftrIdValue_gen = trim($_POST['dauftrIdValue_gen']);
+    $dauftrIdValue_anf = trim($_POST['dauftrIdValue_anf']);
+    $dauftrIdValue_gem = trim($_POST['dauftrIdValue_gem']);
     
     $genehmigt = $_GET['genehmigt'];
     $anforderung = $_GET['anforderung'];
@@ -59,6 +67,7 @@ require_once '../db.php';
     $ar = 0;
     $user = get_user_pc();
 
+    // ima anforderung
     $palArray = array();
     if($imArrayBox!==NULL){
 	foreach ($imArrayBox as $im){
@@ -74,84 +83,156 @@ require_once '../db.php';
     }
 
 if (($anforderung==0) && ($ma=='ema')) {
+    $palArrayBox = array();
+    if(strlen($dauftrIdValue_anf)>0){
+	$idArray = explode(';', $dauftrIdValue_anf);
+//	var_dump($idArray);
+	if(is_array($idArray)){
+	    foreach ($idArray as $i){
+		$dauftrRow = $apl->getDauftrRow($i);
+		if($dauftrRow!==NULL){
+		    array_push($palArrayBox, array('id'=>$dauftrRow['id'],'im'=>$dauftrRow['auftragsnr'],'pal'=>$dauftrRow['pal']));
+		}
+	    }
+	}
+    }
     $formDiv.="<div id='imaselectpalform'>";
-    if ($palArrayBoxRaw_a !== NULL) {
-	foreach ($palArrayBox_a as $pal) {
+    if ($palArrayBox !== NULL) {
+	$arrayOldStr = $dauftrIdValue_gem;
+	$arrayOld = NULL;
+	if(strlen($arrayOldStr)>0){
+	    $arrayOld = explode(';', $arrayOldStr);
+	}
+	
+	foreach ($palArrayBox as $pal) {
 	    $formDiv.="<div>";
-	    $p = sprintf("%04d", $pal);
-	    $formDiv.=$p;
-	    $checked = '';
-	    if ($palArrayBox_gem !== NULL) {
-		if (in_array($pal, $palArrayBox_gem))
+	    $p = sprintf("%d - %04d", $pal['im'],$pal['pal']);
+	    $formDiv.="<label>".$p;
+	    if(is_array($arrayOld)){
+		if(in_array($pal['id'], $arrayOld)){
 		    $checked = 'checked';
+		}
+		else{
+		    $checked = '';
+		}
 	    }
-	    else {
-		$checked = 'checked';
+	    else{
+		$checked='checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal . "' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
-    $formDiv.="</div>";
+    $formDiv.="</div>";    
 }
     
 if (($anforderung==1) && ($ma=='ema')) {
+    $palArrayBox = array();
+    if(strlen($dauftrIdValue_e)>0){
+	$idArray = explode(';', $dauftrIdValue_e);
+	if(is_array($idArray)){
+	    foreach ($idArray as $i){
+		$dauftrRow = $apl->getDauftrRow($i);
+		if($dauftrRow!==NULL){
+		    array_push($palArrayBox, array('id'=>$dauftrRow['id'],'im'=>$dauftrRow['auftragsnr'],'pal'=>$dauftrRow['pal']));
+		}
+	    }
+	}
+    }
     $formDiv.="<div id='imaselectpalform'>";
     if ($palArrayBox !== NULL) {
+	$arrayOldStr = $dauftrIdValue_anf;
+	$arrayOld = NULL;
+	if(strlen($arrayOldStr)>0){
+	    $arrayOld = explode(';', $arrayOldStr);
+	}
+	
 	foreach ($palArrayBox as $pal) {
 	    $formDiv.="<div>";
-	    $p = sprintf("%04d", $pal);
-	    $formDiv.=$p;
-	    $checked = '';
-	    if ($palArrayBox_a !== NULL) {
-		if (in_array($pal, $palArrayBox_a))
+	    $p = sprintf("%d - %04d", $pal['im'],$pal['pal']);
+	    $formDiv.="<label>".$p;
+	    if(is_array($arrayOld)){
+		if(in_array($pal['id'], $arrayOld)){
 		    $checked = 'checked';
+		}
+		else{
+		    $checked = '';
+		}
 	    }
-	    else {
-		$checked = 'checked';
+	    else{
+		$checked='checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal . "' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
-    $formDiv.="</div>";
+    $formDiv.="</div>";    
 }
 
+//------------------------------------------------------------------------------
+//schvaleni imy
 if (($genehmigt == 1)&&($anforderung==0) && ($ma=='ima')) {
+    $palArrayBox = array();
+    if(strlen($dauftrIdValue_e)>0){
+	$idArray = explode(';', $dauftrIdValue_e);
+	if(is_array($idArray)){
+	    foreach ($idArray as $i){
+		$dauftrRow = $apl->getDauftrRow($i);
+		if($dauftrRow!==NULL){
+		    array_push($palArrayBox, array('id'=>$dauftrRow['id'],'im'=>$dauftrRow['auftragsnr'],'pal'=>$dauftrRow['pal']));
+		}
+	    }
+	}
+    }
     $formDiv.="<div id='imaselectpalform'>";
     if ($palArrayBox !== NULL) {
+	$arrayOldStr = $dauftrIdValue_gen;
+	$arrayOld = NULL;
+	if(strlen($arrayOldStr)>0){
+	    $arrayOld = explode(';', $arrayOldStr);
+	}
+	
 	foreach ($palArrayBox as $pal) {
 	    $formDiv.="<div>";
-	    $p = sprintf("%04d", $pal);
-	    $formDiv.=$p;
-	    $checked = '';
-	    if ($palArrayBox_g !== NULL) {
-		if (in_array($pal, $palArrayBox_g))
+	    $p = sprintf("%d - %04d", $pal['im'],$pal['pal']);
+	    $formDiv.="<label>".$p;
+	    if(is_array($arrayOld)){
+		if(in_array($pal['id'], $arrayOld)){
 		    $checked = 'checked';
+		}
+		else{
+		    $checked = '';
+		}
 	    }
-	    else {
-		$checked = 'checked';
+	    else{
+		$checked='checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal . "' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
     $formDiv.="</div>";
 }
 
+//------------------------------------------------------------------------------
+//pozadavek na imu
 if(($anforderung==1) && ($ma=='ima')){
     $formDiv.="<div id='imaselectpalform'>";
     if ($palArray !== NULL) {
 	foreach ($palArray as $pal) {
 	    $formDiv.="<div>";
 	    $p = sprintf("%6d - %04d", $pal['auftragsnr'], $pal['pal']);
-	    $formDiv.=$p;
+	    $formDiv.="<label>".$p;
 	    $checked = '';
 	    if ($palArrayBox !== NULL) {
 		if (in_array($pal['pal'], $palArrayBox))
 		    $checked = 'checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['pal'] . "' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] . "_".$pal['auftragsnr']."_".$pal['pal']."' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
@@ -163,7 +244,7 @@ $returnArray = array(
 	'e'=>$e,
 	'ar'=>$ar,
 	'id'=>$id,
-	'ŧp'=>$tp,
+	'tp'=>$tp,
 	'teil'=>$teil,
 	'imarray'=>$imarray,
 	'palArray'=>$palArray,
@@ -175,8 +256,14 @@ $returnArray = array(
 	'palarraybox_g'=>$palArrayBox_g,
 	'palarrayboxraw'=>$palArrayBoxRaw,
         'palarrayboxraw_a'=>$palArrayBoxRaw_a,
+	'dauftrIdValue_e'=>$dauftrIdValue_e,
+	'dauftrIdValue_gen'=>$dauftrIdValue_gen,
+	'dauftrIdValue_anf'=>$dauftrIdValue_anf,
+	'dauftrIdValue_gem'=>$dauftrIdValue_gem,
+	'palarrayValue_e'=>$palarrayValue_e,
+	'palarrayValue_anf'=>$palarrayValue_anf,
+	'palarrayValue_gem'=>$palarrayValue_gem,
     );
     echo json_encode($returnArray);
 
 ?>
-

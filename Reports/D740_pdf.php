@@ -11,6 +11,7 @@ $doc_keywords = "D740";
 $parameters=$_GET;
 
 $export=$_GET['auftragsnr'];
+$pdfpass=trim($_GET['pdfpass']);
 
 require_once('D740_xml.php');
 
@@ -131,10 +132,10 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 {
 
     $pdfobjekt->SetFont("FreeSans", "", 7);
-	$pdfobjekt->SetFillColor(255,255,200,1);
+	$pdfobjekt->SetFillColor(255,255,200);
 
 	$pdfobjekt->SetY(15);
- 	$pdfobjekt->Cell(0,5,"Seite ".$pdfobjekt->PageNo()." von {nb}",'0',1,'R',0);
+ 	$pdfobjekt->Cell(0,5,"Seite ".$pdfobjekt->PageNo()." von ".$pdfobjekt->getAliasNbPages()."",'0',1,'R',0);
 
 	$pdfobjekt->SetY(35);
 	// schovam si pozice xy
@@ -245,7 +246,7 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 {
 	$pdfobjekt->SetFont("FreeSans", "", 8);
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
 	foreach($pole as $nodename=>$cell)
 	{
@@ -312,7 +313,7 @@ function getValueForNode($nodelist,$nodename)
 function zapati_fremdpos($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
 
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Cell(0,$vyskaradku,"",'T',1,'L',1);
 }
@@ -321,7 +322,7 @@ function zapati_fremdpos($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 {
 
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Cell(20+45+45+10+12,$vyskaradku,"",'0',0,'R',0);
     $mwst = getValueForNode($childNodes,"mwst");
@@ -382,7 +383,7 @@ function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
 
-    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Ln();
 	$pdfobjekt->Cell(0,$vyskaradku,"Bitte überweisen Sie den Betrag bis ".getValueForNode($childNodes,"zahldatum")." auf das Konto",'0',1,'1',0);
@@ -489,7 +490,7 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_fremdposition($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Cell(20,$vyskaradku,"Best.Nr.:",'0',0,'L',1);
 	$fremdauftr = getValueForNode($childNodes,"fremdauftrnr");
@@ -501,7 +502,7 @@ function zahlavi_fremdposition($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	// dummy
@@ -521,7 +522,7 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	// dummy
@@ -568,8 +569,8 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 		return 0;
 }
 
-require_once('../tcpdf/config/lang/eng.php');
-require_once('../tcpdf/tcpdf.php');
+//require_once('../tcpdf/config/lang/eng.php');
+require_once('../tcpdf_new/tcpdf.php');
 
 $pdf = new TCPDF('P','mm','A4',1);
 
@@ -586,8 +587,10 @@ $pdf->SetMargins(PDF_MARGIN_LEFT+5, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 //set auto page breaks
 //$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-$pdf->SetFooterMargin(PDF_MARGIN_FOOTER+3);
+//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER+3);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER+6);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
+$pdf->SetProtection(array('extract'), $pdfpass, '', 1);
 
 
 //$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D740 Rechnung", $params);
@@ -606,7 +609,7 @@ $pdf->setFooterFont(Array("FreeSans", '', 8));
 $pdf->setLanguageArray($l); //set language items
 
 //initialize document
-$pdf->AliasNbPages();
+//$pdf->AliasNbPages();
 $pdf->SetFont("FreeSans", "", 8);
 
 

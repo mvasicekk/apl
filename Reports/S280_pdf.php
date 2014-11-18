@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
@@ -23,6 +23,8 @@ $tatbis = $_GET['tatbis'];
 $oe = trim($_GET['oe']);
 $oeStamm = trim($_GET['ogStamm']);
 $oe1Stamm = trim($_GET['oeStamm']);
+
+
 $vzkdsicht = $_GET['vzkdsicht'];
 $teil = trim($_GET['teil']);
 
@@ -42,6 +44,11 @@ if($oe1StammArray==FALSE)
 require_once('S280_xml.php');
 
 $apl = AplDB::getInstance();
+
+$puser = $_SESSION['user'];
+if($apl->getDisplaySec('S280', 'vzkd', $puser)===FALSE)
+	$vzkdsicht = 0;
+
 
 $priplatekArray = array(
                         "S0011"=>array(100,100,50,50,50,50,50,50,30,30,30,30,30,30,20,20,20,20,20,20),

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
@@ -106,12 +106,12 @@ foreach ($parameters as $param)
 
 $cells = 
 array(
-'startdummy'=> array ("popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
-'invnummer'=> array ("popis"=>"","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
+'startdummy'=> array ("popis"=>"","sirka"=>0.1,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+'invnummer'=> array ("popis"=>"","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 'anlage_beschreibung'=> array ("popis"=>"","sirka"=>20,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 'persnr_reparatur'=> array ("popis"=>"","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 'datum'=> array ("popis"=>"","sirka"=>15,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
-'rep_kosten'=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
+'rep_kosten'=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 'artnr'=> array ("popis"=>"","sirka"=>20,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 'artname'=> array ("popis"=>"","sirka"=>50,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 'anzahl'=> array ("popis"=>"","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -122,6 +122,26 @@ array(
 'gesamt'=> array ("popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 'faktor1'=> array ("popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 'lf'=> array ("popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"BR","radek"=>1,"fill"=>0),
+);
+
+$cells_header = 
+array(
+'startdummy'=> array ("popis"=>"\n","sirka"=>0.1,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'invnummer'=> array ("popis"=>"\ninvnummer","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'anlage_beschreibung'=> array ("popis"=>"\nTyp","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
+'persnr_reparatur'=> array ("popis"=>"repariert\nvon","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'datum'=> array ("popis"=>"\nDatum","sirka"=>15,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
+'rep_kosten'=> array ("popis"=>"Reparatur-\nkosten [Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'artnr'=> array ("popis"=>"\nArtNR","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
+'artname'=> array ("popis"=>"\nArtName","sirka"=>50,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
+'anzahl'=> array ("popis"=>"\nStk","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'preis'=> array ("popis"=>"Preis\n[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'et_alt'=> array ("popis"=>"gebraucht\n40%","sirka"=>15,"ram"=>'0',"align"=>"C","radek"=>0,"fill"=>1),
+'gespreis'=> array ("popis"=>"Ers.Teile\nPreis[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'zuschlag'=> array ("popis"=>"Zuschlag\n10%[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'gesamt'=> array ("popis"=>"Gesamt\n[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'faktor1'=> array ("popis"=>"CZK/\nVzKd(S0011)","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
+'lf'=> array ("popis"=>"\n","sirka"=>0,"ram"=>'0',"align"=>"BR","radek"=>1,"fill"=>1),
 );
 
 $cells_invnr = 
@@ -146,25 +166,6 @@ array(
 );
 
 
-$cells_header = 
-array(
-'startdummy'=> array ("popis"=>"\n","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'invnummer'=> array ("popis"=>"\ninvnummer","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'anlage_beschreibung'=> array ("popis"=>"\nTyp","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-'persnr_reparatur'=> array ("popis"=>"repariert\nvon","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'datum'=> array ("popis"=>"\nDatum","sirka"=>15,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-'rep_kosten'=> array ("popis"=>"Reparatur-\nkosten [Kc]","sirka"=>20,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'artnr'=> array ("popis"=>"\nArtNR","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-'artname'=> array ("popis"=>"\nArtName","sirka"=>50,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-'anzahl'=> array ("popis"=>"\nStk","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'preis'=> array ("popis"=>"Preis\n[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'et_alt'=> array ("popis"=>"gebraucht\n40%","sirka"=>15,"ram"=>'0',"align"=>"C","radek"=>0,"fill"=>1),
-'gespreis'=> array ("popis"=>"Ers.Teile\nPreis[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'zuschlag'=> array ("popis"=>"Zuschlag\n10%[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'gesamt'=> array ("popis"=>"Gesamt\n[Kc]","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'faktor1'=> array ("popis"=>"CZK/\nVzKd(S0011)","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-'lf'=> array ("popis"=>"\n","sirka"=>0,"ram"=>'0',"align"=>"BR","radek"=>1,"fill"=>1),
-);
 
 $cells_header_invnr = 
 array(
@@ -306,26 +307,26 @@ function zahlavi_maschine($pdfobjekt,$vyskaradku,$rgb,$childs)
 
 
         //dummy
-        $pdfobjekt->Cell($cells['startdummy']['sirka'],$vyskaradku,'','0',0,'L',$fill);
+        $pdfobjekt->Cell($cells['startdummy']['sirka'],$vyskaradku,'','T',0,'L',$fill);
         //invnummer
-        $pdfobjekt->Cell($cells['invnummer']['sirka'],$vyskaradku,  getValueForNode($childs, 'invnummer'),'0',0,'R',$fill);
+        $pdfobjekt->Cell($cells['invnummer']['sirka'],$vyskaradku,  getValueForNode($childs, 'invnummer'),'T',0,'R',$fill);
 
         //typ
-        $pdfobjekt->Cell($cells['anlage_beschreibung']['sirka'],$vyskaradku,  getValueForNode($childs, 'anlage_beschreibung'),'0',0,'L',$fill);
+        $pdfobjekt->Cell($cells['anlage_beschreibung']['sirka'],$vyskaradku,  getValueForNode($childs, 'anlage_beschreibung'),'T',0,'L',$fill);
 
         //persnr_reparatur
-        $pdfobjekt->Cell($cells['persnr_reparatur']['sirka'],$vyskaradku,  getValueForNode($childs, 'persnr_reparatur'),'0',0,'R',$fill);
+        $pdfobjekt->Cell($cells['persnr_reparatur']['sirka'],$vyskaradku,  getValueForNode($childs, 'persnr_reparatur'),'T',0,'R',$fill);
         
         //datum
-        $pdfobjekt->Cell($cells['datum']['sirka'],$vyskaradku,  getValueForNode($childs, 'datum'),'0',0,'L',$fill);
+        $pdfobjekt->Cell($cells['datum']['sirka'],$vyskaradku,  getValueForNode($childs, 'datum'),'T',0,'L',$fill);
 
         //rep_kosten
         $sum_zapati_persnr['rep_kosten'] += intval(getValueForNode($childs, 'rep_kosten'));
         
         $obsah = number_format(getValueForNode($childs, 'rep_kosten'),0,',',' ');
-        $pdfobjekt->Cell($cells['rep_kosten']['sirka'],$vyskaradku,$obsah  ,'0',0,'R',$fill);
+        $pdfobjekt->Cell($cells['rep_kosten']['sirka'],$vyskaradku,$obsah  ,'T',0,'R',$fill);
 
-        $pdfobjekt->Cell(0,$vyskaradku,'','0',1,'L',$fill);
+        $pdfobjekt->Cell(0,$vyskaradku,'','T',1,'L',$fill);
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 
         // nascitat minuty oprav
@@ -449,7 +450,7 @@ function zahlavi_et($pdfobjekt,$vyskaradku,$rgb,$childs)
         $sum_zapati_invnr['et_kosten'] += floatval(getValueForNode($childs, 'preis'))*$multi*getValueForNode($childs, 'anzahl');
         $pdfobjekt->Cell($cells['gespreis']['sirka'],$vyskaradku,  $obsah,'0',0,'R',$fill);
 
-        $pdfobjekt->Cell(0,$vyskaradku,'','0',1,'L',$fill);
+        $pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childs, 'bemerkung'),'0',1,'L',$fill);
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 
@@ -492,7 +493,7 @@ function zapati_person($pdfobjekt,$vyskaradku,$rgb,$sumArray,$childs,$persnr=0)
 
 
         //novy radek
-        $pdfobjekt->Cell(0,$vyskaradku,'','B',1,'R',$fill);
+        $pdfobjekt->Cell(0,$vyskaradku,'','0',1,'R',$fill);
 
 	$vzkdGesamt = 0;
         // S0011 radek s vzkd a koeficientem
@@ -1219,7 +1220,7 @@ if ($reportTypPersNr === TRUE) {
 
             test_pageoverflow($pdf, 2, $cells_header);
             $pdf->Cell($cells['startdummy']['sirka'], 1, '', '0', 0, 'L', 0);
-            $pdf->Cell(0, 1, '', 'B', 1, 'L', 0);
+            $pdf->Cell(0, 1, '', '0', 1, 'L', 0);
         }
         test_pageoverflow($pdf, 4*5, $cells_header);
         $sum_zapati_persnr['zuschlag'] = ($sum_zapati_persnr['rep_kosten'] + $sum_zapati_persnr['et_kosten']) * 0.1;

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
@@ -17,6 +17,7 @@ $export = $_GET['export'];
 $export_datum = $_GET['export_datum'];
 
 $pal2x = $_GET['pal2x'];
+$A5papier = intval($_GET['a5']);
 $erstpal = trim($_GET['erstpal']);
 
 //echo $export_datum;
@@ -581,11 +582,13 @@ function drawBehaelterBoxA5($pdf,$row,$column,$popisek,$watermark,$childs,$teil)
 
 require('../fpdf/transform.php');
 
-$pdf = new PDF_Transform('P','mm','A4',1);
-//$pdf = new TCPDF('L','mm','A4',1);
+if($A5papier==1)
+    $pdf = new PDF_Transform('L','mm','A5',1);
+else
+    $pdf = new PDF_Transform('P','mm','A4',1);
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
-$pdf->AddPage();
+if($A5papier!=1) $pdf->AddPage();
 
 // vytvorim si pole, podle ktereho budu vyrabet pole palet
 if(strlen($export)>0){
@@ -623,9 +626,15 @@ $radek = 0;
 $sloupec = 0;
 
 foreach ($dilyArray as $dil) {
-    if($radek>1){
+    if(($radek>1)&&($A5papier!=1)){
         $radek = 0;
         $pdf->AddPage();
+    }
+    else {
+	if($A5papier==1){
+	    $pdf->AddPage();
+	    $radek=0;
+	}
     }
     drawBehaelterBoxChildsA5($pdf, $radek, $sloupec, 'FREIGABE / UVOLNENI', $watermark, $dil,$export,$export_datum);
     $radek++;

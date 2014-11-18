@@ -40,46 +40,6 @@ foreach ($parameters as $param)
 }
 
 
-// pole s sirkama bunek v mm, poradi v poli urcuje i poradi sloupcu
-// v tabulce
-// "klic" => array ("popisek sloupce",sirka_sloupce_v_mm)
-// klic je shodny se jmenem nodeName v XML souboru
-// poradi urcuje predevsim poradu nodu v XML !!!!!
-// nf = pokus pole obsahuje tento klic bude se cislo v teto bunce formatovat dle parametru v poli 0,1,2
-
-//$cells = 
-//array(
-//
-//"imanr"
-//=> array ("popis"=>"IMANr","sirka"=>30,"ram"=>'LBT',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"emanr" 
-//=> array ("popis"=>"EMANr","sirka"=>20,"ram"=>'RBT',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"imavon" 
-//=> array ("filterF"=>"stripPHP","popis"=>"Von","sirka"=>7,"ram"=>'1',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"stamp" 
-//=> array ("popis"=>"Stamp","sirka"=>25,"ram"=>'1',"align"=>"L","radek"=>0,"fill"=>0),
-//    
-//"auftragsnrarray" 
-//=> array ("filterF"=>"maxCountMore3","popis"=>"Importe","sirka"=>35,"ram"=>'LBT',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"palarray" 
-//=> array ("filterF"=>"maxCountMore5","popis"=>"Paletten","sirka"=>40,"ram"=>'BT',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"imastk" 
-//=> array ("filterF"=>"getIMAStk","popis"=>"Stk","sirka"=>8,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
-//    
-//"tatundzeitarray" 
-//=> array ("filterF"=>"maxCountMore3","popis"=>"Tat und Zeit","sirka"=>40,"ram"=>'BTR',"align"=>"L","radek"=>0,"fill"=>0),
-//    
-//"bemerkung" 
-//=> array ("popis"=>"Bemerkung","sirka"=>0,"ram"=>'1',"align"=>"L","radek"=>1,"fill"=>0),
-//
-//
-//
-//);
 
 /**
  * 
@@ -113,138 +73,6 @@ function mail_attachment($to, $subject, $message, $from, $file) {
       ."--".$uid."--"; 
   return mail($to, $subject, "", $header);
  }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-// funkce k vynulovani pole se sumama
-// jako parametr predam asociativni pole
-//function nuluj_sumy_pole(&$pole)
-//{
-//	foreach($pole as $key=>$prvek)
-//	{
-//		$pole[$key]=0;
-//	}
-//}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
- 
-
-// funkce pro vykresleni hlavicky na kazde strance
-//function pageheader($pdfobjekt,$pole,$headervyskaradku)
-//{
-//	$pdfobjekt->SetFont("FreeSans", "", 7);
-//	$pdfobjekt->SetFillColor(255,255,200,1);
-//	$fill=1;
-//	foreach($pole as $cell)
-//	{
-//		$pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$cell['popis'],'1',$cell["align"],$fill);
-//	}
-//	$pdfobjekt->Ln();
-//	//$pdfobjekt->Ln();
-//	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-//	$pdfobjekt->SetFont("FreeSans", "", 6);
-//}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- *
- * @param TCPDF $p
- * @param type $childNodes
- * @param type $rgb 
- */
-//function zahlavi_kunde($p,$rowHeight,$childNodes,$rgb)
-//{
-//	$p->SetFont("FreeSans", "", 10);
-//	$p->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-//	$fill = 1;
-//	$teilnr = getValueForNode($childNodes, 'kundenr');
-//	$p->Cell(0,$rowHeight,$teilnr,'1',1,'L',$fill);
-//}
-
-/**
- *
- * @param type $p
- * @param type $rowHeight
- * @param type $childNodes
- * @param type $rgb 
- */
-//function zahlavi_teil($p,$rowHeight,$childNodes,$rgb)
-//{
-//	$p->SetFont("FreeSans", "B", 10);
-//	$p->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-//	$fill = 1;
-//	$teilnr = getValueForNode($childNodes, 'teilnr');
-//	$teilbez = getValueForNode($childNodes, 'teilbez');
-//	$p->Cell(0,$rowHeight,$teilnr.' '.$teilbez,'1',1,'L',$fill);
-//}
-
-/**
- *
- * @param type $s 
- */
-//function stripPHP($s){
-//  return substr($s, strpos($s, '/')+1);
-//}
-//
-//function maxCountMore5($s,$maxCount=5){
-//    return maxCountMore($s,$maxCount);
-//}
-//function maxCountMore3($s,$maxCount=3){
-//    return maxCountMore($s,$maxCount);
-//}
-/**
- *
- * @param type $s
- * @param type $maxCount 
- */
-//function maxCountMore($s,$maxCount=3){
-//  $returnValue = $s;
-//  $arr = explode(';', $s);
-//  if(is_array($arr)){
-//      $arrayCount = count($arr);
-//      if($arrayCount>$maxCount){
-//	  $rest = $arrayCount-$maxCount;
-//	  $returnValue = join(';',  array_slice($arr, 0, $maxCount))." (+$rest)";
-//      }
-//  }
-//  return $returnValue;
-//}
-
-//function getIMAStk($imanr){
-//    global $apl;
-//    return $apl->getIMAStkForIMANr($imanr);
-//}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// funkce pro vykresleni tela
-//function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
-//{
-//	$pdfobjekt->SetFont("FreeSans", "", 7);
-//	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-//	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
-//	foreach($pole as $nodename=>$cell)
-//	{
-//		if(array_key_exists("nf",$cell))
-//		{
-//			$cellobsah = 
-//			number_format(getValueForNode($nodelist,$nodename), $cell["nf"][0],$cell["nf"][1],$cell["nf"][2]);
-//		}
-//		else
-//		{
-//			$cellobsah=getValueForNode($nodelist,$nodename);
-//		}
-//
-//		if(array_key_exists("filterF", $cell)){
-//		    $fName = $cell['filterF'];
-//		    $cellobsah = call_user_func($fName, $cellobsah);
-//		    if($nodename=='imastk'){
-//			$cellobsah = call_user_func($fName, getValueForNode($nodelist, 'imanr'));
-//		    }
-//		}
-//		
-//		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
-//	}
-//	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-//	$pdfobjekt->SetFont("FreeSans", "", 7);
-//}
 
 
 // funkce ktera vrati hodnotu podle nodename
@@ -263,41 +91,6 @@ function getValueForNode($nodelist,$nodename)
 	return $nodevalue;
 }
 
-/**
- *
- * @param type $pdfobjekt
- * @param type $vysradku
- * @param type $cellhead 
- */
-//function test_pageoverflow($pdfobjekt,$vysradku,$cellhead,$testVyskaRadku)
-//{
-//	// pokud bych prelezl s nasledujicim vystupem vysku stranky
-//	// tak vytvorim novou stranku i se zahlavim
-//	if(($pdfobjekt->GetY()+$testVyskaRadku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
-//	{
-//		$pdfobjekt->AddPage();
-//		pageheader($pdfobjekt,$cellhead,$vysradku);
-////		$pdfobjekt->Ln();
-////		$pdfobjekt->Ln();
-//		return 1;
-//	}
-//	return 0;
-//}
-				
-/**
- *
- * @param type $pdfobjekt
- * @param type $vysradku 
- */
-//function test_pageoverflow_noheader($pdfobjekt,$vysradku)
-//{
-//	// pokud bych prelezl s nasledujicim vystupem vysku stranky
-//	// tak vytvorim novou stranku i se zahlavim
-//	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
-//	{
-//		$pdfobjekt->AddPage();
-//	}
-//}
 
 require_once('../tcpdf/config/lang/eng.php');
 require_once('../tcpdf/tcpdf.php');
@@ -359,6 +152,7 @@ foreach($imas as $ima){
     $teilbezeichnung = $teileInfoArray['Teilbez'];
     $importe = explode(';', getValueForNode($imaChilds, 'ema_auftragsarray'));
     $emaTatArray = explode(';',  getValueForNode($imaChilds, 'ema_tatundzeitarray'));
+    $dauftrIdArray = explode(';',  getValueForNode($imaChilds, 'ema_dauftrid_array'));
     $tatArray = array();
     //tat:vzaby:vzkd
     if(is_array($emaTatArray)){
@@ -378,19 +172,17 @@ foreach($imas as $ima){
 	}
     }
     
-    //zjisteni skutecnych palet = prunik palet zadanych v ema pozadavku a palet v zakazce
+    //zjisteni skutecnych palet
     // plus zjisteni poctu kusu
     $menge = 0;
     $palArraySkutecne = array();
-    $emaPalArray = explode(';', getValueForNode($imaChilds, 'ema_palarray'));
-    if(is_array($emaPalArray)){
-	foreach ($emaPalArray as $emaPal){
-	    // zkusim najit paletu v importech
-	    foreach ($importePalArray as $impal){
-		if($emaPal==$impal['pal']){
-		    array_push($palArraySkutecne, array('im'=>$impal['im'],'pal'=>$impal['pal'],'stk'=>$impal['stk'],'pos'=>$impal['pos']));
-		    $menge+=intval($impal['stk']);
-		}
+//    $emaPalArray = explode(';', getValueForNode($imaChilds, 'ema_palarray'));
+    if(is_array($dauftrIdArray)){
+	foreach ($dauftrIdArray as $i){
+	    $dauftrRow = $apl->getDauftrRow($i);
+	    if($dauftrRow!==NULL){
+		array_push($palArraySkutecne, array('im'=>$dauftrRow['auftragsnr'],'pal'=>$dauftrRow['pal'],'stk'=>$dauftrRow['stk'],'pos'=>$dauftrRow['fremdpos']));
+		$menge+=intval($dauftrRow['stk']);
 	    }
 	}
     }
@@ -582,7 +374,13 @@ foreach($imas as $ima){
 
 $stamp = date('YmdHis');
 //Close and output PDF document
-$filename = 'D555_Mehrarbeitsanmeldung_'.$stamp.'.pdf';
+$teilnrNew = strtr($teilnr, '/', '-');
+$filename = sprintf("%03d_MA_%s_%s.pdf",$kundenr,$teilnrNew,$stamp);// 'D555_Mehrarbeitsanmeldung_'.$stamp.'.pdf';
+//otestovat zda existuje slozka
+if(!file_exists($anlagenDir)){
+    mkdir($anlagenDir,TRUE);
+}
+			
 $pdf->Output($anlagenDir.'/'.$filename, 'F');
 //vzgenerovat novou tabulku se souborama k IMA
 $imaInfoArray = $apl->getIMAInfoArray($imaid);

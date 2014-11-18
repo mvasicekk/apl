@@ -18,9 +18,10 @@ $(document).ready(function(){
        });
 
        pal2x = $('#pal2x').attr('checked')?1:0;
+       a5 = $('#A5papier').attr('checked')?1:0;
        erstpal = $('#erstpal').val();
        
-       document.location.href='../../Reports/D64Y_pdf.php?pole='+pole+'&export='+$('#export').val()+'&export_datum='+$('#export_datum').val().toString()+'&pal2x='+pal2x+'&erstpal='+erstpal;
+       document.location.href='../../Reports/D64Y_pdf.php?pole='+pole+'&export='+$('#export').val()+'&export_datum='+$('#export_datum').val().toString()+'&a5='+a5+'&pal2x='+pal2x+'&erstpal='+erstpal;
     });
     
     // fokus na teil

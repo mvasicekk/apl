@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 
 $doc_title = "S102";
@@ -95,14 +95,19 @@ function nuluj_sumy_pole(&$pole)
 
 
 
-// funkce pro vykresleni hlavicky na kazde strance
+/**
+ * 
+ * @param TCPDF $pdfobjekt
+ * @param type $pole
+ * @param type $headervyskaradku
+ */
 function pageheader($pdfobjekt,$pole,$headervyskaradku)
 {
-	$pdfobjekt->SetFont("FreeSans", "", 6);
-	$pdfobjekt->SetFillColor(255,255,200,1);
+	$pdfobjekt->SetFont("FreeSans", "B", 6);
+	$pdfobjekt->SetFillColor(255,255,200);
 	foreach($pole as $cell)
 	{
-		$pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$cell['popis'],$cell["ram"],$cell["align"],$cell['fill']);
+		$pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$cell['popis'],$cell["ram"],$cell["align"],1);
 	}
 	$pdfobjekt->Ln();
         $pdfobjekt->Ln();
@@ -115,6 +120,7 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
 function telo($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
 {
 	$pdfobjekt->SetFont("FreeSans", "", 8);
+//	$pdfobjekt->SetFont("courier", "", 8);
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
 	foreach($pole as $nodename=>$cell)
@@ -221,8 +227,8 @@ function test_pageoverflow($pdfobjekt,$vysradku,$cellhead)
 }
 				
 				
-require_once('../tcpdf/config/lang/eng.php');
-require_once('../tcpdf/tcpdf.php');
+//require_once('../tcpdf/config/lang/eng.php');
+require_once('../tcpdf_new/tcpdf.php');
 
 $pdf = new TCPDF('P','mm','A4',1);
 
@@ -248,7 +254,7 @@ $pdf->setFooterFont(Array("FreeSans", '', 8));
 $pdf->setLanguageArray($l); //set language items
 
 //initialize document
-$pdf->AliasNbPages();
+//$pdf->AliasNbPages();
 $pdf->SetFont("FreeSans", "", 8);
 
 

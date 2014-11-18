@@ -184,6 +184,7 @@ $smarty = new Smarty;
 		    "showlagerzettel_sec",
 		    "showvpm_sec",
 		    "showima_sec",
+		    "showmittel_sec",
 		    "show_att_muster",
 		    "show_att_empb",
 		    "show_att_ppa",

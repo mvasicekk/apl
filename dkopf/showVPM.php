@@ -21,6 +21,7 @@ require_once '../db.php';
 
     
     $formDiv = "<div id='vpmform'>";
+    $formDiv.="<div class='closebutton' id='closebutton_vpmform'>X</div>";
     // radek pro pridani noveho dokumentu
     $formDiv.="<table id='dokutable'>";
     $formDiv.="<tr style='display:".$display_sec['n_vpm_add'].";background-color:#eef;'>";

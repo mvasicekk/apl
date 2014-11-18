@@ -75,6 +75,7 @@ $columnsArray = array(
     "d"=>array("colname"=>"mzd_9"),
     "nachtstd"=>array("colname"=>"mzd_8"),
     "sostd"=>array("colname"=>"mzd_7"),
+    "svatky"=>array("colname"=>"mzd_11"),
     "anw_std_z"=>array("colname"=>"mzd_2"),
     "anw_std_a"=>array("colname"=>"mzd_4"),
     "lohn_kc_z"=>array("colname"=>"mzd_16"),
@@ -421,12 +422,15 @@ function radek_personE($objPHPExcel, $vyskaradku, $rgb, $person, $monat, $jahr) 
     $datumEndeMonat = sprintf("%04d-%02d-%02d", $jahr, $monat, $pocetDnuVMesici);
     $datumEndeVorMonat = sprintf("%04d-%02d-%02d", $vorjahr, $vormonat, $pocetDnuVorMonat);
 
+    
 //    $pdf->SetFont("FreeSans", "", 6);
     $eintritt = trim($person->eintritt);
     $persnr = trim($person->persnr);
 
     $aplDB = new AplDB();
 
+    $pocetSvatkuVMesici = $aplDB->getSvatekCount($jahr,$monat);
+    
     $persLohnFaktor = floatval(trim($person->perslohnfaktor));
     $leistFaktor = floatval(trim($person->leistfaktor));
 
@@ -651,6 +655,11 @@ function radek_personE($objPHPExcel, $vyskaradku, $rgb, $person, $monat, $jahr) 
     $popis = number_format(floatval($person->sonestd), 1, '.', '');
     $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $popis);
     $sloupec++;
+//    "svatky"=>array("colname"=>"mzd_11"),
+    $popis = number_format($pocetSvatkuVMesici, 1, '.', '');
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $popis);
+    $sloupec++;
+    
 //    "anw_std_z"=>array("colname"=>"mzd_2"),
     $popis = number_format($hodCasove, 1, '.', '');
     $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $popis);

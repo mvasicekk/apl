@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
@@ -20,6 +20,11 @@ $persnr=$_GET['persnr'];
 
 
 require_once('S311_xml.php');
+
+$apl = AplDB::getInstance();
+
+$puser = $_SESSION['user'];
+$vzkdZeigen = $apl->getDisplaySec('S311', 'vzkd', $puser);
 
 
 // vytvorit string s popisem parametru
@@ -88,10 +93,10 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(2,',',' '),"show"=>$vzkdZeigen,"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "sumvzkd" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"show"=>$vzkdZeigen,"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzaby" 
 => array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
@@ -141,10 +146,10 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"Auss\nTyp","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "vzkd_stk" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"VzKd\nStk","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(2,',',' '),"show"=>$vzkdZeigen,"popis"=>"VzKd\nStk","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "vzkd" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nVzKd","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"show"=>$vzkdZeigen,"popis"=>"\nVzKd","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "vzaby_stk" 
 => array ("nf"=>array(2,',',' '),"popis"=>"VzAby\nStk","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
@@ -210,7 +215,24 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
 	$pdfobjekt->SetFillColor(255,255,200,1);
 	foreach($pole as $cell)
 	{
-		$pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$cell['popis'],$cell["ram"],$cell["align"],$cell['fill']);
+	    $obsah = $cell['popis'];
+	    if(array_key_exists('show', $cell)){
+		if($cell['show']===TRUE)
+		    $obsah = $cell['popis'];
+		else{
+		    //musim zjistit kolik bylo v puvodnim obsahu znaku \n a tolik jich musim dat i do 
+		    //noveho obsahu
+		    $lines_arr = preg_split('/\n|\r/',$str);
+		    $num_newlines = count($lines_arr);
+		    $obsah = "";
+		    for($i=0;$i<$num_newlines;$i++){
+			$obsah.="\n";
+		    }
+		}
+		    
+	    }
+	    $pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$obsah,$cell["ram"],$cell["align"],$cell['fill']);
+
 	}
 	//if($pdfobjekt->PageNo()==1)
 	//{
@@ -238,6 +260,11 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 		{
 			$cellobsah=getValueForNode($nodelist,$nodename);
 		}
+		
+		if(array_key_exists("show", $cell)){
+		    if($cell['show']===FALSE) $cellobsah = '';
+		}
+
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}
 	//$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
@@ -302,7 +329,8 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_taetigkeit($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	
 	$tatnr = getValueForNode($childNodes,"tat");
@@ -324,6 +352,7 @@ function zapati_taetigkeit($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 						$vyskaradku,$hodnota,'B',0,'R',1);
 						
 	$hodnota=number_format($sumy['sumvzkd'],0,',',' ');
+	if(!$vzkdZeigen) $hodnota='';
 	$pdfobjekt->Cell(	$cells['auss_typ']['sirka']+
 						$cells['vzkd']['sirka']+
 						$cells['sumvzkd']['sirka'],
@@ -344,7 +373,8 @@ function zapati_taetigkeit($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	
 	$auftragnr = getValueForNode($childNodes,"auftragsnr");
@@ -367,6 +397,7 @@ function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 						
 						
 	$hodnota=number_format($sumy['sumvzkd'],0,',',' ');
+	if(!$vzkdZeigen) $hodnota='';
 	$pdfobjekt->Cell(	
 						$cells['sumvzkd']['sirka'],
 						$vyskaradku,
@@ -395,7 +426,8 @@ function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	
 	$teilnr = getValueForNode($childNodes,"teilnr");
@@ -418,6 +450,7 @@ function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 						
 						
 	$hodnota=number_format($sumy['sumvzkd'],0,',',' ');
+	if(!$vzkdZeigen) $hodnota='';
 	$pdfobjekt->Cell(	
 						$cells['sumvzkd']['sirka'],
 						$vyskaradku,
@@ -446,7 +479,8 @@ function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
 	
 	$teilnr = getValueForNode($childNodes,"teilnr");
@@ -469,6 +503,7 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumy,$cells)
 						
 						
 	$hodnota=number_format($sumy['sumvzkd'],0,',',' ');
+	if(!$vzkdZeigen) $hodnota='';
 	$pdfobjekt->Cell(	
 						$cells['sumvzkd']['sirka'],
 						$vyskaradku,

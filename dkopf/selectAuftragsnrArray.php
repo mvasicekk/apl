@@ -74,7 +74,7 @@ if(($anforderung==1) && ($ma=='ema')){
     if ($imArrayBox !== NULL) {
 	foreach ($imArrayBox as $im) {
 	    $formDiv.="<div>";
-	    $formDiv.=$im;
+	    $formDiv.="<label>$im";
 	    $checked = '';
 	    if ($imArrayBox_a !== NULL) {
 		if (in_array($im, $imArrayBox_a))
@@ -84,6 +84,7 @@ if(($anforderung==1) && ($ma=='ema')){
 		$checked = 'checked';
 	    }
 	    $formDiv.="<input $checked type='checkbox' id='selim" . $editSuffix . "_" . $im . "' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
@@ -96,7 +97,7 @@ if (($genehmigt == 1)&&($anforderung==0) && ($ma=='ima')) {
     if ($imArrayBox !== NULL) {
 	foreach ($imArrayBox as $im) {
 	    $formDiv.="<div>";
-	    $formDiv.=$im;
+	    $formDiv.="<label>$im";
 	    $checked = '';
 	    if ($imArrayBox_g !== NULL) {
 		if (in_array($im, $imArrayBox_g))
@@ -106,6 +107,7 @@ if (($genehmigt == 1)&&($anforderung==0) && ($ma=='ima')) {
 		$checked = 'checked';
 	    }
 	    $formDiv.="<input $checked type='checkbox' id='selim" . $editSuffix . "_" . $im . "' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
@@ -123,13 +125,15 @@ if(($anforderung==1) && ($ma=='ima')) {
     if ($imArray !== NULL) {
 	foreach ($imArray as $im) {
 	    $formDiv.="<div>";
-	    $formDiv.=$im['auftragsnr'];
+	    $formDiv.="<label>".$im['auftragsnr'];
+//	    $formDiv.=$im['auftragsnr'];
 	    $checked = '';
 	    if ($imArrayBox !== NULL) {
 		if (in_array($im['auftragsnr'], $imArrayBox))
 		    $checked = 'checked';
 	    }
 	    $formDiv.="<input $checked type='checkbox' id='selim" . $editSuffix . "_" . $im['auftragsnr'] . "' />";
+	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }

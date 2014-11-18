@@ -12,9 +12,12 @@ $(document).ready(function(){
 	}
     });
 
+//    $('#apl_table').draggable();
+//    $('#apl_table').resizable();
     $('#showteildoku').bind('click',showTeilDoku);
     $('#showvpm').bind('click',showVPM);
     $('#showima').bind('click',showIMA);
+    $('#showmittel').bind('click',showMittel);
     // shows Teil Attachment
     $('#show_att_muster').bind('click',showTeilAtt);
     $('#show_att_empb').bind('click',showTeilAtt);
@@ -28,7 +31,7 @@ $(document).ready(function(){
     $('#show_att_rekl').bind('click',showTeilAtt);
     $(window).bind('resize',documentResized);
     $(window).bind('keydown',keyDownHandler);
-    
+//    $('body').delegate('click','div[id^=closebutton_]',closeButtonClick);    
 
     $('#accordion').accordion();
     
@@ -345,23 +348,23 @@ function emaSelectAuftragsnrArray(event){
 function emaSelectPalArray(event){
     var id=$(this).attr('id');
     var acturl = $(this).attr('acturl');
-    var imarrayValue = $('#ima_imarray_e').val();
-    var palarrayValue = $('#ima_palarray_e').val();
+    var palarrayValue_e = $('#ima_palarray_e').val();
     var palarrayValue_anf = $('#ema_palarray_anf').val();
     var palarrayValue_gem = $('#ema_palarray_gem').val();
-    var imarrayValue_anf = $('#ema_imarray_anf').val();
-    var imarrayValue_gem = $('#ema_imarray_gem').val();
-    
+    var dauftrIdValue_e = $('#ima_dauftrid_e').val();
+    var dauftrIdValue_anf = $('#ema_dauftrid_anf').val();
+    var dauftrIdValue_gem = $('#ema_dauftrid_gem').val();
+
     $.post(acturl,
     {
 	id:id,
 	teil:$('#teil').val(),
-	imarray:imarrayValue,
-	imarray_a:imarrayValue_anf,
-	imarray_gem:imarrayValue_gem,
-	palarray:palarrayValue,
-	palarray_a:palarrayValue_anf,
-	palarray_gem:palarrayValue_gem
+	palarrayValue_e:palarrayValue_e,
+	palarrayValue_anf:palarrayValue_anf,
+	palarrayValue_gem:palarrayValue_gem,
+	dauftrIdValue_e:dauftrIdValue_e,
+	dauftrIdValue_anf:dauftrIdValue_anf,
+	dauftrIdValue_gem:dauftrIdValue_gem
     },
     function(data){
 	updateshowSelectPalArray(data);
@@ -381,6 +384,10 @@ function imaSelectPalArray(event){
     var acturl = $(this).attr('acturl');
     var imarrayValue = $('#ima_imarray').val();
     var palarrayValue = $('#ima_palarray').val();
+    
+    var dauftrIdValue_e = $('#ima_dauftrid_e').val();
+    var dauftrIdValue_gen = $('#ima_dauftrid_gen').val();
+    
     var palarrayValue_gen = $('#ima_palarray_gen').val();
     var palarrayValue_gem = $('#ima_palarray_gem').val();
     var imarrayValue_gen = $('#ima_imarray_gen').val();
@@ -398,7 +405,10 @@ function imaSelectPalArray(event){
 	imarray_g:imarrayValue_gen,
 	palarray:palarrayValue,
 	palarray_g:palarrayValue_gen,
-	palarray_gem:palarrayValue_gem
+	palarray_gem:palarrayValue_gem,
+	dauftrIdValue_e:dauftrIdValue_e,
+	dauftrIdValue_gen:dauftrIdValue_gen
+	
     },
     function(data){
 	updateshowSelectPalArray(data);
@@ -494,6 +504,21 @@ function showIMA(event){
         );    
 }
 
+function showMittel(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowMittel(data);
+        },
+        'json'
+        );    
+}
+
 function imaEdit(event){
     var id=$(this).attr('id');
     var acturl = $(this).attr('acturl');
@@ -551,6 +576,7 @@ function updateshowTeilAtt(data){
     // data jsou k dispozici
     if(data.docsArray!=null){
 	$('body').append(data.formDiv);
+	$('#dokuform').draggable();
 	//priradim udalostni procedury pro slozky
 	$('a.dir').bind('click',updateFolder);
 	$('a.prevdir').bind('click',updateFolder);
@@ -566,6 +592,7 @@ function updateshowTeilAtt(data){
 	//automaticke zavreni divu pri neaktivite
 	//alert('Keine Dateien / žádné soubory');
 	$('body').append(data.formDiv);
+	$('#dokuform').draggable();
 //	$("#dokuform").fadeIn('slow').animate({opacity: 1.0}, 1500).effect("pulsate", { times: 2 }, 800).fadeOut('slow');
 //	if($('#dokuform').length!=0) $('#dokuform').remove();
     }
@@ -625,6 +652,7 @@ function updateshowTeilAtt(data){
 
 	});
 
+	$('div[id^=closebutton_]').bind('click',closeButtonClick);
 }
 
 
@@ -708,9 +736,11 @@ function updateshowSelectAuftragsnrArray(data){
     }
 
     $('input:checkbox[id^=selim]').bind('click',imselectclick);
+    updateIMAGenehmigenButton();
 }
 
 function updateshowSelectPalArray(data){
+    
     // zobrazit editovaci div
     if($('#imaselectpalform').length!=0){
             $('#imaselectpalform').remove();
@@ -728,41 +758,53 @@ function updateshowSelectPalArray(data){
     
     $('body').append(data.formDiv);
     
+    
     $('#imaselectpalform').css({"left":l+"px"});
     $('#imaselectpalform').css({"top":t+"px"});
 	
     //pokud je to policko pro genehmigt a pole je aktualne prazdne
     //tak ho rovnou naplnim a zapisu hodnotu i do db pomoci ajaxu
     if(data.e=='gen'){
-	var obsahPole = $('#ima_palarray_gen').val();
-	if(obsahPole.length==0){
-//	    alert(data.palarrayboxraw);
+	
+	var obsahPoleP = $('#ima_palarray_gen').val();
+	var obsahPoleI = $('#ima_dauftrid_gen').val();
+	if(obsahPoleP.length==0){
 	    $('#ima_palarray_gen').val(data.palarrayboxraw);
-	    // TODO vlozit do DB pomoci ajaxu
 	    imaEditFieldChanged(data.id);
+	}
+	if(obsahPoleI.length==0){
+	    $('#ima_dauftrid_gen').val(data.dauftrIdValue_e);
+	    imaEditFieldChanged('ima_dauftrid_gen');
 	}
     }    
     
     if(data.e=='anf'){
-	var obsahPole = $('#ema_palarray_anf').val();
-	if(obsahPole.length==0){
-//	    alert(data.palarrayboxraw);
-	    $('#ema_palarray_anf').val(data.palarrayboxraw);
-	    // TODO vlozit do DB pomoci ajaxu
+	var obsahPoleP = $('#ema_palarray_anf').val();
+	var obsahPoleI = $('#ema_dauftrid_anf').val();
+	if(obsahPoleP.length==0){
+	    $('#ema_palarray_anf').val(data.palarrayValue_e);
 	    imaEditFieldChanged(data.id);
+	}
+	if(obsahPoleI.length==0){
+	    $('#ema_dauftrid_anf').val(data.dauftrIdValue_e);
+	    imaEditFieldChanged('ema_dauftrid_anf');
 	}
     }    
     
     if(data.e=='gem'){
-	var obsahPole = $('#ema_palarray_gem').val();
-	if(obsahPole.length==0){
-//	    alert(data.palarrayboxraw);
-	    $('#ema_palarray_gem').val(data.palarrayboxraw_a);
-	    // TODO vlozit do DB pomoci ajaxu
+	var obsahPoleP = $('#ema_palarray_gem').val();
+	var obsahPoleI = $('#ema_dauftrid_gem').val();
+	if(obsahPoleP.length==0){
+	    $('#ema_palarray_gem').val(data.palarrayValue_anf);
 	    imaEditFieldChanged(data.id);
+	}
+	if(obsahPoleI.length==0){
+	    $('#ema_dauftrid_gem').val(data.dauftrIdValue_anf);
+	    imaEditFieldChanged('ema_dauftrid_gem');
 	}
     }    
     $('input:checkbox[id^=selpal]').bind('click',palselectclick);
+    updateIMAGenehmigenButton();
 }
 
 function updateshowSelectTatArray(data){
@@ -821,6 +863,7 @@ function updateshowSelectTatArray(data){
     $('input:checkbox[id^=seltat]').bind('click',tatselectclick);
     $('input[id^=seltatvzaby]').bind('change',tatselectclick);
     $('input[id^=seltatvzkd]').bind('change',tatselectclick);
+    updateIMAGenehmigenButton();
 }
 
 function imselectclick(event){
@@ -877,18 +920,27 @@ function imselectclick(event){
     $(imfieldid+suffix).val(imlist);
     //alert(idcko);
     if(e=='e'||e=='n'||e=='f'||e=='m') imaEditFieldChanged(idcko);
+    updateIMAGenehmigenButton();
+    updateDauftrPositionenErstellen();
 }
 
 function palselectclick(event){
     var idcko = $(this).attr('id');
     //musim najit posledni podtrzitko v retezci
-    podtrzitkoIndex = idcko.lastIndexOf('_');
+    posledniPodtrzitkoIndex = idcko.lastIndexOf('_');
+    prvniPodtrzitkoIndex = idcko.indexOf('_');
+    druhePodtrzitkoIndex = idcko.indexOf('_',prvniPodtrzitkoIndex+1);
     //test jestli pred podtrzitkem e
-    var e = idcko.substr(podtrzitkoIndex-1,1);
-//    alert('palselectclick');
+    
+    var e = idcko.substr(prvniPodtrzitkoIndex-1,1);
+    var dauftrid = idcko.substring(prvniPodtrzitkoIndex+1,druhePodtrzitkoIndex);
+    var pal = idcko.substr(posledniPodtrzitkoIndex+1);
+    
+//    alert('dauftrid='+dauftrid+'e='+e+'pal='+pal);
     var suffix='';
     var selector = 'input:checkbox[id^=selpal_]:checked';
     var palfieldid = '#ima_palarray';
+    var dauftrIdfieldid = '#ima_dauftrid';
     
     if(e=='e'){
 	suffix='_e';
@@ -903,23 +955,39 @@ function palselectclick(event){
 	suffix='_anf';
 	selector = 'input:checkbox[id^=selpalanf_]:checked';
 	var palfieldid = '#ema_palarray';
+	var dauftrIdfieldid = '#ema_dauftrid';
     }
 
     if(e=='m'){
 	suffix='_gem';
 	selector = 'input:checkbox[id^=selpalgem_]:checked';
 	var palfieldid = '#ema_palarray';
+	var dauftrIdfieldid = '#ema_dauftrid';
     }
 
     //seznam vsech zaskrtnutych checkboxu
-    var imlist = '';
+    var pallist = '';
+    var idlist = '';
     $(selector).each(function(){
-	imnr = $(this).attr('id').substr(podtrzitkoIndex+1);
-	imlist+=imnr+';';
+	i = $(this).attr('id');
+	posledniPodtrzitkoIndex = i.lastIndexOf('_');
+	prvniPodtrzitkoIndex = i.indexOf('_');
+	druhePodtrzitkoIndex = i.indexOf('_',prvniPodtrzitkoIndex+1);
+	dauftrid = i.substring(prvniPodtrzitkoIndex+1,druhePodtrzitkoIndex);
+	pal = i.substr(posledniPodtrzitkoIndex+1);
+	pallist+=pal+';';
+	idlist+=dauftrid+';';
     });
-    if(imlist.length>0) imlist = imlist.substring(0,imlist.length-1);
-    $(palfieldid+suffix).val(imlist);
-    if(e=='e'||e=='n'||e=='f'||e=='m') imaEditFieldChanged(idcko);
+    if(pallist.length>0) pallist = pallist.substring(0,pallist.length-1);
+    if(idlist.length>0) idlist = idlist.substring(0,idlist.length-1);
+    $(palfieldid+suffix).val(pallist);
+    $(dauftrIdfieldid+suffix).val(idlist);
+    if(e=='e'||e=='n'||e=='f'||e=='m'){
+	imaEditFieldChanged(idcko);
+	imaEditFieldChanged((dauftrIdfieldid+suffix).substr(1));
+    }
+    updateIMAGenehmigenButton();
+    updateDauftrPositionenErstellen();
 }
 
 
@@ -993,6 +1061,8 @@ function tatselectclick(event){
     if(tatlist.length>0) tatlist = tatlist.substring(0,tatlist.length-1);
     $(tatfieldid+suffix).val(tatlist);
     if(e=='e'||e=='n'||e=='f'||e=='m') imaEditFieldChanged(idcko);
+    updateIMAGenehmigenButton();
+    updateDauftrPositionenErstellen();
 }
 
 function updateshowEditIMA(data){
@@ -1002,7 +1072,7 @@ function updateshowEditIMA(data){
 	    return;
         }
     $('body').append(data.formDiv);
-
+    $('#imaeditform').draggable();
     // zapnuti colorboxu pro obrazky
     $('a.jpg').colorbox({
 	    rel:'gal',
@@ -1062,13 +1132,130 @@ function updateshowEditIMA(data){
 	$('div#imaeditform input[id^=ima_select_tat]').bind('click',imaSelectTatArray);
 	$('div#imaeditform input[id^=ema_select_tat]').bind('click',emaSelectTatArray);
 	$('div#imaeditform input[id^=imagenehmigtflag_]').bind('click',imaGenehmigtFlagClicked);
+	$('div#imaeditform input[id^=imangenehmigtflag_]').bind('click',imaGenehmigtFlagClicked);
+	$('div#imaeditform input[id^=emagenehmigtflag_]').bind('click',emaGenehmigtFlagClicked);
+	$('div#imaeditform input[id^=emangenehmigtflag_]').bind('click',emaGenehmigtFlagClicked);
 	$('div#imaeditform input:checkbox[id^=anlage_]').bind('click',imaAnlageChboxClicked);
 	$('div#imaeditform input:button[id^=ema_antrag_generieren]').bind('click',emaAntragGenerierenClicked);
 	$('div#imaeditform textarea[id^=ema_antrag_text]').bind('blur',emaAntragTextUpdated);
 	$('div#imaeditform textarea[id^=ema_genehmigt_bemerkung]').bind('blur',emaAntragTextUpdated);
 	$('input[id^=emanr_]').bind('focus',emaNrFocus);
 	$('input[id^=emanr_]').bind('blur',emaNrChange);
+	// zdatumovani vzbranzch policek
+	$(".datepicker" ).each(function(index){
+	    var ro = $(this).attr('readonly');
+	    if(ro!==true){
+		$(this).datepicker($.datepicker.regional["de"]);
+	    }
+	});
+	$('#ema_genehmigt_stamp').bind('change',emaGenehmigtStampChanged);
+	$('#ema_genehmigt_user').bind('change',emaGenehmigtUserChanged);
+	$('#ema_dauftr_generieren').bind('click',emaDauftrGenerierenClicked);
+	$('div[id^=closebutton_]').bind('click',closeButtonClick);
 	$('#spinner').hide();
+	// update dauftrpositionen erstellen
+	updateDauftrPositionenErstellen();
+	updateIMAGenehmigenButton();
+}
+
+
+function updateIMAGenehmigenButton(){
+    // pokud bude jedno z policek prazdne bude button zakazany
+    var im = $('#ima_imarray_gen').val();
+    var pal = $('#ima_palarray_gen').val();
+    var tat = $('#ima_tatarray_gen').val();
+    
+    if(im.length==0||pal.length==0||tat.length==0)
+	$('input[id^=imagenehmigtflag_]').attr('disabled','disabled');
+    else
+	$('input[id^=imagenehmigtflag_]').removeAttr('disabled');
+}
+
+function updateDauftrPositionenErstellen(){
+    // pokud bude jedno z policek prazdne bude button zakazany
+    var genUser = $('#ema_genehmigt_user').val();
+    var genStamp = $('#ema_genehmigt_stamp').val();
+    var im = $('#ema_imarray_gem').val();
+    var pal = $('#ema_palarray_gem').val();
+    var tat = $('#ema_tatarray_gem').val();
+    
+    if(genUser.length==0||genStamp.length==0||im.length==0||pal.length==0||tat.length==0){
+	$('#ema_dauftr_generieren').attr('disabled','disabled');
+	$('input[id^=emagenehmigtflag_]').attr('disabled','disabled');
+    }
+    else{
+	$('#ema_dauftr_generieren').removeAttr('disabled');
+	$('input[id^=emagenehmigtflag_]').removeAttr('disabled');
+    }
+	
+    //alert('updateDauftrPositionenErstellen');
+}
+
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
+function emaDauftrGenerierenClicked(event){
+    var acturl = $(this).attr('acturl');
+    
+    $.post(acturl,
+        {
+	    id:$(this).attr('id'),
+	    imaid:$('#imaid').val()
+        },
+        function(data){
+            updateEmaDauftrGenerieren(data);
+        },
+        'json'
+        );    
+}
+
+/**
+ * 
+ * @param {type} data
+ * @returns {undefined}
+ */
+function updateEmaDauftrGenerieren(data){
+        // zobrazit editovaci div
+    if($('#previewtable').length!=0){
+//	    alert('remove imaselectimform');
+            $('#previewtable').remove();
+	    return;
+        }
+	
+    //spravne umistit vpravo pod tlacitkem
+    // pozice tlacitka
+    bOffset = $('#'+data.id).offset();
+    bWidth = $('#'+data.id).width();
+    bHeight = $('#'+data.id).height();
+    
+    //alert('bOffset.left='+bOffset.left+'bOffset.top='+bOffset.top+'bWidth='+bWidth+'bHeight='+bHeight);
+    
+    $('body').append(data.formDiv);
+    divHeight = $('#previewtable').height();
+//    l = bOffset.left;
+    l = 10;
+    b = bOffset.top-divHeight-bHeight;
+    
+    
+    $('#previewtable').css({"left":l+"px"});
+    $('#previewtable').css({"top":b+"px"});
+    $('#previewtable').draggable();
+    //click udalost pro tlacitko pro generovani pozic
+    $('#createDauftrPositionen').bind('click',generiereDauftrPositionen);
+}
+
+function emaGenehmigtUserChanged(event){
+//    alert('emaGenhmigtStampChanged, value='+$(this).val());
+    imaEditFieldChanged($(this).attr('id'));
+    updateDauftrPositionenErstellen();
+}
+
+function emaGenehmigtStampChanged(event){
+//    alert('emaGenhmigtStampChanged, value='+$(this).val());
+    imaEditFieldChanged($(this).attr('id'));
+    updateDauftrPositionenErstellen();
 }
 
 function emaAntragTextUpdated(event){
@@ -1077,6 +1264,61 @@ function emaAntragTextUpdated(event){
 //    alert('emaAntragTextUpdated '+url+'\n'+value);
     imaEditFieldChanged($(this).attr('id'));
 }
+
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
+function generiereDauftrPositionen(event){
+//    alert('generiereDauftrPositionen');
+    var url = $(this).attr('acturl');
+    var imanr = $('div#imaeditform input#imanr').val();
+    $.post(url,
+    {
+	id:$(this).attr('id'),
+	ima:imanr
+    },
+    function(data){
+	updateGeneriereDauftrPositionen(data);
+    },
+    'json'
+    );    
+    
+}
+
+/**
+ * 
+ * @param {type} data
+ * @returns {undefined}
+ */
+function updateGeneriereDauftrPositionen(data){
+
+//    alert("dposAr="+data.dposAr
+//	+"\ndposNew="+data.dposNew
+//	+"\ndauftrInserted="+data.dauftrInserted
+//	+"\ndauftrUpdated="+data.dauftrUpdated
+//	+"\ndrueckUpdated="+data.drueckUpdated
+//	);
+
+	if(data.dauftrInserted>0 || data.dauftrUpdated>0){
+	    $('#previewtable').remove();
+	    var thIs = $('#ema_dauftr_generieren');
+	    var acturl = thIs.attr('acturl');
+    
+	    $.post(acturl,
+	    {
+		id:thIs.attr('id'),
+		imaid:$('#imaid').val()
+	    },
+	    function(data){
+		updateEmaDauftrGenerieren(data);
+	    },
+	    'json'
+	    );    
+	}
+}
+
 /**
  * 
  * @param {type} event
@@ -1249,6 +1491,10 @@ function imaEditFieldChanged(id){
 	    imarray_a:$('#ema_imarray_anf').val(),
 	    imarray_gem:$('#ema_imarray_gem').val(),
 	    palarray:$('#ima_palarray_e').val(),
+	    dauftrid:$('#ima_dauftrid_e').val(),
+	    dauftrid_g:$('#ima_dauftrid_gen').val(),
+	    dauftrid_a:$('#ema_dauftrid_anf').val(),
+	    dauftrid_gem:$('#ema_dauftrid_gem').val(),
 	    palarray_g:$('#ima_palarray_gen').val(),
 	    palarray_a:$('#ema_palarray_anf').val(),
 	    palarray_gem:$('#ema_palarray_gem').val(),
@@ -1258,6 +1504,8 @@ function imaEditFieldChanged(id){
 	    tatarray_gem:$('#ema_tatarray_gem').val(),
 	    ema_antrag_text:$('#ema_antrag_text').val(),
 	    ema_genehmigt_bemerkung:$('#ema_genehmigt_bemerkung').val(),
+	    ema_genehmigt_stamp:$('#ema_genehmigt_stamp').val(),
+	    ema_genehmigt_user:$('#ema_genehmigt_user').val(),
 	    bemerkungid:bemerkid
         },
         function(data){
@@ -1284,7 +1532,7 @@ function imaGenehmigtFlagClicked(event){
         {
 	    id:id,
 	    imaid:imaid,
-	    ch:$(this).attr('checked')?1:0,
+	    ch:1,
 	    bemerkung_g:$('#ima_genehmigt_bemerkung_'+imaid).val()
         },
         function(data){
@@ -1294,8 +1542,69 @@ function imaGenehmigtFlagClicked(event){
         );    
 }
 
+function emaGenehmigtFlagClicked(event){
+    var acturl = $(this).attr('acturl');
+    var id = $(this).attr('id');
+
+    podtrzitkoIndex = id.lastIndexOf('_');
+    //alert(podtrzitkoIndex);
+    var imaid = id.substr(podtrzitkoIndex+1);
+    //alert(imaid);
+
+    $.post(acturl,
+        {
+	    id:id,
+	    imaid:imaid,
+	    ch:1,
+	    bemerkung_g:$('#ima_genehmigt_bemerkung_'+imaid).val()
+        },
+        function(data){
+            updateEMAGenehmigtFlagClicked(data);
+        },
+        'json'
+        );    
+}
+
+function updateEMAGenehmigtFlagClicked(data){
+    $('input[id^=imagenehmigtflag_]').attr('disabled','disabled');
+    $('input[id^=imangenehmigtflag_]').attr('disabled','disabled');
+    $('input[id^=emagenehmigtflag_]').attr('disabled','disabled');
+    $('input[id^=emangenehmigtflag_]').attr('disabled','disabled');
+    $('#ema_select_auftragsnr_anf').hide();
+    $('#ema_select_pal_anf').hide();
+    $('#ema_select_tat_anf').hide();
+    $('#ema_antrag_text').attr('disabled','disabled');
+//    $('#ema_antrag_generieren').hide();
+    $('#ema_select_auftragsnr_gem').hide();
+    $('#ema_select_pal_gem').hide();
+    $('#ema_select_tat_gem').hide();
+    $('#ema_genehmigt_bemerkung').attr('disabled','disabled');
+    $('#ema_genehmigt_user').attr('disabled','disabled');
+    $('#ema_genehmigt_stamp').attr('disabled','disabled');
+    $('#ema_dauftr_generieren').hide();
+    $('#ima_select_auftragsnr_gen').hide();
+    $('#ima_select_pal_gen').hide();
+    $('#ima_select_tat_gen').hide();
+    $('#ima_select_auftragsnr_e').hide();
+    $('#ima_select_pal_e').hide();
+    $('#ima_select_tat_e').hide();
+//    $('#emapart').hide();
+    $('input[id^=imabemerkung_]').attr('readonly','readonly');
+    $('input[id^=ima_genehmigt_bemerkung_]').attr('readonly','readonly');
+}
+
 function updateGenehmigtFlagClicked(data){
-    
+    $('input[id^=imagenehmigtflag_]').attr('disabled','disabled');
+    $('input[id^=imangenehmigtflag_]').attr('disabled','disabled');
+    $('#ima_select_auftragsnr_gen').hide();
+    $('#ima_select_pal_gen').hide();
+    $('#ima_select_tat_gen').hide();
+    $('#ima_select_auftragsnr_e').hide();
+    $('#ima_select_pal_e').hide();
+    $('#ima_select_tat_e').hide();
+    $('#emapart').hide();
+    $('input[id^=imabemerkung_]').attr('readonly','readonly');
+    $('input[id^=ima_genehmigt_bemerkung_]').attr('readonly','readonly');
 }
 /**
  *
@@ -1353,8 +1662,75 @@ function updateshowIMA(data){
     $('#ima_select_pal').bind('click',imaSelectPalArray);
     $('#ima_select_tat').bind('click',imaSelectTatArray);
     $('input[id^=i_ima_edit_]').bind('click',imaEdit);
+    $('div[id^=closebutton_]').bind('click',closeButtonClick);
     $('#showimanewdiv').bind('click',showImaNewDiv);
+    $('#imaform').draggable();
     $('#imanewdiv').hide();
+}
+
+
+function closeButtonClick(){
+    var eid = $(this).attr('id');
+    var toCloseId = eid.substr(eid.lastIndexOf('_')+1);
+    $('#'+toCloseId).remove();
+//    alert('id='+eid+'idToClose='+toCloseId);
+}
+
+/**
+ * 
+ * @param {type} data
+ * @returns {undefined}
+ */
+function updateshowMittel(data){
+    // zobrazit editovaci div
+    if($('#mittelform').length!=0){
+            $('#mittelform').remove();
+	    if(data.id=='showmittel') return;
+        }
+    $('body').append(data.formDiv);
+    var buttonOffset = $('#showmittel').offset();
+    var buttonWidth = $('#showmittel').width();
+    var buttonHeight = $('#showmittel').height();
+    var divWidth = $('#mittelform').width();
+    var divHeight = $('#mittelform').height();
+
+    var divLeft = buttonOffset.left - divWidth/2 + buttonWidth/2;
+    var divTop = buttonOffset.top - divHeight - buttonHeight;
+    $('#mittelform').css({
+        "left":divLeft+"px"
+    });
+    $('#mittelform').css({
+        "top":divTop+"px"
+    });
+
+    $('#mittelform').draggable();
+    
+    $( "#n_mittel_nr" ).autocomplete({
+			source: "getArbMittel.php",
+			minLength: 0,
+                        autoFocus: true,
+			select: function( event, ui ) {
+                                    if(ui.item){
+                                    }
+                                    else{
+                                        // polozka neni v seznamu
+                                    }
+			},
+			open: function(event, ui) {
+				$(this).autocomplete("widget").css(
+				    {"color":"black","font-size":"12px","height":"200px","overflow-y":"auto"}
+				);
+			}
+		}).focus(function(){
+		    if ($(this).autocomplete("widget").is(":visible")) {
+			return;
+		    }
+		    $(this).data("autocomplete").search($(this).val());
+		    });
+
+   $('#n_mittel_add').bind('click',mittelAdd);
+   $('input[id^=i_mittel_del_]').bind('click',mittelDel);
+   $('div[id^=closebutton_]').bind('click',closeButtonClick);
 }
 
 /**
@@ -1369,6 +1745,7 @@ function updateshowVPM(data){
 	    if(data.id=='showvpm') return;
         }
     $('body').append(data.formDiv);
+    $('#vpmform').draggable();
     //$(".datepicker" ).datepicker($.datepicker.regional["de"]);
     $(".datepicker" ).each(function(index){
 	var ro = $(this).attr('readonly');
@@ -1405,6 +1782,7 @@ function updateshowVPM(data){
    $('input[id^=i_vpm_del_]').bind('click',vpmDel);
    $('input[id^=r_stk_]').bind('blur',vpmFieldChange);
    $('input[id^=r_bemerkung_]').bind('blur',vpmFieldChange);
+   $('div[id^=closebutton_]').bind('click',closeButtonClick);
 }
 
 /**
@@ -1418,7 +1796,7 @@ function updateshowTeilDoku(data){
 	    if(data.id=='showteildoku') return;
         }
     $('body').append(data.formDiv);
-    
+    $('#dokuform').draggable();
     $(".datepicker" ).each(function(index){
 	var ro = $(this).attr('readonly');
 	if(ro!==true){
@@ -1501,6 +1879,7 @@ function updateshowTeilDoku(data){
    $('input[id^=r_einlag_datum_]').bind('blur',dokuFieldChange);
    $('input[id^=r_freigabe_am_]').bind('blur',dokuFieldChange);
    $('input[id^=r_musterplatz_]').bind('blur',dokuFieldChange);
+   $('div[id^=closebutton_]').bind('click',closeButtonClick);
 //   $('input[id^=r_freigabe_vom_]').change('click',dokuFieldChange);
    
 }
@@ -1590,6 +1969,21 @@ function vpmDel(event){
         );        
 }
 
+function mittelDel(event){
+    element = event.target;
+    var id=element.id;
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:id
+        },
+        function(data){
+            updatemittelAdd(data);
+        },
+        'json'
+        );        
+}
+
 function dokuAdd(event){
     var id=$(this).attr('id');
     var acturl = $(this).attr('acturl');
@@ -1622,6 +2016,7 @@ function imaAdd(event){
 	    ima_imarray:$('#ima_imarray').val(),
 	    ima_palarray:$('#ima_palarray').val(),
 	    ima_tatarray:$('#ima_tatarray').val(),
+	    ima_dauftrid:$('#ima_dauftrid').val(),
 	    bemerkung:$('#imabemerkung').val()
         },
         function(data){
@@ -1645,6 +2040,24 @@ function vpmAdd(event){
         },
         function(data){
             updatevpmAdd(data);
+        },
+        'json'
+        );        
+}
+
+function mittelAdd(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    //alert(acturl);
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val(),
+	    n_mittel_nr:$('#n_mittel_nr').val(),
+	    n_abgnr:$('#n_abgnr').val()
+        },
+        function(data){
+            updatemittelAdd(data);
         },
         'json'
         );        
@@ -1694,6 +2107,22 @@ function updatevpmAdd(data){
         },
         function(data){
             updateshowVPM(data);
+        },
+        'json'
+        );    
+}
+
+function updatemittelAdd(data){
+    element = $('#showmittel');
+    var id=element.id;
+    var acturl = $(element).attr('acturl');
+    $.post(acturl,
+        {
+            id:'n_mittel_add',
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowMittel(data);
         },
         'json'
         );    

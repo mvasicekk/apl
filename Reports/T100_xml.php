@@ -29,7 +29,7 @@ $sql.=" where (1)";
 if(strlen($benutzer)>1)
 $sql.=" and (`user` like '$benutzer')";
 if(strlen($reportname)>1)
-$sql.=" and (report like '%')";
+$sql.=" and (report like '$reportname')";
 $sql.=" and (stamp between '$von' and '$bis 23:59:59')";
 $sql.=" order by";
 $sql.=" report,";

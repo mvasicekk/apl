@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
@@ -374,6 +374,7 @@ function pageheader($pdfobjekt,$rgb,$vyskaradku,$monat,$jahr) {
 
         $datumEndeMonat = sprintf("%02d%02d%02d",$jahr-2000,$monat,$pocetDnu);
         $datumEndeVorMonat = sprintf("%02d%02d%02d",$vorjahr-2000,$vormonat,$pocetDnuVorMonat);
+	$datumEndeVorMonat = $monat.'/'.$jahr;//sprintf("%02d%02d%02d",$vorjahr-2000,$vormonat,$pocetDnuVorMonat);
 
         // horni radek
         //persnr
@@ -594,7 +595,7 @@ function pageheader($pdfobjekt,$rgb,$vyskaradku,$monat,$jahr) {
         $pdfobjekt->Cell(
                             $headerCells['mehrarbeit']['width']
                             ,$vyskaradku
-                            ,'+-Std'
+                            ,$headerCells['mehrarbeit']['text']
                             ,'TLR'
                             ,0
                             ,'L'
@@ -2351,15 +2352,18 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     else
         $factorGesamt = 0;
 
-
+    $maStundenDatumAb = '000000';
     if ($reporttyp == 'lohn') {
         if ($bMAStunden) {
 	    $stddiff = $aplDB->getStdDiff($monat, $jahr, $persnr);
-	    if($stddiff===NULL) 
+	    if($stddiff===NULL) {
 		$startStd = 0;
-	    else
+	    }
+	    else{
 		$startStd = floatval ($stddiff['stunden']);
-	    
+		$maStundenDatumAb = $stddiff['datum'];
+	    }
+		
             $mehrarb = $aplDB->getPlusMinusStunden($monat, $jahr, $persnr);
             $vorjahr = $jahr;
             $vormonat = $monat - 1;
@@ -2374,6 +2378,16 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
         }
     }
 
+    //popisek do hlavicky
+    $headerCells['mehrarbeit']['text'] = $maStundenDatumAb;
+    //prescas. hodiny pocitam vztazene ke startStd, napr. k 31.12.2013
+    $endOfVorYearStd = $aplDB->getMAStundenDatum(date('Y-m-d',mktime(1, 1, 1, 12, 31, $jahr-1)),$persnr);
+    //prescasove hodiny ve ve vybranem mesici
+    $maStdMonat = $mehrarb-$mehrarbVor;
+    
+    
+    $mehrarb-=$startStd;
+    $mehrarbVor-=$startStd;
     //prvni radek
     $pdf->Cell($headerCells['persnr']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
     $pdf->Cell($headerCells['name']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
@@ -2412,7 +2426,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     
     // radek s pocatecni hodnotou prescasovych hodin
     if ($reporttyp == 'lohn')
-        $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, number_format($startStd, 1, ',', ' '), 'TLR', 0, 'R', $fill);
+        $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, number_format($endOfVorYearStd, 1, ',', ' '), 'TLR', 0, 'R', $fill);
     else
         $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, '', 'TLR', 0, 'R', $fill);
 
@@ -2470,7 +2484,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     $pdf->Cell($headerCells['nachtstd']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
     $pdf->Cell($headerCells['sonestd']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
     if ($reporttyp == 'lohn')
-        $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, number_format($mehrarbVor, 1, ',', ' '), 'LR', 0, 'R', $fill);
+        $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, number_format($maStdMonat, 1, ',', ' '), 'LR', 0, 'R', $fill);
     else
         $pdf->Cell($headerCells['mehrarbeit']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
     $pdf->Cell($headerCells['vjRst']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
@@ -2585,7 +2599,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     $summenZapati['frage']+=intval(trim($person->tage_frage));
     $summenZapati['nachtstd']+=floatval(trim($person->nachtstd));
     $summenZapati['sonestd']+=floatval(trim($person->sonestd));
-    $summenZapati['mehrarbeit_vor']+=$mehrarbVor;
+    $summenZapati['mehrarbeit_vor']+=$maStdMonat;
     $summenZapati['mehrarbeit_akt']+=$mehrarb;
     $summenZapati['vjRst']+=floatval(trim($person->rest));
     $summenZapati['jAnsp']+=floatval(trim($person->jahranspruch));

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once "../db.php";
 
@@ -17,6 +17,14 @@ $date_von=$a->make_DB_datum($_GET['date_von']);
 $date_bis=$a->make_DB_datum($_GET['date_bis']);
 $kundevon=$_GET['kundevon'];
 $kundebis=$_GET['kundebis'];
+$teil=trim($_GET['teil']);
+if(strlen($teil)==0||$teil=='*')
+    $bTeil=FALSE;
+else {
+    $bTeil=TRUE;
+}
+$teil=  strtr($teil, '*', '%');
+
 
 $reporttyp = $_GET['reporttyp'];
 $datumtyp = $_GET['datumtyp'];

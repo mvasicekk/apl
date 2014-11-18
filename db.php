@@ -64,6 +64,24 @@ class AplDB {
     );    
 
     /**
+     * 
+     * @return string
+     */
+    public function getGdatPath(){
+	$gdatPath = "/mnt/gdat/Dat/";
+	return $gdatPath;
+    }
+    
+    public function getArbMittelAnlagenPath(){
+	return "Aby 20 Technik, Produktivitat/Arbeitsmittel - Messmittel";
+    }
+    
+    public function getArbMittelAnlagenFullPath(){
+	return $this->getGdatPath().$this->getArbMittelAnlagenPath();
+    }
+    
+    
+    /**
      * get an instance of then utility class
      * @return AplDB
      */
@@ -131,6 +149,53 @@ class AplDB {
 	}
 	return $retStr;
     }
+    
+    /**
+     * 
+     * @param array $rolesArray - pole s id roli jejichz clenove s emailovou adresou budou vybrani do seznamu
+     * @param array $emailsArray - pole emailovych adres, ktere budou pridany do seznamu
+     * @param array $noSendEmailsArray - pole emalovych adres, ktere budou nakonec ze seznamu odebrany
+     */
+    public function getRecipientsArray($rolesArray, $emailsArray = NULL, $noSendEmailsArray = NULL) {
+	$recipients = array();
+	if($emailsArray!==NULL){
+	    if(is_array($emailsArray)){
+		foreach ($emailsArray as $e){
+		    array_push($recipients, $e);
+		}
+	    }
+	}
+	$rolesIdArray = array(2, 3, 16);
+	foreach ($rolesIdArray as $roleId) {
+	    $usersarray = $this->getUsersForRoleId($roleId);
+	    if ($usersarray !== NULL) {
+		foreach ($usersarray as $userrow) {
+		    $userinfo = $this->getUserInfoArray($userrow['benutzername']);
+		    if ($userinfo !== NULL) {
+			$email = trim($userinfo['email']);
+			if (strlen($email) > 0) {
+			    array_push($recipients, $email);
+			}
+		    }
+		}
+	    }
+	}
+	// TODO odstranit vicenasobne emailove adr.
+	$recipients = array_unique($recipients);
+	//odebrat nechtene emailove adresy
+	if($noSendEmailsArray!==NULL){
+	    if(is_array($noSendEmailsArray)){
+		foreach ($noSendEmailsArray as $rr) {
+		    if (($key = array_search($rr, $recipients)) !== false) {
+			unset($recipients[$key]);
+		    }
+		}
+	    }
+	}
+	
+	return $recipients;
+    }
+
     /**
      * vrati cislo zakaznika podle zadaneho dilu
      * 
@@ -332,6 +397,20 @@ class AplDB {
 	return mysql_affected_rows();
     }
 
+    public function insertNewDPOS($teil,$tat,$vzaby,$vzkd){
+	// vytahnout texty
+	$sql = "select `dtaetkz-abg`.oper_CZ,`dtaetkz-abg`.oper_D from `dtaetkz-abg` where `abg-nr`=$tat";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $textCZ = $r[0]['oper_CZ'];
+	    $textDE = $r[0]['oper_D'];
+	    $sql = "insert into dpos (Teil,`TaetNr-Aby`,`TaetBez-Aby-D`,`TaetBez-Aby-T`,`VZ-min-kunde`,`vz-min-aby`,`kz-druck`)";
+	    $sql.=" values('$teil','$tat','$textDE','$textCZ','$vzkd','$vzaby',1)";
+	    mysql_query($sql);
+	    return mysql_insert_id();
+	}
+	return -1;
+    }
     /**
      *
      * @param type $kunde 
@@ -446,7 +525,7 @@ class AplDB {
  * @param unknown_type $ip
  */
 public function grantAccess($user,$pass,$ip){
-	$sql_select="select name,password,realname,level from dbenutzer where ((name='$user') and (password='$pass'))";
+	$sql_select="select name,password,realname,level from dbenutzer where ((name='$user') and (password='$pass') and (level>0))";
 		$res = mysql_query($sql_select) or die(mysql_error());
 		if(mysql_affected_rows()>0){
 			// nasel jsem jmeno v databazi uzivatelu
@@ -858,7 +937,52 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	}
 	return NULL;
     }
+
+    /**
+     * 
+     * @param type $im
+     * @param type $teil
+     * @param type $preis
+     * @param type $stk
+     * @param type $pal
+     * @param type $abgnr
+     * @param type $vzkd
+     * @param type $vzaby
+     * @param type $user
+     */
+    public function insertDauftrRowFromTemplate($im, $teil, $preis, $stk, $pal, $abgnr, $vzkd, $vzaby, $user){
+	// informace, ktere budu potrebovat z pozice G na stejne palete
+	$dauftrId = $this->getDauftrIdGPal1($im, $pal);
+	if($dauftrId!=NULL){
+	    $dr = $this->getDauftrRow($dauftrId);
+	    if($dr!==NULL){
+		$termin = $dr['termin'];
+		$fremdpos = $dr['fremdpos'];
+		$fremdauftr = $dr['fremdauftr'];
+		//pismeno do faktury
+		$kz = $this->getKZForAbgnr($abgnr);
+		$sql = "insert into dauftr (auftragsnr,teil,`stück`,termin,fremdauftr,fremdpos,`mehrarb-kz`,`pos-pal-nr`,abgnr,preis,`VzAby`,`VzKd`,comp_user_accessuser)";
+		$sql.="values('$im','$teil','$stk','$termin','$fremdauftr','$fremdpos','$kz','$pal','$abgnr','$preis','$vzaby','$vzkd','$user')";
+		mysql_query($sql);
+		return mysql_insert_id();
+	    }
+	    return -2;
+	}
+	return -1;
+    }
     
+    /**
+     * 
+     * @param type $abgnr
+     */
+    public function getKZForAbgnr($abgnr){
+	$sql = "select `dtaetkz-abg`.dtaetkz from `dtaetkz-abg` where `dtaetkz-abg`.`abg-nr`=$abgnr";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return $r[0]['dtaetkz'];
+	}
+	return NULL;
+    }
     /**
      *
      * @param type $auftragsnr
@@ -979,6 +1103,18 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
         }
     }
 
+    
+    /**
+     * 
+     * @param type $dposId
+     * @param type $vzaby
+     * @param type $vzkd
+     */
+    public function updateDposVZ($dposId,$vzaby,$vzkd){
+	$sql = "update dpos set `VZ-min-kunde`='$vzkd',`vz-min-aby`='$vzaby' where dpos_id=$dposId limit 1";
+	mysql_query($sql);
+	return mysql_affected_rows();
+    }
     /**
      *
      * @param type $im
@@ -1120,6 +1256,30 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return mysql_affected_rows();
     }
     
+    
+    /**
+     * 
+     * @param type $jahr
+     * @param type $monat
+     */
+    public function getSvatekCount($jahr,$monat){
+	$ps=0;
+	$von = $jahr . "-" . $monat . "-01";
+        $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
+        $bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
+	$sql.=" select ";
+	$sql.=" count(calendar.datum) as pocet";
+	$sql.=" from calendar";
+	$sql.=" where";
+	$sql.=" (svatek<>0)";
+	$sql.=" and (cislodne<>7)";
+	$sql.=" and (datum between '$von' and '$bis')";
+	$r=$this->getQueryRows($sql);
+	if($r!==NULL){
+	    $ps = intval($r[0]['pocet']);
+	}
+	return $ps;
+    }
     /**
      *
      * @param type $dauftrId 
@@ -1416,6 +1576,15 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
 
     /**
+     * 
+     * @param type $teil
+     * @param type $tat
+     */
+    public function getDposInfo($teil,$tat){
+	$sql = "select dpos.dpos_id as id,dpos.`TaetNr-Aby` as abgnr,dpos.`VZ-min-kunde` as vzkd,dpos.`vz-min-aby` as vzaby from dpos where (teil='$teil') and (dpos.`TaetNr-Aby`=$tat)";
+	return $this->getQueryRows($sql);
+    }
+    /**
      *
      * @param type $auftrag
      * @param type $pal
@@ -1593,6 +1762,33 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	mysql_query($sql_insert_storno);
     }
 
+    
+    /**
+     * 
+     * @param type $import
+     * @param type $pal
+     * @param type $teil
+     * @param type $tat
+     */
+    public function getDauftrPosForImPalTeilTat($import,$pal,$teil,$tat){
+	$sql.=" select id_dauftr as id,auftragsnr,";
+	$sql.=" `pos-pal-nr` as pal,";
+	$sql.=" teil,";
+	$sql.=" abgnr,";
+	$sql.=" VzAby as vzaby,";
+	$sql.=" VzKd as vzkd";
+	$sql.=" from dauftr";
+	$sql.=" where";
+	$sql.=" (auftragsnr='$import')";
+	$sql.=" and";
+	$sql.=" (`pos-pal-nr`=$pal)";
+	$sql.=" and";
+	$sql.=" (teil='$teil')";
+	$sql.=" and";
+	$sql.=" (abgnr=$tat)";
+	return $this->getQueryRows($sql);
+    }
+    
     /**
      * 
      * @param type $import
@@ -1640,7 +1836,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param type $dauftrId 
      */
     public function getDauftrRow($dauftrId){
-	$sql = "select id_dauftr as id,auftragsnr,`pos-pal-nr` as pal,teil,`stück` as stk,abgnr,`auftragsnr-exp` as ex,`stk-exp` as ex_stk from dauftr where id_dauftr='$dauftrId'";
+	$sql = "select id_dauftr as id,termin,fremdauftr,fremdpos,auftragsnr,`pos-pal-nr` as pal,teil,`stück` as stk,abgnr,`auftragsnr-exp` as ex,`stk-exp` as ex_stk from dauftr where id_dauftr='$dauftrId'";
         $res = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($res);
@@ -1995,6 +2191,19 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
             return $rows[0]['vzkd'];
     }
 
+    /**
+     * 
+     * @param type $im
+     */
+    public function getMinPreisProImport($im){
+	$minpreis = 0;
+	$sql = "select daufkopf.minpreis from daufkopf where auftragsnr=$im";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $minpreis = floatval($r[0]['minpreis']);
+	}
+	return $minpreis;
+    }
     /**
      *
      * @param type $kunde 
@@ -2613,6 +2822,16 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    return NULL;
     }
 
+
+    public function getKundePreisRundenStellen($kunde) {
+        $sql = "select preis_runden from `dksd` where `kunde`='$kunde'";
+	$r=$this->getQueryRows($sql);
+	if($r!==NULL){
+	    return intval($r[0]['preis_runden']);
+	}
+	return 4;
+    }
+
     /**
      *
      * @param <type> $kunde
@@ -2941,6 +3160,22 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      */
     public function getIMAInfoArrayFromImaNr($imanr){
 	$sql = "select * from dma where imanr='$imanr'";
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
+     * @param type $value
+     * @return type
+     */
+    public function getArbMittelArray($value=NULL){
+	if($value===NULL){
+	    $sql = "select id,nazev,poznamka from dmittel order by nazev";
+	}
+	else{
+	    $sql = "select id,nazev,poznamka from dmittel where nazev like '%$value%' order by nazev";
+	}
+	
 	return $this->getQueryRows($sql);
     }
 
@@ -3347,9 +3582,9 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    return NULL;
 	$sql = "select distinct `pos-pal-nr` as pal from dauftr where (auftragsnr='$im') and (teil='$teil') and (`pos-pal-nr' like '$term%')";
 	if ($term == ''){
-	    $sql = "select distinct `pos-pal-nr` as pal,`stück` as stk,fremdpos from dauftr where (auftragsnr='$im') and (teil='$teil')";
+	    $sql = "select id_dauftr as id,`pos-pal-nr` as pal,`stück` as stk,fremdpos from dauftr where (auftragsnr='$im') and (teil='$teil') and (kzgut='G')";
 	    if($ohneEx===TRUE)
-		$sql = "select distinct `pos-pal-nr` as pal,auftragsnr from dauftr where (auftragsnr='$im') and (teil='$teil') and (`auftragsnr-exp` is null) and (`pal-nr-exp` is null)";
+		$sql = "select id_dauftr as id, `pos-pal-nr` as pal,auftragsnr from dauftr where (auftragsnr='$im') and (teil='$teil') and (kzgut='G') and (`auftragsnr-exp` is null) and (`pal-nr-exp` is null)";
 		//return $sql;
 	}
 	    
@@ -3530,6 +3765,17 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql = "update durlaub1 set $field='$value' where persnr='$persnr' limit 1";
         mysql_query($sql);
         return mysql_affected_rows();
+    }
+    
+    /**
+     * 
+     * @param type $drueckId
+     * @param type $dbField
+     * @param type $dbValue
+     */
+    public function updateDrueckField($drueckId,$dbField,$dbValue){
+	$sql = "update drueck set `$dbField`='$dbValue' where drueck_id=$drueckId limit 1";
+	mysql_query($sql);
     }
     /**
      *
@@ -3758,6 +4004,16 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
         mysql_query($sql);
     }
 
+    
+    public function getDrueckRowsForImTeilPalTat($im,$teil,$pal,$tatneu){
+	$sql.="select * from drueck";
+	$sql.=" where";
+	$sql.=" (drueck.`AuftragsNr`=$im)";
+	$sql.=" and (drueck.`teil`=$teil)";
+	$sql.=" and (drueck.`pos-pal-nr`=$pal)";
+	$sql.=" and (drueck.`taetnr`=$tatneu)";
+	return $this->getQueryRows($sql);
+    }
     /**
      * returns rows array for noex paletten mit teil und abgnr
      * @param <type> $teil
@@ -4209,8 +4465,28 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
             $dbDatumVon = date('Y-m-d', mktime(0, 0, 1, substr($stddifA['datum'], 5, 2), substr($stddifA['datum'], 8, 2) - 1, substr($stddifA['datum'], 0, 4)));
             $stddifA['datum'] = substr($dbDatumVon, 2, 2) . substr($dbDatumVon, 5, 2) . substr($dbDatumVon, 8, 2);
         } else {
-            $stddifStunden = $stddifA['stunden'];
-            $dbDatumVon = '20' . substr($stddifA['datum'], 0, 2) . '-' . substr($stddifA['datum'], 2, 2) . '-' . substr($stddifA['datum'], 4, 2);
+	    //jeste musim zkontrolovat jestli nema eintritt>$stddifA['datum']
+	    // pokud ano, zachovam se stejne jako v pripade, ze $stddifA==null
+	    $eintrittDatumDB = $this->getEintrittsDatumDB($persnr);
+	    if ($eintrittDatumDB == '1980-01-01') {
+                // persnr nema zadany eintrittsdatum
+                echo "<h2>Kontrollieren Sie Eintrittsdatum beim PersNr=$persnr</h2>";
+                exit;
+            }
+//	    echo "eintrittDatumDB=$eintrittDatumDB,stddifA[datumDB]=".$stddifA['datumDB']."<br>";
+	    $timeEintritt = strtotime($eintrittDatumDB);
+	    $timeStdDif = strtotime($stddifA['datumDB']);
+//	    echo "timeEintritt=$timeEintritt,timeStdDif=$timeStdDif<br>";
+	    if($timeEintritt>$timeStdDif){
+		$stddifStunden = 0;
+		$stddifA['datum'] = $eintrittDatumDB;
+		$dbDatumVon = date('Y-m-d', mktime(0, 0, 1, substr($stddifA['datum'], 5, 2), substr($stddifA['datum'], 8, 2) - 1, substr($stddifA['datum'], 0, 4)));
+		$stddifA['datum'] = substr($dbDatumVon, 2, 2) . substr($dbDatumVon, 5, 2) . substr($dbDatumVon, 8, 2);
+	    }
+	    else{
+		$stddifStunden = $stddifA['stunden'];
+		$dbDatumVon = '20' . substr($stddifA['datum'], 0, 2) . '-' . substr($stddifA['datum'], 2, 2) . '-' . substr($stddifA['datum'], 4, 2);
+	    }
         }
 
         if ($datumVonDB !== NULL) {
@@ -4395,6 +4671,23 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	else
 	    return TRUE;
     }
+    
+    /**
+     * 
+     * @param type $datumDB
+     * @param type $persnr
+     */
+    public function getMAStundenDatum($datumDB,$persnr){
+	$stunden = 0;
+	$sql = "select stunden from dstddif where (persnr=$persnr) and (datum='$datumDB')";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $r = $rows[0];
+	    $stunden = floatval($r['stunden']);
+	}
+	return $stunden;
+    }
+    
     /**
      *
      * @param <type> $monat
@@ -4411,18 +4704,13 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
             $vorjahr = $jahr;
         }
 
-
-	
         $pocetdnu = cal_days_in_month(CAL_GREGORIAN, $vormonat, $vorjahr);
         $bisDatum = sprintf("%04d-%02d-%02d", $vorjahr, $vormonat, $pocetdnu);
-        //$sql = "select DATE_FORMAT(datum,'%y%m%d') as datum,stunden from dstddif join dpers on dpers.persnr=dstddif.persnr where dpers.persnr='$persnr' and dstddif.datum<='$bisDatum' and dstddif.datum>=dpers.eintritt  order by datum desc";
-        $sql = "select DATE_FORMAT(datum,'%y%m%d') as datum,stunden from dstddif join dpers on dpers.persnr=dstddif.persnr where dpers.persnr='$persnr' and dstddif.datum<='$bisDatum' order by datum desc";
-//    echo "sql = $sql";
-//        dbConnect();
+        $sql = "select DATE_FORMAT(datum,'%y%m%d') as datum,DATE_FORMAT(datum,'%Y-%m-%d') as datumDB,stunden from dstddif join dpers on dpers.persnr=dstddif.persnr where dpers.persnr='$persnr' and dstddif.datum<='$bisDatum' order by datum desc";
         $result = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($result);
-            return array("datum" => $row['datum'], "stunden" => $row['stunden']);
+            return array("datum" => $row['datum'], "datumDB" => $row['datumDB'],"stunden" => $row['stunden']);
         }
         else
             return null;
@@ -4583,11 +4871,36 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     
 
     public function updateIMAField($field,$value,$imaid){
-	$sql = "update dma set `$field`='$value' where id='$imaid'";
+	if($value===NULL)
+	    $sql = "update dma set `$field`=null where id='$imaid'";
+	else
+	    $sql = "update dma set `$field`='$value' where id='$imaid'";
 	$this->query($sql);
 	return mysql_affected_rows();
     }
 
+
+        public function getIMAStkGenehmigtForIMANrNew($imanr){
+	$stk = 0;
+	$sql = "select ima_dauftrid_array_genehmigt from dma where imanr='$imanr'";
+	$imaRows = $this->getQueryRows($sql);
+	if($imaRows!==NULL){
+	    $imaRow = $imaRows[0];
+	    $dauftrIdArrayStr = $imaRow['ima_dauftrid_array_genehmigt'];
+	    if((strlen($dauftrIdArrayStr)>0)){
+		$idArray = explode(';',$dauftrIdArrayStr);
+		if(is_array($idArray)){
+		    foreach ($idArray as $id){
+			$dauftrRow = $this->getDauftrRow($id);
+			if($dauftrRow!==NULL){
+			    $stk+=intval($dauftrRow['stk']);
+			}
+		    }
+		}
+	    }
+	}
+	return $stk;
+    }
 
     public function getIMAStkGenehmigtForIMANr($imanr){
 	$stk = 0;
@@ -4655,6 +4968,28 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	}
 	return $stk;
     }
+    
+    public function getIMAStkForIMANrNew($imanr){
+	$stk = 0;
+	$sql = "select dma.id,teil,imanr,emanr,auftragsnrarray,palarray,tatundzeitarray,ima_dauftrid_array,bemerkung,imavon,stamp from dma where imanr='$imanr'";
+	$imaRows = $this->getQueryRows($sql);
+	if($imaRows!==NULL){
+	    $imaRow = $imaRows[0];
+	    $dauftrIdArrayStr = $imaRow['ima_dauftrid_array'];
+	    if((strlen($dauftrIdArrayStr)>0)){
+		$idArray = explode(';',$dauftrIdArrayStr);
+		if(is_array($idArray)){
+		    foreach ($idArray as $id){
+			$dauftrRow = $this->getDauftrRow($id);
+			if($dauftrRow!==NULL){
+			    $stk+=intval($dauftrRow['stk']);
+			}
+		    }
+		}
+	    }
+	}
+	return $stk;
+    }
 
     /**
      *
@@ -4662,13 +4997,34 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @return type 
      */
     public function getTeilIMAArray($teil){
-	$sql = "select ima_genehmigt,dma.id,teil,imanr,emanr,auftragsnrarray,palarray,tatundzeitarray,bemerkung,imavon,stamp from dma where teil='$teil' order by imanr desc";
+	$sql = "select ema_genehmigt,ima_genehmigt,dma.id,teil,imanr,emanr,auftragsnrarray,palarray,tatundzeitarray,bemerkung,imavon,stamp from dma where teil='$teil' order by imanr desc";
 	return $this->getQueryRows($sql);
     }
 
     
     public function getArtikelBezeichnung($artnr){
 	$sql = "select `art-name1` as name1,`art-name2` as name2,`art-name3` as name3 from `eink-artikel` where `art-nr`='$artnr'";
+	return $this->getQueryRows($sql);
+    }
+    
+    /**
+     * 
+     * @param type $teil
+     */
+    public function getTeilMittelArray($teil){
+	$sql.=" select ";
+	$sql.=" dmittelteilabgnr.id,";
+	$sql.=" dmittel.nazev,";
+	$sql.=" dmittel.poznamka,";
+	$sql.=" dmittelteilabgnr.abgnr";
+	$sql.=" from";
+	$sql.=" dmittel";
+	$sql.=" join dmittelteilabgnr on dmittelteilabgnr.id_mittel=dmittel.id";
+	$sql.=" where";
+	$sql.=" dmittelteilabgnr.teil='$teil'";
+	$sql.=" order by";
+	$sql.=" dmittelteilabgnr.abgnr,";
+	$sql.=" dmittel.nazev";
 	return $this->getQueryRows($sql);
     }
     /**
@@ -4709,6 +5065,14 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
 
     /**
+     * 
+     * @param type $teil
+     */
+    public function getTeilTatArray($teil){
+	$sql=" select dpos.`TaetNr-Aby` as abgnr from dpos where teil='$teil'";
+	return $this->getQueryRows($sql);
+    }
+    /**
      *
      * @param type $teil 
      */
@@ -4729,6 +5093,16 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $dokuId
+     * @return type
+     */
+    public function delTeilMittel($dokuId){
+	$sql = "delete from dmittelteilabgnr where id='$dokuId' limit 1";
+	mysql_query($sql);
+        return mysql_affected_rows();
+    }
     /**
      *
      * @param type $dokuId
@@ -4753,14 +5127,34 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     /**
      * 
      */
-    public function addTeilIMA($teil,$imanr,$bemerkung,$auftragsarray,$palarray,$tatarray,$user){
+    public function addTeilIMA($teil,$imanr,$bemerkung,$auftragsarray,$palarray,$dauftridarray,$tatarray,$user){
 	$sql = "insert into dma";
-	$sql.=" (imanr,teil,auftragsnrarray,palarray,tatundzeitarray,bemerkung,imavon)";
-	$sql.=" values('$imanr','$teil','$auftragsarray','$palarray','$tatarray','$bemerkung','$user')";
+	$sql.=" (imanr,teil,auftragsnrarray,palarray,ima_dauftrid_array,tatundzeitarray,bemerkung,imavon)";
+	$sql.=" values('$imanr','$teil','$auftragsarray','$palarray','$dauftridarray','$tatarray','$bemerkung','$user')";
         mysql_query($sql);
         return mysql_insert_id();
     }
     
+    /**
+     * 
+     * @param type $teil
+     * @param type $n_mittel_nr
+     * @param type $n_abgnr
+     * @param type $user
+     * @return int
+     */
+    public function addTeilMittel($teil,$n_mittel_nr,$n_abgnr,$user){
+	$sql = "select id from dmittel where nazev='$n_mittel_nr'";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $r = $rows[0];
+	    $idmittel = $r['id'];
+	    $sql = "insert into dmittelteilabgnr (id_mittel,teil,abgnr,user) values($idmittel,'$teil','$n_abgnr','$user')";
+	    mysql_query($sql);
+	    return mysql_affected_rows();
+	}
+	return 0;
+    }
     /**
      *
      * @param type $teil
@@ -4882,8 +5276,31 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     /**
      *
      * @param type $terminAktual 
+     * @param int  timestamp aktualniho datumu radky
      */
-    public function getPlanVzKd($terminAktual){
+    public function getPlanVzKd($terminAktual,$time=NULL){
+	if($time!==NULL){
+	$datumDB = date('Y-m-d',$time);
+	$sql.=" select ";
+	$sql.=" dauftr.termin,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0041,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0051,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0061,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0081,";
+	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as sum_vzkd";
+	$sql.=" from ";
+	$sql.=" dauftr";
+	$sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	$sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+	$sql.=" where";
+	$sql.=" (dauftr.termin='$terminAktual')";
+	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	$sql.=" and (daufkopf.aufdat<='$datumDB')";
+	$sql.=" group by";
+	$sql.=" dauftr.termin";
+	}
+	else{
 	$sql.=" select ";
 	$sql.=" dauftr.termin,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
@@ -4900,6 +5317,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
 	$sql.=" group by";
 	$sql.=" dauftr.termin";
+	}
 	return $this->getQueryRows($sql);
     }
     
@@ -5035,7 +5453,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	if($rmDateTime===NULL) $rmDateTime = date('Y-m-d H:i:s');
 	
 	//1. vzkdplan
-	$vzkdPlanArray = $this->getPlanVzKd($terminAktual);
+	$vzkdPlanArray = $this->getPlanVzKd($terminAktual,$time);
 	$columnIndex = "vzkdplan";
 	if($vzkdPlanArray!==NULL){
 	    $r = $vzkdPlanArray[0];
@@ -6744,11 +7162,16 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
      * @param <type> $datum
      * @return <type>
      */
-    public function make_DB_datum($datum) {
-	if(strlen(trim($datum))==0) return "";
-	if($datum==NULL) return "";
-        $datumRoz = explode(".", $datum); // Roz�e�eme datum na jednotliv� �daje
-        $datum = $datumRoz[2] . "-" . $datumRoz[1] . "-" . $datumRoz[0]; // Op�t ho spoj�me
+    public function make_DB_datum($d) {
+	$datum='';
+	if(strlen(trim($d))==0) return $datum;
+	if($d==NULL) return $datum;
+        $datumRoz = explode(".", $d);
+	if(is_array($datumRoz)){
+	    if(count($datumRoz)==3){
+		$datum = $datumRoz[2] . "-" . $datumRoz[1] . "-" . $datumRoz[0];
+	    }
+	}
         return $datum;
     }
 

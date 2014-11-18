@@ -62,6 +62,8 @@ $options = array(
 	'ema_antrag_am',
 	'ema_antrag_vom',
 	'ema_antrag_text',
+	'ema_dauftrid_array',
+	'ema_dauftrid_array_genehmigt',
 	'stamp',
     ),
 );

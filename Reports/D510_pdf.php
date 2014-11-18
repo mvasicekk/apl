@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once "../db.php";
 
@@ -12,6 +12,16 @@ $doc_keywords = "D510";
 $parameters=$_GET;
 
 $teil=$_GET['teil'];
+$musterfoto=$_GET['musterfoto'];
+$sl = intval($_GET['sloupcu']);
+
+if($sl<1) $sl=1;
+if($sl>10) $sl=10;
+
+$bMusterfoto = FALSE;
+if($musterfoto=="a")
+    $bMusterfoto = TRUE;
+
 
 require_once('D510_xml.php');
 
@@ -773,6 +783,70 @@ foreach($dily as $dil)
 	zapati_teil($pdf,$sum_zapati_teil_array);
 }
 
+//pro pozadavku na zobrazeni musterfoto
+if ($bMusterfoto) {
+    $apl = AplDB::getInstance();
+    $pdf->AddPage();
+    $pdf->SetFillColor(230, 230, 255);
+    $pdf->Cell(0, 5, "Muster Fotos:", '1', 1, 'L', 1);
+    $gdatPath = "/mnt/gdat/Dat/";
+    $att='muster';
+    $att2FolderArray = AplDB::$ATT2FOLDERARRAY;
+    $extensions = 'JPG|jpg';
+    $filter = "/.*.($extensions)$/";
+    $teilnr = $teil;
+    $kundeGdatPath = $apl->getKundeGdatPath($apl->getKundeFromTeil($teilnr));
+    $anlagenDir = $gdatPath . $kundeGdatPath . "/200 Teile/" . $teilnr . "/" . AplDB::$DIRS_FOR_TEIL_FINAL[$att2FolderArray[$att]];
+    $pdf->Cell(0, 5, substr($anlagenDir,14), '1', 1, 'L', 1);
+    $mezeraMeziObrazky = 5;
+    $docsArray = $apl->getFilesForPath($anlagenDir,$filter);
+    if($docsArray!==NULL){
+	$x = $pdf->GetX();
+	$y = $pdf->GetY();
+	$column=0;
+	$imgMaxHeight=0;
+	$sloupcu = $sl;
+	foreach ($docsArray as $doc){
+	    $filePath = $anlagenDir.'/'.$doc['filename'];
+	    $anlage = $doc['filename'];
+//	    $pdf->Cell(0, 5, $filePath, '1', 1, 'L', 0);
+	    if (file_exists($filePath)) {
+		$filenameNew = substr($anlage, 0, strrpos($anlage, '.')) . '_tmp' . substr($anlage, strrpos($anlage, '.'));
+		$img = new Imagick($filePath);
+		$heightOriginal = $img->getimageheight();
+		$widthOriginal = $img->getimagewidth();
+		$ratio = $widthOriginal / $heightOriginal;
+		$imgWidth = ($pdf->getPageWidth()-($mezeraMeziObrazky*($sloupcu-1))-PDF_MARGIN_LEFT-5)/$sloupcu;
+//		$imgWidth = 50;
+		$imgHeight = $imgWidth / $ratio;
+		if($column<$sloupcu){
+		    if($imgMaxHeight<$imgHeight)
+			$imgMaxHeight = $imgHeight;
+		}
+//		$pdf->Cell(0, 5, "$imgWidth x $imgHeight", '1', 1, 'L', 0);
+		$img->thumbnailimage(600, 600, TRUE);
+		$img->writeimage($anlagenDir . '/' . $filenameNew);
+		//nez vykreslim obrazek, otestuju, zda nepujdu pres konec stranky
+		if (($y + $imgHeight ) > ($pdf->getPageHeight() - $pdf->getBreakMargin())) {
+		    $pdf->AddPage();
+		    $y = $pdf->GetY();
+		    $x = $pdf->GetX();
+		    $column = 0;
+		}
+		$pdf->Image($anlagenDir . '/' . $filenameNew, $x+($column*($imgWidth+$mezeraMeziObrazky)), $y+$mezeraMeziObrazky, $imgWidth, $imgHeight);
+		$pdf->Text($x+($column*($imgWidth+$mezeraMeziObrazky)), $y+$mezeraMeziObrazky-1, $anlage);
+		$column++;
+		if($column>($sloupcu-1)){
+		    $column=0;
+		    // posunout y na dalsi radek tabulky
+		    $y += ($imgMaxHeight+$mezeraMeziObrazky);
+		    $imgMaxHeight=0;
+		}
+		unlink($anlagenDir . '/' . $filenameNew);
+	    }
+	}
+    }
+}
 
 //Close and output PDF document
 $pdf->Output();

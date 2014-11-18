@@ -27,7 +27,7 @@
 
 </div>
 
-<div align="center" id="parametry">
+<div style="margin-top: 100px;">
 
     <table width="800px" id="fz_teile" style="padding: 5px;" border="1">
     <tr>
@@ -54,12 +54,15 @@
     </tr>
 </table>
 
-<input type="button" id="fz_drucken" value="Freigabezettel drucken" acturl="fzDrucken.php"/>
-<!-- volba pro prvni paletu -->
-&nbsp;erster Behaelter:&nbsp;<input type="text" id="erstpal" size="5"/>&nbsp;
-<!-- volba pro tisk palety 2x na jeden papir -->
-jeder Behaelter 2x <input type="checkbox" id="pal2x" checked="checked"/>
-</div>
 
+<!-- volba pro prvni paletu -->
+erster Behaelter:&nbsp;<input type="text" id="erstpal" size="5"/><br>
+<!-- volba pro tisk palety 2x na jeden papir -->
+jeder Behaelter 2x <input type="checkbox" id="pal2x" checked="checked"/><br>
+
+<!-- volba pro tisk na papir A5 -->
+auf A5 drucken <input type="checkbox" id="A5papier" /><br>
+<input type="button" id="fz_drucken" value="Freigabezettel drucken" acturl="fzDrucken.php"/>
+</div>
 </body>
 </html>

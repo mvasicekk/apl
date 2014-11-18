@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 
 set_time_limit(20);
 

@@ -12,27 +12,46 @@
     height: 3em;
 }
 
-div#D1XX input.reportbutton
+div#buttoncontainer div{
+    margin: 0;
+}    
+
+div#rs_DXXX input.reportbutton
 {
     background-color:rgb(255,200,200);	
 }
 
-div#D2XX input.reportbutton
-{
-    background-color:rgb(255,200,200);	
-}
-
-div#S2XX input.reportbutton
-{
-    background-color:rgb(255,200,200);	
-}
-
-div#S1XX input.reportbutton
+div#rs_S1XX input.reportbutton
 {
     background-color:rgb(255,200,255);	
 }
 
-div#S2XX input.reportbutton
+div#rs_S190 input.reportbutton
+{
+    background-color:rgb(255,200,255);	
+}
+
+div#rs_S2XX input.reportbutton
+{
+    background-color:rgb(200,200,255);	
+}
+
+div#rs_S34XX input.reportbutton
+{
+    background-color:rgb(230,230,230);	
+}
+
+div#rs_S31X input.reportbutton
+{
+    background-color:rgb(230,230,230);	
+}
+
+div#rs_S5XX input.reportbutton
+{
+    background-color:rgb(230,230,230);	
+}
+
+div#rs_S280 input.reportbutton
 {
     background-color:rgb(200,200,255);	
 }
@@ -42,12 +61,12 @@ div#S7XX input.reportbutton
     background-color:rgb(255,255,200);	
 }
 
-div#S6XX input.reportbutton
+div#rs_S67XX input.reportbutton
 {
     background-color:rgb(200,255,255);	
 }
 
-div#S8XX input.reportbutton
+div#rs_S8XX input.reportbutton
 {
     background-color:rgb(200,255,200);
 }
@@ -57,7 +76,7 @@ div#miscReports input.reportbutton
     background-color:rgb(255,255,255);
 }
 
-div#GF input.reportbutton
+div#rs_GF input.reportbutton
 {
     background-color:rgb(0,255,0);
 }

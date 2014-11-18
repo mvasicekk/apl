@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
@@ -22,6 +22,13 @@ $persnr=$_GET['persnr'];
 
 require_once('S310_xml.php');
 
+$apl = AplDB::getInstance();
+
+$puser = $_SESSION['user'];
+$vzkdZeigen = $apl->getDisplaySec('S310', 'vzkd', $puser);
+
+//$z=$vzkdZeigen===FALSE?'ne':'ano';
+//echo "vzkdZeigen:$z";
 
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
@@ -88,10 +95,10 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd_stk" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(2,',',' '),"popis"=>"","show"=>$vzkdZeigen,"sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","show"=>$vzkdZeigen,"sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzaby_stk" 
 => array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
@@ -139,10 +146,10 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"Auss\nTyp","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "vzkd_stk" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"VzKd\nStk","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(2,',',' '),"popis"=>"VzKd\nStk","show"=>$vzkdZeigen,"sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "vzkd" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nVzKd","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nVzKd","show"=>$vzkdZeigen,"sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "vzaby_stk" 
 => array ("nf"=>array(2,',',' '),"popis"=>"VzAby\nStk","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
@@ -155,6 +162,9 @@ array(
 
 );
 
+//echo "<pre>";
+//var_dump($cells_header);
+//echo "</pre>";
 
 $sum_zapati_taetigkeit_array = array(	
 								"stk"=>0,
@@ -222,7 +232,23 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
 	$pdfobjekt->SetFillColor(255,255,200,1);
 	foreach($pole as $cell)
 	{
-		$pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$cell['popis'],$cell["ram"],$cell["align"],$cell['fill']);
+	    $obsah = $cell['popis'];
+	    if(array_key_exists('show', $cell)){
+		if($cell['show']===TRUE)
+		    $obsah = $cell['popis'];
+		else{
+		    //musim zjistit kolik bylo v puvodnim obsahu znaku \n a tolik jich musim dat i do 
+		    //noveho obsahu
+		    $lines_arr = preg_split('/\n|\r/',$str);
+		    $num_newlines = count($lines_arr);
+		    $obsah = "";
+		    for($i=0;$i<$num_newlines;$i++){
+			$obsah.="\n";
+		    }
+		}
+		    
+	    }
+	    $pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$obsah,$cell["ram"],$cell["align"],$cell['fill']);
 	}
 	//if($pdfobjekt->PageNo()==1)
 	//{
@@ -250,6 +276,10 @@ function telo($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
 		else
 		{
 			$cellobsah=getValueForNode($nodelist,$nodename);
+		}
+		
+		if(array_key_exists("show", $cell)){
+		    if($cell['show']===FALSE) $cellobsah = '';
 		}
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}
@@ -332,7 +362,8 @@ function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$cells_header,$teilnr,$gew,$br
 
 function zapati_fremd($pdfobjekt,$vyskaradku,$popis,$rgb,$pole,$childs){
 
-$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
 	// dummy
@@ -361,6 +392,7 @@ $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if(!$vzkdZeigen) $obsah='';
 	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'B',0,'R',$fill);
 
 	//vzaby_stk
@@ -382,6 +414,7 @@ $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_taetigkeit($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$tatnr)
 {
+    global $vzkdZeigen;
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
@@ -409,6 +442,7 @@ function zapati_taetigkeit($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$tatnr
 	
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if(!$vzkdZeigen) $obsah='';
 	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'B',0,'R',$fill);
 	
 	//vzaby_stk
@@ -430,7 +464,8 @@ function zapati_taetigkeit($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$tatnr
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$teilnr)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
 	// dummy
@@ -457,6 +492,7 @@ function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$teilnr)
 	
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if(!$vzkdZeigen) $obsah='';
 	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'B',0,'R',$fill);
 	
 	//vzaby_stk
@@ -478,7 +514,8 @@ function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$teilnr)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_auftrag($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$auftragsnr)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $vzkdZeigen;
+    $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
 	// dummy
@@ -505,6 +542,7 @@ function zapati_auftrag($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$auftrags
 	
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if(!$vzkdZeigen) $obsah='';
 	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'B',0,'R',$fill);
 	
 	//vzaby_stk
@@ -526,8 +564,9 @@ function zapati_auftrag($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$auftrags
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_sestava($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole)
 {
+    global $vzkdZeigen;
 
-	//$pdfobjekt->Ln();
+    //$pdfobjekt->Ln();
 	//$pdfobjekt->Ln();
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
@@ -556,6 +595,7 @@ function zapati_sestava($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole)
 	
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if(!$vzkdZeigen) $obsah='';
 	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'B',0,'R',$fill);
 	
 	//vzaby_stk

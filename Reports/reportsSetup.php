@@ -160,7 +160,7 @@ $elementsIdArray = $apl->getResourcesForFormId('berichte');
 
 $puser = $_SESSION['user'];
 foreach ($elementsIdArray as $elementId) {
-    $display_sec[$elementId] = $apl->getDisplaySec('berichte', $elementId, $puser) ? 'inline-block' : 'none';
+    $display_sec[$elementId] = $apl->getDisplaySec('berichte', $elementId, $puser) ? 'block' : 'none';
 }
 
 $smarty->assign("display_sec", $display_sec);

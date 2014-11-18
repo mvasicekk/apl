@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../security.php';
 
 $doc_title = "S617";
 $doc_subject = "S617 Report";

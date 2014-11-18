@@ -30,6 +30,7 @@
 		    <div id='S3XX'>
 			<input id="E310" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;Kunde&promenne=datevon;datebis;kunde&values=;;;&report=E310'" class='reportbutton' type="button"  name="E310" value="E310 - Teil - TatNr - Uebersicht"/>
 			<input id="E320" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;Kunde von;Kunde bis&promenne=datevon;datebis;kundevon;kundebis&values=;;;;&report=E320'" class='reportbutton' type="button"  name="E320" value="E320 - Restmengenverwaltung"/>
+			<input id="E395" onClick="location.href='../get_parameters.php?popisky=Teil;Kunde;Datum von (wenn keine Inventur);Zeitpunkt&promenne=teil;kunde!number;datumvon;zeitpunkt&values=;111;{$prvnidenrokuDB} 00:00:00;{$nowtime}&report=E395'" class='reportbutton' type="button"  name="E395" value="E395 - Lagerbestand - Teil"/>
 			<input id="E530" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE&promenne=datevon;datebis&values={$prvnidenmesice};{$dnes}&report=E530'" class='reportbutton' type="button"  name="E530" value="E530 - Reparaturen Ersatzteile"/>
 		    </div>
 	    </div>

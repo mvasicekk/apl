@@ -38,6 +38,7 @@ $pt.= "     ,CONCAT(`eink-artikel`.`art-name1`,' - ',`eink-artikel`.`art-name2`)
 $pt.= "     ,if(`eink-artikel`.`art-vr-preis` is null,0,`eink-artikel`.`art-vr-preis`) as preis";
 $pt.= "     ,if(dreparaturpos.anzahl is null,0,dreparaturpos.anzahl) as anzahl";
 $pt.= "     ,if(dreparaturpos.et_alt is null,0,dreparaturpos.et_alt) as et_alt";
+$pt.= "     ,if(dreparaturpos.bemerkung is null,'',dreparaturpos.bemerkung) as bemerkung";
 $pt.= " from dreparaturkopf";
 $pt.= " join dpers on dpers.persnr=dreparaturkopf.persnr_ma";
 $pt.= " join dreparatur_geraete on dreparatur_geraete.invnummer=dreparaturkopf.invnummer";
@@ -106,6 +107,7 @@ if (!$bPraemien) {
     $sql.= "     ,if(`eink-artikel`.`art-vr-preis` is null,0,`eink-artikel`.`art-vr-preis`) as preis";
     $sql.= "     ,if(dreparaturpos.anzahl is null,0,dreparaturpos.anzahl) as anzahl";
     $sql.= "     ,if(dreparaturpos.et_alt is null,0,dreparaturpos.et_alt) as et_alt";
+    $sql.= "     ,if(dreparaturpos.bemerkung is null,'',dreparaturpos.bemerkung) as bemerkung";
     $sql.= " from dreparaturkopf";
     $sql.= " join dpers on dpers.persnr=dreparaturkopf.persnr_ma";
     $sql.= " join dreparatur_geraete on dreparatur_geraete.invnummer=dreparaturkopf.invnummer";
@@ -148,6 +150,7 @@ if (!$bPraemien) {
     $sql.=" $v_reparaturen.preis,";
     $sql.=" $v_reparaturen.anzahl,";
     $sql.=" $v_reparaturen.et_alt,";
+    $sql.=" $v_reparaturen.bemerkung,";
     $sql.=" if($v_leistung.sumvzkd_11 is null,0,$v_leistung.sumvzkd_11) as vzkd_11,";
     $sql.=" if($v_leistung.sumvzkd_51 is null,0,$v_leistung.sumvzkd_51) as vzkd_51";
     $sql.=" from dpers";
@@ -201,6 +204,7 @@ if ($reportTypPersNr === TRUE) {
 				'artname',
 				'preis',
 				'anzahl',
+				'bemerkung',
 				'et_alt'
 			    ),
 			),
@@ -238,6 +242,7 @@ if ($reportTypPersNr === TRUE) {
 				'artname',
 				'preis',
 				'anzahl',
+				'bemerkung',
 				'et_alt'
 			    ),
 			),
@@ -271,6 +276,7 @@ if ($reportTypPersNr === TRUE) {
 		    'artname',
 		    'preis',
 		    'anzahl',
+		    'bemerkung',
 		    'et_alt'
 		),
 	    ),

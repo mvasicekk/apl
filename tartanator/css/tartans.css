@@ -1,0 +1,140 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 30.10.2014, 10:20:41
+    Author     : runt
+*/
+
+[data-role="footer"]{
+    padding: 0px;
+    
+}
+
+#abercrombie { background-image:url('../tartans/icons/abercrombie.png'); }
+#arbuthnot { background-image:url('../tartans/icons/arbuthnot.png'); }
+#baird { background-image:url('../tartans/icons/baird.png'); }
+#barclay-dress { background-image:url('../tartans/icons/barclay-dress.png'); }
+#barclay { background-image:url('../tartans/icons/barclay.png'); }
+#beeeach { background-image:url('../tartans/icons/beeeach.png'); }
+#birrell { background-image:url('../tartans/icons/birrell.png'); }
+#black-and-white { background-image:url('../tartans/icons/black-and-white.png'); }
+#blair { background-image:url('../tartans/icons/blair.png'); }
+#borthwick-dress { background-image:url('../tartans/icons/borthwick-dress.png'); }
+#borthwick { background-image:url('../tartans/icons/borthwick.png'); }
+#bruce { background-image:url('../tartans/icons/bruce.png'); }
+#bryan { background-image:url('../tartans/icons/bryan.png'); }
+#buchanan { background-image:url('../tartans/icons/buchanan.png'); }
+#cameron-hunting { background-image:url('../tartans/icons/cameron-hunting.png'); }
+#cameron { background-image:url('../tartans/icons/cameron.png'); }
+#carmichael { background-image:url('../tartans/icons/carmichael.png'); }
+#carnegie { background-image:url('../tartans/icons/carnegie.png'); }
+#chisholm { background-image:url('../tartans/icons/chisholm.png'); }
+#clark-clergy- { background-image:url('../tartans/icons/clark-clergy-.png'); }
+#cranston { background-image:url('../tartans/icons/cranston.png'); }
+#davidson { background-image:url('../tartans/icons/davidson.png'); }
+#douglas-green- { background-image:url('../tartans/icons/douglas-green-.png'); }
+#douglas-grey- { background-image:url('../tartans/icons/douglas-grey-.png'); }
+#dunbar { background-image:url('../tartans/icons/dunbar.png'); }
+#dunblane { background-image:url('../tartans/icons/dunblane.png'); }
+#elliot { background-image:url('../tartans/icons/elliot.png'); }
+#erskine { background-image:url('../tartans/icons/erskine.png'); }
+#filly { background-image:url('../tartans/icons/filly.png'); }
+#fletcher { background-image:url('../tartans/icons/fletcher.png'); }
+#foobar { background-image:url('../tartans/icons/foobar.png'); }
+#forbes { background-image:url('../tartans/icons/forbes.png'); }
+#forsyth { background-image:url('../tartans/icons/forsyth.png'); }
+#fox-hunting { background-image:url('../tartans/icons/fox-hunting.png'); }
+#fraser { background-image:url('../tartans/icons/fraser.png'); }
+#galbraith { background-image:url('../tartans/icons/galbraith.png'); }
+#galloway { background-image:url('../tartans/icons/galloway.png'); }
+#gow { background-image:url('../tartans/icons/gow.png'); }
+#graham-of-menteith { background-image:url('../tartans/icons/graham-of-menteith.png'); }
+#graham-of-montrose { background-image:url('../tartans/icons/graham-of-montrose.png'); }
+#gunn { background-image:url('../tartans/icons/gunn.png'); }
+#hamilton { background-image:url('../tartans/icons/hamilton.png'); }
+#hunter { background-image:url('../tartans/icons/hunter.png'); }
+#ingles { background-image:url('../tartans/icons/ingles.png'); }
+#innes-macinnes { background-image:url('../tartans/icons/innes-macinnes.png'); }
+#irvine { background-image:url('../tartans/icons/irvine.png'); }
+#keith { background-image:url('../tartans/icons/keith.png'); }
+#kennedy { background-image:url('../tartans/icons/kennedy.png'); }
+#kincaid { background-image:url('../tartans/icons/kincaid.png'); }
+#lamont { background-image:url('../tartans/icons/lamont.png'); }
+#lauder { background-image:url('../tartans/icons/lauder.png'); }
+#lennox { background-image:url('../tartans/icons/lennox.png'); }
+#leslie-dress { background-image:url('../tartans/icons/leslie-dress.png'); }
+#leslie { background-image:url('../tartans/icons/leslie.png'); }
+#lindsay { background-image:url('../tartans/icons/lindsay.png'); }
+#livingston-e- { background-image:url('../tartans/icons/livingston-e-.png'); }
+#logan-and-maclennan { background-image:url('../tartans/icons/logan-and-maclennan.png'); }
+#macalpine { background-image:url('../tartans/icons/macalpine.png'); }
+#macarthur { background-image:url('../tartans/icons/macarthur.png'); }
+#macaulay-hunting { background-image:url('../tartans/icons/macaulay-hunting.png'); }
+#macauly { background-image:url('../tartans/icons/macauly.png'); }
+#macbeth { background-image:url('../tartans/icons/macbeth.png'); }
+#maccallum { background-image:url('../tartans/icons/maccallum.png'); }
+#maccoll { background-image:url('../tartans/icons/maccoll.png'); }
+#macdonald-lord-of-the-isles { background-image:url('../tartans/icons/macdonald-lord-of-the-isles.png'); }
+#macdonald-of-ardnamurchan { background-image:url('../tartans/icons/macdonald-of-ardnamurchan.png'); }
+#macdonald-of-clanranald { background-image:url('../tartans/icons/macdonald-of-clanranald.png'); }
+#macdonald-of-keppoch { background-image:url('../tartans/icons/macdonald-of-keppoch.png'); }
+#macdonald-of-kingsburgh { background-image:url('icons/macdonald-of-kingsburgh.png'); }
+#macdonald { background-image:url('icons/macdonald.png'); }
+#macduff { background-image:url('icons/macduff.png'); }
+#macewan { background-image:url('icons/macewan.png'); }
+#macfarlane { background-image:url('icons/macfarlane.png'); }
+#macfie-macphee- { background-image:url('icons/macfie-macphee-.png'); }
+#macgregor { background-image:url('icons/macgregor.png'); }
+#machardy { background-image:url('icons/machardy.png'); }
+#maciver { background-image:url('icons/maciver.png'); }
+#mackeane { background-image:url('icons/mackeane.png'); }
+#mackintosh { background-image:url('icons/mackintosh.png'); }
+#maclachlan { background-image:url('icons/maclachlan.png'); }
+#maclain-of-lochbuie { background-image:url('icons/maclain-of-lochbuie.png'); }
+#maclaren { background-image:url('icons/maclaren.png'); }
+#maclean-of-duart { background-image:url('icons/maclean-of-duart.png'); }
+#macleod { background-image:url('icons/macleod.png'); }
+#macmillan { background-image:url('icons/macmillan.png'); }
+#macnab { background-image:url('icons/macnab.png'); }
+#macneil-of-barra { background-image:url('icons/macneil-of-barra.png'); }
+#macneil-of-colonsay { background-image:url('icons/macneil-of-colonsay.png'); }
+#macneil { background-image:url('icons/macneil.png'); }
+#macphail { background-image:url('icons/macphail.png'); }
+#macpherson { background-image:url('icons/macpherson.png'); }
+#macquarrie { background-image:url('icons/macquarrie.png'); }
+#macqueen { background-image:url('icons/macqueen.png'); }
+#macrae { background-image:url('icons/macrae.png'); }
+#mactaggart { background-image:url('icons/mactaggart.png'); }
+#mactavish { background-image:url('icons/mactavish.png'); }
+#maxwell { background-image:url('icons/maxwell.png'); }
+#melville { background-image:url('icons/melville.png'); }
+#menzies { background-image:url('icons/menzies.png'); }
+#moncreiffe { background-image:url('icons/moncreiffe.png'); }
+#morgan { background-image:url('icons/morgan.png'); }
+#morrison { background-image:url('icons/morrison.png'); }
+#murray-of-tullibardine { background-image:url('icons/murray-of-tullibardine.png'); }
+#napier { background-image:url('icons/napier.png'); }
+#nesbitt { background-image:url('icons/nesbitt.png'); }
+#nithsdale { background-image:url('icons/nithsdale.png'); }
+#oliphant { background-image:url('icons/oliphant.png'); }
+#oregon { background-image:url('icons/oregon.png'); }
+#phaedra { background-image:url('icons/phaedra.png'); }
+#ramsay { background-image:url('icons/ramsay.png'); }
+#rose { background-image:url('icons/rose.png'); }
+#ross { background-image:url('icons/ross.png'); }
+#ruthven { background-image:url('icons/ruthven.png'); }
+#scott { background-image:url('icons/scott.png'); }
+#shaw { background-image:url('icons/shaw.png'); }
+#smith { background-image:url('icons/smith.png'); }
+#stewart-of-athol { background-image:url('icons/stewart-of-athol.png'); }
+#stuart-of-galloway { background-image:url('icons/stuart-of-galloway.png'); }
+#sutherland { background-image:url('icons/sutherland.png'); }
+#taylor { background-image:url('icons/taylor.png'); }
+#two-color { background-image:url('icons/two-color.png'); }
+#urquhart { background-image:url('icons/urquhart.png'); }
+#wallace { background-image:url('icons/wallace.png'); }
+#watson { background-image:url('icons/watson.png'); }
+#wellington { background-image:url('icons/wellington.png'); }

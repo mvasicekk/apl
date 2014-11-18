@@ -180,7 +180,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
 	{/if}
             </td>
             <td>
-	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.&promenne=auftragsnr&values={$auftragsnr_value}&report=D740'" id='D740'/>
+	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;PDF Password,password&promenne=auftragsnr;pdfpass&values={$auftragsnr_value};&report=D740'" id='D740'/>
         </td>
         <td>
 	<input class='' type='button' value='D750 normal' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.&promenne=auftragsnr&values={$auftragsnr_value}&report=D750'" id='D750'/>

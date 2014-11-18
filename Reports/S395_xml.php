@@ -78,7 +78,7 @@ $knd = $kd;
 if(strlen($teil)>0)
     $teilArray = array($teil=>"nic");
 else
-    $teilArray = AplDB::getInstance()->getActiveTeilArrayForKunde($knd,180);
+    $teilArray = AplDB::getInstance()->getActiveTeilArrayForKunde($knd,18000);
     
 //foreach ($teilArray as $klic => $hodnota) {
 //    echo "klic = $klic, hodnota = $hodnota<br>";

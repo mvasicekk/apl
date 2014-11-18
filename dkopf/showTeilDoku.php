@@ -26,6 +26,7 @@ require_once '../db.php';
     }
     
     $formDiv = "<div id='dokuform'>";
+    $formDiv.="<div class='closebutton' id='closebutton_dokuform'>X</div>";
     // radek pro pridani noveho dokumentu
     $formDiv.="<table id='dokutable'>";
     $formDiv.="<tr style='display:".$display_sec['n_doku_add'].";background-color:#eef;'>";

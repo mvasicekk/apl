@@ -252,7 +252,11 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 					<input id='showima' type='button' value="IMA" acturl='./showIMA.php' />
 				     </span>
 				 </td>
-
+ 				 <td>
+				     <span style="display:{$display_sec.showmittel_sec};" id="showmittel_sec">
+					<input id='showmittel' type='button' value="AM / MM" acturl='./showMittel.php' />
+				     </span>
+				 </td>
                             </tr>
                         </table>
 			</fieldset>
@@ -492,7 +496,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu
 <tr>
 	<td>
 	    <span style="display:{$display_sec.D510info_sec};" id="D510info_sec">
-		<input class='formularbutton' id='info_D510' type='button' value='Info APL D510' onClick="location.href='../get_parameters.php?popisky=Teil&promenne=teil&values={$teil_value}&report=D510'"/>
+		<input class='formularbutton' id='info_D510' type='button' value='Info APL D510' onClick="location.href='../get_parameters.php?popisky=Teil;mit MusterFotos,*CH;Foto-Sloupcu/Spalten&promenne=teil;musterfoto;sloupcu&values={$teil_value};a;2&report=D510'"/>
 	    </span>
 	</td>
 	<td>

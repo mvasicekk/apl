@@ -11,6 +11,7 @@ require_once '../db.php';
     $imanr= trim($_POST['imanr']);
     $ima_imarray= trim($_POST['ima_imarray']);
     $ima_palarray= trim($_POST['ima_palarray']);
+    $ima_dauftrid= trim($_POST['ima_dauftrid']);
     $ima_tatarray= trim($_POST['ima_tatarray']);
     $bemerkung= trim($_POST['bemerkung']);
 
@@ -23,31 +24,50 @@ require_once '../db.php';
     $palarray = $ima_palarray;
     $tatarray=$ima_tatarray;
     
-    $ar = $apl->addTeilIMA($teil,$imanr,$bemerkung,$auftragsarray,$palarray,$tatarray,$user);
-    $stk = $apl->getIMAStkForIMANr($imanr);
+    $ar = $apl->addTeilIMA($teil,$imanr,$bemerkung,$auftragsarray,$palarray,$ima_dauftrid,$tatarray,$user);
+    $stk = $apl->getIMAStkForIMANrNew($imanr);
     
     if($ar>0){
 	// pokud je vlozen zadek poslu mail
-	$recipient = "jr@abydos.cz,";
-        $recipient .= "rk@abydos.cz,";
-	$recipient .= "pvo@abydos.cz,";
-	$recipient .= "hl@abydos.cz,";
-	$recipient .= "pt@abydos.cz,";
-	$recipient .= "jga@abydos.cz";
-	$subject = "$imanr erstellt von $user";
-	$message = "<h3><b>$imanr</b> wurde erstellt.</h3>";
+	
+	$recipients = $apl->getRecipientsArray(
+	array(2,3,6),
+	array(
+	    "jr@abydos.cz",
+	    "hl@abydos.cz",
+	    "rk@abydos.cz",
+	    "gu@abydos.cz"),
+	array(
+	    "bb@abydos.cz",
+	    "rb@abydos.cz",
+	    "ne@abydos.cz")
+	);
+	
+	$recipientsStr = join(',', $recipients);
+	
+//	$recipient = "jr@abydos.cz,";
+//        $recipient .= "rk@abydos.cz,";
+//	$recipient .= "pvo@abydos.cz,";
+//	$recipient .= "hl@abydos.cz,";
+//	$recipient .= "pt@abydos.cz,";
+//	$recipient .= "jga@abydos.cz";
+	$subject = "$imanr vytvorena uzivatelem: $user";
+	$message = "<h3><b>$imanr</b> vytvorena.</h3>";
 	$message.=" Teil : $teil<br>";
-	$message.=" Bemerkung : $bemerkung<br>";
-	$message.=" Importe : $auftragsarray<br>";
-	$message.=" Paletten : $palarray<br>";
-	$message.=" Stk : $stk<br>";
-	$message.=" Taetigkeiten/VzAby : $tatarray<br>";
-	$message.=" Benutzer : $user<br>";
+	$message.=" poznamka : $bemerkung<br>";
+	$message.=" Importy : $auftragsarray<br>";
+	$message.=" Palety : $palarray<br>";
+	$message.=" ks : $stk<br>";
+	$message.=" operace/VzAby : $tatarray<br>";
+	$message.=" vytvoril : $user<br>";
+	$message.=" email odeslan na : $recipientsStr<br>";
+	
 	
 	$headers = "From: <apl_ima@abydos.cz>\n";
 	$headers = "Content-Type: text/html; charset=UTF-8\n";
-		
-	@mail($recipient,$subject,$message,$headers);
+
+	foreach ($recipients as $recipient)
+	    @mail($recipient,$subject,$message,$headers);
     }
     
     $returnArray = array(

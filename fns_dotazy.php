@@ -543,7 +543,7 @@ function erster_lager($teil,$auftrag,$paleta)
 	$sql = "select abgnr from dauftr where ((teil='$teil') and (auftragsnr='$auftrag') and (`pos-pal-nr`='$paleta') and (abgnr>3)) order by abgnr";
 	$res = mysql_query($sql);
 	$abgnr=0;
-	$ela='OD';
+	$ela='0D';
 	
 	if(mysql_affected_rows()>0)
 	{
@@ -559,7 +559,9 @@ function erster_lager($teil,$auftrag,$paleta)
 	$sql.= " join dauftr on dauftr.teil=dpos.teil and dauftr.abgnr=dpos.`taetnr-aby`";
 	$sql.= " where ((dpos.teil='$teil') and (dpos.lager_von is not null)";
 	$sql.= " and (dauftr.auftragsnr='$auftrag') and (dauftr.`pos-pal-nr`='$paleta')";
-	$sql.= " and (dpos.lager_von<>'0D'))";
+	$sql.= " and (dpos.lager_von<>'0D')";
+	$sql.= " and (length(trim(dpos.lager_von))>0)";
+	$sql.= ")";
 	$sql.=" order by dpos.lager_von";
 	$res = mysql_query($sql);
 	if(mysql_affected_rows()>0)

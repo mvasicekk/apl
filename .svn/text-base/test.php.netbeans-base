@@ -4,20 +4,116 @@ require './db.php';
 
 $apl = AplDB::getInstance();
 
-// pridat operaci do pracovniho planu
-$sql = "select dpos.teil from dpos";
-$sql.=" join dkopf on dkopf.Teil=dpos.Teil";
-$sql.=" where dkopf.Kunde=355 and dpos.`TaetNr-Aby`=446";
+$datumDB = '2012-08-16';
+$persnr = 413;
 
-$cisloOperace = 2546;
+$persnrRows = $apl->getPersnrRowsFromDrueckDatum($datumDB);
 
-$rows = $apl->getQueryRows($sql);
-foreach ($rows as $row){
-    echo "<br>".$row['teil'];
-    $sqlInsert = "insert into dpos (teil,`TaetNr-Aby`) values('".$row['teil']."',2546)";
-    echo "<br>$sqlInsert";
-    $apl->getQueryRows($sqlInsert);
+$persnrRows = array(1477);
+if ($persnrRows !== NULL) {
+
+//    foreach ($persnrRows as $persnrRow) {
+        foreach ($persnrRows as $persnr) {
+//        $persnr = $persnrRow['persnr'];
+        $rows = $apl->getLeistungAnwesenheitRows($datumDB, $persnr);
+
+        echo "<h1>Leistung=>Anwesenheit  $persnr ($datumDB)</h1>";
+
+        if ($rows !== NULL) {
+            echo "<h1>Leistung $persnr ($datumDB)</h1>";
+            echo "<table style='border: solid 1px black; border-collapse: collapse;'>";
+            $style='';
+            $oeold='';
+            foreach ($rows as $row) {
+                $oe = $row['oe'];
+                $von = $row['von'];
+                $bis = $row['bis'];
+                $datum = $row['datum'];
+                $pause = $row['sumpause'];
+                if($oe!=$oeold){
+                    $oeold=$oe;
+                    $style='background-color:#ccffcc;';
+                }
+                else
+                    $style='';
+                
+                echo "<tr style='$style'>";
+                echo "<td style='border: solid 1px black;padding: 5px;'>$oe</td><td style='padding: 5px;border: solid 1px black;'>$von</td><td style='padding: 5px;border: solid 1px black;'>$bis</td><td style='padding: 5px;border: solid 1px black;'>$datum</td><td style='padding: 5px;border: solid 1px black;'>$pause</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+
+
+            echo "<table style='border: solid 1px black; border-collapse: collapse;'>";
+            $oeold = '';
+            $oeold = $rows[0]['oe'];
+            $bisP = $rows[0]['bis'];
+            $vonP = $rows[0]['von'];
+            $datum = $rows[0]['datum'];
+
+            if (count($rows) == 1) {
+                echo "<tr>";
+                echo "<td style='border: solid 1px black;padding: 5px;'>$oeold</td><td style='border: solid 1px black;padding: 5px;'>$vonP</td><td style='border: solid 1px black;padding: 5px;'>$bisP</td><td style='border: solid 1px black;padding: 5px;'>$datum</td>";
+                echo "</tr>";
+//                echo "<br>OE=$oeold,von=$vonP,bis=$bisP,datum=$datum";
+            } else {
+                foreach ($rows as $row) {
+                    $oe = $row['oe'];
+                    $von = $row['von'];
+                    $bis = $row['bis'];
+                    $datum = $row['datum'];
+                    if ($oe != $oeold) {
+                        echo "<tr>";
+                        echo "<td style='border: solid 1px black;padding: 5px;'>$oeold</td><td style='border: solid 1px black;padding: 5px;'>$vonP</td><td style='border: solid 1px black;padding: 5px;'>$bisP</td><td style='border: solid 1px black;padding: 5px;'>$datum</td>";
+                        echo "</tr>";
+                        $vonP = $von;
+                        $oeold = $oe;
+                        // posledni
+                        $bisP = $bis;
+                    } else {
+                        $bisP = $bis;
+                    }
+                }
+                echo "<tr>";
+                echo "<td style='border: solid 1px black;padding: 5px;'>$oeold</td><td style='border: solid 1px black;padding: 5px;'>$vonP</td><td style='border: solid 1px black;padding: 5px;'>$bis</td><td style='border: solid 1px black;padding: 5px;'>$datum</td>";
+                echo "</tr>";
+
+//                echo "<br>OE=$oeold,von=$vonP,bis=$bis,datum=$datum";
+            }
+            echo "</table>";
+        }
+        // pridat info z dochazkoveho systemu
+        $edataRows = $apl->getAnwesenheitFromEdata($datumDB,$persnr);
+        if($edataRows!==NULL){
+            echo "<table style='border: solid 1px black; border-collapse: collapse;'>";            
+            foreach($edataRows as $edataRow){
+                $von = $edataRow['von'];
+                $bis = $edataRow['bis'];
+                echo "<tr>";
+                echo "<td style='border: solid 1px black;padding: 5px;'>Anwesenheit aus EData Reader</td>";
+                echo "<td style='border: solid 1px black;padding: 5px;'>$von</td><td style='border: solid 1px black;padding: 5px;'>$bis</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+        echo "<hr>";
+    }
 }
+
+// pridat operaci do pracovniho planu
+//$sql = "select dpos.teil from dpos";
+//$sql.=" join dkopf on dkopf.Teil=dpos.Teil";
+//$sql.=" where dkopf.Kunde=355 and dpos.`TaetNr-Aby`=446";
+//
+//$cisloOperace = 2546;
+//
+//$rows = $apl->getQueryRows($sql);
+//foreach ($rows as $row){
+//    echo "<br>".$row['teil'];
+//    $sqlInsert = "insert into dpos (teil,`TaetNr-Aby`) values('".$row['teil']."',2546)";
+//    echo "<br>$sqlInsert";
+//    $apl->getQueryRows($sqlInsert);
+//}
 
 // zmena cisel operaci, omezeni jen na zakaznika
 //$kunde = 355;

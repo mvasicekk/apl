@@ -184,7 +184,7 @@ function maxCountMore($s,$maxCount=3){
 
 function getIMAStk($imanr){
     global $apl;
-    return $apl->getIMAStkForIMANr($imanr);
+    return $apl->getIMAStkForIMANrNew($imanr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

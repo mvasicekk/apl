@@ -1440,6 +1440,7 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 		{
 			$cellobsah=getValueForNode($nodelist,$nodename);
 		}
+		$cellobsah = strip_tags($cellobsah);
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);

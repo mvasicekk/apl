@@ -32,6 +32,10 @@ require_once '../db.php';
 	'ema_select_tat_gem',
 	'anlage',
 	'imabemerkung',
+	'ema_genehmigt_bemerkung',
+	'ema_genehmigt_user',
+	'ema_genehmigt_stamp',
+	'ema_dauftr_generieren',
     );
     foreach ($elementsArray as $elementId){
 	$display_sec[$elementId] = $apl->getDisplaySec('dkopf',$elementId,$puser)?'inline-block':'none';
@@ -45,30 +49,59 @@ require_once '../db.php';
 	if(strlen($emaAnlagenStr)>0){
 	    $emaAnlagenArray = explode(';', $emaAnlagenStr);
 	}
-	
+
+
+	if($ir['ima_genehmigt']>0){
+	    $imagenehmigtClass = 'genehmigt';
+	}
+	else if($ima['ima_genehmigt']<0){
+	    $imagenehmigtClass = 'nichtgenehmigt';
+	}
+	else{
+	    $imagenehmigtClass = 'inprocess';
+	}
+
+	if($ir['ema_genehmigt']>0){
+	    $emagenehmigtClass = 'genehmigt';
+	}
+	else if($ima['ema_genehmigt']<0){
+	    $emagenehmigtClass = 'nichtgenehmigt';
+	}
+	else{
+	    $emagenehmigtClass = 'inprocess';
+	}
+
 	$formDiv = "<div id='imaeditform'>";
+	$formDiv.="<div class='closebutton' id='closebutton_imaeditform'>X</div>";
+	$formDiv.="<input type='hidden' id='imaid' value='$imaid'>";
 	$formDiv.="<p id='spinner'>zpracovávám dotaz ....</p>";
 	$formDiv.="<fieldset id='imapart'>";
 	$formDiv.="<legend>IMA</legend>";	
-	$formDiv.="<label for='imanr'>IMA_Nr:</label><input style='text-align:left;' type='text' id='imanr' size='17' readonly='readonly' value='".$ir['imanr']."'/>";
+	$formDiv.="<label for='imanr'>IMA_Nr:</label><input class='$imagenehmigtClass' style='text-align:left;' type='text' id='imanr' size='17' readonly='readonly' value='".$ir['imanr']."'/>";
 	
 	$rdonlyIfGenehmigt = $ir['ima_genehmigt']<>0?'readonly="readonly"':'';
+	$rdonlyIfEMAGenehmigt = $ir['ema_genehmigt']<>0?'readonly="readonly"':'';
 	$disabledIfGenehmigt = $ir['ima_genehmigt']<>0?'disabled="disabled"':'';
+	$disabledIfEMAGenehmigt = $ir['ema_genehmigt']<>0?'disabled="disabled"':'';
 	$checkedIfGenehmigt = $ir['ima_genehmigt']<>0?'checked="checked"':'';
 	$genehmigtUser = substr($ir['ima_genehmigt_user'],strrpos($ir['ima_genehmigt_user'],'/')+1);
 	$genehmigtStamp = substr($ir['ima_genehmigt_stamp'],0,10);
 	$genehmigtBemerkung = trim($ir['ima_genehmigt_bemerkung']);
-
-	$formDiv.="<label for='imabemerkung'>Bemerkung:</label><input $rdonlyIfGenehmigt style='text-align:left;' type='text' size='50' maxlength='255' id='imabemerkung_$imaid' acturl='./updateIMABemerkung.php' value='".$ir['bemerkung']."' /><br>";
+	$genehmigtButtonText = $ir['ima_genehmigt']>0?'genehmigt':'genehmigen';
 	
-	$formDiv.="<label for=ima_genehmigt_bemerkung_$imaid>Bemerk.:</label><input ".$edit_sec['ima_genehmigt_bemerkung']." id='ima_genehmigt_bemerkung_$imaid' $rdonlyIfGenehmigt style='text-align:left;' type='text' size='35' maxlength='255' value='$genehmigtBemerkung'/>";
+	$formDiv.="<label for='imabemerkung'>Bemerkung:</label><input $disabledIfEMAGenehmigt $rdonlyIfGenehmigt style='text-align:left;' type='text' size='50' maxlength='255' id='imabemerkung_$imaid' acturl='./updateIMABemerkung.php' value='".$ir['bemerkung']."' /><br>";
+	
+	$formDiv.="<label for=ima_genehmigt_bemerkung_$imaid>Bemerk.:</label><input $disabledIfEMAGenehmigt ".$edit_sec['ima_genehmigt_bemerkung']." id='ima_genehmigt_bemerkung_$imaid' $rdonlyIfGenehmigt style='text-align:left;' type='text' size='35' maxlength='255' value='$genehmigtBemerkung'/>";
 	$formDiv.="<label for=ima_genehmigt_user_$imaid>vom:</label><input id='ima_genehmigt_user_$imaid' readonly='readonly' style='text-align:left;' type='text' size='4' value='$genehmigtUser'/>";
 	$formDiv.="<label for=ima_genehmigt_stamp_$imaid>am:</label><input id='ima_genehmigt_stamp_$imaid' readonly='readonly' style='text-align:left;' type='text' size='10' value='$genehmigtStamp'/>";
 	
-	$elementId='imagenehmigtflag';
-	$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-	$formDiv.="genehmigt<input $disabledIfGenehmigt style='text-align:left;' type='checkbox' id='imagenehmigtflag_$imaid' acturl='./updateIMAGenehmigt.php' $checkedIfGenehmigt/>";
-	$formDiv.="</span>";
+	if($ir['ema_genehmigt']==0){
+	    $elementId='imagenehmigtflag';
+	    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imagenehmigtflag_$imaid' value='genehmigen' acturl='./updateIMAGenehmigt.php?nicht=0'/>";
+	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imangenehmigtflag_$imaid' value='nicht genehmigen' acturl='./updateIMAGenehmigt.php?nicht=1'/>";
+	    $formDiv.="</span>";
+	}
 	
 	//tabulka pro rozdeleni na Anforderung a genehmigt
 	$formDiv.="<table>";
@@ -82,7 +115,7 @@ require_once '../db.php';
 		    //auftragsnr_array *****************************************
 		    $formDiv.="<tr>";
 		    $formDiv.="<td>";
-		    if($ir['ima_genehmigt']==0)
+		    if(($ir['ima_genehmigt']==0)&&($ir['ema_genehmigt']==0))
 			$formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php?anforderung=1&ma=ima' id='ima_select_auftragsnr_e' value='IM ...' />";
 		    else
 			$formDiv.="";
@@ -94,19 +127,20 @@ require_once '../db.php';
 		    //pal_array ************************************************
 		    $formDiv.="<tr>";
 		    $formDiv.="<td>";
-		    if($ir['ima_genehmigt']==0)
+		    if(($ir['ima_genehmigt']==0)&&($ir['ema_genehmigt']==0))
 			$formDiv.="<input type='button' acturl='./selectPalArray.php?anforderung=1&ma=ima' id='ima_select_pal_e' value='Pal...' />";
 		    else
 			$formDiv.="";
 		    $formDiv.="</td>";
 		    $formDiv.="<td>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_palarray_e' value='".$ir['palarray']."' />";
+		    $formDiv.="<input type='hidden' id='ima_dauftrid_e' value='".$ir['ima_dauftrid_array']."' />";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    //tatundzeit_array *****************************************
 		    $formDiv.="<tr>";
 		    $formDiv.="<td>";
-		    if($ir['ima_genehmigt']==0)
+		    if(($ir['ima_genehmigt']==0)&&($ir['ema_genehmigt']==0))
 			$formDiv.="<input type='button' acturl='./selectTatArray.php?anforderung=1&ma=ima' id='ima_select_tat_e' value='Tat ...' />";
 		    else
 			$formDiv.="";
@@ -121,6 +155,7 @@ require_once '../db.php';
 	    $formDiv.="</td>";
 	    //genehmigt ********************************************************
 	    $formDiv.="<td>";
+	    if($ir['ema_genehmigt']==0){
 	    $formDiv.="<fieldset class='genehmigt'>";
 		$formDiv.="<legend>genehmigt</legend>";
 		//tabulka pro schvaleni ****************************************
@@ -155,6 +190,7 @@ require_once '../db.php';
 		    $formDiv.="</td>";
 		    $formDiv.="<td class='genehmigt'>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_palarray_gen' value='".$ir['ima_palarray_genehmigt']."' /><br>";
+		    $formDiv.="<input type='hidden' id='ima_dauftrid_gen' value='".$ir['ima_dauftrid_array_genehmigt']."' />";		    
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    //tatundzeit_array
@@ -175,6 +211,7 @@ require_once '../db.php';
 		    $formDiv.="</tr>";
 		    $formDiv.="</table>";
 		    $formDiv.="</fieldset>";
+	    }
 	    $formDiv.="</td>";
 	    $formDiv.="</tr>";
 	$formDiv.="</table>";
@@ -261,23 +298,21 @@ require_once '../db.php';
 	$formDiv.="<legend>EMA</legend>";
 	$lastEmaNr = $apl->getLastEMANr($kunde);
 	$emaNr = '';
-	//$emaNr = 'EMA_'.$kunde.'_'.sprintf("%04d",$lastEmaNr+1);
-//	$puser = $_SESSION['user'];
-//	$elementId='emanr';
-//	$display_sec[$elementId] = $apl->getDisplaySec('dkopf',$elementId,$puser)?'inline-block':'none';
-//	$edit_sec[$elementId] = $apl->getPrivilegeSec('dkopf',$elementId,$puser,"schreiben")?'':'readonly="readonly"';
 
 	if(strlen(trim($ir['emanr']))>0) $emaNr=$ir['emanr'];
 	$elementId='emanr';
 	$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-	$formDiv.="<label for='emanr'>EMA_Nr:</label><input ".$edit_sec[$elementId]." changeurl='./emaNrChange.php' focusurl='./emaFocus.php' style='text-align:left;' type='text' size='12' maxlength='15' id='emanr_$imaid' acturl='./updateDMAField.php' value='".$emaNr."' /><br>";
+	$formDiv.="<label for='emanr'>EMA_Nr:</label><input class='$emagenehmigtClass' $rdonlyIfEMAGenehmigt ".$edit_sec[$elementId]." changeurl='./emaNrChange.php' focusurl='./emaFocus.php' style='text-align:left;' type='text' size='12' maxlength='15' id='emanr_$imaid' acturl='./updateDMAField.php' value='".$emaNr."' /><br>";
 	$formDiv.="</span>";
-	
-//	$elementId='';
-//	$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-//	$formDiv.="".$edit_sec[$elementId]."";
-//	$formDiv.="</span>";
-	
+
+	if($ir['ema_genehmigt']==0){
+	    $elementId='imagenehmigtflag';
+	    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+	    $formDiv.="<input $disabledIfEMAGenehmigt style='text-align:left;' type='button' id='emagenehmigtflag_$imaid' value='genehmigen' acturl='./updateIMAGenehmigt.php?nicht=0&ma=ema'/>";
+	    $formDiv.="<input $disabledIfEMAGenehmigt style='text-align:left;' type='button' id='emangenehmigtflag_$imaid' value='nicht genehmigen' acturl='./updateIMAGenehmigt.php?nicht=1&ma=ema'/>";
+	    $formDiv.="</span>";
+	}
+
 	$formDiv.="<table>";
 	$formDiv.="<tr>";
 	$formDiv.="<td>";
@@ -316,6 +351,7 @@ require_once '../db.php';
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ema_palarray_anf' value='".$ir['ema_palarray']."' /><br>";
+		    $formDiv.="<input type='hidden' id='ema_dauftrid_anf' value='".$ir['ema_dauftrid_array']."' />";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    //tatundzeit_array
@@ -337,16 +373,16 @@ require_once '../db.php';
 		    // antrag text
 		    $formDiv.="<tr>";
 		    $formDiv.="<td colspan='2'>";
-		    if($ir['ema_genehmigt']==0){
+//		    if($ir['ema_genehmigt']==0){
 			$formDiv.="Antrag auf Mehrleistung:<br>";
 			$elementId='ema_antrag_text';
 //			$formDiv.="<span style='display:".$display_sec[$elementId].";width:99%;'>";
 			$formDiv.="<span style='width:99%;'>";
-			$formDiv.="<textarea ".$edit_sec[$elementId]." acturl='./updateDMAField.php' id='ema_antrag_text'>";
+			$formDiv.="<textarea $disabledIfEMAGenehmigt ".$edit_sec[$elementId]." acturl='./updateDMAField.php' id='ema_antrag_text'>";
 			$formDiv.= $ir['ema_antrag_text'];
 			$formDiv.="</textarea>";
 			$formDiv.="</span>";
-		    }
+//		    }
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    $formDiv.="<tr>";
@@ -398,6 +434,7 @@ require_once '../db.php';
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ema_palarray_gem' value='".$ir['ema_palarray_genehmigt']."' /><br>";
+		    $formDiv.="<input type='hidden' id='ema_dauftrid_gem' value='".$ir['ema_dauftrid_array_genehmigt']."' />";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    //tatundzeit_array
@@ -419,16 +456,16 @@ require_once '../db.php';
 		    // ema_genehmigt_bemerkung
 		    $formDiv.="<tr>";
 		    $formDiv.="<td colspan='2'>";
-		    if($ir['ema_genehmigt']==0){
+//		    if($ir['ema_genehmigt']==0){
 			$formDiv.="EMA genehmigt Bemerkung:<br>";
 			$elementId='ema_genehmigt_bemerkung';
 //			$formDiv.="<span style='display:".$display_sec[$elementId].";width:99%;'>";
 			$formDiv.="<span style='width:99%;'>";
-			$formDiv.="<textarea ".$edit_sec[$elementId]." acturl='./updateDMAField.php' id='ema_genehmigt_bemerkung'>";
+			$formDiv.="<textarea $disabledIfEMAGenehmigt ".$edit_sec[$elementId]." acturl='./updateDMAField.php' id='ema_genehmigt_bemerkung'>";
 			$formDiv.= $ir['ema_genehmigt_bemerkung'];
 			$formDiv.="</textarea>";
 			$formDiv.="</span>";
-		    }
+//		    }
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
     		    // ema_genehmigt_user
@@ -437,7 +474,10 @@ require_once '../db.php';
 		    $formDiv.="genehmigt vom";
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
-		    $formDiv.="<input type='text' size='40' id='ema_genehmigt_user' value='".$ir['ema_genehmigt_user']."' />";
+		    $elementId='ema_genehmigt_user';
+		    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+		    $formDiv.="<input $disabledIfEMAGenehmigt ".$edit_sec[$elementId]." type='text' size='40' id='ema_genehmigt_user' value='".$ir['ema_genehmigt_user']."' />";
+		    $formDiv.="</span>";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 
@@ -447,7 +487,25 @@ require_once '../db.php';
 		    $formDiv.="genehmigt am";
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
-		    $formDiv.="<input type='text' size='40' id='ema_genehmigt_stamp' value='".$ir['ema_genehmigt_stamp']."' />";
+		    $obsah = substr($ir['ema_genehmigt_stamp'],0,10);
+		    if($obsah=='0000-00-00') $obsah='';
+    		    $elementId='ema_genehmigt_stamp';
+		    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+		    $formDiv.="<input $disabledIfEMAGenehmigt ".$edit_sec[$elementId]." class='datepicker' type='text' size='40' id='ema_genehmigt_stamp' value='".$obsah."' />";
+		    $formDiv.="</span>";
+		    $formDiv.="</td>";
+		    $formDiv.="</tr>";
+
+		    // dauftr positionen generieren
+		    $formDiv.="<tr>";
+		    $formDiv.="<td colspan='2' class=''>";
+		    $elementId='ema_dauftr_generieren';
+		    if($ir['ema_genehmigt']==0){
+			$elementId='ema_dauftr_generieren';
+			$formDiv.="<span style='display:".$display_sec[$elementId].";width:99%;'>";
+			$formDiv.="<input acturl='./emaDauftrGenerieren.php' type='button' id='ema_dauftr_generieren' value='DAuftrpositionen - Vorschau' />";
+			$formDiv.="</span>";
+		    }
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 

@@ -12,6 +12,10 @@ require_once '../db.php';
     $imarray_a = $_POST['imarray_a'];
     $imarray_gem = $_POST['imarray_gem'];
     $palarray = $_POST['palarray'];
+    $dauftrid = $_POST['dauftrid'];
+    $dauftrid_g = $_POST['dauftrid_g'];
+    $dauftrid_a = $_POST['dauftrid_a'];
+    $dauftrid_gem = $_POST['dauftrid_gem'];
     $palarray_g = $_POST['palarray_g'];
     $palarray_gem = $_POST['palarray_gem'];
     $palarray_a = $_POST['palarray_a'];
@@ -21,6 +25,8 @@ require_once '../db.php';
     $tatarray_gem = $_POST['tatarray_gem'];
     $ema_antrag_text = $_POST['ema_antrag_text'];
     $ema_genehmigt_bemerkung = $_POST['ema_genehmigt_bemerkung'];
+    $ema_genehmigt_stamp = $_POST['ema_genehmigt_stamp'];
+    $ema_genehmigt_user = $_POST['ema_genehmigt_user'];
     $bemerkungid = $_POST['bemerkungid'];
     
 
@@ -142,6 +148,45 @@ require_once '../db.php';
     if(strstr($id,"ema_genehmigt_bemerkung")){
 	$field="ema_genehmigt_bemerkung";
 	$value = $ema_genehmigt_bemerkung;
+    }
+
+    if(strstr($id,"ema_genehmigt_user")){
+	$field="ema_genehmigt_user";
+	$value = trim($ema_genehmigt_user);
+    }
+
+    if($id=="ima_dauftrid"){
+	$field="ima_dauftrid_array";
+	$value = $dauftrid;
+    }
+
+    if($id=="ima_dauftrid_e"){
+	$field="ima_dauftrid_array";
+	$value = $dauftrid;
+    }
+    
+    if($id=="ima_dauftrid_gen"){
+	$field="ima_dauftrid_array_genehmigt";
+	$value = $dauftrid_g;
+    }
+
+    if($id=="ema_dauftrid_anf"){
+	$field="ema_dauftrid_array";
+	$value = $dauftrid_a;
+    }
+
+    if($id=="ema_dauftrid_gem"){
+	$field="ema_dauftrid_array_genehmigt";
+	$value = $dauftrid_gem;
+    }
+
+    if(strstr($id,"ema_genehmigt_stamp")){
+	$field="ema_genehmigt_stamp";
+	$value=NULL;
+	if(strlen(trim($ema_genehmigt_stamp))>0){
+	    $value = $apl->make_DB_datum($ema_genehmigt_stamp);
+	}
+	if($value=='') $value=NULL;
     }
 
     $imaid = substr($bemerkungid, strrpos($bemerkungid, '_')+1);
