@@ -1,7 +1,7 @@
 <?php
 require_once '../security.php';
 
-set_time_limit(20);
+//set_time_limit(20);
 
 require_once "../fns_dotazy.php";
 require_once '../db.php';

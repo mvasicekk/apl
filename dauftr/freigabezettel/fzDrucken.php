@@ -1,4 +1,5 @@
 <?php
+require_once '../../security.php';
 require '../../db.php';
 /* 
  * To change this template, choose Tools | Templates

@@ -1,5 +1,5 @@
 <?
- session_start();
+ require_once '../../security.php';
 ?>
 <?
 include "../../fns_dotazy.php";

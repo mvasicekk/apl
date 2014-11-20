@@ -1,4 +1,5 @@
 <?
+require_once '../../security.php';
 require_once '../../db.php';
 
     $id=$_POST['id'];

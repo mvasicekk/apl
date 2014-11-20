@@ -1,4 +1,5 @@
 <?
+require_once '../security.php';
 include "../fns_dotazy.php";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
