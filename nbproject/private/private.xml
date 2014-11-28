@@ -5,15 +5,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/runt/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/runt/NetBeansProjects/apl/dauftr/rechnung/suggest.bak.js</file>
-            <file>file:/home/runt/NetBeansProjects/apl/dkopf/templates/dkopf.tpl</file>
-            <file>file:/home/runt/NetBeansProjects/apl/Reports/S360_pdf.php</file>
-            <file>file:/home/runt/NetBeansProjects/apl/dkopf/suggest.js</file>
-            <file>file:/home/runt/NetBeansProjects/apl/Reports/D555_xml.php</file>
-            <file>file:/home/runt/NetBeansProjects/apl/Reports/D555_pdf.php</file>
-            <file>file:/home/runt/NetBeansProjects/apl/Reports/D550_pdf.php</file>
-            <file>file:/home/runt/NetBeansProjects/apl/Reports/D510_pdf.php</file>
-            <file>file:/home/runt/NetBeansProjects/apl/Reports/S360_xml.php</file>
+            <file>file:/home/runt/NetBeansProjects/apl/apigen.neon</file>
+            <file>file:/home/runt/NetBeansProjects/apl/dauftr/infotablo.php</file>
         </group>
     </open-files>
 </project-private>

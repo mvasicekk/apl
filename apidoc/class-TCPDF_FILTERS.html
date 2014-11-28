@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class TCPDF_FILTERS</title>
+
+	<link rel="stylesheet" href="resources/style.css?331665766">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Packages</h3>
+			<ul>
+				<li class="active">
+					<a href="package-com.html">
+						com<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="package-com.tecnick.html">
+						tecnick<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="package-com.tecnick.tcpdf.html">
+						tcpdf					</a>
+
+						</li>
+							</ul></li></ul></li>
+				<li>
+					<a href="package-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="package-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li>
+					<a href="package-PHPWord.html">
+						PHPWord<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="package-PHPWord.Section.html">
+						Section<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="package-PHPWord.Section.Footer.html">
+						Footer					</a>
+
+						</li>
+				<li>
+					<a href="package-PHPWord.Section.Table.html">
+						Table					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="package-PHPWord.Style.html">
+						Style					</a>
+
+						</li>
+				<li>
+					<a href="package-PHPWord.TOC.html">
+						TOC					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-BarcodeObject.html">BarcodeObject</a></li>
+				<li><a href="class-C128AObject.html">C128AObject</a></li>
+				<li><a href="class-C128BObject.html">C128BObject</a></li>
+				<li><a href="class-C128CObject.html">C128CObject</a></li>
+				<li><a href="class-C39Object.html">C39Object</a></li>
+				<li><a href="class-Datamatrix.html">Datamatrix</a></li>
+				<li><a href="class-I25Object.html">I25Object</a></li>
+				<li><a href="class-PDF417.html">PDF417</a></li>
+				<li><a href="class-QRcode.html">QRcode</a></li>
+				<li><a href="class-TCPDF2DBarcode.html">TCPDF2DBarcode</a></li>
+				<li><a href="class-TCPDF_COLORS.html">TCPDF_COLORS</a></li>
+				<li class="active"><a href="class-TCPDF_FILTERS.html">TCPDF_FILTERS</a></li>
+				<li><a href="class-TCPDF_FONT_DATA.html">TCPDF_FONT_DATA</a></li>
+				<li><a href="class-TCPDF_FONTS.html">TCPDF_FONTS</a></li>
+				<li><a href="class-TCPDF_IMAGES.html">TCPDF_IMAGES</a></li>
+				<li><a href="class-TCPDF_IMPORT.html">TCPDF_IMPORT</a></li>
+				<li><a href="class-TCPDF_PARSER.html">TCPDF_PARSER</a></li>
+				<li><a href="class-TCPDF_STATIC.html">TCPDF_STATIC</a></li>
+				<li><a href="class-TCPDFBarcode.html">TCPDFBarcode</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-com.tecnick.tcpdf.html" title="Summary of com\tecnick\tcpdf"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class TCPDF_FILTERS</h1>
+
+
+	<div class="description">
+	
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> com\tecnick\tcpdf<br>
+
+				<b>Author:</b>
+				Nicola Asuni - info@tecnick.com
+<br>
+				<b>Version:</b>
+				1.0.001
+<br>
+				<b>Brief:</b>
+				This is a PHP class for decoding common PDF filters.
+<br>
+				<b>Class:</b>
+				<p>TCPDF_FILTERS
+This is a PHP class for decoding common PDF filters (PDF 32000-2008 - 7.4 Filters).<br></p>
+<br>
+		<b>Located at</b> <a href="source-class-TCPDF_FILTERS.html#43-477" title="Go to source code">tcpdf_new/include/tcpdf_filters.php</a><br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getAvailableFilters" id="_getAvailableFilters">
+
+		<td class="attributes"><code>
+			 public static
+
+			(array)
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAvailableFilters">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#61-69" title="Go to source code">getAvailableFilters</a>( )</code>
+
+		<div class="description short">
+			<p>Get a list of available decoding filters.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get a list of available decoding filters.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>(array)</code><br>Array of available filter decoders.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilter" id="_decodeFilter">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilter">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#71-126" title="Go to source code">decodeFilter</a>( <span>mixed <var>$filter</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Decode data using the specified filter type.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Decode data using the specified filter type.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filter</var></dt>
+					<dd>Filter name.
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterStandard" id="_decodeFilterStandard">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterStandard">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#130-140" title="Go to source code">decodeFilterStandard</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Standard
+Default decoding filter (leaves data unchanged).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Standard
+Default decoding filter (leaves data unchanged).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterASCIIHexDecode" id="_decodeFilterASCIIHexDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterASCIIHexDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#142-180" title="Go to source code">decodeFilterASCIIHexDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>ASCIIHexDecode
+Decodes data encoded in an ASCII hexadecimal representation, reproducing the original binary data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>ASCIIHexDecode
+Decodes data encoded in an ASCII hexadecimal representation, reproducing the original binary data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterASCII85Decode" id="_decodeFilterASCII85Decode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterASCII85Decode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#182-264" title="Go to source code">decodeFilterASCII85Decode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>ASCII85Decode
+Decodes data encoded in an ASCII base-85 representation, reproducing the original binary data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>ASCII85Decode
+Decodes data encoded in an ASCII base-85 representation, reproducing the original binary data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterLZWDecode" id="_decodeFilterLZWDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterLZWDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#266-345" title="Go to source code">decodeFilterLZWDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>LZWDecode
+Decompresses data encoded using the LZW (Lempel-Ziv-Welch) adaptive compression method, reproducing the original text or binary data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>LZWDecode
+Decompresses data encoded using the LZW (Lempel-Ziv-Welch) adaptive compression method, reproducing the original text or binary data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterFlateDecode" id="_decodeFilterFlateDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterFlateDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#347-362" title="Go to source code">decodeFilterFlateDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>FlateDecode
+Decompresses data encoded using the zlib/deflate compression method, reproducing the original text or binary data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>FlateDecode
+Decompresses data encoded using the zlib/deflate compression method, reproducing the original text or binary data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterRunLengthDecode" id="_decodeFilterRunLengthDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterRunLengthDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#364-398" title="Go to source code">decodeFilterRunLengthDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>RunLengthDecode
+Decompresses data encoded using a byte-oriented run-length encoding algorithm.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>RunLengthDecode
+Decompresses data encoded using a byte-oriented run-length encoding algorithm.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterCCITTFaxDecode" id="_decodeFilterCCITTFaxDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterCCITTFaxDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#400-411" title="Go to source code">decodeFilterCCITTFaxDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>CCITTFaxDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using the CCITT facsimile standard, reproducing the original data (typically monochrome image data at 1 bit per pixel).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>CCITTFaxDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using the CCITT facsimile standard, reproducing the original data (typically monochrome image data at 1 bit per pixel).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterJBIG2Decode" id="_decodeFilterJBIG2Decode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterJBIG2Decode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#413-424" title="Go to source code">decodeFilterJBIG2Decode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>JBIG2Decode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using the JBIG2 standard, reproducing the original monochrome (1 bit per pixel) image data (or an approximation of that data).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>JBIG2Decode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using the JBIG2 standard, reproducing the original monochrome (1 bit per pixel) image data (or an approximation of that data).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterDCTDecode" id="_decodeFilterDCTDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterDCTDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#426-437" title="Go to source code">decodeFilterDCTDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>DCTDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using a DCT (discrete cosine transform) technique based on the JPEG standard, reproducing image sample data that approximates the original data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>DCTDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using a DCT (discrete cosine transform) technique based on the JPEG standard, reproducing image sample data that approximates the original data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterJPXDecode" id="_decodeFilterJPXDecode">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterJPXDecode">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#439-450" title="Go to source code">decodeFilterJPXDecode</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>JPXDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using the wavelet-based JPEG2000 standard, reproducing the original image data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>JPXDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decompresses data encoded using the wavelet-based JPEG2000 standard, reproducing the original image data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFilterCrypt" id="_decodeFilterCrypt">
+
+		<td class="attributes"><code>
+			 public static
+
+			Decoded
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFilterCrypt">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#452-463" title="Go to source code">decodeFilterCrypt</a>( <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Crypt (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decrypts data encrypted by a security handler, reproducing the data as it was before encryption.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Crypt (NOT IMPLEMETED - RETURN AN EXCEPTION)
+Decrypts data encrypted by a security handler, reproducing the data as it was before encryption.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>Data to decode.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Decoded</code><br>data string.
+
+				</div>
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="Error" id="_Error">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_Error">#</a>
+		<code><a href="source-class-TCPDF_FILTERS.html#467-475" title="Go to source code">Error</a>( <span>mixed <var>$msg</var></span> )</code>
+
+		<div class="description short">
+			<p>Throw an exception.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Throw an exception.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$msg</var></dt>
+					<dd>The error message
+</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000 (2011-05-23)
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+						static
+<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js?721046668"></script>
+<script src="elementlist.js?3177386894"></script>
+</body>
+</html>

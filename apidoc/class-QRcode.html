@@ -1,0 +1,5768 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class QRcode</title>
+
+	<link rel="stylesheet" href="resources/style.css?331665766">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Packages</h3>
+			<ul>
+				<li class="active">
+					<a href="package-com.html">
+						com<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="package-com.tecnick.html">
+						tecnick<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="package-com.tecnick.tcpdf.html">
+						tcpdf					</a>
+
+						</li>
+							</ul></li></ul></li>
+				<li>
+					<a href="package-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="package-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li>
+					<a href="package-PHPWord.html">
+						PHPWord<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="package-PHPWord.Section.html">
+						Section<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="package-PHPWord.Section.Footer.html">
+						Footer					</a>
+
+						</li>
+				<li>
+					<a href="package-PHPWord.Section.Table.html">
+						Table					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="package-PHPWord.Style.html">
+						Style					</a>
+
+						</li>
+				<li>
+					<a href="package-PHPWord.TOC.html">
+						TOC					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-BarcodeObject.html">BarcodeObject</a></li>
+				<li><a href="class-C128AObject.html">C128AObject</a></li>
+				<li><a href="class-C128BObject.html">C128BObject</a></li>
+				<li><a href="class-C128CObject.html">C128CObject</a></li>
+				<li><a href="class-C39Object.html">C39Object</a></li>
+				<li><a href="class-Datamatrix.html">Datamatrix</a></li>
+				<li><a href="class-I25Object.html">I25Object</a></li>
+				<li><a href="class-PDF417.html">PDF417</a></li>
+				<li class="active"><a href="class-QRcode.html">QRcode</a></li>
+				<li><a href="class-TCPDF2DBarcode.html">TCPDF2DBarcode</a></li>
+				<li><a href="class-TCPDF_COLORS.html">TCPDF_COLORS</a></li>
+				<li><a href="class-TCPDF_FILTERS.html">TCPDF_FILTERS</a></li>
+				<li><a href="class-TCPDF_FONT_DATA.html">TCPDF_FONT_DATA</a></li>
+				<li><a href="class-TCPDF_FONTS.html">TCPDF_FONTS</a></li>
+				<li><a href="class-TCPDF_IMAGES.html">TCPDF_IMAGES</a></li>
+				<li><a href="class-TCPDF_IMPORT.html">TCPDF_IMPORT</a></li>
+				<li><a href="class-TCPDF_PARSER.html">TCPDF_PARSER</a></li>
+				<li><a href="class-TCPDF_STATIC.html">TCPDF_STATIC</a></li>
+				<li><a href="class-TCPDFBarcode.html">TCPDFBarcode</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="package-com.tecnick.tcpdf.html" title="Summary of com\tecnick\tcpdf"><span>Package</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class QRcode</h1>
+
+
+	<div class="description">
+	
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		<b>Package:</b> com\tecnick\tcpdf<br>
+
+				<b>Author:</b>
+				Nicola Asuni
+<br>
+				<b>Version:</b>
+				1.0.010
+<br>
+				<b>Class:</b>
+				<p>QRcode
+Class to create QR-code arrays for TCPDF class.
+QR Code symbol is a 2D barcode that can be scanned by handy terminals such as a mobile phone with CCD.
+The capacity of QR Code is up to 7000 digits or 4000 characters, and has high robustness.
+This class supports QR Code model 2, described in JIS (Japanese Industrial Standards) X0510:2004 or ISO/IEC 18004.
+Currently the following features are not supported: ECI and FNC1 mode, Micro QR Code, QR Code model 1, Structured mode.</p>
+
+<p>This class is derived from "PHP QR Code encoder" by Dominik Dzienia (http://phpqrcode.sourceforge.net/) based on "libqrencode C library 3.1.1." by Kentaro Fukuchi (http://megaui.net/fukuchi/works/qrencode/index.en.html), contains Reed-Solomon code written by Phil Karn, KA9Q. QR Code is registered trademark of DENSO WAVE INCORPORATED (http://www.denso-wave.com/qrcode/index-e.html).
+Please read comments on this class source file for full copyright and license information.</p>
+<br>
+		<b>Located at</b> <a href="source-class-QRcode.html#276-2862" title="Go to source code">tcpdf_new/include/barcodes/qrcode.php</a><br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-QRcode.html#631-673" title="Go to source code">__construct</a>( <span>mixed <var>$code</var></span>, <span>mixed <var>$eclevel</var> = <span class="php-quote">'L'</span></span> )</code>
+
+		<div class="description short">
+			<p>This is the class constructor.
+Creates a QRcode object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This is the class constructor.
+Creates a QRcode object</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$code</var></dt>
+					<dd>code to represent using QRcode
+</dd>
+					<dt><var>$eclevel</var></dt>
+					<dd>error level:
+
+&lt;ul&gt;&lt;li&gt;L : About 7% or less errors can be corrected.&lt;/li&gt;&lt;li&gt;M : About 15% or less errors can be corrected.&lt;/li&gt;&lt;li&gt;Q : About 25% or less errors can be corrected.&lt;/li&gt;&lt;li&gt;H : About 30% or less errors can be corrected.&lt;/li&gt;&lt;/ul&gt;
+</dd>
+				</dl></div>
+
+
+
+				<h4>Since</h4>
+				<div class="list">
+						1.0.000
+<br>
+				</div>
+				<h4>Public</h4>
+				<div class="list">
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getBarcodeArray" id="_getBarcodeArray">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getBarcodeArray">#</a>
+		<code><a href="source-class-QRcode.html#675-682" title="Go to source code">getBarcodeArray</a>( )</code>
+
+		<div class="description short">
+			<p>Returns a barcode array which is readable by TCPDF</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns a barcode array which is readable by TCPDF</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>barcode array readable by TCPDF;
+
+				</div>
+
+
+				<h4>Public</h4>
+				<div class="list">
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="binarize" id="_binarize">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_binarize">#</a>
+		<code><a href="source-class-QRcode.html#684-698" title="Go to source code">binarize</a>( <span>mixed <var>$frame</var></span> )</code>
+
+		<div class="description short">
+			<p>Convert the frame in binary form</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convert the frame in binary form</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$frame</var></dt>
+					<dd>array to binarize
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>frame in binary form
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeString" id="_encodeString">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeString">#</a>
+		<code><a href="source-class-QRcode.html#700-714" title="Go to source code">encodeString</a>( <span>mixed <var>$string</var></span> )</code>
+
+		<div class="description short">
+			<p>Encode the input string to QR code</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Encode the input string to QR code</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$string</var></dt>
+					<dd>input string to encode
+</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeMask" id="_encodeMask">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeMask">#</a>
+		<code><a href="source-class-QRcode.html#716-774" title="Go to source code">encodeMask</a>( <span>mixed <var>$mask</var></span> )</code>
+
+		<div class="description short">
+			<p>Encode mask</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Encode mask</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mask</var></dt>
+					<dd>masking mode
+</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setFrameAt" id="_setFrameAt">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setFrameAt">#</a>
+		<code><a href="source-class-QRcode.html#780-787" title="Go to source code">setFrameAt</a>( <span>mixed <var>$at</var></span>, <span>mixed <var>$val</var></span> )</code>
+
+		<div class="description short">
+			<p>Set frame value at specified position</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set frame value at specified position</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$at</var></dt>
+					<dd>x,y position
+</dd>
+					<dt><var>$val</var></dt>
+					<dd>value of the character to set
+</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getFrameAt" id="_getFrameAt">
+
+		<td class="attributes"><code>
+			 protected 
+
+			value
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFrameAt">#</a>
+		<code><a href="source-class-QRcode.html#789-796" title="Go to source code">getFrameAt</a>( <span>mixed <var>$at</var></span> )</code>
+
+		<div class="description short">
+			<p>Get frame value at specified position</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get frame value at specified position</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$at</var></dt>
+					<dd>x,y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>value</code><br>at specified position
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getNextPosition" id="_getNextPosition">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getNextPosition">#</a>
+		<code><a href="source-class-QRcode.html#798-847" title="Go to source code">getNextPosition</a>( )</code>
+
+		<div class="description short">
+			<p>Return the next frame position</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the next frame position</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>of x,y coordinates
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="init" id="_init">
+
+		<td class="attributes"><code>
+			 protected 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_init">#</a>
+		<code><a href="source-class-QRcode.html#853-903" title="Go to source code">init</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Initialize code.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initialize code.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>array of ECC specification
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>in case of success, -1 in case of error
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCode" id="_getCode">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCode">#</a>
+		<code><a href="source-class-QRcode.html#905-926" title="Go to source code">getCode</a>( )</code>
+
+		<div class="description short">
+			<p>Return Reed-Solomon block code.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return Reed-Solomon block code.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>rsblocks
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="writeFormatInformation" id="_writeFormatInformation">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_writeFormatInformation">#</a>
+		<code><a href="source-class-QRcode.html#932-974" title="Go to source code">writeFormatInformation</a>( <span>mixed <var>$width</var></span>, <span>mixed <var>&amp; $frame</var></span>, <span>mixed <var>$mask</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>Write Format Information on frame and returns the number of black bits</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Write Format Information on frame and returns the number of black bits</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$width</var></dt>
+					<dd>frame width
+</dd>
+					<dt><var>$frame</var></dt>
+					<dd>frame
+</dd>
+					<dt><var>$mask</var></dt>
+					<dd>masking mode
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>error correction level
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>blacks
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask0" id="_mask0">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask0">#</a>
+		<code><a href="source-class-QRcode.html#976-984" title="Go to source code">mask0</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask0</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask0</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask1" id="_mask1">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask1">#</a>
+		<code><a href="source-class-QRcode.html#986-994" title="Go to source code">mask1</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask1</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask1</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask2" id="_mask2">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask2">#</a>
+		<code><a href="source-class-QRcode.html#996-1004" title="Go to source code">mask2</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask2</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask2</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask3" id="_mask3">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask3">#</a>
+		<code><a href="source-class-QRcode.html#1006-1014" title="Go to source code">mask3</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask3</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask3</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask4" id="_mask4">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask4">#</a>
+		<code><a href="source-class-QRcode.html#1016-1024" title="Go to source code">mask4</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask4</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask4</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask5" id="_mask5">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask5">#</a>
+		<code><a href="source-class-QRcode.html#1026-1034" title="Go to source code">mask5</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask5</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask5</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask6" id="_mask6">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask6">#</a>
+		<code><a href="source-class-QRcode.html#1036-1044" title="Go to source code">mask6</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask6</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask6</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask7" id="_mask7">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask7">#</a>
+		<code><a href="source-class-QRcode.html#1046-1054" title="Go to source code">mask7</a>( <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span> )</code>
+
+		<div class="description short">
+			<p>mask7</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask7</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="generateMaskNo" id="_generateMaskNo">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_generateMaskNo">#</a>
+		<code><a href="source-class-QRcode.html#1056-1076" title="Go to source code">generateMaskNo</a>( <span>mixed <var>$maskNo</var></span>, <span>mixed <var>$width</var></span>, <span>mixed <var>$frame</var></span> )</code>
+
+		<div class="description short">
+			<p>Return bitmask</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return bitmask</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$maskNo</var></dt>
+					<dd>mask number
+</dd>
+					<dt><var>$width</var></dt>
+					<dd>width
+</dd>
+					<dt><var>$frame</var></dt>
+					<dd>frame
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitmask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="makeMaskNo" id="_makeMaskNo">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_makeMaskNo">#</a>
+		<code><a href="source-class-QRcode.html#1078-1104" title="Go to source code">makeMaskNo</a>( <span>mixed <var>$maskNo</var></span>, <span>mixed <var>$width</var></span>, <span>mixed <var>$s</var></span>, <span>mixed <var>&amp; $d</var></span>, <span>mixed <var>$maskGenOnly</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			<p>makeMaskNo</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>makeMaskNo</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$maskNo</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$width</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$s</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$d</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$maskGenOnly</var></dt>
+					<dd>(boolean)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>b
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="makeMask" id="_makeMask">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_makeMask">#</a>
+		<code><a href="source-class-QRcode.html#1106-1119" title="Go to source code">makeMask</a>( <span>mixed <var>$width</var></span>, <span>mixed <var>$frame</var></span>, <span>mixed <var>$maskNo</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>makeMask</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>makeMask</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$width</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$frame</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$maskNo</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="calcN1N3" id="_calcN1N3">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_calcN1N3">#</a>
+		<code><a href="source-class-QRcode.html#1121-1149" title="Go to source code">calcN1N3</a>( <span>mixed <var>$length</var></span> )</code>
+
+		<div class="description short">
+			<p>calcN1N3</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>calcN1N3</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$length</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>demerit
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="evaluateSymbol" id="_evaluateSymbol">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_evaluateSymbol">#</a>
+		<code><a href="source-class-QRcode.html#1151-1210" title="Go to source code">evaluateSymbol</a>( <span>mixed <var>$width</var></span>, <span>mixed <var>$frame</var></span> )</code>
+
+		<div class="description short">
+			<p>evaluateSymbol</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>evaluateSymbol</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$width</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$frame</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>demerit
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mask" id="_mask">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mask">#</a>
+		<code><a href="source-class-QRcode.html#1212-1249" title="Go to source code">mask</a>( <span>mixed <var>$width</var></span>, <span>mixed <var>$frame</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>mask</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mask</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$width</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$frame</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>best mask
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isdigitat" id="_isdigitat">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isdigitat">#</a>
+		<code><a href="source-class-QRcode.html#1255-1266" title="Go to source code">isdigitat</a>( <span>mixed <var>$str</var></span>, <span>mixed <var>$pos</var></span> )</code>
+
+		<div class="description short">
+			<p>Return true if the character at specified position is a number</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return true if the character at specified position is a number</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$str</var></dt>
+					<dd>string
+</dd>
+					<dt><var>$pos</var></dt>
+					<dd>characted position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true of false
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isalnumat" id="_isalnumat">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isalnumat">#</a>
+		<code><a href="source-class-QRcode.html#1268-1279" title="Go to source code">isalnumat</a>( <span>mixed <var>$str</var></span>, <span>mixed <var>$pos</var></span> )</code>
+
+		<div class="description short">
+			<p>Return true if the character at specified position is an alphanumeric character</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return true if the character at specified position is an alphanumeric character</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$str</var></dt>
+					<dd>string
+</dd>
+					<dt><var>$pos</var></dt>
+					<dd>characted position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true of false
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="identifyMode" id="_identifyMode">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_identifyMode">#</a>
+		<code><a href="source-class-QRcode.html#1281-1305" title="Go to source code">identifyMode</a>( <span>mixed <var>$pos</var></span> )</code>
+
+		<div class="description short">
+			<p>identifyMode</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>identifyMode</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$pos</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>mode
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="eatNum" id="_eatNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_eatNum">#</a>
+		<code><a href="source-class-QRcode.html#1307-1337" title="Go to source code">eatNum</a>( )</code>
+
+		<div class="description short">
+			<p>eatNum</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>eatNum</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>run
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="eatAn" id="_eatAn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_eatAn">#</a>
+		<code><a href="source-class-QRcode.html#1339-1376" title="Go to source code">eatAn</a>( )</code>
+
+		<div class="description short">
+			<p>eatAn</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>eatAn</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>run
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="eatKanji" id="_eatKanji">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_eatKanji">#</a>
+		<code><a href="source-class-QRcode.html#1378-1389" title="Go to source code">eatKanji</a>( )</code>
+
+		<div class="description short">
+			<p>eatKanji</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>eatKanji</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>run
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="eat8" id="_eat8">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_eat8">#</a>
+		<code><a href="source-class-QRcode.html#1391-1438" title="Go to source code">eat8</a>( )</code>
+
+		<div class="description short">
+			<p>eat8</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>eat8</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>run
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="splitString" id="_splitString">
+
+		<td class="attributes"><code>
+			 protected 
+
+			(int)
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_splitString">#</a>
+		<code><a href="source-class-QRcode.html#1440-1478" title="Go to source code">splitString</a>( )</code>
+
+		<div class="description short">
+			<p>splitString</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>splitString</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>(int)</code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toUpper" id="_toUpper">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toUpper">#</a>
+		<code><a href="source-class-QRcode.html#1480-1498" title="Go to source code">toUpper</a>( )</code>
+
+		<div class="description short">
+			<p>toUpper</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>toUpper</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newInputItem" id="_newInputItem">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newInputItem">#</a>
+		<code><a href="source-class-QRcode.html#1504-1526" title="Go to source code">newInputItem</a>( <span>mixed <var>$mode</var></span>, <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span>, <span>mixed <var>$bstream</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>newInputItem</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>newInputItem</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mode</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$bstream</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeModeNum" id="_encodeModeNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeModeNum">#</a>
+		<code><a href="source-class-QRcode.html#1528-1555" title="Go to source code">encodeModeNum</a>( <span>mixed <var>$inputitem</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>encodeModeNum</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>encodeModeNum</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$inputitem</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeModeAn" id="_encodeModeAn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeModeAn">#</a>
+		<code><a href="source-class-QRcode.html#1557-1578" title="Go to source code">encodeModeAn</a>( <span>mixed <var>$inputitem</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>encodeModeAn</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>encodeModeAn</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$inputitem</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeMode8" id="_encodeMode8">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeMode8">#</a>
+		<code><a href="source-class-QRcode.html#1580-1594" title="Go to source code">encodeMode8</a>( <span>mixed <var>$inputitem</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>encodeMode8</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>encodeMode8</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$inputitem</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeModeKanji" id="_encodeModeKanji">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeModeKanji">#</a>
+		<code><a href="source-class-QRcode.html#1596-1618" title="Go to source code">encodeModeKanji</a>( <span>mixed <var>$inputitem</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>encodeModeKanji</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>encodeModeKanji</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$inputitem</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeModeStructure" id="_encodeModeStructure">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeModeStructure">#</a>
+		<code><a href="source-class-QRcode.html#1620-1632" title="Go to source code">encodeModeStructure</a>( <span>mixed <var>$inputitem</var></span> )</code>
+
+		<div class="description short">
+			<p>encodeModeStructure</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>encodeModeStructure</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$inputitem</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeBitStream" id="_encodeBitStream">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeBitStream">#</a>
+		<code><a href="source-class-QRcode.html#1634-1679" title="Go to source code">encodeBitStream</a>( <span>mixed <var>$inputitem</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>encodeBitStream</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>encodeBitStream</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$inputitem</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>input item
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="appendNewInputItem" id="_appendNewInputItem">
+
+		<td class="attributes"><code>
+			 protected 
+
+			<code><a href="class-QRcode.html#$items">QRcode::<var>$items</var></a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_appendNewInputItem">#</a>
+		<code><a href="source-class-QRcode.html#1685-1701" title="Go to source code">appendNewInputItem</a>( <span>mixed <var>$items</var></span>, <span>mixed <var>$mode</var></span>, <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Append data to an input object.
+The data is copied and appended to the input object.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Append data to an input object.
+The data is copied and appended to the input object.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>input items
+</dd>
+					<dt><var>$mode</var></dt>
+					<dd>encoding mode.
+</dd>
+					<dt><var>$size</var></dt>
+					<dd>size of data (byte).
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>array of input data.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-QRcode.html#$items">QRcode::<var>$items</var></a></code></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="insertStructuredAppendHeader" id="_insertStructuredAppendHeader">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_insertStructuredAppendHeader">#</a>
+		<code><a href="source-class-QRcode.html#1703-1722" title="Go to source code">insertStructuredAppendHeader</a>( <span>mixed <var>$items</var></span>, <span>mixed <var>$size</var></span>, <span>mixed <var>$index</var></span>, <span>mixed <var>$parity</var></span> )</code>
+
+		<div class="description short">
+			<p>insertStructuredAppendHeader</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>insertStructuredAppendHeader</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$index</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$parity</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>items
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="calcParity" id="_calcParity">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_calcParity">#</a>
+		<code><a href="source-class-QRcode.html#1724-1739" title="Go to source code">calcParity</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>calcParity</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>calcParity</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>parity
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkModeNum" id="_checkModeNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkModeNum">#</a>
+		<code><a href="source-class-QRcode.html#1741-1754" title="Go to source code">checkModeNum</a>( <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>checkModeNum</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>checkModeNum</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true or false
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lookAnTable" id="_lookAnTable">
+
+		<td class="attributes"><code>
+			 protected 
+
+			value
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lookAnTable">#</a>
+		<code><a href="source-class-QRcode.html#1756-1763" title="Go to source code">lookAnTable</a>( <span>mixed <var>$c</var></span> )</code>
+
+		<div class="description short">
+			<p>Look up the alphabet-numeric convesion table (see JIS X0510:2004, pp.19).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Look up the alphabet-numeric convesion table (see JIS X0510:2004, pp.19).</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$c</var></dt>
+					<dd>character value
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>value</code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkModeAn" id="_checkModeAn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkModeAn">#</a>
+		<code><a href="source-class-QRcode.html#1765-1778" title="Go to source code">checkModeAn</a>( <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>checkModeAn</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>checkModeAn</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true or false
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="estimateBitsModeNum" id="_estimateBitsModeNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_estimateBitsModeNum">#</a>
+		<code><a href="source-class-QRcode.html#1780-1799" title="Go to source code">estimateBitsModeNum</a>( <span>mixed <var>$size</var></span> )</code>
+
+		<div class="description short">
+			<p>estimateBitsModeNum</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>estimateBitsModeNum</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>number of bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="estimateBitsModeAn" id="_estimateBitsModeAn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_estimateBitsModeAn">#</a>
+		<code><a href="source-class-QRcode.html#1801-1812" title="Go to source code">estimateBitsModeAn</a>( <span>mixed <var>$size</var></span> )</code>
+
+		<div class="description short">
+			<p>estimateBitsModeAn</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>estimateBitsModeAn</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>number of bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="estimateBitsMode8" id="_estimateBitsMode8">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_estimateBitsMode8">#</a>
+		<code><a href="source-class-QRcode.html#1814-1821" title="Go to source code">estimateBitsMode8</a>( <span>mixed <var>$size</var></span> )</code>
+
+		<div class="description short">
+			<p>estimateBitsMode8</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>estimateBitsMode8</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>number of bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="estimateBitsModeKanji" id="_estimateBitsModeKanji">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_estimateBitsModeKanji">#</a>
+		<code><a href="source-class-QRcode.html#1823-1830" title="Go to source code">estimateBitsModeKanji</a>( <span>mixed <var>$size</var></span> )</code>
+
+		<div class="description short">
+			<p>estimateBitsModeKanji</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>estimateBitsModeKanji</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>number of bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="checkModeKanji" id="_checkModeKanji">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_checkModeKanji">#</a>
+		<code><a href="source-class-QRcode.html#1832-1849" title="Go to source code">checkModeKanji</a>( <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>checkModeKanji</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>checkModeKanji</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true or false
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="check" id="_check">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_check">#</a>
+		<code><a href="source-class-QRcode.html#1851-1883" title="Go to source code">check</a>( <span>mixed <var>$mode</var></span>, <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the input data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the input data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mode</var></dt>
+					<dd>encoding mode.
+</dd>
+					<dt><var>$size</var></dt>
+					<dd>size of data (byte).
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>data to validate
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true in case of valid data, false otherwise
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="estimateBitStreamSize" id="_estimateBitStreamSize">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_estimateBitStreamSize">#</a>
+		<code><a href="source-class-QRcode.html#1885-1927" title="Go to source code">estimateBitStreamSize</a>( <span>mixed <var>$items</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>estimateBitStreamSize</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>estimateBitStreamSize</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="estimateVersion" id="_estimateVersion">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_estimateVersion">#</a>
+		<code><a href="source-class-QRcode.html#1929-1946" title="Go to source code">estimateVersion</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>estimateVersion</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>estimateVersion</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>version
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lengthOfCode" id="_lengthOfCode">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lengthOfCode">#</a>
+		<code><a href="source-class-QRcode.html#1948-2003" title="Go to source code">lengthOfCode</a>( <span>mixed <var>$mode</var></span>, <span>mixed <var>$version</var></span>, <span>mixed <var>$bits</var></span> )</code>
+
+		<div class="description short">
+			<p>lengthOfCode</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>lengthOfCode</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mode</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>(int)
+</dd>
+					<dt><var>$bits</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>size
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createBitStream" id="_createBitStream">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createBitStream">#</a>
+		<code><a href="source-class-QRcode.html#2005-2018" title="Go to source code">createBitStream</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>createBitStream</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>createBitStream</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>of items and total bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="convertData" id="_convertData">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_convertData">#</a>
+		<code><a href="source-class-QRcode.html#2020-2047" title="Go to source code">convertData</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>convertData</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>convertData</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>items
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="appendPaddingBit" id="_appendPaddingBit">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_appendPaddingBit">#</a>
+		<code><a href="source-class-QRcode.html#2049-2080" title="Go to source code">appendPaddingBit</a>( <span>mixed <var>$bstream</var></span> )</code>
+
+		<div class="description short">
+			<p>Append Padding Bit to bitstream</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Append Padding Bit to bitstream</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bstream</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mergeBitStream" id="_mergeBitStream">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mergeBitStream">#</a>
+		<code><a href="source-class-QRcode.html#2082-2097" title="Go to source code">mergeBitStream</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>mergeBitStream</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>mergeBitStream</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>items
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getBitStream" id="_getBitStream">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getBitStream">#</a>
+		<code><a href="source-class-QRcode.html#2099-2107" title="Go to source code">getBitStream</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns a stream of bits.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns a stream of bits.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>padded merged byte stream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getByteStream" id="_getByteStream">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getByteStream">#</a>
+		<code><a href="source-class-QRcode.html#2109-2117" title="Go to source code">getByteStream</a>( <span>mixed <var>$items</var></span> )</code>
+
+		<div class="description short">
+			<p>Pack all bit streams padding bits into a byte array.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Pack all bit streams padding bits into a byte array.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd>(int)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>padded merged byte stream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="allocate" id="_allocate">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_allocate">#</a>
+		<code><a href="source-class-QRcode.html#2123-2130" title="Go to source code">allocate</a>( <span>mixed <var>$setLength</var></span> )</code>
+
+		<div class="description short">
+			<p>Return an array with zeros</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return an array with zeros</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$setLength</var></dt>
+					<dd>array size
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newFromNum" id="_newFromNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newFromNum">#</a>
+		<code><a href="source-class-QRcode.html#2132-2150" title="Go to source code">newFromNum</a>( <span>mixed <var>$bits</var></span>, <span>mixed <var>$num</var></span> )</code>
+
+		<div class="description short">
+			<p>Return new bitstream from number</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return new bitstream from number</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bits</var></dt>
+					<dd>number of bits
+</dd>
+					<dt><var>$num</var></dt>
+					<dd>number
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newFromBytes" id="_newFromBytes">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newFromBytes">#</a>
+		<code><a href="source-class-QRcode.html#2152-2174" title="Go to source code">newFromBytes</a>( <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Return new bitstream from bytes</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return new bitstream from bytes</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>size
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>bytes
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="appendBitstream" id="_appendBitstream">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_appendBitstream">#</a>
+		<code><a href="source-class-QRcode.html#2176-2190" title="Go to source code">appendBitstream</a>( <span>mixed <var>$bitstream</var></span>, <span>mixed <var>$append</var></span> )</code>
+
+		<div class="description short">
+			<p>Append one bitstream to another</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Append one bitstream to another</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bitstream</var></dt>
+					<dd>original bitstream
+</dd>
+					<dt><var>$append</var></dt>
+					<dd>bitstream to append
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="appendNum" id="_appendNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_appendNum">#</a>
+		<code><a href="source-class-QRcode.html#2192-2205" title="Go to source code">appendNum</a>( <span>mixed <var>$bitstream</var></span>, <span>mixed <var>$bits</var></span>, <span>mixed <var>$num</var></span> )</code>
+
+		<div class="description short">
+			<p>Append one bitstream created from number to another</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Append one bitstream created from number to another</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bitstream</var></dt>
+					<dd>original bitstream
+</dd>
+					<dt><var>$bits</var></dt>
+					<dd>number of bits
+</dd>
+					<dt><var>$num</var></dt>
+					<dd>number
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="appendBytes" id="_appendBytes">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_appendBytes">#</a>
+		<code><a href="source-class-QRcode.html#2207-2220" title="Go to source code">appendBytes</a>( <span>mixed <var>$bitstream</var></span>, <span>mixed <var>$size</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			<p>Append one bitstream created from bytes to another</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Append one bitstream created from bytes to another</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bitstream</var></dt>
+					<dd>original bitstream
+</dd>
+					<dt><var>$size</var></dt>
+					<dd>size
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>bytes
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>bitstream
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="bitstreamToByte" id="_bitstreamToByte">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_bitstreamToByte">#</a>
+		<code><a href="source-class-QRcode.html#2222-2257" title="Go to source code">bitstreamToByte</a>( <span>mixed <var>$bstream</var></span> )</code>
+
+		<div class="description short">
+			<p>Convert bitstream to bytes</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convert bitstream to bytes</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bstream</var></dt>
+					<dd>original bitstream
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>of bytes
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="qrstrset" id="_qrstrset">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_qrstrset">#</a>
+		<code><a href="source-class-QRcode.html#2263-2275" title="Go to source code">qrstrset</a>( <span>mixed <var>$srctab</var></span>, <span>mixed <var>$x</var></span>, <span>mixed <var>$y</var></span>, <span>mixed <var>$repl</var></span>, <span>mixed <var>$replLen</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			<p>Replace a value on the array at the specified position</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Replace a value on the array at the specified position</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$srctab</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+					<dt><var>$y</var></dt>
+					<dd>Y position
+</dd>
+					<dt><var>$repl</var></dt>
+					<dd>value to replace
+</dd>
+					<dt><var>$replLen</var></dt>
+					<dd>length of the repl string
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>srctab
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDataLength" id="_getDataLength">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDataLength">#</a>
+		<code><a href="source-class-QRcode.html#2277-2285" title="Go to source code">getDataLength</a>( <span>mixed <var>$version</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>Return maximum data code length (bytes) for the version.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return maximum data code length (bytes) for the version.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>error correction level
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>maximum size (bytes)
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getECCLength" id="_getECCLength">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getECCLength">#</a>
+		<code><a href="source-class-QRcode.html#2287-2295" title="Go to source code">getECCLength</a>( <span>mixed <var>$version</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>Return maximum error correction code length (bytes) for the version.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return maximum error correction code length (bytes) for the version.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>error correction level
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>ECC size (bytes)
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getWidth" id="_getWidth">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getWidth">#</a>
+		<code><a href="source-class-QRcode.html#2297-2304" title="Go to source code">getWidth</a>( <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Return the width of the symbol for the version.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the width of the symbol for the version.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>width
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRemainder" id="_getRemainder">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRemainder">#</a>
+		<code><a href="source-class-QRcode.html#2306-2313" title="Go to source code">getRemainder</a>( <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Return the numer of remainder bits.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the numer of remainder bits.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>number of remainder bits
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMinimumVersion" id="_getMinimumVersion">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMinimumVersion">#</a>
+		<code><a href="source-class-QRcode.html#2315-2330" title="Go to source code">getMinimumVersion</a>( <span>mixed <var>$size</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>Return a version number that satisfies the input code length.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return a version number that satisfies the input code length.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$size</var></dt>
+					<dd>input code length (bytes)
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>error correction level
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>version number
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lengthIndicator" id="_lengthIndicator">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lengthIndicator">#</a>
+		<code><a href="source-class-QRcode.html#2332-2350" title="Go to source code">lengthIndicator</a>( <span>mixed <var>$mode</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Return the size of length indicator for the mode and version.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the size of length indicator for the mode and version.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mode</var></dt>
+					<dd>encoding mode
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>the size of the appropriate length indicator (bits).
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="maximumWords" id="_maximumWords">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_maximumWords">#</a>
+		<code><a href="source-class-QRcode.html#2352-2375" title="Go to source code">maximumWords</a>( <span>mixed <var>$mode</var></span>, <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Return the maximum length for the mode and version.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return the maximum length for the mode and version.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mode</var></dt>
+					<dd>encoding mode
+</dd>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>the maximum length (bytes)
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getEccSpec" id="_getEccSpec">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getEccSpec">#</a>
+		<code><a href="source-class-QRcode.html#2377-2406" title="Go to source code">getEccSpec</a>( <span>mixed <var>$version</var></span>, <span>mixed <var>$level</var></span>, <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return an array of ECC specification.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return an array of ECC specification.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>error correction level
+</dd>
+					<dt><var>$spec</var></dt>
+					<dd>an array of ECC specification contains as following: {# of type1 blocks, # of data code, # of ecc code, # of type2 blocks, # of data code}
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>spec
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="putAlignmentMarker" id="_putAlignmentMarker">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_putAlignmentMarker">#</a>
+		<code><a href="source-class-QRcode.html#2408-2429" title="Go to source code">putAlignmentMarker</a>( <span>mixed <var>$frame</var></span>, <span>mixed <var>$ox</var></span>, <span>mixed <var>$oy</var></span> )</code>
+
+		<div class="description short">
+			<p>Put an alignment marker.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Put an alignment marker.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$frame</var></dt>
+					<dd>frame
+</dd>
+					<dt><var>$ox</var></dt>
+					<dd>X center coordinate of the pattern
+</dd>
+					<dt><var>$oy</var></dt>
+					<dd>Y center coordinate of the pattern
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>frame
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="putAlignmentPattern" id="_putAlignmentPattern">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_putAlignmentPattern">#</a>
+		<code><a href="source-class-QRcode.html#2431-2471" title="Go to source code">putAlignmentPattern</a>( <span>mixed <var>$version</var></span>, <span>mixed <var>$frame</var></span>, <span>mixed <var>$width</var></span> )</code>
+
+		<div class="description short">
+			<p>Put an alignment pattern.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Put an alignment pattern.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+					<dt><var>$frame</var></dt>
+					<dd>frame
+</dd>
+					<dt><var>$width</var></dt>
+					<dd>width
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>frame
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getVersionPattern" id="_getVersionPattern">
+
+		<td class="attributes"><code>
+			 protected 
+
+			BCH
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getVersionPattern">#</a>
+		<code><a href="source-class-QRcode.html#2473-2483" title="Go to source code">getVersionPattern</a>( <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Return BCH encoded version information pattern that is used for the symbol of version 7 or greater. Use lower 18 bits.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return BCH encoded version information pattern that is used for the symbol of version 7 or greater. Use lower 18 bits.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>BCH</code><br>encoded version information pattern
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getFormatInfo" id="_getFormatInfo">
+
+		<td class="attributes"><code>
+			 protected 
+
+			BCH
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFormatInfo">#</a>
+		<code><a href="source-class-QRcode.html#2485-2499" title="Go to source code">getFormatInfo</a>( <span>mixed <var>$mask</var></span>, <span>mixed <var>$level</var></span> )</code>
+
+		<div class="description short">
+			<p>Return BCH encoded format information pattern.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return BCH encoded format information pattern.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mask</var></dt>
+					<dd>(array)
+</dd>
+					<dt><var>$level</var></dt>
+					<dd>error correction level
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>BCH</code><br>encoded format information pattern
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="putFinderPattern" id="_putFinderPattern">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_putFinderPattern">#</a>
+		<code><a href="source-class-QRcode.html#2501-2522" title="Go to source code">putFinderPattern</a>( <span>mixed <var>$frame</var></span>, <span>mixed <var>$ox</var></span>, <span>mixed <var>$oy</var></span> )</code>
+
+		<div class="description short">
+			<p>Put a finder pattern.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Put a finder pattern.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$frame</var></dt>
+					<dd>frame
+</dd>
+					<dt><var>$ox</var></dt>
+					<dd>X center coordinate of the pattern
+</dd>
+					<dt><var>$oy</var></dt>
+					<dd>Y center coordinate of the pattern
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>frame
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFrame" id="_createFrame">
+
+		<td class="attributes"><code>
+			 protected 
+
+			Array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFrame">#</a>
+		<code><a href="source-class-QRcode.html#2524-2587" title="Go to source code">createFrame</a>( <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Return a copy of initialized frame.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return a copy of initialized frame.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Array</code><br>of unsigned char.
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="newFrame" id="_newFrame">
+
+		<td class="attributes"><code>
+			 protected 
+
+			Array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_newFrame">#</a>
+		<code><a href="source-class-QRcode.html#2589-2605" title="Go to source code">newFrame</a>( <span>mixed <var>$version</var></span> )</code>
+
+		<div class="description short">
+			<p>Set new frame for the specified version.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set new frame for the specified version.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$version</var></dt>
+					<dd>version
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Array</code><br>of unsigned char.
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsBlockNum" id="_rsBlockNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsBlockNum">#</a>
+		<code><a href="source-class-QRcode.html#2607-2614" title="Go to source code">rsBlockNum</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return block number 0</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return block number 0</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsBlockNum1" id="_rsBlockNum1">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsBlockNum1">#</a>
+		<code><a href="source-class-QRcode.html#2616-2623" title="Go to source code">rsBlockNum1</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return block number 1</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return block number 1</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsDataCodes1" id="_rsDataCodes1">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsDataCodes1">#</a>
+		<code><a href="source-class-QRcode.html#2625-2632" title="Go to source code">rsDataCodes1</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return data codes 1</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return data codes 1</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsEccCodes1" id="_rsEccCodes1">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsEccCodes1">#</a>
+		<code><a href="source-class-QRcode.html#2634-2641" title="Go to source code">rsEccCodes1</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return ecc codes 1</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return ecc codes 1</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsBlockNum2" id="_rsBlockNum2">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsBlockNum2">#</a>
+		<code><a href="source-class-QRcode.html#2643-2650" title="Go to source code">rsBlockNum2</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return block number 2</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return block number 2</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsDataCodes2" id="_rsDataCodes2">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsDataCodes2">#</a>
+		<code><a href="source-class-QRcode.html#2652-2659" title="Go to source code">rsDataCodes2</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return data codes 2</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return data codes 2</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsEccCodes2" id="_rsEccCodes2">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsEccCodes2">#</a>
+		<code><a href="source-class-QRcode.html#2661-2668" title="Go to source code">rsEccCodes2</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return ecc codes 2</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return ecc codes 2</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsDataLength" id="_rsDataLength">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsDataLength">#</a>
+		<code><a href="source-class-QRcode.html#2670-2677" title="Go to source code">rsDataLength</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return data length</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return data length</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rsEccLength" id="_rsEccLength">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rsEccLength">#</a>
+		<code><a href="source-class-QRcode.html#2679-2686" title="Go to source code">rsEccLength</a>( <span>mixed <var>$spec</var></span> )</code>
+
+		<div class="description short">
+			<p>Return ecc length</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return ecc length</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$spec</var></dt>
+					<dd>(array)
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>value
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="init_rs" id="_init_rs">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_init_rs">#</a>
+		<code><a href="source-class-QRcode.html#2692-2713" title="Go to source code">init_rs</a>( <span>mixed <var>$symsize</var></span>, <span>mixed <var>$gfpoly</var></span>, <span>mixed <var>$fcr</var></span>, <span>mixed <var>$prim</var></span>, <span>mixed <var>$nroots</var></span>, <span>mixed <var>$pad</var></span> )</code>
+
+		<div class="description short">
+			<p>Initialize a Reed-Solomon codec and add it to existing rsitems</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initialize a Reed-Solomon codec and add it to existing rsitems</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$symsize</var></dt>
+					<dd>symbol size, bits
+</dd>
+					<dt><var>$gfpoly</var></dt>
+					<dd>Field generator polynomial coefficients
+</dd>
+					<dt><var>$fcr</var></dt>
+					<dd>first root of RS code generator polynomial, index form
+</dd>
+					<dt><var>$prim</var></dt>
+					<dd>primitive element to generate polynomial roots
+</dd>
+					<dt><var>$nroots</var></dt>
+					<dd>RS code generator polynomial degree (number of roots)
+</dd>
+					<dt><var>$pad</var></dt>
+					<dd>padding bytes at front of shortened block
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Array of RS values:
+
+<ul><li>mm = Bits per symbol;</li><li>nn = Symbols per block;</li><li>alpha_to = log lookup table array;</li><li>index_of = Antilog lookup table array;</li><li>genpoly = Generator polynomial array;</li><li>nroots = Number of generator;</li><li>roots = number of parity symbols;</li><li>fcr = First consecutive root, index form;</li><li>prim = Primitive element, index form;</li><li>iprim = prim-th root of 1, index form;</li><li>pad = Padding bytes in shortened block;</li><li>gfpoly</ul>
+
+.
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="modnn" id="_modnn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_modnn">#</a>
+		<code><a href="source-class-QRcode.html#2719-2731" title="Go to source code">modnn</a>( <span>mixed <var>$rs</var></span>, <span>mixed <var>$x</var></span> )</code>
+
+		<div class="description short">
+			<p>modnn</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>modnn</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$rs</var></dt>
+					<dd>RS values
+</dd>
+					<dt><var>$x</var></dt>
+					<dd>X position
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>X osition
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="init_rs_char" id="_init_rs_char">
+
+		<td class="attributes"><code>
+			 protected 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_init_rs_char">#</a>
+		<code><a href="source-class-QRcode.html#2733-2818" title="Go to source code">init_rs_char</a>( <span>mixed <var>$symsize</var></span>, <span>mixed <var>$gfpoly</var></span>, <span>mixed <var>$fcr</var></span>, <span>mixed <var>$prim</var></span>, <span>mixed <var>$nroots</var></span>, <span>mixed <var>$pad</var></span> )</code>
+
+		<div class="description short">
+			<p>Initialize a Reed-Solomon codec and returns an array of values.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initialize a Reed-Solomon codec and returns an array of values.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$symsize</var></dt>
+					<dd>symbol size, bits
+</dd>
+					<dt><var>$gfpoly</var></dt>
+					<dd>Field generator polynomial coefficients
+</dd>
+					<dt><var>$fcr</var></dt>
+					<dd>first root of RS code generator polynomial, index form
+</dd>
+					<dt><var>$prim</var></dt>
+					<dd>primitive element to generate polynomial roots
+</dd>
+					<dt><var>$nroots</var></dt>
+					<dd>RS code generator polynomial degree (number of roots)
+</dd>
+					<dt><var>$pad</var></dt>
+					<dd>padding bytes at front of shortened block
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Array of RS values:
+
+<ul><li>mm = Bits per symbol;</li><li>nn = Symbols per block;</li><li>alpha_to = log lookup table array;</li><li>index_of = Antilog lookup table array;</li><li>genpoly = Generator polynomial array;</li><li>nroots = Number of generator;</li><li>roots = number of parity symbols;</li><li>fcr = First consecutive root, index form;</li><li>prim = Primitive element, index form;</li><li>iprim = prim-th root of 1, index form;</li><li>pad = Padding bytes in shortened block;</li><li>gfpoly</ul>
+
+.
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encode_rs_char" id="_encode_rs_char">
+
+		<td class="attributes"><code>
+			 protected 
+
+			parity
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encode_rs_char">#</a>
+		<code><a href="source-class-QRcode.html#2820-2860" title="Go to source code">encode_rs_char</a>( <span>mixed <var>$rs</var></span>, <span>mixed <var>$data</var></span>, <span>mixed <var>$parity</var></span> )</code>
+
+		<div class="description short">
+			<p>Encode a Reed-Solomon codec and returns the parity array</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Encode a Reed-Solomon codec and returns the parity array</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$rs</var></dt>
+					<dd>RS values
+</dd>
+					<dt><var>$data</var></dt>
+					<dd>data
+</dd>
+					<dt><var>$parity</var></dt>
+					<dd>parity
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>parity</code><br>array
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="barcode_array" id="$barcode_array">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#293-297" title="Go to source code"><var>$barcode_array</var></a>
+
+			<div class="description short">
+				<p>Barcode array to be returned which is readable by TCPDF.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Barcode array to be returned which is readable by TCPDF.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$barcode_array" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="version" id="$version">
+		<td class="attributes"><code>
+			protected  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#299-303" title="Go to source code"><var>$version</var></a>
+
+			<div class="description short">
+				<p>QR code version. Size of QRcode is defined as version. Version is from 1 to 40. Version 1 is 21<em>21 matrix. And 4 modules increases whenever 1 version increases. So version 40 is 177</em>177 matrix.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>QR code version. Size of QRcode is defined as version. Version is from 1 to 40. Version 1 is 21<em>21 matrix. And 4 modules increases whenever 1 version increases. So version 40 is 177</em>177 matrix.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$version" class="anchor">#</a>
+				<code><span class="php-num">0</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="level" id="$level">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#305-309" title="Go to source code"><var>$level</var></a>
+
+			<div class="description short">
+				<p>Levels of error correction. See definitions for possible values.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Levels of error correction. See definitions for possible values.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$level" class="anchor">#</a>
+				<code>QR_ECLEVEL_L</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="hint" id="$hint">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#311-315" title="Go to source code"><var>$hint</var></a>
+
+			<div class="description short">
+				<p>Encoding mode.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Encoding mode.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$hint" class="anchor">#</a>
+				<code>QR_MODE_8B</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="casesensitive" id="$casesensitive">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#317-321" title="Go to source code"><var>$casesensitive</var></a>
+
+			<div class="description short">
+				<p>Boolean flag, if true the input string will be converted to uppercase.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Boolean flag, if true the input string will be converted to uppercase.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$casesensitive" class="anchor">#</a>
+				<code><span class="php-keyword1">true</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="structured" id="$structured">
+		<td class="attributes"><code>
+			protected  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#323-327" title="Go to source code"><var>$structured</var></a>
+
+			<div class="description short">
+				<p>Structured QR code (not supported yet).</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Structured QR code (not supported yet).</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$structured" class="anchor">#</a>
+				<code><span class="php-num">0</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="data" id="$data">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#329-333" title="Go to source code"><var>$data</var></a>
+
+			<div class="description short">
+				<p>Mask data.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Mask data.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$data" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="width" id="$width">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#337-341" title="Go to source code"><var>$width</var></a>
+
+			<div class="description short">
+				<p>Width.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Width.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$width" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="frame" id="$frame">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#343-347" title="Go to source code"><var>$frame</var></a>
+
+			<div class="description short">
+				<p>Frame.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Frame.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$frame" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="x" id="$x">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#349-353" title="Go to source code"><var>$x</var></a>
+
+			<div class="description short">
+				<p>X position of bit.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>X position of bit.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$x" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="y" id="$y">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#355-359" title="Go to source code"><var>$y</var></a>
+
+			<div class="description short">
+				<p>Y position of bit.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Y position of bit.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$y" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="dir" id="$dir">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#361-365" title="Go to source code"><var>$dir</var></a>
+
+			<div class="description short">
+				<p>Direction.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Direction.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$dir" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="bit" id="$bit">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#367-371" title="Go to source code"><var>$bit</var></a>
+
+			<div class="description short">
+				<p>Single bit value.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Single bit value.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$bit" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="datacode" id="$datacode">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#375-379" title="Go to source code"><var>$datacode</var></a>
+
+			<div class="description short">
+				<p>Data code.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Data code.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$datacode" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="ecccode" id="$ecccode">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#381-385" title="Go to source code"><var>$ecccode</var></a>
+
+			<div class="description short">
+				<p>Error correction code.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Error correction code.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$ecccode" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="blocks" id="$blocks">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#387-391" title="Go to source code"><var>$blocks</var></a>
+
+			<div class="description short">
+				<p>Blocks.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Blocks.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$blocks" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="rsblocks" id="$rsblocks">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#393-397" title="Go to source code"><var>$rsblocks</var></a>
+
+			<div class="description short">
+				<p>Reed-Solomon blocks.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Reed-Solomon blocks.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$rsblocks" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="count" id="$count">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#399-403" title="Go to source code"><var>$count</var></a>
+
+			<div class="description short">
+				<p>Counter.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Counter.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$count" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="dataLength" id="$dataLength">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#405-409" title="Go to source code"><var>$dataLength</var></a>
+
+			<div class="description short">
+				<p>Data length.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Data length.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$dataLength" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="eccLength" id="$eccLength">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#411-415" title="Go to source code"><var>$eccLength</var></a>
+
+			<div class="description short">
+				<p>Error correction length.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Error correction length.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$eccLength" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="b1" id="$b1">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#417-421" title="Go to source code"><var>$b1</var></a>
+
+			<div class="description short">
+				<p>Value b1.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Value b1.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$b1" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="runLength" id="$runLength">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#425-429" title="Go to source code"><var>$runLength</var></a>
+
+			<div class="description short">
+				<p>Run length.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Run length.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$runLength" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="dataStr" id="$dataStr">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#433-437" title="Go to source code"><var>$dataStr</var></a>
+
+			<div class="description short">
+				<p>Input data string.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Input data string.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$dataStr" class="anchor">#</a>
+				<code><span class="php-quote">''</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="items" id="$items">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#439-443" title="Go to source code"><var>$items</var></a>
+
+			<div class="description short">
+				<p>Input items.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Input items.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$items" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="rsitems" id="$rsitems">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#447-451" title="Go to source code"><var>$rsitems</var></a>
+
+			<div class="description short">
+				<p>Reed-Solomon items.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Reed-Solomon items.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$rsitems" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="frames" id="$frames">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#453-457" title="Go to source code"><var>$frames</var></a>
+
+			<div class="description short">
+				<p>Array of frames.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array of frames.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$frames" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="anTable" id="$anTable">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#459-472" title="Go to source code"><var>$anTable</var></a>
+
+			<div class="description short">
+				<p>Alphabet-numeric convesion table.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Alphabet-numeric convesion table.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$anTable" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-comment">//</span>
+    -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-comment">//</span>
+    <span class="php-num">36</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-num">37</span>, <span class="php-num">38</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-num">39</span>, <span class="php-num">40</span>, -<span class="php-num">1</span>, <span class="php-num">41</span>, <span class="php-num">42</span>, <span class="php-num">43</span>, <span class="php-comment">//</span>
+     <span class="php-num">0</span>,  <span class="php-num">1</span>,  <span class="php-num">2</span>,  <span class="php-num">3</span>,  <span class="php-num">4</span>,  <span class="php-num">5</span>,  <span class="php-num">6</span>,  <span class="php-num">7</span>,  <span class="php-num">8</span>,  <span class="php-num">9</span>, <span class="php-num">44</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-comment">//</span>
+    -<span class="php-num">1</span>, <span class="php-num">10</span>, <span class="php-num">11</span>, <span class="php-num">12</span>, <span class="php-num">13</span>, <span class="php-num">14</span>, <span class="php-num">15</span>, <span class="php-num">16</span>, <span class="php-num">17</span>, <span class="php-num">18</span>, <span class="php-num">19</span>, <span class="php-num">20</span>, <span class="php-num">21</span>, <span class="php-num">22</span>, <span class="php-num">23</span>, <span class="php-num">24</span>, <span class="php-comment">//</span>
+    <span class="php-num">25</span>, <span class="php-num">26</span>, <span class="php-num">27</span>, <span class="php-num">28</span>, <span class="php-num">29</span>, <span class="php-num">30</span>, <span class="php-num">31</span>, <span class="php-num">32</span>, <span class="php-num">33</span>, <span class="php-num">34</span>, <span class="php-num">35</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-comment">//</span>
+    -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, <span class="php-comment">//</span>
+    -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>, -<span class="php-num">1</span>  <span class="php-comment">//</span>
+    )</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="capacity" id="$capacity">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#474-521" title="Go to source code"><var>$capacity</var></a>
+
+			<div class="description short">
+				<p>Array Table of the capacity of symbols.
+See Table 1 (pp.13) and Table 12-16 (pp.30-36), JIS X0510:2004.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array Table of the capacity of symbols.
+See Table 1 (pp.13) and Table 12-16 (pp.30-36), JIS X0510:2004.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$capacity" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    <span class="php-keyword1">array</span>(  <span class="php-num">0</span>,    <span class="php-num">0</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(   <span class="php-num">0</span>,    <span class="php-num">0</span>,    <span class="php-num">0</span>,    <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">21</span>,   <span class="php-num">26</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(   <span class="php-num">7</span>,   <span class="php-num">10</span>,   <span class="php-num">13</span>,   <span class="php-num">17</span>)), <span class="php-comment">//  1</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">25</span>,   <span class="php-num">44</span>, <span class="php-num">7</span>, <span class="php-keyword1">array</span>(  <span class="php-num">10</span>,   <span class="php-num">16</span>,   <span class="php-num">22</span>,   <span class="php-num">28</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">29</span>,   <span class="php-num">70</span>, <span class="php-num">7</span>, <span class="php-keyword1">array</span>(  <span class="php-num">15</span>,   <span class="php-num">26</span>,   <span class="php-num">36</span>,   <span class="php-num">44</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">33</span>,  <span class="php-num">100</span>, <span class="php-num">7</span>, <span class="php-keyword1">array</span>(  <span class="php-num">20</span>,   <span class="php-num">36</span>,   <span class="php-num">52</span>,   <span class="php-num">64</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">37</span>,  <span class="php-num">134</span>, <span class="php-num">7</span>, <span class="php-keyword1">array</span>(  <span class="php-num">26</span>,   <span class="php-num">48</span>,   <span class="php-num">72</span>,   <span class="php-num">88</span>)), <span class="php-comment">//  5</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">41</span>,  <span class="php-num">172</span>, <span class="php-num">7</span>, <span class="php-keyword1">array</span>(  <span class="php-num">36</span>,   <span class="php-num">64</span>,   <span class="php-num">96</span>,  <span class="php-num">112</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">45</span>,  <span class="php-num">196</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(  <span class="php-num">40</span>,   <span class="php-num">72</span>,  <span class="php-num">108</span>,  <span class="php-num">130</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">49</span>,  <span class="php-num">242</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(  <span class="php-num">48</span>,   <span class="php-num">88</span>,  <span class="php-num">132</span>,  <span class="php-num">156</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">53</span>,  <span class="php-num">292</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(  <span class="php-num">60</span>,  <span class="php-num">110</span>,  <span class="php-num">160</span>,  <span class="php-num">192</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">57</span>,  <span class="php-num">346</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(  <span class="php-num">72</span>,  <span class="php-num">130</span>,  <span class="php-num">192</span>,  <span class="php-num">224</span>)), <span class="php-comment">// 10</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">61</span>,  <span class="php-num">404</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(  <span class="php-num">80</span>,  <span class="php-num">150</span>,  <span class="php-num">224</span>,  <span class="php-num">264</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">65</span>,  <span class="php-num">466</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>(  <span class="php-num">96</span>,  <span class="php-num">176</span>,  <span class="php-num">260</span>,  <span class="php-num">308</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">69</span>,  <span class="php-num">532</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">104</span>,  <span class="php-num">198</span>,  <span class="php-num">288</span>,  <span class="php-num">352</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">73</span>,  <span class="php-num">581</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">120</span>,  <span class="php-num">216</span>,  <span class="php-num">320</span>,  <span class="php-num">384</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">77</span>,  <span class="php-num">655</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">132</span>,  <span class="php-num">240</span>,  <span class="php-num">360</span>,  <span class="php-num">432</span>)), <span class="php-comment">// 15</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">81</span>,  <span class="php-num">733</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">144</span>,  <span class="php-num">280</span>,  <span class="php-num">408</span>,  <span class="php-num">480</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">85</span>,  <span class="php-num">815</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">168</span>,  <span class="php-num">308</span>,  <span class="php-num">448</span>,  <span class="php-num">532</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">89</span>,  <span class="php-num">901</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">180</span>,  <span class="php-num">338</span>,  <span class="php-num">504</span>,  <span class="php-num">588</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">93</span>,  <span class="php-num">991</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">196</span>,  <span class="php-num">364</span>,  <span class="php-num">546</span>,  <span class="php-num">650</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>( <span class="php-num">97</span>, <span class="php-num">1085</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">224</span>,  <span class="php-num">416</span>,  <span class="php-num">600</span>,  <span class="php-num">700</span>)), <span class="php-comment">// 20</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">101</span>, <span class="php-num">1156</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">224</span>,  <span class="php-num">442</span>,  <span class="php-num">644</span>,  <span class="php-num">750</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">105</span>, <span class="php-num">1258</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">252</span>,  <span class="php-num">476</span>,  <span class="php-num">690</span>,  <span class="php-num">816</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">109</span>, <span class="php-num">1364</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">270</span>,  <span class="php-num">504</span>,  <span class="php-num">750</span>,  <span class="php-num">900</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">113</span>, <span class="php-num">1474</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">300</span>,  <span class="php-num">560</span>,  <span class="php-num">810</span>,  <span class="php-num">960</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">117</span>, <span class="php-num">1588</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">312</span>,  <span class="php-num">588</span>,  <span class="php-num">870</span>, <span class="php-num">1050</span>)), <span class="php-comment">// 25</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">121</span>, <span class="php-num">1706</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">336</span>,  <span class="php-num">644</span>,  <span class="php-num">952</span>, <span class="php-num">1110</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">125</span>, <span class="php-num">1828</span>, <span class="php-num">4</span>, <span class="php-keyword1">array</span>( <span class="php-num">360</span>,  <span class="php-num">700</span>, <span class="php-num">1020</span>, <span class="php-num">1200</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">129</span>, <span class="php-num">1921</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">390</span>,  <span class="php-num">728</span>, <span class="php-num">1050</span>, <span class="php-num">1260</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">133</span>, <span class="php-num">2051</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">420</span>,  <span class="php-num">784</span>, <span class="php-num">1140</span>, <span class="php-num">1350</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">137</span>, <span class="php-num">2185</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">450</span>,  <span class="php-num">812</span>, <span class="php-num">1200</span>, <span class="php-num">1440</span>)), <span class="php-comment">// 30</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">141</span>, <span class="php-num">2323</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">480</span>,  <span class="php-num">868</span>, <span class="php-num">1290</span>, <span class="php-num">1530</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">145</span>, <span class="php-num">2465</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">510</span>,  <span class="php-num">924</span>, <span class="php-num">1350</span>, <span class="php-num">1620</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">149</span>, <span class="php-num">2611</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">540</span>,  <span class="php-num">980</span>, <span class="php-num">1440</span>, <span class="php-num">1710</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">153</span>, <span class="php-num">2761</span>, <span class="php-num">3</span>, <span class="php-keyword1">array</span>( <span class="php-num">570</span>, <span class="php-num">1036</span>, <span class="php-num">1530</span>, <span class="php-num">1800</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">157</span>, <span class="php-num">2876</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">570</span>, <span class="php-num">1064</span>, <span class="php-num">1590</span>, <span class="php-num">1890</span>)), <span class="php-comment">// 35</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">161</span>, <span class="php-num">3034</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">600</span>, <span class="php-num">1120</span>, <span class="php-num">1680</span>, <span class="php-num">1980</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">165</span>, <span class="php-num">3196</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">630</span>, <span class="php-num">1204</span>, <span class="php-num">1770</span>, <span class="php-num">2100</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">169</span>, <span class="php-num">3362</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">660</span>, <span class="php-num">1260</span>, <span class="php-num">1860</span>, <span class="php-num">2220</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">173</span>, <span class="php-num">3532</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">720</span>, <span class="php-num">1316</span>, <span class="php-num">1950</span>, <span class="php-num">2310</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">177</span>, <span class="php-num">3706</span>, <span class="php-num">0</span>, <span class="php-keyword1">array</span>( <span class="php-num">750</span>, <span class="php-num">1372</span>, <span class="php-num">2040</span>, <span class="php-num">2430</span>))  <span class="php-comment">// 40</span>
+)</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="lengthTableBits" id="$lengthTableBits">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#523-532" title="Go to source code"><var>$lengthTableBits</var></a>
+
+			<div class="description short">
+				<p>Array Length indicator.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array Length indicator.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$lengthTableBits" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    <span class="php-keyword1">array</span>(<span class="php-num">10</span>, <span class="php-num">12</span>, <span class="php-num">14</span>),
+    <span class="php-keyword1">array</span>( <span class="php-num">9</span>, <span class="php-num">11</span>, <span class="php-num">13</span>),
+    <span class="php-keyword1">array</span>( <span class="php-num">8</span>, <span class="php-num">16</span>, <span class="php-num">16</span>),
+    <span class="php-keyword1">array</span>( <span class="php-num">8</span>, <span class="php-num">10</span>, <span class="php-num">12</span>)
+)</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="eccTable" id="$eccTable">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#534-581" title="Go to source code"><var>$eccTable</var></a>
+
+			<div class="description short">
+				<p>Array Table of the error correction code (Reed-Solomon block).
+See Table 12-16 (pp.30-36), JIS X0510:2004.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array Table of the error correction code (Reed-Solomon block).
+See Table 12-16 (pp.30-36), JIS X0510:2004.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$eccTable" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">0</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">0</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">0</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">0</span>,  <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>)), <span class="php-comment">//  1</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">2</span>)), <span class="php-comment">//  5</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">1</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">2</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">3</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">4</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">6</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">6</span>,  <span class="php-num">2</span>)), <span class="php-comment">// 10</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">3</span>,  <span class="php-num">8</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">6</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">6</span>), <span class="php-keyword1">array</span>( <span class="php-num">7</span>,  <span class="php-num">4</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">8</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">8</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">12</span>,  <span class="php-num">4</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">3</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>,  <span class="php-num">5</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">5</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">5</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>( <span class="php-num">5</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>,  <span class="php-num">7</span>)), <span class="php-comment">// 15</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">5</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">7</span>,  <span class="php-num">3</span>), <span class="php-keyword1">array</span>(<span class="php-num">15</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>( <span class="php-num">3</span>, <span class="php-num">13</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">1</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>(<span class="php-num">10</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>, <span class="php-num">15</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>, <span class="php-num">17</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">5</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">9</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>, <span class="php-num">19</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">3</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">3</span>, <span class="php-num">11</span>), <span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">9</span>, <span class="php-num">16</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">3</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>( <span class="php-num">3</span>, <span class="php-num">13</span>), <span class="php-keyword1">array</span>(<span class="php-num">15</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>(<span class="php-num">15</span>, <span class="php-num">10</span>)), <span class="php-comment">// 20</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">6</span>), <span class="php-keyword1">array</span>(<span class="php-num">19</span>,  <span class="php-num">6</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">2</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>( <span class="php-num">7</span>, <span class="php-num">16</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>,  <span class="php-num">0</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">4</span>,  <span class="php-num">5</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>(<span class="php-num">16</span>, <span class="php-num">14</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">6</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">6</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>, <span class="php-num">16</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>,  <span class="php-num">2</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">8</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>( <span class="php-num">8</span>, <span class="php-num">13</span>), <span class="php-keyword1">array</span>( <span class="php-num">7</span>, <span class="php-num">22</span>), <span class="php-keyword1">array</span>(<span class="php-num">22</span>, <span class="php-num">13</span>)), <span class="php-comment">// 25</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">10</span>,  <span class="php-num">2</span>), <span class="php-keyword1">array</span>(<span class="php-num">19</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">28</span>,  <span class="php-num">6</span>), <span class="php-keyword1">array</span>(<span class="php-num">33</span>,  <span class="php-num">4</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">8</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">22</span>,  <span class="php-num">3</span>), <span class="php-keyword1">array</span>( <span class="php-num">8</span>, <span class="php-num">26</span>), <span class="php-keyword1">array</span>(<span class="php-num">12</span>, <span class="php-num">28</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">3</span>, <span class="php-num">10</span>), <span class="php-keyword1">array</span>( <span class="php-num">3</span>, <span class="php-num">23</span>), <span class="php-keyword1">array</span>( <span class="php-num">4</span>, <span class="php-num">31</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>, <span class="php-num">31</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">7</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>(<span class="php-num">21</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>( <span class="php-num">1</span>, <span class="php-num">37</span>), <span class="php-keyword1">array</span>(<span class="php-num">19</span>, <span class="php-num">26</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">5</span>, <span class="php-num">10</span>), <span class="php-keyword1">array</span>(<span class="php-num">19</span>, <span class="php-num">10</span>), <span class="php-keyword1">array</span>(<span class="php-num">15</span>, <span class="php-num">25</span>), <span class="php-keyword1">array</span>(<span class="php-num">23</span>, <span class="php-num">25</span>)), <span class="php-comment">// 30</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">13</span>,  <span class="php-num">3</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>, <span class="php-num">29</span>), <span class="php-keyword1">array</span>(<span class="php-num">42</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>(<span class="php-num">23</span>, <span class="php-num">28</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">10</span>, <span class="php-num">23</span>), <span class="php-keyword1">array</span>(<span class="php-num">10</span>, <span class="php-num">35</span>), <span class="php-keyword1">array</span>(<span class="php-num">19</span>, <span class="php-num">35</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">1</span>), <span class="php-keyword1">array</span>(<span class="php-num">14</span>, <span class="php-num">21</span>), <span class="php-keyword1">array</span>(<span class="php-num">29</span>, <span class="php-num">19</span>), <span class="php-keyword1">array</span>(<span class="php-num">11</span>, <span class="php-num">46</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">13</span>,  <span class="php-num">6</span>), <span class="php-keyword1">array</span>(<span class="php-num">14</span>, <span class="php-num">23</span>), <span class="php-keyword1">array</span>(<span class="php-num">44</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>(<span class="php-num">59</span>,  <span class="php-num">1</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">12</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>(<span class="php-num">12</span>, <span class="php-num">26</span>), <span class="php-keyword1">array</span>(<span class="php-num">39</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>(<span class="php-num">22</span>, <span class="php-num">41</span>)), <span class="php-comment">// 35</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">6</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>( <span class="php-num">6</span>, <span class="php-num">34</span>), <span class="php-keyword1">array</span>(<span class="php-num">46</span>, <span class="php-num">10</span>), <span class="php-keyword1">array</span>( <span class="php-num">2</span>, <span class="php-num">64</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">17</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">29</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>(<span class="php-num">49</span>, <span class="php-num">10</span>), <span class="php-keyword1">array</span>(<span class="php-num">24</span>, <span class="php-num">46</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>( <span class="php-num">4</span>, <span class="php-num">18</span>), <span class="php-keyword1">array</span>(<span class="php-num">13</span>, <span class="php-num">32</span>), <span class="php-keyword1">array</span>(<span class="php-num">48</span>, <span class="php-num">14</span>), <span class="php-keyword1">array</span>(<span class="php-num">42</span>, <span class="php-num">32</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">20</span>,  <span class="php-num">4</span>), <span class="php-keyword1">array</span>(<span class="php-num">40</span>,  <span class="php-num">7</span>), <span class="php-keyword1">array</span>(<span class="php-num">43</span>, <span class="php-num">22</span>), <span class="php-keyword1">array</span>(<span class="php-num">10</span>, <span class="php-num">67</span>)), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-keyword1">array</span>(<span class="php-num">19</span>,  <span class="php-num">6</span>), <span class="php-keyword1">array</span>(<span class="php-num">18</span>, <span class="php-num">31</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>, <span class="php-num">34</span>), <span class="php-keyword1">array</span>(<span class="php-num">20</span>, <span class="php-num">61</span>))  <span class="php-comment">// 40</span>
+)</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="alignmentPattern" id="$alignmentPattern">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#583-599" title="Go to source code"><var>$alignmentPattern</var></a>
+
+			<div class="description short">
+				<p>Array Positions of alignment patterns.
+This array includes only the second and the third position of the alignment patterns. Rest of them can be calculated from the distance between them.
+See Table 1 in Appendix E (pp.71) of JIS X0510:2004.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array Positions of alignment patterns.
+This array includes only the second and the third position of the alignment patterns. Rest of them can be calculated from the distance between them.
+See Table 1 in Appendix E (pp.71) of JIS X0510:2004.</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$alignmentPattern" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    <span class="php-keyword1">array</span>( <span class="php-num">0</span>,  <span class="php-num">0</span>),
+    <span class="php-keyword1">array</span>( <span class="php-num">0</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">18</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">22</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>,  <span class="php-num">0</span>), <span class="php-comment">//  1- 5</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">34</span>,  <span class="php-num">0</span>), <span class="php-keyword1">array</span>(<span class="php-num">22</span>, <span class="php-num">38</span>), <span class="php-keyword1">array</span>(<span class="php-num">24</span>, <span class="php-num">42</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">46</span>), <span class="php-keyword1">array</span>(<span class="php-num">28</span>, <span class="php-num">50</span>), <span class="php-comment">//  6-10</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">32</span>, <span class="php-num">58</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>, <span class="php-num">62</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">46</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">48</span>), <span class="php-comment">// 11-15</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">50</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">56</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">58</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>, <span class="php-num">62</span>), <span class="php-comment">// 16-20</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">28</span>, <span class="php-num">50</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">50</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">28</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">32</span>, <span class="php-num">58</span>), <span class="php-comment">// 21-25</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">58</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>, <span class="php-num">62</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">50</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">52</span>), <span class="php-comment">// 26-30</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">56</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>, <span class="php-num">60</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">58</span>), <span class="php-keyword1">array</span>(<span class="php-num">34</span>, <span class="php-num">62</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">54</span>), <span class="php-comment">// 31-35</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">24</span>, <span class="php-num">50</span>), <span class="php-keyword1">array</span>(<span class="php-num">28</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">32</span>, <span class="php-num">58</span>), <span class="php-keyword1">array</span>(<span class="php-num">26</span>, <span class="php-num">54</span>), <span class="php-keyword1">array</span>(<span class="php-num">30</span>, <span class="php-num">58</span>)  <span class="php-comment">// 35-40</span>
+)</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="versionPattern" id="$versionPattern">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#601-613" title="Go to source code"><var>$versionPattern</var></a>
+
+			<div class="description short">
+				<p>Array Version information pattern (BCH coded).
+See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
+size: [QRSPEC_VERSION_MAX - 6]</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array Version information pattern (BCH coded).
+See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
+size: [QRSPEC_VERSION_MAX - 6]</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$versionPattern" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    <span class="php-num">0x07c94</span>, <span class="php-num">0x085bc</span>, <span class="php-num">0x09a99</span>, <span class="php-num">0x0a4d3</span>, <span class="php-num">0x0bbf6</span>, <span class="php-num">0x0c762</span>, <span class="php-num">0x0d847</span>, <span class="php-num">0x0e60d</span>, <span class="php-comment">//</span>
+    <span class="php-num">0x0f928</span>, <span class="php-num">0x10b78</span>, <span class="php-num">0x1145d</span>, <span class="php-num">0x12a17</span>, <span class="php-num">0x13532</span>, <span class="php-num">0x149a6</span>, <span class="php-num">0x15683</span>, <span class="php-num">0x168c9</span>, <span class="php-comment">//</span>
+    <span class="php-num">0x177ec</span>, <span class="php-num">0x18ec4</span>, <span class="php-num">0x191e1</span>, <span class="php-num">0x1afab</span>, <span class="php-num">0x1b08e</span>, <span class="php-num">0x1cc1a</span>, <span class="php-num">0x1d33f</span>, <span class="php-num">0x1ed75</span>, <span class="php-comment">//</span>
+    <span class="php-num">0x1f250</span>, <span class="php-num">0x209d5</span>, <span class="php-num">0x216f0</span>, <span class="php-num">0x228ba</span>, <span class="php-num">0x2379f</span>, <span class="php-num">0x24b0b</span>, <span class="php-num">0x2542e</span>, <span class="php-num">0x26a64</span>, <span class="php-comment">//</span>
+    <span class="php-num">0x27541</span>, <span class="php-num">0x28c69</span>
+)</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="formatInfo" id="$formatInfo">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-QRcode.html#615-624" title="Go to source code"><var>$formatInfo</var></a>
+
+			<div class="description short">
+				<p>Array Format information</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Array Format information</p>
+
+
+					<h4>Protected</h4>
+					<div class="list">
+					</div>
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$formatInfo" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(
+    <span class="php-keyword1">array</span>(<span class="php-num">0x77c4</span>, <span class="php-num">0x72f3</span>, <span class="php-num">0x7daa</span>, <span class="php-num">0x789d</span>, <span class="php-num">0x662f</span>, <span class="php-num">0x6318</span>, <span class="php-num">0x6c41</span>, <span class="php-num">0x6976</span>), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">0x5412</span>, <span class="php-num">0x5125</span>, <span class="php-num">0x5e7c</span>, <span class="php-num">0x5b4b</span>, <span class="php-num">0x45f9</span>, <span class="php-num">0x40ce</span>, <span class="php-num">0x4f97</span>, <span class="php-num">0x4aa0</span>), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">0x355f</span>, <span class="php-num">0x3068</span>, <span class="php-num">0x3f31</span>, <span class="php-num">0x3a06</span>, <span class="php-num">0x24b4</span>, <span class="php-num">0x2183</span>, <span class="php-num">0x2eda</span>, <span class="php-num">0x2bed</span>), <span class="php-comment">//</span>
+    <span class="php-keyword1">array</span>(<span class="php-num">0x1689</span>, <span class="php-num">0x13be</span>, <span class="php-num">0x1ce7</span>, <span class="php-num">0x19d0</span>, <span class="php-num">0x0762</span>, <span class="php-num">0x0255</span>, <span class="php-num">0x0d0c</span>, <span class="php-num">0x083b</span>)  <span class="php-comment">//</span>
+)</code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js?721046668"></script>
+<script src="elementlist.js?3177386894"></script>
+</body>
+</html>

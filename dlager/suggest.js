@@ -53,7 +53,7 @@ var XmlHttpVersions = new Array("MSXML2.XMLHTTP.6.0",
 for (var i=0; i<XmlHttpVersions.length && !xmlHttp; i++)
 {
 try
-Chapter 6
+
 {
 // try to create XMLHttpRequest object
 xmlHttp = new ActiveXObject(XmlHttpVersions[i]);
@@ -538,7 +538,7 @@ var oRange = oText.createTextRange();
 oRange.moveStart("character", start);
 oRange.moveEnd("character", length - oText.value.length);
 oRange.select();
-Chapter 6
+
 }
 else
 // FF

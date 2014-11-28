@@ -1,5 +1,5 @@
 <?
-require_once '../security.php';
+//require_once '../security.php';
 ?>
 <?
 require_once '../db.php';

@@ -316,6 +316,22 @@ class AplDB {
         }
     }
 
+    /**
+     * 
+     * @param type $import
+     * @return type
+     */
+    public function getImDatumSoll($import) {
+        $sql = "select auftragsnr as import,DATE_FORMAT(im_datum_soll,'%d.%m.%Y') as im_datum_soll,DATE_FORMAT(im_datum_soll,'%Y-%m-%d %H:%i') as im_datetime_soll from daufkopf where auftragsnr='$import'";
+        $res = mysql_query($sql);
+        if (mysql_affected_rows() > 0) {
+            $row = mysql_fetch_assoc($res);
+            $row['sql'] = $sql;
+            return $row;
+        } else {
+            return NULL;
+        }
+    }
     
     public function getTatRechnungBezeichnung($tat){
 	$bez='';
@@ -397,6 +413,72 @@ class AplDB {
 	return mysql_affected_rows();
     }
 
+    /**
+     * 
+     * @param type $kundeVon
+     * @param type $kundeBis
+     * @param type $datumVon
+     * @param type $datumBis
+     */
+    public function getImporteDatumKunde($kundeVon,$kundeBis,$datumVon,$datumBis){
+	$sql.=" select ";
+	$sql.=" DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d') as import_datum,";
+	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') as im_soll_datum,";
+	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as im_soll_time,";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" daufkopf.auftragsnr as import";
+	$sql.=" ,if(daufkopf.ausliefer_datum is null,'noex',DATE_FORMAT(daufkopf.ausliefer_datum,'%Y%m%d')) as ausliefer_datum";
+	$sql.=" ,if(daufkopf.fertig='2100-01-01','norech',DATE_FORMAT(daufkopf.fertig,'%Y%m%d')) as fertig";
+	$sql.=" from daufkopf";
+	$sql.=" where";
+	$sql.=" (DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d') between '$datumVon' and '$datumBis')";
+	$sql.=" and";
+	$sql.=" (daufkopf.kunde between $kundeVon and $kundeBis)";
+	$sql.=" order by";
+	$sql.=" DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d'),";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" daufkopf.auftragsnr";
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
+     * @param type $kundeVon
+     * @param type $kundeBis
+     * @param type $datumVon
+     * @param type $datumBis
+     * @return type
+     */
+    public function getExporteDatumKunde($kundeVon,$kundeBis,$datumVon,$datumBis){
+	$sql.=" select ";
+	$sql.=" DATE_FORMAT(daufkopf.ex_datum_soll,'%Y-%m-%d') as export_datum,";
+	$sql.=" DATE_FORMAT(daufkopf.ex_datum_soll,'%H:%i') as export_time,";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" daufkopf.auftragsnr as export,";
+	$sql.=" if(daufkopf.ausliefer_datum is null,'noex',DATE_FORMAT(daufkopf.ausliefer_datum,'%Y%m%d')) as ausliefer_datum,";
+	$sql.=" if(daufkopf.fertig='2100-01-01','norech',DATE_FORMAT(daufkopf.fertig,'%Y%m%d')) as fertig";
+	$sql.=" ,if(zielorte.zielort is null,'',zielorte.zielort) as zielort";
+	$sql.=" from daufkopf";
+	$sql.=" left join zielorte on zielorte.id=daufkopf.zielort_id";
+	$sql.=" where";
+	$sql.=" (DATE_FORMAT(daufkopf.ex_datum_soll,'%Y-%m-%d') between '$datumVon' and '$datumBis')";
+	$sql.=" and";
+	$sql.=" (daufkopf.kunde between $kundeVon and $kundeBis)";
+	$sql.=" order by";
+	$sql.=" DATE_FORMAT(daufkopf.ex_datum_soll,'%Y-%m-%d'),";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" daufkopf.auftragsnr";
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
+     * @param type $teil
+     * @param type $tat
+     * @param type $vzaby
+     * @param type $vzkd
+     * @return type
+     */
     public function insertNewDPOS($teil,$tat,$vzaby,$vzkd){
 	// vytahnout texty
 	$sql = "select `dtaetkz-abg`.oper_CZ,`dtaetkz-abg`.oper_D from `dtaetkz-abg` where `abg-nr`=$tat";
@@ -2837,7 +2919,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param <type> $kunde
      */
     public function getKundeInfoArray($kunde) {
-        $sql = "select kunde,name1 from `dksd` where `kunde`='$kunde'";
+        $sql = "select kunde,name1,preismin,`waehr-kz` as waehrkz from `dksd` where `kunde`='$kunde'";
         return $this->getQueryRows($sql);
     }
 
@@ -3312,9 +3394,9 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      */
     public function getAuftragInfoArray($auftrag,$kunde=NULL) {
 	if($kunde===NULL)
-	    $sql = "select  bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
+	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
 	else
-	    $sql = "select  bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
+	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
         //echo $sql;
         return $this->getQueryRows($sql);
     }
@@ -3694,9 +3776,13 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      */
     public function updateDaufkopfField($dbField, $value, $auftrag) {
 	if(($dbField=='ex_datum_soll') && ($value==NULL))
-	    $sql = "update daufkopf set $dbField=NULL where auftragsnr=$auftrag";
+	    $sql = "update daufkopf set $dbField=NULL where auftragsnr=$auftrag limit 1";
 	else
-	    $sql = "update daufkopf set $dbField='$value' where auftragsnr=$auftrag";
+	    $sql = "update daufkopf set $dbField='$value' where auftragsnr=$auftrag  limit 1";
+	
+	if($value===NULL)
+	    $sql = "update daufkopf set $dbField=NULL where auftragsnr=$auftrag limit 1";
+	
         mysql_query($sql);
         return mysql_affected_rows();
     }
@@ -5068,8 +5154,11 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * 
      * @param type $teil
      */
-    public function getTeilTatArray($teil){
+    public function getTeilTatArray($teil,$nurAktiveTat=FALSE){
 	$sql=" select dpos.`TaetNr-Aby` as abgnr from dpos where teil='$teil'";
+	if($nurAktiveTat===TRUE){
+	    $sql=" select dpos.`vz-min-aby` as vzaby,dpos.KzGut as kzgut,dpos.`TaetNr-Aby` as abgnr,`vz-min-kunde` as vzkd from dpos where (teil='$teil') and (`kz-druck`<>0)";
+	}
 	return $this->getQueryRows($sql);
     }
     /**
@@ -7175,6 +7264,114 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
         return $datum;
     }
 
+    /**
+     * 
+     */
+    public function getLastImportSollTime($kunde){
+	$imnr = "00:00";
+	$sql.=" select";
+	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as time";
+	$sql.=" from daufkopf";
+	$sql.=" where";
+	$sql.=" daufkopf.kunde=$kunde";
+	$sql.=" order by ";
+	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') desc,";
+	$sql.=" daufkopf.auftragsnr desc";
+	$sql.=" limit 1";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $imnr = $r[0]['time'];
+	}
+	return $imnr;
+    }
+    /**
+     * 
+     * @param type $kunde
+     */
+    public function getLastImportNr($kunde){
+	$imnr = 0;
+	$sql.=" select";
+	$sql.=" auftragsnr";
+	$sql.=" from daufkopf";
+	$sql.=" where";
+	$sql.=" daufkopf.kunde=$kunde";
+	$sql.=" order by ";
+	$sql.=" DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d') desc,";
+	$sql.=" daufkopf.auftragsnr desc";
+	$sql.=" limit 1";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $imnr = intval($r[0]['auftragsnr']);
+	}
+	return $imnr;
+    }
+
+    /**
+     * 
+     * @param type $kunde
+     */
+    public function getPlanTeilProKunde($kunde){
+	$sql.=" select dkopf.Teil as teil";
+	$sql.=" from dkopf";
+	$sql.=" where";
+	$teil = sprintf("99%03dIM",$kunde);
+	$sql.=" dkopf.Teil='$teil'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return $r[0]['teil'];
+	}
+	else{
+	    return '';
+	}
+    }
+
+    public function createNewImport($imNr,$kunde,$minpreis,$aufdatDateTime,$sollImDateTime,$waehrKz,$bemerkung,$bestellnr){
+	$sql.="insert into daufkopf (auftragsnr,kunde,minpreis,Aufdat,im_datum_soll,waehr_kz,bemerkung,bestellnr)";
+	$sql.=" values($imNr,$kunde,'$minpreis','$aufdatDateTime','$sollImDateTime','$waehrKz','$bemerkung','$bestellnr')";
+	mysql_query($sql);
+	return mysql_insert_id();
+    }
+
+    public function getRechnungKz($abgnr){
+	$retval = "";
+	$sql.="select `dtaetkz-abg`.dtaetkz from `dtaetkz-abg` where `abg-nr`=$abgnr";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $retval = $r[0]['dtaetkz'];
+	}
+	return $retval;
+    }
+    public function getPlanStkProKunde($kunde){
+	$vzkd = 0;
+	$sql.=" select";
+	$sql.=" sum(dispostatnrkunde.vzkd) as vzkd";
+	$sql.=" from  dispostatnrkunde";
+	$sql.=" where";
+	$sql.=" kunde=$kunde";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return intval($r[0]['vzkd']);
+	}
+	return $vzkd;
+    }
+    
+    /**
+     * 
+     * @param type $import
+     */
+    public function getVzKdSollImport($import){
+	$sql.=" select ";
+	$sql.=" sum(dauftr.`stück`*VzKd) as sum_vzkd";
+	$sql.=" from dauftr";
+	$sql.=" where";
+	$sql.=" auftragsnr='$import'";
+	$r=$this->getQueryRows($sql);
+	if($r!==NULL){
+	    return intval($r[0]['sum_vzkd']);
+	}
+	else
+	    return 0;
+    }
     /**
      * overi platnost zadaneho datumu ve tvaru den mesic [rok]
      * oddelovace muzou byt , . - mezera

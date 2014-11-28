@@ -30,8 +30,8 @@ dbConnect();
                 $waehrung = 'EUR';
         }
 
-	$sql="insert into daufkopf (auftragsnr,kunde,minpreis,aufdat,waehr_kz)";
-	$sql.=" values('$auftragsnr','$kunde','$preismin',NOW(),'$waehrung')";
+	$sql="insert into daufkopf (auftragsnr,kunde,minpreis,aufdat,im_datum_soll,waehr_kz)";
+	$sql.=" values('$auftragsnr','$kunde','$preismin',NOW(),NOW(),'$waehrung')";
 
 	$result=mysql_query($sql);
 	$affected_rows=mysql_affected_rows();
