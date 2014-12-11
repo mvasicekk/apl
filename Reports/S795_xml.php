@@ -37,7 +37,7 @@ $pt.=" sum(if(auss_typ=4,(drueck.`Stück`+drueck.`auss-stück`)*drueck.`vz-soll`
 $pt.=" from drueck";
 $pt.=" join daufkopf on daufkopf.auftragsnr=drueck.`auftragsnr`";
 $pt.=" where ((daufkopf.kunde between '$kunde_von' and '$kunde_bis') and (daufkopf.aufdat>='$auftr_von') and (drueck.datum<='$zeitpunkt'))";
-$pt.=" group by daufkopf.kunde,drueck.auftragsnr,daufkopf.aufdat";
+$pt.=" group by daufkopf.kunde,drueck.auftragsnr,DATE_FORMAT(daufkopf.aufdat,'%Y%m%d')";
 $db->query($pt);
 //echo "<br>PT<br>$pt";
 

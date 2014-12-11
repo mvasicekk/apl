@@ -43,7 +43,7 @@ Lagerzugang / pridani do skladu
 		<label>
         Import
         </label>
-        <input type="text" name="auftragsnr" id="auftragsnr" maxlength="6" size="6" onblur="">
+        <input type="text" name="auftragsnr" id="auftragsnr" maxlength="7" size="7" onblur="">
         <label>
         Kundenteil
         </label>

@@ -210,7 +210,7 @@ function pissuggest(xml)
 	
 	//alert(kw.value.length);
 		
-	if((kw.value.length==6)&&(auftragsnrArray.length==0))
+	if((kw.value.length>=6)&&(auftragsnrArray.length==0))
 	{
 		neu_button.className='showbutton';
 		kundeBox.className = 'showbutton';

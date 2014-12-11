@@ -106,7 +106,7 @@ Aufträge pflegen / zadání zakázky
 				<label for="auftragsnr">Auftragsnr</label>
 			    </td>
 			    <td>
-				<input class='disabled_bold' disabled readonly  maxlength='6' size="6" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
+				<input class='disabled_bold' disabled readonly  maxlength='7' size="7" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
 			    </td>
 			    <td>
 				<label for="bestellnr">Bestellnr</label>

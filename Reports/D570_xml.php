@@ -64,7 +64,7 @@ else {
     $sql.=" from dauftr join daufkopf using(auftragsnr)";
     $sql.=" join dkopf using(teil)";
     $sql.=" join dksd on daufkopf.kunde=dksd.kunde";
-    $sql.=" where ((daufkopf.aufdat between '$datumvom' and '$datumbis') and (dkopf.kunde='$kunde')) group by dkopf.kunde,dkopf.teil";
+    $sql.=" where ((daufkopf.aufdat between '$datumvom 00:00:00' and '$datumbis 23:59:59') and (dkopf.kunde='$kunde')) group by dkopf.kunde,dkopf.teil";
     if ($teillangsort != 0)
         $sql.=" order by dkopf.teillang";
     else

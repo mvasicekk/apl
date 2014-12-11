@@ -39,7 +39,7 @@ require_once '../db.php';
 	$dispoDiv.="<th>";
 	$dispoDiv.="Datum";
 	$dispoDiv.="</th>";
-	array_push($columns, array('width'=>275,'align'=>'center'));
+	array_push($columns, array('width'=>380,'align'=>'center'));
 	foreach ($planyArray as $plan) {
 		$planT=$plan['auftragsnr'];
 		$planExDatum = $plan['ex_datum_soll'];
@@ -49,7 +49,7 @@ require_once '../db.php';
 		$dispoDiv.="</th>";
 		array_push($columns, array('width'=>380,'align'=>'center'));
 	}
-	$dispoDiv.="<thead>";
+	$dispoDiv.="</thead>";
 	$dispoDiv.="<tbody>";
 	while ($time <= $timeBis) {
 	    $sollProTagArray = $apl->getPlanSollProTagArray($kd_von,$kd_bis,$time,FALSE);
@@ -64,13 +64,19 @@ require_once '../db.php';
 		    $summeIA[$timeID][$statnr]['ist']+=$pI['ist'];
 		    $summeIA[$timeID][$statnr]['solltag']+=$pI['solltag'];
 		    $summeIA[$timeID][$statnr]['sollprotag']=$sollProTagArray[$statnr];
+		    $summeIA[$timeID][$statnr]['diff']=(intval($sollProTagArray[$statnr])-intval($pI['solltag']));
 		    //$summeIA[$timeID]['sum']['sollprotag']+=$sollProTagArray[$statnr];
-		    
 		}
 		}
 	    }
-	    foreach ($sollProTagArray as $sV)
+	    
+	    $summeIA[$timeID]['sum']['diff']=0;
+	    foreach ($sollProTagArray as $statnr=>$sV){
 		$summeIA[$timeID]['sum']['sollprotag']+=$sV;
+		$summeIA[$timeID]['sum']['diff']+=($sV-$summeIA[$timeID][$statnr]['solltag']);
+		$summeIA[$timeID][$statnr]['diff']=(intval($sV)-intval($summeIA[$timeID][$statnr]['solltag']));
+	    }
+		
 
 	    $dayClass = date('D', $time);
 	    $todayTime = strtotime($apl->make_DB_datum(date('d.m.Y')));
@@ -80,17 +86,18 @@ require_once '../db.php';
 	    $dispoDiv.="<tr>";
 	    $dispoDiv.="<th class='$dayClass'>";
 	    $dispoDiv.="<table class='tagsummetable'>";
-		    $dispoDiv.="<tr><td class='datumheader' colspan='4'>".date('d.m.Y', $time)."</td></tr>";
+		    $dispoDiv.="<tr><td class='datumheader' colspan='5'>".date('d.m.Y', $time)."</td></tr>";
 		    //radek pod datumem , suma minut pro vsechny zakazniky i nezobrazene
 		    $dispoDiv.="<tr>";
 		    $dispoDiv.="<td class='summinheader'>Soll(ALL)</td>";
-		    $dispoDiv.="<td class='summinvalue' colspan='3' id='summinall_$timeID'>".  number_format($summinAll, 0, ',', ' ')."</td>";
+		    $dispoDiv.="<td class='summinvalue' colspan='4' id='summinall_$timeID'>".  number_format($summinAll, 0, ',', ' ')."</td>";
 		    $dispoDiv.="</tr>";
 		    //------------------------------------------------------------------
 		    $dispoDiv.="<tr>";
 		    $dispoDiv.="<td class='statnr'>Statnr</td>";
 		    $dispoDiv.="<td class='solltag'>SollproTag</td>";
 		    $dispoDiv.="<td class='solltag'>Soll/Tag</td>";
+		    $dispoDiv.="<td class='solltag'>Diff</td>";
 		    $dispoDiv.="<td class='ist'>Ist</td>";
 		    $dispoDiv.="</tr>";
 		    foreach ($summeIA[$timeID] as $statnr=>$pi){
@@ -99,13 +106,19 @@ require_once '../db.php';
 			$dispoDiv.="<td class='statnr'>";
 			$dispoDiv.=$statnr;
 			$dispoDiv.="</td>";
-			$dispoDiv.="<td class='sollprotag'>";
+			$dispoDiv.="<td id='sollprotagsum"."_".$statnr."_".$timeID."' class='sollprotag'>";
 			$dispoDiv.=number_format($pi['sollprotag'], 0, ',', ' ');
 			$dispoDiv.="</td>";
 			$dispoDiv.="<td id='solltagsum"."_".$statnr."_".$timeID."' class='solltag'>";
 			$sollTagValue = number_format($pi['solltag'], 0, ',', ' ');
 			$dispoDiv.= $sollTagValue;
 			$dispoDiv.="</td>";
+			
+			$dispoDiv.="<td id='diff"."_".$statnr."_".$timeID."' class='solltag'>";
+			$diffValue = number_format($pi['diff'], 0, ',', ' ');
+			$dispoDiv.= $diffValue;
+			$dispoDiv.="</td>";
+
 			$dispoDiv.="<td class='ist'>";
 			$dispoDiv.=number_format($pi['ist'], 0, ',', ' ');
 			$dispoDiv.="</td>";

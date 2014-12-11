@@ -115,7 +115,7 @@ umgerechnete Rechnung pflegen
 				<label for="rechnrneu">RechnunrNr.:</label>
 			</td>
 			<td>
-				<input onblur="" maxlength='6' size="6" type="text" id="rechnrneu" name="rechnrneu" value=""/>
+				<input onblur="" maxlength='7' size="7" type="text" id="rechnrneu" name="rechnrneu" value=""/>
 				<input type='text' class='hidden' id='newtatnr_failed' value='tatnrfehler' />
 			</td>
 		</tr>

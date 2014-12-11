@@ -71,7 +71,7 @@ else {
     $sql.=" left join dteildokument on dteildokument.teil=dkopf.teil";
     $sql.=" join dksd on daufkopf.kunde=dksd.kunde";
     $sql.=" where ( 1";
-    $sql.=" and (daufkopf.aufdat between '$datumvom' and '$datumbis') and (dkopf.kunde='$kunde')";
+    $sql.=" and (daufkopf.aufdat between '$datumvom 00:00:00' and '$datumbis 23:59:59') and (dkopf.kunde='$kunde')";
     if(strlen($dokunr)>0)
 	$sql.=" and (dteildokument.doku_nr like '$dokunr')";	
     $sql.=" )";

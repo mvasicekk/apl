@@ -426,7 +426,8 @@ class AplDB {
 	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') as im_soll_datum,";
 	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as im_soll_time,";
 	$sql.=" daufkopf.kunde,";
-	$sql.=" daufkopf.auftragsnr as import";
+	$sql.=" daufkopf.auftragsnr as import,";
+	$sql.=" daufkopf.bestellnr";
 	$sql.=" ,if(daufkopf.ausliefer_datum is null,'noex',DATE_FORMAT(daufkopf.ausliefer_datum,'%Y%m%d')) as ausliefer_datum";
 	$sql.=" ,if(daufkopf.fertig='2100-01-01','norech',DATE_FORMAT(daufkopf.fertig,'%Y%m%d')) as fertig";
 	$sql.=" from daufkopf";
@@ -441,6 +442,38 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $ex
+     */
+    public function getRestVzkdForEx($ex){
+	$sql.=" select";
+	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as vzkd_gepl";
+	$sql.=" from dauftr";
+	$sql.=" where";
+	$sql.=" (dauftr.termin='P$ex') and (dauftr.`auftragsnr-exp` is null) and (dauftr.`pal-nr-exp` is null)";
+	$r = $this->getQueryRows($sql);
+	$vzkdSoll = 0;
+	if($r!==NULL){
+	    $vzkdSoll = intval($r[0]['vzkd_gepl']);
+	}
+	
+	$sql=" select";
+	$sql.=" sum(if(auss_typ=4,(drueck.`Stück`+`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`)) as sumvzkd_fertig";
+	$sql.=" from dauftr";
+	$sql.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.Teil=dauftr.teil and drueck.TaetNr=dauftr.abgnr";
+	$sql.=" where";
+	$sql.=" (dauftr.termin='P$ex') and (dauftr.`auftragsnr-exp` is null) and (dauftr.`pal-nr-exp` is null)";
+	
+	$r = $this->getQueryRows($sql);
+	$vzkdFertig = 0;
+	if($r!==NULL){
+	    $vzkdFertig = intval($r[0]['sumvzkd_fertig']);
+	}
+
+	return $vzkdSoll-$vzkdFertig;
+    }
+    
     /**
      * 
      * @param type $kundeVon
@@ -1213,6 +1246,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
         return mysql_affected_rows();
     }
 
+    
     /**
      *
      * @param type $plan
@@ -1248,6 +1282,44 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	if($rows===NULL) return 0;
 	return intval($rows[0]['sum_minuten']);
     }
+    
+    /**
+     * 
+     * @param type $dbDatum
+     * @param type $kd_von
+     * @param type $kd_bis
+     * @return int
+     */
+    public function getPlanSollTagKundeSummeNoEx($dbDatum,$kd_von,$kd_bis){
+	$sql.=" select sum(minuten) as sum_minuten ";
+	$sql.=" from plansolltag ";
+	$sql.=" where ";
+	$sql.="     (datum='$dbDatum')";
+	$sql.="     and plan between '".$kd_von."NOEX' and '".$kd_bis."NOEX'";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sum_minuten']);
+    }
+    
+    /**
+     * 
+     * @param type $dbDatum
+     * @param type $statnr
+     * @param type $kd_von
+     * @param type $kd_bis
+     * @return int
+     */
+    public function getPlanSollStatnrSummeNoEx($dbDatum, $statnr, $kd_von, $kd_bis) {
+	$sql.=" select sum(minuten) as sum_minuten ";
+	$sql.=" from plansolltag ";
+	$sql.=" where ";
+	$sql.="     (datum='$dbDatum') and (statnr='$statnr')";
+	$sql.="     and plan between '".$kd_von."NOEX' and '".$kd_bis."NOEX'";
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL) return 0;
+	return intval($rows[0]['sum_minuten']);
+    }
+
     /**
      *
      * @param type $dbDatum
@@ -2919,7 +2991,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param <type> $kunde
      */
     public function getKundeInfoArray($kunde) {
-        $sql = "select kunde,name1,preismin,`waehr-kz` as waehrkz from `dksd` where `kunde`='$kunde'";
+        $sql = "select bearbeitung_tage,kunde,name1,preismin,`waehr-kz` as waehrkz from `dksd` where `kunde`='$kunde'";
         return $this->getQueryRows($sql);
     }
 
@@ -5338,7 +5410,50 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    return $this->getQueryRows($sql);
     }
 
-        public function getIstFertig($termin,$datum,$rmDateTime=NULL){
+    /**
+     * 
+     * @param type $termin
+     * @param type $datum
+     * @param type $rmDateTime
+     * @return type
+     */
+    public function getIstFertigKunde($kunde_von,$kunde_bis,$datum,$rmDateTime=NULL){
+	    $sql.=" select ";
+	    $sql.=" daufkopf.kunde,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
+	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
+	    $sql.=" from ";
+	    $sql.=" drueck";
+	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr";
+	    $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	    $sql.=" where";
+	    $sql.=" daufkopf.kunde between '$kunde_von' and '$kunde_bis'";
+	    $sql.=" and (drueck.Datum='$datum')";
+	    if($rmDateTime!==NULL)
+	    $sql.=" and (drueck.insert_stamp<='$rmDateTime')";
+	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	    $sql.=" group by";
+	    $sql.=" daufkopf.kunde";
+	    $r=$this->getQueryRows($sql);
+	    if($r!==NULL){
+		$a = array();
+		foreach ($r as $row){
+		    $a[$row['kunde']]=$row;
+		}
+		return $a;
+	    }
+	    else {
+		return NULL;
+	    }
+    }
+
+        
+    public function getIstFertig($termin,$datum,$rmDateTime=NULL){
 	    $sql.=" select ";
 	    $sql.=" dauftr.termin,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
@@ -5349,7 +5464,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
 	    $sql.=" from ";
 	    $sql.=" drueck";
-	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr";
+	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr and drueck.teil=dauftr.teil";
 	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
 	    $sql.=" where";
 	    $sql.=" dauftr.termin='$termin'";
@@ -5361,7 +5476,66 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    $sql.=" dauftr.termin";
 	    return $this->getQueryRows($sql);
     }
+
     
+    public function getPlanIstFertigNoEx($kunde,$datum,$rmDateTime=NULL){
+	    $datum = date('Y-m-d',$datum);
+	    $sql.=" select ";
+	    $sql.=" '$kunde"."NOEX' as termin,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
+	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
+	    $sql.=" from ";
+	    $sql.=" drueck";
+	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr and dauftr.teil=drueck.teil";
+	    $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	    $sql.=" where";
+	    $sql.=" (daufkopf.kunde='$kunde')";
+	    $sql.=" and (drueck.Datum<='$datum')";
+	    if($rmDateTime!==NULL)
+	    $sql.=" and (drueck.insert_stamp<='$rmDateTime')";
+	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	    $sql.=" group by";
+	    $sql.=" dauftr.`auftragsnr-exp`";
+//	    var_dump($sql);
+	    return $this->getQueryRows($sql);
+    }
+
+	/**
+	 * 
+	 * @param type $kunde
+	 * @param type $time
+	 * @return type
+	 */
+        public function getPlanVzKdNoEx($kunde,$time=NULL){
+	if($time!==NULL){
+	$datumDB = date('Y-m-d',$time);
+	$sql.=" select ";
+	$sql.=" '$kunde"."NOEX' as termin,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0041,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0051,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0061,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0081,";
+	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as sum_vzkd";
+	$sql.=" from ";
+	$sql.=" dauftr";
+	$sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	$sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+	$sql.=" where";
+	$sql.=" (daufkopf.kunde='$kunde')";
+	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	$sql.=" and (DATE_FORMAT(daufkopf.aufdat,'%Y-%m-%d')<='$datumDB')";
+	$sql.=" group by";
+	$sql.=" dauftr.`auftragsnr-exp`";
+	}
+	return $this->getQueryRows($sql);
+    }
+
     /**
      *
      * @param type $terminAktual 
@@ -5385,7 +5559,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" where";
 	$sql.=" (dauftr.termin='$terminAktual')";
 	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
-	$sql.=" and (daufkopf.aufdat<='$datumDB')";
+	$sql.=" and (DATE_FORMAT(daufkopf.aufdat,'%Y-%m-%d')<='$datumDB')";
 	$sql.=" group by";
 	$sql.=" dauftr.termin";
 	}
@@ -5474,7 +5648,55 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	}
 	return NULL;
     }
-    
+
+    /**
+     * 
+     * @param type $terminAktual
+     * @param type $statnr
+     * @param type $time
+     * @param type $rmDateTime
+     * @return type
+     */
+    public function getPlanZuBearbeitenNoEx($terminAktual,$statnr,$time,$rmDateTime=NULL){
+	$kunde = substr($terminAktual, 0, 3);
+	
+	$zubearbeiten = 0;
+	
+	// vzkdplan
+	$vzkdPlanArray = $this->getPlanVzKdNoEx($kunde,$time);
+	if($vzkdPlanArray===NULL)
+	    $vzkdPlan = 0;
+	else{
+	    $index = 'sum_vzkd_'.$statnr;
+	    if($statnr=='sum')
+		$index = 'sum_vzkd';
+	    $vzkdPlan = floatval($vzkdPlanArray[0][$index]);
+	}
+	
+	
+
+	// fertig
+	$fertigPlanArray = $this->getPlanIstFertigNoEx($kunde, $time,$rmDateTime);
+	if($fertigPlanArray===NULL)
+	    $fertigPlan = 0;
+	else{
+	    $index = 'sum_vzkd_'.$statnr;
+	    if($statnr=='sum')
+		$index = 'sum_vzkd';
+	    $fertigPlan = floatval($fertigPlanArray[0][$index]);
+	}
+	
+	
+	// solltag
+	if($statnr=='sum')
+	    $beforeMins = floatval($this->getPlanSollTagSumme($terminAktual, date('Y-m-d',$time), TRUE));
+	else
+	    $beforeMins = floatval($this->getPlanSollTagMinuten($terminAktual, $statnr, date('Y-m-d',$time), TRUE));
+
+	$zubearbeiten = $vzkdPlan-$fertigPlan-$beforeMins;
+	
+	return $zubearbeiten;
+    }
     /**
      *
      * @param type $terminAktual
@@ -5616,6 +5838,26 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return $pIA;
     }
     
+    /**
+     * 
+     * @param type $kd_von
+     * @param type $kd_bis
+     */
+    public function getKundenMitGeplantenMinuten($kd_von,$kd_bis){
+	$sql.=" select";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as vzkd_gepl";
+	$sql.=" from daufkopf";
+	$sql.=" join dauftr on dauftr.auftragsnr=daufkopf.auftragsnr";
+	$sql.=" where";
+	$sql.=" daufkopf.kunde between '$kd_von' and '$kd_bis'";
+	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	$sql.=" and (dauftr.`pal-nr-exp` is null)";
+	$sql.=" group by";
+	$sql.=" daufkopf.kunde";
+	$sql.=" having vzkd_gepl<>0";
+	return $this->getQueryRows($sql);	
+    }
     /**
      *
      * @param type $kd_von
@@ -7325,9 +7567,9 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
 	}
     }
 
-    public function createNewImport($imNr,$kunde,$minpreis,$aufdatDateTime,$sollImDateTime,$waehrKz,$bemerkung,$bestellnr){
-	$sql.="insert into daufkopf (auftragsnr,kunde,minpreis,Aufdat,im_datum_soll,waehr_kz,bemerkung,bestellnr)";
-	$sql.=" values($imNr,$kunde,'$minpreis','$aufdatDateTime','$sollImDateTime','$waehrKz','$bemerkung','$bestellnr')";
+    public function createNewImport($imNr,$kunde,$minpreis,$aufdatDateTime,$sollImDateTime,$waehrKz,$bemerkung,$bestellnr,$sollExDateTime,$standard_zielort_id){
+	$sql.="insert into daufkopf (auftragsnr,kunde,minpreis,Aufdat,im_datum_soll,waehr_kz,bemerkung,bestellnr,ex_datum_soll,zielort_id)";
+	$sql.=" values($imNr,$kunde,'$minpreis','$aufdatDateTime','$sollImDateTime','$waehrKz','$bemerkung','$bestellnr','$sollExDateTime','$standard_zielort_id')";
 	mysql_query($sql);
 	return mysql_insert_id();
     }
@@ -7343,18 +7585,30 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
     }
     public function getPlanStkProKunde($kunde){
 	$vzkd = 0;
-	$sql.=" select";
-	$sql.=" sum(dispostatnrkunde.vzkd) as vzkd";
-	$sql.=" from  dispostatnrkunde";
-	$sql.=" where";
-	$sql.=" kunde=$kunde";
+	$sql.=" select dksd.import_plan_vzkd as vzkd from dksd where Kunde=$kunde";
+//	$sql.=" select";
+//	$sql.=" sum(dispostatnrkunde.vzkd) as vzkd";
+//	$sql.=" from  dispostatnrkunde";
+//	$sql.=" where";
+//	$sql.=" kunde=$kunde";
 	$r = $this->getQueryRows($sql);
 	if($r!==NULL){
 	    return intval($r[0]['vzkd']);
 	}
 	return $vzkd;
     }
+
     
+    public function getStandardZielortId($kunde){
+	$sql.="select zielorte.id from zielorte where kunde=$kunde order by standard desc,zielort asc limit 1";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return $r[0]['id'];
+	}
+	else {
+	    return 0;
+	}
+    }
     /**
      * 
      * @param type $import
@@ -7371,6 +7625,36 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
 	}
 	else
 	    return 0;
+    }
+    
+    public function getExporteVzkdDatumKunde($kunde,$time){
+	$datum = date('Y-m-d',$time);
+	$sql.=" select";
+	$sql.=" daufkopf.auftragsnr";
+	$sql.=" from";
+	$sql.=" daufkopf";
+	$sql.=" where";
+	$sql.=" (daufkopf.kunde=$kunde)";
+	$sql.=" and (DATE_FORMAT(daufkopf.ex_datum_soll,'%Y-%m-%d')='$datum')";
+	return $this->getQueryRows($sql);
+    }
+    
+    public function getImporteVzkdDatumKunde($kunde,$time){
+	$datum = date('Y-m-d',$time);
+	$sql.=" select";
+	$sql.=" daufkopf.auftragsnr,";
+	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as vzkd";
+	$sql.=" from";
+	$sql.=" daufkopf";
+	$sql.=" join dauftr on dauftr.auftragsnr=daufkopf.auftragsnr";
+	$sql.=" where";
+	$sql.=" (daufkopf.kunde=$kunde)";
+	$sql.=" and (DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d')='$datum')";
+	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	$sql.=" and (dauftr.`pal-nr-exp` is null)";
+	$sql.=" group by";
+	$sql.=" daufkopf.auftragsnr";
+	return $this->getQueryRows($sql);
     }
     /**
      * overi platnost zadaneho datumu ve tvaru den mesic [rok]

@@ -96,7 +96,7 @@ if($reporttyp=='IM'){
     $pt.=" as SELECT dauftr.teil,dauftr.auftragsnr,sum(dauftr.`Stück`) as gut_stk";
     $pt.=" FROM `dauftr`";
     $pt.=" join daufkopf on daufkopf.auftragsnr=dauftr.AuftragsNr";
-    $pt.=" WHERE ((daufkopf.aufdat between '$date_von' and '$date_bis') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G')";
+    $pt.=" WHERE ((daufkopf.aufdat between '$date_von 00:00:00' and '$date_bis 23:59:59') and (daufkopf.kunde between '$kundevon' and '$kundebis') and (dauftr.kzgut='G')";
     if($bTeil)
 	$pt.="     and (dauftr.teil like '$teil')";
     $pt.=" )";

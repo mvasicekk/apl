@@ -48,7 +48,7 @@
 	<input acturl="./getDispoDiv.php" type="button" id="disporefresh" value="Refr." />
 	<hr>
 	<a href='./imexcalendar.php' target="_blank">Rundlauf - Kalendar</a>
-	<a href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;RM bis (Zeit);Kunde von;Kunde bis&promenne=von;bis;rm_bis;kundevon;kundebis&values={$datevon};;{$rm_bis};0;999&report=S218'>Dispo Report</a>
+	{*<a href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;RM bis (Zeit);Kunde von;Kunde bis&promenne=von;bis;rm_bis;kundevon;kundebis&values={$datevon};;{$rm_bis};0;999&report=S218'>Dispo Report</a>*}
     </fieldset>
 </div>
 

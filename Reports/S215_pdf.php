@@ -7,6 +7,7 @@ $doc_title = "S215";
 $doc_subject = "S215 Report";
 $doc_keywords = "S215";
 
+$apl = AplDB::getInstance();
 // necham si vygenerovat XML
 
 $parameters=$_GET;
@@ -25,6 +26,11 @@ if($reporttyp=='mit VzKd')
 else
     $bVzkd = FALSE;
 
+$puser = $_SESSION['user'];
+$vzkdZeigen = $apl->getDisplaySec('S215', 'vzkd', $puser);
+if($bVzkd===TRUE){
+    $bVzkd = $vzkdZeigen;
+}
 if($teil=='*' || strlen($teil)==0)
     $bTeilWhere = FALSE;
 else

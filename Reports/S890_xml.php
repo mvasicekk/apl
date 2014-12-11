@@ -43,7 +43,7 @@ $db->query($pt);
 $sql="select daufkopf.kunde,daufkopf.auftragsnr,DATE_FORMAT(daufkopf.aufdat,'%d.%m.%Y') as aufdat,sum(dauftr.`stück`) as stk,sum(dauftr.`stück`*gew) as vaha from dauftr";
 $sql.=" join daufkopf using(auftragsnr)";
 $sql.=" join dkopf on dauftr.teil=dkopf.teil";
-$sql.=" where ((daufkopf.kunde between '$kundevon' and '$kundebis') and (daufkopf.aufdat between '$aufdatvon' and '$aufdatbis') and (dauftr.kzgut='G'))";
+$sql.=" where ((daufkopf.kunde between '$kundevon' and '$kundebis') and (daufkopf.aufdat between '$aufdatvon 00:00:00' and '$aufdatbis 23:59:59') and (dauftr.kzgut='G'))";
 $sql.=" group by daufkopf.kunde,daufkopf.auftragsnr";
 
 //$sql=" SELECT drech.AuftragsNr, drech.`Taet-kz`, drech.Text1, drech.DM, Sum(drech.`Stück`) AS sumstk, Sum(drech.Ausschuss) AS sumauss, sum((drech.`Stück`+Ausschuss)*DM) as betrag";

@@ -171,7 +171,7 @@ td.negativ{
 }
 
 .today{
-    background-color: #ffdddd;
+    background-color: #FFB;
 }
 
 table.exporttag{
@@ -245,6 +245,15 @@ table.exporttable td.solltag{
     text-align: right;
 }
 
+table.exporttable td.solltaginput{
+    width: 75px;
+    border: 1px solid black;
+    text-align: right;
+    background-color: lightgoldenrodyellow;
+}
+
+
+
 table.exporttable td.ist{
     border: 1px solid black;
     text-align: right;
@@ -261,12 +270,33 @@ table.exporttable td.solltag input{
     border: none;
     text-align: right;
     width: 70px;
+    background-color: transparent;
+    font-weight: bold;
+    color: black;
+}
+
+table.exporttable td.solltaginput input{
+    border: none;
+    text-align: right;
+    width: 70px;
     background-color: lightgoldenrodyellow;
 }
 
 table.exporttable tr{
     height: 30px;
 }
+
+table.exporttable td.importarrived{
+    background-color: #FDD;
+    color: black;
+    text-align: left;
+}    
+
+table.exporttable td.exportsollweg{
+    background-color: #DFD;
+    color: black;
+    text-align: left;
+}    
 
 /******************************************************************************/
 /* tagsummetable */

@@ -82,7 +82,7 @@ Rückmeldungen / zadání výkonu
 		<td>
 	
 			<label for="auftragsnr"><b><u>A</u></b>uftragsnr</label><br>
-			<input {if $exportFlag>0}disabled='disabled'{/if} accesskey='a' {popup text="zde zadejte cislo zakazky podle pracovniho papiru"} onblur="getDataReturnXml('./validate_auftragsnr.php?&controlid='+this.id+'&value='+this.value, validate_auftragsnr);"  onfocus='markfocus(this);this.select();' maxlength='6' size="6" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
+			<input {if $exportFlag>0}disabled='disabled'{/if} accesskey='a' {popup text="zde zadejte cislo zakazky podle pracovniho papiru"} onblur="getDataReturnXml('./validate_auftragsnr.php?&controlid='+this.id+'&value='+this.value, validate_auftragsnr);"  onfocus='markfocus(this);this.select();' maxlength='7' size="7" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
                         <input type="text" disabled="disabled" id="pg" value="" size="1"/>
                         <input type="text" disabled="disabled" id="kunde" value="" size="3"/>
 		</td>

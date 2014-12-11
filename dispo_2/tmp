@@ -1,0 +1,16 @@
+	$imnr = "00:00";
+	$sql.=" select";
+	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as time";
+	$sql.=" from daufkopf";
+	$sql.=" where";
+	$sql.=" daufkopf.kunde=$kunde";
+	$sql.=" order by ";
+	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') desc,";
+	$sql.=" daufkopf.auftragsnr desc";
+	$sql.=" limit 1";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $imnr = $r[0]['time'];
+	}
+	return $imnr;
+    

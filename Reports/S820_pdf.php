@@ -22,8 +22,8 @@ $reporttyp = $_GET['reporttyp'];
 $user = $_SESSION['user'];
 
 // nacteni pole s rolema
-if(!testReportPassword("S820",$password,$user))
-	echo "password ($password,$user)";
+if(!testReportPassword("S820",$password,$user,1))
+	echo "password ??, etwas stimmt nicht !";
 else
 {
 

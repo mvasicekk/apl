@@ -31,7 +31,7 @@ $sql.= "     ,DATE_FORMAT(dkopf.`Muster-Freigabe-2-vom`,'%y-%m-%d') as freigabe2
 $sql.=" from dauftr join daufkopf using(auftragsnr)";
 $sql.=" join dkopf using(teil)";
 $sql.=" join dksd on daufkopf.kunde=dksd.kunde";
-$sql.=" where ((daufkopf.aufdat between '$datumvon' and '$datumbis')";
+$sql.=" where ((daufkopf.aufdat between '$datumvon 00:00:00' and '$datumbis 23:59:59')";
 if(($kunde>0) && ($teil=='*')){
     $sql.= "     and (dkopf.kunde='$kunde')";
 }

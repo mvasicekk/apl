@@ -185,29 +185,26 @@ function updateSollTagChanged(data){
     // mam na jedne strance vice elementu se stejnym id, coz je illegal a vyber
     // potom nefunguje jak ma
     // 
-    //$('#'+data.summeid).val(data.summeplan);
     var att1 = 'input[name="'+data.summeid+'"]';
     $(att1).val(data.summeplan);
     
     $('#'+data.summetagId).html(data.summetagValue);
     $('#'+data.summestatnrtagId).html(data.summestatnrtagValue);
     $('#'+data.summinAllId).html(data.summinAllValue);
-    
+
     //spocitat rozdil
+    //jednotlive statnr
     var sollProtag = parseInt($('#sollprotagsum_'+data.statnr+'_'+data.datum).html().replace(/\s+/g, ''));
     var sollTag = parseInt($('#solltagsum_'+data.statnr+'_'+data.datum).html().replace(/\s+/g, ''));
     var diff = sollProtag-sollTag;
     diff = number_format(diff,0,',',' ');
     $('#diff_'+data.statnr+'_'+data.datum).html(diff);
-    
+    //suma statnr
     var sollProtag = parseInt($('#sollprotagsum_sum_'+data.datum).html().replace(/\s+/g, ''));
     var sollTag = parseInt($('#solltagsum_sum_'+data.datum).html().replace(/\s+/g, ''));
     var diff = sollProtag-sollTag;
     diff = number_format(diff,0,',',' ');
     $('#diff_sum_'+data.datum).html(diff);
-    
-    
-//    alert('sollProTag='+sollProtag+' sollTag='+sollTag+' diff='+diff);
     
     $.each( data.zubearbarray, function(i, n){
 	$('#'+i).html(n);

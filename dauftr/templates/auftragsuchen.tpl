@@ -48,7 +48,7 @@ Aufträge pflegen / zadani zakazky
 	        <label>
         	Auftrag suchen / hledat zakázku
 	        </label>
-	        <input type="text" name="auftragsnr" id="auftragsnr" onfocus="this.select();" onkeyup="getDataReturnXml('./suggest.php?keyword='+this.value, pissuggest);" maxlength="10" size="10">
+	        <input type="text" name="auftragsnr" id="auftragsnr" onfocus="this.select();" onkeyup="getDataReturnXml('./suggest.php?keyword='+this.value, pissuggest);" maxlength="7" size="7">
 	        <input class='hidden' type="text" name="kunde" id="kunde" maxlength="3" size="3">
 		<input class='hidden' type="button" name="auftragsnrneu" id="auftragsnrneu" onclick="getDataReturnXml('./new_auftrag.php?auftragsnr='+document.getElementById('auftragsnr').value+'&kunde='+document.getElementById('kunde').value, new_auftrag);" value='NEU Auftrag / nova zakazka'>
 	</span>
