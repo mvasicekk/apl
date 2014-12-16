@@ -33,7 +33,7 @@
 /**
  * installation path
  */
-define ("K_PATH_MAIN", "e:/www/tcpdf/");
+define ("K_PATH_MAIN", "/var/www/workspace/apl/tcpdf/");
 
 /**
  * url path

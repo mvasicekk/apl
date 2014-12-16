@@ -46,6 +46,12 @@ fieldset.buttonsection legend{
     width: 100%;
 }
 
+#myChart{
+    background-color:rgb(179,179,179);
+    margin-top: 1em;
+    width: 100%;
+}
+
 table.monatleistungtable
 {
 	background-color:rgb(220,220,220);
@@ -76,6 +82,14 @@ table.monatleistungtable
 	margin-left: 1em;
     }
 
+    #myChart{
+	float: left;
+	margin-top: 1em;
+	margin-left: 2em;
+	width: 40%;
+	height: 20em;
+    }
+    
     table.paramtable
     {
 	margin-top: 1em;

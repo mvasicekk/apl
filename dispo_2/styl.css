@@ -48,6 +48,11 @@ border-bottom: 1px solid black;
     /*width: 20em;*/
 }    
 
+
+table.imextable td{
+width: 30em;
+}    
+
 table.imextable{
     border-collapse: collapse;
     width: 100%;
@@ -82,7 +87,7 @@ td.kundeTagBox{
 }    
 
 th.kundeheader{
-    /*width: 10em;*/
+    width: 10em;
     vertical-align: middle;
     text-align: center;
     font-size: 0.6em;
@@ -90,7 +95,7 @@ th.kundeheader{
 }    
 
 th.datumheader{
-/*    width: 10em;*/
+    width: 10em;
     vertical-align: middle;
     text-align: left;
     font-size: 0.6em;

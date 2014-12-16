@@ -36,7 +36,7 @@
 	{foreach from=$calendarArray item=tag key=tagdatum}
 	    <tr id="tag_{$tag.datum}" class="{$tag.tagname} {$tag.dnes}">
 		<th class="datumheader">
-		    {$tag.datum}&nbsp;{$tag.tagname}
+		    {$tag.datum}<br>{$tag.tagname}
 		</th>
 		
 		{foreach from=$kundenArray item=kunde key=kundenr}

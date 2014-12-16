@@ -41,7 +41,7 @@ $smarty = new Smarty;
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
 	// + 14 dnu
-	$pocetdnu = $pocetDnuPredAktualnimDnem+21;
+	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	$datumBis = date('Y-m-d',  strtotime($datumVon)+$pocetdnu*24*60*60);
 	
 	$kundenNrArray = array();

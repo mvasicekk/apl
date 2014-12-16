@@ -10,6 +10,15 @@
 	<link rel="stylesheet" href="./styl_common.css" type="text/css">
 	<link rel="stylesheet" href="./styl.css" type="text/css">
 	<script type="text/javascript" src="./js/jquery-1.11.0.min.js"></script>
+	
+	<script type="text/javascript" src="./js/jquery.jqplot.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="./js/jquery.jqplot.min.css"/>
+	
+	<script type="text/javascript" src="./js/plugins/jqplot.barRenderer.min.js"></script>
+	<script type="text/javascript" src="./js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+	<script type="text/javascript" src="./js/plugins/jqplot.canvasTextRenderer.min.js"></script>
+	<script type="text/javascript" src="./js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+	
 	<script type="text/javascript" src="./apl.js"></script>
 	{literal}
 	<style>
@@ -152,53 +161,12 @@
 			</tr>
 		    {/foreach}
 		</table>
-
-{*		<table class="monatleistungtable" border="0">
-		    <tr>
-			<td colspan="5" class="progresspopis">Importe - Heute</td>
-		    </tr>
-		    <tr>
-			<td class="ganzmonat">Kunde</td>
-			<td class="ganzmonat">auftragsnr</td>
-			<td class="ganzmonat">aufdat</td>
-			<td class="ganzmonat">ausliefdat</td>
-			<td class="ganzmonat">rechdatum</td>
-		    </tr>
-		    {foreach item=polozka from=$zakazkyIM}
-			<tr>
-			    <td class='progresspolozka'>{$polozka.kunde}</td>
-			    <td class='progresspolozka'>{$polozka.auftragsnr}</td>
-			    <td class='progresspolozka'>{$polozka.aufdat}</td>
-			    <td class='progresspolozka'>{$polozka.ausliefer_datum}</td>
-			    <td class='progresspolozka'>{$polozka.fertig}</td>
-			</tr>
-		    {/foreach}
-		</table>
-
-		<table class="monatleistungtable" border="0">
-		    <tr>
-			<td colspan="5" class="progresspopis">Exporte - Heute</td>
-		    </tr>
-		    <tr>
-			<td class="ganzmonat">Kunde</td>
-			<td class="ganzmonat">auftragsnr</td>
-			<td class="ganzmonat">aufdat</td>
-			<td class="ganzmonat">ausliefdat</td>
-			<td class="ganzmonat">rechdatum</td>
-		    </tr>
-		    {foreach item=polozka from=$zakazkyEX}
-			<tr>
-			    <td class='progresspolozka'>{$polozka.kunde}</td>
-			    <td class='progresspolozka'>{$polozka.auftragsnr}</td>
-			    <td class='progresspolozka'>{$polozka.aufdat}</td>
-			    <td class='progresspolozka'>{$polozka.ausliefer_datum}</td>
-			    <td class='progresspolozka'>{$polozka.fertig}</td>
-			</tr>
-		    {/foreach}
-		</table>
-*}
 	    </div>
 	{/if}
 
+	{if $prihlasen}
+	<div id="myChart">
+	</div>
+	{/if}
     </body>
 </html>
