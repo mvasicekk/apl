@@ -58,7 +58,7 @@ $apl = AplDB::getInstance();
 	    $div.="</td>";
     
 	    $div.="<td>";
-	    $div.="<input type='text' disabled='disabled' id='auftragsnr_$kundeBoxId' maxlength='7' size='7' value='$auftragsnr' />";
+	    $div.="<input type='text' disabled='disabled' id='auftragsnr_$kundeBoxId' maxlength='8' size='8' value='$auftragsnr' />";
 	    $div.="</td>";
 	    
 	    //bestellnr

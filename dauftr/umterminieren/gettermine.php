@@ -29,7 +29,7 @@ if($termineRows!==NULL){
         $panelydiv.="<td><strong><span id='export_old_".$termin['termin']."'>".$termin['termin']."</span></strong></td>";
 	$panelydiv.="<td><strong>".substr($termin['ausliefer_datum'],0,10)."</strong></td>";
 	$panelydiv.="<td><strong>".substr($termin['ex_datum_soll'],0,16)."</strong></td>";
-        $panelydiv.="<td>"."<input acturl='./terminneuUpdate.php' id='terminneu_".$termin['termin']."' type='text' value='' size='6' maxlength='6'"."</td>";
+        $panelydiv.="<td>"."<input acturl='./terminneuUpdate.php' id='terminneu_".$termin['termin']."' type='text' value='' size='8' maxlength='8'"."</td>";
         $panelydiv.="<td>"."<input class='datepicker' id='ex_datum_soll_neu_".$termin['termin']."' type='text' value='' size='10' maxlength='10'"."</td>";
 	$panelydiv.="<td>"."<input id='ex_time_soll_neu_".$termin['termin']."' type='text' value='' size='5' maxlength='5'"."</td>";
 	$panelydiv.="<td>"."<input acturl='./zielortUpdate.php' id='zielort_".$termin['termin']."' type='text' value='".$termin['zielort']."' size='20' maxlength='255'"."</td>";

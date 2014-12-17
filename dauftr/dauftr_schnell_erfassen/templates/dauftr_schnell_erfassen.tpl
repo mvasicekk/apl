@@ -154,7 +154,7 @@ Positionen schnell erfassen / rychle zadani pozic zakazky
 						<label for="exgeplannt">Ex geplant mit</label>
 					</td>
 					<td>
-						<input maxlength='7' size="7" type="text" id="exgeplannt" name="exgeplannt" value="{$exgeplannt_value}"/>
+						<input maxlength='8' size="8" type="text" id="exgeplannt" name="exgeplannt" value="{$exgeplannt_value}"/>
 					</td>
 
 				</tr>

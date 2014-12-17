@@ -50,7 +50,7 @@ Exportfullen / zadani Exportu
 
 <div id='export_header'>
 EXPORT / GEPLANNT:
-<input type='text' {popup text="zde zadejte cislo exportu, se kterym maji vybrane palety odejit.."} class='input_exportnummer' id='export' name='export' size='10' maxlength='7' />
+<input type='text' {popup text="zde zadejte cislo exportu, se kterym maji vybrane palety odejit.."} class='input_exportnummer' id='export' name='export' size='10' maxlength='8' />
 </div>
 
 

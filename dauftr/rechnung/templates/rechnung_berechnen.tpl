@@ -112,7 +112,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
                             <label>Rechnungsnummer fuer <strong>markierte Positionen</strong> :</label>
 			</td>
 			<td>
-				<input maxlength='7' size="7" type="text" id="rechnr_ma" value="{$ma_rechnr}"/>
+				<input maxlength='8' size="8" type="text" id="rechnr_ma" value="{$ma_rechnr}"/>
 			</td>
 		</tr>
 		<tr>
@@ -120,7 +120,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
 				<label>Rechnungsnummer fuer nicht markierte Positionen :</label>
 			</td>
 			<td>
-				<input readonly="readonly" maxlength='7' size="6" type="text" id="rechnr_regular" value="{$auftragsnr_value}"/>
+				<input readonly="readonly" maxlength='8' size="8" type="text" id="rechnr_regular" value="{$auftragsnr_value}"/>
 			</td>
 		</tr>
 <!--		<tr>

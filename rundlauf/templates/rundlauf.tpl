@@ -46,9 +46,9 @@
             <table>
                 <tr>
                     <td>EX</td>
-                    <td><input class="entermove ui-widget" type="text" size="8" maxlength="7" id="ex" value="" acturl="./validateAuftrag.php"/></td>
+                    <td><input class="entermove ui-widget" type="text" size="8" maxlength="8" id="ex" value="" acturl="./validateAuftrag.php"/></td>
                     <td>IM</td>
-                    <td><input class="entermove ui-widget" type="text" size="8" maxlength="7" id="im" value="" acturl="./validateAuftrag.php"/></td>
+                    <td><input class="entermove ui-widget" type="text" size="8" maxlength="8" id="im" value="" acturl="./validateAuftrag.php"/></td>
                 </tr>
 
 		<!-- abfahtrt Aby -->

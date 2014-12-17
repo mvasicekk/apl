@@ -89,10 +89,10 @@ error = {$error}<br>
 				<dt>an</dt>
 				<dd><input onblur="YAHOO.util.Connect.asyncRequest('GET','./validatekndnummer.php?value='+this.value+'&id='+this.id, validatekndnummer);" size="3" maxlength="3" type='text' id='an' name='an' value='{$paarinfo.an}' />&nbsp;<span id='anname'>{$paarinfo.anname}</span></dd>
 				<dt>letzte Rechnung</dt>
-				<dd><input size="7" maxlength="7" type='text' id='letzterechnung' name='letzterechnung' value='{$paarinfo.letzterechnung}' /></dd>
+				<dd><input size="8" maxlength="8" type='text' id='letzterechnung' name='letzterechnung' value='{$paarinfo.letzterechnung}' /></dd>
 
 				<dt>letzte sonstRechnung</dt>
-				<dd><input size="7" maxlength="7" type='text' id='letzterechnung_sonst' name='letzterechnung_sonst' value='{$paarinfo.letzterechnung_sonst}' /></dd>
+				<dd><input size="8" maxlength="8" type='text' id='letzterechnung_sonst' name='letzterechnung_sonst' value='{$paarinfo.letzterechnung_sonst}' /></dd>
 			</dl>
 			</fieldset>
 			</dd>

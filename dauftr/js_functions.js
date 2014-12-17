@@ -210,7 +210,7 @@ function pissuggest(xml)
 	
 	//alert(kw.value.length);
 		
-	if((kw.value.length>=6)&&(auftragsnrArray.length==0))
+	if((kw.value.length>=8)&&(auftragsnrArray.length==0))
 	{
 		neu_button.className='showbutton';
 		kundeBox.className = 'showbutton';
@@ -396,7 +396,7 @@ function checkCR() {
 		//alert('je to z auftragsnr'+element);
 		// zjistim kolik znaku uz mam v textovem poli
 		hodnota = policko.value;
-		if(hodnota.length==6)
+		if(hodnota.length==8)
 		{
 			//alert('hodnota v policku='+hodnota);
 			// mam v tabulce pod polem jeden radek ?

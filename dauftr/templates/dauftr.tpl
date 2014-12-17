@@ -42,7 +42,7 @@ var promenne = new Array(	"teil",
 							"stk_exp",
 							"fremdauftr",
 							"fremdpos");
-							
+
 var onblur_function = new Array("savevalue(this);",
 								"savevalue(this);",
 								"savevalue(this);",
@@ -56,7 +56,7 @@ var onblur_function = new Array("savevalue(this);",
 								"savevalue(this);",
 								"savevalue(this);",
 								"savevalue(this);");
-								
+
 var editovat = new Array(0,0,1,0,0,0,1,1,1,1,1,1,1);
 
 </script>
@@ -106,7 +106,7 @@ Aufträge pflegen / zadání zakázky
 				<label for="auftragsnr">Auftragsnr</label>
 			    </td>
 			    <td>
-				<input class='disabled_bold' disabled readonly  maxlength='7' size="7" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
+				<input class='disabled_bold' disabled readonly  maxlength='8' size="8" type="text" id="auftragsnr" name="auftragsnr" value="{$auftragsnr_value}"/>
 			    </td>
 			    <td>
 				<label for="bestellnr">Bestellnr</label>
@@ -141,7 +141,7 @@ Aufträge pflegen / zadání zakázky
 		</td>
 		<td width='150px'>
 			<input class='formularbutton' accesskey='h' title='Alt+h' type='button' value='suchen / hledat' onclick="document.location.href='auftragsuchen.php';"/>
-			<input class='formularbutton' accesskey='s' title='Alt+s' type='button' value='Änderungen speichern' 
+			<input class='formularbutton' accesskey='s' title='Alt+s' type='button' value='Änderungen speichern'
 		onclick="getDataReturnXml('./save_dauftr.php?auftragsnr='+encodeControlValue('auftragsnr')
 												+'&bestellnr='+encodeControlValue('bestellnr')
 												+'&aufdat='+encodeControlValue('aufdat')
@@ -156,7 +156,7 @@ Aufträge pflegen / zadání zakázky
 			<label for="fertig">Rechnung am / faktura dne</label>
 			<!-- po dvojkliku dovolim smazat fakturu -->
 			<input ondblclick="YAHOO.util.Connect.asyncRequest('GET','./delrechnung.php?auftragsnr={$auftragsnr_value}&run=1', delrechnung);" readonly maxlength='10' size="10" type="text" id="fertig" name="fertig" value="{$fertig_value}"/>
-			
+
 			<label for="ausliefer_datum">ausgeliefert am</label>
 			<input class='disabled_bold' disabled readonly maxlength='10' size="10" type="text" id="ausliefer_datum" name="ausliefer_datum" value="{$ausliefer_datum_value}"/>
 
@@ -204,7 +204,7 @@ Aufträge pflegen / zadání zakázky
 
 
 <div id='dauftr_table'>
-	<div id='scroll_apl'>	
+	<div id='scroll_apl'>
 		<table class='dauftr_table' border='0' id='dautfrtabulka'>
 		<tr class='dauftr_table_header'>
 			<td>Teil</td>
@@ -251,11 +251,11 @@ Aufträge pflegen / zadání zakázky
 				{if $polozka.hasrechnung}
 				Rechnung
 				{else}
-				<a {if $polozka.KzGut eq 'G'} 
-						{popup text="<p>pokud <strong>editujete operaci G</strong>, potom se ImportStk,Termin,AuftrEx,PalEx,FremdAuftr a FremdPos rozkopíruje do všech pozic na vybrané paletě.</p><p>Pokud <strong>mažete u operace G</strong>, smaže se celá paleta (tj. všechny operace na paletě)</p>" } 
-					{/if} 
-					id='edit{$polozka.id_dauftr}' 
-					onclick="getDataReturnXml('./edit_dauftr_row.php?dauftr_id={$polozka.id_dauftr}', edit);" 
+				<a {if $polozka.KzGut eq 'G'}
+						{popup text="<p>pokud <strong>editujete operaci G</strong>, potom se ImportStk,Termin,AuftrEx,PalEx,FremdAuftr a FremdPos rozkopíruje do všech pozic na vybrané paletě.</p><p>Pokud <strong>mažete u operace G</strong>, smaže se celá paleta (tj. všechny operace na paletě)</p>" }
+					{/if}
+					id='edit{$polozka.id_dauftr}'
+					onclick="getDataReturnXml('./edit_dauftr_row.php?dauftr_id={$polozka.id_dauftr}', edit);"
 					href='#'>edit</a>
 				{/if}
 			</td>
@@ -278,10 +278,10 @@ Aufträge pflegen / zadání zakázky
 	</td>
 	<td>
 		<input class='formularbutton' type='button' value='Export/Plan füllen' onclick="document.location.href='./export_fullen/export_fuellen.php?auftragsnr={$auftragsnr_value}';"/>
-		
+
 	</td>
 	<td>
-		<input class='formularbutton' type='button' value='Rechnung' onclick="document.location.href='./rechnung/rechnung_berechnen.php?auftragsnr={$auftragsnr_value}';"/>		
+		<input class='formularbutton' type='button' value='Rechnung' onclick="document.location.href='./rechnung/rechnung_berechnen.php?auftragsnr={$auftragsnr_value}';"/>
 	</td>
 </tr>
 
@@ -289,7 +289,7 @@ Aufträge pflegen / zadání zakázky
 	<td>
                 <input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={$auftragsnr_value};0;9999&report=D235'" class='formularbutton' type="button" id="D235" name="D230" value="D230 - Arbeitspapiere/DUPLEX"/>
 	</td>
-	
+
 	<td>
 		<input onClick="location.href='../get_parameters.php?popisky=Export&promenne=export&values={$auftragsnr_value}&report=D606'" class='formularbutton' type="button" id="D606" name="D606" value="D606 Export"/>
 	</td>
@@ -314,7 +314,7 @@ Aufträge pflegen / zadání zakázky
 		<td>
 			<input id="D710" onClick="location.href='../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={$auftragsnr_value};{$ausliefer_datum_value}&report=D710'" class='formularbutton' type="button"  name="D710" value="D710 - Lieferungsübersicht"/>
 		</td>
-		<td>	
+		<td>
 			<input id="importrechnung" onClick="location.href='./rechnung_umrechnen/import.php'" class='formularbutton' type="button"  name="" value="Rechnung importieren"/>
 		</td>
 </tr>
@@ -323,7 +323,7 @@ Aufträge pflegen / zadání zakázky
 	<td>
 {*		<input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis;A->Z(0) Z->A(1)&promenne=auftragsnr;palvon;palbis;order&values={$auftragsnr_value};0;9999;0&report=D210'" class='formularbutton' type="button" id="D231" name="D210" value="D210 - Arbeitspapiere / Rückseite"/>*}
 	</td>
-	
+
 		<td>
                     <input id="exporttable" onClick="location.href='./exporttablo.php?export={$auftragsnr_value}'" class='formularbutton' type="button"  value="ExportTablo"/>
 		</td>
@@ -331,7 +331,7 @@ Aufträge pflegen / zadání zakázky
 		<td>
 			<input id="D64X" onClick="location.href='../get_parameters.php?popisky=Export (leer = Blanko );Teil;Termin;Text,*RA;Wassermarke,*RA;Format,*RA&promenne=export;teil;termin;popisek;watermark;format&values={$auftragsnr_value};*;{$ausliefer_datum_value};FREIGABE,ZWEIFLER;nein,ja;6x auf A4,2x auf A4&report=D64X'" class='formularbutton' type="button"  value="D6XX - Freigabezettel"/>
 		</td>
-		
+
 		<td>
 			<input class='formularEndbutton' type='button' value='Ende / konec' onclick="document.location.href='../index.php';"/>
 		</td>

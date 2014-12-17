@@ -49,7 +49,7 @@ DLager - Umbuchung
 	    <tr>
 		<td>
 		<label for="auftrag_import">Import - Auftragsnr</label>
-		<input class='entermove' maxlength='7' size="7" type="text" id="auftrag_import" name="auftrag_import" value=""/>
+		<input class='entermove' maxlength='8' size="8" type="text" id="auftrag_import" name="auftrag_import" value=""/>
 		</td>
 		<td>
 		<label for="pal_import">Import - Palette</label>

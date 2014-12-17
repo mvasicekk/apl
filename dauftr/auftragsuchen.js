@@ -1,5 +1,73 @@
 // JavaScript Document
 
+$(document).ready(function(){
+
+    
+    $('#b_infopanely1').click(function(event){
+            var acturl = './infopanelAjax.php';
+            var id = $(this).attr('id');
+
+            // test jestli uz nemam tabulku otevrenou
+            if($('#panelytable').length!=0){
+                $('#panelytable').remove();
+                return;
+            }
+            
+            $.post(acturl,
+            {
+                id: id
+            },
+            function(data){
+                updateInfoPanelClick(data);
+            },
+            'json'
+            );
+    });
+    
+        $('#b_infopanely2').click(function(event){
+            var acturl = './infopanelAjax2.php';
+            var id = $(this).attr('id');
+
+            // test jestli uz nemam tabulku otevrenou
+            if($('#panelytable2').length!=0){
+                $('#panelytable2').remove();
+                return;
+            }
+            
+            $.post(acturl,
+            {
+                id: id
+            },
+            function(data){
+                updateInfoPanelClick2(data);
+            },
+            'json'
+            );
+    });
+    
+            $('#b_infopanely3').click(function(event){
+            var acturl = './infopanelAjax3.php';
+            var id = $(this).attr('id');
+
+            // test jestli uz nemam tabulku otevrenou
+            if($('#panelytable3').length!=0){
+                $('#panelytable3').remove();
+                return;
+            }
+            
+            $.post(acturl,
+            {
+                id: id
+            },
+            function(data){
+                updateInfoPanelClick3(data);
+            },
+            'json'
+            );
+    });
+    
+});
+
 function updateSaveText(data){
     
 }
@@ -204,69 +272,3 @@ function updateInfoPanelClick3(data){
 
 }
 
-$(document).ready(function(){
-
-    $('#b_infopanely1').click(function(event){
-            var acturl = './infopanelAjax.php';
-            var id = $(this).attr('id');
-
-            // test jestli uz nemam tabulku otevrenou
-            if($('#panelytable').length!=0){
-                $('#panelytable').remove();
-                return;
-            }
-            
-            $.post(acturl,
-            {
-                id: id
-            },
-            function(data){
-                updateInfoPanelClick(data);
-            },
-            'json'
-            );
-    });
-    
-        $('#b_infopanely2').click(function(event){
-            var acturl = './infopanelAjax2.php';
-            var id = $(this).attr('id');
-
-            // test jestli uz nemam tabulku otevrenou
-            if($('#panelytable2').length!=0){
-                $('#panelytable2').remove();
-                return;
-            }
-            
-            $.post(acturl,
-            {
-                id: id
-            },
-            function(data){
-                updateInfoPanelClick2(data);
-            },
-            'json'
-            );
-    });
-    
-            $('#b_infopanely3').click(function(event){
-            var acturl = './infopanelAjax3.php';
-            var id = $(this).attr('id');
-
-            // test jestli uz nemam tabulku otevrenou
-            if($('#panelytable3').length!=0){
-                $('#panelytable3').remove();
-                return;
-            }
-            
-            $.post(acturl,
-            {
-                id: id
-            },
-            function(data){
-                updateInfoPanelClick3(data);
-            },
-            'json'
-            );
-    });
-    
-});
