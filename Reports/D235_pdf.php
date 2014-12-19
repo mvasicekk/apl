@@ -485,7 +485,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Write(5,"Auftrag / dodavka / pal:");$pdfobjekt->Ln();
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	$pdfobjekt->SetX($x_pocatek+52+5);
-	$pdfobjekt->SetFont("FreeSans", "B", 25);
+	$pdfobjekt->SetFont("FreeSans", "B", 20);
 	$pdfobjekt->Write(25,getValueForNode($importChildNodes,"auftragsnr")."/");
 	$x1 = $pdfobjekt->GetX();
 	$pdfobjekt->SetFont("FreeSans", "B", 18);
@@ -711,7 +711,7 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$x_pocatek=$pdfobjekt->GetX();
 	$y_pocatek=$pdfobjekt->GetY();
 	$y_offset = 10;
-	$auftragsnr_vyska = 110;
+	$auftragsnr_vyska = 85;
 	$paletaPoziceX = 150;
 	$datumCas = date('d.m.Y H:i:s');
 	$ident = get_user();

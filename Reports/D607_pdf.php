@@ -66,7 +66,7 @@ $cells =
 array(
 
 "import" 
-=> array ("popis"=>"","sirka"=>10,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>12.5,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "abnummer" 
 => array ("popis"=>"","sirka"=>16,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
@@ -171,7 +171,7 @@ $cells_header =
 array(
 
 "export_lief" 
-=> array ("popis"=>"IM\nAuftr\n","sirka"=>11,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("popis"=>"IM\nAuftr\n","sirka"=>12.5,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "abnummer" 
 => array ("popis"=>"AB\nNummer\n","sirka"=>10,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),

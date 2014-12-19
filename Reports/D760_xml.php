@@ -5,6 +5,8 @@ require_once('DB.php');
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
+// D760 delena faktura
+// 
 // cast pro vytvoreni XML by mela byt v jinem souboru jmenosestavy_xml.php
 $db = &DB::connect('mysql://root:nuredv@localhost/apl');
 

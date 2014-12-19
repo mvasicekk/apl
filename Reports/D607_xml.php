@@ -145,7 +145,7 @@ $sql.=" order by $pt_D605_dauftr.termin,$pt_D605_dauftr.Teil,$pt_D605_dauftr.auf
 function getGeplanntDatum($record)
 {
 	$auftrag = substr($record['termin'],1);
-	if(strlen($auftrag)==6)
+	if(strlen($auftrag)>=6)
 	{
 		$sql = "select DATE_FORMAT(ex_datum_soll,'%y-%m-%d %H:%i') as solldat from daufkopf where (auftragsnr='$auftrag')";
 		$res=mysql_query($sql);
