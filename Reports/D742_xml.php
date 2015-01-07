@@ -15,6 +15,20 @@ $db->query("set names utf8");
 
 // vytvorim si nekolik pohledu
 
+$teilen = 0;
+$auftragsnrTeilen='';
+$dt='voll';
+
+
+if(array_key_exists('hatma', $parameters)){
+    $hatma = $parameters['hatma'];
+    $teilen = 1;
+    $auftragsnrTeilen = $parameters['ma_rechnr'];
+    $dt = $parameters['dt'];
+}
+
+$parametersPDF = $parameters;
+
 
 $pcip=get_pc_ip();
 
@@ -45,7 +59,19 @@ $pt.=" from drech";
 $pt.=" join daufkopf on drech.auftragsnr=daufkopf.auftragsnr";
 // 2013-12-18 pridano  and drech.origauftrag=dauftr.auftragsnr
 $pt.=" join dauftr on dauftr.`auftragsnr-exp`=drech.auftragsnr and dauftr.teil=drech.teil and dauftr.`pos-pal-nr`=drech.`pos-pal-nr` and dauftr.abgnr=drech.abgnr and drech.origauftrag=dauftr.auftragsnr";
-$pt.=" where (((drech.AuftragsNr)='$export') and (`Taet-kz`<>'I'))";
+$pt.=" where (((drech.AuftragsNr)='$export') and (`Taet-kz`<>'I')";
+if($hatma!=0){
+    if($parameters['dt']=='ma'){
+        $pt.=" and ( drech.rechnr_druck=".$parameters['ma_rechnr']." )";
+    }
+    elseif($parameters['dt']=='regular'){
+        $pt.=" and ( drech.rechnr_druck=".$export." )";
+    }
+    else{
+        $pt.=" and ( 1 )";
+    }
+}
+$pt.=" )";
 $pt.=" GROUP BY daufkopf.kunde, drech.auftragsnr,drech.fremdauftr,drech.fremdpos,drech.teil, drech.teilbez, drech.`Taet-kz`, drech.DM, drech.abgnr";
 
 $db->query($pt);

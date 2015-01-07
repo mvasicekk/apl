@@ -28,9 +28,11 @@ $pt.=" Sum(if(auss_typ=2,drueck.`Auss-Stück`,0)) AS auss_2,";
 $pt.=" Sum(if(auss_typ=4,drueck.`Auss-Stück`,0)) AS auss_4,";
 $pt.=" Sum(if(auss_typ=6,drueck.`Auss-Stück`,0)) AS auss_6";
 $pt.=" FROM dauftr INNER JOIN drueck ON (dauftr.`pos-pal-nr` = drueck.`pos-pal-nr`) AND (dauftr.abgnr = drueck.TaetNr) AND (dauftr.Teil = drueck.Teil) AND (dauftr.AuftragsNr = drueck.AuftragsNr)";
-$pt.=" WHERE (((dauftr.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.Teil) Like '".$teil."'))";
+$pt.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+//$pt.=" WHERE (((dauftr.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.Teil) Like '".$teil."'))";
+$pt.=" WHERE (((daufkopf.kunde) Between '".$kunde_von."' And '".$kunde_bis."') AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.Teil) Like '".$teil."'))";
 $pt.=" GROUP BY drueck.AuftragsNr, drueck.Teil, drueck.`pos-pal-nr`";
-$pt.=" HAVING (((drueck.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((drueck.Teil) Like '".$teil."'))";
+//$pt.=" HAVING (((drueck.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((drueck.Teil) Like '".$teil."'))";
 //echo $pt."<br>";
 $db->query($pt);
 
@@ -41,7 +43,8 @@ $pt_hotovosum=$pcip.$views[0];
 
 $sql="SELECT dauftr.AuftragsNr, dauftr.Teil, dauftr.Stück, dauftr.fremdpos,dauftr.`pos-pal-nr`, dkopf.Gew, `gew`*`stück` AS vahacelkem, dauftr.`auftragsnr-exp`, ".$pt_hotovosum.".gutstk, ".$pt_hotovosum.".auss, $pt_hotovosum.auss_2,$pt_hotovosum.auss_4,$pt_hotovosum.auss_6,dauftr.KzGut, daufkopf.bestellnr,DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d') as Aufdat, dauftr.Termin";
 $sql.=" FROM daufkopf INNER JOIN ((dkopf RIGHT JOIN dauftr ON dkopf.Teil = dauftr.Teil) LEFT JOIN ".$pt_hotovosum." ON (dauftr.AuftragsNr = ".$pt_hotovosum.".AuftragsNr) AND (dauftr.Teil = ".$pt_hotovosum.".Teil) AND (dauftr.`pos-pal-nr` = ".$pt_hotovosum.".`pos-pal-nr`)) ON daufkopf.AuftragsNr = dauftr.AuftragsNr";
-$sql.=" WHERE (((dauftr.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((dauftr.Teil) Like '".$teil."') AND ((dauftr.`pos-pal-nr`)>0) AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.KzGut)='G'))";
+//$sql.=" WHERE (((dauftr.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((dauftr.Teil) Like '".$teil."') AND ((dauftr.`pos-pal-nr`)>0) AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.KzGut)='G'))";
+$sql.=" WHERE (((daufkopf.kunde) Between '".$kunde_von."' And '".$kunde_bis."') AND ((dauftr.Teil) Like '".$teil."') AND ((dauftr.`pos-pal-nr`)>0) AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.KzGut)='G'))";
 $sql.=" ORDER BY dauftr.AuftragsNr, dauftr.Teil, dauftr.`pos-pal-nr`";
 
 //echo "sql=$sql"."<br>";

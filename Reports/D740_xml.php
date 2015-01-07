@@ -13,7 +13,22 @@ global $db;
 $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->query("set names utf8");
 
+$teilen = 0;
+$auftragsnrTeilen='';
+$dt='voll';
+
+
+if(array_key_exists('hatma', $parameters)){
+    $hatma = $parameters['hatma'];
+    $teilen = 1;
+    $auftragsnrTeilen = $parameters['ma_rechnr'];
+    $dt = $parameters['dt'];
+}
+
+$parametersPDF = $parameters;
+
 // vytvorim si nekolik pohledu
+
 
 $views=array("D740_sumteilstk","");
 
@@ -39,7 +54,19 @@ $pt.=" sum(`stück`) as stk,";
 $pt.=" sum(ausschuss) as auss";
 $pt.=" from drech";
 $pt.=" join daufkopf on drech.auftragsnr=daufkopf.auftragsnr";
-$pt.=" where (((drech.AuftragsNr)='$export') and (`Taet-kz`<>'I'))";
+$pt.=" where (((drech.AuftragsNr)='$export') and (`Taet-kz`<>'I')";
+if($hatma!=0){
+    if($parameters['dt']=='ma'){
+        $pt.=" and ( drech.rechnr_druck=".$parameters['ma_rechnr']." )";
+    }
+    elseif($parameters['dt']=='regular'){
+        $pt.=" and ( drech.rechnr_druck=".$export." )";
+    }
+    else{
+        $pt.=" and ( 1 )";
+    }
+}
+$pt.=" )";
 //$pt.=" GROUP BY drechneu.kunde, drechneu.AuftragsNr, drechneu.vom, drechneu.an, drechneu.fremdauftr, drechneu.fremdpos, drechneu.Teil, drechneu.teilbez, drechneu.`Taet-kz`, drechneu.DM, drechneu.abgnr";
 $pt.=" GROUP BY daufkopf.kunde, drech.auftragsnr,drech.teil, drech.teilbez, drech.`Taet-kz`, drech.DM, drech.abgnr";
 

@@ -41,10 +41,11 @@ dbConnect();
 			// chci zadavat vicepraci
 			// paleta uz je vyexportovana a nabidnu pro dany dil jen interni operace
 			// vytahnu vsechny interni operace a rozlisim podle zakazky
-			if($auftragsnr<999999)
-				$sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000)) order by abgnr";
+			if($auftragsnr==999999||$auftragsnr==99999999)
+			    $sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999)) order by abgnr";
 			else
-				$sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999)) order by abgnr";
+			    $sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000)) order by abgnr";
+			
 			$result_operace = mysql_query($sql);
 			if(mysql_affected_rows()>0)
 			{
@@ -77,10 +78,10 @@ dbConnect();
 		{
 			// chci zadat vicepraci
 			// vytahnu vsechny interni operace a rozlisim podle zakazky
-			if($auftragsnr<999999)
-				$sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000)) order by abgnr";
+			if($auftragsnr==999999||$auftragsnr==99999999)
+			    $sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999)) order by abgnr";
 			else
-				$sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999)) order by abgnr";
+			    $sql="select `abg-nr` as abgnr from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000)) order by abgnr";
 			$result_operace = mysql_query($sql);
 			if(mysql_affected_rows()>0)
 			{

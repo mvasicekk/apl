@@ -46,7 +46,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
 			Exportrechnung erstellen: {$auftragsnr_value} 
 			</td>
 			<td>
-			Auslieferdatum:<input onblur="getDataReturnText('./validate_datum.php?what=datum&value='+this.value+'&controlid='+this.id, refreshdatum)" type='text' name='auslieferdatum' id='auslieferdatum' size='10' maxlength='10' value='{$has_rechnung}'/>
+			Auslieferdatum:<input onblur="getDataReturnText('./validate_datum.php?what=datum&value='+this.value+'&controlid='+this.id, refreshdatum)" type='text' name='auslieferdatum' id='auslieferdatum' size='10' maxlength='10' value='{$ausliefer_value}'/>
 			</td>
 		</tr>
 		<tr>
@@ -112,7 +112,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
                             <label>Rechnungsnummer fuer <strong>markierte Positionen</strong> :</label>
 			</td>
 			<td>
-				<input maxlength='8' size="8" type="text" id="rechnr_ma" value="{$ma_rechnr}"/>
+				<input readonly="readonly" maxlength='8' size="8" type="text" id="rechnr_ma" value="{$ma_rechnr}"/>
 			</td>
 		</tr>
 		<tr>
@@ -150,9 +150,9 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
             <input type="hidden" id="hat_ma_rechnung" value="{$hat_MARechnung}"/>
             <td id="td_rechnung_drueck_auswahl">
                 MA RechnungNr : {$ma_rechnr}&nbsp;
-                druecken : <input type="radio" name="dt" checked="checked" value="ma"/>&nbsp;MA Rechnung
+                druecken : <input type="radio" name="dt" value="ma"/>&nbsp;MA Rechnung
                 &nbsp;<input type="radio" name="dt" value="regular"/>&nbsp;ohne MA Rechnung
-                &nbsp;<input type="radio" name="dt" value="voll"/>&nbsp;volle Rechnung
+                &nbsp;<input type="radio" checked="checked" name="dt" value="voll"/>&nbsp;volle Rechnung
             </td>
 	</tr>
 	<tr>
@@ -180,7 +180,8 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
 	{/if}
             </td>
             <td>
-	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;PDF Password,password&promenne=auftragsnr;pdfpass&values={$auftragsnr_value};&report=D740'" id='D740'/>
+	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;XMA RechNr;DT;hat MA Rech;PDF Password,password&promenne=auftragsnr;ma_rechnr;dt;hatma;pdfpass&values={$auftragsnr_value};{$ma_rechnr};'+$('input[name=dt]:checked').val()+';{$hat_MARechnung}&report=D740'" id='D740'/>
+{*	<input class='' type='button' value='D760 kurz' onclick="location.href='../../Reports/D760_pdf.php?report=D760&auftragsnr={$auftragsnr_value}&auftragsnr_label=Rech Nr'+'&ma_rechnr={$ma_rechnr}'+'&dt='+$('input[name=dt]:checked').val()+'&hatma={$hat_MARechnung}'" id='D760'/>*}
         </td>
         <td>
 	<input class='' type='button' value='D750 normal' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.&promenne=auftragsnr&values={$auftragsnr_value}&report=D750'" id='D750'/>
@@ -193,7 +194,8 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
         <input class='' disabled="disabled" type='button' value='D770 normal' onclick="location.href='../../Reports/D770_pdf.php?report=D770&auftragsnr={$auftragsnr_value}&auftragsnr_label=Rech Nr&abgnr_von='+$('#abgnr_von').val()+'&abgnr_bis='+$('#abgnr_bis').val()+'&flag_teilen='+$('#flag_teilen').val()+'&druck_typ='+$('input[@name=druck_typ]:checked').val()+'&rechnr_regular='+$('#rechnr_regular').val()+'&rechnr_ma='+$('#rechnr_ma').val()" id='D770'/>
         </td>
         <td>
-	<input class='' type='button' value='D742 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;Typ,*RA&promenne=auftragsnr;typ&values={$auftragsnr_value};normal,Summe Teil,nur Summe Teil&report=D742'" id='D742'/>
+{*	<input class='' type='button' value='D742 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;Typ,*RA&promenne=auftragsnr;typ&values={$auftragsnr_value};normal,Summe Teil,nur Summe Teil&report=D742'" id='D742'/>*}
+	<input class='' type='button' value='D742 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;Typ,*RA;XMA RechNr;DT;hat MA Rech&promenne=auftragsnr;typ;ma_rechnr;dt;hatma&values={$auftragsnr_value};normal,Summe Teil,nur Summe Teil;{$ma_rechnr};'+$('input[name=dt]:checked').val()+';{$hat_MARechnung}&report=D742'" id='D742'/>
         </td>
         <td>
 	<input class='' type='button' value='D752 normal' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.&promenne=auftragsnr&values={$auftragsnr_value}&report=D752'" id='D752'/>

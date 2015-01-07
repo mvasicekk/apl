@@ -30,7 +30,7 @@ $(document).ready(function(){
         var abgnrVon = parseInt($('#abgnr_von').val());
         var abgnrBis = parseInt($('#abgnr_bis').val());
         //alert('von='+abgnrVon+' bis='+abgnrBis);
-
+	var pocetOznacenych = 0;
         // projit vsechny radky tabulky
         $('table.formulartable tr[class=rechnung_table_position]').css({'background-color':''});
         $('table.formulartable tr[class=rechnung_table_position]').each(function(index){
@@ -41,11 +41,22 @@ $(document).ready(function(){
             //alert('rowAbgnr='+rowAbgnr);
             if((rowAbgnr>=abgnrVon) && (rowAbgnr<=abgnrBis)){
               $(this).css({'background-color':'yellow'});
+	      pocetOznacenych++;
             }
         });
 
         // enable teilen button
-        $('#bt_markieren_run').show();
+	if($('#rechnr_ma').val()!="00000000"){
+	    if(pocetOznacenych>0){
+		$('#bt_markieren_run').attr('value','Teilen ( '+pocetOznacenych+' )');
+		$('#bt_markieren_run').show();
+	    }
+	    else{
+		$('#bt_markieren_run').attr('value','Teilen ( '+pocetOznacenych+' )');
+		$('#bt_markieren_run').show();
+	    }
+	}
+        
         //bind ajaxfunction to run button
         $('#bt_markieren_run').click(function(){
             var acturl = $(this).attr('acturl');
@@ -71,6 +82,7 @@ $(document).ready(function(){
     $('#bt_abbrechen').click(function(){
             $('table.formulartable tr[class=rechnung_table_position]').css({'background-color':''});
             $('#rechnung_aby_teilen_form').hide();
+	    $('#bt_markieren_run').hide();
             $('#flag_teilen').val('0');
         });
 });

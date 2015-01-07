@@ -210,6 +210,11 @@ function nuluj_sumy_pole(&$pole)
 function pageheader($pdfobjekt,$cells,$childnodes)
 {
 
+    global $parametersPDF;
+    global $teilen;
+    global $auftragsnrTeilen;
+    global $dt;
+
     $pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->SetFillColor(255,255,200,1);
 
@@ -260,7 +265,17 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	$pdfobjekt->SetLineWidth(0.5);
 	$pdfobjekt->Cell(50,7,"Rechnung",'TB',0,'L',0);
-	$pdfobjekt->Cell(0,7,"Nr.:  ".getValueForNode($childnodes,"auftragsnr"),'TB',1,'R',0);
+	
+	$obsah = getValueForNode($childnodes,"auftragsnr");
+	
+        if($teilen!=0){
+            if($dt=='ma')
+                $obsah = $auftragsnrTeilen;
+	}
+        
+	$pdfobjekt->Cell(0,7,"Nr.:  ".$obsah,'TB',1,'R',0);
+
+//	$pdfobjekt->Cell(0,7,"Nr.:  ".getValueForNode($childnodes,"auftragsnr"),'TB',1,'R',0);
 
 	// toto zobrazim jen na prvni strance
 	if($pdfobjekt->PageNo()==1)

@@ -25,6 +25,8 @@ $smarty = new Smarty;
 
         mysql_query('SET names utf8');
 
+	$a = AplDB::getInstance();
+	
 	if(isset($auftragsnr))
 	{
             $sql = " select dauftr.id_dauftr as id,dauftr.teil, dauftr.auftragsnr, `stück` as importstk, `mehrarb-kz` as tatkz, preis, `pos-pal-nr` as pal,";
@@ -51,10 +53,15 @@ $smarty = new Smarty;
 		
 		$smarty->assign("hasrechnung",$hasrechnung);
 		$fertig_value="";
-		if($hasrechnung)
-			$fertig_value = get_rechnung_datum($auftragsnr);
-		
+		if($hasrechnung){
+		    $fertig_value = get_rechnung_datum($auftragsnr);
+		}
+			
+		$auftrInfo = $a->getAuftragInfoArray($auftragsnr);
+		$ausliefer_value = $auftrInfo[0]['ausliefer_datum'];
+		    
 		$smarty->assign("fertig_value",$fertig_value);
+		$smarty->assign("ausliefer_value",$ausliefer_value);
 		 
 		// zjistim minutovou sazbu z auftragu
 		$minpreis=get_minpreis_von_auftrag($auftragsnr);
@@ -67,9 +74,15 @@ $smarty = new Smarty;
 		}
                 else{
 		    // uprava vezmu podledni hodnotu ma faktury a zvetsim o jednicku
-		    $kunde = $apl->getKundeFromAuftransnr($auftragsnr);
-		    $letzteMARechnung = $apl->getLetzteMARechNrKunde($kunde);
-		    $letzte_MA_RECHNR = $letzteMARechnung + 1;
+		    // u noveho cislovani bude na 4.miste 8cka napr. z 13000001 bude 13080001
+		    if(strlen($auftragsnr)==8){
+			$letzte_MA_RECHNR = substr($auftragsnr, 0, 3).'8'.substr($auftragsnr, 4);
+		    }
+		    else{
+//			$kunde = $apl->getKundeFromAuftransnr($auftragsnr);
+//			$letzteMARechnung = $apl->getLetzteMARechNrKunde($kunde);
+			$letzte_MA_RECHNR = "00000000";
+		    }
 		}
 
                 $ma_rechnrVorschlag = $letzte_MA_RECHNR;

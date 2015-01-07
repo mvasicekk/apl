@@ -9,8 +9,11 @@ $doc_keywords = "S818";
 // necham si vygenerovat XML
 
 $parameters=$_GET;
-$auftragsnr_von=$_GET['auftragsnr_von'];
-$auftragsnr_bis=$_GET['auftragsnr_bis'];
+//$auftragsnr_von=$_GET['auftragsnr_von'];
+//$auftragsnr_bis=$_GET['auftragsnr_bis'];
+$kunde_von=$_GET['kunde_von'];
+$kunde_bis=$_GET['kunde_bis'];
+
 $teil=strtr($_GET['teil'],'*','%');
 $pal=strtr($_GET['pal'],'*','%');
 

@@ -31,7 +31,7 @@ $i=0;
 //echo "</pre>";
 foreach($popisky as $popis)
 {
-	// za popisek jeste muze byt podrobnejsi popis typu policka
+	// za popiskem jeste muze byt podrobnejsi popis typu policka
 	if(strpos($popis,","))
 	{
 		$label=substr($popis,0,strpos($popis,","));
@@ -42,7 +42,14 @@ foreach($popisky as $popis)
 		$label=$popis;
 		$typPole = "text";
 	}
-		
+
+	$pop[$i]['readonly']='';
+	//test na readonly, na zacatku popisku bude #
+	if($label[0]=='X'){
+	    $label = substr($label, 1);
+	    $pop[$i]['readonly']='readonly';
+	}
+	
 	$pop[$i]['typ']=$typPole;
 	$pop[$i]['label']=$label;
 	// rozsireni pro nove input type

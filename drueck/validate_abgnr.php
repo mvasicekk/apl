@@ -54,10 +54,10 @@ $aplDB = AplDB::getInstance();
 		{
 			// dil nema tuhle operaci v pracovnim planu, vytahnu info o operaci ze seznamu operaci a vzaby,vzkd nastavim na 0
 			// a jeste musim rozlisit zdanejde o zakazku 999999		
-			if($auftragsnr<999999)
-				$sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000) and (`abg-nr`='$value')) order by abgnr";
+			if($auftragsnr==999999||$auftragsnr==99999999)
+			    $sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999) and (`abg-nr`='$value')) order by abgnr";
 			else
-				$sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999) and (`abg-nr`='$value')) order by abgnr";
+			    $sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000) and (`abg-nr`='$value')) order by abgnr";
 			
 			$result = mysql_query($sql);
 			if(mysql_affected_rows()>0)
