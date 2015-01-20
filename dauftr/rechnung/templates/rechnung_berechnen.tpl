@@ -83,7 +83,10 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
 						<td align='left'>{$polozka.fremdpos}</td>
 						<td align='right'>{$polozka.diff}</td>
 						<td align='left'>{$polozka.auftragsnr}</td>
-						<td align='left'>{$polozka.text}</td>
+{*						u fracht bude editovatelny*}
+						<td align='left'>
+						    <input readonly type="text" id="text1_{$polozka.id}" acturl='./updateDrechField.php' value="{$polozka.text}" style="width: 100%;" maxlength="100"/>
+						</td>
 					</tr>
 				{/foreach}
 				</table>
@@ -180,6 +183,8 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
 	{/if}
             </td>
             <td>
+	<input type='hidden' name='hatmarech' id='hatmarech' value='{$hat_MARechnung}' />
+	
 	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;XMA RechNr;DT;hat MA Rech;PDF Password,password&promenne=auftragsnr;ma_rechnr;dt;hatma;pdfpass&values={$auftragsnr_value};{$ma_rechnr};'+$('input[name=dt]:checked').val()+';{$hat_MARechnung}&report=D740'" id='D740'/>
 {*	<input class='' type='button' value='D760 kurz' onclick="location.href='../../Reports/D760_pdf.php?report=D760&auftragsnr={$auftragsnr_value}&auftragsnr_label=Rech Nr'+'&ma_rechnr={$ma_rechnr}'+'&dt='+$('input[name=dt]:checked').val()+'&hatma={$hat_MARechnung}'" id='D760'/>*}
         </td>

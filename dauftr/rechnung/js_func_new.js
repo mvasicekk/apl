@@ -2,6 +2,9 @@
 
 $(document).ready(function(){
 
+
+    $('input[id^=text1_]').bind('change',text1Updatet);
+    
     $('#rechnung_aby_teilen_form').hide();
 
 
@@ -89,6 +92,27 @@ $(document).ready(function(){
 
 
 // Ajax update Functions
+
+function text1Updatet(event){
+    var Id  = $(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    
+    $.post(acturl,
+	{
+	id:Id,
+        value:$(this).val()
+        },
+        function(data){
+		updateDrechUpdate(data);
+            },
+            'json'
+    );
+}
+
+
+function updateDrechUpdate(data){
+    
+}
 
 function updateRechnungTeilen(data){
     //alert('affected_rows='+data.ar);

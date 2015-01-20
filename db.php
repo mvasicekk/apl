@@ -3215,10 +3215,13 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     /**
      * 
      */
-    public function getEinkaufAnforderungenArray(){
+    public function getEinkaufAnforderungenArray($u,$all=TRUE){
 	$sql = "select";
 	$sql.=" id,stamp,SUBSTRING(user,LOCATE('/',user)+1) as login,anftyp,artikel,anzahl,user,bemerkung,abdatum,prio,status,lieferdatum,erledigt";
 	$sql.=" from einkauf_anforderungen";
+	if($all!==TRUE){
+	    $sql.=" where user like '%$u'";
+	}
 	$sql.=" order by id desc";
 	return $this->getQueryRows($sql);
     }
@@ -3925,6 +3928,12 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
         return mysql_affected_rows();
     }
     
+    
+    public function updateDRechField($dbField, $value, $drechId){
+	$sql = "update drech set `$dbField`='$dbValue' where drech_id=$drechId limit 1";
+	mysql_query($sql);
+	return mysql_affected_rows();
+    }
     /**
      * 
      * @param type $drueckId

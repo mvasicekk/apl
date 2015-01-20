@@ -118,7 +118,7 @@
 		    <div id='rs_S5XX' style="display:{$display_sec.rs_S5XX}">
                         <input id="S510" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;PersNr von;PersNr bis&promenne=von;bis;persvon!number;persbis!number&values=;;0;99999&report=S510'" class='reportbutton' type="button"  name="S510" value="S510 - Reparaturen nach PersNr"/>
                         <input id="S515" onClick="location.href='../get_parameters.php?popisky=Invnr von;Invnr bis&promenne=invvon;invbis&values=;;&report=S515'" class='reportbutton' type="button"  name="S515" value="S515 - Reparaturen nach InvNr"/>
-                        <input id="S520" onClick="location.href='../get_parameters.php?popisky=Password,password;Datum von,*DATE;Datum bis,*DATE;InvNr von;InvNr bis;ErsatzTeil;PersNr von;PersNr bis;Grenze unten;Grenze oben;Premie[%];Report,*RA;mit VzKd,*CH&promenne=password;von;bis;invnrvon;invnrbis;et;persvon!number;persbis!number;gu;go;p;reporttyp;mitvzkd&values=;;;0;999999;*;0;99999;0,14;0,30;10;nach PersNr,PersNr Praemien,nach Invnummer;a&report=S520'" class='reportbutton' type="button"  name="S520" value="S520 - Reparaturen nach PersNr - Detail"/>
+                        <input id="S520" onClick="location.href='../get_parameters.php?popisky=Password,password;Datum von,*DATE;Datum bis,*DATE;InvNr von;InvNr bis;ErsatzTeil;PersNr von;PersNr bis;Grenze unten;Grenze oben;Premie[%];Report,*RA;mit VzKd,*CH&promenne=password;von;bis;invnrvon;invnrbis;et;persvon!number;persbis!number;gu;go;p;reporttyp;mitvzkd&values=;;;0;999999;*;0;99999;0,14;0,30;10;nach PersNr,PersNr Praemien,nach Invnummer,SumPersExcell;a&report=S520'" class='reportbutton' type="button"  name="S520" value="S520 - Reparaturen nach PersNr - Detail"/>
 		    </div>
 		    
 		    <div id='rs_S67XX' style="display:{$display_sec.rs_S67XX}">
@@ -131,7 +131,8 @@
 
 		    <div id='rs_S8XX' style="display:{$display_sec.rs_S8XX}">
 			<input id="S805" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Jahr&promenne=kundevon!number;kundebis!number;jahr!number&values=0;999;{$aktualniRok}&report=S805'" class='reportbutton' type="button"  name="S805" value="S805 - Umsatz je Kunde + StatNr nach Monaten"/>
-			<input id="S810" onClick="location.href='../get_parameters.php?popisky=Auftrag von;Auftrag bis;Teil&promenne=auftragsnr_von!number;auftragsnr_bis!number;teil&values=;;&report=S810'" class='reportbutton' type="button"  name="S810" value="S810 - Teil - Bearbeitungsstand"/>
+{*			<input id="S810" onClick="location.href='../get_parameters.php?popisky=Auftrag von;Auftrag bis;Teil&promenne=auftragsnr_von!number;auftragsnr_bis!number;teil&values=;;&report=S810'" class='reportbutton' type="button"  name="S810" value="S810 - Teil - Bearbeitungsstand"/>*}
+			<input id="S810" onClick="location.href='../get_parameters.php?popisky=Auftragsdatum von,*DATE;Auftragsdatum bis,*DATE;Teil&promenne=auftragsnr_von;auftragsnr_bis;teil&values=;;&report=S810'" class='reportbutton' type="button"  name="S810" value="S810 - Teil - Bearbeitungsstand"/>
 			<input id="S813" disabled='disabled' class='reportbutton' type="button"  name="S610" value="S813 - Teil - Bearbeitungsstand ohne Rechnung"/>
 			<input id="S816" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Teil&promenne=kunde_von!number;kunde_bis!number;teil&values=;;*&report=S816'" class='reportbutton' type="button"  name="S816" value="S816 - T_neodeslane"/>
                         <input id="S817" onClick="location.href='../get_parameters.php?popisky=Auftrag von;Auftrag bis;Teil&promenne=auftragsnr_von!number;auftragsnr_bis!number;teil&values=;;*&report=S817'" class='reportbutton' type="button"  name="S817" value="S817 - T ohne Leistung"/>

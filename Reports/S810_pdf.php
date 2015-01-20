@@ -1,6 +1,7 @@
 <?php
 require_once '../security.php';
 require_once "../fns_dotazy.php";
+require_once '../db.php';
 
 $doc_title = "S810";
 $doc_subject = "S810 Report";
@@ -10,9 +11,12 @@ $doc_keywords = "S810";
 
 $parameters=$_GET;
 
-$auftragsnr_von=$_GET['auftragsnr_von'];
-$auftragsnr_bis=$_GET['auftragsnr_bis'];
-$teil=$_GET['teil'];
+$a = AplDB::getInstance();
+
+$auftragsnr_von=$a->make_DB_datum($_GET['auftragsnr_von']);
+$auftragsnr_bis=$a->make_DB_datum($_GET['auftragsnr_bis']);
+
+$teil=  trim($_GET['teil']);
 
 
 require_once('S810_xml.php');

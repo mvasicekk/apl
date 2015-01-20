@@ -397,6 +397,11 @@ function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
 
+    global $parametersPDF;
+    global $teilen;
+    global $auftragsnrTeilen;
+    global $dt;
+
     $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Ln();
@@ -409,8 +414,11 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 
 
     if(strlen($zweck)>0){
-
     $renr = getValueForNode($childNodes,"auftragsnr");
+    if($teilen!=0){
+	if($dt=='ma') $renr = $auftragsnrTeilen;
+    }
+
     $lsnr = getValueForNode($childNodes,"origauftrag");
 
     $zweckText = "Als Verwendungszweck geben Sie bitte an: ";

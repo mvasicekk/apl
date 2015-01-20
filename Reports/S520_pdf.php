@@ -48,7 +48,7 @@ if($reportTyp=="nach PersNr")
 else
     $reportTypPersNr = FALSE;
 
-if($reportTyp=="PersNr Praemien"){
+if($reportTyp=="PersNr Praemien"||$reportTyp=="SumPersExcell"){
     $bPraemien = TRUE;
     $reportTypPersNr = TRUE;
 }
@@ -1159,7 +1159,148 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku,$cellhead)
         else
                 return FALSE;
 }
-				
+
+if($reportTyp=="SumPersExcell"){
+    date_default_timezone_set('Europe/Prague');
+    /** PHPExcel */
+    require_once '../Classes/PHPExcel.php';
+    // Create new PHPExcel object
+    $objPHPExcel = new PHPExcel();
+    $user = get_user_pc();
+    // Set properties
+    $objPHPExcel->getProperties()->setCreator($user)
+							 ->setLastModifiedBy($user)
+							 ->setTitle("E520")
+							 ->setSubject("E520")
+							 ->setDescription("E520")
+							 ->setKeywords("office openxml php")
+							 ->setCategory("phpexcel");
+    
+    $cells_header = array(
+	"persnr"=>array(
+	    "popis"=>"persnr    ",
+	    ),
+	"name"=>array(
+	    "popis"=>"Name                               ",
+	    ),
+	"rep_kosten"=>array(
+	    "popis"=>"Reparaturkosten - Arbeit",
+	    ),
+	"et_kosten"=>array(
+	    "popis"=>"Ers.Teile",
+	    ),
+	"zuschlag"=>array(
+	    "popis"=>"Repkosten Zuschlag 10%",
+	    ),
+	"gesamt"=>array(
+	    "popis"=>"Repkosten - Gesamt",
+	    ),
+	"vzkd_11"=>array(
+	    "popis"=>"Vzkd S0011",
+	    ),
+	"vzkd_51"=>array(
+	    "popis"=>"Vzkd S0051",
+	    ),
+	"vzaby"=>array(
+	    "popis"=>"VzAby $von - $bis",
+	    ),
+	
+    );
+    
+    $sloupec=0;
+    $radek=1;
+    
+
+    foreach($cells_header as $ch){
+	$popis = $ch['popis'];
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $popis);
+	$sloupec++;
+    }
+    
+    $sloupecAktual = 'A';
+    foreach ($cells_header as $ch) {
+	$objPHPExcel->getActiveSheet()->getColumnDimension($sloupecAktual)->setWidth(strlen($ch['popis'])+2);
+	$sloupecAktual = chr(ord($sloupecAktual)+1);
+    }
+
+    $radek++;
+
+
+    
+    $personen = $domxml->getElementsByTagName("person");
+    foreach ($personen as $person) {
+	$sloupec=0;
+        nuluj_sumy_pole($sum_zapati_persnr);
+        $personChilds = $person->childNodes;
+	$persnr = getValueForNode($personChilds, 'persnr_ma');
+        $maschinen = $person->getElementsByTagName("machine");
+        foreach ($maschinen as $maschine) {
+            $maschineChilds = $maschine->childNodes;
+            $positionen = $maschine->getElementsByTagName("et");
+	    $sum_zapati_persnr['rep_kosten'] += intval(getValueForNode($maschineChilds, 'rep_kosten'));
+            foreach ($positionen as $et) {
+                $etChilds = $et->childNodes;
+		$alt = intval(getValueForNode($etChilds, 'et_alt'));
+		$multi = $alt>0?0.4:1;
+		$sum_zapati_persnr['et_kosten'] += floatval(getValueForNode($etChilds, 'preis'))*$multi*getValueForNode($etChilds, 'anzahl');
+            }
+        }
+        $sum_zapati_persnr['zuschlag'] = ($sum_zapati_persnr['rep_kosten'] + $sum_zapati_persnr['et_kosten']) * 0.1;
+        $sum_zapati_persnr['gesamt'] = $sum_zapati_persnr['rep_kosten'] + $sum_zapati_persnr['et_kosten'] + $sum_zapati_persnr['zuschlag'];
+	
+	
+	$popis = getValueForNode($personChilds, 'persnr_ma');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$popis = getValueForNode($personChilds, 'name').' '.getValueForNode($personChilds, 'vorname');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$popis = $sum_zapati_persnr['rep_kosten'];
+	$popis = number_format($popis, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$popis = $sum_zapati_persnr['et_kosten'];
+	$popis = number_format($popis, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$popis = $sum_zapati_persnr['zuschlag'];
+	$popis = number_format($popis, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$popis = $sum_zapati_persnr['gesamt'];
+	$popis = number_format($popis, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+
+	$popis = getValueForNode($personChilds, 'vzkd_11');
+	$popis = number_format($popis, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$popis = getValueForNode($personChilds, 'vzkd_51');
+	$popis = number_format($popis, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+
+	$vzAby = $apl->getVzAbyProPersNrDatum($von, $bis, $persnr);
+	$popis = number_format($vzAby, 0, ',', '');
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec++, $radek, $popis);
+	
+	$radek++;
+//        zapati_person($pdf, 5, array(255, 255, 240), $sum_zapati_persnr, $personChilds,getValueForNode($personChilds, 'persnr_ma'));
+    }
+
+    $objPHPExcel->getActiveSheet()->setTitle('E520');
+    // Set active sheet index to the first sheet, so Excel opens this as the first sheet	
+    $objPHPExcel->setActiveSheetIndex(0);
+    // Redirect output to a client’s web browser (Excel5)
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment;filename="E520.xls"');
+    header('Cache-Control: max-age=0');
+
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    $objWriter->save('php://output');
+    exit;
+
+}
+else{
 require_once('../tcpdf/config/lang/eng.php');
 require_once('../tcpdf/tcpdf.php');
 
@@ -1295,9 +1436,5 @@ zapati_sestava_repariertVom($pdf, 5, array(240,240,255), $sum_zapati_repariertVo
 
 //Close and output PDF document
 $pdf->Output();
-
-//============================================================+
-// END OF FILE                                                 
-//============================================================+
-
-?>
+    
+}

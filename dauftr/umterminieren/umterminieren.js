@@ -26,7 +26,9 @@ function updateTerminNeuChanged(data){
     else{
 	$('#'+data.id).css({"border-color":""});
 	//vypitvat cast za podtrzitkem
-	prilepek=data.id.substr(data.id.indexOf('_', 0),8);
+//	prilepek=data.id.substr(data.id.indexOf('_', 0),8);
+	prilepek=data.id.substr(data.id.indexOf('_', 0));
+//	alert(prilepek);
 	$('#ex_datum_soll_neu'+prilepek).val(data.exportinfo[0].ex_soll_datum);
 	$('#ex_time_soll_neu'+prilepek).val(data.exportinfo[0].ex_soll_uhrzeit);
     }
@@ -147,7 +149,9 @@ $(document).ready(function(){
 		exportNeuValue = $.trim($(this).val());
 		if(exportNeuValue.length>0){
 		    thisId = $(this).attr('id');
-		    prilepek= thisId.substr(thisId.indexOf('_', 0),8);
+		    
+		    //prilepek= thisId.substr(thisId.indexOf('_', 0),8);
+		    prilepek= thisId.substr(thisId.indexOf('_', 0));
 		    exportOldValue = $('#export_old'+prilepek).html();
 		    exSollDatumValue = $('#ex_datum_soll_neu'+prilepek).val();
 		    exSollUhrzeitValue = $('#ex_time_soll_neu'+prilepek).val();

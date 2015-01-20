@@ -1,7 +1,4 @@
 <?php
-// ngix web server
-
-
 session_start();
 require_once('XML/Query2XML.php');
 require_once('DB.php');

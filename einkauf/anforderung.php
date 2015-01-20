@@ -87,6 +87,8 @@ if ($elementsIdArray !== NULL) {
 	$display_sec[$elementId] = $apl->getDisplaySec('einkaufaufforderung', $elementId, $puser) ? 'block' : 'none';
     }
 }
+
+
 $smarty->assign("display_sec", $display_sec);
 
 

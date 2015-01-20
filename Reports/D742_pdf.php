@@ -116,65 +116,6 @@ array(
 
 );
 
-//$cells =
-//array(
-//
-//"teilnr"
-//=> array ("popis"=>"","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"teilbez"
-//=> array ("popis"=>"","sirka"=>45,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"text1"
-//=> array ("popis"=>"","sirka"=>45,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
-//
-//"auss"
-//=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
-//
-//"stk"
-//=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
-//
-//"preis"
-//=> array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>20,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
-//
-//"betrag"
-//=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
-//
-//"waehrung"
-//=> array ("popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>0)
-//
-//);
-//
-//
-//$cells_header =
-//array(
-//
-//"teil"
-//=> array ("popis"=>"Teil","sirka"=>20,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-//
-//"bezeichnung"
-//=> array ("popis"=>"Import","sirka"=>45,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-//
-//"dienstleistung"
-//=> array ("popis"=>"Art der Dienstleistung","sirka"=>45,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
-//
-//"auss"
-//=> array ("popis"=>"Ausschuss","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-//
-//"gutstk"
-//=> array ("popis"=>"GutSTK","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-//
-//"preis"
-//=> array ("popis"=>"Preis","sirka"=>20,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-//
-//"betrag"
-//=> array ("popis"=>"Betrag","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>1),
-//
-//"dummy"
-//=> array ("popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>1),
-//
-//);
-
 $sum_zapati_fremdpos_array = array(	
 								"betrag"=>0,
                                                                 "preis"=>0,
@@ -336,72 +277,6 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 	}
 }
 
-// funkce pro vykresleni hlavicky na kazde strance
-//function pageheader($pdfobjekt,$cells,$childnodes)
-//{
-//	$pdfobjekt->SetFont("FreeSans", "", 7);
-//	$pdfobjekt->SetFillColor(255,255,200,1);
-//
-//	$pdfobjekt->SetY(15);
-//	$pdfobjekt->Cell(60,5,"Abydos s.r.o., CZ - 35132 Hazlov 247",'0',0,'L',0);
-//	$pdfobjekt->Cell(0,5,"Seite ".$pdfobjekt->PageNo()." von {nb}",'0',1,'R',0);
-//
-//	$pdfobjekt->SetY(35);
-//	// schovam si pozice xy
-//	$xOld=$pdfobjekt->GetX();
-//	$yOld=$pdfobjekt->GetY();
-//
-//	// adresa zakaznika
-//	$pdfobjekt->SetFont("FreeSans", "", 9);
-//	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"name1"),'0',1,'L',0);
-//	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"name2"),'0',1,'L',0);
-//	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"strasse"),'0',1,'L',0);
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"land")."-".getValueForNode($childnodes,"plz")." ".getValueForNode($childnodes,"ort"),'0',1,'L',0);
-//
-//	//datum faktury a lieferdatum
-//	$pdfobjekt->SetLeftMargin(100);
-//
-//	//$pdfobjekt->SetX($xOld+100);
-//	$pdfobjekt->SetY($yOld);
-//	$pdfobjekt->Cell(0,5,"Rechnungsdatum:  ".getValueForNode($childnodes,"fertig"),'0',1,'R',0);
-//	//$pdfobjekt->SetX($xOld+100);
-//	$pdfobjekt->Cell(0,5,"Lieferdatum :          ".getValueForNode($childnodes,"ausliefer_datum"),'0',1,'R',0);
-//	$pdfobjekt->Ln();
-//
-//
-//
-//	$pdfobjekt->SetLeftMargin(PDF_MARGIN_LEFT);
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->SetFont("FreeSans", "B", 10);
-//	$pdfobjekt->SetLineWidth(0.5);
-//	$pdfobjekt->Cell(50,7,"D742",'TB',0,'L',0);
-//	$pdfobjekt->Cell(0,7,"Rechnung Nr.:  ".getValueForNode($childnodes,"auftragsnr"),'TB',1,'R',0);
-//
-//	// toto zobrazim jen na prvni strance
-//	if($pdfobjekt->PageNo()==1)
-//	{
-//		$pdfobjekt->SetFont("FreeSans", "B", 8);
-//		$pdfobjekt->Cell(0,7,"Gemäss Ihrer Bestellung Nr.".getValueForNode($childnodes,"bestellnr")." berechnen wir Ihnen :",'0',1,'L',0);
-//	}
-//	else
-//	{
-//		$pdfobjekt->SetFont("FreeSans", "B", 8);
-//		$pdfobjekt->Cell(0,3,"",'0',1,'L',0);
-//	}
-//
-//	$pdfobjekt->SetLineWidth(0.2);
-//	$pdfobjekt->SetFont("FreeSans", "B", 8);
-//	foreach($cells as $cell)
-//	{
-//		$pdfobjekt->Cell($cell['sirka'],5,$cell['popis'],$cell['ram'],$cell['radek'],$cell['align'],$cell['fill']);
-//	}
-//
-//}
-
-
 // funkce pro vykresleni tela
 function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 {
@@ -430,30 +305,6 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 }
 
-// funkce pro vykresleni tela
-//function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
-//{
-//	$pdfobjekt->SetFont("FreeSans", "", 8);
-//	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-//	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
-//	foreach($pole as $nodename=>$cell)
-//	{
-//		if(array_key_exists("nf",$cell))
-//		{
-//			$cellobsah =
-//			number_format(getValueForNode($nodelist,$nodename), $cell["nf"][0],$cell["nf"][1],$cell["nf"][2]);
-//		}
-//		else
-//		{
-//			$cellobsah=getValueForNode($nodelist,$nodename);
-//		}
-//		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
-//	}
-//	//$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-//	$pdfobjekt->SetFont("FreeSans", "", 7);
-//}
-
-
 // funkce ktera vrati hodnotu podle nodename
 // predam ji nodelist a jmeno node ktereho hodnotu hledam
 function getValueForNode($nodelist,$nodename)
@@ -473,15 +324,6 @@ function getValueForNode($nodelist,$nodename)
 function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumArray,$gutStk)
 {
     global $cells;
-//"teilnr"
-//"teilbez"
-//"text1"
-//"auss"
-//"stk"
-//"preis"
-//"betrag"
-//"waehrung"
-
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 
@@ -532,28 +374,8 @@ function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumArray,$gutStk)
 function zapati_fremdpos($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumArray)
 {
     global $cells;
-//"teilnr"
-//"teilbez"
-//"text1"
-//"auss"
-//"stk"
-//"preis"
-//"betrag"
-//"waehrung"
-
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
-//	$pdfobjekt->Cell(
-//                    $cells['teilnr']['sirka']
-//                    +$cells['teilbez']['sirka']
-//                    +$cells['text1']['sirka']
-//                    ,$vyskaradku,"",'T',0,'L',1);
-//
-//        $obsah = number_format($sumArray['auss'],0,',',' ');
-//      	$pdfobjekt->Cell(
-//                    $cells['auss']['sirka']
-//                    ,$vyskaradku,$obsah,'T',0,'R',1);
-
       	$pdfobjekt->Cell(
                             0
                             ,$vyskaradku,"",'T',1,'L',1);
@@ -608,22 +430,12 @@ function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
-//{
-//
-//	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-//	$pdfobjekt->SetFont("FreeSans", "B", 8);
-//	$pdfobjekt->Cell(20+45+45+12+12,$vyskaradku,"",'0',0,'R',1);
-//	$pdfobjekt->Cell(20,$vyskaradku,"Summe:",'TB',0,'R',1);
-//	$obsah=number_format($sumarray['betrag'],2,',',' ');
-//	$pdfobjekt->Cell(15,$vyskaradku,$obsah,'TB',0,'R',1);
-//	$pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,"waehrung"),'TB',1,'R',1);
-//}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
+    global $parametersPDF;
+    global $teilen;
+    global $auftragsnrTeilen;
+    global $dt;
 
     $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
@@ -639,6 +451,10 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
     if(strlen($zweck)>0){
 
     $renr = getValueForNode($childNodes,"auftragsnr");
+    if($teilen!=0){
+	if($dt=='ma') $renr = $auftragsnrTeilen;
+    }
+
     $lsnr = getValueForNode($childNodes,"origauftrag");
 
     $zweckText = "Als Verwendungszweck geben Sie bitte an: ";
@@ -703,31 +519,6 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->Cell(0,$vyskaradku,$vomname,'0',1,'L',0);
 }
 
-//function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
-//{
-//
-//	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-//	$pdfobjekt->SetFont("FreeSans", "B", 8);
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->Cell(0,$vyskaradku,"Bitte überweisen Sie den Betrag bis ".getValueForNode($childNodes,"zahlenbis")." auf das Konto Nr.",'0',1,'1',0);
-//	$pdfobjekt->Cell(0,$vyskaradku,"".getValueForNode($childNodes,"textkonto")."",'0',1,'1',0);
-//	$zweck=getValueForNode($childNodes,"textverwzweck");
-//	if(strlen($zweck)>0)
-//		$pdfobjekt->Cell(0,$vyskaradku,"Als Verwendungszweck geben Sie bitte an: ".$zweck." ".getValueForNode($childNodes,"auftragsnr"),'0',1,'1',0);
-//
-//	$dic=getValueForNode($childNodes,"dic");
-//	if((strlen($dic)>0)&&(substr($dic,0,2)!="CZ"))
-//	{
-//		$pdfobjekt->Cell(0,$vyskaradku,"Es handelt sich um eine steuerfreie innergemeinschaftliche Lieferung nach par.10 Abs. 5 UStG (Gesetzessammlung 235 / 2004).",'0',1,'1',0);
-//		$pdfobjekt->Cell(0,$vyskaradku,"Die USt.Id.Nr. des Rechnungsempfängers ist: ".$dic,'0',1,'1',0);
-//	}
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->Cell(0,$vyskaradku,"Mit freundlichen Grüssen",'0',1,'L',0);
-//	$pdfobjekt->Cell(0,$vyskaradku,"Abydos s.r.o.",'0',1,'L',0);
-//	//$obsah=number_format($sumarray['betrag'],2,',',' ');
-//	//$pdfobjekt->Cell(15,$vyskaradku,$obsah,'TB',0,'R',1);
-//
-//}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_fremdposition($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
@@ -823,39 +614,20 @@ $pdf->SetKeywords($doc_keywords);
 
 $pdf->SetHeaderData("", 0, "D742", "");
 $pdf->setRechnungFoot(true);
-//set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT+5, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-//set auto page breaks
-//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER+3);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
-
-
-//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D740 Rechnung", $params);
-//set margins
-//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-//set auto page breaks
-//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-//$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
-
-//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setHeaderFont(Array("FreeSans", '', 9));
 $pdf->setFooterFont(Array("FreeSans", '', 8));
-
 $pdf->setLanguageArray($l); //set language items
 
 //initialize document
 $pdf->AliasNbPages();
 $pdf->SetFont("FreeSans", "", 8);
 
-
-
 // prvni stranka
 $pdf->AddPage();
-//pageheader($pdf,$cells_header,5);
 
 // zacinam po rechnungach
 
@@ -864,33 +636,6 @@ $z2 = "Hazlov 247                                       Tel:+420 354 595 337    
 $z3 = "35132 Hazlov                                   Fax:+420 354 596 993                                   IBAN: DE43 7216 9831 0000 0622 51 BIC: GENODEF1RBL";
 
 $pdf->setRechnungZeilen($z1, $z2, $z3);
-
-
-//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D742 Rechnung", $params);
-////set margins
-//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-////set auto page breaks
-////$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-//$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
-//
-////$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-//$pdf->setHeaderFont(Array("FreeSans", '', 9));
-//$pdf->setFooterFont(Array("FreeSans", '', 8));
-//
-//$pdf->setLanguageArray($l); //set language items
-//
-////initialize document
-//$pdf->AliasNbPages();
-//$pdf->SetFont("FreeSans", "", 8);
-//
-//
-//
-//// prvni stranka
-//$pdf->AddPage();
-//pageheader($pdf,$cells_header,5);
-
 // zacinam po rechnungach
 
 $rechnunge=$domxml->getElementsByTagName("rechnung");
@@ -954,20 +699,10 @@ foreach ($rechnunge as $rechnung) {
                             $sum_zapati_teil_array[$key]+=$hodnota;
                         }
                     }
-//                    $taetigkeitChildNodes = $taetigkeit->childNodes;
-//                    if (test_pageoverflow_noheader($pdf, 5))
-//                        pageheader($pdf, $cells_header, $rechnungChildNodes);
-//
-//                    detaily($pdf, $cells, 5, array(255, 255, 255), $taetigkeitChildNodes);
-//                    //aktualizuju sumy pro zapati faktury
-//                    foreach ($sum_zapati_rechnung_array as $key => $prvek) {
-//                        $hodnota = getValueForNode($taetigkeitChildNodes, $key);
-//                        $sum_zapati_rechnung_array[$key]+=$hodnota;
-//                    }
                 }
 
                 if($bMitSumme){
-                if (test_pageoverflow_noheader($pdf, 1))
+                if (test_pageoverflow_noheader($pdf, 6))
                     pageheader($pdf, $cells_header, $rechnungChildNodes);
                 zapati_teil($pdf, 6, array(255, 255, 255), $teilChildNodes,$sum_zapati_teil_array,$gutStk);
                 }

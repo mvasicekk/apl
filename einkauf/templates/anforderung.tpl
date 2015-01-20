@@ -76,7 +76,12 @@
     </form>
 </div>
 	
-	<div style="display:{$display_sec.anforderungenlist};" id="anforderungenlist">
+	
+<input type="hidden" name="user" id="user" value="{$user}" />
+<input type="hidden" name="showalllist" id="showalllist" value="{$display_sec.anforderungenlist}" />
+
+{*	<div style="display:{$display_sec.anforderungenlist};" id="anforderungenlist">*}
+	<div id="anforderungenlist">
 	    <div id="grid_array" style="margin:auto;"></div>
 	</div>
 </body>

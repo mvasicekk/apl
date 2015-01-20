@@ -34,6 +34,7 @@ $(document).ready(function(){
         }
     });
     
+    var editable = $('#showalllist').val()=='block'?true:false;
     
     var colM = [
 		{ title: "ID", dataIndx: "id",width:10,editable:false }
@@ -45,9 +46,9 @@ $(document).ready(function(){
 		,{ title: "Bemerkung", dataIndx: "bemerkung", align: "left",width:170,editable:false }
 		,{ title: "ab Datum", dataIndx: "abdatum", align: "left",width:75,editable:false }
 		,{ title: "prio", dataIndx: "prio", align: "right",width:10,editable:false }
-		,{ title: "verantw.", dataIndx: "erledigt", align: "left",width:70,editable:true,className:"editable" }
-		,{ title: "Status", dataIndx: "status", align: "left",width:90,className:"editable" }
-		,{ title: "lief. Datum", dataIndx: "lieferdatum", align: "left",width:75,className:"editable" }
+		,{ title: "verantw.", dataIndx: "erledigt", align: "left",width:70,editable:editable,className:"editable" }
+		,{ title: "Status", dataIndx: "status", align: "left",width:90,className:"editable",editable:editable }
+		,{ title: "lief. Datum", dataIndx: "lieferdatum", align: "left",width:75,className:"editable",editable:editable }
 //		,{ title: "test spojeni sloupcu", colModel:[{title:"neco"},{title:"neco1"}],width:100}
 	    ];
 	    
@@ -56,7 +57,7 @@ $(document).ready(function(){
 		dataType: "JSON",
 		method: "GET",
 		getUrl : function () {                
-		    return { url: 'getanforderungen.php?import='+$('#import').val()};
+		    return { url: 'getanforderungen.php?import='+$('#import').val()+'&user='+$('#user').val()+'&showalllist='+$('#showalllist').val()};
 		},
 		getData: function ( response ) {                
 		    return { data: response };                
