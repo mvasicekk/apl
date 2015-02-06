@@ -104,8 +104,8 @@ array(
 "tatbez_t" 
 => array ("popis"=>"","sirka"=>35,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
-"mittel" 
-=> array ("popis"=>"","sirka"=>25,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+//"mittel" 
+//=> array ("popis"=>"","sirka"=>25,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd" 
 => array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -141,8 +141,8 @@ array(
 "tatbez_d" 
 => array ("popis"=>"Bezeichnung\noznaceni","sirka"=>70,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
-"mittel" 
-=> array ("popis"=>"\nAM","sirka"=>25,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
+//"mittel" 
+//=> array ("popis"=>"\nAM","sirka"=>25,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd" 
 => array ("nf"=>array(4,',',' '),"popis"=>"VzKd\nmin/stk","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -781,6 +781,43 @@ foreach($dily as $dil)
         }
 	}
 	zapati_teil($pdf,$sum_zapati_teil_array);
+	
+	// seznam arbeitsmittelu
+	$a = AplDB::getInstance();
+	$mittelArray = $a->getArbMittelArrayForTeil($teil);
+	if($mittelArray!==NULL){
+	    //hlavicka
+	    $pdf->Ln();
+	    $pdf->SetFillColor(255, 255, 230);
+	    $pdf->Cell(0, 5, "Arbeitsmittel / Messmittel", 'LRBT', 1, 'C', 1);
+	    $pdf->Cell(10, 5, "TatNr", 'LRBT', 0, 'R', 1);
+	    $pdf->Cell(25, 5, "AM / MM", 'LRBT', 0, 'L', 1);
+	    $pdf->Cell(55, 5, "Bemerkung", 'LRBT', 0, 'L', 1);
+	    $pdf->Cell(0, 5, "Datei", 'LRBT', 0, 'L', 1);
+	    $pdf->Ln();
+	    foreach ($mittelArray as $mittel){
+		$obsah = $mittel['abgnr'];
+		$pdf->Cell(10, 5, $obsah, 'LRBT', 0, 'R', 0);
+		$obsah = $mittel['nazev'];
+		$pdf->Cell(25, 5, $obsah, 'LRBT', 0, 'L', 0);
+		$obsah = $mittel['poznamka'];
+		$pdf->Cell(55, 5, $obsah, 'LRBT', 0, 'L', 0);
+		// ma prilohu ?
+		$dir = $a->getArbMittelAnlagenFullPath();
+		$fileName = $mittel['nazev'].".pdf";
+		$filePath = $dir."/".$fileName;
+		if(file_exists($filePath)){
+		    $obsah = "$filePath";
+		    $obsah = substr($filePath, strpos($filePath, "Aby"));
+		}
+		else{
+		    $obsah="";
+		}
+		$pdf->Cell(0, 5, $obsah, 'LRBT', 0, 'L', 0);
+		
+		$pdf->Ln();
+	    }
+	}
 }
 
 //pro pozadavku na zobrazeni musterfoto

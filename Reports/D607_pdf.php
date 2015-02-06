@@ -1554,7 +1554,7 @@ foreach($terminy as $termin)
 		{
 			$paletaChildNodes = $paleta->childNodes;
                         if($reporttyp=='Detail mit Summen' || $reporttyp=='Detail'){
-                            test_pageoverflow($pdf,3,$cells);
+                            test_pageoverflow($pdf,5,$cells);
                             detaily($pdf,$cells,5,array(255,255,255),$paletaChildNodes);
                         }
 			// nascitam casy

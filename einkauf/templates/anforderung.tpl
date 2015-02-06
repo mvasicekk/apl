@@ -48,7 +48,7 @@
 
 	<span>
 	<label for="artikel">Artikel:</label>
-	<input type='text' id='artikel' name='artikel' class='entermove' placeholder="artikel beschreibung"/>
+	<input type='text' maxlength='30' id='artikel' name='artikel' class='entermove' placeholder="artikel beschreibung"/>
 	</span>
 	<span>
 	<label for="anzahl">pocet kusů:</label>
@@ -71,8 +71,8 @@
 {*	    <option value='c' >c - chci to, ale vlastně nepotřebuju</option>*}
 	</select>
 	</span>
-	
 	<input type="submit" value='eingeben / vložit' id='eingeben' name='eingeben' class='entermove submit abyStartButton'/>
+	<input style="display:{$display_sec.E195};" type='button' value='Anforderungen->Excel' onclick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE&promenne=datvon;datbis&values={$prvnidenroku};{$now}'+'&report=E195'" id='E195'/>
     </form>
 </div>
 	

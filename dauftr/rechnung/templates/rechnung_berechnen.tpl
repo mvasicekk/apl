@@ -185,7 +185,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
             <td>
 	<input type='hidden' name='hatmarech' id='hatmarech' value='{$hat_MARechnung}' />
 	
-	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;XMA RechNr;DT;hat MA Rech;PDF Password,password&promenne=auftragsnr;ma_rechnr;dt;hatma;pdfpass&values={$auftragsnr_value};{$ma_rechnr};'+$('input[name=dt]:checked').val()+';{$hat_MARechnung}&report=D740'" id='D740'/>
+	<input class='' type='button' value='D740 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;XMA RechNr;DT;hat MA Rech;PDF Password,password&promenne=auftragsnr;ma_rechnr;dt;hatma;pdfpass&values={$auftragsnr_value};{$ma_rechnr};'+$('input[name=dt]:checked').val()+';'+$('#hat_ma_rechnung').val()+'&report=D740'" id='D740'/>
 {*	<input class='' type='button' value='D760 kurz' onclick="location.href='../../Reports/D760_pdf.php?report=D760&auftragsnr={$auftragsnr_value}&auftragsnr_label=Rech Nr'+'&ma_rechnr={$ma_rechnr}'+'&dt='+$('input[name=dt]:checked').val()+'&hatma={$hat_MARechnung}'" id='D760'/>*}
         </td>
         <td>
@@ -200,7 +200,7 @@ Exportrechnung erstellen / vytvoreni faktury podle exportu
         </td>
         <td>
 {*	<input class='' type='button' value='D742 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;Typ,*RA&promenne=auftragsnr;typ&values={$auftragsnr_value};normal,Summe Teil,nur Summe Teil&report=D742'" id='D742'/>*}
-	<input class='' type='button' value='D742 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;Typ,*RA;XMA RechNr;DT;hat MA Rech&promenne=auftragsnr;typ;ma_rechnr;dt;hatma&values={$auftragsnr_value};normal,Summe Teil,nur Summe Teil;{$ma_rechnr};'+$('input[name=dt]:checked').val()+';{$hat_MARechnung}&report=D742'" id='D742'/>
+	<input class='' type='button' value='D742 kurz' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.;Typ,*RA;XMA RechNr;DT;hat MA Rech&promenne=auftragsnr;typ;ma_rechnr;dt;hatma&values={$auftragsnr_value};normal,Summe Teil,nur Summe Teil;{$ma_rechnr};'+$('input[name=dt]:checked').val()+';'+$('#hat_ma_rechnung').val()+'&report=D742'" id='D742'/>
         </td>
         <td>
 	<input class='' type='button' value='D752 normal' onclick="location.href='../../get_parameters.php?popisky=Rechnung Nr.&promenne=auftragsnr&values={$auftragsnr_value}&report=D752'" id='D752'/>

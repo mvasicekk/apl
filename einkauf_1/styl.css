@@ -1,0 +1,26 @@
+
+#grid_array{
+    overflow: scroll;
+}
+
+@media screen and (min-width:780px){
+}
+
+@media screen and (max-width:780px){
+    .inputform form span{
+	white-space: nowrap;
+	display: table;
+	width: 100%;
+    }    
+
+    .inputform form span label{
+	display: table-cell;
+	padding-right: 0.5em;
+	width: 25%;
+    }    
+
+    .inputform form span input{
+	width: 99%;
+	display: table-cell;
+    }
+}

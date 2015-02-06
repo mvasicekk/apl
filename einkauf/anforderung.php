@@ -78,6 +78,8 @@ if(isset($_GET['d'])){
     $smarty->assign('d', $_GET['d']);
 }
 
+//propojeni sestav s formularem pomoci parametru v get_parameters
+//
 //security
 $elementsIdArray = $apl->getResourcesForFormId('einkaufaufforderung');
 $display_sec = array();
@@ -88,6 +90,29 @@ if ($elementsIdArray !== NULL) {
     }
 }
 
+
+$akt_den = date("d");
+$akt_mesic = date("m");
+$akt_rok = date("Y");
+
+// posledni datum minuleho mesice ziskam jako den 0 aktualniho mesice
+
+$lastday = mktime(0, 0, 0, $akt_mesic, 0, $akt_rok);
+$firstday = mktime(0, 0, 0, date('m', $lastday), 1, $akt_rok);
+
+$min_mesic_od = date('d.m.Y', $firstday);
+$min_mesic_do = date('d.m.Y', $lastday);
+
+$pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $akt_mesic, $akt_rok);
+$tagbis = $pocetDnuVMesici;
+
+$prvniDenAktualnihoRoku = date('d.m.Y', mktime(1, 1, 1, 1, 1, $akt_rok));
+$prvniDenAktualnihoRokuDB = date('Y-m-d', mktime(1, 1, 1, 1, 1, $akt_rok));
+$prvniDenAktualnihoMesice = date('d.m.Y', mktime(1, 1, 1, $akt_mesic, 1, $akt_rok));
+$dnes = date('d.m.Y');
+
+$smarty->assign("now", date("d.m.Y"));
+$smarty->assign("prvnidenroku", $prvniDenAktualnihoRoku);
 
 $smarty->assign("display_sec", $display_sec);
 

@@ -119,5 +119,5 @@ function updateRechnungTeilen(data){
     $('#rechnung_aby_teilen_form').hide('slow');
     $('#td_rechnung_drueck_auswahl').show();
     $('#bt_rechnung_teilen').attr('disabled', 'disabled');
-
+    $('#hat_ma_rechnung').val(1);
 }

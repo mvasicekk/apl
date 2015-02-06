@@ -976,6 +976,15 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
         return $this->getQueryRows($sql);
     }
 
+    public function getAussArtText($artnr){
+	$retString = "";
+	$sql = "select `a-bez` as aussbeschreibung from `auss-art` where `a-nr`='$artnr'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $retString = $r[0]['aussbeschreibung'];
+	}
+	return $retString;
+    }
     /**
      *
      * @param type $aussNr 
@@ -1736,6 +1745,37 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      */
     public function getDposInfo($teil,$tat){
 	$sql = "select dpos.dpos_id as id,dpos.`TaetNr-Aby` as abgnr,dpos.`VZ-min-kunde` as vzkd,dpos.`vz-min-aby` as vzaby from dpos where (teil='$teil') and (dpos.`TaetNr-Aby`=$tat)";
+	return $this->getQueryRows($sql);
+    }
+    
+    /**
+     * 
+     * @param type $ex
+     */
+    public function getAussArtenArrayForExport($ex){
+	$sql.=" select";
+	$sql.=" drueck.Teil as teil,";
+	$sql.=" dauftr.auftragsnr as import,";
+	$sql.=" dauftr.`mehrarb-kz` as tatkz,";
+	$sql.=" dauftr.fremdauftr as bestnr,";
+	$sql.=" dauftr.fremdpos as pos,";
+	$sql.=" drueck.auss_typ,";
+	$sql.=" drueck.`auss-art` as auss_art,";
+	$sql.=" sum(drueck.`Auss-Stück`) as auss_stk";
+	$sql.=" from drueck";
+	$sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.teil=drueck.Teil and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr";
+	$sql.=" where";
+	$sql.=" dauftr.`auftragsnr-exp`='$ex'";
+	$sql.=" and";
+	$sql.=" drueck.auss_typ<>0";
+	$sql.=" group by";
+	$sql.=" drueck.Teil,";
+	$sql.=" dauftr.auftragsnr,";
+	$sql.=" dauftr.`mehrarb-kz`,";
+	$sql.=" drueck.auss_typ,";
+	$sql.=" drueck.`auss-art`";
+	$sql.=" having ";
+	$sql.=" auss_stk<>0;";
 	return $this->getQueryRows($sql);
     }
     /**
@@ -4237,6 +4277,22 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     public function getEssenInfoArray() {
         $sql = "select id_essen as id,essen_kz from " . self::TABLE_DESSEN . " order by id_essen";
         return $this->getQueryRows($sql);
+    }
+
+    public function getArbMittelArrayForTeil($teil){
+	$sql.=" select ";
+	$sql.=" dmittelteilabgnr.teil,";
+	$sql.=" dmittelteilabgnr.abgnr,";
+	$sql.=" dmittel.nazev,";
+	$sql.=" dmittel.poznamka";
+	$sql.=" from dmittelteilabgnr";
+	$sql.=" join dmittel on dmittel.id=dmittelteilabgnr.id_mittel";
+	$sql.=" where";
+	$sql.=" dmittelteilabgnr.teil='$teil'";
+	$sql.=" order by";
+	$sql.=" dmittelteilabgnr.abgnr,";
+	$sql.=" dmittel.nazev";
+	return $this->getQueryRows($sql);
     }
 
     /**

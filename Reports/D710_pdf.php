@@ -494,13 +494,13 @@ function zahlavi_export($pdfobjekt,$vyskaradku,$rgb,$exportChildNodes)
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 
-function test_pageoverflow($pdfobjekt,$vysradku,$cellhead)
-{
+function test_pageoverflow($pdfobjekt, $vysradku, $cellhead,$childnodes=NULL) {
 	// pokud bych prelezl s nasledujicim vystupem vysku stranky
 	// tak vytvorim novou stranku i se zahlavim
 	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
 	{
 		$pdfobjekt->AddPage();
+		zahlavi_export($pdfobjekt,5,array(255,255,255),$childnodes);
 		pageheader($pdfobjekt,$cellhead,$vysradku);
 		$pdfobjekt->Ln();
 		$pdfobjekt->Ln();
@@ -518,9 +518,10 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 		//pageheader($pdfobjekt,$cellhead,$vysradku);
 		//$pdfobjekt->Ln();
 		//$pdfobjekt->Ln();
+		return TRUE;
 	}
+	return FALSE;
 }
-
 /**
  *
  * @param type $teil
@@ -607,7 +608,7 @@ foreach($exporte as $export)
 
 	$exportChildNodes = $export->childNodes;
 
-	test_pageoverflow($pdf,5,$cells_header);
+	test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 	zahlavi_export($pdf,5,array(255,255,255),$exportChildNodes);
 	pageheader($pdf,$cells_header,5);
 
@@ -621,7 +622,7 @@ foreach($exporte as $export)
 		list($summeGut,$summeAuss) = getGutAussStkTeil($teil);
 		if(($summeAuss+$summeGut)==0) continue;
 
-		test_pageoverflow($pdf,5,$cells_header);
+		test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 		zahlavi_teil($pdf,5,array(255,255,255),$teilChildNodes);
                 nuluj_sumy_pole($sum_zapati_teil_array);
 
@@ -633,7 +634,7 @@ foreach($exporte as $export)
 			list($summeGut,$summeAuss) = getGutAussStkImport($import);
 			if(($summeAuss+$summeGut)==0) continue;
 
-			test_pageoverflow($pdf,5,$cells_header);
+			test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 			zahlavi_import($pdf,5,array(255,255,255),$importChildNodes);
 			nuluj_sumy_pole($sum_zapati_import_array);
 
@@ -642,7 +643,7 @@ foreach($exporte as $export)
 			foreach($taetigkeiten as $tat)
 			{
 				$tatChildNodes = $tat->childNodes;
-				test_pageoverflow($pdf,5,$cells_header);
+				test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 				//function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
 				detaily($pdf,$cells,4,array(255,255,255),$tatChildNodes);
 				foreach($sum_zapati_import_array as $key=>$prvek)
@@ -651,6 +652,7 @@ foreach($exporte as $export)
 					$sum_zapati_import_array[$key]+=$hodnota;
 				}				
 			}
+			test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 			zapati_import($pdf,5,array(255,255,255),$importChildNodes,$sum_zapati_import_array);
 			// spocitam sumy pro zapati sestavy
 			$sum_zapati_sestava_array['auss2_stk_exp']+=$sum_zapati_import_array['auss2_stk_exp'];
@@ -666,14 +668,17 @@ foreach($exporte as $export)
 			$sum_zapati_teil_array['gew_auss']+=$sum_zapati_import_array['gew_auss'];
 			$sum_zapati_teil_array['geliefert']+=getValueForNode($importChildNodes,"geliefert");
 		}
+		test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
                 zapati_teil($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array);
 	}
 }
 
+test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 zapati_sestava($pdf,5,array(255,255,255),$exportChildNodes,$sum_zapati_sestava_array);
 $pdf->Ln();
 $pdf->Ln();
-test_pageoverflow_noheader($pdf,120);
+if(test_pageoverflow_noheader($pdf,120))
+	zahlavi_export($pdf,5,array(255,255,255),$exportChildNodes);
 sestava_tabulka($pdf,10,array(255,255,255),$exportChildNodes);
 
 //Close and output PDF document

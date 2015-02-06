@@ -36,6 +36,11 @@ div#rs_S2XX input.reportbutton
     background-color:rgb(200,200,255);	
 }
 
+div#rs_S36X input.reportbutton
+{
+    background-color:rgb(230,230,230);	
+}
+
 div#rs_S34XX input.reportbutton
 {
     background-color:rgb(230,230,230);	
