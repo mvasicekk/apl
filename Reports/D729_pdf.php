@@ -52,6 +52,16 @@ if ($exportInfo !== NULL) {
 	"export" => $export,
 	"bemerkung" => $exportInfo[0]['bemerkung'],
 	"aufdat"=>$exportInfo[0]['aufdat'],
+	"fertig_raw" =>$exportInfo[0]['fertig_raw'],
+	"im_soll_datetime" =>$exportInfo[0]['im_soll_datetime'],
+	"ex_soll_datetime" =>$exportInfo[0]['ex_soll_datetime'],
+	"bestellnr" =>$exportInfo[0]['bestellnr'],
+	"zielort_id" =>$exportInfo[0]['zielort_id'],
+	"kunde" =>$exportInfo[0]['kunde'],
+	"minpreis" =>$exportInfo[0]['minpreis'],
+	"ausliefer_datum" =>$exportInfo[0]['ausliefer_datum'],
+	"ex_soll_datum" =>$exportInfo[0]['ex_soll_datum'],
+	"ex_soll_uhrzeit" =>$exportInfo[0]['ex_soll_uhrzeit'],
     );
 
     $style = array(
@@ -72,12 +82,13 @@ if ($exportInfo !== NULL) {
     );
 
     foreach ($items as $name => $item) {
-	$text = $item;
+	strlen($item)>0?$text = $item:$text="NOTEXT";
 	$x = $pdf->GetX();
 	$y = $pdf->GetY();
 	$pdf->Cell(0, 18, $name.':'.$text, '1', 1, 'L');
 	$textLength = $pdf->GetStringWidth($name.' '.$text);
-	$pdf->write1DBarcode($text, 'C39', $x + $textLength, $y, '', 18, 0.4, $style, 'N');
+	
+	$pdf->write1DBarcode($text, 'C128', $x + $textLength, $y, '', 18, 0.4, $style, 'N');
     }
 } else {
     $pdf->Cell(0, 18, "Exportinfo ERROR", '1', 1, 'L');
