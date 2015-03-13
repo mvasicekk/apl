@@ -97,11 +97,11 @@ $db->query($pt);
 $viewname=$pcip.$views[3];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
-$pt.=" as SELECT dauftr.auftragsnr, dauftr.teil, dauftr.`pos-pal-nr`,Max(dauftr.fremdauftr)  as abnummer ";
+$pt.=" as SELECT dauftr.auftragsnr, dauftr.teil, dauftr.`pos-pal-nr`,Max(dauftr.fremdauftr)  as abnummer,dauftr.bemerkung ";
 if($von==$bis)
-    $pt.=" FROM dauftr where (((dauftr.`termin`) between '$von' and '$bis')) group BY dauftr.auftragsnr,dauftr.teil,dauftr.`pos-pal-nr`";
+    $pt.=" FROM dauftr where (((dauftr.`termin`) between '$von' and '$bis') and (dauftr.kzgut='G')) group BY dauftr.auftragsnr,dauftr.teil,dauftr.`pos-pal-nr`";
 else
-    $pt.=" FROM dauftr where (((dauftr.`termin`) between '$von' and '$bis') or dauftr.termin is null  or LENGTH(dauftr.termin)=0 ) group BY dauftr.auftragsnr,dauftr.teil,dauftr.`pos-pal-nr`";
+    $pt.=" FROM dauftr where ((((dauftr.`termin`) between '$von' and '$bis') or dauftr.termin is null  or LENGTH(dauftr.termin)=0 ) and (dauftr.kzgut='G')) group BY dauftr.auftragsnr,dauftr.teil,dauftr.`pos-pal-nr`";
 //echo $pt."<br>";
 $db->query($pt);
 
@@ -115,7 +115,7 @@ $pt_D605_fremdauftr=$pcip.$views[3];
 //$sql="SELECT $pt_D605_dauftr.termin,$pt_D605_dauftr.AuftragsNr, $pt_D605_dauftr.import_pal, $pt_D605_dauftr.export_pal, $pt_D605_dauftr.Teil, $pt_D605_dauftr.import_stk, $pt_D605_drueck.sum_stk_T, $pt_D605_drueck.sum_stk_P, $pt_D605_drueck.sum_stk_St, $pt_D605_drueck.sum_stk_G, $pt_D605_drueck.sum_stk_E, $pt_D605_drueck.auss2, $pt_D605_drueck.auss4, $pt_D605_drueck.auss6, $pt_D605_dauftr.S0011P, $pt_D605_dauftr.sumS0011P, $pt_D605_dauftr.cnt_S0011P, $pt_D605_dauftr.S0011T, $pt_D605_dauftr.sumS0011T, $pt_D605_dauftr.cnt_S0011T, $pt_D605_dauftr.S0041, $pt_D605_dauftr.sumS0041, $pt_D605_dauftr.cnt_S0041, $pt_D605_dauftr.S0051, $pt_D605_dauftr.sumS0051, $pt_D605_dauftr.cnt_S0051, $pt_D605_dauftr.S0061, $pt_D605_dauftr.sumS0061, $pt_D605_dauftr.cnt_S0061, $pt_D605_dauftr.imp_gew, $pt_D605_dauftr.sumvzkd, $pt_D605_dauftr.export_stk, $pt_D605_dauftr.aufdat, `sum_stk_Gtat`-`import_stk` AS GDiff FROM ($pt_D605_dauftr LEFT JOIN $pt_D605_drueck ON ($pt_D605_dauftr.Teil = $pt_D605_drueck.Teil) AND ($pt_D605_dauftr.import_pal = $pt_D605_drueck.import_pal) AND ($pt_D605_dauftr.AuftragsNr = $pt_D605_drueck.AuftragsNr)) LEFT JOIN $pt_D605_drueckG_gesamt ON ($pt_D605_dauftr.Teil = $pt_D605_drueckG_gesamt.Teil) AND ($pt_D605_dauftr.import_pal = $pt_D605_drueckG_gesamt.import_pal) AND ($pt_D605_dauftr.AuftragsNr = $pt_D605_drueckG_gesamt.AuftragsNr) where ($pt_D605_dauftr.sumvzkd<>0) order by $pt_D605_dauftr.termin,$pt_D605_dauftr.Teil,$pt_D605_dauftr.auftragsnr,$pt_D605_dauftr.import_pal";
 // budu brat i pozice s vzkd=0
 $sql="SELECT $pt_D605_dauftr.termin,if($pt_D605_dauftr.termin is null or LENGTH(TRIM($pt_D605_dauftr.termin))=0,'NO TERMIN',$pt_D605_dauftr.termin) as terminF,$pt_D605_dauftr.AuftragsNr, $pt_D605_fremdauftr.abnummer,$pt_D605_dauftr.import_pal,";
-$sql.=" $pt_D605_dauftr.export_pal,$pt_D605_dauftr.bemerkung, $pt_D605_dauftr.Teil,$pt_D605_dauftr.verpackungmenge,$pt_D605_dauftr.gew,$pt_D605_dauftr.restmengen_verw, $pt_D605_dauftr.import_stk, $pt_D605_drueck.sum_stk_T,";
+$sql.=" $pt_D605_dauftr.export_pal,$pt_D605_fremdauftr.bemerkung, $pt_D605_dauftr.Teil,$pt_D605_dauftr.verpackungmenge,$pt_D605_dauftr.gew,$pt_D605_dauftr.restmengen_verw, $pt_D605_dauftr.import_stk, $pt_D605_drueck.sum_stk_T,";
 $sql.=" $pt_D605_drueck.sum_stk_P, $pt_D605_drueck.sum_stk_St, $pt_D605_drueck.sum_stk_G, $pt_D605_drueck.sum_stk_E,";
 $sql.=" $pt_D605_dauftr.gew*$pt_D605_drueck.auss2 as a2gew, ";
 $sql.=" $pt_D605_dauftr.gew*$pt_D605_drueck.auss4 as a4gew, ";

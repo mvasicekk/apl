@@ -30,7 +30,9 @@ $pt.=" Sum(dauftr.auss6_stk_exp) AS Summevonauss6_stk_exp,";
 $pt.=" dauftr.KzGut";
 $pt.=" FROM dauftr";
 $pt.=" where (((dauftr.`auftragsnr-exp`)='$export'))";
-$pt.=" GROUP BY dauftr.`auftragsnr-exp`, dauftr.teil, dauftr.auftragsnr, dauftr.abgnr, dauftr.`mehrarb-kz`, dauftr.KzGut";
+//$pt.=" GROUP BY dauftr.`auftragsnr-exp`, dauftr.teil, dauftr.auftragsnr, dauftr.abgnr, dauftr.`mehrarb-kz`, dauftr.KzGut";
+//2015-02-17 odstraneno seskupeni dle kzgut
+$pt.=" GROUP BY dauftr.`auftragsnr-exp`, dauftr.teil, dauftr.auftragsnr, dauftr.abgnr, dauftr.`mehrarb-kz`";
 $pt.=" ORDER BY dauftr.teil, dauftr.auftragsnr, dauftr.abgnr, dauftr.`mehrarb-kz`;";
 
 

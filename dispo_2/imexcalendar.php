@@ -33,7 +33,7 @@ $smarty = new Smarty;
 		$pocetDnuPredAktualnimDnem = 7+($cislodnePred7dny-1);
 	    }
 	    else{
-		//nedele
+		//nedele a konec
 		$pocetDnuPredAktualnimDnem = 7+6;
 	    }
 	}
@@ -56,6 +56,7 @@ $smarty = new Smarty;
 		    $importeDatumArray[$importDatum][$kunde] = array();
 		}
 		$draggable=$imRow['ausliefer_datum']=='noex'&&$imRow['fertig']=='norech'?'draggable':'';
+		$draggable='draggable';
 		array_push($importeDatumArray[$importDatum][$kunde]
 			,array(
 			    'kunde'=>$imRow['kunde'],
@@ -82,6 +83,7 @@ $smarty = new Smarty;
 		}
 		$vzkdRest = $a->getRestVzkdForEx($exRow['export']);
 		$draggable=$exRow['ausliefer_datum']=='noex'&&$exRow['fertig']=='norech'?'draggable':'';
+		$draggable='draggable';
 		array_push($exporteDatumArray[$exportDatum][$kunde]
 			,array(
 			    'kunde'=>$exRow['kunde'],

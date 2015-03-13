@@ -143,7 +143,7 @@ if($teil!='%')
     $sql .=" and (dkopf.teil like '$teil')";
 $sql.=")";
 $sql.=" group by drueck_id order by datum,persnr,auftragsnr,von,teil,taetnr";
-//echo "sql=$sql"."<br>";
+echo "sql=$sql"."<br>";
 
 
 $query2xml = XML_Query2XML::factory($db);
@@ -306,7 +306,7 @@ for($i=0;$i<sizeof($views);$i++)
 	
 	$viewname=$pcip.$views[$i];
 	$sql="drop view ". $viewname;
-	$db->query($sql);
+	//$db->query($sql);
 	//echo $sql."<br>";
 }
 

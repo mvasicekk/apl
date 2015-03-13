@@ -269,7 +269,7 @@ $pdf->SetKeywords($doc_keywords);
 
 
 
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S610", $params);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S610 - VzKd Ist pro Lieferung und Taetigkeitsgruppe", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 //set auto page breaks

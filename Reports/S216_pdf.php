@@ -60,13 +60,13 @@ array(
 => array ("popis"=>"Kunde","sirka"=>13,"ram"=>'1',"align"=>"L","radek"=>0,"fill"=>0),
 
 "vzkd_soll"
-=> array ("popis"=>"VzkdSoll","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("popis"=>"VzkdGesamt","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd_soll_pct"
 => array ("popis"=>"Vzkd","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
     
 "vzkd_bearbeitet"
-=> array ("popis"=>"VzkdIst","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("popis"=>"VzkdFertig","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
     
 "vzkd_bearbeitet_pct"
 => array ("popis"=>"Vzkd","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
@@ -78,7 +78,7 @@ array(
 => array ("popis"=>"Vzkd","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd_soll_tag"
-=> array ("popis"=>"VzkdSoll","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("popis"=>"VzkdPlan","sirka"=>15,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "reichweite"
 => array ("popis"=>"Reichweite","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),

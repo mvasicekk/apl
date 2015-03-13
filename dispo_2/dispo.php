@@ -17,7 +17,7 @@ $smarty = new Smarty;
 
 
 	$smarty->assign("datevon",date('d.m.Y'));
-	$smarty->assign("rm_bis",date('H:i'));
+	$smarty->assign("rm_bis","05:30");
 	
 		
 	$smarty->display('dispo.tpl');

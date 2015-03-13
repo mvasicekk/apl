@@ -90,10 +90,10 @@ require_once '../db.php';
 		    //------------------------------------------------------------------
 		    $dispoDiv.="<tr>";
 		    $dispoDiv.="<td class='statnr'>Statnr</td>";
-		    $dispoDiv.="<td class='solltag'>SollproTag</td>";
-		    $dispoDiv.="<td class='solltag'>Soll/Tag</td>";
+		    $dispoDiv.="<td class='solltag'>VzKdPlan</td>";
+		    $dispoDiv.="<td class='solltag'>VzKdSoll</td>";
 		    $dispoDiv.="<td class='solltag'>Diff</td>";
-		    $dispoDiv.="<td class='ist'>Ist</td>";
+		    $dispoDiv.="<td class='ist'>VzKdIst(!EX)</td>";
 		    $dispoDiv.="</tr>";
 		    foreach ($statnrArray as $statnr){
 			$rowClass = $statnr;
@@ -264,11 +264,11 @@ require_once '../db.php';
 		
 		$dispoDiv.="</tr>";
 		$dispoDiv.="<tr>";
-		$dispoDiv.="<td class='vzkdplan'>VzKdPlan</td>";
-		$dispoDiv.="<td class='istfertig'>ist fertig</td>";
-		$dispoDiv.="<td class='zubearbeiten'>zu bearb.</td>";
-		$dispoDiv.="<td class='solltag'>Soll/Tag</td>";
-		$dispoDiv.="<td class='ist'>Ist</td>";
+		$dispoDiv.="<td class='vzkdplan'>VzKdGesamt</td>";
+		$dispoDiv.="<td class='istfertig'>VzKdFertig</td>";
+		$dispoDiv.="<td class='zubearbeiten'>VzKdRest</td>";
+		$dispoDiv.="<td class='solltag'>VzKdSoll</td>";
+		$dispoDiv.="<td class='ist'>VzKdIst(!EX)</td>";
 		$dispoDiv.="</tr>";
 		$kundeSollTagPlanArray[$kunde] = $apl->getPlanSollProTagArray($kunde, $kunde);
 		foreach ($statnrArray as $statnr){

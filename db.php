@@ -3503,6 +3503,35 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	if($r===NULL) return '';
 	return $r[0]['zielort'];
     }
+    
+    /**
+     * 
+     * @param type $export
+     */
+    public function getLieferscheinRows($export,$maxrows){
+	$sql.=" select";
+	$sql.=" dauftr.teil,";
+	$sql.=" dauftr.fremdauftr,";
+	$sql.=" dauftr.fremdpos,";
+	$sql.=" dauftr.`mehrarb-kz` as tatkz,";
+	$sql.=" dtaetkz.Rechtext,";
+	$sql.=" sum(dauftr.`stk-exp`) as gut_stk_ex,";
+	$sql.=" sum(if(dauftr.KzGut='G',dauftr.`stk-exp`,0)) as stk_geliefert_G,";
+	$sql.=" sum(dauftr.auss2_stk_exp) as auss2,";
+	$sql.=" sum(dauftr.auss4_stk_exp) as auss4,";
+	$sql.=" sum(dauftr.auss6_stk_exp) as auss6";
+	$sql.=" from dauftr";
+	$sql.=" join dtaetkz on dtaetkz.Dtaetkz=dauftr.`mehrarb-kz`";
+	$sql.=" where";
+	$sql.=" dauftr.`auftragsnr-exp`='$export'";
+	$sql.=" group by";
+	$sql.=" dauftr.teil,";
+	$sql.=" dauftr.fremdauftr,";
+	$sql.=" dauftr.fremdpos,";
+	$sql.=" dauftr.`mehrarb-kz`";
+	$sql.=" limit $maxrows";
+	return $this->getQueryRows($sql);
+    }
     /**
      *
      * @param <type> $auftrag
@@ -4364,7 +4393,26 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     public function teilNrAendern($teilOld, $teilNew) {
 
 
-        $sql = "update dkopf set `Teil`='$teilNew' where `Teil`='$teilOld' and `Teil`<>'$teilNew'";
+//dauftr
+//dkopf
+//dkopf_attachment
+//dlagerbew
+//dlagerstk
+//dma
+//dmittelteilabgnr
+//dpos
+//dposbedarflager
+//dpos_import
+//drech
+//drechbew
+//drechdeleted
+//drechneu
+//dreklamation
+//drueck
+//dteildokument
+//dverp (teil_id)
+
+	$sql = "update dkopf set `Teil`='$teilNew' where `Teil`='$teilOld' and `Teil`<>'$teilNew'";
         $res = mysql_query($sql);
         $affectedRows = mysql_affected_rows();
         echo "<br>sql=$sql,affectedRows=$affectedRows";
@@ -4402,6 +4450,33 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
             $affectedRows = mysql_affected_rows();
             echo "<br>sql=$sql,affectedRows=$affectedRows";
             $sql = "update drechneu set `Teil`='$teilNew' where `Teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dkopf_attachment set `teil`='$teilNew' where `teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dma set `teil`='$teilNew' where `teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dmittelteilabgnr set `teil`='$teilNew' where `teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dpos_import set `Teil`='$teilNew' where `Teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update drechbew set `Teil`='$teilNew' where `Teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update drechdeleted set `Teil`='$teilNew' where `Teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dreklamation set `teil`='$teilNew' where `teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dteildokument set `teil`='$teilNew' where `teil`='$teilOld'";
+            $res = mysql_query($sql);
+            $affectedRows = mysql_affected_rows();
+	    $sql = "update dverp set `teil_id`='$teilNew' where `teil_id`='$teilOld'";
             $res = mysql_query($sql);
             $affectedRows = mysql_affected_rows();
         }
@@ -5482,7 +5557,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param type $rmDateTime
      * @return type
      */
-    public function getIstFertigKunde($kunde_von,$kunde_bis,$datum,$rmDateTime=NULL){
+    public function getIstFertigKunde($kunde_von,$kunde_bis,$datum,$rmDateTime=NULL,$getSql=FALSE){
 	    $sql.=" select ";
 	    $sql.=" daufkopf.kunde,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
@@ -5504,6 +5579,9 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
 	    $sql.=" group by";
 	    $sql.=" daufkopf.kunde";
+	    if($getSql===TRUE){
+		return $sql;
+	    }
 	    $r=$this->getQueryRows($sql);
 	    if($r!==NULL){
 		$a = array();
@@ -5517,7 +5595,45 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    }
     }
 
-        
+    
+    public function getIstFertigKundeS610($kunde_von,$kunde_bis,$datum,$rmDateTime=NULL,$getSql=FALSE){
+	    $sql.=" select ";
+	    $sql.=" daufkopf.kunde,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
+	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
+	    $sql.=" from ";
+	    $sql.=" drueck";
+	    $sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.abgnr=drueck.TaetNr";
+	    $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.abgnr";
+	    $sql.=" where";
+	    $sql.=" daufkopf.kunde between '$kunde_von' and '$kunde_bis'";
+	    $sql.=" and (drueck.Datum='$datum')";
+	    if($rmDateTime!==NULL)
+	    $sql.=" and (drueck.insert_stamp<='$rmDateTime')";
+	    //$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	    $sql.=" group by";
+	    $sql.=" daufkopf.kunde";
+	    if($getSql===TRUE){
+		return $sql;
+	    }
+	    $r=$this->getQueryRows($sql);
+	    if($r!==NULL){
+		$a = array();
+		foreach ($r as $row){
+		    $a[$row['kunde']]=$row;
+		}
+		return $a;
+	    }
+	    else {
+		return NULL;
+	    }
+    }
+
     public function getIstFertig($termin,$datum,$rmDateTime=NULL){
 	    $sql.=" select ";
 	    $sql.=" dauftr.termin,";
@@ -5903,6 +6019,15 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return $pIA;
     }
     
+    /**
+     * 
+     * @param type $var
+     */
+    static public function varDump($var){
+	echo "<pre>";
+	var_dump($var);
+	echo "</pre>";
+    }
     /**
      * 
      * @param type $kd_von

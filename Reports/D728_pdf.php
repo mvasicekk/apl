@@ -4,9 +4,9 @@ require_once "../fns_dotazy.php";
 require_once '../db.php';
 
 // pod pod
-$doc_title = "D725";
-$doc_subject = "D725 Report";
-$doc_keywords = "D725";
+$doc_title = "D720";
+$doc_subject = "D720 Report";
+$doc_keywords = "D720";
 
 // necham si vygenerovat XML
 $parameters=$_GET;
@@ -16,6 +16,8 @@ $export=$_GET['export'];
 $typ = $_GET['typ'];
 
 $exF = $export;
+$posString="";
+$position = 1;
 
 $a = AplDB::getInstance();
 
@@ -23,6 +25,23 @@ $kunde = $a->getKundeFromAuftransnr($export);
 $ex = $export;
 
 $exString = "$ex";
+
+    $style = array(
+	'position' => '',
+	'align' => 'L',
+	'stretch' => false,
+	'fitwidth' => true,
+	'cellfitalign' => '',
+	'border' => FALSE,
+	'hpadding' => 'auto',
+	'vpadding' => 'auto',
+	'fgcolor' => array(0, 0, 0),
+	'bgcolor' => false, //array(255,255,255),
+	'text' => FALSE,
+	'font' => 'helvetica',
+	'fontsize' => 8,
+	'stretchtext' => 4
+    );
 
 if(($typ=='Ausschuss')){
     if(strlen($ex)==8){
@@ -45,7 +64,7 @@ if(($typ=='Ausschuss')){
     }
 }
 
-require_once('D725_xml.php');
+require_once('D720_xml.php');
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
 $parameters=$domxml->getElementsByTagName("parameters");
@@ -186,39 +205,6 @@ function nuluj_sumy_pole(&$pole)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
  
-function pageheader_auss($pdfobjekt,$pole,$headervyskaradku)
-{
-    global $typ;
-    global $aussArtenKeys;
-
-	$pdfobjekt->SetFont("FreeSans", "B", 8);
-	$pdfobjekt->SetFillColor(255,255,200,1);
-	foreach($pole as $key=>$cell)
-	{
-            $obsah = $cell['popis'];
-            if(($typ=='Gute Teile')&&($key=="auss2"||$key=="auss4"||$key=="auss6")) $obsah = "";
-	    // skoncim po Leistung
-            if(($typ=='Ausschuss')&&($key=="gutstk"))		break;
-            $pdfobjekt->MyMultiCell($cell["sirka"],$headervyskaradku,$obsah,$cell["ram"],$cell["align"],$cell['fill']);
-	}
-	$aussArtSirka = 15;
-	if($aussArtenKeys!==NULL){
-	    if(is_array($aussArtenKeys)){
-		foreach ($aussArtenKeys as $aa){
-		    $obsah = "A-$aa";
-		    $pdfobjekt->MyMultiCell(
-			    $aussArtSirka
-			    ,$headervyskaradku,
-			    $obsah,'BT','R',1);
-		}
-	    }
-	}
-	$pdfobjekt->Cell(0,$headervyskaradku,'','BT',0,0,1);
-	$pdfobjekt->Ln();
-	//$pdfobjekt->Ln();
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-	$pdfobjekt->SetFont("FreeSans", "", 6);
-}
 
 // funkce pro vykresleni hlavicky na kazde strance
 function pageheader($pdfobjekt,$pole,$headervyskaradku)
@@ -226,7 +212,7 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
     global $typ;
 
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
-	$pdfobjekt->SetFillColor(255,255,200,1);
+	$pdfobjekt->SetFillColor(255,255,200);
 	foreach($pole as $key=>$cell)
 	{
             $obsah = $cell['popis'];
@@ -241,69 +227,13 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku)
 	$pdfobjekt->SetFont("FreeSans", "", 6);
 }
 
-function detaily_auss($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
-{
-    global $typ;
-    global $aussArtenKeys;
-    global $aussArtArray;
-    
-    $pdfobjekt->SetFont("FreeSans", "", 8);
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
-	foreach($pole as $nodename=>$cell)
-	{
-		if(array_key_exists("nf",$cell))
-		{
-			$cellobsah = 
-			number_format(floatval(getValueForNode($nodelist,$nodename)), $cell["nf"][0],$cell["nf"][1],$cell["nf"][2]);
-		}
-		else
-		{
-			$cellobsah=getValueForNode($nodelist,$nodename);
-		}
-
-                if(($typ=='Gute Teile')&&($nodename=="auss2_stk_exp"||$nodename=="auss4_stk_exp"||$nodename=="auss6_stk_exp")) $cellobsah = "";
-                if(($typ=='Ausschuss')&&($nodename=="expstk")) $cellobsah = "";
-
-		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
-		// u ausschussu po text koncim, pote kreslim jinak
-		if($nodename=='text') break;
-	}
-	
-	$aussArtSirka = 15;
-	if($aussArtenKeys!==NULL){
-	    if(is_array($aussArtenKeys)){
-		$teil = getValueForNode($nodelist, 'teilnr');
-		$im = getValueForNode($nodelist, 'im');
-		$tatkz = getValueForNode($nodelist, 'tatkz');
-		foreach ($aussArtenKeys as $aa){
-		    $obsah = "A-$aa";
-		    $obsah = intval($aussArtArray[$teil][$im][$tatkz][$aa]['auss_stk']);
-		    $obsah = number_format($obsah, 0, ',', ' ');
-		    $pdfobjekt->Cell(
-			    $aussArtSirka
-			    ,$zahlavivyskaradku,
-			    $obsah,
-			    '0',
-			    0,
-			    'R',
-			    0);
-		}
-	    }
-	}
-	$pdfobjekt->Cell(0,$zahlavivyskaradku,'','0',0,'R',0);
-	$pdfobjekt->Ln();
-	
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-	$pdfobjekt->SetFont("FreeSans", "", 7);
-}
 
 // funkce pro vykresleni tela
 function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 {
     global $typ;
 	$pdfobjekt->SetFont("FreeSans", "", 8);
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
 	foreach($pole as $nodename=>$cell)
 	{
@@ -363,12 +293,11 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
         global $ex;
 	global $typ;
-	global $aussArtenKeys;
 	
         $apl = AplDB::getInstance();
         
 
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 12);
 	// dummy
@@ -377,28 +306,12 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
 	//misto pro teil
         // NEW
-	if($typ=="Ausschuss"){
-	    $pdfobjekt->SetFont("FreeSans", "B", 7);
-//	    $pdfobjekt->SetX(120);
-	    $pdfobjekt->Cell(0,5,"Ausschussarten",'B',1,'L',$fill);
-	    if($aussArtenKeys!==NULL){
-		if(is_array($aussArtenKeys)){
-		    foreach ($aussArtenKeys as $aa){
-			$obsah = $apl->getAussArtText($aa);
-//			$pdfobjekt->SetX(120);
-			$pdfobjekt->Cell(0,5,"A-$aa $obsah",'0',1,'L',$fill);
-		    }
-		}
-	    }
-	    
-	}
-	else{
-	    $pdfobjekt->SetX(120);
-	    $pdfobjekt->SetFont("FreeSans", "B", 7);
-	    $pdfobjekt->MultiCell(50,5,"Ausschusstyp\n(2) KdAusschuss vor Arbeitsgang\n(4) KdAusschuss nach Arbeitsgang\n(6) Ausschuss Abydos",0,2,'L',0);
-	    $x_typausschussu = $pdfobjekt->GetX();
-	    $y_typausschussu = $pdfobjekt->GetY();
-	}
+        $pdfobjekt->SetX(120);
+        $pdfobjekt->SetFont("FreeSans", "B", 7);
+        $pdfobjekt->MultiCell(50,5,"Ausschusstyp\n(2) KdAusschuss vor Arbeitsgang\n(4) KdAusschuss nach Arbeitsgang\n(6) Ausschuss Abydos",0,2,'L',0);
+
+	$x_typausschussu = $pdfobjekt->GetX();
+	$y_typausschussu = $pdfobjekt->GetY();
 
         // tabulka s behaeltrama
         $spaltenArray = $apl->getBehaelterZustandD710Array();
@@ -476,54 +389,11 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 }
 
 
-function zapati_sestava_auss($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
-{
-    global $typ;
-    global $aussArtenKeys;
-    
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	$fill=1;
-	$pdfobjekt->SetFont("FreeSans", "B", 9);
-	// dummy
-	$obsah="";
-	$pdfobjekt->Ln();
-	$pdfobjekt->Cell(25+25+33,$vyskaradku,"Summe Lieferung",'LBT',0,'L',$fill);
-	$aussArtSirka = 15;
-	if($aussArtenKeys!==NULL){
-	    if(is_array($aussArtenKeys)){
-		foreach ($aussArtenKeys as $aa){
-		    $obsah = intval($sum_zapati_array[$aa]);
-		    $obsah = number_format($obsah, 0, ',', ' ');
-		    $pdfobjekt->Cell(
-			    $aussArtSirka
-			    ,$vyskaradku,
-			    $obsah,
-			    'BT',
-			    0,
-			    'R',
-			    $fill);
-		}
-	    }
-	}
-	$obsah="";
-	$pdfobjekt->Cell(0,$vyskaradku,$obsah,'0',1,'R',$fill);
-
-	$pdfobjekt->Cell(25+25+33,$vyskaradku,"Gewicht(to) Netto",'LBT',0,'L',$fill);
-
-        $obsah = ($sum_zapati_array['gew_auss']) / 1000;
-        $obsah = number_format($obsah, 3, ',', ' ');
-        $pdfobjekt->Cell(15, $vyskaradku, $obsah, 'BT', 0, 'R', $fill);
-        $pdfobjekt->Cell(0, $vyskaradku, '', 'BT', 0, 'R', $fill);
-        $pdfobjekt->Ln();
-	$pdfobjekt->Cell(25+25+33+10+10,$vyskaradku,"Gewicht(to) Brutto",'LBTR',1,'L',$fill);
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
 {
     global $typ;
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
@@ -595,10 +465,15 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_arra
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
+function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array,$teilchilds=NULL)
 {
     global $typ;
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $exF;
+    global $posString;
+    global $position;
+    
+    $y=$pdfobjekt->GetY();
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
@@ -626,91 +501,56 @@ function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array
 	$pdfobjekt->Cell(15,$vyskaradku,$obsah,'BT',0,'R',$fill);
 	$pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,""),'BT',1,'L',$fill);
 
+	$position = 10;
+	if($typ=="Ausschuss") $position = 20;
+	
+	$separator = "(";
+	$teillang = getValueForNode($teilchilds,"teillang");
+	$teillang = str_replace(' ','',$teillang);
+	$charge = getValueForNode($childNodes,"fremdpos");
+	$charge = "**";
+	$s2matrix = $separator.$exF
+		.$separator.getValueForNode($childNodes,"fremdauftr")
+		.$separator.sprintf("%05d",$position)
+		.$separator.getValueForNode($childNodes,"geliefert")
+		.$separator.$teillang
+		.$separator.$handlingUnitNummer
+		.$separator.$produktionsDatum
+		.$separator.$serialNummer
+		.$separator.$charge;
+		
+		//."*T".getValueForNode($teilchilds,"teilnr")."*O".getValueForNode($teilchilds,"teillang")."*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*I".getValueForNode($childNodes, 'im')."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert");
+	//$posString .= "*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*I".getValueForNode($childNodes, 'im')."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert")."|";
+	$posString .= "*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert")."|";
+	
+	
+	$pdfobjekt->write2DBarcode($s2matrix, 'DATAMATRIX', $pdfobjekt->getPageWidth()-30, $y-16, 25, 25);
+	
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-}
-
-function zapati_import_auss($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
-{
-    global $typ;
-    global $aussArtenKeys;
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	$fill=1;
-	$pdfobjekt->SetFont("FreeSans", "B", 9);
-	// dummy
-	$obsah="";
-	//$obsah=number_format($obsah,0,',',' ');
-	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
-	//misto pro teil
-	$pdfobjekt->Cell(25,$vyskaradku,'','0',0,'L',$fill);
-        $pdfobjekt->Cell(25,$vyskaradku,"IM: ".getValueForNode($childNodes, 'im'),'BT',0,'L',$fill);
-	$pdfobjekt->Cell(33,$vyskaradku,"geliefert",'BT',0,'L',$fill);
-        $obsah = getValueForNode($childNodes,"geliefert");
-
-	$aussArtSirka = 15;
-	if($aussArtenKeys!==NULL){
-	    if(is_array($aussArtenKeys)){
-		foreach ($aussArtenKeys as $aa){
-		    $obsah = intval($sum_zapati_array[$aa]);
-		    $obsah = number_format($obsah, 0, ',', ' ');
-		    $pdfobjekt->Cell(
-			    $aussArtSirka
-			    ,$vyskaradku,
-			    $obsah,
-			    'BT',
-			    0,
-			    'R',
-			    $fill);
-		}
-	    }
-	}
-
-	$pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,""),'BT',1,'L',$fill);
-
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-}
-
-function zapati_teil_auss($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
-{
-    global $typ;
-    global $aussArtenKeys;
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	$fill=1;
-	$pdfobjekt->SetFont("FreeSans", "B", 9);
-	// dummy
-	$obsah="";
-	//$obsah=number_format($obsah,0,',',' ');
-	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
-	//misto pro teil
-        $teilnr = getValueForNode($childNodes, 'teilnr');
-	$pdfobjekt->Cell(25+25+33,$vyskaradku,"Summe ".$teilnr,'BT',0,'L',$fill);
-	$aussArtSirka = 15;
-	if($aussArtenKeys!==NULL){
-	    if(is_array($aussArtenKeys)){
-		foreach ($aussArtenKeys as $aa){
-		    $obsah = intval($sum_zapati_array[$aa]);
-		    $obsah = number_format($obsah, 0, ',', ' ');
-		    $pdfobjekt->Cell(
-			    $aussArtSirka
-			    ,$vyskaradku,
-			    $obsah,
-			    'BT',
-			    0,
-			    'R',
-			    $fill);
-		}
-	    }
-	}
-	$pdfobjekt->Cell(0,$vyskaradku,'','BT',1,'L',$fill);
-
-        $pdfobjekt->Ln();
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
+	$position++;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+ * @global type $typ
+ * @global type $exF
+ * @param TCPDF $pdfobjekt
+ * @param type $vyskaradku
+ * @param type $rgb
+ * @param type $childNodes
+ * @param type $sum_zapati_array
+ */
 function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
 {
     global $typ;
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+    global $exF;
+    global $posString;
+    
+	$x=$pdfobjekt->GetX();
+	$y=$pdfobjekt->GetY();
+	
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
@@ -736,13 +576,19 @@ function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
 	$pdfobjekt->Cell(15,$vyskaradku,'','BT',0,'R',$fill);
 	$pdfobjekt->Cell(0,$vyskaradku,'','BT',1,'L',$fill);
 
+//	$s2matrix = "*".$exF
+//		."*T".getValueForNode($childNodes,"teilnr")."*O".getValueForNode($childNodes,"teillang")."*G".$sum_zapati_array['geliefert']."*D".$posString;
+//	$pdfobjekt->write2DBarcode($s2matrix, 'DATAMATRIX', $x, $y-22, 22,22);
+//	$posString = "";
+	
+	
         $pdfobjekt->Ln();
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
@@ -755,7 +601,7 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->Cell(25,$vyskaradku,getValueForNode($childNodes,""),'0',0,'L',$fill);
 //	$pdfobjekt->Cell(25,$vyskaradku,getValueForNode($childNodes,"im"),'0',0,'L',$fill);
         $pdfobjekt->Cell(25,$vyskaradku,'','0',0,'L',$fill);
-	$pdfobjekt->Cell(40,$vyskaradku,"Best.Nr.:".getValueForNode($childNodes,"fremdauftr"),'0',0,'L',$fill);
+	$pdfobjekt->Cell(50,$vyskaradku,"Best.Nr.:".getValueForNode($childNodes,"fremdauftr"),'0',0,'L',$fill);
 	$pdfobjekt->Cell(0,$vyskaradku,"Pos.:".getValueForNode($childNodes,"fremdpos"),'0',1,'L',$fill);
 
 
@@ -765,7 +611,7 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
@@ -781,17 +627,29 @@ function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 
+/**
+ * 
+ * @global type $exF
+ * @global array $style
+ * @param TCPDF $pdfobjekt
+ * @param type $vyskaradku
+ * @param type $rgb
+ * @param type $exportChildNodes
+ */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_export($pdfobjekt,$vyskaradku,$rgb,$exportChildNodes)
 {
     global $exF;
+    global $style;
 
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$fill=1;
 
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 //    $pdfobjekt->SetY(-20);
     
+	$y= $pdfobjekt->GetY();
+	
         $pdfobjekt->Cell(
         0,
         $vyskaradku,
@@ -812,28 +670,27 @@ function zahlavi_export($pdfobjekt,$vyskaradku,$rgb,$exportChildNodes)
 	$pdfobjekt->Cell(120,$vyskaradku,getValueForNode($exportChildNodes,"Name2"),'B',0,'L',$fill);
 	$pdfobjekt->Cell(0,$vyskaradku,"Fax:".getValueForNode($exportChildNodes,"Fax"),'B',1,'L',$fill);
 
-
+	$s2matrix = "E".$exF."*T".getValueForNode($exportChildNodes,"termin")."*K".getValueForNode($exportChildNodes,"Kunde")." ".getValueForNode($exportChildNodes,"Name1")." ".getValueForNode($exportChildNodes,"Name2");
+	
+//	$x=$pdfobjekt->GetX();
+	
+//	$pdfobjekt->write2DBarcode($s2matrix, 'DATAMATRIX', $pdfobjekt->getPageWidth()-30, $y, 25, 25);
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 
 function test_pageoverflow($pdfobjekt, $vysradku, $cellhead,$childnodes=NULL) {
-    global $typ;
-    // pokud bych prelezl s nasledujicim vystupem vysku stranky
-    // tak vytvorim novou stranku i se zahlavim
-    if (($pdfobjekt->GetY() + $vysradku) > ($pdfobjekt->getPageHeight() - $pdfobjekt->getBreakMargin())) {
-	$pdfobjekt->AddPage();
-	zahlavi_export($pdfobjekt,5,array(255,255,255),$childnodes);
-	if ($typ == "Ausschuss") {
-	    pageheader_auss($pdfobjekt, $cellhead, $vysradku);
-	} else {
-	    pageheader($pdfobjekt, $cellhead, $vysradku);
+	// pokud bych prelezl s nasledujicim vystupem vysku stranky
+	// tak vytvorim novou stranku i se zahlavim
+	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
+	{
+		$pdfobjekt->AddPage();
+		zahlavi_export($pdfobjekt,5,array(255,255,255),$childnodes);
+		pageheader($pdfobjekt,$cellhead,$vysradku);
+		$pdfobjekt->Ln();
+		$pdfobjekt->Ln();
 	}
-
-//		pageheader($pdfobjekt,$cellhead,$vysradku);
-//	$pdfobjekt->Ln();
-//	$pdfobjekt->Ln();
-    }
 }
+				
 
 function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 {
@@ -882,8 +739,10 @@ function getGutAussStkImport($import) {
 }
 
 
-require_once('../tcpdf/config/lang/eng.php');
-require_once('../tcpdf/tcpdf.php');
+//require_once('../tcpdf/config/lang/eng.php');
+//require_once('../tcpdf/tcpdf.php');
+
+require_once('../tcpdf_new/tcpdf.php');
 
 $pdf = new TCPDF('P','mm','A4',1);
 
@@ -893,7 +752,7 @@ $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D725 Liefer- und Leistungsübersicht ($typ)", $params);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D728 Liefer- und Leistungsübersicht ($typ)", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 //set auto page breaks
@@ -909,53 +768,11 @@ $pdf->setFooterFont(Array("FreeSans", '', 8));
 $pdf->setLanguageArray($l); //set language items
 
 //initialize document
-$pdf->AliasNbPages();
+//$pdf->AliasNbPages();
 $pdf->SetFont("FreeSans", "", 8);
 
-$aussArtArray = NULL;
-$aussArtenKeys = NULL;
 
-if($typ=="Ausschuss"){
-    $aussArtArray1 = $a->getAussArtenArrayForExport($export);
-    if($aussArtArray1!==NULL){
-//	echo "<pre>";
-//	var_dump($aussArtArray1);
-//	echo "</pre>";
-	foreach ($aussArtArray1 as $key => $aA) {
-	    $teil = $aA['teil'];
-	    $import = $aA['import'];
-	    $tatkz = $aA['tatkz'];
-	    $bestnr = $aA['bestnr'];
-	    $pos = $aA['pos'];
-	    $auss_typ = $aA['auss_typ'];
-	    $auss_art = $aA['auss_art'];
-	    $auss_stk = $aA['auss_stk'];
-	    $aussArtArray[$teil][$import][$tatkz][$auss_art]['auss_stk']=  intval($auss_stk);
-	    $aussArtArray[$teil][$import][$tatkz][$auss_art]['bestnr']=  $bestnr;
-	    $aussArtArray[$teil][$import][$tatkz][$auss_art]['pos']=  $pos;
-	    $aussArtArray[$teil][$import][$tatkz][$auss_art]['auss_typ']=  $auss_typ;
-	}
-//	echo "<pre>";
-//	var_dump($aussArtArray);
-//	echo "</pre>";
-	foreach ($aussArtArray as $teil=>$teilArray){
-	    foreach ($teilArray as $import=>$importArray){
-		foreach ($importArray as $tatkz=>$tatArray){
-		    foreach ($tatArray as $aussArt=>$stkArray){
-			$aussArten[$aussArt]+=1;
-		    }
-		}
-	    }
-	}
-	$aussArtenKeys = array_keys($aussArten);
-	sort($aussArtenKeys);
-//	echo "<pre>";
-//	var_dump($aussArten);
-//	var_dump($aussArtenKeys);
-//	echo "</pre>";
 
-    }
-}
 // prvni stranka
 $pdf->AddPage();
 //pageheader($pdf,$cells_header,5);
@@ -979,13 +796,10 @@ foreach($exporte as $export)
 
 	test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 	zahlavi_export($pdf,5,array(255,255,255),$exportChildNodes);
-	if($typ=="Ausschuss"){
-	    pageheader_auss($pdf,$cells_header,5);
-	}
-	else{
-	    pageheader($pdf,$cells_header,5);
-	}
-	
+	pageheader($pdf,$cells_header,5);
+
+
+
 	// ted jdu po dilech
 	$teile=$export->getElementsByTagName("teil");
 	foreach($teile as $teil)
@@ -1018,41 +832,15 @@ foreach($exporte as $export)
 				$tatChildNodes = $tat->childNodes;
 				test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
 				//function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
-				if($typ=="Ausschuss"){
-				    detaily_auss($pdf,$cells,4,array(255,255,255),$tatChildNodes);
-				}
-				else{
-				    detaily($pdf,$cells,4,array(255,255,255),$tatChildNodes);
-				}
-				
+				detaily($pdf,$cells,4,array(255,255,255),$tatChildNodes);
 				foreach($sum_zapati_import_array as $key=>$prvek)
 				{
 					$hodnota = $tat->getElementsByTagName($key)->item(0)->nodeValue;
 					$sum_zapati_import_array[$key]+=$hodnota;
-				}
-				if($aussArtenKeys!=NULL){
-				    if(is_array($aussArtenKeys)){
-					$teil = getValueForNode($tatChildNodes, 'teilnr');
-					$im = getValueForNode($tatChildNodes, 'im');
-					$tatkz = getValueForNode($tatChildNodes, 'tatkz');
-					foreach ($aussArtenKeys as $aa){
-					    $sum_zapati_import_array[$aa]+=intval($aussArtArray[$teil][$im][$tatkz][$aa]['auss_stk']);
-					}
-				    }
-				}
+				}				
 			}
-//				echo "<pre>";
-//				var_dump($sum_zapati_import_array);
-//				echo "</pre>";
-
 			test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
-			if($typ=="Ausschuss"){
-			    zapati_import_auss($pdf,5,array(255,255,255),$importChildNodes,$sum_zapati_import_array);
-			}
-			else{
-			    zapati_import($pdf,5,array(255,255,255),$importChildNodes,$sum_zapati_import_array);
-			}
-			
+			zapati_import($pdf,5,array(255,255,255),$importChildNodes,$sum_zapati_import_array,$teilChildNodes);
 			// spocitam sumy pro zapati sestavy
 			$sum_zapati_sestava_array['auss2_stk_exp']+=$sum_zapati_import_array['auss2_stk_exp'];
 			$sum_zapati_sestava_array['auss4_stk_exp']+=$sum_zapati_import_array['auss4_stk_exp'];
@@ -1066,36 +854,13 @@ foreach($exporte as $export)
 			$sum_zapati_teil_array['auss6_stk_exp']+=$sum_zapati_import_array['auss6_stk_exp'];
 			$sum_zapati_teil_array['gew_auss']+=$sum_zapati_import_array['gew_auss'];
 			$sum_zapati_teil_array['geliefert']+=getValueForNode($importChildNodes,"geliefert");
-			if($aussArtenKeys!=NULL){
-			    if(is_array($aussArtenKeys)){
-				foreach ($aussArtenKeys as $aa){
-				    $sum_zapati_teil_array[$aa]+=intval($sum_zapati_import_array[$aa]);
-				    $sum_zapati_sestava_array[$aa]+=intval($sum_zapati_import_array[$aa]);
-				}
-			    }
-			}
 		}
 		test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
-		if($typ=="Ausschuss"){
-		    zapati_teil_auss($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array);
-		}
-		else{
-		    zapati_teil($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array);
-		}
-                
+                zapati_teil($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array);
 	}
 
 test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);	
-if($typ=="Ausschuss"){
-    zapati_sestava_auss($pdf,5,array(255,255,255),$exportChildNodes,$sum_zapati_sestava_array);
-}	
-else{
-    zapati_sestava($pdf,5,array(255,255,255),$exportChildNodes,$sum_zapati_sestava_array);
-}
-    
-
-
-
+zapati_sestava($pdf,5,array(255,255,255),$exportChildNodes,$sum_zapati_sestava_array);
 $pdf->Ln();
 $pdf->Ln();
 if(test_pageoverflow_noheader($pdf,120))

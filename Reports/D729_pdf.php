@@ -89,6 +89,50 @@ if ($exportInfo !== NULL) {
 	$textLength = $pdf->GetStringWidth($name.' '.$text);
 	
 	$pdf->write1DBarcode($text, 'C128', $x + $textLength, $y, '', 18, 0.4, $style, 'N');
+	
+    }
+    $itemsJoined = join('*', $items);
+	$pdf->AddPage();
+	$pdf->Cell(0, 5, $itemsJoined, 'LRBT', 0, 'L', 0);
+	$pdf->write2DBarcode($itemsJoined, 'DATAMATRIX', 10, 45, 25, 25, $style, 'N');
+//	$pdf->write2DBarcode($itemsJoined, 'QRCODE,H', 10+25+10, 45, 25, 25, $style, 'N');
+	
+    $pdf->AddPage();
+    $lieferscheinRows = $a->getLieferscheinRows($export,999);
+    $lfString="";
+    if($lieferscheinRows!==NULL){
+	foreach ($lieferscheinRows as $lR){
+	    $rowsString="";
+	    foreach ($lR as $fieldname=>$fieldvalue){
+		$rowsString.="$fieldname:$fieldvalue;";
+	    }
+	    $pdf->Cell(0, 5, $rowsString, 'LRBT', 0, 'L', 0);
+	    $x=$pdf->GetX();$y=$pdf->GetY();
+	    $pdf->write2DBarcode($rowsString, 'DATAMATRIX', $x-25, $y+5, 25, 25, $style, 'N');
+//	    $pdf->write2DBarcode($rowsString, 'QRCODE,H', $x-25-30, $y+5, 25, 25, $style, 'N');
+
+	    $pdf->Ln(25);
+	    $lfString.=$rowsString."*";
+	}
+//	$pdf->AddPage();
+////	echo "delka exportu ve znacich:".strlen($rowsString);
+////	AplDB::varDump($rowsString);
+//	$style = array(
+//	'border' => 2,
+//	'vpadding' => 'auto',
+//	'hpadding' => 'auto',
+//	'fgcolor' => array(0,0,0),
+//	'bgcolor' => false, //array(255,255,255)
+//	'module_width' => 2, // width of a single module in points
+//	'module_height' => 2 // height of a single module in points
+//	);
+//	
+//	$compressed = gzcompress($rowsString);
+	
+//	$pdf->write2DBarcode($rowsString, 'DATAMATRIX', 10, 20, 100, 100, $style, 'N');
+	
+//	$pdf->AddPage();
+//	$pdf->write2DBarcode($compressed, 'DATAMATRIX', 10, 20, 50, 50, $style, 'N');
     }
 } else {
     $pdf->Cell(0, 18, "Exportinfo ERROR", '1', 1, 'L');
