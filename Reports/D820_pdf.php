@@ -3,6 +3,9 @@ require_once '../security.php';
 require_once "../fns_dotazy.php";
 require_once '../db.php';
 
+//The Android SDK was developed using the Java programming language. Similarly, Android applications are also developed using Java. As a result, the Java Development Kit (JDK) is the first component that must be installed.
+//Android development requires the installation of either version 6 or 7 of the Standard Edition of the Java Platform Development Kit. Java is provided in both development (JDK) and runtime (JRE) packages. For the purposes of Android development, the JDK must be installed. 
+
 // pod pod
 $doc_title = "D820";
 $doc_subject = "D820 Report";

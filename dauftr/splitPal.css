@@ -1,0 +1,49 @@
+div#dauftrLog{
+    font-size: xx-small;
+}
+.inputform form span{
+    white-space: nowrap;
+}    
+
+.inputform form span input{
+    font-size: 1em;
+}
+
+#dauftrfrig {
+    margin-left: 2px;
+}
+#dauftrgrid td.editable{
+    color: green;
+}
+
+#dauftrgrid td.rdonly{
+    color: graytext;
+}
+
+#dauftrgrid td.im{
+}
+
+#dauftrgrid td.teil{
+}
+
+@media screen and (min-width:780px){
+}
+
+@media screen and (max-width:780px){
+    .inputform form span{
+	white-space: nowrap;
+	display: table;
+	width: 100%;
+    }    
+
+    .inputform form span label{
+	display: table-cell;
+	padding-right: 0.5em;
+	width: 25%;
+    }    
+
+    .inputform form span input{
+	width: 99%;
+	display: table-cell;
+    }
+}

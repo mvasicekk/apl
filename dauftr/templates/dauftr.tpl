@@ -149,6 +149,7 @@ Aufträge pflegen / zadání zakázky
 												, saverefresh);"/>
                         <input type="button" class='formularbutton' accesskey='b' title='Alt+b' value='Behaelter bew.' onclick="document.location.href='../dbehaelter/beheingabe.php?auftrag={$auftragsnr_value}';"/>
 			<input type="button" class='formularbutton' accesskey='b' title='Alt+e' value='edit Auftrpositionen' onclick="document.location.href='./editDauftrForm.php?import={$auftragsnr_value}';"/>
+			<input type="button" class='formularbutton' accesskey='p' title='Alt+p' value='split Pal' onclick="document.location.href='./splitPal.php?import={$auftragsnr_value}';"/>
 		</td>
 	</tr>
 	<tr>

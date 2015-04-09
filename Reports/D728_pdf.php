@@ -504,7 +504,7 @@ function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array
 	$position = 10;
 	if($typ=="Ausschuss") $position = 20;
 	
-	$separator = "(";
+	$separator = "*";
 	$teillang = getValueForNode($teilchilds,"teillang");
 	$teillang = str_replace(' ','',$teillang);
 	$charge = getValueForNode($childNodes,"fremdpos");
@@ -524,7 +524,7 @@ function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array
 	$posString .= "*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert")."|";
 	
 	
-	$pdfobjekt->write2DBarcode($s2matrix, 'DATAMATRIX', $pdfobjekt->getPageWidth()-30, $y-16, 25, 25);
+//	$pdfobjekt->write2DBarcode($s2matrix, 'DATAMATRIX', $pdfobjekt->getPageWidth()-30, $y-16, 25, 25);
 	
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 	$position++;
@@ -541,11 +541,12 @@ function zapati_import($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array
  * @param type $childNodes
  * @param type $sum_zapati_array
  */
-function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
+function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array,$fremdAuftrArray)
 {
     global $typ;
     global $exF;
     global $posString;
+    global $position;
     
 	$x=$pdfobjekt->GetX();
 	$y=$pdfobjekt->GetY();
@@ -575,6 +576,39 @@ function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
 	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'BT',0,'R',$fill);
 	$pdfobjekt->Cell(15,$vyskaradku,'','BT',0,'R',$fill);
 	$pdfobjekt->Cell(0,$vyskaradku,'','BT',1,'L',$fill);
+
+	$position = 10;
+	if($typ=="Ausschuss") $position = 20;
+	
+	$fremdKeys = array_keys($fremdAuftrArray);
+	if(count($fremdKeys)>1){
+	    $s2matrix="";
+	}
+	else{
+	    $separator = "*";
+	    $teillang = getValueForNode($childNodes,"teillang");
+	    $teillang = str_replace(' ','',$teillang);
+	    //	$charge = getValueForNode($childNodes,"fremdpos");
+	    $charge = "**";
+	    $s2matrix = $separator.$exF
+		.$separator.$fremdKeys[0]
+		.$separator.sprintf("%05d",$position)
+		.$separator.$sum_zapati_array['geliefert']
+		.$separator.$teillang
+		.$separator.$handlingUnitNummer
+		.$separator.$produktionsDatum
+		.$separator.$serialNummer
+		.$separator.$charge;
+	}
+		
+		//."*T".getValueForNode($teilchilds,"teilnr")."*O".getValueForNode($teilchilds,"teillang")."*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*I".getValueForNode($childNodes, 'im')."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert");
+	//$posString .= "*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*I".getValueForNode($childNodes, 'im')."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert")."|";
+//	$posString .= "*B".getValueForNode($childNodes,"fremdauftr")."*P".getValueForNode($childNodes,"fremdpos")."*G".getValueForNode($childNodes,"geliefert")."*A".getValueForNode($childNodes,"angeliefert")."|";
+	
+	if($s2matrix!=""){
+	    $pdfobjekt->write2DBarcode($s2matrix, 'DATAMATRIX', $x, $y-23, 22, 22);
+	}
+	
 
 //	$s2matrix = "*".$exF
 //		."*T".getValueForNode($childNodes,"teilnr")."*O".getValueForNode($childNodes,"teillang")."*G".$sum_zapati_array['geliefert']."*D".$posString;
@@ -814,6 +848,7 @@ foreach($exporte as $export)
 		// nastavit sloupce v zahlavi pruzne podle poctu auss-art
 		// ted pujdu po importech
 		$importe = $teil->getElementsByTagName("import");
+		$fremdAuftrArray = array();
 		foreach($importe as $import)
 		{
 			$importChildNodes = $import->childNodes;
@@ -854,9 +889,12 @@ foreach($exporte as $export)
 			$sum_zapati_teil_array['auss6_stk_exp']+=$sum_zapati_import_array['auss6_stk_exp'];
 			$sum_zapati_teil_array['gew_auss']+=$sum_zapati_import_array['gew_auss'];
 			$sum_zapati_teil_array['geliefert']+=getValueForNode($importChildNodes,"geliefert");
+			$fremdAuftr = getValueForNode($importChildNodes, 'fremdauftr');
+			$fremdAuftrArray[$fremdAuftr]+=1;
 		}
 		test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);
-                zapati_teil($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array);
+//		AplDB::varDump($fremdAuftrArray);
+                zapati_teil($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array,$fremdAuftrArray);
 	}
 
 test_pageoverflow($pdf,5,$cells_header,$exportChildNodes);	

@@ -38,6 +38,7 @@
 		    <input style="display:{$display_sec.dpers};" type="button" value="Personal Pflegen" id="dpers" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./personal/doc_root/index.php?presenter=Persinfo'" />
 		    <input style="display:{$display_sec.dzeit};" type="button" value="Anwesenheitserfassung" id="dzeit" class="abyStartButton"  onClick="location.href='./dzeit/dzeit.php'" />
 		    <input style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung" id="anwesenheitplan" class="abyStartButton"  onClick="location.href='./personal/doc_root/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" />
+		    <input style="display:{$display_sec.vorschuss};" type="button" value="Vorschuss" id="vorschuss" class="abyStartButton"  onClick="location.href='./dpers/vorschuss.php'" />
 		</fieldset>
 
 		<fieldset class='buttonsection kunden'>

@@ -140,9 +140,12 @@ if($planyArray!==NULL){
 		foreach ($zuBearbeitenArray[$timeID][$kunde] as $k=>$value){
 		    $sumZuBearbeitenArray[$timeID][$k]+=$value;
 		}
-		foreach ($istTagS610Array[$timeID][$kunde] as $k=>$value){
-		    $sumIstTagS610Array[$timeID][$k]+=$value;
+		if(is_array($istTagS610Array[$timeID][$kunde])){
+		    foreach ($istTagS610Array[$timeID][$kunde] as $k=>$value){
+			$sumIstTagS610Array[$timeID][$k]+=$value;
+		    }
 		}
+		
 	    }
 	    
 //	    AplDB::varDump($sumSollPlanTagArray);

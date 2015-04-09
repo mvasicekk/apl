@@ -801,6 +801,68 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return $this->getQueryRows($sql);
     }
     
+    
+    /**
+     * 
+     * @param type $import
+     * @param type $pal1
+     * @param type $abgnr
+     */
+    public function getVZFromDauftr($import,$pal1,$abgnr){
+	$sql="select dauftr.VzKd as vzkd,dauftr.VzAby as vzaby from dauftr where dauftr.auftragsnr='$import' and dauftr.`pos-pal-nr`='$pal1' and dauftr.abgnr='$abgnr'";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
+     * @param type $import
+     * @param type $impal
+     */
+    public function getRMArray($import,$impal){
+	$sql.=" select";
+	$sql.=" drueck.AuftragsNr as import,";
+	$sql.=" drueck.Teil as teil,";
+	$sql.=" drueck.`pos-pal-nr` as pal,";
+	$sql.=" drueck.TaetNr as abgnr,";
+	$sql.=" sum(drueck.`Stück`) as gutstk,";
+	$sql.=" sum(drueck.`Auss-Stück`) as aussstk";
+	$sql.=" from drueck";
+	$sql.=" where";
+	$sql.=" (drueck.AuftragsNr='$import')";
+	$sql.=" and (drueck.`pos-pal-nr`='$impal')";
+	$sql.=" group by";
+	$sql.=" drueck.AuftragsNr,";
+	$sql.=" drueck.Teil,";
+	$sql.=" drueck.`pos-pal-nr`,";
+	$sql.=" drueck.TaetNr";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
+     * @param type $persnr
+     * @param type $datum
+     */
+    public function getVorschussArray($persnr,$datum){
+	if(($persnr===NULL) && ($datum===NULL)){
+	    return array();
+	}
+	if($datum===NULL){
+	    $sql = "select CONCAT(dpers.name,' ',dpers.vorname) as name,id_vorschuss,dvorschuss.persnr,DATE_FORMAT(datum,'%d.%m.%Y') as datumF,vorschuss from dvorschuss join dpers on dpers.persnr=dvorschuss.persnr where (dvorschuss.persnr='$persnr') order by datum desc";
+	}
+	else if($persnr===NULL){
+	    $sql = "select CONCAT(dpers.name,' ',dpers.vorname) as name,id_vorschuss,dvorschuss.persnr,DATE_FORMAT(datum,'%d.%m.%Y') as datumF,vorschuss from dvorschuss join dpers on dpers.persnr=dvorschuss.persnr  where (datum='$datum') order by dvorschuss.persnr asc";
+	}
+	else{
+	    $sql = "select CONCAT(dpers.name,' ',dpers.vorname) as name,id_vorschuss,dvorschuss.persnr,DATE_FORMAT(datum,'%d.%m.%Y') as datumF,vorschuss from dvorschuss  join dpers on dpers.persnr=dvorschuss.persnr where (datum='$datum') and (dvorschuss.persnr='$persnr')";
+	}
+	
+	$rows = $this->getQueryRows($sql);
+	if($rows===NULL){
+	    return array();
+	}
+	else{
+	    return $rows;
+	}
+    }
     /**
      * vrati posledni cislo MA faktury ulozene u zakaznika
      * 
@@ -1152,6 +1214,17 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
         }
     }
 
+    /**
+     * 
+     * @param type $datum
+     * @param type $persnr
+     * @param type $vorschuss
+     */
+    public function insertVorschuss($datum,$persnr,$vorschuss,$user){
+	$sql = "insert into dvorschuss (PersNr,Datum,Vorschuss,user) values('$persnr','$datum','$vorschuss','$user')";
+	$res = mysql_query($sql);
+	return mysql_insert_id();
+    }
     /**
      *
      * @param type $teil
@@ -1961,6 +2034,39 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * 
      * @param type $import
      * @param type $pal
+     * @return type
+     */
+    public function getDauftrRowsForImportPal($import, $pal) {
+	$sql.=" select";
+	$sql.=" dauftr.id_dauftr as id,";
+	$sql.=" dauftr.auftragsnr,";
+	$sql.=" dauftr.teil,";
+	$sql.=" dauftr.termin,";
+	$sql.=" dauftr.preis,";
+	$sql.=" dauftr.`stück` as stk,";
+	$sql.=" dauftr.`mehrarb-kz` as tatkz,";
+	$sql.=" dauftr.fremdauftr,";
+	$sql.=" dauftr.fremdpos,";
+	$sql.=" dauftr.KzGut as kzgut,";
+	$sql.=" dauftr.abgnr,";
+	$sql.=" dauftr.VzKd as vzkd,";
+	$sql.=" dauftr.VzAby as vzaby";
+	$sql.=" from";
+	$sql.=" dauftr";
+	$sql.=" where";
+	$sql.=" dauftr.auftragsnr='$import'";
+	$sql.=" and";
+	$sql.=" dauftr.`pos-pal-nr`='$pal'";
+	$sql.=" order by";
+	$sql.=" abgnr";
+
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
+     * @param type $import
+     * @param type $pal
      * @param type $teil
      * @param type $tat
      */
@@ -1982,6 +2088,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" (abgnr=$tat)";
 	return $this->getQueryRows($sql);
     }
+    
     
     /**
      * 
@@ -4003,6 +4110,18 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	mysql_query($sql);
 	return mysql_affected_rows();
     }
+    
+    /**
+     * 
+     * @param type $id_vorschuss
+     * @param type $fieldToUpdate
+     * @param type $newValue
+     */
+    public function updateVorschuss($id_vorschuss,$fieldToUpdate,$newValue,$user){
+	$sql = "update dvorschuss set `$fieldToUpdate`='$newValue',`user`='$user' where id_vorschuss=$id_vorschuss limit 1";
+	mysql_query($sql);
+	return mysql_affected_rows();
+    }
     /**
      * 
      * @param type $drueckId
@@ -4958,6 +5077,12 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 //    }
     }
 
+    
+    /**
+     * 
+     * @param type $persnr
+     * @return boolean
+     */
     public function isUniversalista($persnr){
 	$sql.= " select * from dpersstempel";
 	$sql.= " where";
