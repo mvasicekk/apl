@@ -1740,40 +1740,87 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @return type 
      */
     public function erster_lager($teil, $auftrag, $paleta) {
-	//dbConnect();
-	// nejdriv si zjistim cislo operace
+		// nejdriv si zjistim cislo operace
 	$sql = "select abgnr from dauftr where ((teil='$teil') and (auftragsnr='$auftrag') and (`pos-pal-nr`='$paleta') and (abgnr>3)) order by abgnr";
 	$res = mysql_query($sql);
-	$abgnr = 0;
-	$ela = 'OD';
-
-	if (mysql_affected_rows() > 0) {
-	    $row = mysql_fetch_array($res);
-	    $abgnr = $row['abgnr'];
+	$abgnr=0;
+	$ela='0D';
+	
+	if(mysql_affected_rows()>0)
+	{
+		$row = mysql_fetch_array($res);
+		$abgnr = $row['abgnr'];
 	}
-
+	
 	// pro zjistinene abgnr si zjistim z tabulky dpos jmeno skladu
 	// pokud pro dane abgnr nic nenajdu vratim 0D
-	$sql = "select lager_von from dpos where ((teil='$teil') and (lager_von is not null) and (lager_von<>'0D') and (`taetnr-aby`='$abgnr'))";
+	//$sql = "select lager_von from dpos where ((teil='$teil') and (lager_von is not null) and (lager_von<>'0D') and (`taetnr-aby`='$abgnr'))";
+	// zmena 2014-05-29, prvni lager se hleda podle vzestupne setridenych lager_von
+	$sql = "select dpos.lager_von from dpos ";
+	$sql.= " join dauftr on dauftr.teil=dpos.teil and dauftr.abgnr=dpos.`taetnr-aby`";
+	$sql.= " where ((dpos.teil='$teil') and (dpos.lager_von is not null)";
+	$sql.= " and (dauftr.auftragsnr='$auftrag') and (dauftr.`pos-pal-nr`='$paleta')";
+	$sql.= " and (dpos.lager_von<>'0D')";
+	$sql.= " and (length(trim(dpos.lager_von))>0)";
+	$sql.= ")";
+	$sql.=" order by dpos.lager_von";
 	$res = mysql_query($sql);
-	if (mysql_affected_rows() > 0) {
-	    $row = mysql_fetch_array($res);
-	    $lVon = $row['lager_von'];
-	    if (strlen($lVon) > 0)
-		$ela = $lVon;
-	}
-	else {
-	    // jeste posledni moznost, jestli nemam jmeno skladu u zaskrtnute G operace
-	    $sql = "select lager_von from dpos where ((teil='$teil') and (kzgut='G') and (`kz-druck`<>0))";
-	    $res = mysql_query($sql);
-	    if (mysql_affected_rows() > 0) {
+	if(mysql_affected_rows()>0)
+	{
 		$row = mysql_fetch_array($res);
 		$lVon = $row['lager_von'];
-		if (strlen($lVon) > 0)
-		    $ela = $lVon;
-	    }
+		if(strlen($lVon)>0)
+			$ela = $lVon;
+	}
+	else
+	{
+		// jeste posledni moznost, jestli nemam jmeno skladu u zaskrtnute G operace
+		$sql = "select lager_von from dpos where ((teil='$teil') and (kzgut='G') and (`kz-druck`<>0))";
+		$res = mysql_query($sql);
+		if(mysql_affected_rows()>0)
+		{
+			$row = mysql_fetch_array($res);
+			$lVon = $row['lager_von'];
+			if(strlen($lVon)>0)
+				$ela = $lVon;
+		}
 	}
 	return $ela;
+
+	//dbConnect();
+	// nejdriv si zjistim cislo operace
+//	$sql = "select abgnr from dauftr where ((teil='$teil') and (auftragsnr='$auftrag') and (`pos-pal-nr`='$paleta') and (abgnr>3)) order by abgnr";
+//	$res = mysql_query($sql);
+//	$abgnr = 0;
+//	$ela = 'OD';
+//
+//	if (mysql_affected_rows() > 0) {
+//	    $row = mysql_fetch_array($res);
+//	    $abgnr = $row['abgnr'];
+//	}
+//
+//	// pro zjistinene abgnr si zjistim z tabulky dpos jmeno skladu
+//	// pokud pro dane abgnr nic nenajdu vratim 0D
+//	$sql = "select lager_von from dpos where ((teil='$teil') and (lager_von is not null) and (lager_von<>'0D') and (`taetnr-aby`='$abgnr'))";
+//	$res = mysql_query($sql);
+//	if (mysql_affected_rows() > 0) {
+//	    $row = mysql_fetch_array($res);
+//	    $lVon = $row['lager_von'];
+//	    if (strlen($lVon) > 0)
+//		$ela = $lVon;
+//	}
+//	else {
+//	    // jeste posledni moznost, jestli nemam jmeno skladu u zaskrtnute G operace
+//	    $sql = "select lager_von from dpos where ((teil='$teil') and (kzgut='G') and (`kz-druck`<>0))";
+//	    $res = mysql_query($sql);
+//	    if (mysql_affected_rows() > 0) {
+//		$row = mysql_fetch_array($res);
+//		$lVon = $row['lager_von'];
+//		if (strlen($lVon) > 0)
+//		    $ela = $lVon;
+//	    }
+//	}
+//	return $ela;
     }
 
     public function getLagerGutIn($auftrag, $pal, $lager) {
@@ -1982,6 +2029,51 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
 
     /**
+     * 
+     * @param type $teil
+     * @param type $t
+     * @return string
+     */
+    public function lager_nach($teil, $t)
+    {   
+	$sql = "SELECT dpos.lager_nach FROM dpos WHERE (((dpos.teil) = '" . $teil . "') And ((dpos.lager_nach) Is Not Null) and (dpos.`taetnr-aby`='" . $t . "'))";
+	$res = mysql_query($sql) or die(mysql_error());
+	
+	if(mysql_affected_rows()>0)
+	{
+		$row=mysql_fetch_array($res);
+		if(strlen($row['lager_nach'])>0)
+			return $row['lager_nach'];
+		else
+			return "0D";
+	}
+	else
+		return "0D";
+    }
+
+    /**
+     * 
+     * @param type $teil
+     * @param type $t
+     * @return string
+     */
+    public function lager_von($teil, $t)
+    {
+	$sql = "SELECT dpos.lager_von FROM dpos WHERE (((dpos.teil) = '" . $teil . "') And ((dpos.lager_von) Is Not Null) and (dpos.`taetnr-aby`='" . $t . "'))";
+	$res = mysql_query($sql) or die(mysql_error());
+	
+	if(mysql_affected_rows()>0)
+	{
+		$row=mysql_fetch_array($res);
+		if(strlen($row['lager_von'])>0)
+			return $row['lager_von'];
+		else
+			return "0D";
+	}
+	else
+		return "0D";
+    }
+    /**
      *
      * @param type $dil
      * @param type $auftragsnr
@@ -1991,17 +2083,31 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param type $nach
      * @param type $ident 
      */
-    public function insertDlagerBew($dil,$auftragsnr,$pal,$gut,$auss,$von,$nach,$ident){
-	$sql_insert = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser) ";
-	$sql_insert.= "values ('$dil','$auftragsnr','$pal','$gut','$auss','$von','$nach','$ident')";
+    public function insertDlagerBew($dil,$auftragsnr,$pal,$gut,$auss,$von,$nach,$ident,$abgnr=NULL,$prog_module=NULL){
+	
+	if($abgnr!=NULL){
+	    $von = $this->lager_von($dil, $abgnr);
+	    $nach = $this->lager_nach($dil, $abgnr);
+	}
+	
+	if(!$prog_module){
+	    $sql_insert = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser) ";
+	    $sql_insert.= "values ('$dil','$auftragsnr','$pal','$gut','$auss','$von','$nach','$ident')";
+	}
+	else{
+    	    $sql_insert = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser,prog_module,abgnr) ";
+	    $sql_insert.= "values ('$dil','$auftragsnr','$pal','$gut','$auss','$von','$nach','$ident','$prog_module','$abgnr')";
+	}
+	
 	mysql_query($sql_insert);
+	return mysql_insert_id();
     }
 
     
     /**
      * 
      */
-    public function updateDlagerImportStkForDauftrId($dauftrId,$stk){
+    public function updateDlagerImportStkForDauftrId($dauftrId,$stk,$prog_module=NULL){
 	
 	$dauftrRow = $this->getDauftrRow($dauftrId);
 	$auftragsnr=$dauftrRow['auftragsnr'];
@@ -2017,15 +2123,27 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$user = $this->get_user_pc();
 
 	// pripravim storno zaznam
-	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
-	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
+	if($prog_module!==NULL){
+	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser,prog_module)";
+	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user','$prog_module')";
+	}
+	else{
+	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
+	}
 	// pokud je co stornovat, provedu prikaz
 	if($storno_stk!=0)
         mysql_query($sql_insert_storno);
 
 	// pripravim novy zaznam
-	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
-	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
+	if($prog_module!==NULL){
+	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser,prog_module)";
+	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user','$prog_module')";
+	}
+	else{
+	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
+	}
 	mysql_query($sql_insert_storno);
     }
 
@@ -3281,7 +3399,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 
         $sql = "select persnr,name,vorname from dpers where 1";
         if ($ohneAustritt === TRUE)
-            $sql.= " and eintritt>='$dbEintrittVom' and (austritt is null or austritt<eintritt)";
+            $sql.= " and (austritt is null or austritt<eintritt)";
         if ($pole == 0)
             $sql.= " and persnr=$value";
         if ($pole == 1) {

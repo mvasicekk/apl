@@ -328,9 +328,9 @@ function schicht_radek($ogFarbenArray,$pdfobjekt,$vyskaradku,$rgb,$childs){
         //schicht
         $obsah = $schichtnr;
         $pdfobjekt->SetFont("FreeSans", "B", 7);
-        $pdfobjekt->Cell(8,$vyskaradku,$obsah,'TLB',0,'L',$fill);
-        $pdfobjekt->SetFont("FreeSans", "", 7);
-        $pdfobjekt->Cell(5,$vyskaradku,$oeVerantwortlich,'TB',0,'R',$fill);
+        $pdfobjekt->Cell(9,$vyskaradku,$obsah,'TLB',0,'L',$fill);
+        $pdfobjekt->SetFont("FreeSans", "", 5);
+        $pdfobjekt->Cell(4,$vyskaradku,$oeVerantwortlich,'TB',0,'R',$fill);
 
         //schichtfuehrer
         $obsah = substr(getValueForNode($childs, 'oetext'),0,30);

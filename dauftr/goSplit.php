@@ -44,7 +44,27 @@ if($dauftrRows!==NULL){
 	$insertDauftrSql.= "NOW()";
 	$insertDauftrSql.= ")";
 	$dauftrLog.= $insertDauftrSql;
+	$a->query($insertDauftrSql);
 	$dauftrLog.="<br>";
+
+	if($kzgut=='G'){
+    	    //zaznamy do dlagerbew
+	    //$a->updateDlagerImportStkForDauftrId($id, $newstk, 'pal_split');
+	    $dauftrLog.="updateDlagerImportStkForDauftrId($id, $newstk, 'pal_split')<br>";
+	    // pridat info do dlagerbew
+	    $el = $a->erster_lager($dr['teil'], $dr['auftragsnr'], $pal2);
+            //nejdriv smazu eventuelni starou pozici v lagru
+            $sql_delete = "delete from dlagerbew where ((teil='".$dr['teil']."') and (auftrag_import='".$dr['auftragsnr']."') and (pal_import='$pal2') and (lager_von='0'))";
+            $sql_insert = "insert into dlagerbew (teil,auftrag_import,pal_import,gut_stk,auss_stk,lager_von,lager_nach,comp_user_accessuser,prog_module) ";
+            $sql_insert.= "values ('".$dr['teil']."','".$dr['auftragsnr']."','$pal2','$pal2stk',0,'0','$el','$u','pal_split')";
+	    $dauftrLog.="$sql_delete<br>";
+	    $dauftrLog.="$sql_insert<br>";
+	    $a->query($sql_delete);
+	    $a->query($sql_insert);
+	    
+	    //mysql_query($sql_delete);
+	    //mysql_query($sql_insert);
+	}
     }
 }
 
@@ -113,8 +133,44 @@ if($rmArray!==NULL){
 	$insertDrueckMinus.="'".$u."',";
 	$insertDrueckMinus.="NOW()";
 	$insertDrueckMinus.=")";
-	
+
 	$drueckLog.="drueckMinus:$insertDrueckMinus<br>";
+	$a->query($insertDrueckMinus);
+	$a->insertDlagerBew($rm['teil'], $rm['import'], $pal1, -$pal2stk, 0, '', '', $u, $rm['abgnr'], 'pal_split');
+	$drueckLog.="insertDlagerBew(".$rm['teil'].", ".$rm['import'].", ".$pal1.", -$pal2stk, 0, '', '', $u, ".$rm['abgnr'].", 'pal_split')<br>";
+
+	$insertDrueckPlus = "insert into drueck";
+	$insertDrueckPlus.= "(auftragsnr,teil,taetnr,`stück`,`auss-stück`,`vz-soll`,`vz-ist`,`verb-zeit`,persnr,datum,`pos-pal-nr`,";
+	$insertDrueckPlus.= "`auss-art`,`verb-von`,`verb-bis`,`verb-pause`,schicht,oe,auss_typ,comp_user_accessuser,insert_stamp,kzgut)";
+	$insertDrueckPlus.="values(";
+	$insertDrueckPlus.="'".$rm['import']."',";
+	$insertDrueckPlus.="'".$rm['teil']."',";
+	$insertDrueckPlus.="'".$rm['abgnr']."',";
+	$insertDrueckPlus.="'".$pal2stk."',";
+	$insertDrueckPlus.="'"."0"."',";
+	$insertDrueckPlus.="'".$vzkd."',";
+	$insertDrueckPlus.="'".$vzaby."',";
+	$insertDrueckPlus.="'"."0"."',";
+	$insertDrueckPlus.="'".$persnr."',";
+	$insertDrueckPlus.="'".date('Y-m-d')."',";
+	$insertDrueckPlus.="'".$pal2."',";
+	$insertDrueckPlus.="'"."0"."',";
+	$insertDrueckPlus.="'".$verbVon."',";
+	$insertDrueckPlus.="'".$verbBis."',";
+	$insertDrueckPlus.="'"."0"."',";
+	$insertDrueckPlus.="'"."0"."',";
+	$insertDrueckPlus.="'".$oe."',";
+	$insertDrueckPlus.="'"."0"."',";
+	$insertDrueckPlus.="'".$u."',";
+	$insertDrueckPlus.="NOW()";
+	$insertDrueckPlus.=")";
+
+	$drueckLog.="drueckPlus:$insertDrueckPlus<br>";
+	$a->query($insertDrueckPlus);
+	$a->insertDlagerBew($rm['teil'], $rm['import'], $pal2, $pal2stk, 0, '', '', $u, $rm['abgnr'], 'pal_split');
+	$drueckLog.="insertDlagerBew(".$rm['teil'].", ".$rm['import'].", ".$pal2.", $pal2stk, 0, '', '', $u, ".$rm['abgnr'].", 'pal_split')<br>";
+	
+	
     }
 }
 
