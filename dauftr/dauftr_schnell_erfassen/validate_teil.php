@@ -38,8 +38,8 @@ dbConnect();
 	{
 		$row=mysql_fetch_array($result);
 		$fremdausauftrag = $row['auftragsnr'];
-		$fremdauftr=$row['fremdauftr'];
-		$fremdpos=$row['fremdpos'];
+		$fremdauftr=strip_tags($row['fremdauftr']);
+		$fremdpos=strip_tags($row['fremdpos']);
 	}
 	else
 	{
@@ -124,8 +124,8 @@ dbConnect();
 	{
 		while ($row = mysql_fetch_array($result))
 		{
-			$output .= '<fremdauftr>' . $row['fremdauftr'] . '</fremdauftr>';
-			$output .= '<fremdpos>' . $row['fremdpos'] . '</fremdpos>';
+			$output .= '<fremdauftr>' . strip_tags($row['fremdauftr']) . '</fremdauftr>';
+			$output .= '<fremdpos>' . strip_tags($row['fremdpos']) . '</fremdpos>';
 		}
 	}
 	else

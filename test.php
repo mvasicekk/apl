@@ -425,31 +425,35 @@ $apl = AplDB::getInstance();
 //   echo "$persnr,$eintritt,$name,$plusminusStunden2011,$arbstunden2012,$plusminusStunden2012,$arbstunden2013,$plusminusStunden2013<br>";
 ////    $apl->addQualifikationen($persnr, $qArray, 0, 0);
 //}
-//foreach ($persnrArray as $persnr) {
-//
-//    echo "<hr>PersNr: $persnr";
-//    echo "<table border='1'>";
-//    echo "<tr>";
-//    echo "<th>Jahr</th>";
-//    echo "<th>Monat</th>";
-//    $pmStundenArray = $apl->getPlusMinusStundenVerbose(1, 2010, 104);
-//    foreach ($pmStundenArray as $key => $value) {
-//        echo "<th>$key</th>";
-//    }
-//    echo "</tr>";
-//    for ($monat = 1; $monat <= 12; $monat++) {
-//        echo "<tr>";
-//        echo "<td>$jahr</td><td align='right' >$monat</td>";
-//        $pmStundenArray = $apl->getPlusMinusStundenVerbose($monat, $jahr, $persnr);
-//        if (is_array($pmStundenArray)) {
-//            foreach ($pmStundenArray as $value) {
-//                echo "<td align='right' width='80px'>" . $value . "</td>";
-//            }
-//        }
-//        echo "</tr>";
-//    }
-//    echo "</table>";
-//}
+
+$persnrArray = array(104,245);
+$jahr=2014;
+
+foreach ($persnrArray as $persnr) {
+
+    echo "<hr>PersNr: $persnr";
+    echo "<table border='1'>";
+    echo "<tr>";
+    echo "<th>Jahr</th>";
+    echo "<th>Monat</th>";
+    $pmStundenArray = $apl->getPlusMinusStundenVerbose(1, 2010, 104);
+    foreach ($pmStundenArray as $key => $value) {
+        echo "<th>$key</th>";
+    }
+    echo "</tr>";
+    for ($monat = 1; $monat <= 12; $monat++) {
+        echo "<tr>";
+        echo "<td>$jahr</td><td align='right' >$monat</td>";
+        $pmStundenArray = $apl->getPlusMinusStundenVerbose($monat, $jahr, $persnr);
+        if (is_array($pmStundenArray)) {
+            foreach ($pmStundenArray as $value) {
+                echo "<td align='right' width='80px'>" . $value . "</td>";
+            }
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+}
 //$noExPalArray = $apl->getNoExRows('06017272');
 //echo "<pre>";
 //print_r($noExPalArray);
@@ -792,18 +796,18 @@ $id_dauftr=477914;
 
 //vypsani souboru v danem adresari
 
-$kundeGdatPath = $apl->getKundeGdatPath(111);
-echo $kundeGdatPath."<br>";
-if ($kundeGdatPath !== NULL) {
-    foreach (new DirectoryIterator('/mnt/gdat/Dat/' . $kundeGdatPath) as $file) {
-	// if the file is not this file, and does not start with a '.' or '..',
-	// then store it for later display
-	if ((!$file->isDot()) && ($file->getFilename() != basename($_SERVER['PHP_SELF']))) {
-	    // if the element is a directory add to the file name "(Dir)"
-	    //echo ($file->isDir()) ? "(Dir) ".$file->getFilename() : $file->getFilename()."<br>";
-	    if (!$file->isDir()) {
-		echo "<a href='/gdat" . substr($file->getPath(), 13) . "/" . $file->getFilename() . "'>" . $file->getFilename() . "</a><br>";
-	    }
-	}
-    }
-}
+//$kundeGdatPath = $apl->getKundeGdatPath(111);
+//echo $kundeGdatPath."<br>";
+//if ($kundeGdatPath !== NULL) {
+//    foreach (new DirectoryIterator('/mnt/gdat/Dat/' . $kundeGdatPath) as $file) {
+//	// if the file is not this file, and does not start with a '.' or '..',
+//	// then store it for later display
+//	if ((!$file->isDot()) && ($file->getFilename() != basename($_SERVER['PHP_SELF']))) {
+//	    // if the element is a directory add to the file name "(Dir)"
+//	    //echo ($file->isDir()) ? "(Dir) ".$file->getFilename() : $file->getFilename()."<br>";
+//	    if (!$file->isDir()) {
+//		echo "<a href='/gdat" . substr($file->getPath(), 13) . "/" . $file->getFilename() . "'>" . $file->getFilename() . "</a><br>";
+//	    }
+//	}
+//    }
+//}

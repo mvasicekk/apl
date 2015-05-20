@@ -1429,6 +1429,7 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	// pujdu polem pro zahlavi a budu prohledavat predany nodelist
+	// povoleni editoru na tri bunky
 	foreach($pole as $nodename=>$cell)
 	{
 		if(array_key_exists("nf",$cell))
@@ -1440,7 +1441,8 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 		{
 			$cellobsah=getValueForNode($nodelist,$nodename);
 		}
-		$cellobsah = strip_tags($cellobsah);
+		$cellobsah = preg_replace("/&#?[a-z0-9]{2,8};/i","",$cellobsah);
+		$cellobsah = trim(html_entity_decode(strip_tags($cellobsah)));
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);

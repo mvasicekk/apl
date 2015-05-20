@@ -415,6 +415,75 @@ class AplDB {
 
     /**
      * 
+     * @param type $id
+     * @param type $rundlaufid
+     */
+    public function deletePayloadRundlauf($id,$rundlaufid){
+	$sql = "delete from drundlaufimex where rundlauf_id='$rundlaufid' and id='$id'";
+	mysql_query($sql);
+    }
+    /**
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function getRundlaufImExArray($id){
+	$sql.= " select ";
+	$sql.= " id,";
+	$sql.= " rundlauf_id,";
+	$sql.= " auftragsnr,";
+	$sql.= " imex";
+	$sql.= " from drundlaufimex";
+	$sql.= " where drundlaufimex.rundlauf_id='$id'";
+	$sql.= " order by imex desc,auftragsnr";
+	return $this->getQueryRows($sql);
+    }
+    
+    /**
+     * 
+     * @param type $rundlaufid
+     * @param type $ie
+     * @param type $auftragsnr
+     */
+    public function addRundlaufPayload($rundlaufid,$ie,$auftragsnr){
+	// smazu z puvodniho umisteni
+	$sql="delete from drundlaufimex where auftragsnr='$auftragsnr' and imex='$ie'";
+	$this->query($sql);
+	//vlozim novy
+	$sql="insert into drundlaufimex (rundlauf_id,auftragsnr,imex) values('$rundlaufid','$auftragsnr','$ie')";
+	mysql_query($sql);
+	return mysql_insert_id();
+    }
+    
+    /**
+     * 
+     */
+    public function getRundlaufInfoArray($id){
+	$sql.=" select";
+	$sql.=" drundlauf.*";
+	$sql.=" from drundlauf";
+	$sql.=" where drundlauf.id='$id'";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
+     * @param type $datumVon
+     * @param type $datumBis
+     */
+    public function getLkwDatumArray($datumVon,$datumBis){
+	$sql.=" select ";
+	$sql.=" DATE_FORMAT(ab_aby_soll_datetime,'%Y-%m-%d') as ab_aby,";
+	$sql.=" DATE_FORMAT(an_aby_soll_datetime,'%Y-%m-%d') as an_aby,";
+	$sql.=" drundlauf.id,drundlauf.dspediteur_id,drundlauf.lkw_kz";
+	$sql.=" from drundlauf";
+	$sql.=" where ";
+	$sql.=" drundlauf.ab_aby_soll_datetime between '$datumVon 00:00:00' and '$datumBis 23:59:59'";
+	$sql.=" or";
+	$sql.=" drundlauf.an_aby_soll_datetime between '$datumVon 00:00:00' and '$datumBis 23:59:59'";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
      * @param type $kundeVon
      * @param type $kundeBis
      * @param type $datumVon
@@ -823,6 +892,10 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" drueck.Teil as teil,";
 	$sql.=" drueck.`pos-pal-nr` as pal,";
 	$sql.=" drueck.TaetNr as abgnr,";
+	$sql.=" drueck.`auss-art` as aussart,";
+	$sql.=" drueck.`auss_typ`,";
+	$sql.=" 1 as gutFlag,";
+	$sql.=" 0 as aussFlag,";
 	$sql.=" sum(drueck.`Stück`) as gutstk,";
 	$sql.=" sum(drueck.`Auss-Stück`) as aussstk";
 	$sql.=" from drueck";
@@ -833,7 +906,8 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" drueck.AuftragsNr,";
 	$sql.=" drueck.Teil,";
 	$sql.=" drueck.`pos-pal-nr`,";
-	$sql.=" drueck.TaetNr";
+	$sql.=" drueck.TaetNr,";
+	$sql.=" drueck.`auss-art`";
 	return $this->getQueryRows($sql);
     }
     /**
@@ -980,6 +1054,22 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
     
     /**
+     * 
+     * @param type $import
+     * @param type $impal
+     */
+public function istExportiert($import, $impal){
+    $isex = FALSE;
+    $sql.="select dauftr.`auftragsnr-exp` as ex from dauftr where auftragsnr='$import' and `pos-pal-nr`='$impal' and kzgut='G'";
+    $rows = $this->getQueryRows($sql);
+    if($rows!==NULL){
+	$r = $rows[0];
+	$ex = $r['ex'];
+	if(strlen(trim($ex))>0) $isex = TRUE;
+    }
+    return $isex;
+}
+    /**
      *
      * @return <type>
      */
@@ -1047,6 +1137,21 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	}
 	return $retString;
     }
+    
+    
+    /**
+     * 
+     */
+    public function getSchlTabellenArray($tabid=NULL){
+	if($tabid===NULL){
+	    $sql = "select dschltabellen.* from dschltabellen order by buttonName";
+	}
+	else{
+	    $sql = "select dschltabellen.* from dschltabellen where tabid='$tabid'";
+	}
+	return $this->getQueryRows($sql);
+    }
+    
     /**
      *
      * @param type $aussNr 
@@ -2159,6 +2264,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" dauftr.id_dauftr as id,";
 	$sql.=" dauftr.auftragsnr,";
 	$sql.=" dauftr.teil,";
+	$sql.=" dauftr.`pos-pal-nr` as pal,";
 	$sql.=" dauftr.termin,";
 	$sql.=" dauftr.preis,";
 	$sql.=" dauftr.`stück` as stk,";
@@ -2167,6 +2273,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" dauftr.fremdpos,";
 	$sql.=" dauftr.KzGut as kzgut,";
 	$sql.=" dauftr.abgnr,";
+	$sql.=" dauftr.`auftragsnr-exp` as ex,";
 	$sql.=" dauftr.VzKd as vzkd,";
 	$sql.=" dauftr.VzAby as vzaby";
 	$sql.=" from";
@@ -4777,7 +4884,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     public function getIstOEStundenBetweenDatums($dbDatumVon, $dbDatumBis, $persnr, $oe) {
         $sql = "select sum(dzeit.stunden) as sumstunden from dzeit where datum>'$dbDatumVon' and datum<='$dbDatumBis' and persnr='$persnr' and tat='$oe'";
 //    echo "<br>".$sql;
-        dbConnect();
+//        dbConnect();
         $res = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($res);

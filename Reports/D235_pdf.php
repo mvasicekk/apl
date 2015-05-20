@@ -662,9 +662,10 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
             $y += 2.5;
         }
         
-        $pdfobjekt->SetXY(150, $yTemp + 1);
+        $pdfobjekt->SetXY(152, $yTemp + 1);
         $verpackungsmenge = getValueForNode($paletteChildNodes, "verpackungmenge");
-        $pdfobjekt->Cell(45, 2.5, "1x VPE = " . $verpackungsmenge . " stk/ks", "", 0 , "L");
+	$pdfobjekt->SetFillColor(255,255,255);
+        $pdfobjekt->Cell(40, 2.5, "1x VPE = " . $verpackungsmenge . " stk/ks", "", 0 , "L",1);
 }
 
 

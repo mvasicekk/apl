@@ -29,26 +29,36 @@
 	{include file='../../templates/heading.tpl'}
 	<div id="sizeinfo"></div>
 	<div id="mainform">
-	<fieldset>
+	<fieldset style="border: none;margin-top: 10px;border-bottom: 1px solid;margin-bottom: 10px;">
 	    <legend>Von :</legend>
 	    <label for="import">Import</label>
 	    <input type="number" accesskey="i" id="import" value="{$import}" autofocus />
 	    <label for="pal1">Pal von</label>
 	    <input type="number" accesskey="p" id="pal1" value="" />
+	    <span id="exInfo">schon Exportiert</span>
 	</fieldset>
-	
-	<fieldset>
+
+	<div style="border-bottom: 1px solid black;margin-bottom: 10px;">
+    	<fieldset style="float: left;border: none;">
+	    <legend>Import</legend>
+	    <div id="dauftrtable" style="margin:auto;"></div>
+	</fieldset>
+
+	    <fieldset style="border:none;">
 	    <legend>Rueckmeldungen</legend>
 	    <div id="ruecktable" style="margin:auto;"></div>
 	</fieldset>
+		<hr style="visibility: hidden;clear: both;">
+	</div>    
 	
 	
-	<fieldset>
+	<fieldset style="border:none;">
 	    <legend>Nach :</legend>
 	    <label for="import">Import</label>
 	    <input type="number" disabled="disabled" readonly accesskey="i" id="import1" value="{$import}"/>
 	    <label for="pal2">Pal nach</label>
 	    <input type="number" accesskey="p" id="pal2" value="" />
+	    <span id="pal2ExistsInfo">pal existiert !!!</span>
 	    <label for="pal2stk">Stk</label>
 	    <input type="number" id="pal2stk" value="0" />
 	    <label for="persnr">Persnr</label>

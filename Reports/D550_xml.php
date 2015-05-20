@@ -20,7 +20,7 @@ $db->query("set names utf8");
 $pcip=get_pc_ip();
 
 
-$sql.=" select dkopf.teilbez,dkopf.kunde,dma.imanr,dma.emanr,dma.teil,dma.auftragsnrarray,dma.palarray,dma.tatundzeitarray,dma.bemerkung,dma.imavon,dma.stamp ";
+$sql.=" select dma.ima_genehmigt,dma.ema_genehmigt,dkopf.teilbez,dkopf.kunde,dma.imanr,dma.emanr,dma.teil,dma.auftragsnrarray,dma.palarray,dma.tatundzeitarray,dma.bemerkung,dma.imavon,dma.stamp ";
 $sql.=" from dma";
 $sql.=" join dkopf on dkopf.Teil=dma.teil";
 $sql.=" where (1)";
@@ -63,6 +63,8 @@ $options = array(
 		    'elements'=>array(
 			'imanr',
 			'emanr',
+			'ima_genehmigt',
+			'ema_genehmigt',
 			'auftragsnrarray',
 			'palarray',
 			'tatundzeitarray',

@@ -140,9 +140,12 @@ function logout()
 	<tr>
 <!--            <td><input {popup text="Sprava personalu .."} type="button" value="Personal Pflegen" id="dpers" class="abyStartButton"  onClick="okno=window.open();okno.location.href='http://mailserver/apl/index.php?presenter=Persinfo'" /></td>-->
             <td><input {popup text="Sprava personalu .."} type="button" value="Personal Pflegen" id="dpers" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./personal/doc_root/index.php?presenter=Persinfo'" /></td>
-            <td><input disabled {popup text="Zadavani dochazky .."} type="button" value="Anwesenheitserfassung" id="dzeit" class="abyStartButton"  onClick="location.href='./dzeit/dzeit.php'" /></td>
+            <td><input disabled {popup text="Zadavani dochazky .."} type="button" value="Anwesenheitserfassung lt. Leistung" id="dzeitedata" class="abyStartButton"  onClick="location.href='./personal/doc_root/index.php?action=edataAnw&presenter=DpersAnwesenheit'" /></td>
 	</tr>
-	
+        <tr>
+            <td>&nbsp;</td>
+            <td><input disabled {popup text="Zadavani dochazky .."} type="button" value="Anwesenheitserfassung" id="dzeit" class="abyStartButton"  onClick="location.href='./dzeit/dzeit.php'" /></td>
+        </tr>	
 	<tr>
 		<td><input  disabled {popup text="Osobni karta .."} type="button" value="Personal Karte" id="perskarte" class="abyStartButton"  onClick="location.href=''" /></td>
 <!--		<td><input disabled {popup text="Planovani dochazky .."} type="button" value="Anwesenheitplanung" id="anwesenheitplan" class="abyStartButton"  onClick="location.href='http://mailserver/apl/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" /></td>-->

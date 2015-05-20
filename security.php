@@ -6,4 +6,3 @@ if (!isset($_SESSION['user'])) {
     echo "an der Hauptseite bitte anmelden ! / prihlaste se prosim na hlavni strance !";
     exit();
 }
-?>

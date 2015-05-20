@@ -189,7 +189,7 @@ function getIMAStk($imanr){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // funkce pro vykresleni tela
-function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
+function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist,$imagen,$emagen)
 {
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
@@ -213,8 +213,22 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 			$cellobsah = call_user_func($fName, getValueForNode($nodelist, 'imanr'));
 		    }
 		}
+		if($nodename=='imanr'||$nodename=='emanr'){
+		    $fill=1;
+		    $testVal = $nodename=='imanr'?$imagen:$emagen;
+		    $pdfobjekt->SetFillColor(255,255,230);
+		    if($testVal>0){
+			$pdfobjekt->SetFillColor(230,255,230);
+		    }
+		    if($testVal<0){
+			$pdfobjekt->SetFillColor(255,230,230);
+		    }
+		}
+		else{
+		    $fill=$cell["fill"];
+		}
 		
-		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
+		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$fill);
 	}
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 	$pdfobjekt->SetFont("FreeSans", "", 7);
@@ -337,7 +351,9 @@ foreach($kunden as $kunde){
 		    zahlavi_kunde($pdf,5,$kundeChilds,array(230,250,230));
 		    zahlavi_teil($pdf,5,$teilChilds,array(230,230,250));
 		}
-		detaily($pdf, $cells, 5, array(255,255,255), $imaChilds);
+		$imagen = intval(getValueForNode($imaChilds, "ima_genehmigt"));
+		$emagen = intval(getValueForNode($imaChilds, "ema_genehmigt"));
+		detaily($pdf, $cells, 5, array(255,255,255), $imaChilds,$imagen,$emagen);
 		//get files
 		$imgDir = $gdatPath . $kundeGdatPath . "/200 Teile/" . $teilnr . "/" . AplDB::$DIRS_FOR_TEIL_FINAL[$att2FolderArray[$att]];
 		$imgDir.= "/".$imanr;

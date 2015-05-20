@@ -430,14 +430,22 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
         // fremdauftr je u kazde palety, tj. u kazdeho radku v dauftr
         
 	$obsah="";
+	// mongolab sharding partition over geological areas
 	//$obsah=number_format($obsah,0,',',' ');
 	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
 	//misto pro teil
 	$pdfobjekt->Cell(25,$vyskaradku,getValueForNode($childNodes,""),'0',0,'L',$fill);
 //	$pdfobjekt->Cell(25,$vyskaradku,getValueForNode($childNodes,"im"),'0',0,'L',$fill);
         $pdfobjekt->Cell(25,$vyskaradku,'','0',0,'L',$fill);
-	$pdfobjekt->Cell(50,$vyskaradku,"Best.Nr.:".getValueForNode($childNodes,"fremdauftr"),'0',0,'L',$fill);
-	$pdfobjekt->Cell(0,$vyskaradku,"Pos.:".getValueForNode($childNodes,"fremdpos"),'0',1,'L',$fill);
+	//regularnim vyrazem odstranim mezery &nbsp;
+	$cellobsah = preg_replace("/&#?[a-z0-9]{2,8};/i","",getValueForNode($childNodes,"fremdauftr"));
+	//odstranim html tagy
+	$cellobsah = trim(html_entity_decode(strip_tags($cellobsah)));
+	$pdfobjekt->Cell(50,$vyskaradku,"Best.Nr.:".$cellobsah,'0',0,'L',$fill);
+	$cellobsah = preg_replace("/&#?[a-z0-9]{2,8};/i","",getValueForNode($childNodes,"fremdpos"));
+	$cellobsah = trim(html_entity_decode(strip_tags($cellobsah)));
+	
+	$pdfobjekt->Cell(0,$vyskaradku,"Pos.:".$cellobsah,'0',1,'L',$fill);
 
 
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);

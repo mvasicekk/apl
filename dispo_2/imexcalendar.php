@@ -44,6 +44,44 @@ $smarty = new Smarty;
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	$datumBis = date('Y-m-d',  strtotime($datumVon)+$pocetdnu*24*60*60);
 	
+	//lkwArray
+	$lkwDatumArray = array();
+	$lkwDatumArrayDB = $a->getLkwDatumArray($datumVon,$datumBis);
+	if($lkwDatumArrayDB!==NULL){
+	    foreach ($lkwDatumArrayDB as $lkwRow){
+		//zjistit imex
+		$imexArray = $a->getRundlaufImExArray($lkwRow['id']);
+		$imexStr = "";
+		if($imexArray!==NULL){
+		    foreach ($imexArray as $imex){
+			$auftrStr = substr($imex['auftragsnr'],4);
+			$imexStr.= "<span style='border:1px solid black;padding:0.1em;' class='payLoad_".$imex['imex']."'>".$auftrStr."</span>";
+		    }
+		}
+
+		$ab_aby = $lkwRow['ab_aby'];
+		$an_aby = $lkwRow['an_aby'];
+		$lkwRow['imexstr'] = $imexStr;
+		
+		if(strlen(trim($ab_aby))>0){
+		    if(!is_array($lkwDatumArray[$ab_aby])){
+			$lkwDatumArray[$ab_aby] = array();
+		    }
+		    array_push($lkwDatumArray[$ab_aby], $lkwRow);
+		}
+		if(strlen(trim($an_aby))>0){
+		    if(!is_array($lkwDatumArray[$an_aby])){
+			$lkwDatumArray[$an_aby] = array();
+		    }
+		    if($ab_aby!=$an_aby){
+			array_push($lkwDatumArray[$an_aby], $lkwRow);
+		    }
+		}
+	    }
+	}
+	
+//	AplDB::varDump($lkwDatumArray);
+	
 	$kundenNrArray = array();
 	$importeDatumArray = array();
 	$importeDatumArrayDB = $a->getImporteDatumKunde($kundeVon,$kundeBis,$datumVon,$datumBis);
@@ -118,6 +156,7 @@ $smarty = new Smarty;
 	
 	$smarty->assign("importeDatumArray",$importeDatumArray);
 	$smarty->assign("exporteDatumArray",$exporteDatumArray);
+	$smarty->assign("lkwDatumArray",$lkwDatumArray);
 	$smarty->assign("calendarArray",$calendarArray);
 	$smarty->assign("kundenArray",$kundenNrArray);
 	$smarty->assign("kundeVon",$kundeVon);

@@ -14,14 +14,6 @@ $.fn.center = function() {
     return this;
 }
 
-//jQuery.fn.center = function () {
-//    this.css("position","absolute");
-////    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
-//    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2)) + "px");
-//    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
-//    return this;
-//}
-
 $(document).ready(function(){
     
     	$.datepicker.setDefaults($.datepicker.regional["de"]);
@@ -29,10 +21,24 @@ $(document).ready(function(){
 	
 	$('.imextable').floatThead();
 	$('.kundeTagBox').bind('dblclick',kundeBoxDblClicked);
+	$('.datumheader').bind('dblclick',datumHeaderDblClicked);
+	$('.lkwdraggable').bind('dblclick',lkwDblClicked);
 	$('.draggable').bind('dblclick',draggableImExDblClicked);
-	$('.draggable').draggable();
+	$('.draggable').draggable({zIndex: 999});
+	
+	$('.lkwdraggable').draggable({
+	    axis: "y",
+	    start: function(){
+		
+		$(this).css({"z-index":"999"});
+	    },
+	    stop: function(){
+		$(this).css({"background-color":""});
+	    }
+	});
 	$('.selectable').selectable();
 	$('.draggable').css({"cursor":"pointer"});
+	$('.lkwdraggable').css({"cursor":"pointer"});
 	$('.droppable').droppable(
 		{
 		    accept: ".draggable",
@@ -40,6 +46,15 @@ $(document).ready(function(){
 		    addClasses: false,
 		    hoverClass: "drop-hover",
 		    drop: function( event, ui ) {
+			// pokud mam otevreny formular pro lkwedit nebudu drop zpracovavat a necham
+			// to lkwedit
+//			if($('div[id^=editlkw_]').length!=0){
+//			    $(this).draggable( "option", "revert", true );
+//			    return;
+//			}
+//			else{
+//			    $(this).draggable( "option", "revert", false );
+//			}
 			//alert(ui.draggable.attr('id')+' polozen na '+$(this).attr('id'));
 			ui.helper.remove();
 			var acturl = 'updateDrop.php';
@@ -68,6 +83,23 @@ function keyDownHandler(event){
 	$('div[id^=editdraggableimex_]').remove();
 	$('div[id^=newimp_]').remove();
     }
+}
+
+function lkwDblClicked(event){
+    event.preventDefault();
+    event.stopPropagation();
+    var id = $(this).attr('id');
+    var acturl = 'lkwEdit.php';
+    $.post(acturl,
+    {
+	id:id
+    },
+    function(data){
+	updateLkwDblClicked(data);
+    },
+    'json'
+    );        
+    //alert('lkwedit');
 }
 
 function draggableImExDblClicked(event){
@@ -169,6 +201,27 @@ function erstellenPlanImportButtonClick(event){
     );        
     
 }
+
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
+function datumHeaderDblClicked(event){
+    var datumHeaderId = $(this).attr('id');
+    var acturl = 'datumHeaderDblClicked.php';
+    $.post(acturl,
+    {
+	datumHeaderId:datumHeaderId
+    },
+    function(data){
+	updatedatumHeaderDblClicked(data);
+//	updatekundeBoxDblClicked(data);
+    },
+    'json'
+    );        
+}
+
 /**
  * 
  * @param {type} event
@@ -256,11 +309,158 @@ function updateerstellenPlanImportButtonClick(data){
     }
 }
 
+function submitLkwEdit(event){
+    if(event.keyCode==13){
+	$(this).find('input[id^=savelkwbutton_]').click();
+    }
+}
+
 function submitImExEdit(event){
     //alert('event.keycode'+event.keyCode+'id='+$(this).attr('id'));
     if(event.keyCode==13){
 	$(this).find('input[id^=editimexbutton_]').click();
     }
+}
+
+function makeLkwPayloadDraggable(data){
+$('div.lkwPayLoad').draggable({
+	stop:function(event,ui){
+	    var offsetUI = ui.offset;
+	    var divOffset = $('#'+data.divid).offset();
+	    var divWidth = $('#'+data.divid).outerWidth();
+	    var divHeight = $('#'+data.divid).outerHeight();
+	    var uiWidth = ui.helper.outerWidth();
+	    var uiHeight = ui.helper.outerHeight();
+	    
+	    var lDif = divOffset.left-offsetUI.left;
+	    var rDif = (offsetUI.left+uiWidth)-(divOffset.left+divWidth);
+	    var tDif = divOffset.top-offsetUI.top;
+	    var bDif = (offsetUI.top+uiHeight)-(divOffset.top+divHeight);
+	    
+	    if((lDif>uiWidth)||(rDif>uiWidth)||(tDif>uiHeight)||(bDif>uiHeight)){
+		var acturl = './deletePayloadId.php';
+		$.post(acturl,
+		{
+		    payloadid:$(this).attr('id'),
+		    rid:data.divid
+		},
+		function(data){
+		    updateDeletePayloadId(data);
+		},
+		'json'
+		);        
+	    }
+	    else{
+		//$(this).css({"background-color":""});
+	    }
+	},
+	drag:function(event,ui){
+	    var offsetUI = ui.offset;
+	    var divOffset = $('#'+data.divid).offset();
+	    var divWidth = $('#'+data.divid).outerWidth();
+	    var divHeight = $('#'+data.divid).outerHeight();
+	    var uiWidth = ui.helper.outerWidth();
+	    var uiHeight = ui.helper.outerHeight();
+	    
+	    var lDif = divOffset.left-offsetUI.left;
+	    var rDif = (offsetUI.left+uiWidth)-(divOffset.left+divWidth);
+	    var tDif = divOffset.top-offsetUI.top;
+	    var bDif = (offsetUI.top+uiHeight)-(divOffset.top+divHeight);
+	    
+	    if((lDif>uiWidth)||(rDif>uiWidth)||(tDif>uiHeight)||(bDif>uiHeight)){
+		$(this).css({"background-color":"red"});
+	    }
+	    else{
+		$(this).css({"background-color":""});
+	    }
+	    
+	    //console.log("lDif:"+lDif+"tDif:"+tDif+"rDif"+rDif+"bDif:"+bDif);
+	}
+    });
+    $('div.lkwPayLoad').css({"cursor":"pointer"});
+}
+
+function draggableClick(event) {
+    if ($('div[id^=editlkw_]').length > 0) {
+	var target_id = $('div[id^=editlkw_]').attr('id');
+	var dropped_id = $(this).attr('id');
+//	alert('target_id='+target_id+',dropped_id='+dropped_id);
+	var acturl = 'updateDropToLkw.php';
+	$.post(acturl,
+		{
+		    target_id: target_id,
+		    dropped_id: dropped_id
+		},
+	function (data) {
+	    updateDroppedToLkw(data);
+	},
+		'json'
+		);
+    }
+}
+/**
+ * 
+ * @param {type} data
+ * @returns {undefined}
+ */
+function updateLkwDblClicked(data) {
+    $('body').append(data.div);
+    $('#' + data.divid).hide();
+    $('#' + data.divid).center();
+    $('#' + data.divid).show('slide');
+    $('#' + data.divid).draggable();
+    // pridam ke vsem draggable imex odchyceni udalosti click
+    $('.draggable').unbind('click');
+    $('.draggable').on('click',draggableClick);
+//    $('#' + data.divid).droppable(
+//	    {
+//		accept: ".draggable",
+////		    activeClass: "ui-state-highlight",
+//		addClasses: false,
+//		hoverClass: "drop-hover",
+//		drop: function (event, ui) {
+//		    //alert(ui.draggable.attr('id')+' polozen na '+$(this).attr('id'));
+//		    event.preventDefault();
+//		    event.stopPropagation();
+//		    ui.helper.remove();
+//		    var acturl = 'updateDropToLkw.php';
+//		    $.post(acturl,
+//			    {
+//				target_id: $(this).attr('id'),
+//				dropped_id: ui.draggable.attr('id'),
+//			    },
+//			    function (data) {
+//				updateDroppedToLkw(data);
+//			    },
+//			    'json'
+//			    );
+//		}
+//	    }
+//    );
+    makeLkwPayloadDraggable(data);
+
+
+    $(".datepicker").datepicker($.datepicker.regional["de"]);
+    $('#' + data.divid).bind('keypress', submitLkwEdit);
+    $('input[id^=savelkwbutton_]').bind('click', saveLkwButtonClick);
+    $('div[id^=closebutton_]').bind('click', closeButtonClick);
+}
+
+function updateDeletePayloadId(data){
+    $('div.payloadList').html(data.payloadDiv);
+    $('div.lkw_'+data.rundlaufid).html(data.lkwDiv);
+    makeLkwPayloadDraggable(data);
+    
+}
+
+function saveLkwButtonClick(){
+    console.log('saveLkwButtonClick');
+    //vytvorit mapu vsech inputu
+    var map = {};
+    $(this).parent().find('input').each(function() {
+	map[$(this).attr("id")] = $(this).val();
+    });
+    console.log(map);
 }
 
 /**
@@ -313,6 +513,16 @@ function updatedraggableImExDblClicked(data){
 		    });
 }
 
+
+function updatedatumHeaderDblClicked(data){
+    $('body').append(data.div);
+    $('#'+data.divid).hide();
+    $('#'+data.divid).center();
+    $('#'+data.divid).show('slide');
+    $('#'+data.divid).draggable();
+    $('div[id^=closebutton_]').bind('click',closeButtonClick);
+}
+
 function updatekundeBoxDblClicked(data){
 //    if($('#'+data.divid).length!=0){
 //            $('#'+data.divid).remove();
@@ -349,6 +559,10 @@ function zielortChange(event){
 }
 
 
+function updateDroppedToLkw(data){
+    updateDeletePayloadId(data);
+}
+
 function updateDropped(data){
 //    if(data.imex=='ex'){
 	$('#'+data.target_id).html(data.targetTD);
@@ -356,7 +570,7 @@ function updateDropped(data){
 	//udelat draggable
 	$('.draggable').unbind('dblclick');
 	$('.draggable').bind('dblclick',draggableImExDblClicked);
-	$('.draggable').draggable();
+	$('.draggable').draggable({zIndex: 999});
 	$('.draggable').css({"cursor":"pointer"});
 
 //    }
