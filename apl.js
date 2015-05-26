@@ -33,6 +33,40 @@ $(document).ready(function(){
 		'myChart', 
 		[hodnoty_pg1,hodnoty_pg4,hodnoty_celkem],
 		{
+		    //seriesColors:["#4bb2c5", "#c5b47f", "#EAA228"],
+		    seriesColors:["#4bb2c5", "#EAA228", "#c5b47f"],
+		    canvasOverlay:{
+			show:true,
+			objects:[
+			    {
+				dashedHorizontalLine:{
+				    name: 'KemperZiel',
+				    y: 17000,
+				    lineWidth:2,
+				    color:'#EAA228',
+				    shadow:true
+				}
+			    },
+			    {
+				dashedHorizontalLine:{
+				    name: 'SummeZiel',
+				    y: 75000,
+				    lineWidth:2,
+				    color:'#c5b47f',
+				    shadow:true
+				}
+			    },
+			    {
+				dashedHorizontalLine:{
+				    name: 'GussZiel',
+				    y: 58000,
+				    lineWidth:2,
+				    color:'#4bb2c5',
+				    shadow:true
+				}
+			    }
+			]
+		    },
 		    title:'VzKd - PG1,PG4,Sum',
 		    axesDefaults:{
 			labelRenderer: $.jqplot.CanvasAxisLabelRenderer
@@ -40,7 +74,7 @@ $(document).ready(function(){
 		    seriesDefaults:{
 			rendererOptions:{
 			    animation: { 
-				show: true
+				show: false
 			    }
 			}
 		    },

@@ -48,7 +48,9 @@ if($qArray!==NULL){
 
 foreach ($querys as $key=>$a){
     $querys[$key]['sql'] = base64_encode($a['sql']);
+    $querys[$key]['icon'] = strlen(trim($a['popisky']))>0?'glyphicon-modal-window':'glyphicon-th-list';
 }
 
+//AplDB::varDump($querys);
 $smarty->assign("querys",$querys);
 $smarty->display('st.tpl');

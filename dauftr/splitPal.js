@@ -99,7 +99,8 @@ function showSplitGo(){
     var isExVisible = $('#exInfo').is(':visible');
     var isPal2ExistsVisible = $('#pal2ExistsInfo').is(':visible');
     
-    if(pal2>0 && pal2stk>0 && persnr>0 && !isExVisible && !isPal2ExistsVisible){
+    //if(pal2>0 && pal2stk>0 && persnr>0 && !isExVisible && !isPal2ExistsVisible){
+    if(pal2>0 && pal2stk>0 && persnr>0 && !isExVisible){
 	$('#gosplit').show();
     }
     else{
@@ -160,7 +161,9 @@ function gosplitClicked(event){
  * @returns {Function|undefined}
  */
 function updateGoSplit(data){
-    $('#dauftrLog').html(data.dauftrLog+"<hr>"+data.drueckLog);
+    //$('#dauftrLog').html(data.dauftrLog+"<hr>"+data.drueckLog);
+    $('#dauftrLog').html("<h3> hotovo - fertig ! </h3>");
+    $('#gosplit').hide();
 }
 /**
  * 

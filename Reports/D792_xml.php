@@ -42,7 +42,8 @@ $pt.=" dm,";
 $pt.=" drech.abgnr,";
 $pt.=" sum(drech.`stück`) as stk,";
 $pt.=" sum(if(kzgut='G',drech.`stück`,0)) as gut_stk,";
-$pt.=" sum(ausschuss) as auss";
+$pt.=" sum(dauftr.auss2_stk_exp+dauftr.auss4_stk_exp) as auss,";
+$pt.=" sum(ausschuss) as auss1";
 $pt.=" from drech";
 //$pt.=" join dpos on dpos.teil=drech.teil and dpos.`taetnr-aby`=drech.abgnr";
 $pt.=" join dauftr on dauftr.`auftragsnr-exp`=drech.auftragsnr and dauftr.teil=drech.teil and dauftr.`pos-pal-nr`=drech.`pos-pal-nr` and dauftr.abgnr=drech.abgnr and dauftr.auftragsnr=drech.origauftrag";
@@ -95,6 +96,7 @@ $sql.=", tat";
 $sql.=", stk";
 $sql.=", gut_stk";
 $sql.=", sum(auss) as auss";
+$sql.=", sum(auss1) as auss1";
 $sql.=", sum(DM) as preis";
 $sql.=", max(abgnr) as reihe";
 $sql.=" FROM $D740_sumteilstk";
@@ -113,7 +115,14 @@ $query2xml = XML_Query2XML::factory($db);
 
 function getBetrag($record){
     $value = round(
-                    floatval(($record['stk']+$record['auss'])*$record['preis'])
+                    floatval(($record['stk']+$record['auss1'])*$record['preis'])
+                    ,3);
+    return round($value,2);
+}
+
+function getBetragSum($record){
+    $value = round(
+                    floatval(($record['stk']+$record['auss_sum'])*$record['preis'])
                     ,3);
     return round($value,2);
 }
@@ -190,7 +199,11 @@ $options = array(
                                                 'stk',
                                                 'gut_stk',
                                                 'auss',
+						'auss1',
+//						'auss_sum',
                                                 'betrag' => '#getBetrag();',
+//						'betrag' => '#getBetragSum();',
+//						'betrag_sum' => '#getBetragSum();',
                                                 'waehrung' => 'wahr'
                                             ),
                                         ),

@@ -2257,6 +2257,44 @@ public function istExportiert($import, $impal){
      * 
      * @param type $import
      * @param type $pal
+     * @param type $abgnr
+     * @return type
+     */
+    public function getDauftrRowsForImportPalAbgnr($import, $pal,$abgnr) {
+	$sql.=" select";
+	$sql.=" dauftr.id_dauftr as id,";
+	$sql.=" dauftr.auftragsnr,";
+	$sql.=" dauftr.teil,";
+	$sql.=" dauftr.`pos-pal-nr` as pal,";
+	$sql.=" dauftr.termin,";
+	$sql.=" dauftr.preis,";
+	$sql.=" dauftr.`stück` as stk,";
+	$sql.=" dauftr.`mehrarb-kz` as tatkz,";
+	$sql.=" dauftr.fremdauftr,";
+	$sql.=" dauftr.fremdpos,";
+	$sql.=" dauftr.KzGut as kzgut,";
+	$sql.=" dauftr.abgnr,";
+	$sql.=" dauftr.`auftragsnr-exp` as ex,";
+	$sql.=" dauftr.VzKd as vzkd,";
+	$sql.=" dauftr.VzAby as vzaby";
+	$sql.=" from";
+	$sql.=" dauftr";
+	$sql.=" where";
+	$sql.=" dauftr.auftragsnr='$import'";
+	$sql.=" and";
+	$sql.=" dauftr.`pos-pal-nr`='$pal'";
+	$sql.=" and";
+	$sql.=" dauftr.`abgnr`='$abgnr'";
+	$sql.=" order by";
+	$sql.=" abgnr";
+
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
+     * @param type $import
+     * @param type $pal
      * @return type
      */
     public function getDauftrRowsForImportPal($import, $pal) {

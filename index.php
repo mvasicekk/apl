@@ -65,8 +65,22 @@ $smarty->assign("display_sec", $display_sec);
 
 
 // spocitam hodnoty pro tabulku s aktualnima vykonama pro tento mesic
+$zielPG1 = 58000;
+$zielPG4 = 17000;
+$zielSum = 75000;
 
 $leistungTableArray = $apl->getLeistungTable();
+
+//AplDB::varDump($leistungTableArray['pole']);
+
+foreach ($leistungTableArray['pole'] as $i=>$a){
+    $leistungTableArray['pole'][$i]['ziel_pg1'] = $leistungTableArray['pole'][$i]['pg1']/$zielPG1 * 100;
+    $leistungTableArray['pole'][$i]['ziel_pg4'] = $leistungTableArray['pole'][$i]['pg4']/$zielPG4 * 100;
+    $leistungTableArray['pole'][$i]['ziel_sum'] = $leistungTableArray['pole'][$i]['celkem']/$zielSum * 100;
+}
+
+//AplDB::varDump($leistungTableArray['pole']);
+
 $smarty->assign("datum", $leistungTableArray['datum']);
 $smarty->assign("pole", $leistungTableArray['pole']);
 $smarty->assign("sum_pg1", $leistungTableArray['sum_pg1']);

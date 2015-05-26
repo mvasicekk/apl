@@ -18,6 +18,7 @@
 	<script type="text/javascript" src="./js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
 	<script type="text/javascript" src="./js/plugins/jqplot.canvasTextRenderer.min.js"></script>
 	<script type="text/javascript" src="./js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+	<script type="text/javascript" src="./js/plugins/jqplot.canvasOverlay.min.js"></script>
 	
 	<script type="text/javascript" src="./apl.js"></script>
 	{literal}
@@ -77,11 +78,11 @@
 		    <legend>Berichte / sestavy</legend>
 		    <input style="display:{$display_sec.berichte};" type="button" value="Berichte Drucken" id="berichte" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/reports.php'" />
 		    <input style="display:{$display_sec.phpexcel};" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" />
-		    <input style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php'" />
-{*		    <input style="" type="button" value="Berichte Drucken" id="berichte" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/reports.php'" />
-		    <input style="" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" />
-		    <input style="" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/querys.php'" />
-*}
+{*		    <input style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php'" />*}
+{*		    <input style="" type="button" value="Berichte Drucken" id="berichte" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/reports.php'" />*}
+{*		    <input style="" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" />*}
+		    <input style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/querys.php'" />
+
 		</fieldset>
 
 		<fieldset class='buttonsection reparatur'>
@@ -135,30 +136,33 @@
 
 		    <tr>
 			<td class="progresspopis">datum</td>
-			<td class="progresspopis">PG1</td>
-			<td class="progresspopis">PG3</td>
-			<td class="progresspopis">PG4</td>
+			<td colspan="2" class="progresspopis">PG1 / % Ziel</td>
+{*			<td class="progresspopis">PG3</td>*}
+			<td colspan="2" class="progresspopis">PG4 / % Ziel</td>
 			<td class="progresspopis">PG9</td>
-			<td class="progresspopis">Summe</td>
+			<td colspan="2" class="progresspopis">Summe / % Ziel</td>
 		    </tr>
 
 		    <tr>
 			<td class="ganzmonat">akt. Monat</td>
-			<td class="ganzmonat">{$sum_pg1|string_format:"%d"}</td>
-			<td class="ganzmonat">{$sum_pg3|string_format:"%d"}</td>
-			<td class="ganzmonat">{$sum_pg4|string_format:"%d"}</td>
+			<td colspan="2" class="ganzmonat">{$sum_pg1|string_format:"%d"}</td>
+{*			<td class="ganzmonat">{$sum_pg3|string_format:"%d"}</td>*}
+			<td colspan="2" class="ganzmonat">{$sum_pg4|string_format:"%d"}</td>
 			<td class="ganzmonat">{$sum_pg9|string_format:"%d"}</td>
-			<td class="ganzmonat">{$sum_celkem|string_format:"%d"}</td>
+			<td colspan="2" class="ganzmonat">{$sum_celkem|string_format:"%d"}</td>
 		    </tr>
 
 		    {foreach key=poradi item=polozka from=$pole}
 			<tr>
 			    <td class='progresspolozka'>{$polozka.datum}</td>
 			    <td class='progresspolozka'>{$polozka.pg1|string_format:"%d"}</td>
-			    <td class='progresspolozka'>{$polozka.pg3|string_format:"%d"}</td>
+			    <td class='progresspolozka'>{$polozka.ziel_pg1|string_format:"%d"}%</td>
+{*			    <td class='progresspolozka'>{$polozka.pg3|string_format:"%d"}</td>*}
 			    <td class='progresspolozka'>{$polozka.pg4|string_format:"%d"}</td>
+			    <td class='progresspolozka'>{$polozka.ziel_pg4|string_format:"%d"}%</td>
 			    <td class='progresspolozka'>{$polozka.pg9|string_format:"%d"}</td>
 			    <td class='progresspolozka'>{$polozka.celkem|string_format:"%d"}</td>
+			    <td class='progresspolozka'>{$polozka.ziel_sum|string_format:"%d"}%</td>
 			</tr>
 		    {/foreach}
 		</table>

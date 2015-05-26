@@ -23,29 +23,46 @@ if($dauftrRows!==NULL){
     foreach ($dauftrRows as $dr){
 	$id = $dr['id'];
 	$kzgut = $dr['kzgut'];
-	$newstk = $dr['stk']-$pal2stk;
+	$newstk = intval($dr['stk'])-$pal2stk;
 	$updateDauftrSql = "update dauftr set `stück`='$newstk' where id_dauftr=$id";
 	$a->query($updateDauftrSql);
 	$dauftrLog.=$updateDauftrSql." (".$dr['abgnr'].")";
 	$dauftrLog.="<br>";
-	$insertDauftrSql = "insert into dauftr (auftragsnr,teil,`pos-pal-nr`,preis,`stück`,`mehrarb-kz`,fremdauftr,fremdpos,KzGut,abgnr,VzKd,VzAby,comp_user_accessuser,inserted)";
-	$insertDauftrSql.= "values(";
-	$insertDauftrSql.= "'".$dr['auftragsnr']."',";
-	$insertDauftrSql.= "'".$dr['teil']."',";
-	$insertDauftrSql.= "'".$pal2."',";
-	$insertDauftrSql.= "'".$dr['preis']."',";
-	$insertDauftrSql.= "'".$pal2stk."',";
-	$insertDauftrSql.= "'".$dr['tatkz']."',";
-	$insertDauftrSql.= "'".$dr['fremdauftr']."',";
-	$insertDauftrSql.= "'".$dr['fremdpos']."',";
-	$insertDauftrSql.= "'".$dr['kzgut']."',";
-	$insertDauftrSql.= "'".$dr['abgnr']."',";
-	$insertDauftrSql.= "'".$dr['vzkd']."',";
-	$insertDauftrSql.= "'".$dr['vzaby']."',";
-	$insertDauftrSql.= "'".$u."',";
-	$insertDauftrSql.= "NOW()";
-	$insertDauftrSql.= ")";
-	$dauftrLog.= $insertDauftrSql;
+	//otestuju zda uz paletu s cinnosti pro presunuti mam, pokud ano, tak k ni prictu, jinak vlozim
+	$daTest = $a->getDauftrRowsForImportPalAbgnr($dr['auftragsnr'], $pal2,$dr['abgnr']);
+	if($daTest!==NULL){
+	    // bude update
+	    $dauftrid = $daTest[0]['id'];
+	    $stk = intval($daTest[0]['stk']);
+	    $nstk = intval($stk)+intval($pal2stk);
+	    // a provedu update
+	    $updSql="update dauftr set `stück`='$nstk' where id_dauftr='$dauftrid'";
+	    $dauftrLog.= $updSql;
+	    $a->query($updSql);
+	}
+	else{
+	    // bude insert
+	    $insertDauftrSql = "insert into dauftr (auftragsnr,teil,`pos-pal-nr`,preis,`stück`,`mehrarb-kz`,fremdauftr,fremdpos,KzGut,abgnr,VzKd,VzAby,comp_user_accessuser,inserted)";
+	    $insertDauftrSql.= "values(";
+	    $insertDauftrSql.= "'".$dr['auftragsnr']."',";
+	    $insertDauftrSql.= "'".$dr['teil']."',";
+	    $insertDauftrSql.= "'".$pal2."',";
+	    $insertDauftrSql.= "'".$dr['preis']."',";
+	    $insertDauftrSql.= "'".$pal2stk."',";
+	    $insertDauftrSql.= "'".$dr['tatkz']."',";
+	    $insertDauftrSql.= "'".$dr['fremdauftr']."',";
+	    $insertDauftrSql.= "'".$dr['fremdpos']."',";
+	    $insertDauftrSql.= "'".$dr['kzgut']."',";
+	    $insertDauftrSql.= "'".$dr['abgnr']."',";
+	    $insertDauftrSql.= "'".$dr['vzkd']."',";
+	    $insertDauftrSql.= "'".$dr['vzaby']."',";
+	    $insertDauftrSql.= "'".$u."',";
+	    $insertDauftrSql.= "NOW()";
+	    $insertDauftrSql.= ")";
+	    $dauftrLog.= $insertDauftrSql;
+	}
+	
+	
 	$a->query($insertDauftrSql);
 	$dauftrLog.="<br>";
 

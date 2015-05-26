@@ -50,9 +50,9 @@ mysql_query('set names utf8');
 		$smazanoRadku=deleteRechnung($auftragsnr);
 		// poslat informacni email
 		
-		//$recipient = "jr@abydos.cz,";
-		$recipient = "hl@abydos.cz,";
-                $recipient .= "sz@abydos.cz,";
+		$recipient = "jr@abydos.cz,";
+		$recipient.= "hl@abydos.cz";
+                //$recipient.= "sz@abydos.cz,";
 
 		/*
 		// posle mail i odesilateli
@@ -79,7 +79,7 @@ mysql_query('set names utf8');
 		$headers = "From: <apl@abydos.cz>\n";
 		$headers = "Content-Type: text/html; charset=UTF-8\n";
 		
-		//@mail($recipient,$subject,$message,$headers);
+		@mail($recipient,$subject,$message,$headers);
 	}
 	
 	$doc->appendChild($root);
