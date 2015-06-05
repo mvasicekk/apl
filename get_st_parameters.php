@@ -15,7 +15,11 @@ $smarty = new Smarty;
 
 if(strlen(trim($_GET['popisky']))==0){
     //rovnou prejdu k zobrazeni tabulky
-    $urlparams = "label=".urlencode($_GET['label'])."&sql=".base64_encode(base64_decode($_GET['sql']))."&filter=".urlencode($_GET['filter']);
+    $urlparams = "label=".urlencode($_GET['label'])
+	    ."&sql=".base64_encode(base64_decode($_GET['sql']))
+	    ."&filter=".urlencode($_GET['filter'])
+	    ."&tabid=".urlencode($_GET['tabid']);
+    
     $reporturl="./Reports/showquery1.php?".$urlparams;
     header("Location: ".$reporturl);
 }	
@@ -98,6 +102,7 @@ foreach($popisky as $popis)
 $smarty->assign("param",$pop);
 $smarty->assign("paramok",$paramok);
 $smarty->assign("query",$_GET['query']);
+$smarty->assign("tabid",$_GET['tabid']);
 $smarty->assign("nadpis",$_GET['query']." parametry");
 $smarty->display('get_st_parameters.tpl');
 

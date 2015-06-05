@@ -150,7 +150,7 @@
 			<input id="S870" onClick="location.href='../get_parameters.php?popisky=Auslieferdatum von,*DATE;bis,*DATE;Kunde;Teil&promenne=ausliefer_von;ausliefer_bis;kunde!number;teil&values={$min_mesic_od};{$min_mesic_do};111;06017272&report=S870'" class='reportbutton' type="button"  name="S870" value="S870 - Taetigkeiten in Rechnungen"/>
                         <input id="S875" onClick="location.href='../get_parameters.php?popisky=Auslieferdatum von,*DATE;bis,*DATE;Kunde;Teil&promenne=ausliefer_von;ausliefer_bis;kunde!number;teil&values={$min_mesic_od};{$min_mesic_do};*;*&report=S875'" class='reportbutton' type="button"  name="S875" value="S875 - StatNr in Rechnungen"/>
 			<input id="S890" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Auftragsdatum von,*DATE;Auftragsdatum von,*DATE&promenne=kundevon!number;kundebis!number;aufdatvon;aufdatbis&values=0;999;;&report=S890'" class='reportbutton' type="button"  name="S890" value="S890 - Intrastat Importe"/>
-			<input id="S895" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Auslieferdatum von,*DATE;Auslieferdatum von,*DATE&promenne=kundevon!number;kundebis!number;aufdatvon;aufdatbis&values=0;999;;&report=S895'" class='reportbutton' type="button"  name="S895" value="S895 - Intrastat Exporte"/>
+			<input id="S895" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Auslieferdatum von,*DATE;Auslieferdatum bis,*DATE&promenne=kundevon!number;kundebis!number;aufdatvon;aufdatbis&values=0;999;;&report=S895'" class='reportbutton' type="button"  name="S895" value="S895 - Intrastat Exporte"/>
 		    </div>
 	    
 {*		    <div id='miscReports'>

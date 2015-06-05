@@ -325,8 +325,12 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
         $stkArray = $apl->getBehaelterBewegungenFuerImEx($ex, 1);
 //        echo "<pre>".var_dump($stkArray)."</pre>";
 
+	$pdfobjekt->SetX($x_typausschussu);
+	$pdfobjekt->SetY($y_typausschussu);
         $pdfobjekt->SetFont("FreeSans", "B", 12);
-	$pdfobjekt->Cell(140,$vyskaradku,"Behälter",'0',1,'L',$fill);
+	$pdfobjekt->Cell(30,$vyskaradku,"Behälter",'0',1,'L',$fill);
+	$pdfobjekt->Ln(3);
+	
         // radek s nadpisem tabulky
         $pdfobjekt->Cell(25,$vyskaradku,"",'1',0,'L',$fill);
         $pdfobjekt->SetFont("FreeSans", "B", 7);
@@ -924,10 +928,12 @@ foreach($exporte as $export)
 //		AplDB::varDump($fremdAuftrArray);
 		$neededRoom = 30;
 		$need = $neededRoom - $roomFor2DCode;
-		test_pageoverflow($pdf,$need,$cells_header,$exportChildNodes);
+		//echo "neededRoom=$neededRoom,roomFor2DCode=$roomFor2DCode,need=$need<br>";
+		test_pageoverflow($pdf,$need+10,$cells_header,$exportChildNodes);
 		if($roomFor2DCode<$neededRoom){
 		    $need = $neededRoom - $roomFor2DCode;
 		    $pdf->Ln($need);
+		    //echo "making rom for 2D Code, $need<br>";
 		}
                 zapati_teil($pdf, 5, array(255,255,240), $teilChildNodes, $sum_zapati_teil_array,$fremdAuftrArray);
 	}

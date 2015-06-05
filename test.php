@@ -426,8 +426,8 @@ $apl = AplDB::getInstance();
 ////    $apl->addQualifikationen($persnr, $qArray, 0, 0);
 //}
 
-$persnrArray = array(104,245);
-$jahr=2014;
+$persnrArray = array(104,215);
+$jahr=2015;
 
 foreach ($persnrArray as $persnr) {
 
@@ -436,7 +436,7 @@ foreach ($persnrArray as $persnr) {
     echo "<tr>";
     echo "<th>Jahr</th>";
     echo "<th>Monat</th>";
-    $pmStundenArray = $apl->getPlusMinusStundenVerbose(1, 2010, 104);
+    $pmStundenArray = $apl->getPlusMinusStundenVerbose(5, 2015, 104);
     foreach ($pmStundenArray as $key => $value) {
         echo "<th>$key</th>";
     }

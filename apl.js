@@ -33,8 +33,18 @@ $(document).ready(function(){
 		'myChart', 
 		[hodnoty_pg1,hodnoty_pg4,hodnoty_celkem],
 		{
-		    //seriesColors:["#4bb2c5", "#c5b47f", "#EAA228"],
+		    highlighter: {
+			show: true,
+			sizeAdjust: 7.5
+		    },
+		    cursor: {
+			show: false
+		    },
 		    seriesColors:["#4bb2c5", "#EAA228", "#c5b47f"],
+		    legend:{
+			show:true,
+			location: 'nw'
+		    },
 		    canvasOverlay:{
 			show:true,
 			objects:[
@@ -67,10 +77,11 @@ $(document).ready(function(){
 			    }
 			]
 		    },
-		    title:'VzKd - PG1,PG4,Sum',
+		    title:'',
 		    axesDefaults:{
 			labelRenderer: $.jqplot.CanvasAxisLabelRenderer
 		    },
+		    series:[{label:"Guss"},{label:"NE"},{label:"Sum"}],
 		    seriesDefaults:{
 			rendererOptions:{
 			    animation: { 
@@ -81,21 +92,26 @@ $(document).ready(function(){
 		    axes:{
 			xaxis:{
 			    label:'Tag in akt. Monat',
-			    min: 0
-//			    max: hodnoty_celkem.length+2,
-//			    ticks:ticks
-//			    renderer: $.jqplot.CategoryAxisRenderer
+			    min: 0,
+			    max:31,
+//			    ticks:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
+			    ticks:[0,5,10,15,20,25,31],
+			    tickOptions:{
+				formatString:"%d"
+			    },
+//			    numberTicks:31
 			},
 			yaxis:{
 			    label:'VzKd[min]',
-			    min: 0
+			    min: 0,
+			    ticks:[0,5000,10000,17000,25000,30000,40000,50000,58000,70000,75000,85000],
+			    tickOptions:{
+				formatString:"%d"
+			    },
+			    max:85000
 			}
 		    }
 		}
 	);
-		    
     });
-    
-    
-    
 });

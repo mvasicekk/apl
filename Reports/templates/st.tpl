@@ -42,7 +42,7 @@
 				{foreach from=$querys item=q key=k}
 				    {if $q.showButton}
 					<div class='col-md-3 col-sm-4'>
-					    <button style='text-align:left;' class='btn btn-lg btn-default btn-block' id="{$k}" onClick="location.href='../get_st_parameters.php?popisky={$q.popisky}&promenne={$q.promenne}&values={$q.values}&query={$k}&label={$q.buttonName}&sql={$q.sql}&filter={$q.filter}';" >
+					    <button style='text-align:left;' class='btn btn-lg btn-default btn-block' id="{$k}" onClick="location.href='../get_st_parameters.php?popisky={$q.popisky}&promenne={$q.promenne}&values={$q.values}&query={$k}&label={$q.buttonName}&sql={$q.sql}&filter={$q.filter}&tabid={$k}';">
 {*					    <input class='btn btn-lg btn-default btn-block' id="{$k}" onClick="location.href='../get_st_parameters.php?popisky={$q.popisky}&promenne={$q.promenne}&values={$q.values}&query={$k}&label={$q.buttonName}&sql={$q.sql}&filter={$q.filter}';" class='reportbutton' type="button"  name="{$k}" value="{$q.buttonName}">*}
 						<span class="glyphicon {$q.icon}" aria-hidden="true"></span> {$q.buttonName}
 					    </button>

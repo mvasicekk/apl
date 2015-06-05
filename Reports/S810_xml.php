@@ -51,7 +51,7 @@ $sql.=" join daufkopf dim on d.auftragsnr=dim.auftragsnr";
 $sql.=" left join daufkopf dex on d.`auftragsnr-exp`=dex.auftragsnr";
 $sql.=" join $pt_auss on $pt_auss.auftragsnr=d.auftragsnr and $pt_auss.pal=d.`pos-pal-nr`";
 $sql.=" left join drueck on d.auftragsnr=drueck.auftragsnr and d.`pos-pal-nr`=drueck.`pos-pal-nr` and d.teil=drueck.teil and d.abgnr=drueck.taetnr";
-$sql.=" left join drech on d.`auftragsnr-exp`=drech.auftragsnr and d.teil=drech.teil and d.`pos-pal-nr`=drech.`pos-pal-nr` and d.`mehrarb-kz`=drech.`taet-kz`"; 
+$sql.=" left join drech on d.`auftragsnr-exp`=drech.auftragsnr and d.`auftragsnr`=drech.origauftrag and d.teil=drech.teil and d.`pos-pal-nr`=drech.`pos-pal-nr` and d.`mehrarb-kz`=drech.`taet-kz`"; 
 //$sql.=" where ((d.auftragsnr between '$auftragsnr_von' and '$auftragsnr_bis') and (d.teil='$teil') and (d.kzgut='G')) ";
 $sql.=" where ((dim.aufdat between '$auftragsnr_von' and '$auftragsnr_bis 23:59:59') and (d.teil='$teil') and (d.kzgut='G')) ";
 $sql.=" group by"; 

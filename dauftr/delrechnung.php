@@ -50,8 +50,10 @@ mysql_query('set names utf8');
 		$smazanoRadku=deleteRechnung($auftragsnr);
 		// poslat informacni email
 		
-		$recipient = "jr@abydos.cz,";
-		$recipient.= "hl@abydos.cz";
+//		$recipient = "jr@abydos.cz,";
+		$recipient.= "hl@abydos.cz,";
+		$recipient.= "in@abydos.cz,";
+		$recipient.= "jk@abydos.cz";
                 //$recipient.= "sz@abydos.cz,";
 
 		/*

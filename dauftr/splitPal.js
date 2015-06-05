@@ -4,8 +4,9 @@ $(document).ready(function () {
     var container = document.getElementById('ruecktable');
     var containerDA = document.getElementById('dauftrtable');
     
+    
     // odeslat pres REST,
-    // dauftr GET?full=auftragsnr
+    
     var hotOptions = {
 	data: [],
 	dataSchema: {import: null, teil: null, pal: null, abgnr: null,gutstk:null,aussstk:null,aussart:null,auss_typ:null,gutFlag:null,aussFlag:null},
@@ -138,6 +139,7 @@ function pal2Changed(){
  * @returns {undefined}
  */
 function gosplitClicked(event){
+    $('#gosplit').hide();
     $.post('./goSplit.php',
 		{
 		    id: $(this).attr('id'),

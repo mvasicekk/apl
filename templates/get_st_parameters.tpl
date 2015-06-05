@@ -84,6 +84,7 @@ function setvar(hodnota)
 	<tr>
 		<td colspan="2"><input type="button" name="" value="Show" id="tl_pdf" class="abyStartButton" onClick="setvar('pdf');form.submit();" /></td>
 		<input type="hidden" name="tl_tisk" id="tl_tisk" value="html"/>
+		<input type="hidden" name="tabid" id="tabid" value="{$tabid}"/>
 	</tr>
 	<tr>
 	    <td colspan="2">

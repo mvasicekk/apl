@@ -84,10 +84,10 @@ array(
 => array ("popis"=>"","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
 
 "auftragsnr"
-=> array ("popis"=>"IMPORT","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
+=> array ("popis"=>"EX","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
 
 "aufdat"
-=> array ("popis"=>"datum IM","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
+=> array ("popis"=>"datum EX","sirka"=>30,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
 
 "stk"
 => array ("popis"=>"kusy","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
@@ -305,7 +305,7 @@ $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S895 přehled zakázek exportovaných pro Intrastat", $params);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S895 Intrastat - exportované zakázky", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 //set auto page breaks

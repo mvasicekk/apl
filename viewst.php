@@ -59,7 +59,7 @@ if($queryInfo!==NULL){
 
     $sql = base64_encode($sql);
     //$urlparams = "par=".urlencode($par)."&label=".urlencode($queryInfo['buttonName'])."&sql=".rawurlencode($sql)."&filter=".urlencode($queryInfo['filter']);
-    $urlparams = "par=".urlencode($par)."&label=".urlencode($queryInfo['buttonName'])."&sql=".$sql."&filter=".urlencode($queryInfo['filter']);
+    $urlparams = "par=".urlencode($par)."&label=".urlencode($queryInfo['buttonName'])."&sql=".$sql."&filter=".urlencode($queryInfo['filter'])."&tabid=".urlencode($_POST['query']);
     $reporturl="./Reports/showquery1.php?".$urlparams;
 //zapisu do logu pouziti sestavy
 $a->reportUsageLog($_POST['query'],$reporturl,$userpc);

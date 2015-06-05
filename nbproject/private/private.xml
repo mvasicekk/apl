@@ -4,9 +4,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/st.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/st.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/templates/index.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/S895_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/templates/indexBS.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/reports.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/S895_xml.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/templates/headingBS.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/stylBS.css</file>
         </group>
     </open-files>
 </project-private>

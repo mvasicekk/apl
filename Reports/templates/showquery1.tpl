@@ -44,6 +44,7 @@
 	    </div>
 	    {/if}
 	    <input type="hidden" id="sqlField" value="{$sql}" />
+	    <input type="hidden" id="tabidField" value="{$tabid}" />
 {*	<fieldset>
 	    <legend>Info</legend>
 	    {$sql}

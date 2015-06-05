@@ -2,7 +2,8 @@ $(document).ready(function () {
     // get the data
     $.post('./getQueryData.php',
 		{
-		    sql: $('#sqlField').val()
+		    sql: $('#sqlField').val(),
+		    tabid: $('#tabidField').val()
 		},
 	function (data) {
 	    updateGetQueryData(data);
@@ -34,7 +35,8 @@ function updateGetQueryData(data){
 	search: true,
 	rowHeaders:true,
 	fillHandle:false,
-	minSpareRows: 0
+	minSpareRows: 0,
+	columns:data.columnsOptions
     };
 
     if(data.data!==null){
