@@ -30,7 +30,9 @@ if($data!==NULL){
     }
 }
 
+
 //projdu columnNames a vytvorim pole columns s volbama pro sloupce
+
 $columns = array();
 $columnsOptions = array();
 

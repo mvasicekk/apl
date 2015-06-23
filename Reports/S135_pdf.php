@@ -91,6 +91,8 @@ global $sum_zapati_persnr_array;
 $sum_zapati_sestava_array;
 global $sum_zapati_sestava_array;
 
+$sumOEDatum = array();
+
 function hatTagArbZeit($tag, $schicht_abteilung) {
     $vonIndex = 'von_' . $schicht_abteilung;
     $bisIndex = 'bis_' . $schicht_abteilung;
@@ -348,6 +350,8 @@ function zahlavi_personA($pdfobjekt, $vyskaradku, $rgb, $persnr, $nameArray, $pe
  */
 function oe_radekA($persnr, $persname, $pocetOES, $oefarbenArray, $pdfobjekt, $vyskaradku, $rgb, $datumy, $oekz, $typ, $ityp, $monat, $jahr, $svatky, $tagvon, $tagbis, $von, $bis, $pocetDnuNaStranku, $lastpage = TRUE, $kumulSumaHodin = 0) {
 
+    global $sumOEDatum;
+    
     // nekresli prazdny radek pro lidi bez naplanovane dovolene
     if ($pocetOES > 1 && $oekz == 'name')
 	return;
@@ -392,6 +396,8 @@ function oe_radekA($persnr, $persname, $pocetOES, $oefarbenArray, $pdfobjekt, $v
 	    foreach ($datumy as $dat => $stunden) {
 		$tag = intval(substr($dat, 8));
 		if ($dat == $testDatum) {
+		    $sumOEDatum[$oekz][$testDatum] += floatval($stunden);
+		    
 		    if ($stunden == 0) {
 			$pdfobjekt->SetFillColor($oeRGBArray[0], $oeRGBArray[1], $oeRGBArray[2], 1);
 			//                            $pdfobjekt->Cell($sirkabunky,$vyskaradku,$oekz,'1',0,'R',$fill);
@@ -424,6 +430,70 @@ function oe_radekA($persnr, $persname, $pocetOES, $oefarbenArray, $pdfobjekt, $v
     }
     $pdfobjekt->Ln();
     return $sumaHodin;
+}
+
+function oe_radekOE($oefarbenArray, $pdfobjekt, $vyskaradku, $rgb, $datumy, $oekz, $typ, $ityp, $monat, $jahr, $svatky, $tagvon, $tagbis, $von, $bis, $pocetDnuNaStranku, $lastpage = TRUE, $kumulSumaHodin = 0) {
+
+    $sirkaOE = 10;
+    $sirkaOEKz = 5;
+
+    $oeRGBArray = split(",", $oefarbenArray);
+    $fill = 1;
+    $pdfobjekt->SetFillColor($oeRGBArray[0], $oeRGBArray[1], $oeRGBArray[2], 1);
+    $pdfobjekt->SetFont("FreeSans", "B", 6);
+    $pdfobjekt->Cell($sirkaOE, $vyskaradku, ' '.$oekz, '1', 0, 'L', $fill);
+
+    $pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
+//
+//
+    $daysBetween = ($bis - $von) / (24 * 60 * 60);
+////        $sirkabunky = ($pdfobjekt->getPageWidth()-10-3-PDF_MARGIN_RIGHT-PDF_MARGIN_LEFT-10)/$pocetDnuVMesici;
+    $sirkabunky = ($pdfobjekt->getPageWidth() - PDF_MARGIN_RIGHT - PDF_MARGIN_LEFT - $sirkaOE) / ($pocetDnuNaStranku);
+//    //$sirkabunky = 10;
+    $pdfobjekt->SetFont("FreeSans", "", 7);
+//    $sumaHodin = 0;
+//
+    for ($den = $von; $den <= $bis; $den+=(24 * 60 * 60)) {
+	$testDatum = date('Y-m-d', $den);
+	// oznaceni so+ne a svatku
+	$workday = date('w', $den);
+	if ($workday == 6 || $workday == 0 || in_array($testDatum, $svatky))
+	    $pdfobjekt->SetFillColor(245, 245, 255, 1);
+
+	$kresliPrazdny = 1;
+	if (is_array($datumy)) {
+	    foreach ($datumy as $dat => $stunden) {
+		$tag = intval(substr($dat, 8));
+		if ($dat == $testDatum) {
+		    if ($stunden == 0) {
+			$pdfobjekt->SetFillColor($oeRGBArray[0], $oeRGBArray[1], $oeRGBArray[2], 1);
+			$stunden = number_format($stunden, 1);
+			$pdfobjekt->Cell($sirkabunky, $vyskaradku, $stunden, '1', 0, 'R', $fill);
+			$pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
+		    } else {
+			$stunden = number_format($stunden, 1);
+			$pdfobjekt->SetFillColor($oeRGBArray[0], $oeRGBArray[1], $oeRGBArray[2], 1);
+			$pdfobjekt->Cell($sirkabunky, $vyskaradku, $stunden, '1', 0, 'R', $fill);
+			$pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
+		    }
+		    $kresliPrazdny = 0;
+		    break;
+		}
+	    }
+	}
+
+	if ($workday == 6 || $workday == 0 || in_array($testDatum, $svatky))
+	    $pdfobjekt->SetFillColor(245, 245, 255, 1);
+
+	if ($kresliPrazdny) {
+	    //                $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+	    $pdfobjekt->Cell($sirkabunky, $vyskaradku, "", '1', 0, 'R', $fill);
+	}
+
+	if ($workday == 6 || $workday == 0 || in_array($testDatum, $svatky))
+	    $pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
+    }
+    $pdfobjekt->Ln();
 }
 
 /**
@@ -641,9 +711,10 @@ foreach ($ogArray as $og => $ogCount) {
 		//print_r($restArray);
 		$personalinfo['rest'] = $restArray['rest'];
 
-		$personalinfo['urlaubtagesoll'] = $apl->getUrlaubTageInMonatSoll($persnr, $monat, $jahr);
+		$personalinfo['urlaubtagesoll'] = $apl->getUrlaubTageInMonatSoll($persnr, $monat, $jahr,TRUE);
 		$personalinfo['urlaubtageist'] = $apl->getUrlaubTageInMonatIst($persnr, $monat, $jahr);
 
+//		AplDB::varDump($personalinfo);
 		// prescasy
 		$stddiffA = $apl->getStdDiff($monat, $jahr, $persnr);
 		if ($stddiffA != null) {
@@ -689,6 +760,39 @@ foreach ($ogArray as $og => $ogCount) {
 	$datetimevon += ($pocetDnuNaStranku) * 24 * 60 * 60;
     }
 }
+
+//vytahnu vsechny oe z pole a seradim podle abecedy
+$oesVSume = array();
+$oesVSume = array_keys($sumOEDatum);
+sort($oesVSume);
+//AplDB::varDump($oesVSume);
+//zapati se sumama pro OE
+$datetimevon = $vonTest;
+
+for ($stranka = 0; $stranka < $pocetStranekNaSirku; $stranka++) {
+
+    $datetimebis = $datetimevon + ($pocetDnuNaStranku - 1) * 24 * 60 * 60;
+    if ($datetimebis > $bisTest)
+	$datetimebis = $bisTest;
+
+    $pdf->AddPage();
+    pageheader($pdf, $cells_header, 5, $jahr, $monat, $svatkyArray, $pracDobaA, $datetimevon, $datetimebis, $pocetDnuNaStranku);
+
+    
+    foreach ($oesVSume as $oe) {
+	$oeArray = $sumOEDatum[$oe];
+	oe_radekOE($oeFarbenArray[$oe], $pdf, 5, array(255,245,245), $oeArray, $oe, 0, 0, $monat, $jahr, $svatkyArray, $tagvon, $tagbis, $datetimevon, $datetimebis, $pocetDnuNaStranku,$lastPage);
+//	$pdf->Cell(10, 5, $oe, 'LRBT', 0, 'L', 0);
+//	$pdf->Cell(0, 5, join(',', $oeArray), 'LRBT', 1, 'L', 0);
+    }
+    
+    
+    $datetimevon += ($pocetDnuNaStranku) * 24 * 60 * 60;
+}
+
+//AplDB::varDump($oeFarbenArray);
+//AplDB::varDump($reportArray);
+//AplDB::varDump($sumOEDatum);
 
 //Close and output PDF document
 $pdf->Output();

@@ -60,6 +60,7 @@ $sql.= " dpers.regeloe,";
 $sql.= " dpers.alteroe,";
 $sql.= " dpers.lohnfaktor,";
 $sql.= " dpers.leistfaktor,";
+$sql.= " SUBSTRING(dpers.dpersstatus,1,3) as dpersstatus,";
 $sql.= " dpersdetail1.regeltrans,";
 $sql.= " if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),0) as tage_nach_austritt";
 $sql.= " from";
@@ -114,6 +115,7 @@ $options = array(
                     'regelarbzeit',
                     'regeloe',
                     'alteroe',
+		    'dpersstatus',
                     'lohnfaktor',
                     'leistfaktor',
                     'regeltrans',

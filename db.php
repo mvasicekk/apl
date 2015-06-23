@@ -108,6 +108,7 @@ class AplDB {
                 or die('Nemuzu zvolit databazi ' . mysql_error());
     }
 
+    
 // ------------------------------------------------------------------------
 // public methods
 
@@ -1139,6 +1140,9 @@ public function istExportiert($import, $impal){
     }
     
     
+    /**
+     * formatter -> parser in angularModel
+     */
     /**
      * 
      */
@@ -7125,13 +7129,20 @@ public function getUrlaubBisDatum($persnr,$bisDatum) {
     return array('rest'=>$rest,'anspruch'=>$anspruch,'alt'=>$alt,'gekrzt'=>$gekrzt,'genommen'=>$genommenBis);
 }
 
-public function getUrlaubTageInMonatSoll($persnr,$monat,$jahr) {
+public function getUrlaubTageInMonatSoll($persnr,$monat,$jahr,$vonAktual=FALSE) {
     $datvon = $jahr."-".$monat."-01";
     // get number of days in month
     $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
     $datbis = $jahr."-".$monat."-".$pocetDnuVMesici;
-
-    $sql = "select count(dzeitsoll.datum) as urlaubtage from dzeitsoll where persnr='$persnr' and datum between '$datvon' and '$datbis' and oe='d'";
+    $aktualDatum = date('Y-m-d');
+    
+    if($vonAktual===TRUE){
+	$sql = "select count(dzeitsoll.datum) as urlaubtage from dzeitsoll where persnr='$persnr' and datum between '$aktualDatum' and '$datbis' and oe='d'";
+    }
+    else{
+	$sql = "select count(dzeitsoll.datum) as urlaubtage from dzeitsoll where persnr='$persnr' and datum between '$datvon' and '$datbis' and oe='d'";
+    }
+    
     $result = mysql_query($sql);
     if(mysql_affected_rows()>0) {
         $row = mysql_fetch_assoc($result);
