@@ -4,16 +4,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/S169_pdf.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/utils/filetree.html</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/S169_xml.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/libs/fileTree/jqueryFileTree.css</file>
-            <file>file:/home/jr/NetBeansProjects/apl/js/filters.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/libs/fileTree/jqueryFileTree.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dauftr/templates/auftrsuchen.tpl</file>
-            <file>file:/home/jr/NetBeansProjects/apl/libs/fileTree/connectors/sendFile.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/js/controllers.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/js/app.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/showquery1.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/showquery1.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/showquery1.php</file>
         </group>
     </open-files>
 </project-private>

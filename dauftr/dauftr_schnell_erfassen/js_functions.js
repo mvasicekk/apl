@@ -1396,6 +1396,8 @@ function toggle_kzdruck(id)
 
 function fillParamList()
 {
+	document.getElementById('pos_erstellen').disabled=true;
+	
 	var paramList = document.getElementById('paramlist');
 	var str_teil=document.getElementById('teil').value;
 	var str_pal_nr=document.getElementById('pal_nr').value;
@@ -1459,6 +1461,7 @@ function fillParamList()
 	}
 
 	paramList.value=seznam;
+	//a zakazat tlacitko, abych ho nemohl stisknout dvakrat
 }
 
 function validateVzkd(xml)
