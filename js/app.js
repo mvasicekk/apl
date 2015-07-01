@@ -4,4 +4,4 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('aplApp',['aplFilters']);
+var aplApp = angular.module('aplApp',['aplFilters','ui.select','ngSanitize']);
