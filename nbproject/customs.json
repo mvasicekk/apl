@@ -2,5 +2,9 @@
     "elements": {
 	"ui-select": {}
     },
-    "attributes": {}
+    "attributes": {
+	"ng-repeat": {
+	    "context": "tr"
+	}
+    }
 }

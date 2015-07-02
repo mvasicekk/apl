@@ -1,21 +1,27 @@
 <?
 require_once '../db.php';
 
-    $params = $_post['params'];
+    $t = $_GET['t'];
+    $k = $_GET['kunde'];
     
     // zjistim zda mam hodnotu value ulozenou v databazi artiklu
 
     $apl = AplDB::getInstance();
 
     $teileArray = NULL;
-    if(strlen($params->t)>=3){
-	$teileArray = $apl->getTeileNrArrayForKunde(NULL,$params->t);
+    if(strlen($t)>=3){
+	$teileArray = $apl->getTeileArrayForKundeMatch($k,$t);
     }
     
+    if($teileArray!==NULL){
+	foreach ($teileArray as $i=>$row){
+	    $teileArray[$i]['formattedTeil'] = "".sprintf("%03d - %-10s (%s)",$row['kunde'],$row['teil'],$row['teilbez'])."";
+	}
+    }
 
     $returnArray = array(
-	't'=>$params->t,
-	//'teileArray'=>$teileArray,
+	't'=>$t,
+	'teileArray'=>$teileArray,
     );
     echo json_encode($returnArray);
     //$dokuArray = 55;

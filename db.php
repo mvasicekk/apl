@@ -543,7 +543,34 @@ class AplDB {
 
 	return $vzkdSoll-$vzkdFertig;
     }
-    
+
+    /**
+     * 
+     * @param type $ohneRechnung
+     */
+    public function getExporteMatch($e, $ohneRechnung = TRUE) {
+	
+	$sql.=" select ";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" daufkopf.auftragsnr as ex,";
+	$sql.=" if(daufkopf.ex_datum_soll is not null,DATE_FORMAT(daufkopf.ex_datum_soll,'%d.%m.%Y %H:%i'),'') as ex_datum_soll,";
+	$sql.=" if(daufkopf.ausliefer_datum is not null,DATE_FORMAT(daufkopf.ausliefer_datum,'%d.%m.%Y %H:%i'),'') as ausliefer_datum,";
+	$sql.=" if(daufkopf.Aufdat is not null,DATE_FORMAT(daufkopf.Aufdat,'%d.%m.%Y'),'') as aufdat,";
+	$sql.=" if(daufkopf.fertig is not null,DATE_FORMAT(daufkopf.fertig,'%d.%m.%Y'),'') as fertig";
+	$sql.=" from daufkopf";
+	$sql.=" where";
+	$sql.=" (1)";
+	if($ohneRechnung===TRUE){
+	    $sql.=" and (daufkopf.fertig='2100-01-01')";
+	}
+	$sql.=" and";
+	$sql.=" (daufkopf.auftragsnr like '$e%')";
+	$sql.=" order by";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" daufkopf.auftragsnr";
+	return $this->getQueryRows($sql);
+    }
+
     /**
      * 
      * @param type $kundeVon
@@ -4227,7 +4254,57 @@ public function istExportiert($import, $impal){
         }
     }
     
-    
+    /**
+     * 
+     * @param type $t
+     * @return type
+     */
+    public function getBehDataArray($t) {
+	$sql.=" select ";
+	$sql.=" dauftr.teil,";
+	$sql.="     dauftr.auftragsnr as import,";
+	$sql.=" dauftr.`pos-pal-nr` as impal,";
+	$sql.=" dauftr.`stück` as imstk,";
+	$sql.=" dauftr.termin";
+	$sql.=" from dauftr";
+	$sql.=" where";
+	$sql.=" (dauftr.KzGut='G')";
+	$sql.=" and (dauftr.teil='$t')";
+	$sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	$sql.=" order by";
+	$sql.=" dauftr.teil,";
+	$sql.=" dauftr.`pos-pal-nr`";
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
+     * @param type $kunde
+     * @param type $teil
+     * @param type $ohneEx
+     */
+    public function getTeileArrayForKundeMatch($kunde, $teil, $ohneEx = TRUE) {
+	$sql.=" select distinct";
+	$sql.=" dkopf.teil,";
+	$sql.=" dkopf.teillang,";
+	$sql.=" dkopf.Teilbez as teilbez,";
+	$sql.=" dkopf.kunde,";
+	$sql.=" dkopf.verpackungmenge";
+	$sql.=" from dkopf";
+	$sql.=" join dauftr on dauftr.teil=dkopf.Teil";
+	$sql.=" where";
+	$sql.=" (dkopf.Kunde=$kunde)";
+	if ($ohneEx === TRUE) {
+	    $sql.=" and (dauftr.`auftragsnr-exp` is null)";
+	}
+	$sql.=" and (dkopf.teil like '%$teil%')";
+	$sql.=" order by";
+	$sql.=" dkopf.Kunde,";
+	$sql.=" dkopf.Teil";
+
+	return $this->getQueryRows($sql);
+    }
+
     /**
      *
      * @param <type> $kunde
@@ -4236,7 +4313,7 @@ public function istExportiert($import, $impal){
     public function getTeileNrArrayForKunde($kunde=NULL,$teil=NULL) {
         $query = "select dkopf.`Teil` as teil,teillang from dkopf where dkopf.`Kunde`='$kunde' order by dkopf.`Teil`";
 	if($kunde===NULL)
-	    $query = "select dkopf.`Teil` as teil,teillang,kunde,teilbez from dkopf where (teil like '%$teil%') order by dkopf.kunde,dkopf.`Teil`";
+	    $query = "select dkopf.`Teil` as teil,teillang,kunde,teilbez,verpackungmenge from dkopf where (teil like '%$teil%') order by dkopf.kunde,dkopf.`Teil`";
         $res = mysql_query($query);
         if (mysql_affected_rows() == 0)
             return NULL;
