@@ -1994,16 +1994,36 @@ public function istExportiert($import, $impal){
 	return $in;
     }
 
+    
     /**
      * 
      * @param type $teil
      * @param type $tat
      */
-    public function getDposInfo($teil,$tat){
-	$sql = "select dpos.dpos_id as id,dpos.`TaetNr-Aby` as abgnr,dpos.`VZ-min-kunde` as vzkd,dpos.`vz-min-aby` as vzaby from dpos where (teil='$teil') and (dpos.`TaetNr-Aby`=$tat)";
+    public function getDposInfo($teil, $tat = NULL) {
+	if ($tat === NULL) {
+	    $sql.=" select ";
+	    $sql.=" dpos.`TaetNr-Aby` as abgnr,";
+	    $sql.=" dpos.KzGut as kzgut,";
+	    $sql.=" dpos.`TaetBez-Aby-D` as tat_bez_d,";
+	    $sql.=" dpos.`TaetBez-Aby-T` as tat_bez_cz,";
+	    $sql.=" dpos.`VZ-min-kunde` as vzaby,";
+	    $sql.=" dpos.`VZ-min-kunde` as vzkd,";
+	    $sql.=" dpos.`kz-druck` as kz_druck,";
+	    $sql.=" dpos.lager_von,";
+	    $sql.=" dpos.lager_nach";
+	    $sql.=" from dpos";
+	    $sql.=" where ";
+	    $sql.=" teil='$teil'";
+	    $sql.=" order by";
+	    $sql.=" dpos.`TaetNr-Aby`";
+	} else {
+	    $sql = "select dpos.dpos_id as id,dpos.`TaetNr-Aby` as abgnr,dpos.`VZ-min-kunde` as vzkd,dpos.`vz-min-aby` as vzaby from dpos where (teil='$teil') and (dpos.`TaetNr-Aby`=$tat)";
+	}
+
 	return $this->getQueryRows($sql);
     }
-    
+
     /**
      * 
      * @param type $ex

@@ -75,9 +75,18 @@ Positionen schnell erfassen / rychle zadani pozic zakazky
                         <label for="rest">Restmenge verw.</label>
                     </td>
 
-                    <td colspan="3">
+                    <td>
                         <input type="text"  size="6" value="" id="rest" style="border:none;background-color:lightyellow;visibility:hidden;"/>
                     </td>
+		    
+		    <td>
+                        <label for="verpackungmenge">Verpackungmenge</label>
+                    </td>
+
+                    <td>
+                        <input type="text"  size="6" value="" id="verpackungmenge" style="border:none;background-color:lightyellow;visibility:hidden;"/>
+                    </td>
+		    
                 </tr>
 
                 <tr>

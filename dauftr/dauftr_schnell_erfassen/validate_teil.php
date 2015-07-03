@@ -60,7 +60,7 @@ dbConnect();
 	//
 	//
 	// 3. vytahnu informace z pracovniho planu pro dany dil
-	$sql="select dkopf.restmengen_verw as rest,dkopf.status as st,lager_von,lager_nach,bedarf_typ,teilbez as bezeichnung,gew,brgew,`TaetNr-Aby` as abgnr,dtaetkz as tat,`VZ-min-kunde` as vzkd, `vz-min-aby` as vzaby,";
+	$sql="select dkopf.verpackungmenge,dkopf.restmengen_verw as rest,dkopf.status as st,lager_von,lager_nach,bedarf_typ,teilbez as bezeichnung,gew,brgew,`TaetNr-Aby` as abgnr,dtaetkz as tat,`VZ-min-kunde` as vzkd, `vz-min-aby` as vzaby,";
 	$sql.="KzGut as kzgut,`kz-druck` as kzdruck";
 	$sql.=" from dpos join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby` ";
     $sql.=" join dkopf using(teil)";
@@ -75,6 +75,7 @@ dbConnect();
 			$output .= '<teil>' . $value . '</teil>';
             $output .= '<bezeichnung>' . $row['bezeichnung'] . '</bezeichnung>';
             $output .= '<status>' . $row['st'] . '</status>';
+	    $output .= '<verpackungmenge>' . $row['verpackungmenge'] . '</verpackungmenge>';
 	    $output .= '<rest>' . $row['rest'] . '</rest>';
 			$output .= '<abgnr>' . $row['abgnr'] . '</abgnr>';
             $output .= '<gew>' . $row['gew'] . '</gew>';

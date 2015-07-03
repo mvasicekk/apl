@@ -1097,6 +1097,10 @@ function validate_teil(xml)
 			var status = xml.getElementsByTagName('status').item(0).firstChild.nodeValue;
 		else
 			status = '';
+	if(xml.getElementsByTagName('verpackungmenge').item(0).hasChildNodes())
+			var verpackungmenge = xml.getElementsByTagName('verpackungmenge').item(0).firstChild.nodeValue;
+		else
+			verpackungmenge = '';
 
 
 		// zajistim si pristup na textboxy
@@ -1117,6 +1121,10 @@ function validate_teil(xml)
         e_rest.value = rest;
         e_rest.style.visibility = 'visible';
 
+	var e_vm = document.getElementById('verpackungmenge');
+        e_vm.value = verpackungmenge;
+        e_vm.style.visibility = 'visible';
+	
         var e_gew = document.getElementById('netgewicht');
         e_gew.value = gew;
         e_gew.style.visibility = 'visible';
