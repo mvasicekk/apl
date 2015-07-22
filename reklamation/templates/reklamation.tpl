@@ -39,7 +39,7 @@
 			<th>Kd Kd ReklNr</th>
 			<th>IM</th>
 			<th>EX</th>
-			<th>Festgelegt am</th>
+			<th st-sort="rekl_datum">Festgelegt am</th>
 			<th>TeileNr</th>
 			<th>reklamierte Menge</th>
 			<th>Beschreibung der Abweichung</th>
