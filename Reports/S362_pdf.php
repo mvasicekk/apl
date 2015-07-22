@@ -997,7 +997,41 @@ foreach($kunden as $kunde)
         test_pageoverflow($pdf,5,Array($cells_header1, $cells_header2));       
     
 	$reklChilds = $reklamation->childNodes;
+	$reklid = getValueForNode($reklChilds, 'reklid');
         
+	// second sql request to dabmahnungen for fees
+	$sql2=" select";
+	$sql2.="     dreklamation.rekl_nr,";
+	$sql2.="     dreklamation.id,";
+	$sql2.="     dabmahnung.persnr,";
+	$sql2.="     dabmahnung.vorschlag_betrag,";
+	$sql2.="     dabmahnung.betr,";
+	$sql2.="     dabmahnung.vorschlag_bemerkung,";
+	$sql2.="     dabmahnung.id as ab_ID";
+	$sql2.=" from ";
+	$sql2.="     dreklamation";
+	$sql2.=" left join dabmahnung on ";
+	$sql2.="     dreklamation.id = dabmahnung.dreklamation_id";
+	$sql2.=" where";
+	$sql2.="     ( dreklamation.id='$reklid')";
+
+	$options2 = array(
+					'encoder'=>false,
+					'rootTag'=>'strafen',
+					'idColumn'=>'ab_ID',
+					'rowTag'=>'strafe',
+					'elements'=>array(
+                                                'rekl_nr',
+						'id',
+						'persnr',
+						'vorschlag_betrag',
+                                                'betr',
+                                                'vorschlag_bemerkung',
+					)
+				);
+	$domxml2 = $query2xml->getXML($sql2,$options2);
+	$domxml2->encoding="UTF-8";     
+
         insertFields($pdf,$reklChilds,array(255,255,255), $cells,$domxml2);
         
 	//teloMultiZeilen($pdf,$cellsMultiZeilen,3,array(255,255,255),"",$reklChilds,$fontSizeBody);

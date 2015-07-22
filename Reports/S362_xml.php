@@ -139,6 +139,7 @@ $options = array(
 	    'elements' => array(
 		'kundenr' => 'kunde',
 		'kunde_name' => 'name',
+		'reklid' => 'id',
 		'rekl_nr',
 		'kd_rekl_nr',
 		'kd_kd_rekl_nr',

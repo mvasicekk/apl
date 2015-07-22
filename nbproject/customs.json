@@ -5,6 +5,9 @@
     "attributes": {
 	"ng-repeat": {
 	    "context": "tr"
+	},
+	"ng-app": {
+	    "context": "body"
 	}
     }
 }

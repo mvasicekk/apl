@@ -741,16 +741,18 @@ function zahlavi_export($pdfobjekt,$vyskaradku,$rgb,$exportChildNodes)
 function test_pageoverflow($pdfobjekt, $vysradku, $cellhead,$childnodes=NULL) {
 	// pokud bych prelezl s nasledujicim vystupem vysku stranky
 	// tak vytvorim novou stranku i se zahlavim
+    
     global $roomFor2DCode;
 	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
 	{
 		$pdfobjekt->AddPage();
 		zahlavi_export($pdfobjekt,5,array(255,255,255),$childnodes);
-		pageheader($pdfobjekt,$cellhead,$vysradku);
+		pageheader($pdfobjekt,$cellhead,5);
 //		$pdfobjekt->Ln();
 //		$pdfobjekt->Ln();
 		// pri nove strance zacnu az po 2 mm
 		$roomFor2DCode = 2;
+//		echo "strankuju ja<br>";
 	}
 }
 				
@@ -928,8 +930,10 @@ foreach($exporte as $export)
 //		AplDB::varDump($fremdAuftrArray);
 		$neededRoom = 30;
 		$need = $neededRoom - $roomFor2DCode;
-		//echo "neededRoom=$neededRoom,roomFor2DCode=$roomFor2DCode,need=$need<br>";
-		test_pageoverflow($pdf,$need+10,$cells_header,$exportChildNodes);
+		
+		test_pageoverflow($pdf,$neededRoom,$cells_header,$exportChildNodes);
+//		echo "neededRoom=$neededRoom,roomFor2DCode=$roomFor2DCode,need=$need<br>";
+		
 		if($roomFor2DCode<$neededRoom){
 		    $need = $neededRoom - $roomFor2DCode;
 		    $pdf->Ln($need);

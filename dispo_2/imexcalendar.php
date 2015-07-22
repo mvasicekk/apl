@@ -42,7 +42,14 @@ $smarty = new Smarty;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
 	// + 14 dnu
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
-	$datumBis = date('Y-m-d',  strtotime($datumVon)+$pocetdnu*24*60*60);
+	$konecRokuTime = mktime(23, 59, 59, 12, 31);
+	$datumBis = date('Y-m-d',  $konecRokuTime);
+	$datetime1 = new DateTime($datumBis);
+	$datetime2 = new DateTime($datumVon);
+	$interval = $datetime1->diff($datetime2);
+	$pocetdnu = $interval->format('%a')+1;
+	
+//	$datumBis = date('Y-m-d',  strtotime($datumVon)+$pocetdnu*24*60*60);
 	
 	//lkwArray
 	$lkwDatumArray = array();
