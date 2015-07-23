@@ -14,4 +14,4 @@ if (isset($_SESSION['user']) && isset($_SESSION['level'])) {
 }
 //nacteni roli podle prihlaseni
 require_once '../assignsecurity.php';
-$smarty->display('reklamation.tpl');
+$smarty->display('index.tpl');

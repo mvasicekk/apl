@@ -1,0 +1,25 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23.7.2015, 9:40:51
+    Author     : jr
+*/
+
+.st-sort-ascent:before{
+    content: '\25B2';
+  }
+
+  .st-sort-descent:before{
+    content: '\25BC';
+  }
+
+  .table > thead > tr > th {
+    background-color: #DCEAF5;
+  }
+  
+  th[st-sort]{
+      cursor: pointer;
+  }

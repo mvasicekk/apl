@@ -1170,25 +1170,30 @@ public function istExportiert($import, $impal){
     /**
      * 
      */
-    public function getReklamationenArray() {
-	$sql.=" select";
-	$sql.=" dreklamation.id,";
-	$sql.=" dreklamation.rekl_nr,";
-	$sql.=" kunde,";
-	$sql.=" kd_rekl_nr,";
-	$sql.=" kd_kd_rekl_nr,";
-	$sql.=" import,";
-	$sql.=" export,";
-	$sql.=" DATE_FORMAT(rekl_datum,'%Y-%m-%d') as rekl_datum,";
-	$sql.=" teil,";
-	$sql.=" stk_reklammiert,";
-	$sql.=" beschr_abweichung,";
-	$sql.=" bemerkung";
-	$sql.=" from";
-	$sql.=" dreklamation";
-	$sql.=" order by";
-	$sql.=" dreklamation.rekl_datum desc,";
-	$sql.=" dreklamation.rekl_nr";
+    public function getReklamationenArray($reklid = NULL) {
+	if ($reklid === NULL) {
+	    $sql.=" select";
+	    $sql.=" dreklamation.id,";
+	    $sql.=" dreklamation.rekl_nr,";
+	    $sql.=" kunde,";
+	    $sql.=" kd_rekl_nr,";
+	    $sql.=" kd_kd_rekl_nr,";
+	    $sql.=" import,";
+	    $sql.=" export,";
+	    $sql.=" DATE_FORMAT(rekl_datum,'%Y-%m-%d') as rekl_datum,";
+	    $sql.=" teil,";
+	    $sql.=" stk_reklammiert,";
+	    $sql.=" beschr_abweichung,";
+	    $sql.=" bemerkung";
+	    $sql.=" from";
+	    $sql.=" dreklamation";
+	    $sql.=" order by";
+	    $sql.=" dreklamation.rekl_datum desc,";
+	    $sql.=" dreklamation.rekl_nr";
+	} else {
+	    $sql = "select * from dreklamation where id='$reklid'";
+	}
+
 	return $this->getQueryRows($sql);
     }
 

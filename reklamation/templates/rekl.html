@@ -1,0 +1,32 @@
+<div class="container-fluid">
+    <p>detail: {{reklid}}</p>
+    <table class="table table-condensed table-responsive table-striped">
+	<thead>
+	    <tr id='uploader'>
+		<th colspan="2">{{rekl.savePath|limitTo:255:10}}<div id='filelist'></div></th>
+		<th><button id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+	    </tr>
+	    <tr>
+		<th>name</th>
+		<th>mtime</th>
+		<th>size</th>
+	    </tr>
+	</thead>
+	<tbody>
+	    <tr ng-repeat="f in rekl.files">
+		<td><a href="{{f.url}}">{{f.filename}}</a></td>
+		<td>{{f.mtime*1000|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+		<td>{{f.size}}</td>
+	    </tr>
+	</tbody>
+    </table>
+    
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDebug" aria-expanded="false" aria-controls="collapseDebug">
+    debuginfo
+    </button>
+    <div class="collapse" id="collapseDebug">
+	<div class="well">
+	    <p><pre>{{rekl|json}}</pre></p>
+	</div>
+    </div>
+</div>

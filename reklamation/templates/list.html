@@ -21,8 +21,8 @@
 	</thead>
 	<tbody>
 	    <tr ng-repeat="r in dReklamationen">
-		<td>{{r.kunde}}</td>
-		<td>{{r.rekl_nr}}</td>
+		<td><a href="#/det/{{r.id}}">{{r.kunde}}</a></td>
+		<td><a href="#/detail/{{r.id}}">{{r.rekl_nr}}</a></td>
 		<td>{{r.kd_rekl_nr}}</td>
 		<td>{{r.kd_kd_rekl_nr}}</td>
 		<td>{{r.import}}</td>
