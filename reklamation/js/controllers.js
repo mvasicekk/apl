@@ -17,9 +17,39 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
   function($scope, $routeParams,$http) {
     $scope.reklid = $routeParams.reklid;
     $scope.rekl = undefined;
+    $scope.disabled = undefined;
+
+    $scope.abmahnungPersnrSelected = function($item,$model){
+	console.log($scope.abmahnungPersnr.selected.persnr + ' selected');
+    }
+    
+    $scope.enable = function() {
+	$scope.disabled = false;
+    };
+
+    $scope.disable = function() {
+	$scope.disabled = true;
+    };
+
+    $scope.clear = function() {
+	$scope.abmahnungPersnr.selected = undefined;
+    };
+    
+    $scope.abmahnungPersnr = {};
+    
+    $scope.refreshAbmahnungPersnr = function(e) {
+    var params = {e: e};
+    return $http.get(
+      './getPersnr.php',
+      {params: params}
+    ).then(function(response) {
+	    $scope.abmahnungPersnrArray = response.data.persnrArray;
+	});
+    };
     
     $http.get('./getReklDetail.php?reklid='+$scope.reklid).success(function(data){
 	$scope.rekl = data.rekl;
+	$scope.user = data.rekl.user;
 	
 	var uploader = new plupload.Uploader({
 	    runtimes: 'html5,flash,browserplus',

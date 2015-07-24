@@ -1440,6 +1440,16 @@ public function istExportiert($import, $impal){
         }
     }
 
+    
+    /**
+     * 
+     * @param type $reklid
+     */
+    public function getAbmahnungenForReklamation($reklid){
+	$sql.="select * from dabmahnung where dabmahnung.dreklamation_id='$reklid' order by dabmahnung.persnr";
+	return $this->getQueryRows($sql);
+    }
+    
     /**
      *
      * @param type $gewicht
@@ -3614,6 +3624,30 @@ public function istExportiert($import, $impal){
 	$sql = "select * from dpers where persnr=$persnr";
 	return $this->getQueryRows($sql);
     }
+    
+    /**
+     * 
+     * @param type $value
+     * @param type $ohneAustritt
+     * @param type $pole
+     * @return type
+     */
+    public function getPersonalArrayMatch($value, $ohneAustritt = TRUE, $pole = 0) {
+
+        $sql = "select persnr,name,vorname from dpers where 1";
+        if ($ohneAustritt === TRUE)
+            $sql.= " and (austritt is null or austritt<eintritt)";
+        if ($pole == 0)
+            $sql.= " and (persnr=$value)";
+        if ($pole == 1) {
+            $sql.= " and (CONVERT(persnr,CHAR) like '$value%' or LOWER(name) like LOWER('%$value%') or LOWER(vorname) like LOWER('%$value%') )";
+        }
+        $sql.= " order by persnr";
+        if ($pole == 1)
+            $sql.= " limit 30";
+        return array('sql'=>$sql,'rows'=>$this->getQueryRows($sql));
+    }
+    
     /**
      *
      * @param <type> $value

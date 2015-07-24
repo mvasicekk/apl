@@ -23,6 +23,10 @@
     
     <script type="text/javascript" src="../plupload/js/plupload.full.js"></script>
     
+    <script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
+    <link href="./bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
+
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
     

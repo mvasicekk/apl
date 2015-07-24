@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('reklApp',['ngRoute','smart-table']);
+var aplApp = angular.module('reklApp',['ngSanitize','ui.select','ngRoute','smart-table']);
 
 aplApp.config(['$routeProvider',
     function($routeProvider){
