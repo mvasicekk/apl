@@ -1,0 +1,358 @@
+<!--<nav class="navbar">
+    <h1 class="head">Apl - Reklamation -<small> Neue Reklamation</small></h1>
+    <button type="button" class="btn btn-danger">Neu</button>
+</nav>-->
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDebug" aria-expanded="false" aria-controls="collapseDebug">
+debuginfo
+</button>
+<div class="collapse" id="collapseDebug">
+    <div class="well">
+	<p><pre>{{rekl|json}}</pre></p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<div class="panel panel-primary">
+	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html #collapseOne" aria-expanded="true" aria-controls="collapseOne">
+		<div class="panel-heading phead" role="tab" id="headingOne">
+		    <h4 class="panel-title">Grundinfo</h4>
+		</div>
+            </a>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+		<div class="panel-body">
+		    <form>
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="kunde">Kunde:</label>
+				<input ng-model="rekl.kunde" type="text" class="form-control pinput" id="kunde" placeholder="Kunde">
+			    </div>
+			    <div class="form-group col-md-4 form-group-sm ">
+				<label class="control-label" for="teil">Teil:</label>
+				<input ng-model="rekl.teil" type="text" class="form-control pinput"  id="teil" placeholder="Teil">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="rekl">Rekl.Nr.:</label>
+				<input ng-model="rekl.rekl_nr" type="text" class="form-control pinput" id="rekl" placeholder="Reklamation nummer">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm ">
+				<label class="control-label" for="kdrekl">Kd Rekl.Nr.:</label>
+				<input ng-model="rekl.kd_rekl_nr" type="text" class="form-control pinput" id="kdrekl" placeholder="Kd reklamation nummer">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="kdkdrekl">KdKd Rekl.Nr.:</label>
+				<input ng-model="rekl.kd_kd_rekl_nr" type="text" class="form-control pinput" id="kdkdrekl" placeholder="KdKd reklamation nummer">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="erh">Erhalten am:</label>
+				<input ng-model="rekl.rekl_datum" class="form-control pinput" id="erh" placeholder="Erhalten am">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label"  for="erl">Erledigt am:</label>
+				<input ng-model="rekl.rekl_erledigt_am" type="date" class="form-control pinput" id="erl" placeholder="Erledigt am">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="mail">E-mail:</label>
+				<input ng-model="rekl.mt_email" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" class="pinput" id="mail">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="bk">Bearbeier kunde:</label>
+				<input ng-model="rekl.bearbeiter_kunde" type="text" class="form-control pinput" id="bk" placeholder="Bearbeier kunde">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="tel">Tel.:</label>
+				<input ng-model="rekl.mt_telefon" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" class="pinput" id="tel">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label class="control-label" for="dm">Datum Mitteilung:</label>
+				<input ng-model="rekl.mt_datum" type="text" class="form-control pinput" id="dm" placeholder="Datum Mitteilung">
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label ng-model="rekl.mt_telefon" ng-true-value="'1'" ng-false-value="'0'" class="control-label" for="mu">Mūndlich</label><input type="checkbox" class="pinput" id="mu">
+			    </div>
+			</div>
+		    </form>
+		</div>
+	    </div>
+
+	</div>
+
+
+
+        <div class="panel panel-primary">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html #collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+		<div class="panel-heading phead" role="tab" id="headingTwo">
+		    <h4 class="panel-title">
+			Teil - identifikator
+
+		    </h4>
+		</div>
+            </a>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+		<div class="panel-body">
+		    <form>
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="IM">IM:</label>  
+				<input ng-model="rekl.import" type="text" class="form-control pinput" id="IM" placeholder="IM">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="EX">EX:</label>  
+				<input ng-model="rekl.export" type="text" class="form-control pinput" id="EX" placeholder="EX">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Exp">Exp-Beh:</label>  
+				<input ng-model="rekl.export_beh" type="text" class="form-control pinput" id="Exp" placeholder="Exp-Beh">
+			    </div>
+
+			</div>
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="CG">Charge / Giesstag:</label>  
+				<input ng-model="rekl.giesstag" type="text" class="form-control pinput" id="CG" placeholder="Charge / Giesstag">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="St">Stempel:</label>  
+				<input ng-model="rekl.stempel" type="text" class="form-control pinput" id="St" placeholder="Stempel">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Pr">Pragestempel:</label>  
+				<input ng-model="rekl.pragestempel" type="text" class="form-control pinput" id="Pr" placeholder="Pragestempel">
+			    </div>
+			</div>
+		    </form>
+                </div>   
+	    </div>
+        </div>
+
+	<div class="panel panel-primary">
+	    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html #collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <div class="panel-heading phead" role="tab" id="headingThree">
+                    <h4 class="panel-title">Abweichunginfo</h4>
+                </div>
+            </a>
+	    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="panel-body">
+                    <form>
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Lf">Liefermenge:</label>  
+				<input ng-model="rekl.stk_expediert" type="text" class="form-control pinput" id="Lf" placeholder="Liefermenge">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Rf">Rekl.Menge:</label>  
+				<input ng-model="rekl.stk_reklammiert" type="text" class="form-control pinput" id="Rf" placeholder="Rekl.Menge">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="PPM">PPM:</label>  
+				<input ng-model="rekl.ppm" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" class="form-control pinput" id="PPM">
+			    </div>
+
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="8D">8D - Gefordet:</label>  
+				<input ng-model="rekl.gefordert_8D" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" class="form-control pinput" id="8D">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Termin">Termin:</label>  
+				<input type="date" class="form-control pinput" id="Termin" placeholder="Termin">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Ga">Gesendet am:</label>  <input type="date" class="form-control pinput" id="Ga" placeholder="Gesendet am">
+			    </div>
+
+
+
+			</div>
+
+			<div class="row">
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Zch">Zeichnungsnummer:</label>  
+				<input ng-model="rekl.zeichnungsnummer" type="text" class="form-control pinput" id="Zch" placeholder="Zeichnungsnummer:">
+			    </div>
+
+			    <div class="form-group col-md-4 form-group-sm">
+				<label for="Zchn">Zeichnungsstand:</label>  
+				<input ng-model="rekl.zeichnungsstand" type="text" class="form-control pinput" id="Zchn" placeholder="Zeichnungsstand">
+			    </div>
+			</div>
+
+			<div class="row">
+			    <div class="col-md-12 ">
+				<h5><span class="col-xs-12 Grenpozadi">1. Team Vorschlag zur Teambesprechung:</span></h5>
+			    </div>
+			    <form class="form-inline ">
+				<table  style="margin-left: 15px;">
+				    <tr>
+					<th>Name</th>
+					<th>Abteilung</th>
+					<th>Leiter</th>
+				    </tr>
+				    <tr>
+					<td><input ng-model="rekl.team_bespr_name1" class="form-control input-sm" type="text"> </td>
+					<td><input ng-model="rekl.team_bespr_abteilung1" class="form-control input-sm" type="text"></td>
+					<td><input ng-model="rekl.team_bespr_leiter1" ng-true-value="'1'" ng-false-value="'0'" class="form-control" type="checkbox"> </td>
+				    </tr> <tr>
+					<td><input ng-model="rekl.team_bespr_name2" class="form-control input-sm" type="text"> </td>
+					<td><input ng-model="rekl.team_bespr_abteilung2" class="form-control input-sm" type="text"></td>
+					<td><input ng-model="rekl.team_bespr_leiter2" ng-true-value="'1'" ng-false-value="'0'" class="form-control" type="checkbox"> </td>
+				    </tr> <tr>
+					<td><input ng-model="rekl.team_bespr_name3" class="form-control input-sm" type="text"> </td>
+					<td><input ng-model="rekl.team_bespr_abteilung3" class="form-control input-sm" type="text"></td>
+					<td><input ng-model="rekl.team_bespr_leiter3" ng-true-value="'1'" ng-false-value="'0'" class="form-control" type="checkbox"> </td>
+				    </tr> <tr>
+					<td><input ng-model="rekl.team_bespr_name4" class="form-control input-sm" type="text"> </td>
+					<td><input ng-model="rekl.team_bespr_abteilung4" class="form-control input-sm" type="text"></td>
+					<td><input ng-model="rekl.team_bespr_leiter4" ng-true-value="'1'" ng-false-value="'0'" class="form-control" type="checkbox"> </td>
+				    </tr> <tr>
+					<td><input ng-model="rekl.team_bespr_name5" class="form-control input-sm" type="text"> </td>
+					<td><input ng-model="rekl.team_bespr_abteilung5" class="form-control input-sm" type="text"></td>
+					<td><input ng-model="rekl.team_bespr_leiter5" ng-true-value="'1'" ng-false-value="'0'" class="form-control" type="checkbox"> </td>
+				    </tr>
+				</table>
+			</div>
+
+			<div class="row">
+			    <div class="col-md-12 ">
+				<h5><span class="col-xs-12 Grenpozadi">2. Problembeschreibung:</span></h5>
+			    </div>
+			    <div class="col-xs-12 .col-sm-6 .col-lg-8">
+				<textarea class="form-control" rows="3"></textarea>
+			    </div>
+			</div>
+
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h5> <span class="col-xs-9 Grenpozadi"> 3. Sofortmaßnahmen:</span> <span class="col-xs-3 Grenpozadi">Einfúhrungsdatum</span>  </h5>
+                            </div>
+                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
+                                <textarea class="form-control" style="width: 76%; float:left;" rows="3"></textarea>
+                                <input class="form-control input-lg" type="text" style="width:24%;">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5> <span class="col-md-4 Grenpozadi "> 4. Fehlerursachen: </span> <span class="col-md-4 Grenpozadi"> <input type="checkbox" > Fehler tritt erstmalig auf </span> <span class="col-md-4 Grenpozadi"> <input type="checkbox"> Wiederholferhler </span>  </h5>
+                            </div>
+                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
+                                <textarea class="form-control"" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h5  style="margin-top: 0px;"> <span class="col-xs-12 Grenpozadi">Art der Bestigung </span></h5>
+                            </div>
+                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
+                                <textarea class="form-control" rows="3"></textarea>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h5> <span class="col-xs-7 Grenpozadi"> 5. Geplante Abstellmaßnahmen:</span> <span class="col-xs-5 Grenpozadi"> 5a Wirksamkeitsprúfung mit methode</span></h5>
+                            </div>
+                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
+                                <textarea class="form-control" style="width: 60%; float:left;" rows="3"></textarea>
+                                <textarea class="form-control" style="width: 40%;" rows="3"></textarea>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5><span class="col-xs-9 Grenpozadi">6. Eingefúhrte Abstellmaßnahmen: </span><span class="col-xs-3 Grenpozadi">Einfúhrungsdatum</span> </h5>
+                            </div>
+                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
+                                <textarea class="form-control" style="width: 76%; float:left;" rows="3"></textarea>
+                                <input class="form-control input-lg" type="text" style="width:24%;">
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5"><span class="col-xs-9 Grenpozadi">7. Maßnahmen gegen Widerhofehler:</span><span class="col-xs-3 Grenpozadi">Einfúhrungsdatum</span></h5>
+                            </div>
+                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
+                                <textarea class="form-control" style="width: 76%; float:left;" rows="3"></textarea>
+                                <input class="form-control input-lg" type="text" style="width:24%;">
+
+                            </div>
+                        </div>
+
+			<div class="row">
+			    <div class="col-md-12">
+				<table class="table table-condensed table-responsive table-striped">
+				    <thead>
+					<tr id='uploader'>
+					    <th colspan="2">{{rekl.savePath|limitTo:255:10}}<div id='filelist'></div></th>
+				    <th><button id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+				    </tr>
+				    <tr>
+					<th>name</th>
+					<th>mtime</th>
+					<th class="text-right">size</th>
+				    </tr>
+				    </thead>
+				    <tbody>
+					<tr ng-repeat="f in rekl.files">
+					    <td><a href="{{f.url}}">{{f.filename}}</a></td>
+					    <td>{{f.mtime * 1000|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+					    <td class="text-right">{{f.size}}</td>
+					</tr>
+				    </tbody>
+				</table>
+			    </div>
+			</div>
+
+		    </form>
+		</div> </div>
+	</div>
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+

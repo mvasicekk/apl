@@ -2,7 +2,7 @@
     <div class="container-fluid navbar-left">
         <div class="navbar-header" style="float:left;">
             <a class="navbar-brand" href="/index.php">
-                <img style='height: 32px;' alt='Abydos s.r.o.' src='./images/logo.png'>
+                <img style='height: 32px;' alt='Abydos s.r.o.' src='/images/logo.png'>
             </a>
         </div>
 

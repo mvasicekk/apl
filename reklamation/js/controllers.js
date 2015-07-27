@@ -19,8 +19,56 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
     $scope.rekl = undefined;
     $scope.disabled = undefined;
 
+    $scope.abmahnungVorschlagUser=undefined;
+    $scope.abmahnungBemerkung="";
+    $scope.abmahnungVorschlagBetrag = 0;
+    $scope.abmahnungDatum = new Date();
+    $scope.dateOptions = {
+	dateFormat:'dd.mm.yy',
+	firstDay:1
+    };
+    
+    
+    $scope.delAbmahnung = function(id){
+	console.log('delAbmahnung '+id);
+	$http.post('./delAbmahnungVorschlag.php',{id:id,rekl_id:$scope.rekl.id}).success(function(data){
+	    if(data.affectedRows>0){
+		$scope.rekl.abmahnungen = data.abmahnungen;
+	    }
+	});
+    }
+    
+    $scope.addAbmahnung = function(){
+	var persnr = 0;
+	if($scope.abmahnungPersnr.selected!==undefined){
+	    persnr = $scope.abmahnungPersnr.selected.persnr;
+	}
+	console.log("addAbmahnung, persnr:"+persnr
+		+' bemerkung: '+$scope.abmahnungBemerkung
+		+' abmahnungVorschlagUser: '+$scope.abmahnungVorschlagUser
+		+' abmahnungVorschlagBetrag: '+$scope.abmahnungVorschlagBetrag
+		+' abmahnungDatum: '+$scope.abmahnungDatum
+		
+		);
+
+	var params = {
+	    rekl_id:$scope.rekl.id,
+	    persnr:persnr,
+	    datum:$scope.abmahnungDatum,
+	    vorschlagBemerkung:$scope.abmahnungBemerkung,
+	    vorschlagUser:$scope.abmahnungVorschlagUser,
+	    vorschlagBetrag:$scope.abmahnungVorschlagBetrag
+	};
+	$http.post('./addAbmahnungVorschlag.php',params).success(function(data){
+	    //abmahnung vorschlag added
+	    if(data.insertId>0){
+		$scope.rekl.abmahnungen = data.abmahnungen;
+	    }
+	});
+    }
+    
     $scope.abmahnungPersnrSelected = function($item,$model){
-	console.log($scope.abmahnungPersnr.selected.persnr + ' selected');
+	//console.log($scope.abmahnungPersnr.selected.persnr + ' selected');
     }
     
     $scope.enable = function() {
@@ -50,6 +98,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
     $http.get('./getReklDetail.php?reklid='+$scope.reklid).success(function(data){
 	$scope.rekl = data.rekl;
 	$scope.user = data.rekl.user;
+	$scope.abmahnungVorschlagUser = data.rekl.user;
 	
 	var uploader = new plupload.Uploader({
 	    runtimes: 'html5,flash,browserplus',

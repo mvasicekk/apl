@@ -1440,13 +1440,42 @@ public function istExportiert($import, $impal){
         }
     }
 
+    /**
+     * 
+     * @param type $id
+     */
+    public function delAbmahnung($id){
+	$sql.="delete from dabmahnung where id='$id' limit 1";
+	$this->query($sql);
+	return mysql_affected_rows();
+    }
+    
+    /**
+     * 
+     * @param type $persnr
+     * @param type $grund
+     * @param type $datum
+     * @param type $betr
+     * @param type $dreklamation_id
+     * @param type $vorschlag
+     * @param type $vorschlag_von
+     * @param type $vorschlag_betrag
+     * @param type $vorschlag_bemerkung
+     */
+    public function addAbmahnung($persnr,$grund,$datum,$betr,$dreklamation_id,$vorschlag,$vorschlag_von,$vorschlag_betrag,$vorschlag_bemerkung){
+	$sql.="insert into dabmahnung ";
+	$sql.="(persnr,grund,datum,betr,dreklamation_id,vorschlag,vorschlag_von,vorschlag_betrag,vorschlag_bemerkung)";
+	$sql.="values('$persnr','$grund','$datum','$betr','$dreklamation_id','$vorschlag','$vorschlag_von','$vorschlag_betrag','$vorschlag_bemerkung')";
+	$this->query($sql);
+	return mysql_insert_id();
+    }
     
     /**
      * 
      * @param type $reklid
      */
     public function getAbmahnungenForReklamation($reklid){
-	$sql.="select * from dabmahnung where dabmahnung.dreklamation_id='$reklid' order by dabmahnung.persnr";
+	$sql.="select *,DATE_FORMAT(datum,'%d.%m.%Y') as datumFormatted from dabmahnung where dabmahnung.dreklamation_id='$reklid' order by dabmahnung.persnr";
 	return $this->getQueryRows($sql);
     }
     

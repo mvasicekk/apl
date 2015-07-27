@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('reklApp',['ngSanitize','ui.select','ngRoute','smart-table']);
+var aplApp = angular.module('reklApp',['ngSanitize','ui.select','ui.date','ngRoute','smart-table']);
 
 aplApp.config(['$routeProvider',
     function($routeProvider){
@@ -14,7 +14,7 @@ aplApp.config(['$routeProvider',
 		    controller:'reklController'
 		}).
 		when('/detail/:reklid',{
-		    templateUrl:'templates/rekl.html',
+		    templateUrl:'templates/detail.html',
 		    controller:'detailController'
 		}).
 		when('/det/:reklid',{
