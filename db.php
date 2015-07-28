@@ -1191,7 +1191,7 @@ public function istExportiert($import, $impal){
 	    $sql.=" dreklamation.rekl_datum desc,";
 	    $sql.=" dreklamation.rekl_nr";
 	} else {
-	    $sql = "select * from dreklamation where id='$reklid'";
+	    $sql = "select *,DATE_FORMAT(rekl_datum,'%Y-%m-%d') as rekl_datum1 from dreklamation where id='$reklid'";
 	}
 
 	return $this->getQueryRows($sql);
