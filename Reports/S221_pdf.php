@@ -277,7 +277,7 @@ function zahlavi_palette($pdfobjekt,$vyskaradku,$rgb,$palnr,$teilnr,$auftragsnr,
 	
 	$pdfobjekt->Cell(20,$vyskaradku,$teilnr,'0',0,'L',$fill);
 	
-	$pdfobjekt->Cell(25,$vyskaradku,"IM: ".$auftragsnr,'0',0,'L',$fill);
+	$pdfobjekt->Cell(30,$vyskaradku,"IM: ".$auftragsnr,'0',0,'L',$fill);
 
 	$pdfobjekt->Cell(0,$vyskaradku,"",'0',1,'L',$fill);
 	

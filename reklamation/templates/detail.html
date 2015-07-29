@@ -21,14 +21,16 @@
 	</div>
     </div>
 
+    {{rekl.rekl_datum1|date}}
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	
 	<!--Grundinfo-->
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 		<div class="panel-heading phead" role="tab" id="headingOne">
-		    <h4 class="panel-title">Grundinfo</h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Grundinfo</h4>
 		    <div style="float:right;">{{rekl.rekl_nr}} | {{rekl.teil}}</div>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -117,10 +119,9 @@
         <div class="panel panel-primary">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 		<div class="panel-heading phead" role="tab" id="headingTwo">
-		    <h4 class="panel-title">
-			Teil - identifikator
-
-		    </h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Teil - identifikator</h4>
+		    <div style="float:right;">Charge/Giesstag <span class="badge">{{rekl.giesstag|limitTo:255:0}}</span></div>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
@@ -172,11 +173,12 @@
 	<div class="panel panel-primary">
 	    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                 <div class="panel-heading phead" role="tab" id="headingThree">
-                    <h4 class="panel-title">Abweichunginfo</h4>
+                    <h4 class="panel-title"><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span> Abweichunginfo</h4>
 		    <div style="float:right;">
 			<span ng-show="rekl.gefordert_8D=='1'">8D gefordert |</span>
 			geliefert/reklamiert : <span class="badge">{{rekl.stk_expediert}}</span>/<span class="badge">{{rekl.stk_reklammiert}}</span>
 		    </div>
+		    <hr class="clear">
                 </div>
             </a>
 	    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
@@ -346,11 +348,29 @@
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseAuswertung" aria-expanded="false" aria-controls="collapseAuswertung">
 		<div class="panel-heading phead" role="tab" id="headingAuswertung">
-		    <h4 class="panel-title">Auswertung</h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Auswertung</h4>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseAuswertung" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAuswertung">
-		AAA
+		<div class="panel-body">
+		    <img src="/images/sb.jpg">
+		</div>
+	    </div>
+	</div>
+
+	<!--Kosten-->
+	<div class="panel panel-primary">
+	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseKosten" aria-expanded="false" aria-controls="collapseKosten">
+		<div class="panel-heading phead" role="tab" id="headingKosten">
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Kosten</h4>
+		    <hr class="clear">
+		</div>
+            </a>
+            <div id="collapseKosten" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingKosten">
+		<div class="panel-body">
+		    <img src="/images/sb.jpg">
+		</div>
 	    </div>
 	</div>
 
@@ -358,7 +378,9 @@
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseBemerkung" aria-expanded="false" aria-controls="collapseBemerkung">
 		<div class="panel-heading phead" role="tab" id="headingBemerkung">
-		    <h4 class="panel-title">Bemerkung</h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Bemerkung</h4>
+		    <div style="float:right;">{{rekl.bemerkung|limitTo:255:0}}</div>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseBemerkung" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBemerkung">
@@ -404,7 +426,6 @@
 					    </label>
 					</div>
 				    </div>
-
 				</div>
 			    </fieldset>
 			</div>
@@ -417,8 +438,9 @@
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseAnhange" aria-expanded="false" aria-controls="collapseAnhange">
 		<div class="panel-heading phead" role="tab" id="headingAnhange">
-		    <h4 class="panel-title">Anhaenge </h4>
-		    <div style="float:right;">Anzahl Anlagen <span class="badge">{{rekl.files.length}}</span></div>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Anhaenge </h4>
+		    <div style="float:right;">{{rekl.savePath|limitTo:255:10}} | Anzahl Anlagen <span class="badge">{{rekl.files.length}}</span></div>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseAnhange" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAnhange">
@@ -453,11 +475,50 @@
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseMASchulung" aria-expanded="false" aria-controls="collapseMASchulung">
 		<div class="panel-heading phead" role="tab" id="headingMASchulung">
-		    <h4 class="panel-title">Mitarbeiterschulung</h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Mitarbeiterschulung</h4>
+		    <div style="float:right;">Anzahl Schulungsvorschlaege <span class="badge">{{rekl.schulungen.length}}</span></div>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseMASchulung" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMASchulung">
-		AAA
+		<div class="row">
+		    <div class="col-md-12">
+			<table class="table table-condensed table-responsive">
+			    <thead>
+				<tr>
+				    <th>
+			    <ui-select
+				ng-model="schulungPersnr.selected" 
+				ng-disabled="disabled" 
+				reset-search-input="false" 
+				theme="bootstrap"
+				>
+				<ui-select-match placeholder="Persnr oder Name">{{$select.selected.persnr}}</ui-select-match>
+				<ui-select-choices repeat="p in schulungPersnrArray track by $index"
+						   refresh="refreshSchulungPersnr($select.search)"
+						   refresh-delay="0">
+				    <div ng-bind-html="p.formattedPersnr | highlight: $select.search"></div>
+				</ui-select-choices>
+			    </ui-select>
+			    </th>
+			    <th></th>
+			    <th><button ng-click="addSchulung()" id='add_schulung' type="button" class="btn btn-sm btn-primary btn-block">+</button></th>
+			    </tr>
+			    <tr>
+				<th class="text-right">PersNr</th>
+				<th colspan="2" >Name</th>
+			    </tr>
+			    </thead>
+			    <tbody>
+				<tr ng-repeat="a in rekl.schulungen">
+				    <td class="text-right">{{a.persnr}}</td>
+				    <td>{{a.name}}</td>
+				    <td><button ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				</tr>
+			    </tbody>
+			</table>
+		    </div>
+		</div>
 	    </div>
 	</div>
 
@@ -465,8 +526,9 @@
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseAbvor" aria-expanded="false" aria-controls="collapseAbvor">
 		<div class="panel-heading phead" role="tab" id="headingAbvor">
-		    <h4 class="panel-title">Abmahnung Vorschlaege</h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span> Abmahnung Vorschlaege</h4>
 		    <div style="float:right;">Anzahl Vorschlaege <span class="badge">{{rekl.abmahnungen.length}}</span></div>
+		    <hr class="clear">
 		</div>
             </a>
             <div id="collapseAbvor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAbvor">

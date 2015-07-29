@@ -23,6 +23,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
     $scope.abmahnungBemerkung="";
     $scope.abmahnungVorschlagBetrag = 0;
     $scope.abmahnungDatum = new Date();
+    
     $scope.dateOptions = {
 	dateFormat:'dd.mm.yy',
 	firstDay:1
@@ -66,11 +67,36 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
 	    }
 	});
     }
-    
-    $scope.abmahnungPersnrSelected = function($item,$model){
-	//console.log($scope.abmahnungPersnr.selected.persnr + ' selected');
+
+    $scope.addSchulung = function(){
+	var persnr = 0;
+	if($scope.schulungPersnr.selected!==undefined){
+	    persnr = $scope.schulungPersnr.selected.persnr;
+	}
+	console.log("addSchulung, persnr:"+persnr);
+
+	var params = {
+	    rekl_id:$scope.rekl.id,
+	    persnr:persnr,
+	    datum:$scope.rekl.rekl_datum
+	};
+	$http.post('./addSchulungVorschlag.php',params).success(function(data){
+	    //abmahnung vorschlag added
+	    if(data.insertId>0){
+		$scope.rekl.schulungen = data.schulungen;
+	    }
+	});
     }
-    
+
+    $scope.delSchulung = function(id){
+	console.log('delSchulung '+id);
+	$http.post('./delSchulungVorschlag.php',{id:id,rekl_id:$scope.rekl.id}).success(function(data){
+	    if(data.affectedRows>0){
+		$scope.rekl.schulungen = data.schulungen;
+	    }
+	});
+    }
+
     $scope.enable = function() {
 	$scope.disabled = false;
     };
@@ -81,9 +107,12 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
 
     $scope.clear = function() {
 	$scope.abmahnungPersnr.selected = undefined;
+	$scope.schulungPersnr.selected = undefined;
     };
     
     $scope.abmahnungPersnr = {};
+    $scope.schulungPersnr = {};
+    
     
     $scope.refreshAbmahnungPersnr = function(e) {
     var params = {e: e};
@@ -92,6 +121,16 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
       {params: params}
     ).then(function(response) {
 	    $scope.abmahnungPersnrArray = response.data.persnrArray;
+	});
+    };
+    
+    $scope.refreshSchulungPersnr = function(e) {
+    var params = {e: e};
+    return $http.get(
+      './getPersnr.php',
+      {params: params}
+    ).then(function(response) {
+	    $scope.schulungPersnrArray = response.data.persnrArray;
 	});
     };
     

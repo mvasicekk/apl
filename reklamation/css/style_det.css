@@ -20,8 +20,11 @@
 {
     margin-top: -41px;
 }*/
-
-
+hr.clear{
+    visibility: hidden;
+    margin: 0;
+    clear: both;
+}
 h4.panel-title{
     display:inline-block;
 }

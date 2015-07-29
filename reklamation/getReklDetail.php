@@ -21,6 +21,9 @@ require_once '../db.php';
 	$rekl['abmahnungen'] = $abmahnungen;
 	//pridam si prihlaseneho uzivatele
 	$rekl['user'] = $_SESSION['user'];
+	//schulungen
+	$schulungen = $apl->getSchulungenForReklamation($rekl['id']);
+	$rekl['schulungen'] = $schulungen;
     }
     
     $returnArray = array(

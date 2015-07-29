@@ -1452,6 +1452,31 @@ public function istExportiert($import, $impal){
     
     /**
      * 
+     * @param type $id
+     * @return type
+     */
+    public function delSchulung($id){
+	$sql.="delete from dpersschulung where id='$id' limit 1";
+	$this->query($sql);
+	return mysql_affected_rows();
+    }
+
+    /**
+     * 
+     * @param type $persnr
+     * @param type $schulung_id
+     * @param type $datum
+     * @param type $dreklamation_id
+     * @param type $ergebniss
+     */
+    public function addSchulungVorschlag($persnr,$schulung_id,$datum,$dreklamation_id,$ergebniss){
+	$sql.="insert into dpersschulung (persnr,schulung_id,letzte_datum,ergebniss,rekl_id)";
+	$sql.=" values('$persnr','$schulung_id','$datum','$ergebniss','$dreklamation_id')";
+	$this->query($sql);
+	return mysql_insert_id();
+    }
+    /**
+     * 
      * @param type $persnr
      * @param type $grund
      * @param type $datum
@@ -1470,6 +1495,14 @@ public function istExportiert($import, $impal){
 	return mysql_insert_id();
     }
     
+    /**
+     * 
+     * @param type $reklid
+     */
+    public function getSchulungenForReklamation($reklid){
+	$sql.="select dpersschulung.*,CONCAT(dpers.name,' ',dpers.vorname) as name from dpersschulung join dpers on dpers.persnr=dpersschulung.persnr where dpersschulung.rekl_id='$reklid'";
+	return $this->getQueryRows($sql);
+    }
     /**
      * 
      * @param type $reklid
