@@ -15,13 +15,17 @@
     
     <div class="row">
 	<div class="col-md-12">
-	    <button class="btn btn-primary" type="button">
+	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
 		Speichern / uložit
 	    </button>
+    	    <button ng-show="rekl.rekl_erledigt_am1==null" ng-click="reklBeenden()" class="btn btn-primary" type="button">
+		Reklamation beenden
+	    </button>
+
 	</div>
     </div>
 
-    {{rekl.rekl_datum1|date}}
+    
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 	
 	<!--Grundinfo-->
@@ -29,7 +33,7 @@
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 		<div class="panel-heading phead" role="tab" id="headingOne">
 		    <h4 class="panel-title"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Grundinfo</h4>
-		    <div style="float:right;">{{rekl.rekl_nr}} | {{rekl.teil}}</div>
+		    <div style="float:right;"><span ng-show="rekl.rekl_erledigt_am1!=null">Beendet am: {{rekl.rekl_erledigt_am1|date:'dd.MM.yyyy'}} | </span>{{rekl.rekl_nr}} | {{rekl.teil}}</div>
 		    <hr class="clear">
 		</div>
             </a>
@@ -73,7 +77,7 @@
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label"  for="erl">Erledigt am:</label>
-				<input ng-model="rekl.rekl_erledigt_am" type="date" class="form-control pinput" id="erl" placeholder="Erledigt am">
+				<input disabled readonly ng-model="rekl.rekl_erledigt_am1" ui-date="dateOptions" type="text" class="form-control pinput" id="erl" placeholder="Erledigt am">
 			    </div>
 			</div>
 
@@ -99,7 +103,7 @@
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="dm">Datum Mitteilung:</label>
-				<input ng-model="rekl.mt_datum" type="text" class="form-control pinput" id="dm" placeholder="Datum Mitteilung">
+				<input ng-model="rekl.mt_datum1" ui-date="dateOptions" type="text" class="form-control pinput" id="dm" placeholder="Datum Mitteilung">
 			    </div>
 			</div>
 			<div class="row">
@@ -212,12 +216,12 @@
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="Termin">Termin:</label>  
-				<input ng-model="rekl.termin_8D" type="date" class="form-control pinput" id="Termin" placeholder="Termin">
+				<input ng-model="rekl.termin_8D1" ui-date="dateOptions" type="text" class="form-control pinput" id="Termin" placeholder="Termin">
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="Ga">Gesendet am:</label>  
-				<input ng-model="rekl.gesendet_am_8D" type="date" class="form-control pinput" id="Ga" placeholder="Gesendet am">
+				<input ng-model="rekl.gesendet_am_8D1" ui-date="dateOptions" type="text" class="form-control pinput" id="Ga" placeholder="Gesendet am">
 			    </div>
 			</div>
 
@@ -273,27 +277,45 @@
 				<h5><span class="col-xs-12 Grenpozadi">2. Problembeschreibung:</span></h5>
 			    </div>
 			    <div class="col-xs-12 .col-sm-6 .col-lg-8">
-				<textarea class="form-control" rows="3"></textarea>
+				<textarea ng-model="rekl.beschr_abweichung" class="form-control" rows="3"></textarea>
 			    </div>
 			</div>
 
+			<!--3. sofortmassnahmen-->
                         <div ng-show="rekl.gefordert_8D=='1'" class="row">
                             <div class="col-md-12 ">
-                                <h5> <span class="col-xs-9 Grenpozadi"> 3. Sofortmaßnahmen:</span> <span class="col-xs-3 Grenpozadi">Einfúhrungsdatum</span>  </h5>
+                                <h5> <span class="col-md-10 Grenpozadi"> 3. Sofortmaßnahmen:</span> <span class="col-md-2 Grenpozadi">Einfuhrungsdatum</span>  </h5>
                             </div>
-                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea class="form-control" style="width: 76%; float:left;" rows="3"></textarea>
-                                <input class="form-control input-lg" type="text" style="width:24%;">
-
+			    <!--a-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_3a" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_3a_einsatzdatum" ui-date="dateOptions" type="text" class="form-control" type="text">
+                            </div>
+			    <!--b-->
+			    <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_3b" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_3b_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                            </div>
+			    <!--c-->
+			    <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_3c" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_3c_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
                             </div>
                         </div>
 			
+			<!--4. Fehlerursachenng-true-value="'1'" ng-false-value="'0'"-->
                         <div class="row">
                             <div class="col-md-12">
-                                <h5> <span class="col-md-4 Grenpozadi "> 4. Fehlerursachen: </span> <span class="col-md-4 Grenpozadi"> <input type="checkbox" > Fehler tritt erstmalig auf </span> <span class="col-md-4 Grenpozadi"> <input type="checkbox"> Wiederholferhler </span>  </h5>
+                                <h5> <span class="col-md-4 Grenpozadi "> 4. Fehlerursachen: </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_erstmalig" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" > Fehler tritt erstmalig auf </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_wiederholfehler" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"> Wiederholferhler </span>  </h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea class="form-control"" rows="3"></textarea>
+                                <textarea ng-model="rekl.beschr_ursache" class="form-control"" rows="3"></textarea>
                             </div>
                         </div>
                         
@@ -302,7 +324,7 @@
                                 <h5  style="margin-top: 0px;"> <span class="col-xs-12 Grenpozadi">Art der Bestigung </span></h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea class="form-control" rows="3"></textarea>
+                                <textarea ng-model="rekl.beschr_beseitigung" class="form-control" rows="3"></textarea>
 
                             </div>
                         </div>
@@ -312,31 +334,65 @@
                                 <h5> <span class="col-xs-7 Grenpozadi"> 5. Geplante Abstellmaßnahmen:</span> <span class="col-xs-5 Grenpozadi"> 5a Wirksamkeitsprúfung mit methode</span></h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea class="form-control" style="width: 60%; float:left;" rows="3"></textarea>
-                                <textarea class="form-control" style="width: 40%;" rows="3"></textarea>
+                                <textarea ng-model="rekl.report8D_5" class="form-control" style="width: 60%; float:left;" rows="3"></textarea>
+                                <textarea ng-model="rekl.report8D_5a" class="form-control" style="width: 40%;" rows="3"></textarea>
 
                             </div>
                         </div>
 
+			<!--6. Eingefuhrte Abstellmaßnahmen-->
                         <div ng-show="rekl.gefordert_8D=='1'" class="row">
                             <div class="col-md-12">
-                                <h5><span class="col-xs-9 Grenpozadi">6. Eingefúhrte Abstellmaßnahmen: </span><span class="col-xs-3 Grenpozadi">Einfúhrungsdatum</span> </h5>
+                                <h5><span class="col-md-10 Grenpozadi">6. Eingefūhrte Abstellmaßnahmen: </span><span class="col-md-2 Grenpozadi">Einfūhrungsdatum</span> </h5>
                             </div>
-                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea class="form-control" style="width: 76%; float:left;" rows="3"></textarea>
-                                <input class="form-control input-lg" type="text" style="width:24%;">
-
+			    <!--a-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_6a" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_6a_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                            </div>
+			    <!--b-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_6b" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_6b_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                            </div>
+			    <!--c-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_6c" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_6c_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
                             </div>
                         </div>
 
+			<!--7. Maßnahmen gegen Widerhofehler-->
                         <div ng-show="rekl.gefordert_8D=='1'" class="row">
                             <div class="col-md-12">
-                                <h5"><span class="col-xs-9 Grenpozadi">7. Maßnahmen gegen Widerhofehler:</span><span class="col-xs-3 Grenpozadi">Einfúhrungsdatum</span></h5>
+                                <h5"><span class="col-md-10 Grenpozadi">7. Maßnahmen gegen Widerhofehler:</span><span class="col-md-2 Grenpozadi">Einfūhrungsdatum</span></h5>
                             </div>
-                            <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea class="form-control" style="width: 76%; float:left;" rows="3"></textarea>
-                                <input class="form-control input-lg" type="text" style="width:24%;">
-
+			    <!--a-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_7a" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_7a_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                            </div>
+			    <!--b-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_7b" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_7b_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                            </div>
+			    <!--c-->
+                            <div class="col-md-10">
+                                <textarea ng-model="rekl.report8D_7c" class="form-control" rows="2"></textarea>
+			    </div>
+			    <div class="col-md-2">
+                                <input ng-model="rekl.report8D_7c_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
                             </div>
                         </div>
 		    </form>
@@ -398,34 +454,34 @@
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_erhalten_am">Erhalten am:</label>
-					    <input type="text" class="form-control" id="analyse_erhalten_am" placeholder="Analyse erhalten am - Datum">
+					    <input ng-model="rekl.analyse_erhalten_am" ui-date="dateOptions" type="text" class="form-control" id="analyse_erhalten_am" placeholder="Analyse erhalten am - Datum">
 					</div>
 				    </div>
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_erledigt_am">Erledigt am:</label>
-					    <input type="text" class="form-control" id="analyse_erledigt_am" placeholder="Analyse erledigt am - Datum">
+					    <input ng-model="rekl.analyse_erledigt_am" ui-date="dateOptions" type="text" class="form-control" id="analyse_erledigt_am" placeholder="Analyse erledigt am - Datum">
 					</div>
 				    </div>
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_nichtanerkant_stk">Nicht Anerkannt Stk:</label>
-					    <input type="number" class="form-control" id="analyse_nichtanerkant_stk" placeholder="nicht anerkannt stk">
+					    <input ng-model="rekl.analyse_nichtanerkant_stk" type="number" class="form-control" id="analyse_nichtanerkant_stk" placeholder="nicht anerkannt stk">
 					</div>
 				    </div>
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_anerkant_stk">Anerkannt Stk:</label>
-					    <input type="number" class="form-control" id="analyse_anerkant_stk" placeholder="anerkannt stk">
+					    <input ng-model="rekl.analyse_anerkant_stk" type="number" class="form-control" id="analyse_anerkant_stk" placeholder="anerkannt stk">
 					</div>
 				    </div>
-    				    <div class="col-md-3">
+<!--    				    <div class="col-md-3">
 					<div class="form-group">
 					    <label class="checkbox-inline">
 						<input type="checkbox" id="neg_muster_bei_aby">Negativmuster bei Aby/Kunde
 					    </label>
 					</div>
-				    </div>
+				    </div>-->
 				</div>
 			    </fieldset>
 			</div>
@@ -438,7 +494,7 @@
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseAnhange" aria-expanded="false" aria-controls="collapseAnhange">
 		<div class="panel-heading phead" role="tab" id="headingAnhange">
-		    <h4 class="panel-title"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Anhaenge </h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span> Anlagen </h4>
 		    <div style="float:right;">{{rekl.savePath|limitTo:255:10}} | Anzahl Anlagen <span class="badge">{{rekl.files.length}}</span></div>
 		    <hr class="clear">
 		</div>
@@ -450,7 +506,7 @@
 			    <thead>
 				<tr id='uploader'>
 				    <th colspan="2">{{rekl.savePath|limitTo:255:10}}<div id='filelist'></div></th>
-			    <th><button id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+			    <th><button ng-show="rekl.rekl_erledigt_am1==null" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
 			    </tr>
 			    <tr>
 				<th>name</th>
@@ -485,7 +541,7 @@
 		    <div class="col-md-12">
 			<table class="table table-condensed table-responsive">
 			    <thead>
-				<tr>
+				<tr ng-show="rekl.rekl_erledigt_am1==null">
 				    <th>
 			    <ui-select
 				ng-model="schulungPersnr.selected" 
@@ -513,7 +569,7 @@
 				<tr ng-repeat="a in rekl.schulungen">
 				    <td class="text-right">{{a.persnr}}</td>
 				    <td>{{a.name}}</td>
-				    <td><button ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
 				</tr>
 			    </tbody>
 			</table>
@@ -536,7 +592,7 @@
 		    <div class="col-md-12">
 			<table class="table table-condensed table-responsive">
 			    <thead>
-				<tr>
+				<tr ng-show="rekl.rekl_erledigt_am1==null">
 				    <th><input ui-date="dateOptions" ng-model="abmahnungDatum" type="text" class="form-control"></th>
 				    <th>
 			    <ui-select
@@ -575,7 +631,7 @@
 				    <td class="text-right">{{a.vorschlag_betrag}}</td>
 				    <td>{{a.vorschlag_von}}</td>
 				    <td>{{a.vorschlag_bemerkung}}</td>
-				    <td><button ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
 				</tr>
 			    </tbody>
 			</table>
@@ -588,7 +644,7 @@
 
     <div class="row">
 	<div class="col-md-12">
-	    <button class="btn btn-primary" type="button">
+	    <button ng-click="reklSave()" class="btn btn-primary" type="button">
 		Speichern / uložit
 	    </button>
 	</div>

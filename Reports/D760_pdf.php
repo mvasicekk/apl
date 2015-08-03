@@ -197,7 +197,7 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 	if($pdfobjekt->PageNo()==1)
 	{
 		$pdfobjekt->SetFont("FreeSans", "B", 8);
-		$pdfobjekt->Cell(0,7,"Na základě Vaší objednávky".getValueForNode($childnodes,"bestellnr")." Vám fakturujeme :",'0',1,'L',0);
+		$pdfobjekt->Cell(0,7,"Na základě Vaší objednávky ".getValueForNode($childnodes,"bestellnr")." Vám fakturujeme :",'0',1,'L',0);
 	}
 	else
 	{
@@ -276,6 +276,7 @@ function zapati_palette($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 {
 
+	$dphP = 21;
         $waehrung = trim(getValueForNode($childNodes,"waehrung"));
 
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
@@ -291,17 +292,18 @@ function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
         $apl = AplDB::getInstance();
         $kurs = $apl->getKurs(date('Y-m-d'), 'EUR', 'CZK');
         $betragNCZK = $betragN * $kurs;
-        $celkemkuhrade = floor(($sumarray['betrag']*1.20)*10+0.9)/10;
-        $kuhrade1 = $sumarray['betrag']*1.20;
+	$multi = 1+($dphP/100);
+        $celkemkuhrade = floor(($sumarray['betrag']*$multi)*10+0.9)/10;
+        $kuhrade1 = $sumarray['betrag']*$multi;
         $dphN = $kuhrade1 - $sumarray['betrag'];
         $halvyrovnani = $celkemkuhrade - $kuhrade1;
 
 //        $dphN = round(0.19*$betragN,2);
-        $dph = number_format(0.20*$sumarray['betrag'],2,',',' ');
-        $dphCZ = $kurs * 0.20*$sumarray['betrag'];
+        $dph = number_format(($dphP/100)*$sumarray['betrag'],2,',',' ');
+        $dphCZ = $kurs * ($dphP/100)*$sumarray['betrag'];
 
       	$pdfobjekt->Cell(20+45+45+12+12,$vyskaradku,"",'0',0,'R',1);
-	$pdfobjekt->Cell(20,$vyskaradku,"DPH 20%:",'',0,'R',1);
+	$pdfobjekt->Cell(20,$vyskaradku,"DPH $dphP%:",'',0,'R',1);
 	$pdfobjekt->Cell(20,$vyskaradku,$dph,'',0,'R',1);
 	$pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,"waehrung"),'',1,'R',1);
 
@@ -354,7 +356,7 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Ln();
         $pdfobjekt->Ln();
-	$pdfobjekt->Cell(75,$vyskaradku,"Cástku prosím převedte do  ".getValueForNode($childNodes,"zahlenbis")." na konto číslo : ",'0',0,'L',0);
+	$pdfobjekt->Cell(75,$vyskaradku,"Částku prosím převeďte do  ".getValueForNode($childNodes,"zahlenbis")." na konto číslo : ",'0',0,'L',0);
         $pdfobjekt->Cell(0,$vyskaradku,getValueForNode($childNodes,"textkonto"),'0',1,'L',0);
         //$pdfobjekt->Cell(0,$vyskaradku,"na konto číslo ".getValueForNode($childNodes,"textkonto"),'0',1,'1',0);
 //	$pdfobjekt->Cell(0,$vyskaradku,"".getValueForNode($childNodes,"textkonto")."",'0',1,'1',0);

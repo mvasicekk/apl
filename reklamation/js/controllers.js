@@ -68,6 +68,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
 	});
     }
 
+
     $scope.addSchulung = function(){
 	var persnr = 0;
 	if($scope.schulungPersnr.selected!==undefined){
@@ -88,6 +89,28 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
 	});
     }
 
+    $scope.reklSave = function(){
+	console.log("reklSave");
+
+	var params = {
+	    rekl:$scope.rekl
+	};
+	$http.post('./reklSave.php',params).success(function(data){
+	    console.log('rekl saved '+data);
+	});
+    }
+
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.reklBeenden = function(){
+	console.log('reklBeenden');
+	// ulozit aktualni datum do rekl_erledigt_am
+	$scope.rekl.rekl_erledigt_am1 = new Date();
+	// schovat tlacitka save = vyresit pomoc ngShow s podminkou na vyplneny datum rekl_erledigt_am
+    }
+    
     $scope.delSchulung = function(id){
 	console.log('delSchulung '+id);
 	$http.post('./delSchulungVorschlag.php',{id:id,rekl_id:$scope.rekl.id}).success(function(data){

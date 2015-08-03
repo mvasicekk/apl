@@ -1191,7 +1191,13 @@ public function istExportiert($import, $impal){
 	    $sql.=" dreklamation.rekl_datum desc,";
 	    $sql.=" dreklamation.rekl_nr";
 	} else {
-	    $sql = "select *,DATE_FORMAT(rekl_datum,'%Y-%m-%d') as rekl_datum1 from dreklamation where id='$reklid'";
+	    $sql = "select *";
+	    $sql.=" ,DATE_FORMAT(rekl_datum,'%Y-%m-%d') as rekl_datum1";
+	    $sql.=" ,DATE_FORMAT(rekl_erledigt_am,'%Y-%m-%d') as rekl_erledigt_am1";
+	    $sql.=" ,DATE_FORMAT(mt_datum,'%Y-%m-%d') as mt_datum1";
+	    $sql.=" ,DATE_FORMAT(termin_8D,'%Y-%m-%d') as termin_8D1";
+	    $sql.=" ,DATE_FORMAT(gesendet_am_8D,'%Y-%m-%d') as gesendet_am_8D1";
+	    $sql.=" from dreklamation where id='$reklid'";
 	}
 
 	return $this->getQueryRows($sql);
