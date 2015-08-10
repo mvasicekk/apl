@@ -29,7 +29,29 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
 	firstDay:1
     };
     
+
+    /**
+    * 
+    * @returns {undefined}
+    */
+    $scope.report8Dgenerieren = function(){
+	console.log('8D generieren');
+	var params = {
+	    rekl:$scope.rekl
+	};
+	$http.post('../Reports/report8D_pdf.php',params).success(function(data){
+	    console.log('8D generiert '+data);
+	    $http.get('./getReklDetail.php?reklid='+$scope.reklid).success(function(data){
+		$scope.rekl = data.rekl;
+	    });
+	});
+    }
     
+    /**
+     * 
+     * @param {type} id
+     * @returns {undefined}
+     */
     $scope.delAbmahnung = function(id){
 	console.log('delAbmahnung '+id);
 	$http.post('./delAbmahnungVorschlag.php',{id:id,rekl_id:$scope.rekl.id}).success(function(data){
@@ -92,6 +114,9 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
     $scope.reklSave = function(){
 	console.log("reklSave");
 
+	$scope.rekl.kunde = $scope.kunde.selected.kunde;
+	$scope.rekl.teil = $scope.teil.selected.teil;
+	
 	var params = {
 	    rekl:$scope.rekl
 	};
@@ -131,10 +156,15 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
     $scope.clear = function() {
 	$scope.abmahnungPersnr.selected = undefined;
 	$scope.schulungPersnr.selected = undefined;
+	//$scope.kunde.selected = undefined;
     };
     
     $scope.abmahnungPersnr = {};
     $scope.schulungPersnr = {};
+    $scope.kunde = {};
+    $scope.kunde.selected = {};
+    $scope.teil = {};
+    $scope.teil.selected = {};
     
     
     $scope.refreshAbmahnungPersnr = function(e) {
@@ -144,6 +174,26 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
       {params: params}
     ).then(function(response) {
 	    $scope.abmahnungPersnrArray = response.data.persnrArray;
+	});
+    };
+    
+    $scope.refreshKunde = function(e) {
+    var params = {e: e};
+    return $http.get(
+      './getKunde.php',
+      {params: params}
+    ).then(function(response) {
+	    $scope.kundeArray = response.data.kundeArray;
+	});
+    };
+    
+    $scope.refreshTeil = function(e,k) {
+    var params = {e: e,k:k};
+    return $http.get(
+      './getTeil.php',
+      {params: params}
+    ).then(function(response) {
+	    $scope.teilArray = response.data.teilArray;
 	});
     };
     
@@ -161,6 +211,10 @@ aplApp.controller('detailController', ['$scope', '$routeParams','$http',
 	$scope.rekl = data.rekl;
 	$scope.user = data.rekl.user;
 	$scope.abmahnungVorschlagUser = data.rekl.user;
+	$scope.refreshKunde(data.rekl.kunde);
+	$scope.kunde.selected.kunde = data.rekl.kunde;
+	$scope.refreshTeil(data.rekl.teil,data.rekl.kunde);
+	$scope.teil.selected.teil = data.rekl.teil;
 	
 	var uploader = new plupload.Uploader({
 	    runtimes: 'html5,flash,browserplus',

@@ -13,7 +13,8 @@ $doc_keywords = "S166";
 $parameters=$_GET;
 $von=make_DB_datum($_GET['von']);
 $bis=make_DB_datum($_GET['bis']);
-
+$persvon = intval($_GET['persvon']);
+$persbis = intval($_GET['persbis']);
 
 require_once('S166_xml.php');
 

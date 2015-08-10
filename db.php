@@ -138,6 +138,20 @@ class AplDB {
 
     /**
      * 
+     * @param type $t
+     * @return type
+     */
+    public static function toDBDate($t) {
+	$d = date('Y-m-d', strtotime($t));
+	if ($d == "1970-01-01") {
+	    return NULL;
+	} else {
+	    return $d;
+	}
+    }
+
+    /**
+     * 
      * @param type $retez
      * @param type $delka
      * @param type $append
@@ -1180,6 +1194,7 @@ public function istExportiert($import, $impal){
 	    $sql.=" kd_kd_rekl_nr,";
 	    $sql.=" import,";
 	    $sql.=" export,";
+	    $sql.=" DATE_FORMAT(rekl_erledigt_am,'%Y-%m-%d') as rekl_erledigt_am1,";
 	    $sql.=" DATE_FORMAT(rekl_datum,'%Y-%m-%d') as rekl_datum,";
 	    $sql.=" teil,";
 	    $sql.=" stk_reklammiert,";
@@ -1197,6 +1212,16 @@ public function istExportiert($import, $impal){
 	    $sql.=" ,DATE_FORMAT(mt_datum,'%Y-%m-%d') as mt_datum1";
 	    $sql.=" ,DATE_FORMAT(termin_8D,'%Y-%m-%d') as termin_8D1";
 	    $sql.=" ,DATE_FORMAT(gesendet_am_8D,'%Y-%m-%d') as gesendet_am_8D1";
+	    $sql.=" ,DATE_FORMAT(report8D_3a_einsatzdatum,'%Y-%m-%d') as report8D_3a_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_3b_einsatzdatum,'%Y-%m-%d') as report8D_3b_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_3c_einsatzdatum,'%Y-%m-%d') as report8D_3c_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_6a_einsatzdatum,'%Y-%m-%d') as report8D_6a_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_6b_einsatzdatum,'%Y-%m-%d') as report8D_6b_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_6c_einsatzdatum,'%Y-%m-%d') as report8D_6c_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_7a_einsatzdatum,'%Y-%m-%d') as report8D_7a_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_7b_einsatzdatum,'%Y-%m-%d') as report8D_7b_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(report8D_7c_einsatzdatum,'%Y-%m-%d') as report8D_7c_einsatzdatum1";
+	    
 	    $sql.=" from dreklamation where id='$reklid'";
 	}
 
@@ -3556,6 +3581,16 @@ public function istExportiert($import, $impal){
     }
 
     /**
+     * 
+     * @param type $e
+     */
+    public function getKundeArrayMatch($e){
+	$sql = "select dksd.Kunde as kunde,dksd.Name1,dksd.Name2 from dksd";
+	$sql.=" where Kunde like '$e%' or Name1 like '%$e%' or Name2 like '%$e%'";
+	$sql.=" order by Kunde";
+	return $this->getQueryRows($sql);
+    }
+    /**
      *
      * @param <type> $kunde
      */
@@ -4429,6 +4464,27 @@ public function istExportiert($import, $impal){
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $k
+     * @param type $e
+     */
+    public function getTeilArrayForKundeMatch($k,$e){
+	$sql.=" select dkopf.teil,";
+	$sql.=" dkopf.teillang,";
+	$sql.=" dkopf.Teilbez as teilbez,";
+	$sql.=" dkopf.kunde";
+	$sql.=" from dkopf";
+	$sql.=" where";
+	$sql.=" (dkopf.Kunde='$k')";
+	$sql.=" and (dkopf.teil like '%$e%' or dkopf.teilbez like '%$e%'  or dkopf.teillang like '%$e%')";
+	$sql.=" order by";
+	$sql.=" dkopf.Kunde,";
+	$sql.=" dkopf.Teil";
+
+	return $this->getQueryRows($sql);
+	
+    }
     /**
      * 
      * @param type $kunde

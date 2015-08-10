@@ -43,28 +43,54 @@
 			<div class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="kunde">Kunde:</label>
-				<input ng-model="rekl.kunde" type="text" class="form-control pinput" id="kunde" placeholder="Kunde">
+				<ui-select
+				    ng-model="kunde.selected" 
+				    ng-disabled="disabled" 
+				    reset-search-input="false" 
+				    theme="bootstrap"
+				>
+				<ui-select-match placeholder="Kundenr oder name">{{$select.selected.kunde}}</ui-select-match>
+				<ui-select-choices repeat="p in kundeArray track by $index"
+						   refresh="refreshKunde($select.search)"
+						   refresh-delay="0">
+				    <div ng-bind-html="p.formattedKunde | highlight: $select.search"></div>
+				</ui-select-choices>
+				</ui-select>
+				<!--<input ng-model="rekl.kunde" maxlength="3" type="text" class="form-control pinput" id="kunde" placeholder="Kunde">-->
 			    </div>
 			    <div class="form-group col-md-4 form-group-sm ">
 				<label class="control-label" for="teil">Teil:</label>
-				<input ng-model="rekl.teil" type="text" class="form-control pinput"  id="teil" placeholder="Teil">
+				<ui-select
+				    ng-model="teil.selected" 
+				    ng-disabled="disabled" 
+				    reset-search-input="false" 
+				    theme="bootstrap"
+				>
+				<ui-select-match placeholder="teilenr">{{$select.selected.teil}}</ui-select-match>
+				<ui-select-choices repeat="p in teilArray track by $index"
+						   refresh="refreshTeil($select.search,kunde.selected.kunde)"
+						   refresh-delay="0">
+				    <div ng-bind-html="p.formattedTeil | highlight: $select.search"></div>
+				</ui-select-choices>
+				</ui-select>
+				<!--<input ng-model="rekl.teil" maxlength="10" type="text" class="form-control pinput"  id="teil" placeholder="Teil">-->
 			    </div>
 			</div>
 
 			<div class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="rekl">Rekl.Nr.:</label>
-				<input ng-model="rekl.rekl_nr" type="text" class="form-control pinput" id="rekl" placeholder="Reklamation nummer">
+				<input maxlength="10" ng-model="rekl.rekl_nr" type="text" class="form-control pinput" id="rekl" placeholder="Reklamation nummer">
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm ">
 				<label class="control-label" for="kdrekl">Kd Rekl.Nr.:</label>
-				<input ng-model="rekl.kd_rekl_nr" type="text" class="form-control pinput" id="kdrekl" placeholder="Kd reklamation nummer">
+				<input maxlength="255" ng-model="rekl.kd_rekl_nr" type="text" class="form-control pinput" id="kdrekl" placeholder="Kd reklamation nummer">
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="kdkdrekl">KdKd Rekl.Nr.:</label>
-				<input ng-model="rekl.kd_kd_rekl_nr" type="text" class="form-control pinput" id="kdkdrekl" placeholder="KdKd reklamation nummer">
+				<input maxlength="255" ng-model="rekl.kd_kd_rekl_nr" type="text" class="form-control pinput" id="kdkdrekl" placeholder="KdKd reklamation nummer">
 			    </div>
 			</div>
 
@@ -90,7 +116,7 @@
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="bk">Bearbeier kunde:</label>
-				<input ng-model="rekl.bearbeiter_kunde" type="text" class="form-control pinput" id="bk" placeholder="Bearbeier kunde">
+				<input maxlength="255" ng-model="rekl.bearbeiter_kunde" type="text" class="form-control pinput" id="bk" placeholder="Bearbeier kunde">
 			    </div>
 			</div>
 
@@ -132,40 +158,40 @@
 		<div class="panel-body">
 		    <form>
 			<div class="row">
-			    <div class="form-group col-md-4 form-group-sm">
+<!--			    <div class="form-group col-md-4 form-group-sm">
 				<label for="IM">IM:</label>  
 				<input ng-model="rekl.import" type="text" class="form-control pinput" id="IM" placeholder="IM">
-			    </div>
+			    </div>-->
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="EX">EX:</label>  
-				<input ng-model="rekl.export" type="text" class="form-control pinput" id="EX" placeholder="EX">
+				<input maxlength="255" ng-model="rekl.export" type="text" class="form-control pinput" id="EX" placeholder="EX">
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="Exp">Exp-Beh:</label>  
-				<input ng-model="rekl.export_beh" type="text" class="form-control pinput" id="Exp" placeholder="Exp-Beh">
+				<input maxlength="255" ng-model="rekl.export_beh" type="text" class="form-control pinput" id="Exp" placeholder="Exp-Beh">
 			    </div>
 
 			</div>
 			<div class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="CG">Charge / Giesstag:</label>  
-				<input ng-model="rekl.giesstag" type="text" class="form-control pinput" id="CG" placeholder="Charge / Giesstag">
+				<input maxlength="255" ng-model="rekl.giesstag" type="text" class="form-control pinput" id="CG" placeholder="Charge / Giesstag">
 			    </div>
 			</div>
 
 			<div class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="St">Stempel:</label>  
-				<input ng-model="rekl.stempel" type="text" class="form-control pinput" id="St" placeholder="Stempel">
+				<input maxlength="255" ng-model="rekl.stempel" type="text" class="form-control pinput" id="St" placeholder="Stempel">
 			    </div>
 			</div>
 
 			<div class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="Pr">Pragestempel:</label>  
-				<input ng-model="rekl.pragestempel" type="text" class="form-control pinput" id="Pr" placeholder="Pragestempel">
+				<input maxlength="255" ng-model="rekl.pragestempel" type="text" class="form-control pinput" id="Pr" placeholder="Pragestempel">
 			    </div>
 			</div>
 		    </form>
@@ -192,12 +218,12 @@
 			<div class="row">
 			    <div class="form-group col-md-4">
 				<label for="Lf">Liefermenge:</label>  
-				<input ng-model="rekl.stk_expediert" type="text" class="form-control pinput" id="Lf" placeholder="Liefermenge">
+				<input maxlength="12" ng-model="rekl.stk_expediert" type="text" class="form-control pinput" id="Lf" placeholder="Liefermenge">
 			    </div>
 
 			    <div class="form-group col-md-4">
 				<label for="Rf">Rekl.Menge:</label>  
-				<input ng-model="rekl.stk_reklammiert" type="text" class="form-control pinput" id="Rf" placeholder="Rekl.Menge">
+				<input maxlength="12" ng-model="rekl.stk_reklammiert" type="text" class="form-control pinput" id="Rf" placeholder="Rekl.Menge">
 			    </div>
 
 			    <div class="form-group col-md-4">
@@ -228,12 +254,12 @@
 			<div ng-show="rekl.gefordert_8D=='1'" class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="Zch">Zeichnungsnummer:</label>  
-				<input ng-model="rekl.zeichnungsnummer" type="text" class="form-control pinput" id="Zch" placeholder="Zeichnungsnummer:">
+				<input maxlength="255" ng-model="rekl.zeichnungsnummer" type="text" class="form-control pinput" id="Zch" placeholder="Zeichnungsnummer:">
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label for="Zchn">Zeichnungsstand:</label>  
-				<input ng-model="rekl.zeichnungsstand" type="text" class="form-control pinput" id="Zchn" placeholder="Zeichnungsstand">
+				<input maxlength="255" ng-model="rekl.zeichnungsstand" type="text" class="form-control pinput" id="Zchn" placeholder="Zeichnungsstand">
 			    </div>
 			</div>
 
@@ -277,7 +303,7 @@
 				<h5><span class="col-xs-12 Grenpozadi">2. Problembeschreibung:</span></h5>
 			    </div>
 			    <div class="col-xs-12 .col-sm-6 .col-lg-8">
-				<textarea ng-model="rekl.beschr_abweichung" class="form-control" rows="3"></textarea>
+				<textarea maxlength="255" ng-model="rekl.beschr_abweichung" class="form-control" rows="3"></textarea>
 			    </div>
 			</div>
 
@@ -291,21 +317,21 @@
                                 <textarea ng-model="rekl.report8D_3a" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_3a_einsatzdatum" ui-date="dateOptions" type="text" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_3a_einsatzdatum1" ui-date="dateOptions" type="text" class="form-control" type="text">
                             </div>
 			    <!--b-->
 			    <div class="col-md-10">
                                 <textarea ng-model="rekl.report8D_3b" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_3b_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_3b_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
 			    <!--c-->
 			    <div class="col-md-10">
                                 <textarea ng-model="rekl.report8D_3c" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_3c_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_3c_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
                         </div>
 			
@@ -315,7 +341,7 @@
                                 <h5> <span class="col-md-4 Grenpozadi "> 4. Fehlerursachen: </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_erstmalig" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" > Fehler tritt erstmalig auf </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_wiederholfehler" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"> Wiederholferhler </span>  </h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea ng-model="rekl.beschr_ursache" class="form-control"" rows="3"></textarea>
+                                <textarea maxlength="255" ng-model="rekl.beschr_ursache" class="form-control"" rows="3"></textarea>
                             </div>
                         </div>
                         
@@ -324,14 +350,14 @@
                                 <h5  style="margin-top: 0px;"> <span class="col-xs-12 Grenpozadi">Art der Bestigung </span></h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
-                                <textarea ng-model="rekl.beschr_beseitigung" class="form-control" rows="3"></textarea>
+                                <textarea maxlength="255" ng-model="rekl.beschr_beseitigung" class="form-control" rows="3"></textarea>
 
                             </div>
                         </div>
 
                         <div ng-show="rekl.gefordert_8D=='1'" class="row">
                             <div class="col-md-12 ">
-                                <h5> <span class="col-xs-7 Grenpozadi"> 5. Geplante Abstellmaßnahmen:</span> <span class="col-xs-5 Grenpozadi"> 5a Wirksamkeitsprúfung mit methode</span></h5>
+                                <h5> <span class="col-xs-7 Grenpozadi"> 5. Geplante Abstellmaßnahmen:</span> <span class="col-xs-5 Grenpozadi"> 5a Wirksamkeitsprūfung mit methode</span></h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
                                 <textarea ng-model="rekl.report8D_5" class="form-control" style="width: 60%; float:left;" rows="3"></textarea>
@@ -350,21 +376,21 @@
                                 <textarea ng-model="rekl.report8D_6a" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_6a_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_6a_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
 			    <!--b-->
                             <div class="col-md-10">
                                 <textarea ng-model="rekl.report8D_6b" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_6b_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_6b_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
 			    <!--c-->
                             <div class="col-md-10">
                                 <textarea ng-model="rekl.report8D_6c" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_6c_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_6c_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
                         </div>
 
@@ -378,23 +404,37 @@
                                 <textarea ng-model="rekl.report8D_7a" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_7a_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_7a_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
 			    <!--b-->
                             <div class="col-md-10">
                                 <textarea ng-model="rekl.report8D_7b" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_7b_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_7b_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
 			    <!--c-->
                             <div class="col-md-10">
                                 <textarea ng-model="rekl.report8D_7c" class="form-control" rows="2"></textarea>
 			    </div>
 			    <div class="col-md-2">
-                                <input ng-model="rekl.report8D_7c_einsatzdatum" ui-date="dateOptions" class="form-control" type="text">
+                                <input ng-model="rekl.report8D_7c_einsatzdatum1" ui-date="dateOptions" class="form-control" type="text">
                             </div>
                         </div>
+			
+			<!--button 8D generieren-->
+			<div ng-show="rekl.gefordert_8D=='1'" class="row">
+                            <div class="col-md-10">
+                                &nbsp;
+                            </div>
+			    <!--a-->
+                            <div class="col-md-2">
+				<button ng-click="report8Dgenerieren()" class="btn btn-danger btn-block" type="button">
+				    8D-Report generieren
+				</button>
+			    </div>
+                        </div>
+			
 		    </form>
 		</div> 
 	    </div>

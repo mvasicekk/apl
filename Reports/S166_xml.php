@@ -32,6 +32,7 @@ $sql.=" where ";
 $sql.="     class='access'";
 $sql.=" and (type='Access granted' or type='Access denied Card unknown')";
 $sql.=" and DATE_FORMAT(dt,'%Y-%m-%d') between '$von' and '$bis'";
+$sql.=" and (edata_access_events.persnr between '$persvon' and '$persbis')";
 $sql.=" order by";
 $sql.="     DATE_FORMAT(dt,'%Y-%m-%d'),";
 $sql.="     persnr,";
