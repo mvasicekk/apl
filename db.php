@@ -228,13 +228,17 @@ class AplDB {
             return 0;
     }
 
+    public function insert($sql){
+	mysql_query($sql);
+	return mysql_insert_id();
+    }
     /**
      * wrapper pro mysql_query
      * @param string $sql 
      */
     public function query($sql){
 	mysql_query($sql);
-	return;
+	return mysql_affected_rows();
     }
     
     /**
@@ -1221,6 +1225,8 @@ public function istExportiert($import, $impal){
 	    $sql.=" ,DATE_FORMAT(report8D_7a_einsatzdatum,'%Y-%m-%d') as report8D_7a_einsatzdatum1";
 	    $sql.=" ,DATE_FORMAT(report8D_7b_einsatzdatum,'%Y-%m-%d') as report8D_7b_einsatzdatum1";
 	    $sql.=" ,DATE_FORMAT(report8D_7c_einsatzdatum,'%Y-%m-%d') as report8D_7c_einsatzdatum1";
+	    $sql.=" ,DATE_FORMAT(analyse_erhalten_am,'%Y-%m-%d') as analyse_erhalten_am1";
+	    $sql.=" ,DATE_FORMAT(analyse_erledigt_am,'%Y-%m-%d') as analyse_erledigt_am1";
 	    
 	    $sql.=" from dreklamation where id='$reklid'";
 	}

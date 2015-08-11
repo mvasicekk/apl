@@ -4,9 +4,9 @@
 </nav>-->
 
 <div class="container-fluid">
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDebug" aria-expanded="false" aria-controls="collapseDebug">
+<!--    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDebug" aria-expanded="false" aria-controls="collapseDebug">
 	debuginfo
-    </button>
+    </button>-->
     <div class="collapse" id="collapseDebug">
 	<div class="well">
 	    <p><pre>{{rekl|json}}</pre></p>
@@ -33,7 +33,7 @@
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 		<div class="panel-heading phead" role="tab" id="headingOne">
 		    <h4 class="panel-title"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Grundinfo</h4>
-		    <div style="float:right;"><span ng-show="rekl.rekl_erledigt_am1!=null">Beendet am: {{rekl.rekl_erledigt_am1|date:'dd.MM.yyyy'}} | </span>{{rekl.rekl_nr}} | {{rekl.teil}}</div>
+		    <div style="float:right;"><span ng-show="rekl.rekl_erledigt_am1!=null">Beendet am: {{rekl.rekl_erledigt_am1|date:'dd.MM.yyyy'}} | </span>KD Reklnr: {{rekl.kd_rekl_nr}} | {{rekl.rekl_nr}} | {{rekl.teil}}</div>
 		    <hr class="clear">
 		</div>
             </a>
@@ -494,25 +494,25 @@
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_erhalten_am">Erhalten am:</label>
-					    <input ng-model="rekl.analyse_erhalten_am" ui-date="dateOptions" type="text" class="form-control" id="analyse_erhalten_am" placeholder="Analyse erhalten am - Datum">
+					    <input ng-model="rekl.analyse_erhalten_am1" ui-date="dateOptions" type="text" class="form-control" id="analyse_erhalten_am" placeholder="Analyse erhalten am - Datum">
 					</div>
 				    </div>
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_erledigt_am">Erledigt am:</label>
-					    <input ng-model="rekl.analyse_erledigt_am" ui-date="dateOptions" type="text" class="form-control" id="analyse_erledigt_am" placeholder="Analyse erledigt am - Datum">
+					    <input ng-model="rekl.analyse_erledigt_am1" ui-date="dateOptions" type="text" class="form-control" id="analyse_erledigt_am" placeholder="Analyse erledigt am - Datum">
 					</div>
 				    </div>
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_nichtanerkant_stk">Nicht Anerkannt Stk:</label>
-					    <input ng-model="rekl.analyse_nichtanerkant_stk" type="number" class="form-control" id="analyse_nichtanerkant_stk" placeholder="nicht anerkannt stk">
+					    <input ng-model="rekl.analyse_nichtanerkant_stk" type="text" class="form-control" id="analyse_nichtanerkant_stk" placeholder="nicht anerkannt stk">
 					</div>
 				    </div>
 				    <div class="col-md-3">
 					<div class="form-group">
 					    <label for="analyse_anerkant_stk">Anerkannt Stk:</label>
-					    <input ng-model="rekl.analyse_anerkant_stk" type="number" class="form-control" id="analyse_anerkant_stk" placeholder="anerkannt stk">
+					    <input ng-model="rekl.analyse_anerkant_stk" type="text" class="form-control" id="analyse_anerkant_stk" placeholder="anerkannt stk">
 					</div>
 				    </div>
 <!--    				    <div class="col-md-3">

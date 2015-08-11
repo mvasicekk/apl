@@ -2,7 +2,12 @@
     <table st-table="dReklamationen" st-safe-src="reklamationen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr>
-		<th colspan="10"><input st-search="" class="form-control" placeholder="global suchen / hledat ..." type="text"/></th>
+		<th colspan="9"><input st-search="" class="form-control" placeholder="global suchen / hledat ..." type="text"/></th>
+		<th>
+		    <a class="btn btn-primary" href="#/detail/0" type="button" >
+		    Neue Rekl
+		    </a>
+		</th>
 		<th colspan="1">zeige: <span class="badge">{{dReklamationen.length}}</span> / gesamt: <span class="badge">{{reklamationen.length}}</span></th>
 	    </tr>
 	    <tr>

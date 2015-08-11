@@ -77,9 +77,9 @@ $field2Value = array(
     'report8D_7a' => trim($rekl->report8D_7a),				    //*
     'report8D_7b' => trim($rekl->report8D_7b),				    //*
     'report8D_7c' => trim($rekl->report8D_7c),				    //*
-    'report8D_7b_einsatzdatum' => toDBDate($rekl->report8D_7a_einsatzdatum1),//*
-    'report8D_7c_einsatzdatum' => toDBDate($rekl->report8D_7b_einsatzdatum1),//*
-    'report8D_7a_einsatzdatum' => toDBDate($rekl->report8D_7c_einsatzdatum1),//*
+    'report8D_7b_einsatzdatum' => toDBDate($rekl->report8D_7b_einsatzdatum1),//*
+    'report8D_7c_einsatzdatum' => toDBDate($rekl->report8D_7c_einsatzdatum1),//*
+    'report8D_7a_einsatzdatum' => toDBDate($rekl->report8D_7a_einsatzdatum1),//*
     'interne_bewertung' => intval($rekl->interne_bewertung),		    
 //'anerkannt_stk_ja'=>0,
 //'anerkannt_stk_nein'=>0,
@@ -87,8 +87,8 @@ $field2Value = array(
 //'anerkannt_wert_ausschuss'=>0,
 //'anerkannt_stk_nacharbeit'=>0,
 //'anerkannt_wert_nacharbeit'=>0,
-    'analyse_erhalten_am' => $rekl->analyse_erhalten_am,
-    'analyse_erledigt_am' => $rekl->analyse_erledigt_am,
+    'analyse_erhalten_am' => toDBDate($rekl->analyse_erhalten_am1),
+    'analyse_erledigt_am' => toDBDate($rekl->analyse_erledigt_am1),
     'analyse_nichtanerkant_stk' => intval($rekl->analyse_nichtanerkant_stk),
     'analyse_anerkant_stk' => intval($rekl->analyse_anerkant_stk),
 //'strafe_persnr'=>,
@@ -127,6 +127,7 @@ if($reklId>0){
     }
     $sql = substr($sql, 0, strlen($sql)-1);
     $sql.=" where id='$reklId' limit 1";
+    $updatedRows = $apl->query($sql);
 }
 
 $returnArray = array(
