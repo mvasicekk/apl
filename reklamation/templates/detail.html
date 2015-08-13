@@ -65,6 +65,7 @@
 				    ng-disabled="disabled" 
 				    reset-search-input="false" 
 				    theme="bootstrap"
+				    on-select="teilOnSelect($item, $model)"
 				>
 				<ui-select-match placeholder="teilenr">{{$select.selected.teil}}</ui-select-match>
 				<ui-select-choices repeat="p in teilArray track by $index"
@@ -450,7 +451,104 @@
             </a>
             <div id="collapseAuswertung" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAuswertung">
 		<div class="panel-body">
-		    <img src="/images/sb.jpg">
+		    <div class="row">
+			<div class="col-md-6">
+			    <table class="table table-condensed table-responsive">
+				<thead>
+				    <tr>
+					<th></th>
+					<th>Stk</th>
+					<th>Gew ({{rekl.teilgew}} kg/Stk)</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    <tr>
+					<th>Ausschuss</th>
+					<td>
+					    <input ng-model="rekl.anerkannt_stk_ausschuss" type="text" class="form-control" id="Aussstk" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="{{rekl.anerkannt_stk_ausschuss*rekl.teilgew}}" type="text" class="form-control" id="aussgew" placeholder="Gew">
+					</td>
+				    </tr>
+				    <tr>
+					<th>Nacharbeit</th>
+					<td>
+					    <input ng-model="rekl.anerkannt_stk_nacharbeit" type="text" class="form-control" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="{{rekl.anerkannt_stk_nacharbeit*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					</td>
+				    </tr>
+				    <tr>
+					<th>Dif / falsch deklariert</th>
+					<td>
+					    <input ng-model="rekl.dif_falsch_deklariert_stk" type="text" class="form-control" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="{{rekl.dif_falsch_deklariert_stk*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					</td>
+				    </tr>
+				    <tr>
+					<th>Verpackung</th>
+					<td>
+					    <input ng-model="rekl.verpackung_stk" type="text" class="form-control" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="0" type="text" class="form-control" placeholder="Gew">
+					</td>
+				    </tr>
+				    <tr>
+					<th>Kreislauf</th>
+					<td>
+					    <input ng-model="rekl.kreislauf_stk" type="text" class="form-control" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="{{rekl.kreislauf_stk*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					</td>
+				    </tr>
+				    <tr>
+					<th>Unklar</th>
+					<td>
+					    <input ng-model="rekl.unklar_stk" type="text" class="form-control" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="{{rekl.unklar_stk*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					</td>
+				    </tr>
+				    <tr>
+					<th>nicht anerkannt</th>
+					<td>
+					    <input ng-model="rekl.anerkannt_stk_nein" type="text" class="form-control" placeholder="Stk">
+					</td>
+					<td>
+					    <input readonly value="{{rekl.anerkannt_stk_nein*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					</td>
+				    </tr>
+				</tbody>
+			    </table>
+			</div>
+			<div class="col-md-3">
+			    <div class="form-group">
+				<label for="klaren_bis">klāren bis:</label>
+				<input ng-model="rekl.klaren_bis1" ui-date="dateOptions" type="text" class="form-control" id="klaren_bis" placeholder="klāren bis - Datum">
+			    </div>
+			    <div class="form-group">
+				<label for="wider_am">widersprochen am:</label>
+				<input ng-model="rekl.wider_am1" ui-date="dateOptions" type="text" class="form-control" id="wider_am" placeholder="widersprochen am - Datum">
+			    </div>
+			    <div class="form-group">
+				<label for="wider_per">widersprochen per:</label>
+				<input ng-model="rekl.wider_per" mwxlength="255" type="text" class="form-control" id="wider_per" placeholder="widersprochen per">
+			    </div>
+			</div>
+			<div class="col-md-3">
+			    <div class="form-group">
+				<label for="interne_bewertung">interne Bewertung:</label>
+				<input ng-model="rekl.interne_bewertung" mwxlength="3" type="text" class="form-control" id="interne_bewertung" placeholder="interne bewertung">
+			    </div>
+			</div>
+		    </div>
 		</div>
 	    </div>
 	</div>

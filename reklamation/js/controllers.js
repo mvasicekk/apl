@@ -190,6 +190,13 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	    });
 	}
 
+	$scope.teilOnSelect = function($item, $model){
+	    console.log($item);
+	    $http.get('./getTeilGew.php?teil=' + $item.teil).success(function (data) {
+		    $scope.rekl.teilgew = parseFloat(data.tia.Gew);
+		});
+	}
+	
 	$scope.reklSave = function () {
 	    console.log("reklSave");
 

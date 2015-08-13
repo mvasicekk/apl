@@ -14,7 +14,9 @@ require_once '../db.php';
 	$rekl = $rekl[0];
 	$teilbezeichnungA = $apl->getTeilInfoArray($rekl['teil']);
 	$teilbezeichnung = $teilbezeichnungA['Teilbez'];
+	$gew = floatval($teilbezeichnungA['Gew']);
 	$rekl['teilbezeichnung'] = trim($teilbezeichnung);
+	$rekl['teilgew'] = $gew;
 	//files
 	$rekl['savePath']=$apl->getGdatPath()."".$apl->getKundeGdatPath($rekl['kunde'])."/200 Teile/".$rekl['teil']."/".AplDB::$DIRS_FOR_TEIL_FINAL['100']."/".$rekl['rekl_nr'];
 	$files = $apl->getFilesForPath($rekl['savePath']);
