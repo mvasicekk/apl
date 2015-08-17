@@ -39,7 +39,44 @@ require_once '../db.php';
     
     $dauftrInsert = array();
     
-    //vytvorit pozice v zakazce, v pripade ze pozaduji nenulovy pocet kusu
+    //automaticky pridat "bordeldil"
+    //2015-08-17
+    $bordelTeil = $apl->getBordelTeilProKunde($kunde);
+    $teilInfo = $apl->getTeilInfoArray($bordelTeil);
+    $bordelTeilStk = 0;
+    $dposArray = $apl->getTeilTatArray($bordelTeil,TRUE);
+    foreach ($dposArray as $dpos) {
+	$auftragsnr = $imNr;
+	$teil = $bordelTeil;
+	$stk = $bordelTeilStk;
+	$preis = $minpreis * $dpos['vzkd'];
+	$kg_stk_bestellung = $teilInfo['Gew'];
+	$mehrarbKz = $apl->getRechnungKz($dpos['abgnr']);
+	$posPalNr = 1;
+	$abgnr = $dpos['abgnr'];
+	$kzgut = $dpos['kzgut'];
+	$vzkd = $dpos['vzkd'];
+	$vzaby = $dpos['vzaby'];
+	$comp_user_accessuser = $apl->get_user_pc();
+	$inserted = date('Y-m-d H:i:s');
+
+	if ($kzgut == 'G') {
+	    $sql = "insert into dauftr (auftragsnr,teil,`Stück`,preis,kg_stk_bestellung,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
+	    $sql.="vzkd,vzaby,comp_user_accessuser,inserted,termin) values";
+	    $sql.="	('$auftragsnr','$teil','$stk','$preis','$kg_stk_bestellung','$mehrarbKz',";
+	    $sql.="'$posPalNr','$abgnr','$kzgut','$vzkd','$vzaby','$comp_user_accessuser',NOW(),'$termin')";
+	} else {
+	    $sql = "insert into dauftr (auftragsnr,teil,`Stück`,preis,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
+	    $sql.="vzkd,vzaby,comp_user_accessuser,inserted,termin) values";
+	    $sql.="	('$auftragsnr','$teil','$stk','$preis','$mehrarbKz',";
+	    $sql.="'$posPalNr','$abgnr','$kzgut','$vzkd','$vzaby','$comp_user_accessuser',NOW(),'$termin')";
+	}
+	array_push($dauftrInsert, $sql);
+	$apl->query($sql);
+    }
+
+
+//vytvorit pozice v zakazce, v pripade ze pozaduji nenulovy pocet kusu planovaciho dilu
     if($planTeilStk>0){
 	// fiktivni dil
 	$planTeil = $apl->getPlanTeilProKunde($kunde);

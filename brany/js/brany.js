@@ -18,13 +18,13 @@ function openBrana(e){
     var iD = $(this).attr('id');
     console.log(e+" "+iD);
     if(sock){
-	sock.send(JSON.stringify({id:iD,message:"clicked"}));
+	var messageToSend = JSON.stringify({msg:"branaButtonClicked",id:iD});
+	sock.send(messageToSend);
     }
 }
 
 function startSock(){
     sock = new WebSocket('ws://172.16.1.236:1880/ws/brany');
-    
     
     sock.onopen = function(){ 
                     console.log("Connected to websocket");
@@ -33,6 +33,8 @@ function startSock(){
                     console.log("Ping sent..");
 		    $('#sock_status').html('connected');
 		    $('#sock_status').css({"background-color":"green"});
+		    //dej mi poctecni stav bran
+		    sock.send('{"msg":"getbranystatus"}');
                   };
         
     sock.onerror = function(){
@@ -44,13 +46,15 @@ function startSock(){
 	    var branaInfo = JSON.parse(evt.data);
             console.log(branaInfo);
 	    if(isObject(branaInfo)){
-		if(branaInfo.stav=='on'){
-		    $('#'+branaInfo.brana).addClass('on');
-		    $('#'+branaInfo.brana).removeClass('off');
+		if(branaInfo.msg==="branyStatus"){
+		    console.log('zpracovat branyStatus');
+		    branaInfo.br.forEach(function(e){
+			console.log('id='+e.id+',stav='+e.stav);
+			setOnOff(e.id,e.stav);
+		    });
 		}
 		else{
-		    $('#'+branaInfo.brana).addClass('off');
-		    $('#'+branaInfo.brana).removeClass('on');
+		    setOnOff(branaInfo.brana,branaInfo.stav);
 		}
 	    }
     };
@@ -64,6 +68,26 @@ function startSock(){
     };
 }
 
+/**
+ * 
+ * @param {type} id
+ * @param {type} stav
+ * @returns {undefined}
+ */
+function setOnOff(id, stav) {
+    if (stav == 'on') {
+	$('#' + id).addClass('on');
+	$('#' + id).removeClass('off');
+    }
+    else {
+	$('#' + id).addClass('off');
+	$('#' + id).removeClass('on');
+    }
+}
+/**
+ * 
+ * @returns {undefined}
+ */
 function check(){
 //    console.log('checking socket connection');
     if(!sock||sock.readyState===3){

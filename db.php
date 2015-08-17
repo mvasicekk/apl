@@ -8431,6 +8431,25 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
     /**
      * 
      * @param type $kunde
+     * @return string
+     */
+    public function getBordelTeilProKunde($kunde){
+	$sql.=" select dkopf.Teil as teil";
+	$sql.=" from dkopf";
+	$sql.=" where";
+	$teil = sprintf("99%03d",$kunde);
+	$sql.=" dkopf.Teil='$teil'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return $r[0]['teil'];
+	}
+	else{
+	    return '';
+	}
+    }
+    /**
+     * 
+     * @param type $kunde
      */
     public function getPlanTeilProKunde($kunde){
 	$sql.=" select dkopf.Teil as teil";
