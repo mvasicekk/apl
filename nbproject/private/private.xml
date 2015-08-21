@@ -5,11 +5,15 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/brany/index.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/getReklamationen.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/brany/css/brany.css</file>
-            <file>file:/home/jr/NetBeansProjects/apl/utils/d607i.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/getD607i.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/js/app.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/templates/d607i.tpl</file>
             <file>file:/home/jr/NetBeansProjects/apl/brany/js/brany.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dispo_2/importPlanErstellen.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/templates/list.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/d607i/css/style.css</file>
         </group>
     </open-files>
 </project-private>

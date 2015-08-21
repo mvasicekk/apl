@@ -305,6 +305,7 @@ Aufträge pflegen / zadání zakázky
 
 <tr>
 		<td>
+		    <input id="d607i" onClick="location.href='../d607i/d607i.php'" class='formularbutton' type="button"  value="D607i"/>
 {*			<input onClick="location.href='../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={$auftragsnr_value};0;9999&report=D230'" class='formularbutton' type="button" id="D230" name="D230" value="D230 - Arbeitspapiere"/>	*}
 		</td>
 

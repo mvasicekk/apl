@@ -1,34 +1,70 @@
 <div class="container-fluid">
-    <table st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
+    <table id='d607it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
-	    <tr>
-		<th style="width:10em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="terminMatch" placeholder="termin" type="text"/></th>
+	    <tr class='no-print'>
 		<th style="width:10em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" placeholder="import" type="text"/></th>
 		<th style="width:10em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" placeholder="teil" type="text"/></th>
-		<th class="text-left" colspan="{{2 + abgnrKeysArray.length}}"><span class="badge">{{zeilen.length}}</span></th>
+		<th colspan="{{2}}"><input style="width:10em;" class="form-control" ng-keypress="getZeilen($event)" ng-model="terminMatch" placeholder="termin" type="text"/></th>
+		<th class="text-left" colspan="{{3 + abgnrKeysArray.length + aartKeysArray.length}}">
+		    <span class="badge">{{zeilen.length}}</span>
+		    <button class='btn btn-info' ng-click="showPrintDialog()">Drucken</button>
+		</th>
 	    </tr>
 	    <tr>
-		<th>Termin</th>
+<!--		<th>Termin</th>-->
 		<th>Import</th>
 		<th>Teil</th>
-		<th>Pal</th>
+		<th style="width:4em;">Pal</th>
 		<th>IM Stk</th>
 		<th class="text-center" ng-repeat="tat in abgnrKeysArray">{{tat}}</th>
+		<th class="text-center" ng-repeat="auss in aartKeysArray">A {{auss}}</th>
+		<th class="text-center" >G-tat</th>
+		<th class="text-center" >to IMP</th>
+		<th class="text-center" >Bemerkung</th>
 	    </tr>
 	</thead>
-	<tbody>
-	    <tr ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
-		<td>{{r.termin}}</td>
-		<td>{{r.import}}</td>
-		<td>{{r.teil}}</td>
-		<td class="text-right">{{r.pal}}</td>
-		<td class="text-right">{{r.palInfo.sum_im_stk}}</td>
-		<td class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+	<tbody ng-repeat="t in terminKeysArray">
+	    <tr>
+		<td class="success" colspan="{{7+abgnrKeysArray.length + aartKeysArray.length}}">
+		    {{t}}
+		</td>
+	    </tr>
+	    <tr ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+<!--		<td>{{r.termin}}</td>-->
+		<td ng-if="r.section=='detail'">{{r.import}}</td>
+		<td ng-if="r.section=='detail'">{{r.teil}}</td>
+		<td ng-if="r.section=='detail'" class="text-right">{{r.pal}}</td>
+		<td ng-if="r.section=='detail'" class="text-right">{{r.palInfo.sum_im_stk}}</td>
+		<td ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
 		    <span ng-if="r.palInfo.hasOwnProperty(tat)">
 			{{zeilenD[zeilenIndex].palInfo[tat].sum_gut_stk}}
 			<!--{{zeilenIndex}}-->
 		    </span>
 		</td>
+		<td ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="auss in aartKeysArray">
+		    	{{zeilenDA[zeilenIndex].palInfo[auss].sum_auss_stk}}
+		</td>
+		<td ng-if="r.section=='detail'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
+		<td ng-if="r.section=='detail'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
+		<td ng-if="r.section=='detail'" class="text-left">{{r.palInfo.bemerkung}}</td>
+
+		<!--zapati pro dil-->
+		<td ng-if="r.section=='sumteil'">Summe</td>
+		<td colspan="2" ng-if="r.section=='sumteil'">{{r.teil}}</td>
+		<td ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_stk}}</td>
+		<td ng-if="r.section=='sumteil'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		    <span ng-if="r.palInfo.hasOwnProperty(tat)">
+			{{zeilenD[zeilenIndex].palInfo[tat].sum_gut_stk}}
+			<!--{{zeilenIndex}}-->
+		    </span>
+		</td>
+		<td ng-if="r.section=='sumteil'" class="text-info text-right" ng-repeat="auss in aartKeysArray">
+		    	{{zeilenDA[zeilenIndex].palInfo[auss].sum_auss_stk}}
+		</td>
+		<td ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
+		<td ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
+		<td ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_vzkd|number:0}}</td>
+
 	    </tr>
 	</tbody>
 	<tfoot>

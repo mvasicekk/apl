@@ -30,6 +30,9 @@
     <script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
     <link href="./bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
 
+    
+    <script src="./bower_components/floatThead/dist/jquery.floatThead.min.js"></script>
+    
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
     

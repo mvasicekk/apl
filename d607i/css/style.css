@@ -131,3 +131,20 @@ tfoot td {
   float: left;
   border-bottom-width: 0;
 }
+
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+    
+    #d607it{
+	font-size: 0.7em;
+    }
+}
+
+tr.sumteil{
+    font-weight: bold;
+    font-style: italic;
+}

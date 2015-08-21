@@ -23,3 +23,4 @@ aplApp.config(['$routeProvider',
 		}).
 		otherwise({redirectTo:'/list'});
     }]);
+
