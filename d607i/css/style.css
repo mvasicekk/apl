@@ -134,6 +134,11 @@ tfoot td {
 
 @media print
 {    
+    * {
+	background: inherit;
+	color: inherit;
+    }
+    
     .no-print, .no-print *
     {
         display: none !important;
@@ -142,9 +147,84 @@ tfoot td {
     #d607it{
 	font-size: 0.7em;
     }
+    
+    #d607it a[href]:after {
+	content: none;
+    }
 }
 
 tr.sumteil{
     font-weight: bold;
     font-style: italic;
+}
+
+#d607it td.detail{
+	font-size: 0.8em;
+}
+
+#d607it td.teilinfo{
+	font-size: 0.7em;
+	font-weight: normal;
+}
+    
+table#d607it td.sumteil{
+    border-top: 2px solid #88D144;
+    border-bottom: 2px solid #88D144;
+    background-color: #e5ffe5;
+}
+
+table#d607it td.terminzahlavi{
+    background-color: #ffffbb;
+    font-weight: bold;
+}
+
+table#d607it td.leftBorderDetail{
+    border-left: 2px solid #88D144;
+}
+
+table#d607it td.rightBorderDetail{
+    border-right: 2px solid #88D144;
+}
+
+table#d607it td.leftBorderSumTeil{
+    border-left: 2px solid #88D144;
+    border-top: 2px solid #88D144;
+    border-bottom: 2px solid #88D144;
+}
+
+table#d607it td.rightBorderSumTeil{
+    border-right: 2px solid #88D144;
+    border-top: 2px solid #88D144;
+    border-bottom: 2px solid #88D144;
+}
+
+div.teilfield{
+    display: inline-block;
+    min-width: 10em;
+}
+
+div.teilInfoField{
+    display: inline-block;
+    font-size: 0.7em;
+    font-weight: normal;
+}
+
+div.reklInfoField{
+    font-size: 0.9em;
+    color: red;
+}
+
+#spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -100px 0 0 -100px;
+	height: 200px;
+	width: 200px;
+	text-indent: 250px;
+	white-space: nowrap;
+	overflow: hidden;
+	background-image: url(../../images/spinner2.gif);
+	background-repeat: no-repeat;
+	z-index: 9999;
 }

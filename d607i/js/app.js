@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('d607iApp',['ngSanitize','ui.select','ui.date','ngRoute','smart-table']);
+var aplApp = angular.module('d607iApp',['ngSanitize','ui.select','ui.date','ngRoute','smart-table','aplFilters']);
 
 aplApp.config(['$routeProvider',
     function($routeProvider){

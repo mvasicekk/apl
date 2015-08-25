@@ -7,14 +7,19 @@
 var aplApp = angular.module('d607iApp');
 
 aplApp.controller('d607iController', function ($scope, $http,$timeout) {
-    $scope.terminMatch = '';
+//    $scope.terminMatch = '';
+    $scope.terminMatchVon = '';
+    $scope.terminMatchBis = '';
     $scope.importMatch = '';
     $scope.teilMatch = '';
+    $scope.mitPaletten = false;
+    $scope.mitReklamation = false;
     
     var d607it;
     
     $scope.$on('$viewContentLoaded', function(event) {
 	    d607it = $('#d607it');
+	    $('#spinner').hide();
     });
     
     $scope.showPrintDialog = function(){
@@ -27,8 +32,10 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
     };
     $scope.getZeilen = function(e){
 	console.log('getZeilen event.keyCode='+e.which);
-	if (($scope.terminMatch.length >= 3)&&(e.which==13)) {
-	    $http.get('./getD607i.php?termin=' + $scope.terminMatch
+	if (($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3)&&(e.which==13)) {
+	    $('#spinner').show();
+	    $http.get('./getD607i.php?terminvon=' + $scope.terminMatchVon
+		    +'&terminbis='+$scope.terminMatchBis
 		    +'&import='+$scope.importMatch
 		    +'&teil='+$scope.teilMatch
 		    )
@@ -40,10 +47,13 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 			$scope.abgnrKeysArray = data.abgnrKeysArray;
 			$scope.aartKeysArray = data.aartKeysArray;
 			$scope.terminKeysArray = data.terminKeysArray;
+			$scope.terminArray = data.terminArray;
+			$scope.teileArray = data.teileArray;
 			$timeout(function(){
 			    d607it.floatThead('destroy');
 			    d607it.floatThead();
 			    d607it.floatThead('reflow');
+			    $('#spinner').hide();
 			},100);
 		    });
 	}

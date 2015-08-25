@@ -14,7 +14,7 @@
     <link href="./bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
 
 {*	Bootstrap*}
-    <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 {*	<script src="../js/jquery-ui-1.11.0/jquery-ui.min.js" type="text/javascript"></script>*}
 
@@ -32,9 +32,12 @@
 
     
     <script src="./bower_components/floatThead/dist/jquery.floatThead.min.js"></script>
+    <script src="./bower_components/numeral/numeral.js"></script>
     
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
+    <script src="../js/filters.js"></script>
+    
     
     <link href="./css/style.css" rel="stylesheet">
     <link href="./css/style_det.css" rel="stylesheet">

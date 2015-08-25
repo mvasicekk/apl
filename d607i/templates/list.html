@@ -1,13 +1,28 @@
+<div id="spinner"></div>
+
 <div class="container-fluid">
     <table id='d607it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class='no-print'>
-		<th style="width:10em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" placeholder="import" type="text"/></th>
-		<th style="width:10em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" placeholder="teil" type="text"/></th>
-		<th colspan="{{2}}"><input style="width:10em;" class="form-control" ng-keypress="getZeilen($event)" ng-model="terminMatch" placeholder="termin" type="text"/></th>
+		<th style="width:8em;min-width:8em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" maxlength="8" placeholder="import" type="text"/></th>
+		<th style="width:10em;min-width:8em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" maxlength="10" placeholder="teil" type="text"/></th>
+		<th colspan="{{2}}">
+		    <input style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchVon" placeholder="termin von" type="text"/><br>
+		    <input style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchBis" placeholder="termin bis" type="text"/>
+		</th>
 		<th class="text-left" colspan="{{3 + abgnrKeysArray.length + aartKeysArray.length}}">
 		    <span class="badge">{{zeilen.length}}</span>
 		    <button class='btn btn-info' ng-click="showPrintDialog()">Drucken</button>
+		    <div class="checkbox-inline">
+		    <label class="checkbox-inline">
+			<input ng-model="mitPaletten" type="checkbox">mit Paletten
+		    </label>
+		    </div>
+		    <div class="checkbox-inline">
+		    <label class="checkbox-inline">
+			<input ng-model="mitReklamation" type="checkbox">Reklamationen zeigen
+		    </label>
+		    </div>
 		</th>
 	    </tr>
 	    <tr>
@@ -23,54 +38,74 @@
 		<th class="text-center" >Bemerkung</th>
 	    </tr>
 	</thead>
-	<tbody ng-repeat="t in terminKeysArray">
+	<tbody ng-if="zeilen===null">
 	    <tr>
-		<td class="success" colspan="{{7+abgnrKeysArray.length + aartKeysArray.length}}">
-		    {{t}}
+		<td colspan="7" class="text-center text-danger">
+		    <h1>Keine Data !</h1>
 		</td>
 	    </tr>
-	    <tr ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+	</tbody>
+	<tbody ng-repeat="t in terminKeysArray">
+	    <tr>
+		<td class="terminzahlavi" colspan="{{7+abgnrKeysArray.length + aartKeysArray.length}}">
+		    {{t}} {{terminArray[t]}}
+		</td>
+	    </tr>
+	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
 <!--		<td>{{r.termin}}</td>-->
-		<td ng-if="r.section=='detail'">{{r.import}}</td>
-		<td ng-if="r.section=='detail'">{{r.teil}}</td>
-		<td ng-if="r.section=='detail'" class="text-right">{{r.pal}}</td>
-		<td ng-if="r.section=='detail'" class="text-right">{{r.palInfo.sum_im_stk}}</td>
-		<td ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.teil}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-right">{{r.pal}}</td>
+		<td class="rightBorderDetail text-right" ng-class="r.section" ng-if="r.section=='detail'">{{r.palInfo.sum_im_stk}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
 		    <span ng-if="r.palInfo.hasOwnProperty(tat)">
 			{{zeilenD[zeilenIndex].palInfo[tat].sum_gut_stk}}
 			<!--{{zeilenIndex}}-->
 		    </span>
 		</td>
-		<td ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="auss in aartKeysArray">
+		<td ng-class="{leftBorderDetail:$first,rightBorderDetail:$last}" ng-if="r.section=='detail'" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray">
 		    	{{zeilenDA[zeilenIndex].palInfo[auss].sum_auss_stk}}
 		</td>
-		<td ng-if="r.section=='detail'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
-		<td ng-if="r.section=='detail'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
-		<td ng-if="r.section=='detail'" class="text-left">{{r.palInfo.bemerkung}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-left">{{r.palInfo.bemerkung}}</td>
 
 		<!--zapati pro dil-->
-		<td ng-if="r.section=='sumteil'">Summe</td>
-		<td colspan="2" ng-if="r.section=='sumteil'">{{r.teil}}</td>
-		<td ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_stk}}</td>
-		<td ng-if="r.section=='sumteil'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
-		    <span ng-if="r.palInfo.hasOwnProperty(tat)">
+		<td colspan="3" ng-class="r.section" ng-if="r.section=='sumteil'">
+		    <div class="teilfield">
+			{{r.teil}}
+		    </div>
+		    <div class="teilInfoField">
+			{{teileArray[r.teil].info.Gew}} kg/Stk | VPE: {{teileArray[r.teil].info.verpackungmenge}} | {{teileArray[r.teil].info.restmengen_verw}}
+		    </div>
+		    <div class="reklInfoField" ng-show="mitReklamation">
+			<span ng-repeat="rekl in teileArray[r.teil].rekl" class="text-danger">
+			    <a ng-href="../reklamation/reklamation.php#detail/{{rekl.id}}" target="_blank">{{rekl.rekl_nr}}</a>
+			    <span ng-show="!$last"> | </span>
+			</span>
+		    </div>
+		</td>
+		<!--<td ng-class="r.section" class="teilinfo" colspan="2" ng-if="r.section=='sumteil'">{{teileArray[r.teil].info.Gew}} kg/Stk | VPE: {{teileArray[r.teil].info.verpackungmenge}} | {{teileArray[r.teil].info.restmengen_verw}}</td>-->
+		<td class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumteil'" >{{r.palInfo.sum_im_stk}}</td>
+		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		    <span ng-if="zeilenD[zeilenIndex].palInfo.hasOwnProperty(tat)">
 			{{zeilenD[zeilenIndex].palInfo[tat].sum_gut_stk}}
 			<!--{{zeilenIndex}}-->
 		    </span>
 		</td>
-		<td ng-if="r.section=='sumteil'" class="text-info text-right" ng-repeat="auss in aartKeysArray">
+		<td ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-if="r.section=='sumteil'" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray">
 		    	{{zeilenDA[zeilenIndex].palInfo[auss].sum_auss_stk}}
 		</td>
-		<td ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
-		<td ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
-		<td ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_vzkd|number:0}}</td>
+		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
+		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
+		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">Sum VzKd: {{r.palInfo.sum_vzkd|celecislo}}</td>
 
 	    </tr>
 	</tbody>
 	<tfoot>
 <!--	    <tr>
-		<td colspan="{{5 + abgnrKeysArray.length}}" class="text-center">
-		    <div st-pagination="true" st-items-by-page="100" st-displayed-pages="10"></div>
+		<td colspan="{{5 + abgnrKeysArray.length + aartKeysArray.length}}" class="text-center">
+		    <div st-pagination="true" st-items-by-page="50" st-displayed-pages="10"></div>
 		</td>
 	    </tr>-->
 	</tfoot>

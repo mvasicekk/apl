@@ -5717,7 +5717,7 @@ public function istExportiert($import, $impal){
      * {}
      */
     public function getLetzteReklamation($teil,$limit=5){
-	$sql = "select rekl_datum as rd,rekl_nr,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_datum,beschr_abweichung,interne_bewertung,giesstag from dreklamation where teil='$teil' order by rd desc limit $limit";
+	$sql = "select id,rekl_datum as rd,rekl_nr,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_datum,beschr_abweichung,interne_bewertung,giesstag from dreklamation where teil='$teil' order by rd desc limit $limit";
 	return $this->getQueryRows($sql);
     }
 	
