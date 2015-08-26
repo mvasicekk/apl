@@ -1,0 +1,95 @@
+<div class="container-fluid">
+    <div class="row">    
+	<div class="col-sm-9">
+	    <div class="panel panel-info">
+		<div class="panel-heading">
+		    Výtka ({{abmahnungInfo.grund}})
+		</div>
+		<div class="panel-body">
+		    <div class="row">
+			<div class="col-sm-4">
+			    <input type="text" maxlength="30" class="form-control" ng-model="textArray.text10" />
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-4">
+			    <textarea rows="3" disabled class="form-control" style="resize: none;">{{persInfo.Vorname}} {{persInfo.Name}}
+{{persDetailInfo.strasse_op}}
+{{persDetailInfo.plz_op}} {{persDetailInfo.ort_op}}
+			    </textarea>
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-4 col-sm-offset-8">
+			    <input type="text" maxlength="30" class="form-control" ng-model="textArray.text20" />
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-12">
+			    <h2 class="text-center">Výtka</h2>
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-12">
+			    <input class="text-center form-control" disabled type="text" maxlength="30" ng-model="textArray.textOsC" />
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-4">
+			    <input class="text-left form-control" type="text" maxlength="30" ng-model="textArray.text30" />
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-12">
+			    <textarea rows="3" class="form-control" ng-model="textArray.text40"></textarea>
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-12">
+			    <textarea class="form-control" ng-model="textArray.text50"></textarea>
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-12">
+			    <textarea class="form-control" ng-model="textArray.text60"></textarea>
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-4 col-sm-offset-8">
+			    <textarea class="form-control text-center" ng-model="textArray.text70"></textarea>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col-sm-12">
+		    <button ng-click="abmagnungGen()" class="btn btn-primary" type="button">
+			Abmahnung generieren und speichern
+		    </button>
+
+		</div>
+	    </div>
+
+	</div>
+
+	<div class="col-sm-3">
+	    &nbsp;
+	</div>
+    </div>
+</div>
+
+
+
+
+
+
+

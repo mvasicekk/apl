@@ -835,7 +835,7 @@ function SplittingObsah($pdfobjekt, $obsah, $cell, $lineNum, $Zelle)
         while ($pdfobjekt->GetStringWidth($obsah) > $cell["sirka"] - 1.5)
         {
              $stopCounter++;
-             if ($stopCounter > 100)
+             if ($stopCounter > 255)
              {
                   echo "Achtung! Endlosschleife!";
                   return;

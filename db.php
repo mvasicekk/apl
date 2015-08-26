@@ -1227,7 +1227,7 @@ public function istExportiert($import, $impal){
 	    $sql.=" ,DATE_FORMAT(report8D_7c_einsatzdatum,'%Y-%m-%d') as report8D_7c_einsatzdatum1";
 	    $sql.=" ,DATE_FORMAT(analyse_erhalten_am,'%Y-%m-%d') as analyse_erhalten_am1";
 	    $sql.=" ,DATE_FORMAT(analyse_erledigt_am,'%Y-%m-%d') as analyse_erledigt_am1";
-	    
+	    $sql.=" ,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_erhalten_am_abmahnung";
 	    $sql.=" from dreklamation where id='$reklid'";
 	}
 
@@ -1538,6 +1538,45 @@ public function istExportiert($import, $impal){
      */
     public function getSchulungenForReklamation($reklid){
 	$sql.="select dpersschulung.*,CONCAT(dpers.name,' ',dpers.vorname) as name from dpersschulung join dpers on dpers.persnr=dpersschulung.persnr where dpersschulung.rekl_id='$reklid'";
+	return $this->getQueryRows($sql);
+    }
+    
+    /**
+     * 
+     * @param type $grund
+     */
+    public function getAbmahnungGrundIdFromText($grund){
+	$sql="select id from dabmahnpplan where bezeichnung='$grund'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return $r[0]['id'];
+	}
+	else{
+	    return 0;
+	}
+    }
+    
+    /**
+     * 
+     * @param type $id
+     */
+    public function getAbmahnungTexte($id){
+	$sql = "select * from dabmahnungtexte where abmahnung_id='$id'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return $r[0];
+	}
+	else{
+	    return $r;
+	}
+    }
+    /**
+     * 
+     * @param type $abmahnungid
+     * @return type
+     */
+    public function getAbmahnungInfo($abmahnungid){
+	$sql.="select *,DATE_FORMAT(datum,'%d.%m.%Y') as datumFormatted,DATE_FORMAT(betrdat,'%m / %Y') as betrdatum_monat_jahr from dabmahnung where dabmahnung.id='$abmahnungid'";
 	return $this->getQueryRows($sql);
     }
     /**
@@ -3729,10 +3768,26 @@ public function istExportiert($import, $impal){
             return TRUE;
     }
 
+    /**
+     * 
+     * @param type $persnr
+     * @return type
+     */
     public function getPersInfoArray($persnr){
 	$sql = "select * from dpers where persnr=$persnr";
 	return $this->getQueryRows($sql);
     }
+    
+    /**
+     * 
+     * @param type $persnr
+     * @return type
+     */
+    public function getPersDetailInfoArray($persnr){
+	$sql = "select * from dpersdetail1 where persnr=$persnr";
+	return $this->getQueryRows($sql);
+    }
+    
     
     /**
      * 
