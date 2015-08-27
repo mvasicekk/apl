@@ -3,7 +3,7 @@
 	<div class="col-sm-9">
 	    <div class="panel panel-info">
 		<div class="panel-heading">
-		    Výtka ({{abmahnungInfo.grund}})
+		    Výtka (Grund - {{abmahnungInfo.grund}} - {{abmahnungGrundId}})
 		</div>
 		<div class="panel-body">
 		    <div class="row">
@@ -16,8 +16,7 @@
 			<div class="col-sm-4">
 			    <textarea rows="3" disabled class="form-control" style="resize: none;">{{persInfo.Vorname}} {{persInfo.Name}}
 {{persDetailInfo.strasse_op}}
-{{persDetailInfo.plz_op}} {{persDetailInfo.ort_op}}
-			    </textarea>
+{{persDetailInfo.plz_op}} {{persDetailInfo.ort_op}}</textarea>
 			</div>
 		    </div>
 
@@ -72,17 +71,30 @@
 	    </div>
 	    <div class="row">
 		<div class="col-sm-12">
-		    <button ng-click="abmagnungGen()" class="btn btn-primary" type="button">
+		    <button ng-click="abmahnungGenerieren()" class="btn btn-primary" type="button">
 			Abmahnung generieren und speichern
 		    </button>
-
+		    <a class="btn btn-info" ng-if="pdfReady" ng-href="{{pdfPath}}">Výtka PDF ({{filename}})</a>
 		</div>
 	    </div>
 
 	</div>
 
 	<div class="col-sm-3">
-	    &nbsp;
+	    <div class="panel panel-warning">
+		<div class="panel-heading">
+		    Info
+		</div>
+		<div class="panel-body">
+		    <div class="row">
+			<div class="col-sm-12">
+			    <pre>
+				{{abmahnungInfo|json}}
+			    </pre>
+			</div>
+		    </div>
+		</div>
+	    </div>
 	</div>
     </div>
 </div>

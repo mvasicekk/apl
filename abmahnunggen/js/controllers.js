@@ -9,7 +9,32 @@ var aplApp = angular.module('abmahnunggenApp');
 aplApp.controller('formController', function ($scope, $http,$timeout,$routeParams) {
     $scope.abmahnungid = $routeParams.abmahnungid;
     $scope.abmahnungInfo = undefined;
+    $scope.pdfReady = false;
     
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.abmahnungGenerieren = function () {
+	    console.log('abmahnung generieren');
+	    var params = {
+		texte: $scope.textArray,
+		abmahnungInfo:$scope.abmahnungInfo,
+		persInfo:$scope.persInfo,
+		persDetailInfo:$scope.persDetailInfo,
+	    };
+	    $http.post('../Reports/Abmahnung_pdf.php', params).then(function (response) {
+		console.log('abmahnung generiert ' + response.data);
+		$scope.filename = response.data.filename;
+		$scope.pdfPath = response.data.pdfPath;
+		$scope.pdfReady = true;
+	    });
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
     $scope.getAbmahnungInfo = function getAbmahnungInfo(){
 	console.log('getAbmahnungInfo '+$scope.abmahnungid);
 	if($scope.abmahnungid>0){
@@ -24,6 +49,7 @@ aplApp.controller('formController', function ($scope, $http,$timeout,$routeParam
 		    .then(function(response){
 //			alert('then');
 			$scope.abmahnungInfo = response.data.abmahnungInfo;
+			$scope.abmahnungGrundId = response.data.abmahnungGrundId;
 			$scope.persInfo = response.data.persInfo;
 			$scope.aktualDatum = response.data.aktualDatum;
 			$scope.persDetailInfo = response.data.persDetailInfo;

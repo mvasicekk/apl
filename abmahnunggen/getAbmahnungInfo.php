@@ -13,7 +13,8 @@ $abmahnungInfoA = $a->getAbmahnungInfo($abmahnungId);
 
 if($abmahnungInfoA!==NULL){
     $abmahnungInfo = $abmahnungInfoA[0];
-    $textArray = $a->getAbmahnungTexte($a->getAbmahnungGrundIdFromText($abmahnungInfo['grund']));
+    $abmahnungGrundId = $a->getAbmahnungGrundIdFromText($abmahnungInfo['grund']);
+    $textArray = $a->getAbmahnungTexte($abmahnungGrundId);
     $persInfoA = $a->getPersInfoArray($abmahnungInfo['persnr']);
     if($persInfoA!==NULL){
 	$persInfo = $persInfoA[0];
@@ -30,12 +31,14 @@ if($abmahnungInfoA!==NULL){
     }
     
     //upravim nektere texty, nahradim je hodnotama z reklamace / vytky
-    // hodnoty z reklamace
+    // hodnoty z reklamace, jen pokud mam k dispozici reklid
+    if(intval($abmahnungInfo['dreklamation_id'])>0){
     foreach ($reklInfo as $promenna=>$hodnota){
 	// co hledam
 	$hledam = "{\$".$promenna."}";
 	$textArray['text40'] = str_replace($hledam, $hodnota, $textArray['text40']);
 	$textArray['text50'] = str_replace($hledam, $hodnota, $textArray['text50']);
+    }
     }
     // hodnoty z vytky
     foreach ($abmahnungInfo as $promenna=>$hodnota){
@@ -48,6 +51,7 @@ if($abmahnungInfoA!==NULL){
 
 $returnArray = array(
 	'abmahnungId'=>$abmahnungId,
+	'abmahnungGrundId'=>$abmahnungGrundId,
 	'abmahnungInfo'=>$abmahnungInfo,
 	'textArray'=>$textArray,
 	'persInfo'=>$persInfo,
