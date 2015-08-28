@@ -29,7 +29,7 @@ $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
 $params="";
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "", $params);
+//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -43,88 +43,40 @@ $pdf->setLanguageArray($l); //set language items
 $pdf->SetFont("FreeSans", "", 9);
 $pdf->SetAutoPageBreak(TRUE,15);
 
+$pdf->setPrintHeader(false);
+$pdf->setPrintFooter(false);
 
 
 // prvni stranka
 $pdf->AddPage();
-
-//MultiCell  This method allows printing text with line breaks. They can be automatic (as soon as the text reaches the right border of the cell) or explicit (via the \n character). As many cells as necessary are output, one below the other. Text can be aligned, centered or justified. The cell block can be framed and the background painted. 
-//Parameters:
-//$w
-//(float) Width of cells. If 0, they extend up to the right margin of the page.
-//$h
-//(float) Cell minimum height. The cell extends automatically if needed.
-//$txt
-//(string) String to print
-//$border
-//(mixed) Indicates if borders must be drawn around the cell. The value can be a number:
-//0: no border (default)
-//1: frame
-//or a string containing some or all of the following characters (in any order):
-//L: left
-//T: top
-//R: right
-//B: bottom
-//or an array of line styles for each border group - for example: array('LTRB' => array('width' => 2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)))
-//$align
-//(string) Allows to center or align the text. Possible values are:
-//L or empty string: left align
-//C: center
-//R: right align
-//J: justification (default value when $ishtml=false)
-//$fill
-//(boolean) Indicates if the cell background must be painted (true) or transparent (false).
-//$ln
-//(int) Indicates where the current position should go after the call. Possible values are:
-//0: to the right
-//1: to the beginning of the next line [DEFAULT]
-//2: below
-//$x
-//(float) x position in user units
-//$y
-//(float) y position in user units
-//$reseth
-//(boolean) if true reset the last cell height (default true).
-//$stretch
-//(int) font stretch mode:
-//0 = disabled
-//1 = horizontal scaling only if text is larger than cell width
-//2 = forced horizontal scaling to fit cell width
-//3 = character spacing only if text is larger than cell width
-//4 = forced character spacing to fit cell width
-//General font stretching and scaling values will be preserved when possible.
-//$ishtml
-//(boolean) INTERNAL USE ONLY -- set to true if $txt is HTML content (default = false). Never set this parameter to true, use instead writeHTMLCell() or writeHTML() methods.
-//$autopadding
-//(boolean) if true, uses internal padding and automatically adjust it to account for line width.
-//$maxh
-//(float) maximum height. It should be >= $h and less then remaining space to the bottom of the page, or 0 for disable this feature. This feature works only when $ishtml=false.
-//$valign
-//(string) Vertical alignment of text (requires $maxh = $h > 0). Possible values are:
-//T: TOP
-//M: middle
-//B: bottom
-//. This feature works only when $ishtml=false and the cell must fit in a single page.
-//$fitcell
-//(boolean) if true attempt to fit all the text within the cell by reducing the font size (do not work in HTML mode). $maxh must be greater than 0 and wqual to $h.
-//Returns:
-//Type:
-//int
 //Description:
 //Return the number of cells or 1 for html mode.
 //$pdf->MultiCell($w, $h, $txt, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell)
 $fill = FALSE;
 $sirkaFull = 135;
 $h = 5;
-$tSizeNormal = 10;
+$tSizeNormal = 11;
+$tSizeHlavPapir = 6.5;
+
 $ram = '0';
+$okrajXHlavPapir = 170;
+
+
+$pdf->Ln(22);
+$pdf->SetFont("FreeSans", "", $tSizeHlavPapir);
+$pdf->MultiCell($sirkaFull, $h, "Abydos s.r.o., CZ - 351 32 Hazlov 247, Česká republika", $ram, 'L', $fill, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', TRUE);
+
+
 $pdf->SetFont("FreeSans", "", $tSizeNormal);
 
-$pdf->Ln(60);
+$pdf->Ln(9);
 $pdf->MultiCell(35, $h, $texte->text10, $ram, 'L', $fill, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', TRUE);
 
 //Anschrift
-$anschrift = $persInfo->Vorname." ".$persInfo->Name."\n"
+// prijmeni ocistit od znacek
+$prijmeni = substr($persInfo->Name, 0, strpos($persInfo->Name, ' '));
+
+$anschrift = $persInfo->Vorname." ".$prijmeni."\n"
 	.$persDetailInfo->strasse_op."\n"
 	.$persDetailInfo->plz_op." ".$persDetailInfo->ort_op;
 //$anschrift="asda";
@@ -154,7 +106,7 @@ $pdf->Ln($h);
 $pdf->MultiCell($sirkaFull, $h, $texte->text40, $ram, 'L', $fill, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 
 //text 50
-$pdf->Ln($h);
+$pdf->Ln($h+10);
 $pdf->MultiCell($sirkaFull, $h, $texte->text50, $ram, 'L', $fill, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 
 //text 60
@@ -171,13 +123,27 @@ $pdf->MultiCell($sirkaFull-35-40, $h, $texte->text70, $ram, 'C', $fill, 0, '', '
 
 //prevzal a souhlasi
 $pdf->Ln(5*$h);
-$pdf->MultiCell(45, $h, "Převzal a s výtkou souhlasí", $ram, 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
+$pdf->MultiCell(50, $h, "Převzal a s výtkou souhlasí", $ram, 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 $pdf->MultiCell(45, $h, "................................\n podpis", $ram, 'C', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 
 
 //dne
-$pdf->Ln(5*$h);
+$pdf->Ln(3*$h);
 $pdf->MultiCell($sirkaFull, $h, "Dne: ................................", $ram, 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
+
+
+// a ted imitace hlavickoveho papiru
+// logo
+//$pdf->Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border)
+$pdf->Image("../images/logo1.jpg", $okrajXHlavPapir, 38,30);
+$pdf->SetFont("FreeSans", "", $tSizeHlavPapir);
+$pdf->MultiCell(35, 0, "Abydos s.r.o.\n\nCZ - 351 32 Hazlov 247\n\nČeská republika\n\n", 'B', 'L', $fill, 1, $okrajXHlavPapir, 90, TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
+$pdf->SetX($okrajXHlavPapir);
+$pdf->MultiCell(35, 0, "\nTelefon:\n\n++420 354 595 337\n\nFax:\n\n++420 354 596 993\n\nemail:\n\ninfo@abydos.cz\n\n", 'B', 'L', $fill, 1, '','', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
+$pdf->SetX($okrajXHlavPapir);
+$pdf->MultiCell(35, 0, "\nDIČ/Ust-ID-Nr.:\n\nCZ25206958\n\n", 'B', 'L', $fill, 1, '','', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
+$pdf->SetX($okrajXHlavPapir);
+$pdf->MultiCell(35, 0, "\nBankovní spojení/\n\nBankverbindung\n\nCZ - Citibank a.s. Praha\n\nSm. číslo/BLZ: 2600\n\nČ.ú./Konto:\n\n2514640100 (CZK)\n\n2514640207 (EUR)\n\nD - Raiffeisenbank Riedenburg\n\nSm. číslo/BLZ: 72169831\n\nČ.ú./Konto: 62251 (EUR)", '0', 'L', $fill, 1, '','', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 
 $stamp = date('YmdHis');
 //Close and output PDF document
