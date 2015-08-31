@@ -74,7 +74,14 @@ $pdf->MultiCell(35, $h, $texte->text10, $ram, 'L', $fill, 1, '', '', TRUE, 0, FA
 
 //Anschrift
 // prijmeni ocistit od znacek
-$prijmeni = substr($persInfo->Name, 0, strpos($persInfo->Name, ' '));
+$mezera = strpos($persInfo->Name, ' ');
+if($mezera!==FALSE){
+    $prijmeni = substr($persInfo->Name, 0, $mezera);
+}
+else{
+    $prijmeni = $persInfo->Name;
+}
+
 
 $anschrift = $persInfo->Vorname." ".$prijmeni."\n"
 	.$persDetailInfo->strasse_op."\n"
@@ -106,7 +113,8 @@ $pdf->Ln($h);
 $pdf->MultiCell($sirkaFull, $h, $texte->text40, $ram, 'L', $fill, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 
 //text 50
-$pdf->Ln($h+10);
+//$pdf->Ln($h+10);
+$pdf->Ln($h);
 $pdf->MultiCell($sirkaFull, $h, $texte->text50, $ram, 'L', $fill, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'B', FALSE);
 
 //text 60

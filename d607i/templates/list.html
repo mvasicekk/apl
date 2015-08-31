@@ -23,10 +23,16 @@
 			<input ng-model="mitReklamation" type="checkbox">Reklamationen zeigen
 		    </label>
 		    </div>
+	
+		    <label class="radio-inline">
+			<input ng-model="minutenOption" type="radio" name="minutenRadioOptions" id="inlineRadio1" value="vzkd"> VzKd
+		    </label>
+		    <label class="radio-inline">
+			<input ng-model="minutenOption" type="radio" name="minutenRadioOptions" id="inlineRadio2" value="vzaby"> VzAby
+		    </label>
 		</th>
 	    </tr>
 	    <tr>
-<!--		<th>Termin</th>-->
 		<th>Import <span ng-show="importMatch.length>0">(*{{importMatch}}*)</span></th>
 		<th>Teil <span ng-show="teilMatch.length>0">(*{{teilMatch}}*)</span></th>
 		<th style="width:4em;">Pal</th>
@@ -35,7 +41,7 @@
 		<th class="text-center" ng-repeat="auss in aartKeysArray">A {{auss}}</th>
 		<th class="text-center" >G-tat</th>
 		<th class="text-center" >to IMP</th>
-		<th class="text-center" >Bemerkung</th>
+		<th class="text-center" >Bemerkung ( Minuten = {{minutenOption}})</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -52,15 +58,13 @@
 		</td>
 	    </tr>
 	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
-<!--		<td>{{r.termin}}</td>-->
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.teil}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-right">{{r.pal}}</td>
 		<td class="rightBorderDetail text-right" ng-class="r.section" ng-if="r.section=='detail'">{{r.palInfo.sum_im_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
-		    <span ng-if="r.palInfo.hasOwnProperty(tat)">
+		    <span ng-if="r.palInfo.hasOwnProperty(tat)" title="abgnr:{{tat}}">
 			{{zeilenD[zeilenIndex].palInfo[tat].sum_gut_stk}}
-			<!--{{zeilenIndex}}-->
 		    </span>
 		</td>
 		<td ng-class="{leftBorderDetail:$first,rightBorderDetail:$last}" ng-if="r.section=='detail'" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray">
@@ -73,24 +77,26 @@
 		<!--zapati pro dil-->
 		<td colspan="3" ng-class="r.section" ng-if="r.section=='sumteil'">
 		    <div class="teilfield">
-			{{r.teil}}
+			<a style="color:#000;" ng-href="../dkopf/dkopf.php?teil={{r.teil}}" target="_blank">{{r.teil}}</a>
 		    </div>
 		    <div class="teilInfoField">
 			{{teileArray[r.teil].info.Gew}} kg/Stk | VPE: {{teileArray[r.teil].info.verpackungmenge}} | {{teileArray[r.teil].info.restmengen_verw}}
 		    </div>
 		    <div class="reklInfoField" ng-show="mitReklamation">
-			<span ng-repeat="rekl in teileArray[r.teil].rekl" class="text-danger">
-			    <a ng-href="../reklamation/reklamation.php#detail/{{rekl.id}}" target="_blank">{{rekl.rekl_nr}}</a>
-			    <span ng-show="!$last"> | </span>
+			<span ng-repeat="rekl in teileArray[r.teil].rekl.E" class="text-danger">
+			    <a class="btn btn-xs btn-danger" ng-href="../Reports/S362_pdf.php?report=S362&reklnr={{rekl.rekl_nr}}&reklnr_label=ReklNr&tl_tisk=pdf" target="_blank" title="{{rekl.rekl_datum}}">{{rekl.rekl_nr}}</a>
+			    <!--<a class="btn btn-xs btn-danger" ng-href="../reklamation/reklamation.php#detail/{{rekl.id}}" target="_blank" title="{{rekl.rekl_datum}}">{{rekl.rekl_nr}}</a>-->
+			</span>
+			<br>
+			<span ng-repeat="rekl in teileArray[r.teil].rekl.I" class="text-danger">
+			    <a class="btn btn-xs btn-warning" ng-href="../Reports/S362_pdf.php?report=S362&reklnr={{rekl.rekl_nr}}&reklnr_label=ReklNr&tl_tisk=pdf" target="_blank" title="{{rekl.rekl_datum}}">{{rekl.rekl_nr}}</a>
 			</span>
 		    </div>
 		</td>
-		<!--<td ng-class="r.section" class="teilinfo" colspan="2" ng-if="r.section=='sumteil'">{{teileArray[r.teil].info.Gew}} kg/Stk | VPE: {{teileArray[r.teil].info.verpackungmenge}} | {{teileArray[r.teil].info.restmengen_verw}}</td>-->
 		<td class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumteil'" >{{r.palInfo.sum_im_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
-		    <span ng-if="zeilenD[zeilenIndex].palInfo.hasOwnProperty(tat)">
+		    <span ng-if="zeilenD[zeilenIndex].palInfo.hasOwnProperty(tat)" title="abgnr:{{tat}}">
 			{{zeilenD[zeilenIndex].palInfo[tat].sum_gut_stk}}
-			<!--{{zeilenIndex}}-->
 		    </span>
 		</td>
 		<td ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-if="r.section=='sumteil'" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray">
@@ -98,7 +104,13 @@
 		</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
-		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">Sum VzKd: {{r.palInfo.sum_vzkd|celecislo}}</td>
+		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">
+		    <div style="display:block;" class="teilInfoField">
+			<span>{{minutenOption}}-soll: {{getSumMinuten(r.palInfo,minutenOption)|celecislo}}</span>
+			<span>{{minutenOption}}-ist: {{getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>
+		    </div>
+		    <span>{{minutenOption}}-rest: {{getSumMinuten(r.palInfo,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>
+		</td>
 
 	    </tr>
 	</tbody>

@@ -14,6 +14,7 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
     $scope.teilMatch = '';
     $scope.mitPaletten = false;
     $scope.mitReklamation = false;
+    $scope.minutenOption = 'vzaby';
     
     var d607it;
     
@@ -30,6 +31,22 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 	}
 	window.print();
     };
+    
+    /**
+     * 
+     * @param {type} e
+     * @returns {undefined}
+     */
+    $scope.getSumMinuten = function(palInfo,minutenOption){
+	var index = 'sum_'+$scope.minutenOption;
+	return palInfo[index];
+    }
+    
+    /**
+     * 
+     * @param {type} e
+     * @returns {undefined}
+     */
     $scope.getZeilen = function(e){
 	console.log('getZeilen event.keyCode='+e.which);
 	if (($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3)&&(e.which==13)) {

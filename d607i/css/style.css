@@ -162,6 +162,14 @@ tr.sumteil{
 	font-size: 0.8em;
 }
 
+#d607it a.btn-xs{
+	width: 6em;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 0.8em;
+	margin-bottom: 2px;
+}
+
 #d607it td.teilinfo{
 	font-size: 0.7em;
 	font-weight: normal;

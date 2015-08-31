@@ -24,3 +24,7 @@ aplApp.config(['$routeProvider',
 		otherwise({redirectTo:'/list'});
     }]);
 
+
+aplApp.config(['$compileProvider', function ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}]);

@@ -25,7 +25,8 @@ $sql.="     sum(if(kzgut='G',dauftr.`stück`,0)) as sum_im_stk,";
 $sql.="     sum(if(kzgut='G',dauftr.`stück`*dkopf.gew/1000,0)) as sum_im_gew,";
 $sql.="     max(if(kzgut='G',dauftr.bemerkung,'')) as bemerkung,";
 $sql.="     dauftr.kzgut,";
-$sql.="     sum(dauftr.VzKd*dauftr.`stück`) as sum_vzkd";
+$sql.="     sum(dauftr.VzKd*dauftr.`stück`) as sum_vzkd,";
+$sql.="     sum(dauftr.VzAby*dauftr.`stück`) as sum_vzaby";
 $sql.=" from dauftr";
 $sql.=" join dkopf on dkopf.teil=dauftr.teil";
 $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
@@ -46,8 +47,9 @@ $sql.="     dauftr.teil,";
 $sql.="     dauftr.`pos-pal-nr`,";
 $sql.="     dauftr.abgnr";
 $sql.=" HAVING ";
-$sql.="     sum_vzkd>0";
-$sql.="     and abgnr<>95";
+//$sql.="     sum_vzkd>0 and";
+$sql.="     abgnr<>95 and";
+$sql.="     abgnr<>93";
 $sql.=" order by";
 $sql.="     dauftr.termin,";
 $sql.="     dauftr.teil,";
@@ -63,7 +65,10 @@ $sqlD.="     dauftr.teil,";
 $sqlD.="     dauftr.`pos-pal-nr` as im_pal,";
 $sqlD.="     dauftr.abgnr,";
 $sqlD.="     sum(if(dauftr.kzgut='G' and drueck.`Stück` is not null,drueck.`stück`,0)) as sum_G_stk,";
-$sqlD.="     sum(if(drueck.`Stück` is null,0,drueck.`Stück`)) as sum_gut_stk";
+$sqlD.="     sum(if(drueck.`Stück` is null,0,drueck.`Stück`)) as sum_gut_stk,";
+$sqlD.="     sum(if(drueck.`Stück` is not null,if(auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`vz-soll`,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`vz-soll`),0)) as sum_vzkd,";
+$sqlD.="     sum(if(drueck.`Stück` is not null,if(auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`vz-ist`,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`vz-ist`),0)) as sum_vzaby";
+
 $sqlD.=" from dauftr";
 $sqlD.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=dauftr.teil and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.TaetNr=dauftr.abgnr";
 $sqlD.=" where ";
@@ -150,6 +155,7 @@ if ($rows != NULL) {
 	$terminArray[$termin] = "( ".$bemerkungA[0]['ex_soll_datum']." ".$bemerkungA[0]['ex_soll_uhrzeit']." )".$bemerkungA[0]['bemerkung']." $zielort";
 
 	$zeilen[$termin][$teil][$import][$pal][$abgnr]['sum_vzkd'] = $r['sum_vzkd'];
+	$zeilen[$termin][$teil][$import][$pal][$abgnr]['sum_vzaby'] = $r['sum_vzaby'];
 	$zeilen[$termin][$teil][$import][$pal]['sum_im_stk'] += $r['sum_im_stk'];
 	$zeilen[$termin][$teil][$import][$pal]['sum_im_gew'] += $r['sum_im_gew'];
 	$zeilen[$termin][$teil][$import][$pal]["import_datum"]= $imdat;
@@ -160,7 +166,8 @@ if ($rows != NULL) {
     
     foreach($teileArray as $teil=>$val){
 	$teileArray[$teil]['info'] = $a->getTeilInfoArray($teil);
-	$teileArray[$teil]['rekl'] = $a->getLetzteReklamation($teil, 8);
+	$teileArray[$teil]['rekl']['E'] = $a->getLetzteReklamation($teil, 3,'E%');
+	$teileArray[$teil]['rekl']['I'] = $a->getLetzteReklamation($teil, 3,'I%');
     }
 
 
@@ -182,7 +189,8 @@ if ($rows != NULL) {
 			}
 			else{
 			    foreach ($tatArray as $tat=>$val){
-				$teilSummen["sum_vzkd"] += $val;
+//				$teilSummen["sum_vzkd"] += $val;
+				$teilSummen[$tat] += $val;
 			    }
 			}
 		    }
@@ -202,6 +210,8 @@ if ($rowsD != NULL) {
 	$abgnr = $r['abgnr'];
 	//$abgnrArray[$abgnr] += 1;
 
+	$zeilenD[$termin][$teil][$import][$pal][$abgnr]['sum_vzkd'] = $r['sum_vzkd'];
+	$zeilenD[$termin][$teil][$import][$pal][$abgnr]['sum_vzaby'] = $r['sum_vzaby'];
 	$zeilenD[$termin][$teil][$import][$pal][$abgnr]['sum_gut_stk'] = $r['sum_gut_stk'];
 	$zeilenD[$termin][$teil][$import][$pal]['sum_G_stk'] += $r['sum_G_stk'];
     }
@@ -218,7 +228,8 @@ if ($rowsD != NULL) {
 			    $teilSummen[$klic] += floatval($palInfoArray[$klic]);
 			} else {
 			    foreach ($tatArray as $tat => $val) {
-				$teilSummen["sum_vzkd"] += $val;
+//				$teilSummen["sum_vzkd"] += $val;
+				$teilSummen[$tat] += $val;
 				$teilSummen[$klic][$tat] += $val;
 			    }
 			}
