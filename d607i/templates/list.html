@@ -1,6 +1,9 @@
 <div id="spinner"></div>
 
 <div class="container-fluid">
+    <div class="page-header">
+	<h4>D607 intern</h4>
+    </div>
     <table id='d607it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class='no-print'>
@@ -41,7 +44,7 @@
 		<th class="text-center" ng-repeat="auss in aartKeysArray">A {{auss}}</th>
 		<th class="text-center" >G-tat</th>
 		<th class="text-center" >to IMP</th>
-		<th class="text-center" >Bemerkung ( Minuten = {{minutenOption}})</th>
+		<th class="text-center" >Bemerkung</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -57,7 +60,7 @@
 		    {{t}} {{terminArray[t]}}
 		</td>
 	    </tr>
-	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')||(r.section=='sumteilmin')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.teil}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-right">{{r.pal}}</td>
@@ -105,15 +108,97 @@
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
 		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">
-		    <div style="display:block;" class="teilInfoField">
+<!--		    <div style="display:block;" class="teilInfoField">
 			<span>{{minutenOption}}-soll: {{getSumMinuten(r.palInfo,minutenOption)|celecislo}}</span>
 			<span>{{minutenOption}}-ist: {{getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>
 		    </div>
-		    <span>{{minutenOption}}-rest: {{getSumMinuten(r.palInfo,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>
+		    <span>{{minutenOption}}-rest: {{getSumMinuten(r.palInfo,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>-->
+		</td>
+
+		<!--zapati pro dil minuten-->
+		<td class="rightBorderSumTeil" colspan="3" ng-class="r.section" ng-if="r.section=='sumteilmin'">
+		    <div class="">
+			{{minutenOption}}-soll
+		    </div>
+    		    <div class="">
+			{{minutenOption}}-rest
+		    </div>
+		</td>
+		<td style="white-space: nowrap;" class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumteilmin'" >
+		    <div>
+			{{getSumMinuten(r.palInfo,minutenOption)|celecislo}}
+		    </div>
+		    <div>
+			{{getSumMinuten(r.palInfo,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}
+		    </div>
+		</td>
+		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		    <div ng-if="zeilenD[zeilenIndex].palInfo.hasOwnProperty(tat)" title="abgnr:{{tat}}">
+			<div>
+			    {{getSumMinuten(r.palInfo[tat],minutenOption)|celecislo}}
+			</div>
+			<div>
+			    {{getSumMinuten(r.palInfo[tat],minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo[tat],minutenOption)|celecislo}}
+			</div>
+		    </div>
+		</td>
+		<td ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-if="r.section=='sumteilmin'" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray"></td>
+		<td ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-info text-right"></td>
+		<td ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-right"></td>
+		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-right">
+		    
 		</td>
 
 	    </tr>
 	</tbody>
+	
+	<!--Suma pro celou tabulku-->
+	<tbody class="sumTable" ng-if="zeilen!==null && zeilen.length>0">
+	    <tr style="white-space: nowrap;">
+		<td colspan="3">
+		    <div>
+			Sum Stk
+		    </div>
+		    <div class="">
+			{{minutenOption}}-soll
+		    </div>
+		    <div class="">
+			{{minutenOption}}-rest
+		    </div>
+		</td>
+		
+		<td class="rightBorderSumTeil text-right">
+		    <div>
+			{{sumReport.sum_im_stk|celecislo}}
+		    </div>
+		    <div>
+			<!--{{sumReport.soll.sum_vzkd|celecislo}}-->
+			{{getSumMinuten(sumReport.soll,minutenOption)|celecislo}}
+		    </div>
+		    <div>
+			{{getSumMinuten(sumReport.soll,minutenOption)-getSumMinuten(sumReport.ist,minutenOption)|celecislo}}
+		    </div>
+		</td>
+		<td class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		    <div ng-if="sumReport.soll.hasOwnProperty(tat)" title="abgnr:{{tat}}">
+			<div>
+			    {{sumReport.ist[tat].sum_gut_stk|celecislo}}
+			</div>
+			<div>
+			    {{getSumMinuten(sumReport.soll[tat],minutenOption)|celecislo}}
+			</div>
+			<div>
+			    {{getSumMinuten(sumReport.soll[tat],minutenOption)-getSumMinuten(sumReport.ist[tat],minutenOption)|celecislo}}
+			</div>
+		    </div>
+		</td>
+		<td class="text-right" ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-repeat="auss in aartKeysArray">{{sumReport.auss[auss].sum_auss_stk}}</td>
+		<td></td>
+		<td class="text-right">{{sumReport.sum_im_gew|number:2}}</td>
+		<td></td>
+	    </tr>
+	</tbody>
+
 	<tfoot>
 <!--	    <tr>
 		<td colspan="{{5 + abgnrKeysArray.length + aartKeysArray.length}}" class="text-center">

@@ -138,6 +138,8 @@ if ((strlen($terminMatchVon)>=3)&&(strlen($terminMatchBis)>=3)) {
     $rowsDA = $a->getQueryRows($sqlDA);
 }
 
+$sumReport = array();
+
 if ($rows != NULL) {
     foreach ($rows as $r) {
 	$termin = $r['termin'];
@@ -183,20 +185,26 @@ if ($rows != NULL) {
 	    foreach ($importe as $import => $paletten) {
 		foreach ($paletten as $pal => $palInfoArray) {
 		    array_push($zeilenArray, array("section"=>"detail","termin" => $termin, "import_datum"=>$palInfoArray['import_datum'],"import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $palInfoArray));
+		    $sumReport['sum_im_stk']+=$palInfoArray['sum_im_stk'];
+		    $sumReport['sum_im_gew']+=$palInfoArray['sum_im_gew'];
 		    foreach ($palInfoArray as $klic=>$tatArray){
 			if(!is_array($tatArray)){
 			    $teilSummen[$klic] += floatval($palInfoArray[$klic]);
 			}
 			else{
 			    foreach ($tatArray as $tat=>$val){
+				$sumReport['soll'][$tat]+=$val;
+				$sumReport['soll'][$klic][$tat]+=$val;
 //				$teilSummen["sum_vzkd"] += $val;
 				$teilSummen[$tat] += $val;
+				$teilSummen[$klic][$tat] += $val;
 			    }
 			}
 		    }
 		}
 	    }
 	    array_push($zeilenArray, array("section"=>"sumteil","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
+	    array_push($zeilenArray, array("section"=>"sumteilmin","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
     }
 }
@@ -228,6 +236,8 @@ if ($rowsD != NULL) {
 			    $teilSummen[$klic] += floatval($palInfoArray[$klic]);
 			} else {
 			    foreach ($tatArray as $tat => $val) {
+				$sumReport['ist'][$tat]+=$val;
+				$sumReport['ist'][$klic][$tat]+=$val;
 //				$teilSummen["sum_vzkd"] += $val;
 				$teilSummen[$tat] += $val;
 				$teilSummen[$klic][$tat] += $val;
@@ -237,6 +247,7 @@ if ($rowsD != NULL) {
 		}
 	    }
 	    array_push($zeilenDArray, array("section" => "sumteil", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
+	    array_push($zeilenDArray, array("section" => "sumteilmin", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
     }
 }
@@ -269,15 +280,18 @@ if ($rowsD != NULL) {
 		    foreach ($palInfoArray as $klic => $tatArray) {
 			if (!is_array($tatArray)) {
 			    $teilSummen[$klic] += floatval($palInfoArray[$klic]);
+			    $sumReport['auss'][$klic] += floatval($palInfoArray[$klic]);
 			} else {
 			    foreach ($tatArray as $tat => $val) {
 				$teilSummen[$klic][$tat] += $val;
+				$sumReport['auss'][$klic][$tat] += $val;
 			    }
 			}
 		    }
 		}
 	    }
 	    array_push($zeilenDAArray, array("section"=>"sumteil","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
+	    array_push($zeilenDAArray, array("section"=>"sumteilmin","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
     }
 }
@@ -285,8 +299,9 @@ if ($rowsD != NULL) {
 $returnArray = array(
 //    "rows"=>$rows,
 //    "inputData" => $inputData,
+    "sumReport"=>$sumReport,
     "zeilen" => $zeilenArray,
-    "zeilenRaw" => $zeilen,
+//    "zeilenRaw" => $zeilen,
     "zeilenD" => $zeilenDArray,
     "zeilenDA" => $zeilenDAArray,
     "abgnrKeysArray" => $abgnrKeysArray,

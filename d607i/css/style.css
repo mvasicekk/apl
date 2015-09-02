@@ -8,6 +8,19 @@ and open the template in the editor.
     Author     : jr
 */
 
+
+div.page-header{
+    background-color: lightyellow;
+    text-align: center;
+    margin: 0px 0px 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+div.page-header h4{
+    margin: 0px;
+}
+
 .st-sort-ascent:before{
     content: '\25B2';
   }
@@ -24,99 +37,8 @@ and open the template in the editor.
       cursor: pointer;
   }
   
-/*  table {
 
-    box-sizing: border-box;
-
-    -moz-box-sizing: border-box;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: stretch;
-
-    height: 500px;  this can vary 
-
-}
-
-
-table * {
-
-    box-sizing: inherit;
-
-    -moz-box-sizing: inherit;
-
-}
-
-
-thead {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: stretch;
-
-}
-
-
-tbody {
-
-    overflow-y: scroll;
-
-    display: inline-block;
-
-}
-
-
-thead > tr, tbody > tr, tfoot > tr {
-
-    display: flex;
-
-    flex-direction: row;
-
-    flex-wrap: nowrap;
-
-}
-
-
-thead, tfoot {
-
-    flex-shrink: 0;
-
-}
-
-
-th, tbody td {
-
-    width: 20%;  this can vary 
-
-    overflow-x: hidden;
-
-    text-overflow: ellipsis;
-
-    display: inline-block;
-
-}
-
-
-tfoot {
-
-    display: inline-block;
-
-}
-
-
-tfoot td {
-
-    width: 100%;
-
-    display: inline-block;
-
-}*/
-
-.table-fixed thead {
+/*.table-fixed thead {
   width: 97%;
 }
 .table-fixed tbody {
@@ -130,7 +52,7 @@ tfoot td {
 .table-fixed tbody td, .table-fixed thead > tr> th {
   float: left;
   border-bottom-width: 0;
-}
+}*/
 
 @media print
 {    
@@ -177,6 +99,12 @@ tr.sumteil{
     
 table#d607it td.sumteil{
     border-top: 2px solid #88D144;
+    /*border-bottom: 2px solid #88D144;*/
+    background-color: #e5ffe5;
+}
+
+table#d607it td.sumteilmin{
+    /*border-top: 2px solid #88D144;*/
     border-bottom: 2px solid #88D144;
     background-color: #e5ffe5;
 }
@@ -198,6 +126,10 @@ table#d607it td.leftBorderSumTeil{
     border-left: 2px solid #88D144;
     border-top: 2px solid #88D144;
     border-bottom: 2px solid #88D144;
+}
+
+table#d607it tbody.sumTable{
+    font-size: 0.8em;
 }
 
 table#d607it td.rightBorderSumTeil{

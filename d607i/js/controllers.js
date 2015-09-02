@@ -66,6 +66,7 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 			$scope.terminKeysArray = data.terminKeysArray;
 			$scope.terminArray = data.terminArray;
 			$scope.teileArray = data.teileArray;
+			$scope.sumReport = data.sumReport;
 			$timeout(function(){
 			    d607it.floatThead('destroy');
 			    d607it.floatThead();
