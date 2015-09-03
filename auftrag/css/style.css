@@ -66,83 +66,27 @@ div.page-header h4{
         display: none !important;
     }
     
-    #d607it{
+    #dauftr{
 	font-size: 0.7em;
     }
     
-    #d607it a[href]:after {
+    #dauftr a[href]:after {
 	content: none;
     }
 }
 
-tr.sumteil{
-    font-weight: bold;
-    font-style: italic;
+#dauftr td{
+    padding: 1px;
 }
-
-#d607it td.detail{
-	font-size: 0.8em;
-}
-
-#d607it a.btn-xs{
-	width: 6em;
-	font-style: normal;
+#dauftr tr.kzgut{
 	font-weight: bold;
-	font-size: 0.8em;
-	margin-bottom: 2px;
+	background-color: lightyellow;
 }
 
-#d607it td.teilinfo{
-	font-size: 0.7em;
-	font-weight: normal;
-}
-    
-table#d607it td.sumteil{
-    border-top: 2px solid #88D144;
-    border-bottom: 2px solid #88D144;
-    background-color: #e5ffe5;
+#dauftr td.newpal{
+	border-top:2px solid blue;
 }
 
-table#d607it td.terminzahlavi{
-    background-color: #ffffbb;
-    font-weight: bold;
-}
-
-table#d607it td.leftBorderDetail{
-    border-left: 2px solid #88D144;
-}
-
-table#d607it td.rightBorderDetail{
-    border-right: 2px solid #88D144;
-}
-
-table#d607it td.leftBorderSumTeil{
-    border-left: 2px solid #88D144;
-    border-top: 2px solid #88D144;
-    border-bottom: 2px solid #88D144;
-}
-
-table#d607it td.rightBorderSumTeil{
-    border-right: 2px solid #88D144;
-    border-top: 2px solid #88D144;
-    border-bottom: 2px solid #88D144;
-}
-
-div.teilfield{
-    display: inline-block;
-    min-width: 10em;
-}
-
-div.teilInfoField{
-    display: inline-block;
-    font-size: 0.7em;
-    font-weight: normal;
-}
-
-div.reklInfoField{
-    font-size: 0.9em;
-    color: red;
-}
 
 #spinner {
 	position: absolute;

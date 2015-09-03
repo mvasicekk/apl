@@ -2585,6 +2585,23 @@ public function istExportiert($import, $impal){
     /**
      * 
      * @param type $import
+     */
+    public function getDauftrRowsForImport($import){
+	$sql = "select *";
+	$sql.=" ,`pos-pal-nr` as imp_pal";
+	$sql.=" ,`stück` as imp_stk";
+	$sql.=" ,`mehrarb-kz` as tatkz";
+	$sql.=" ,`auftragsnr-exp` as ex";
+	$sql.=" ,`pal-nr-exp` as palex";
+	$sql.=" ,`stk-exp` as stkex";
+	$sql.=" from dauftr";
+	$sql.=" where auftragsnr='$import'";
+	$sql.=" order by `pos-pal-nr`,abgnr";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
+     * @param type $import
      * @param type $teil
      */
     public function getDauftrRows($import,$teil,$plan,$nurOhneEx=TRUE){
@@ -4185,11 +4202,15 @@ public function istExportiert($import, $impal){
      *
      * @param <type> $auftrag
      */
-    public function getAuftragInfoArray($auftrag,$kunde=NULL) {
+    public function getAuftragInfoArray($auftrag,$kunde=NULL,$match=FALSE) {
 	if($kunde===NULL)
 	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
 	else
 	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
+	
+	if($match===TRUE){
+	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr like '$auftrag%' limit 100";	    
+	}
         //echo $sql;
         return $this->getQueryRows($sql);
     }

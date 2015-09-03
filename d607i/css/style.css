@@ -112,6 +112,8 @@ table#d607it td.sumteilmin{
 table#d607it td.terminzahlavi{
     background-color: #ffffbb;
     font-weight: bold;
+    border-bottom: 2px solid #88D144;
+    border-top: 2px solid #88D144;
 }
 
 table#d607it td.leftBorderDetail{
@@ -124,9 +126,12 @@ table#d607it td.rightBorderDetail{
 
 table#d607it td.leftBorderSumTeil{
     border-left: 2px solid #88D144;
-    border-top: 2px solid #88D144;
-    border-bottom: 2px solid #88D144;
 }
+
+table#d607it tbody.sumTable td{
+    background-color: #E0EFEF;
+}
+
 
 table#d607it tbody.sumTable{
     font-size: 0.8em;
@@ -134,8 +139,6 @@ table#d607it tbody.sumTable{
 
 table#d607it td.rightBorderSumTeil{
     border-right: 2px solid #88D144;
-    border-top: 2px solid #88D144;
-    border-bottom: 2px solid #88D144;
 }
 
 div.teilfield{

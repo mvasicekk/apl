@@ -178,8 +178,14 @@ function pageHeader($pdf,$rowHeight,$kdArray){
     global $datumColumnWidth;
     global $planyArray;
     global $statnrColumns;
+    global $pocetZakazniku;
+    //odvodit velikost fontu z sirky sloupce
+    $fontSize = 7;
+    if($pocetZakazniku>5){
+	$fontSize = $datumColumnWidth / 1.9;
+    }
     
-    $pdf->SetFont("FreeSans", "", 7);
+    $pdf->SetFont("FreeSans", "", $fontSize);
     $pdf->SetFillColor(255,255,200);
     $pdf->Cell($datumColumnWidth, $rowHeight, 'Dat/StatNr', 'B', 0, 'L', 1);
     
@@ -224,7 +230,7 @@ $aktDatum = date('Y-m-d H:i:s');
 $params = "(Kunde $kd_von - $kd_bis, Datum ".$_GET['von']." - ".$_GET['bis'].", VzKdRest mit RM bis $rmBisFormat)";
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S217 Dispo - Plan ", $params);
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(PDF_MARGIN_LEFT-10, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT-10);
 //set auto page breaks
 //$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -242,6 +248,22 @@ $pdf->AddPage();
 
 
 $rowHeight = 3;
+// spocitat sirku sloupcu, tak abych se vesel do daneho mista
+//echo "pagewidth=".$pdf->getPageWidth()."<br>";
+//echo "LEFTM=".PDF_MARGIN."<br>";
+
+$sirkaKDispozici = $pdf->getPageWidth()-PDF_MARGIN_LEFT+10-PDF_MARGIN_RIGHT+10;
+$pocetZakazniku = count($planyArray);
+$pocetSloupcu = 4+$pocetZakazniku*3;
+$columnWidth = $sirkaKDispozici / $pocetSloupcu;
+if ($pocetZakazniku > 5) {
+    foreach ($statnrColumns as $stat => $a) {
+	$statnrColumns[$stat]['width'] = $columnWidth;
+    }
+}
+
+
+
 $datumColumnWidth = $statnrColumns['Stat']['width'];
 
 pageHeader($pdf, 5, $planyArray);

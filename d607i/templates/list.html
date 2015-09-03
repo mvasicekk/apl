@@ -63,7 +63,7 @@
 	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')||(r.section=='sumteilmin')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.teil}}</td>
-		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-right">{{r.pal}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'" class="rightBorderDetail text-right">{{r.pal}}</td>
 		<td class="rightBorderDetail text-right" ng-class="r.section" ng-if="r.section=='detail'">{{r.palInfo.sum_im_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
 		    <span ng-if="r.palInfo.hasOwnProperty(tat)" title="abgnr:{{tat}}">
@@ -78,7 +78,7 @@
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-left">{{r.palInfo.bemerkung}}</td>
 
 		<!--zapati pro dil-->
-		<td colspan="3" ng-class="r.section" ng-if="r.section=='sumteil'">
+		<td class="rightBorderSumTeil" colspan="3" ng-class="r.section" ng-if="r.section=='sumteil'">
 		    <div class="teilfield">
 			<a style="color:#000;" ng-href="../dkopf/dkopf.php?teil={{r.teil}}" target="_blank">{{r.teil}}</a>
 		    </div>
@@ -108,11 +108,6 @@
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
 		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">
-<!--		    <div style="display:block;" class="teilInfoField">
-			<span>{{minutenOption}}-soll: {{getSumMinuten(r.palInfo,minutenOption)|celecislo}}</span>
-			<span>{{minutenOption}}-ist: {{getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>
-		    </div>
-		    <span>{{minutenOption}}-rest: {{getSumMinuten(r.palInfo,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}</span>-->
 		</td>
 
 		<!--zapati pro dil minuten-->
@@ -155,7 +150,7 @@
 	<!--Suma pro celou tabulku-->
 	<tbody class="sumTable" ng-if="zeilen!==null && zeilen.length>0">
 	    <tr style="white-space: nowrap;">
-		<td colspan="3">
+		<td class="rightBorderSumTeil" colspan="3">
 		    <div>
 			Sum Stk
 		    </div>

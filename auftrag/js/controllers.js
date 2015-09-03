@@ -8,18 +8,82 @@ var aplApp = angular.module('auftragApp');
 
 aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout) {
     
+    var auftragTable;
+    
     $scope.auftragsnr = $routeParams.auftragsnr;
+    $scope.auftragInfo = undefined;
+    $scope.showAlleTat = false;
+    $scope.auftrag = {};
+    $scope.auftrag.selected = {};
+    
+    $scope.enable = function () {
+	$scope.disabled = false;
+    };
+
+    $scope.disable = function () {
+	$scope.disabled = true;
+    };
+    
+    $scope.dateOptions = {
+		dateFormat: 'dd.mm.yy',
+		firstDay: 1
+	    };
     
     $scope.$on('$viewContentLoaded', function(event) {
+	auftragTable = $('#dauftr');
     });
     
+    
+    $scope.auftragOnSelect = function($item, $model){
+	    console.log($item);
+	    $scope.auftragsnr = $item.auftragsnr;
+	    $routeParams.auftragsnr=$scope.auftragsnr;
+	    $scope.getAuftragInfo();
+    }
+	
+    $scope.refreshAuftragsnr = function (e) {
+	    var params = {e: e};
+	    return $http.get(
+		    './getAuftragsnr.php',
+		    {params: params}
+	    ).then(function (response) {
+		$scope.auftragsnrArray = response.data.auftragsnrArray;
+	    });
+    };
+    /**
+     * 
+     * @param {type} e
+     * @returns {undefined}
+     */
+    $scope.getAuftragInfo = function(e){
+//	console.log('getZeilen event.keyCode='+e.which);
+	    $('#spinner').show();
+	    $http.get('./getAuftragInfo.php?auftragsnr=' + $scope.auftragsnr
+		    )
+		    .then(function (response) {
+			$scope.auftragInfo = response.data.auftragInfo;
+			$scope.dauftrPos = response.data.dauftrPos;
+			$scope.auftrag.selected.auftragsnr = response.data.auftragInfo.auftragsnr;
+			$scope.displayDauftrPos = [].concat($scope.dauftrPos);
+			$timeout(function(){
+			    auftragTable.floatThead('destroy');
+			    auftragTable.floatThead();
+			    auftragTable.floatThead('reflow');
+			    $('#spinner').hide();
+			},100);
+		    });
+    };
+    
+    // init
+    $scope.getAuftragInfo();
+    
     $scope.showPrintDialog = function(){
-//	d607it.floatThead('destroy');
-//	window.onafterprint = function(){
-//	    console.log("Printing completed...");
-//	    d607it.floatThead();
-//	}
-//	window.print();
+	auftragTable.floatThead('destroy');
+	window.onafterprint = function(){
+	    console.log("Printing completed...");
+	    auftragTable.floatThead();
+	}
+	window.print();
     };
     
     /**

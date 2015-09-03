@@ -2,61 +2,178 @@
 
 <div class="container-fluid">
     <div class="page-header">
-	<h4>Auftrag pflegen / sprava zakazky {{auftragsnr}}</h4>
+	<h4>Auftrag pflegen / sprava zakazky <span class="label label-info">{{auftragInfo.auftragsnr}}</span></h4>
     </div>
     
     <div class="row">
 	<div class="col-sm-10">
-	    mainForm
+		<div class="row">
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label for="auftragsnr">Auftragsnr</label>
+			    <ui-select
+				    ng-model="auftrag.selected" 
+				    ng-disabled="disabled" 
+				    reset-search-input="false" 
+				    theme="bootstrap"
+				    on-select="auftragOnSelect($item, $model)"
+				>
+				<ui-select-match placeholder="Auftragsnr">{{$select.selected.auftragsnr}}</ui-select-match>
+				<ui-select-choices repeat="p in auftragsnrArray track by $index"
+						   refresh="refreshAuftragsnr($select.search)"
+						   refresh-delay="0">
+				    <div ng-bind-html="p.formattedAuftragsnr | highlight: $select.search"></div>
+				</ui-select-choices>
+				</ui-select>
+			</div>
+		    </div>
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label for="bestellnr">Bestellnr</label>
+			    <input ng-model="auftragInfo.bestellnr" type="text" maxlength="30" class="form-control" id="bestellnr" placeholder="bestellnr">
+			</div>
+		    </div>
+		    <div class="col-sm-6">
+			<div class="form-group">
+			    <label for="bemerkung">Bemerkung</label>
+			    <input ng-model="auftragInfo.bemerkung" type="text" maxlength="255" class="form-control" id="bemerkung" placeholder="Bemerkung">
+			</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label style="display:block;" for="imsoll">Im SOLL</label>
+			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum">
+			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Im Soll Uhrzeit">
+			</div>
+		    </div>
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label style="display:block;" for="exsoll">Ex SOLL</label>
+			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
+			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Ex Soll Uhrzeit">
+			</div>
+		    </div>
+		    <div class="col-sm-6">
+			<div class="form-group">
+			    <label for="auftragsnr">Zielort</label>
+			    <input ng-model="auftragInfo.zielort_id" disabled type="text" maxlength="8" class="form-control" id="auftragsnr" placeholder="Zielort">
+			</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label style="display:block;" for="imist">Auftragseingang</label>
+			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
+			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Auftragseingang Uhrzeit">
+			</div>
+		    </div>
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label style="display:block;" for="geliefert">ausgeliefert am</label>
+			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
+			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="ausgeliefert Uhrzeit">
+			</div>
+		    </div>
+		    <div class="col-sm-3">
+			<div class="form-group">
+			    <label for="fertig">Rechnung am</label>
+			    <input ng-model="auftragInfo.fertig" type="text" disabled maxlength="8" class="form-control" id="fertig" placeholder="Rechnug am">
+			</div>
+		    </div>
+		</div>
 	</div>
-	<div class="col-sm-2">
-	    <a href="" class="btn btn-block btn-xs">Behaelter bew.</a>
-	    <a href="" class="btn btn-block btn-xs">edit Auftrpositionen</a>
-	    <a href="" class="btn btn-block btn-xs">split Pal</a>
+	<div class="col-sm-2 no-print">
+	    <a href="" ng-click="showPrintDialog()" class="btn btn-block btn-xs btn-info">Drucken</a>
+	    <a href="" class="btn btn-block btn-xs btn-info">Behaelter bew.</a>
+	    <a href="" class="btn btn-block btn-xs btn-info">edit Auftrpositionen</a>
+	    <a href="" class="btn btn-block btn-xs btn-info">split Pal</a>
 	</div>
 	
-	<div class="col-sm-12">
-	    Rechnung am ....
-	</div>
-	
-	<div class="col-sm-12">
-	    KundeNr ....
-	</div>
     </div>
     
-    <div class="row">
-	<div class="col-sm-12">
-	    tabulka s dauftr pozicema
-	</div>
-    </div>
-    
-    <div class="row">
+    <div class="row no-print">
 	<div class="col-sm-3">
-	    <a href="" class="btn btn-xs btn-block">Position erstellen</a>
-	    <a href="" class="btn btn-xs btn-block">D230 - Arbeitspapiere/DUPLEX</a>
-	    <a href="" class="btn btn-xs btn-block">Auftragsmenge speichern</a>
-	    <a href="" class="btn btn-xs btn-block">D607i</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Position erstellen</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D230 - Arbeitspapiere/DUPLEX</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Auftragsmenge speichern</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D607i</a>
 	</div>
 	<div class="col-sm-3">
-	    <a href="" class="btn btn-xs btn-block">D605 Import</a>
-	    <a href="" class="btn btn-xs btn-block">D606 Export</a>
-	    <a href="" class="btn btn-xs btn-block">D607 Plan</a>
-	    <a href="" class="btn btn-xs btn-block">Exporttablo</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D605 Import</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D606 Export</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D607 Plan</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Exporttablo</a>
 	</div>
 	<div class="col-sm-3">
-	    <a href="" class="btn btn-xs btn-block">Export/Plan fullen</a>
-	    <a href="" class="btn btn-xs btn-block">Export loeschen</a>
-	    <a href="" class="btn btn-xs btn-block">D710 - Lieferungsuebersicht</a>
-	    <a href="" class="btn btn-xs btn-block">D6XX - Freigabezettel</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Export loeschen</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D710 - Lieferungsuebersicht</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">D6XX - Freigabezettel</a>
 	</div>
 	<div class="col-sm-3">
-	    <a href="" class="btn btn-xs btn-block">Rechnung</a>
-	    <a href="" class="btn btn-xs btn-block">Rechnung exportieren</a>
-	    <a href="" class="btn btn-xs btn-block">Rechnung importiere</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Rechnung</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Rechnung exportieren</a>
+	    <a href="" class="btn btn-xs btn-block btn-info">Rechnung importiere</a>
 	    <a href="" class="btn btn-xs btn-block btn-danger">Ende / konec</a>
 	</div>
     </div>
     
-    
+    <div class="row">
+	<div class="col-sm-12">
+	    <table id="dauftr" st-table="displayDauftrPos" st-safe-src="dauftrPos" class="table table-bordered table-striped table-condensed table-hover">
+	    <thead>
+	    <tr>
+		<th class="no-print" colspan="14">
+		    <input st-search="" class="form-control" placeholder="global suchen / hledat ..." type="text"/>
+		    <div class="checkbox-inline">
+		    <label class="checkbox-inline">
+			<input ng-model="showAlleTat" type="checkbox">alle Positionen
+		    </label>
+		    </div>
+		</th>
+	    </tr>
+	    <tr>
+		<th st-sort="teil">Teil</th>
+		<th st-sort="imp_pal">Pal</th>
+		<th>Stk</th>
+		<th>Preis</th>
+		<th>Kennz</th>
+		<th>TaetNr</th>
+		<th>G</th>
+		<th>Termin</th>
+		<th>AuftrEx</th>
+		<th>PalEx</th>
+		<th>StkEx</th>
+		<th>FremdAuftr</th>
+		<th>FremdPos</th>
+		<th></th>
+	    </tr>
+	    </thead>
+	    <tbody>
+		<tr ng-if="r.KzGut=='G' || (showAlleTat)" ng-class="{kzgut:(r.KzGut=='G')&&(showAlleTat)}" ng-repeat="r in displayDauftrPos">
+		    <td class="" ng-class="{newpal:r.newpal==1}">{{r.teil}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.imp_pal}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.imp_stk}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.preis|number:4}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">{{r.tatkz}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.abgnr}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">{{r.KzGut}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">{{r.termin}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">{{r.ex}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.palex}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.stkex}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">{{r.fremdauftr}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">{{r.fremdpos}}</td>
+		    <td ng-class="{newpal:r.newpal==1}">
+			edit/rechnung
+		    </td>
+		</tr>
+	    </tbody>
+	    </table>
+	</div>
+    </div>    
     
 </div>
