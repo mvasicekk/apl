@@ -15,7 +15,7 @@ require_once '../db.php';
     
     if($auftragsnrArray!==NULL){
 	foreach ($auftragsnrArray as $i=>$row){
-	    $auftragsnrArray[$i]['formattedAuftragsnr'] = sprintf("%03d - %8d %s %s %s",$row['kunde'],$row['auftragsnr'],$row['bestellnr'],$row['aufdat'],$row['ausliefer_datum']);
+	    $auftragsnrArray[$i]['formattedAuftragsnr'] = sprintf("<div class='list_kunde'>%03d</div> - <div class='list_import'>%8d</div> <div class='list_bestellnr'>BestellNr:%s</div> <div class='list_aufdat'>AE:%s</div> <div class='list_auslieferdatum'>AusDat:%s</div>",$row['kunde'],$row['auftragsnr'],$row['bestellnr'],$row['aufdat'],$row['ausliefer_datum']);
 	}
     }
 

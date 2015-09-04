@@ -16,6 +16,9 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.auftrag = {};
     $scope.auftrag.selected = {};
     
+    $scope.zielort = {};
+    $scope.zielort.selected = {};
+    
     $scope.enable = function () {
 	$scope.disabled = false;
     };
@@ -40,6 +43,11 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	    $routeParams.auftragsnr=$scope.auftragsnr;
 	    $scope.getAuftragInfo();
     }
+    
+    $scope.zielortOnSelect = function($item, $model){
+	    console.log($item);
+	    $scope.auftragInfo.zielort_id = $item.id;
+    }
 	
     $scope.refreshAuftragsnr = function (e) {
 	    var params = {e: e};
@@ -50,6 +58,44 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		$scope.auftragsnrArray = response.data.auftragsnrArray;
 	    });
     };
+    
+    var parseTime = function(time){
+	console.log(time);
+	if(time.length>3){
+	    //return String.sub
+	}
+    }
+    
+    $scope.parseImSollTime = function(){
+	$scope.auftragInfo.imsolluhr1 = parseTime($scope.auftragInfo.imsolluhr1);
+    }
+    
+    $scope.refreshZielort = function (e) {
+	if ($scope.auftragInfo !== undefined) {
+	    var params = {e: e, k: $scope.auftragInfo.kunde};
+	    return $http.get(
+		    './getZielorte.php',
+		    {params: params}
+	    ).then(function (response) {
+		$scope.zielortArray = response.data.zielortArray;
+		// pokud nastavuju obsah selectu podle zielort_id, je e undefined
+		if(e===undefined){
+		    console.log('e je undefined');
+		    //projit zielortArray a do selected priradi objekt se shodou v id
+			for(i=0;i<$scope.zielortArray.length;i++){
+			    if($scope.zielortArray[i].id==$scope.auftragInfo.zielort_id){
+				$scope.zielort.selected = $scope.zielortArray[i];
+				break;
+			    }
+			}
+		}
+	    });
+	}
+	else {
+	    return;
+	}
+    };
+    
     /**
      * 
      * @param {type} e
@@ -65,6 +111,9 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			$scope.dauftrPos = response.data.dauftrPos;
 			$scope.auftrag.selected.auftragsnr = response.data.auftragInfo.auftragsnr;
 			$scope.displayDauftrPos = [].concat($scope.dauftrPos);
+			$scope.refreshZielort();
+			//nastavit zielort do select boxu podle zielort_id v auftragInfo
+			
 			$timeout(function(){
 			    auftragTable.floatThead('destroy');
 			    auftragTable.floatThead();

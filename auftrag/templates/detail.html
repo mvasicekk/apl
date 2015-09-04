@@ -10,7 +10,7 @@
 		<div class="row">
 		    <div class="col-sm-3">
 			<div class="form-group">
-			    <label for="auftragsnr">Auftragsnr</label>
+			    <label for="auftragsnr">Auftragsnr ( suchen / hledat )</label>
 			    <ui-select
 				    ng-model="auftrag.selected" 
 				    ng-disabled="disabled" 
@@ -44,21 +44,33 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="imsoll">Im SOLL</label>
-			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum">
-			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Im Soll Uhrzeit">
+			    <input ng-model="auftragInfo.imsolldat1" style="display:inline-block;width:7em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum"><timepicker style="display:inline-block;" ng-model="auftragInfo.imsolluhr1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="exsoll">Ex SOLL</label>
-			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
-			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Ex Soll Uhrzeit">
+			    <input ng-model="auftragInfo.exsolldat1" style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
+			    <input ng-model="auftragInfo.exsolluhr1"  maxlength="5" style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Ex Soll Uhrzeit">
 			</div>
 		    </div>
 		    <div class="col-sm-6">
 			<div class="form-group">
-			    <label for="auftragsnr">Zielort</label>
-			    <input ng-model="auftragInfo.zielort_id" disabled type="text" maxlength="8" class="form-control" id="auftragsnr" placeholder="Zielort">
+			    <label for="zielort">Zielort</label>
+			    <ui-select
+				    ng-model="zielort.selected" 
+				    ng-disabled="disabled" 
+				    reset-search-input="false" 
+				    theme="bootstrap"
+				    on-select="zielortOnSelect($item, $model)"
+				>
+				<ui-select-match placeholder="Zielort">{{$select.selected.zielort}}</ui-select-match>
+				<ui-select-choices repeat="p in zielortArray track by $index"
+						   refresh="refreshZielort($select.search)"
+						   refresh-delay="0">
+				    <div ng-bind-html="p.formattedZielort | highlight: $select.search"></div>
+				</ui-select-choices>
+			    </ui-select>
 			</div>
 		    </div>
 		</div>
@@ -66,21 +78,21 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="imist">Auftragseingang</label>
-			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
-			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Auftragseingang Uhrzeit">
+			    <input ng-model="auftragInfo.aufdat1" style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
+			    <input ng-model="auftragInfo.aufuhr1"  maxlength="5" style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Auftragseingang Uhrzeit">
 			</div>
 		    </div>
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="geliefert">ausgeliefert am</label>
-			    <input style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
-			    <input style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="ausgeliefert Uhrzeit">
+			    <input ng-model="auftragInfo.auslieferdat1" style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
+			    <input ng-model="auftragInfo.auslieferuhr1"  maxlength="5" style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="ausgeliefert Uhrzeit">
 			</div>
 		    </div>
 		    <div class="col-sm-3">
-			<div class="form-group">
+			<div ng-class="{hatrechnung:auftragInfo.hatrechnung==1}" class="form-group">
 			    <label for="fertig">Rechnung am</label>
-			    <input ng-model="auftragInfo.fertig" type="text" disabled maxlength="8" class="form-control" id="fertig" placeholder="Rechnug am">
+			    <input ng-model="auftragInfo.fertigdat1" type="text" disabled maxlength="8" ui-date="dateOptions" class="form-control" id="fertig" placeholder="Rechnug am">
 			</div>
 		    </div>
 		</div>

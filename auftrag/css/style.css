@@ -103,3 +103,37 @@ div.page-header h4{
 	z-index: 9999;
 	display:none;
 }
+
+.ui-select-bootstrap > .ui-select-choices{
+    width: auto;
+    max-height: 250px;
+}
+
+.ui-select-bootstrap .ui-select-choices-row{
+    border-bottom: 1px solid blue !important;
+}
+
+div.list_kunde{
+    display: inline-block;
+    /*width: 3em;*/
+}
+div.list_import{
+    display: inline-block;
+    width: 5em;
+}
+div.list_bestellnr{
+    display: inline-block;
+    width: 10em;
+}
+div.list_aufdat{
+    display: inline-block;
+    width: 10em;
+}
+div.list_auslieferdatum{
+    display: inline-block;
+    width: 10em;
+}
+
+div.hatrechnung{
+    background-color: lightpink;
+}
