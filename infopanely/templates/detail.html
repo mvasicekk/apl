@@ -1,0 +1,30 @@
+<div class="container-fluid">
+    <div class="page-header">
+	<h4>Infopanely</h4>
+    </div>
+<!--    <p>
+	<pre>
+	    {{panels|json}}
+	</pre>
+    </p>-->
+    <div class="row">
+	<div class="col-sm-12">
+	    <div ng-repeat="place in places" class="panel panel-info">
+		<div class="panel-heading">
+		    {{place.place}}
+		</div>
+		<div class="panel-body">
+		    <div class="row container-fluid">
+			<div ng-repeat="panel in panels[place.id]" class="col-sm-1">
+			    <input ng-model="panel.text1" type="text" class="form-control input-sm text-center" placeholder="">
+			    <input ng-model="panel.text2" type="text" class="form-control input-sm text-center" placeholder="">
+			    <input ng-model="panel.text3" type="text" class="form-control input-sm text-center" placeholder="">
+			    <input ng-model="panel.text4" type="text" class="form-control input-sm text-center" placeholder="">
+			    <input ng-model="panel.text5" type="text" class="form-control input-sm text-center" placeholder="">
+			</div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
