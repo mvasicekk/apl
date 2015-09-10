@@ -10,6 +10,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     
     var auftragTable;
     
+    $scope.formDataChanged = false;
     $scope.auftragsnr = $routeParams.auftragsnr;
     $scope.auftragInfo = undefined;
     $scope.showAlleTat = false;
@@ -36,6 +37,27 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	auftragTable = $('#dauftr');
     });
     
+    var convertMysql2Date = function(dt){
+	var t = dt.split(/[- :]/);
+	// Apply each element to the Date function
+	var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+	return d;
+    }
+    
+    $scope.testFormChanges = function(){
+	console.log('testing form changes');
+	var d = JSON.stringify($scope.auftragInfo);
+	if($scope.auftragInfoOriginal!==d){
+	    $scope.formDataChanged = true;
+	    //TODO zavolat ukladaci funkci, po vyrizeni ukladani nastavit 
+	    //formDataChanged na false a auftragInfoOriginal nastavit na
+	    //aktualni auftraginfo
+	    $scope.auftragInfoOriginal = d;
+	}
+	else{
+	    $scope.formDataChanged = false;
+	}
+    }
     
     $scope.auftragOnSelect = function($item, $model){
 	    console.log($item);
@@ -108,6 +130,17 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    )
 		    .then(function (response) {
 			$scope.auftragInfo = response.data.auftragInfo;
+//			$scope.auftragInfo.exsolluhr1 = convertMysql2Date($scope.auftragInfo.ex_soll_datetime);
+			$scope.auftragInfo.exsolldat1 = convertMysql2Date($scope.auftragInfo.ex_soll_datetime);
+//			$scope.auftragInfo.imsolluhr1 = convertMysql2Date($scope.auftragInfo.im_soll_datetime);
+			$scope.auftragInfo.imsolldat1 = convertMysql2Date($scope.auftragInfo.im_soll_datetime);
+//			$scope.auftragInfo.aufuhr1 = convertMysql2Date($scope.auftragInfo.aufdat_raw);
+			$scope.auftragInfo.aufdat1 = convertMysql2Date($scope.auftragInfo.aufdat_raw);
+//			$scope.auftragInfo.auslieferuhr1 = convertMysql2Date($scope.auftragInfo.ausliefer_raw);
+			$scope.auftragInfo.auslieferdat1 = convertMysql2Date($scope.auftragInfo.ausliefer_raw);
+			
+			// ulozit originalni stav dat, abych mohl porovnat zda jsou ve formulari zmeny
+			$scope.auftragInfoOriginal = JSON.stringify($scope.auftragInfo);
 			$scope.dauftrPos = response.data.dauftrPos;
 			$scope.auftrag.selected.auftragsnr = response.data.auftragInfo.auftragsnr;
 			$scope.displayDauftrPos = [].concat($scope.dauftrPos);

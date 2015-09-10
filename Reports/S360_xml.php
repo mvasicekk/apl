@@ -144,6 +144,8 @@ $sql2.=" where";
 $sql2.="     ( dreklamation.kunde between '$kundevon' and '$kundebis')";
 $sql2.="     and";
 $sql2.="     ( dreklamation.rekl_datum between '$erhvon' and '$erhbis')";
+if(strlen($reklnr)>0)
+$sql2.="     and ( dreklamation.rekl_nr like '$reklnr')";
 $sql2.=" order by";
 $sql2.="     dreklamation.rekl_nr";
 

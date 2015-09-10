@@ -2,9 +2,12 @@
 
 <div class="container-fluid">
     <div class="page-header">
-	<h4>Auftrag pflegen / sprava zakazky <span class="label label-info">{{auftragInfo.auftragsnr}}</span></h4>
+	<h4>Auftrag pflegen / sprava zakazky 
+	<span class="label label-info">{{auftragInfo.auftragsnr}}</span>
+	<span ng-show="formDataChanged" class="label label-danger">... saving changes</span>
+	</h4>
     </div>
-    
+
     <div class="row">
 	<div class="col-sm-10">
 		<div class="row">
@@ -30,13 +33,13 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label for="bestellnr">Bestellnr</label>
-			    <input ng-model="auftragInfo.bestellnr" type="text" maxlength="30" class="form-control" id="bestellnr" placeholder="bestellnr">
+			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.bestellnr" type="text" maxlength="30" class="form-control" id="bestellnr" placeholder="bestellnr">
 			</div>
 		    </div>
 		    <div class="col-sm-6">
 			<div class="form-group">
 			    <label for="bemerkung">Bemerkung</label>
-			    <input ng-model="auftragInfo.bemerkung" type="text" maxlength="255" class="form-control" id="bemerkung" placeholder="Bemerkung">
+			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.bemerkung" type="text" maxlength="255" class="form-control" id="bemerkung" placeholder="Bemerkung">
 			</div>
 		    </div>
 		</div>
@@ -44,20 +47,23 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="imsoll">Im SOLL</label>
-			    <input ng-model="auftragInfo.imsolldat1" style="display:inline-block;width:7em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum"><timepicker style="display:inline-block;" ng-model="auftragInfo.imsolluhr1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
+			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.imsolldat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum">
+			    <!--u timepickeru nefunguje ng-blur, proto ng-change-->
+			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.imsolldat1" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="exsoll">Ex SOLL</label>
-			    <input ng-model="auftragInfo.exsolldat1" style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
-			    <input ng-model="auftragInfo.exsolluhr1"  maxlength="5" style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Ex Soll Uhrzeit">
+			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.exsolldat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
+			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.exsolldat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-6">
 			<div class="form-group">
 			    <label for="zielort">Zielort</label>
 			    <ui-select
+				    ng-change="testFormChanges()" 
 				    ng-model="zielort.selected" 
 				    ng-disabled="disabled" 
 				    reset-search-input="false" 
@@ -78,15 +84,15 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="imist">Auftragseingang</label>
-			    <input ng-model="auftragInfo.aufdat1" style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
-			    <input ng-model="auftragInfo.aufuhr1"  maxlength="5" style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="Auftragseingang Uhrzeit">
+			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.aufdat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
+			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.aufdat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="geliefert">ausgeliefert am</label>
-			    <input ng-model="auftragInfo.auslieferdat1" style="display:inline-block;width:10em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
-			    <input ng-model="auftragInfo.auslieferuhr1"  maxlength="5" style="display:inline-block;width:5em;" type="text" class="form-control" id="" placeholder="ausgeliefert Uhrzeit">
+			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.auslieferdat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
+			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.auslieferdat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
