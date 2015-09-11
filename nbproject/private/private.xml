@@ -4,15 +4,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/templates/detail.html</file>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/places.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/css/style.css</file>
+            <file>file:/home/jr/NetBeansProjects/apl/auftrag/getAuftragInfo.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/getPlaces.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/js/app.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/panely.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/infopanely/js/controllers.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/D710_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/auftrag/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/auftrag/css/style.css</file>
+            <file>file:/home/jr/NetBeansProjects/apl/auftrag/templates/detail.html</file>
         </group>
     </open-files>
 </project-private>

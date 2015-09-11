@@ -38,12 +38,59 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     });
     
     var convertMysql2Date = function(dt){
+	if(dt===null){
+	    return null;
+	}
 	var t = dt.split(/[- :]/);
 	// Apply each element to the Date function
 	var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
 	return d;
     }
     
+    /**
+     * 
+     * @returns {undefined}
+     */
+    var saveFormChanges = function(){
+	var propChanges = [];
+	// projdu vsechny vlastnosti objektu auftragInfo a porovnam s puvodni hodnotou
+	//vytvorim si pole zmenenych vlastnosti
+	var keys = Object.keys($scope.auftragInfo);
+	var original = JSON.parse($scope.auftragInfoOriginal);
+	
+	for (i=0;i<keys.length;i++) {
+	    var pr = keys[i];
+	    if ($scope.auftragInfo.hasOwnProperty(pr)) {
+		//date objekty musim porovnavat specialne
+		if ($scope.auftragInfo[pr] instanceof Date){
+		    vAktual = $scope.auftragInfo[pr].toISOString();
+		    vOriginal = original[pr]==''?'':new Date(original[pr]).toISOString();
+		}
+		else{
+		    vAktual = $scope.auftragInfo[pr]===null?'':$scope.auftragInfo[pr].toString();
+		    vOriginal = original[pr]===null?'':original[pr].toString();
+		}
+		if(vOriginal!=vAktual){
+		    propChanges.push({prop:pr,oldVal:original[pr],newVal:$scope.auftragInfo[pr]});
+		}
+	    }
+	}
+	// pokud bude mit pole nejake polozky, ulozit zmeny do db
+	if(propChanges.length>0){
+	    //ulozit zmeny do DB
+	    console.log('ukladam zmeny do DB');
+	    
+	    $http.post('./saveDaufkopfChanges.php', {auftragsnr:$scope.auftragInfo.auftragsnr,propChanges: propChanges}).then(function (response) {
+		console.log(response.data);
+		$scope.formDataChanged = false;
+	    });
+	}
+	
+    }
+    
+    /**
+     * 
+     */
     $scope.testFormChanges = function(){
 	console.log('testing form changes');
 	var d = JSON.stringify($scope.auftragInfo);
@@ -52,6 +99,8 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	    //TODO zavolat ukladaci funkci, po vyrizeni ukladani nastavit 
 	    //formDataChanged na false a auftragInfoOriginal nastavit na
 	    //aktualni auftraginfo
+	    //funkce by mela vratit promise (asynchronni volani) protoze muze trvat dlouho
+	    saveFormChanges();
 	    $scope.auftragInfoOriginal = d;
 	}
 	else{
@@ -104,12 +153,17 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		if(e===undefined){
 		    console.log('e je undefined');
 		    //projit zielortArray a do selected priradi objekt se shodou v id
+		    if($scope.zielortArray!==null){
 			for(i=0;i<$scope.zielortArray.length;i++){
 			    if($scope.zielortArray[i].id==$scope.auftragInfo.zielort_id){
 				$scope.zielort.selected = $scope.zielortArray[i];
 				break;
 			    }
 			}
+		    }
+		    else{
+			$scope.zielort.selected = undefined;
+		    }
 		}
 	    });
 	}
@@ -130,13 +184,9 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    )
 		    .then(function (response) {
 			$scope.auftragInfo = response.data.auftragInfo;
-//			$scope.auftragInfo.exsolluhr1 = convertMysql2Date($scope.auftragInfo.ex_soll_datetime);
 			$scope.auftragInfo.exsolldat1 = convertMysql2Date($scope.auftragInfo.ex_soll_datetime);
-//			$scope.auftragInfo.imsolluhr1 = convertMysql2Date($scope.auftragInfo.im_soll_datetime);
 			$scope.auftragInfo.imsolldat1 = convertMysql2Date($scope.auftragInfo.im_soll_datetime);
-//			$scope.auftragInfo.aufuhr1 = convertMysql2Date($scope.auftragInfo.aufdat_raw);
 			$scope.auftragInfo.aufdat1 = convertMysql2Date($scope.auftragInfo.aufdat_raw);
-//			$scope.auftragInfo.auslieferuhr1 = convertMysql2Date($scope.auftragInfo.ausliefer_raw);
 			$scope.auftragInfo.auslieferdat1 = convertMysql2Date($scope.auftragInfo.ausliefer_raw);
 			
 			// ulozit originalni stav dat, abych mohl porovnat zda jsou ve formulari zmeny

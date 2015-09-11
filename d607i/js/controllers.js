@@ -32,6 +32,12 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 	window.print();
     };
     
+    $scope.dauftrRowChange = function(r,field){
+	console.log(r);
+	$http.post('./saveDauftr.php', {r: r,field:field}).then(function (response) {
+		
+	    });
+    }
     /**
      * 
      * @param {type} e

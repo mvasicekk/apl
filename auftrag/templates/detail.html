@@ -97,8 +97,10 @@
 		    </div>
 		    <div class="col-sm-3">
 			<div ng-class="{hatrechnung:auftragInfo.hatrechnung==1}" class="form-group">
-			    <label for="fertig">Rechnung am</label>
-			    <input ng-model="auftragInfo.fertigdat1" type="text" disabled maxlength="8" ui-date="dateOptions" class="form-control" id="fertig" placeholder="Rechnug am">
+			    <label style="display:block;" for="fertig">Rechnung am</label>
+			    <input style="width:7em;display:inline-block;vertical-align: middle;" ng-model="auftragInfo.fertigdat1" type="text" disabled maxlength="8" ui-date="dateOptions" class="form-control" id="fertig" placeholder="Rechnug am">
+			    <!--tlacitko pro smazani faktury-->
+			    <button style="display: inline-block;vertical-align: middle;width:auto;" ng-if="auftragInfo.hatrechnung==1" class="btn btn-danger form-control">Re Lō</button>
 			</div>
 		    </div>
 		</div>
@@ -108,6 +110,7 @@
 	    <a href="" class="btn btn-block btn-xs btn-info">Behaelter bew.</a>
 	    <a href="" class="btn btn-block btn-xs btn-info">edit Auftrpositionen</a>
 	    <a href="" class="btn btn-block btn-xs btn-info">split Pal</a>
+	    <a href="" ng-show="auftragInfo.im_stk_gespeichert===null" class="btn btn-block btn-xs btn-success">Auftragsmenge speichern</a>
 	</div>
 	
     </div>

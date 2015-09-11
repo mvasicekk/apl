@@ -20,6 +20,7 @@ $sql.="     dauftr.auftragsnr,";
 $sql.="     DATE_FORMAT(daufkopf.aufdat,'%d.%m.%y') as import_datum,";
 $sql.="     dauftr.teil,";
 $sql.="     dauftr.`pos-pal-nr` as im_pal,";
+$sql.="     dauftr.giesstag,";
 $sql.="     dauftr.abgnr,";
 $sql.="     sum(if(kzgut='G',dauftr.`stück`,0)) as sum_im_stk,";
 $sql.="     sum(if(kzgut='G',dauftr.`stück`*dkopf.gew/1000,0)) as sum_im_gew,";
@@ -146,6 +147,7 @@ if ($rows != NULL) {
 	$import = $r['auftragsnr'];
 	$teil = $r['teil'];
 	$pal = $r['im_pal'];
+	$gt = $r['giesstag'];
 	$imdat = $r['import_datum'];
 	$abgnr = $r['abgnr'];
 	$abgnrArray[$abgnr] += 1;
@@ -161,8 +163,10 @@ if ($rows != NULL) {
 	$zeilen[$termin][$teil][$import][$pal]['sum_im_stk'] += $r['sum_im_stk'];
 	$zeilen[$termin][$teil][$import][$pal]['sum_im_gew'] += $r['sum_im_gew'];
 	$zeilen[$termin][$teil][$import][$pal]["import_datum"]= $imdat;
+	
 	if(trim($r['kzgut'])=='G'){
 	    $zeilen[$termin][$teil][$import][$pal]['bemerkung'] = strip_tags(trim($r['bemerkung']));
+	    $zeilen[$termin][$teil][$import][$pal]["gt"]= $gt;
 	}
     }
     
@@ -184,7 +188,7 @@ if ($rows != NULL) {
 	    $teilSummen = array();
 	    foreach ($importe as $import => $paletten) {
 		foreach ($paletten as $pal => $palInfoArray) {
-		    array_push($zeilenArray, array("section"=>"detail","termin" => $termin, "import_datum"=>$palInfoArray['import_datum'],"import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $palInfoArray));
+		    array_push($zeilenArray, array("section"=>"detail","termin" => $termin, "giesstag"=>$palInfoArray['gt'],"import_datum"=>$palInfoArray['import_datum'],"import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $palInfoArray));
 		    $sumReport['sum_im_stk']+=$palInfoArray['sum_im_stk'];
 		    $sumReport['sum_im_gew']+=$palInfoArray['sum_im_gew'];
 		    foreach ($palInfoArray as $klic=>$tatArray){
