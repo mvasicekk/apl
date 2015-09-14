@@ -13,9 +13,10 @@ $terminMatchVon = trim($_GET['terminvon']);
 $terminMatchBis = trim($_GET['terminbis']);
 $importMatch = trim($_GET['import']);
 $teilMatch = trim($_GET['teil']);
+$kundeMatch = trim($_GET['kunde']);
 
 $sql.=" select ";
-$sql.="     dauftr.termin,";
+$sql.="     if(dauftr.termin is null or dauftr.termin='','NOTERMIN',dauftr.termin) as termin,";
 $sql.="     dauftr.auftragsnr,";
 $sql.="     DATE_FORMAT(daufkopf.aufdat,'%d.%m.%y') as import_datum,";
 $sql.="     dauftr.teil,";
@@ -31,9 +32,13 @@ $sql.="     sum(dauftr.VzAby*dauftr.`stück`) as sum_vzaby";
 $sql.=" from dauftr";
 $sql.=" join dkopf on dkopf.teil=dauftr.teil";
 $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
-$sql.=" where ";
-//$sql.="     dauftr.termin like 'P$terminMatch%'";
-$sql.="     dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis'";
+$sql.=" where (1)";
+if(strlen($kundeMatch)==3){
+    $sql.="     and (daufkopf.kunde='$kundeMatch')";
+}
+if(strlen($terminMatchVon)>1&&($terminMatchBis)>1){
+    $sql.="   and (  dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis')";
+}
 if(strlen(trim($importMatch))>0){
     $sql.="     and dauftr.auftragsnr like '%$importMatch%'";    
 }
@@ -60,7 +65,7 @@ $sql.="     dauftr.abgnr";
 
 
 $sqlD.=" select ";
-$sqlD.="     dauftr.termin,";
+$sqlD.="     if(dauftr.termin is null or dauftr.termin='','NOTERMIN',dauftr.termin) as termin,";
 $sqlD.="     dauftr.auftragsnr,";
 $sqlD.="     dauftr.teil,";
 $sqlD.="     dauftr.`pos-pal-nr` as im_pal,";
@@ -71,16 +76,30 @@ $sqlD.="     sum(if(drueck.`Stück` is not null,if(auss_typ=4,(drueck.`Stück`+d
 $sqlD.="     sum(if(drueck.`Stück` is not null,if(auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`vz-ist`,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`vz-ist`),0)) as sum_vzaby";
 
 $sqlD.=" from dauftr";
+$sqlD.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
 $sqlD.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=dauftr.teil and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.TaetNr=dauftr.abgnr";
-$sqlD.=" where ";
-//$sqlD.="     dauftr.termin like 'P$terminMatch%'";
-$sqlD.="     dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis'";
+$sqlD.=" where (1)";
+if(strlen($kundeMatch)==3){
+    $sqlD.="     and (daufkopf.kunde='$kundeMatch')";
+}
+if(strlen($terminMatchVon)>1&&($terminMatchBis)>1){
+    $sqlD.="   and (  dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis')";
+}
 if(strlen(trim($importMatch))>0){
     $sqlD.="     and dauftr.auftragsnr like '%$importMatch%'";    
 }
 if(strlen(trim($teilMatch))>0){
     $sqlD.="     and dauftr.teil like '%$teilMatch%'";    
 }
+
+//$sqlD.="     dauftr.termin like 'P$terminMatch%'";
+//$sqlD.="     dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis'";
+//if(strlen(trim($importMatch))>0){
+//    $sqlD.="     and dauftr.auftragsnr like '%$importMatch%'";    
+//}
+//if(strlen(trim($teilMatch))>0){
+//    $sqlD.="     and dauftr.teil like '%$teilMatch%'";    
+//}
 
 $sqlD.="     and dauftr.`auftragsnr-exp` is null";
 $sqlD.=" group by";
@@ -97,7 +116,7 @@ $sqlD.="     dauftr.`pos-pal-nr`,";
 $sqlD.="     dauftr.abgnr";
 
 $sqlDA.=" select ";
-$sqlDA.="     dauftr.termin,";
+$sqlDA.="     if(dauftr.termin is null or dauftr.termin='','NOTERMIN',dauftr.termin) as termin,";
 $sqlDA.="     dauftr.auftragsnr,";
 $sqlDA.="     dauftr.teil,";
 $sqlDA.="     dauftr.`pos-pal-nr` as im_pal,";
@@ -105,15 +124,28 @@ $sqlDA.="     if(drueck.`auss-art` is null,0,drueck.`auss-art`) as aart,     ";
 $sqlDA.="     sum(if(drueck.`Auss-Stück` is null,0,drueck.`Auss-Stück`)) as sum_auss_stk";
 $sqlDA.=" from dauftr";
 $sqlDA.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=dauftr.teil and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.TaetNr=dauftr.abgnr";
-$sqlDA.=" where ";
-//$sqlDA.="     dauftr.termin like 'P$terminMatch%'";
-$sqlDA.="     dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis'";
+$sqlDA.=" where (1)";
+if(strlen($kundeMatch)==3){
+    $sqlDA.="     and (daufkopf.kunde='$kundeMatch')";
+}
+if(strlen($terminMatchVon)>1&&($terminMatchBis)>1){
+    $sqlDA.="   and (  dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis')";
+}
 if(strlen(trim($importMatch))>0){
     $sqlDA.="     and dauftr.auftragsnr like '%$importMatch%'";    
 }
 if(strlen(trim($teilMatch))>0){
     $sqlDA.="     and dauftr.teil like '%$teilMatch%'";    
 }
+
+//$sqlDA.="     dauftr.termin like 'P$terminMatch%'";
+//$sqlDA.="     dauftr.termin between 'P$terminMatchVon' and 'P$terminMatchBis'";
+//if(strlen(trim($importMatch))>0){
+//    $sqlDA.="     and dauftr.auftragsnr like '%$importMatch%'";    
+//}
+//if(strlen(trim($teilMatch))>0){
+//    $sqlDA.="     and dauftr.teil like '%$teilMatch%'";    
+//}
 
 $sqlDA.="     and dauftr.`auftragsnr-exp` is null";
 $sqlDA.=" group by";
@@ -133,7 +165,7 @@ $sqlDA.="     dauftr.`pos-pal-nr`";
     
 $aartArray = array();
 
-if ((strlen($terminMatchVon)>=3)&&(strlen($terminMatchBis)>=3)) {
+if (((strlen($terminMatchVon)>=3)&&(strlen($terminMatchBis)>=3))||(strlen($kundeMatch)==3)) {
     $rows = $a->getQueryRows($sql);
     $rowsD = $a->getQueryRows($sqlD);
     $rowsDA = $a->getQueryRows($sqlDA);
@@ -313,7 +345,7 @@ $returnArray = array(
     "terminKeysArray" => $terminKeysArray,
     "terminArray"=>$terminArray,
     "termin"=>$terminMatch,
-//    "sql"=>$sql,
+    "sql"=>$sql,
 //    "sqlD"=>$sqlD,
 //    "sqlDA"=>$sqlDA,
     "teileArray"=>$teileArray,

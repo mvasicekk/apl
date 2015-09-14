@@ -1,0 +1,182 @@
+<!--<div id="spinner"></div>-->
+
+<div class="container-fluid">
+    <div class="page-header">
+	<h4>Auftragpositionen erstellen / pozice zakazky 
+	<span class="label label-info">{{auftragsnr}}</span>
+	</h4>
+    </div>
+
+    <div class="row">
+	<!--informace pro vytvoreni pozice-->
+	<div class="col-sm-6">
+	    <div class="row">
+		<div class="col-sm-12">
+		    <div class="form-group">
+			<label for="Teil">Teil ( suchen / hledat )</label>
+			    <ui-select
+				    ng-model="teil.selected" 
+				    ng-disabled="disabled" 
+				    reset-search-input="false" 
+				    theme="bootstrap"
+				    on-select="teilOnSelect($item, $model)"
+				>
+				<ui-select-match placeholder="Teil">{{$select.selected.teil}}</ui-select-match>
+				<ui-select-choices repeat="p in teilArray track by $index"
+						   refresh="refreshTeil($select.search)"
+						   refresh-delay="0">
+				    <div ng-bind-html="p.formattedTeil | highlight: $select.search"></div>
+				</ui-select-choices>
+			    </ui-select>
+		    </div>
+		</div>
+	    </div>
+	    
+	    <div ng-show="teilInfo!==undefined" class="row">
+		<div class="col-sm-12">
+		    <!--teilbezeichnung-->
+		    <div class="row">
+			<div class="col-sm-12">
+			    <div class="form-group">
+				<label for="">Teilbezeichnung</label>
+				<input ng-model="teilInfo.teil.Teilbez" disabled type="text" class="form-control">
+			    </div>	    
+			</div>
+		    </div>
+		    <!-- restmenge, verpackung-->
+		    <div class="row">
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">Restmenge verw.</label>
+				<input ng-model="teilInfo.teil.restmengen_verw" disabled type="text" class="form-control">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">Verpackungmenge</label>
+				<input ng-model="teilInfo.teil.verpackungmenge" disabled type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">Br. Gewicht [kg]</label>
+				<input ng-model="teilInfo.teil.BrGew" disabled type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">NettoGewich [kg]</label>
+				<input ng-model="teilInfo.teil.Gew" type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+		    </div>
+		    
+		    <!-- -->
+		    <div class="row">
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">PalStūckzahl / pocet palet</label>
+				<input ng-model="positionInfo.palstk" type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">Stk pro Pal / kusu na palete</label>
+				<input ng-model="positionInfo.stkpropal" type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">erste Palnummer / cislo prvni palety</label>
+				<input ng-model="positionInfo.firstpal" type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">Increment / prirustek</label>
+				<input ng-model="positionInfo.increment" type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+		    </div>
+		    
+		    <!-- -->
+		    <div class="row">
+			<div class="col-sm-3">
+			    <div title="aus Auftrag: {{positionInfo.fremdausauftrag}}" class="form-group">
+				<label for="">fremdauftr</label>
+				<input title="aus Auftrag: {{positionInfo.fremdausauftrag}}" ng-model="positionInfo.fremdauftr" type="text" class="form-control text-left">
+			    </div>	    
+			</div>
+			<div title="aus Auftrag: {{positionInfo.fremdausauftrag}}" class="col-sm-3">
+			    <div class="form-group">
+				<label for="">fremdpos</label>
+				<input title="aus Auftrag: {{positionInfo.fremdausauftrag}}" ng-model="positionInfo.fremdpos" type="text" class="form-control text-right">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">giesstag</label>
+				<input ng-model="positionInfo.gt" type="text" class="form-control text-left">
+			    </div>	    
+			</div>
+			<div class="col-sm-3">
+			    <div class="form-group">
+				<label for="">EX geplant mit</label>
+				<input ng-model="positionInfo.explanmit" type="text" class="form-control">
+			    </div>	    
+			</div>
+		    </div>
+		    
+		    <!-- -->
+		    <div class="row">
+			<div class="col-sm-6">
+			    <button class="btn btn-primary form-control">Positionen erstellen</button>
+			</div>
+			<div class="col-sm-6">
+			    <button class="btn btn-danger form-control">Ende / konec</button>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	    
+	</div>
+	<!--pozice z pracoviho planu pro vybrany dil-->
+	<div class="col-sm-6">
+	    <table id='dpos' ng-show="teilInfo!==undefined" st-table="displaydpos" st-safe-src="dpos" class="table table-bordered table-striped table-condensed table-hover">
+	    <thead>
+	    <tr>
+		<th>tat</th>
+		<th>abgnr</th>
+		<th>G</th>
+		<th>Preis</th>
+		<th>VzKd</th>
+		<th>VzAby</th>
+		<th>Lag Von</th>
+		<th>Lag Nach</th>
+		<th>Bedarf</th>
+	    </tr>
+	    </thead>
+	    <tbody>
+		<tr ng-class="{kzgut:(r.kzgut=='G'),disabled:(r.kz_druck==0)}" ng-repeat="r in displaydpos | filter:{r.abgnr}" >
+		    <td ng-click="dposRowClicked(r)" class='text-right'>{{r.tat}}</td>
+		    <td ng-click="dposRowClicked(r)" class='text-right'>{{r.abgnr}}</td>
+		    <td>
+			<input ng-disabled="r.kz_druck==0"  type="text" class="form-control input-sm" ng-model="r.kzgut"/>
+		    </td>
+		    <td class='text-right'>{{r.preis|number:4}}</td>
+		    <td class='text-right'>
+			<input ng-change="vzChanged(r,'vzkd')" ng-model-options="{updateOn:'blur'}" ng-disabled="r.kz_druck==0" type="text" class="form-control input-sm text-right" ng-model="r.vzkd"/>
+		    </td>
+		    <td class='text-right'>
+			<input ng-change="vzChanged(r,'vzaby')" ng-model-options="{updateOn:'blur'}"  ng-disabled="r.kz_druck==0"  type="text" class="form-control input-sm text-right" ng-model="r.vzaby"/>
+		    </td>
+		    <td>{{r.lager_von}}</td>
+		    <td>{{r.lager_nach}}</td>
+		    <td>{{r.bedarf_typ}}</td>
+		</tr>
+	    </tbody>
+	    </table>
+	</div>
+    </div>
+    
+</div>

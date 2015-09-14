@@ -7,11 +7,16 @@
     <table id='d607it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class='no-print'>
-		<th style="width:8em;min-width:8em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" maxlength="8" placeholder="import" type="text"/></th>
-		<th style="width:10em;min-width:8em;" colspan="{{1}}"><input class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" maxlength="10" placeholder="teil" type="text"/></th>
-		<th colspan="{{3}}">
-		    <input style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchVon" placeholder="termin von" type="text"/><br>
-		    <input style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchBis" placeholder="termin bis" type="text"/>
+		<th style="width:8em;min-width:8em;" colspan="{{1}}">
+		    <input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchVon" placeholder="termin von" type="text"/><br>
+		    <input  tabindex="5" class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" maxlength="8" placeholder="import" type="text"/>
+		</th>
+		<th style="width:10em;min-width:8em;" colspan="{{1}}">
+		    <input tabindex="2"  style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchBis" placeholder="termin bis" type="text"/><br>
+		    <input  tabindex="4" class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" maxlength="10" placeholder="teil" type="text"/>
+		</th>
+		<th colspan="{{3}}" style="vertical-align: top;">
+		    ( <input  tabindex="3" style="display:inline-block;width:5em" class="form-control" ng-keypress="getZeilen($event)" ng-model="kundeMatch" maxlength="3" placeholder="Kunde" type="text"/> ) 
 		</th>
 		<th class="text-left" colspan="{{3 + abgnrKeysArray.length + aartKeysArray.length}}">
 		    <span class="badge">{{zeilen.length}}</span>

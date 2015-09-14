@@ -2182,6 +2182,7 @@ public function istExportiert($import, $impal){
 	if ($tat === NULL) {
 	    $sql.=" select ";
 	    $sql.=" dpos.`TaetNr-Aby` as abgnr,";
+	    $sql.=" `dtaetkz-abg`.dtaetkz as tat,";
 	    $sql.=" dpos.KzGut as kzgut,";
 	    $sql.=" dpos.`TaetBez-Aby-D` as tat_bez_d,";
 	    $sql.=" dpos.`TaetBez-Aby-T` as tat_bez_cz,";
@@ -2189,8 +2190,10 @@ public function istExportiert($import, $impal){
 	    $sql.=" dpos.`VZ-min-kunde` as vzkd,";
 	    $sql.=" dpos.`kz-druck` as kz_druck,";
 	    $sql.=" dpos.lager_von,";
+	    $sql.=" dpos.bedarf_typ,";
 	    $sql.=" dpos.lager_nach";
 	    $sql.=" from dpos";
+	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby`";
 	    $sql.=" where ";
 	    $sql.=" teil='$teil'";
 	    $sql.=" order by";
@@ -4554,6 +4557,7 @@ public function istExportiert($import, $impal){
     public function getTeilArrayForKundeMatch($k,$e){
 	$sql.=" select dkopf.teil,";
 	$sql.=" dkopf.teillang,";
+	$sql.=" dkopf.gew,";
 	$sql.=" dkopf.Teilbez as teilbez,";
 	$sql.=" dkopf.kunde";
 	$sql.=" from dkopf";

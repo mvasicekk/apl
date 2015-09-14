@@ -272,7 +272,7 @@ Aufträge pflegen / zadání zakázky
 
 <tr>
 	<td>
-		<input class='formularbutton'  type='button' value='Position erstellen' onclick="document.location.href='./dauftr_schnell_erfassen/dauftr_schnell_erfassen.php?kunde={$kunde_value}&auftragsnr={$auftragsnr_value}&minpreis={$minpreis_value}';"/>
+		<input class='formularbutton'  type='button' value='Position erstellen' onclick="document.location.href='../auftragpositionen/auftragpositionen.php#/det/{$auftragsnr_value}';"/>
 	</td>
 	<td>
 		<input onClick="location.href='../get_parameters.php?popisky=Import&promenne=auftragsnr&values={$auftragsnr_value}&report=D605'" class='formularbutton' type="button" id="D605" name="D605" value="D605 Import"/>

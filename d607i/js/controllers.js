@@ -12,6 +12,7 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
     $scope.terminMatchBis = '';
     $scope.importMatch = '';
     $scope.teilMatch = '';
+    $scope.kundeMatch = '';
     $scope.mitPaletten = false;
     $scope.mitReklamation = false;
     $scope.minutenOption = 'vzaby';
@@ -55,12 +56,13 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
      */
     $scope.getZeilen = function(e){
 	console.log('getZeilen event.keyCode='+e.which);
-	if (($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3)&&(e.which==13)) {
+	if (((($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3))||($scope.kundeMatch.length==3))&&(e.which==13)) {
 	    $('#spinner').show();
 	    $http.get('./getD607i.php?terminvon=' + $scope.terminMatchVon
 		    +'&terminbis='+$scope.terminMatchBis
 		    +'&import='+$scope.importMatch
 		    +'&teil='+$scope.teilMatch
+		    +'&kunde='+$scope.kundeMatch
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;
