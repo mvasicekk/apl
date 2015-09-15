@@ -4559,7 +4559,8 @@ public function istExportiert($import, $impal){
 	$sql.=" dkopf.teillang,";
 	$sql.=" dkopf.gew,";
 	$sql.=" dkopf.Teilbez as teilbez,";
-	$sql.=" dkopf.kunde";
+	$sql.=" dkopf.kunde,";
+	$sql.=" dkopf.status";
 	$sql.=" from dkopf";
 	$sql.=" where";
 	$sql.=" (dkopf.Kunde='$k')";

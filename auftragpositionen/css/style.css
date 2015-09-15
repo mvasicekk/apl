@@ -124,3 +124,15 @@ div.hatrechnung{
 .ng-dirty{
     /*background-color: #FECA40;*/
 }
+
+.ng-invalid{
+    border-color:red;
+}
+
+div.ALT{
+    background-color: lightsalmon;
+}
+
+div.GSP{
+    background-color: lightpink;
+}

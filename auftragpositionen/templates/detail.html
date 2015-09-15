@@ -7,7 +7,10 @@
 	</h4>
     </div>
 
+    <form novalidate name="erfassenform">
+
     <div class="row">
+	
 	<!--informace pro vytvoreni pozice-->
 	<div class="col-sm-6">
 	    <div class="row">
@@ -43,6 +46,20 @@
 			    </div>	    
 			</div>
 		    </div>
+		    <div ng-show="teilInfo.teil.status=='ALT'" class="row">
+			<div class="col-sm-12">
+			    <div class="form-group">
+				<input disabled type="text" class="form-control text-danger" value="ALTES Teil, nicht benutzen !!!">
+			    </div>	    
+			</div>
+		    </div>
+		    <div ng-show="teilInfo.teil.status=='GSP'" class="row">
+			<div class="col-sm-12">
+			    <div class="form-group">
+				<input disabled type="text" class="form-control text-danger" value="gesperrtes Teil, nicht benutzen !!!">
+			    </div>	    
+			</div>
+		    </div>
 		    <!-- restmenge, verpackung-->
 		    <div class="row">
 			<div class="col-sm-3">
@@ -66,7 +83,7 @@
 			<div class="col-sm-3">
 			    <div class="form-group">
 				<label for="">NettoGewich [kg]</label>
-				<input ng-model="teilInfo.teil.Gew" type="text" class="form-control text-right">
+				<input required="" ng-model="teilInfo.teil.Gew" type="text" class="form-control text-right">
 			    </div>	    
 			</div>
 		    </div>
@@ -76,25 +93,25 @@
 			<div class="col-sm-3">
 			    <div class="form-group">
 				<label for="">PalStūckzahl / pocet palet</label>
-				<input ng-model="positionInfo.palstk" type="text" class="form-control text-right">
+				<input required="" min="0" max="99" ng-model="positionInfo.palstk" type="number" class="form-control text-right">
 			    </div>	    
 			</div>
 			<div class="col-sm-3">
 			    <div class="form-group">
 				<label for="">Stk pro Pal / kusu na palete</label>
-				<input ng-model="positionInfo.stkpropal" type="text" class="form-control text-right">
+				<input required="" min="0" max="99999" ng-model="positionInfo.stkpropal" type="number" class="form-control text-right">
 			    </div>	    
 			</div>
 			<div class="col-sm-3">
 			    <div class="form-group">
 				<label for="">erste Palnummer / cislo prvni palety</label>
-				<input ng-model="positionInfo.firstpal" type="text" class="form-control text-right">
+				<input  name="erstepal" stkinc="{{positionInfo.palstk}}:{{positionInfo.increment}}:{{auftragsnr}}" palcanexist-validator required="" ng-model-options="{updateOn: 'default blur', debounce: { default: 200, blur: 0 }}" min="0" max="9999" ng-model="positionInfo.firstpal" type="number" class="form-control text-right">
 			    </div>	    
 			</div>
 			<div class="col-sm-3">
 			    <div class="form-group">
 				<label for="">Increment / prirustek</label>
-				<input ng-model="positionInfo.increment" type="text" class="form-control text-right">
+				<input  required="" min="1" max="100"  ng-model="positionInfo.increment" type="number" class="form-control text-right">
 			    </div>	    
 			</div>
 		    </div>
@@ -130,12 +147,26 @@
 		    <!-- -->
 		    <div class="row">
 			<div class="col-sm-6">
-			    <button class="btn btn-primary form-control">Positionen erstellen</button>
+			    <button ng-click="posErstellen('formValid')" ng-show="(erfassenform.$valid && allowErfassen)" class="btn btn-primary form-control">Positionen erstellen</button>
 			</div>
 			<div class="col-sm-6">
-			    <button class="btn btn-danger form-control">Ende / konec</button>
+			    <button ng-click="endeClick()" class="btn btn-danger form-control">Ende / konec</button>
 			</div>
 		    </div>
+		</div>
+	    </div>
+
+	    <!--vypis chyb-->
+	    
+	    <div style="margin-top:20px;" class="panel panel-danger" ng-if="(teilInfo!==undefined)&&(erfassenform.erstepal.$error.palexists)">
+		<div class="panel-heading">
+		    Fehler / Chyba
+		</div>
+		<div class="panel-body">
+		    <p ng-show="erfassenform.erstepal.$error.palexists">
+			Eingegebene kombination kann Palettenduplikate erstellen !
+			<button ng-show="allowErfassen" ng-click="posErstellen('mitPalExists')" class="btn btn-primary form-control">trotzdem Positionen erstellen</button>
+		    </p>
 		</div>
 	    </div>
 	    
@@ -147,7 +178,7 @@
 	    <tr>
 		<th>tat</th>
 		<th>abgnr</th>
-		<th>G</th>
+		<th style="width:3em;">G</th>
 		<th>Preis</th>
 		<th>VzKd</th>
 		<th>VzAby</th>
@@ -157,11 +188,11 @@
 	    </tr>
 	    </thead>
 	    <tbody>
-		<tr ng-class="{kzgut:(r.kzgut=='G'),disabled:(r.kz_druck==0)}" ng-repeat="r in displaydpos | filter:{r.abgnr}" >
-		    <td ng-click="dposRowClicked(r)" class='text-right'>{{r.tat}}</td>
+		<tr ng-class="{kzgut:(r.kzgut=='G'),disabled:(r.kz_druck==0)}" ng-repeat="r in displaydpos" >
+		    <td ng-click="dposRowClicked(r)" class='text-left'>{{r.tat}}</td>
 		    <td ng-click="dposRowClicked(r)" class='text-right'>{{r.abgnr}}</td>
 		    <td>
-			<input ng-disabled="r.kz_druck==0"  type="text" class="form-control input-sm" ng-model="r.kzgut"/>
+			<input ng-change="updateKzGut(r)" maxlength="1" ng-pattern="G" ng-disabled="r.kz_druck==0"  type="text" class="form-control input-sm" ng-model="r.kzgut"/>
 		    </td>
 		    <td class='text-right'>{{r.preis|number:4}}</td>
 		    <td class='text-right'>
@@ -178,5 +209,6 @@
 	    </table>
 	</div>
     </div>
-    
+
+    </form>
 </div>

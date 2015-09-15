@@ -6,7 +6,25 @@
 
 var aplApp = angular.module('auftragposApp');
 
-aplApp.controller('detailController', function ($filter,$scope, $routeParams,$http,$timeout) {
+aplApp.directive('palcanexistValidator', function($http, $q) {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModel) {
+            ngModel.$asyncValidators.palexists = function(modelValue, viewValue) {
+                return $http.post('./palExists.php', {firstPal: viewValue,attrs:attrs}).then(
+                    function(response) {
+                        if (response.data.palCanExist) {
+                            return $q.reject(response.data.errorMessage);
+                        }
+                        return true;
+                    }
+                );
+            };
+        }
+    };
+});
+
+aplApp.controller('detailController', function ($filter,$scope, $routeParams,$http,$timeout,$window) {
     
     var auftragTable;
     
@@ -17,6 +35,7 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
     $scope.dpos = undefined;
     $scope.minpreis;
     $scope.runden = 4;
+    $scope.allowErfassen;
     
     $scope.positionInfo = {
 	palstk:0,
@@ -112,7 +131,7 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
 		    .then(function (response) {
 			$scope.minpreis = response.data.minpreis;
 			$scope.runden = response.data.runden;
-		
+			$scope.allowErfassen = true;
 			$scope.teilInfo = response.data.teilInfo;
 			$scope.dpos = $scope.teilInfo.dpos;
 			$scope.positionInfo.fremdauftr = response.data.fremdauftr;
@@ -120,6 +139,9 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
 			$scope.positionInfo.fremdausauftrag = response.data.fremdauftrausauftrag;
 			$scope.positionInfo.explanmit = response.data.explanmit;
 			$scope.displaydpos = [].concat($scope.dpos);
+			if($scope.teilInfo.teil.status=='ALT'||$scope.teilInfo.teil.status=='GSP'){
+			    $scope.allowErfassen = false;
+			}
 		    });
     }
     
@@ -131,6 +153,40 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
 	}
 	window.print();
     };
+    
+    /**
+     * 
+     * @param {type} info
+     * @returns {undefined}
+     */
+    $scope.posErstellen = function(info){
+	    var params = {teil: $scope.teil.selected.teil,auftrag:$scope.auftragsnr,positionInfo:$scope.positionInfo,dpos:$scope.dpos,teilInfo:$scope.teilInfo};
+	    $http.post('./posErstellen.php',{params:params}
+		    )
+		    .then(function (response) {
+			//presunout se na spravu zakazky
+			$window.location.href = '../dauftr/dauftr.php?auftragsnr='+response.data.auftrag;
+		    });
+    };
+    
+    $scope.endeClick = function(){
+	$window.location.href = '../dauftr/dauftr.php?auftragsnr='+$scope.auftragsnr;
+    };
+    
+    $scope.updateKzGut = function(r){
+	//povolim je jedno G u operaci
+	console.log('updateKzGut');
+	if(r.kzgut=='G'||r.kzgut=='g'){
+	    console.log('zadal G');
+	    r.kzgut = 'G';
+	    var abgnr = r.abgnr;
+	    for(i=0;i<$scope.dpos.length;i++){
+		if($scope.dpos[i].abgnr!=abgnr){
+		    $scope.dpos[i].kzgut='';
+		}
+	    }
+	}
+    }
 });
 
 
