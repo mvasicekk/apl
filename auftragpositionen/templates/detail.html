@@ -106,7 +106,7 @@
 			<div class="col-sm-3">
 			    <div class="form-group">
 				<label for="">erste Palnummer / cislo prvni palety</label>
-				<input  name="erstepal" stkinc="{{positionInfo.palstk}}:{{positionInfo.increment}}:{{auftragsnr}}" palcanexist-validator required="" ng-model-options="{updateOn: 'default blur', debounce: { default: 200, blur: 0 }}" min="0" max="9999" ng-model="positionInfo.firstpal" type="number" class="form-control text-right">
+				<input  name="erstepal" stkinc="{{positionInfo.palstk}}:{{positionInfo.increment}}:{{auftragsnr}}" palcanexist-validator required="" ng-model-options="{allowInvalid: true,updateOn: 'default blur', debounce: { default: 200, blur: 0 }}" min="0" max="9999" ng-model="positionInfo.firstpal" type="number" class="form-control text-right">
 			    </div>	    
 			</div>
 			<div class="col-sm-3">

@@ -2186,7 +2186,7 @@ public function istExportiert($import, $impal){
 	    $sql.=" dpos.KzGut as kzgut,";
 	    $sql.=" dpos.`TaetBez-Aby-D` as tat_bez_d,";
 	    $sql.=" dpos.`TaetBez-Aby-T` as tat_bez_cz,";
-	    $sql.=" dpos.`VZ-min-kunde` as vzaby,";
+	    $sql.=" dpos.`VZ-min-aby` as vzaby,";
 	    $sql.=" dpos.`VZ-min-kunde` as vzkd,";
 	    $sql.=" dpos.`kz-druck` as kz_druck,";
 	    $sql.=" dpos.lager_von,";
