@@ -141,6 +141,7 @@ foreach($imas as $ima){
     $imaid = getValueForNode($imaChilds, 'id');
     $kundenr = $apl->getKundeFromTeil($teilnr);
     $kundeInfoArray = $apl->getKundeInfoArray($kundenr);
+    $waehrkz = $kundeInfoArray[0]['waehrkz'];
     $kundeName = $kundeInfoArray[0]['name1'];
     
     $kundeGdatPath = $apl->getKundeGdatPath($kundenr);
@@ -273,7 +274,7 @@ foreach($imas as $ima){
 	    $kostenSum = $menge*$kostenStk;
 	    $obsah = number_format($kostenSum, 2, ',', ' ');
 	    $pdf->Cell(40, 5, $obsah, '0', 0, 'R', 0);
-	    $pdf->Cell(0, 5, "EUR", '0', 1, 'R', 0);
+	    $pdf->Cell(0, 5, "$waehrkz", '0', 1, 'R', 0);
 	    $sumVzKd+=$vzkd;
 	    $sumKostenStk+=$kostenStk;
 	    $sumKostenSum+=$kostenSum;
@@ -290,7 +291,7 @@ foreach($imas as $ima){
 	$pdf->Cell(35, 5, $obsah, 'BT', 0, 'R', 1);
 	$obsah = number_format($sumKostenSum, 2, ',', ' ');
 	$pdf->Cell(40, 5, $obsah, 'BT', 0, 'R', 1);
-	$pdf->Cell(0, 5, "EUR", 'BT', 1, 'R', 1);
+	$pdf->Cell(0, 5, "$waehrkz", 'BT', 1, 'R', 1);
     }
     
     //tabulka erstellung/genehmigung

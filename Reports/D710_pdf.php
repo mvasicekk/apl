@@ -428,7 +428,18 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
         // fremdauftr je u kazde palety, tj. u kazdeho radku v dauftr
-        
+        $im = getValueForNode($childNodes,"im");
+	$ex = getValueForNode($childNodes,"ex");
+	$teilnr = getValueForNode($childNodes,"teilnr");
+	$a = AplDB::getInstance();
+	$gtArray = $a->getGTArray($im,$ex,$teilnr);
+	if($gtArray!==NULL){
+	    $gt = join(',',$gtArray);
+	}
+	else{
+	    $gt = "";
+	}
+	
 	$obsah="";
 	// mongolab sharding partition over geological areas
 	//$obsah=number_format($obsah,0,',',' ');
@@ -445,7 +456,9 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$cellobsah = preg_replace("/&#?[a-z0-9]{2,8};/i","",getValueForNode($childNodes,"fremdpos"));
 	$cellobsah = trim(html_entity_decode(strip_tags($cellobsah)));
 	
-	$pdfobjekt->Cell(0,$vyskaradku,"Pos.:".$cellobsah,'0',1,'L',$fill);
+	$pdfobjekt->Cell(30,$vyskaradku,"Pos.:".$cellobsah,'0',0,'L',$fill);
+	
+	$pdfobjekt->Cell(0,$vyskaradku,"GT:".$gt,'0',1,'L',$fill);
 
 
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);

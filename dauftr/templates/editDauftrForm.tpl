@@ -39,9 +39,6 @@
 	
 	<div id="dauftrgrid" style="margin:auto;"></div>
 	    
-	<div id="map-container">
-	    
-	</div>
 	</div>
     </body>
 </html>

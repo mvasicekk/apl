@@ -521,7 +521,18 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	// dummy
         // fremdauftr je u kazde palety, tj. u kazdeho radku v dauftr
-        
+        $im = getValueForNode($childNodes,"im");
+	$ex = getValueForNode($childNodes,"ex");
+	$teilnr = getValueForNode($childNodes,"teilnr");
+	$a = AplDB::getInstance();
+	$gtArray = $a->getGTArray($im,$ex,$teilnr);
+	if($gtArray!==NULL){
+	    $gt = join(',',$gtArray);
+	}
+	else{
+	    $gt = "";
+	}
+	
 	$obsah="";
 	//$obsah=number_format($obsah,0,',',' ');
 	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
@@ -530,8 +541,8 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 //	$pdfobjekt->Cell(25,$vyskaradku,getValueForNode($childNodes,"im"),'0',0,'L',$fill);
         $pdfobjekt->Cell(25,$vyskaradku,'','0',0,'L',$fill);
 	$pdfobjekt->Cell(50,$vyskaradku,"Best.Nr.:".getValueForNode($childNodes,"fremdauftr"),'0',0,'L',$fill);
-	$pdfobjekt->Cell(0,$vyskaradku,"Pos.:".getValueForNode($childNodes,"fremdpos"),'0',1,'L',$fill);
-
+	$pdfobjekt->Cell(30,$vyskaradku,"Pos.:".getValueForNode($childNodes,"fremdpos"),'0',0,'L',$fill);
+	$pdfobjekt->Cell(0,$vyskaradku,"GT:".$gt,'0',1,'L',$fill);
 
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }

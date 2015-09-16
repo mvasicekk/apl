@@ -169,7 +169,7 @@ $options = array(
 					'rowTag'=>'export',
 					'elements'=>array(
 						'ex',
-                        'termin',
+						'termin',
 						'gew_gut',
 						'positionen',
 						'Kunde',
@@ -198,6 +198,8 @@ $options = array(
 									'idColumn'=>'im',
 									'elements'=>array(
 										'im',
+										'ex',
+										'teilnr'=>'Teil',
 										'geliefert'=>'#geliefert_korr();',
 										'angeliefert',
 										'fremdauftr',

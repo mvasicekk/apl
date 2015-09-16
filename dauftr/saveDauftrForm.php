@@ -7,6 +7,7 @@ $a = AplDB::getInstance();
 $index2dbField = array(
     'bemerkung'=>'bemerkung',
     'fremdpos'=>'fremdpos',
+    'giesstag'=>'giesstag',
     'fremdauftr'=>'fremdauftr',
     'im_stk'=>'Stück',
     'plan'=>'termin'

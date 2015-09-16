@@ -93,7 +93,7 @@ array(
 "auslief" 
 => array ("popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
 
-"fremdpos" 
+"giesstag" 
 => array ("popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>0),
 
 
@@ -138,8 +138,8 @@ array(
 "auslief" 
 => array ("popis"=>"EXDat","sirka"=>15,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>1),
 
-"fremdpos" 
-=> array ("popis"=>"fremdpos","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>1),
+"giesstag" 
+=> array ("popis"=>"GT","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>1),
 
 );
 

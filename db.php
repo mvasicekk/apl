@@ -2178,7 +2178,7 @@ public function istExportiert($import, $impal){
      * @param type $teil
      * @param type $tat
      */
-    public function getDposInfo($teil, $tat = NULL) {
+    public function getDposInfo($teil, $tat = NULL,$no3=FALSE) {
 	if ($tat === NULL) {
 	    $sql.=" select ";
 	    $sql.=" dpos.`TaetNr-Aby` as abgnr,";
@@ -2196,6 +2196,9 @@ public function istExportiert($import, $impal){
 	    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby`";
 	    $sql.=" where ";
 	    $sql.=" teil='$teil'";
+	    if($no3===TRUE){
+		$sql.=" and dpos.`TaetNr-Aby`<>3";
+	    }
 	    $sql.=" order by";
 	    $sql.=" dpos.`TaetNr-Aby`";
 	} else {
@@ -2621,6 +2624,7 @@ public function istExportiert($import, $impal){
 	$sql.=" ,`stück` as im_stk";
 	$sql.=" ,bemerkung";
 	$sql.=" ,fremdpos";
+	$sql.=" ,giesstag";
 	$sql.=" ,fremdauftr";
 	$sql.=" ,`auftragsnr-exp` as ex";
 	$sql.=" ,termin as plan";
@@ -2990,6 +2994,35 @@ public function istExportiert($import, $impal){
             return "So";
     }
     
+    /**
+     * 
+     * @param type $im
+     * @param type $ex
+     * @param type $teilnr
+     */
+    public function getGTArray($im,$ex,$teilnr){
+	$sql.=" select";
+	$sql.=" dauftr.giesstag";
+	$sql.=" from";
+	$sql.=" dauftr";
+	$sql.=" where";
+	$sql.=" `auftragsnr-exp`='$ex'";
+	$sql.=" and auftragsnr='$im'";
+	$sql.=" and teil='$teilnr'";
+	$sql.=" group by";
+	$sql.=" dauftr.giesstag";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $gtA = array();
+	    foreach ($rows as $row){
+		array_push($gtA,$row['giesstag']);
+	    }
+	    return $gtA;
+	}
+	else{
+	    return NULL;
+	}
+    }
     /**
      *
      * @param type $teil

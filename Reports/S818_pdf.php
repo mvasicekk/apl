@@ -78,7 +78,7 @@ array(
 "pal" 
 => array ("popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
-"fremdpos" 
+"giesstag" 
 => array ("popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "Gew" 
@@ -115,7 +115,7 @@ $cells_header = array(
 "pal" 
 => array ("nf"=>array(0,',',' '),"popis"=>"Beh","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
-"fremdpos" 
+"giesstag" 
 => array ("nf"=>array(0,',',' '),"popis"=>"GT","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "Gew" 
@@ -394,7 +394,7 @@ function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole)
 	$pdfobjekt->Cell($cells['pal']['sirka'],$vyskaradku,$obsah,'T',0,'L',$fill);
 
 	$obsah="";
-	$pdfobjekt->Cell($cells['fremdpos']['sirka'],$vyskaradku,$obsah,'T',0,'L',$fill);
+	$pdfobjekt->Cell($cells['giesstag']['sirka'],$vyskaradku,$obsah,'T',0,'L',$fill);
 
 	$obsah="";
 	$pdfobjekt->Cell($cells['Gew']['sirka'],$vyskaradku,$obsah,'T',0,'R',$fill);

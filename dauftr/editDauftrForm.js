@@ -9,6 +9,7 @@ $(document).ready(function(){
 		,{ title: "Bemerkung", dataIndx: "bemerkung", align: "left",width:280,dataType:"string",className:"editable" }
 		,{ title: "Fremdauftr", align:"left",dataIndx: "fremdauftr",width:110,dataType:"string",className:"editable" }	
 		,{ title: "Fremdpos", align:"left",dataIndx: "fremdpos",width:110,dataType:"string",className:"editable" }
+		,{ title: "GT", align:"left",dataIndx: "giesstag",width:110,dataType:"string",className:"editable" }
 		,{ title: "Plan", align:"left",dataIndx: "plan",width:80,dataType:"string",className:"editable" }
 		,{ title: "ID", align:"right",editable:false,dataIndx: "id",width:100,dataType:"integer",className:'rdonly' }
 	    ];

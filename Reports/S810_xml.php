@@ -45,7 +45,7 @@ $sql.=" d.`stk-exp` as impkorr,sum(if(drueck.`stück` is not null,drueck.`stück
 $sql.=" d.`stk-exp` as stkexp,drech.`stück` as stkre,";
 $sql.=" d.`auss2_stk_exp`+d.`auss4_stk_exp`+d.`auss6_stk_exp` as aussstk,";
 $sql.=" $pt_auss.auss as aussstk_all,";
-$sql.=" d.`auftragsnr`,   d.`abgnr`,d.`fremdpos`, d.`pal-nr-exp` as pal_exp";
+$sql.=" d.`auftragsnr`,   d.`abgnr`,d.`fremdpos`,d.`giesstag`, d.`pal-nr-exp` as pal_exp";
 $sql.=" FROM dauftr d";
 $sql.=" join daufkopf dim on d.auftragsnr=dim.auftragsnr";
 $sql.=" left join daufkopf dex on d.`auftragsnr-exp`=dex.auftragsnr";
@@ -102,6 +102,7 @@ $options = array(
                                                                 'aussstk_all',
 								'abgnr',
 								'fremdpos',
+								'giesstag',
 								'auftragsnrex',
 								'auslief',
 								'pal_exp'

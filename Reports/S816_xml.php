@@ -41,7 +41,7 @@ $db->query($pt);
 // provedu dotaz nad vytvorenymi pohledy
 $pt_hotovosum=$pcip.$views[0];
 
-$sql="SELECT dauftr.AuftragsNr, dauftr.Teil, dauftr.Stück, dauftr.fremdpos,dauftr.`pos-pal-nr`, dkopf.Gew, `gew`*`stück` AS vahacelkem, dauftr.`auftragsnr-exp`, ".$pt_hotovosum.".gutstk, ".$pt_hotovosum.".auss, $pt_hotovosum.auss_2,$pt_hotovosum.auss_4,$pt_hotovosum.auss_6,dauftr.KzGut, daufkopf.bestellnr,DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d') as Aufdat, dauftr.Termin";
+$sql="SELECT dauftr.AuftragsNr, dauftr.Teil, dauftr.Stück, dauftr.fremdpos,dauftr.giesstag,dauftr.`pos-pal-nr`, dkopf.Gew, `gew`*`stück` AS vahacelkem, dauftr.`auftragsnr-exp`, ".$pt_hotovosum.".gutstk, ".$pt_hotovosum.".auss, $pt_hotovosum.auss_2,$pt_hotovosum.auss_4,$pt_hotovosum.auss_6,dauftr.KzGut, daufkopf.bestellnr,DATE_FORMAT(daufkopf.Aufdat,'%Y-%m-%d') as Aufdat, dauftr.Termin";
 $sql.=" FROM daufkopf INNER JOIN ((dkopf RIGHT JOIN dauftr ON dkopf.Teil = dauftr.Teil) LEFT JOIN ".$pt_hotovosum." ON (dauftr.AuftragsNr = ".$pt_hotovosum.".AuftragsNr) AND (dauftr.Teil = ".$pt_hotovosum.".Teil) AND (dauftr.`pos-pal-nr` = ".$pt_hotovosum.".`pos-pal-nr`)) ON daufkopf.AuftragsNr = dauftr.AuftragsNr";
 //$sql.=" WHERE (((dauftr.AuftragsNr) Between '".$auftragsnr_von."' And '".$auftragsnr_bis."') AND ((dauftr.Teil) Like '".$teil."') AND ((dauftr.`pos-pal-nr`)>0) AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.KzGut)='G'))";
 $sql.=" WHERE (((daufkopf.kunde) Between '".$kunde_von."' And '".$kunde_bis."') AND ((dauftr.Teil) Like '".$teil."') AND ((dauftr.`pos-pal-nr`)>0) AND ((dauftr.`auftragsnr-exp`) Is Null) AND ((dauftr.KzGut)='G'))";
@@ -155,6 +155,7 @@ $options = array(
 							'auss_6',
 							'pal'=>'pos-pal-nr',
 							'fremdpos',
+							'giesstag',
 							'Gew',
 							'vahacelkem',
 							'Termin'

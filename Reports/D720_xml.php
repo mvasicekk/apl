@@ -206,6 +206,8 @@ $options = array(
 									'idColumn'=>'im',
 									'elements'=>array(
 										'im',
+										'ex',
+										'teilnr'=>'Teil',
 										//'geliefertG',
 										'geliefert'=>'#geliefert_korr();',
 										'angeliefert',

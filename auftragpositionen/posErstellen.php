@@ -44,7 +44,8 @@ for ($i = 0; $i < $pal_nr; $i++) {
 	$vzkd = $position->vzkd;
 	$vzaby = $position->vzaby;
 
-	if ($kz_druck != 0) {
+	// TODO do dauftr nezapisovat operace 3
+	if (($kz_druck != 0)&&($abgnr!=3)) {
 	    if ($Gtat == 'G') {
 		$sql = "insert into dauftr (giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,kg_stk_bestellung,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
 		$sql.="vzkd,vzaby,comp_user_accessuser,inserted,termin) values";

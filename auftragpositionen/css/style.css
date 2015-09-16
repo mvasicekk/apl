@@ -64,11 +64,11 @@ div.page-header h4{
 }
 #dpos tr.kzgut{
 	font-weight: bold;
-	background-color: lightyellow;
+	background-color: yellow;
 }
 
 #dpos tr.disabled{
-	background-color: lightgray;
+	background-color: gray;
 }
 
 #spinner {

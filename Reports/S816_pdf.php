@@ -76,7 +76,7 @@ array(
 "pal" 
 => array ("popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
-"fremdpos" 
+"giesstag" 
 => array ("popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "Gew" 
@@ -116,7 +116,7 @@ $cells_header = array(
 "pal" 
 => array ("nf"=>array(0,',',' '),"popis"=>"Beh","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
-"fremdpos" 
+"giesstag" 
 => array ("nf"=>array(0,',',' '),"popis"=>"GT","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "Gew" 

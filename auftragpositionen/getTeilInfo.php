@@ -11,7 +11,7 @@ require_once '../db.php';
     $teilInfo = array();
     
     $teilInfo['teil'] = $a->getTeilInfoArray($teil);
-    $teilInfo['dpos'] = $a->getDposInfo($teil);
+    $teilInfo['dpos'] = $a->getDposInfo($teil,NULL,TRUE);
     
     //vypocet cen
     $auftragInfoA = $a->getAuftragInfoArray($auftrag);
