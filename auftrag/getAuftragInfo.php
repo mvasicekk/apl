@@ -18,10 +18,20 @@ if($auftragInfoA!==NULL){
 }
 
 // dauftrpositionen
+
 $dauftrPos = $a->getDauftrRowsForImport($auftragsnr);
 if($dauftrPos!==NULL){
     $oldpal = $dauftrPos[0]['imp_pal'];
     foreach($dauftrPos as $p=>$row){
+	//zjistim zda ma exportni cislo u pozice fakturu
+	$ex = $row['ex'];
+	$hatRechnung = 0;
+	if(strlen(trim($ex))>0){
+	    $exInfoArray = $a->getAuftragInfoArray($auftragsnr);
+	    $hatRechnung = $exInfoArray[0]['hatrechnung'];
+	}
+	$dauftrPos[$p]['hatrechnung']=$hatRechnung;
+	$dauftrPos[$p]['edit']=0;
 	if($row['imp_pal']!=$oldpal){
 	    $dauftrPos[$p]['newpal']=1;
 	    $oldpal = $row['imp_pal'];

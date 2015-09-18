@@ -492,7 +492,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Write(25,getValueForNode($paletteChildNodes,"pal"));
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	$pdfobjekt->SetXY($x1,$y1);
-	$pdfobjekt->Write(8,getValueForNode($paletteChildNodes,"fremdpos"));$pdfobjekt->Ln();
+	$pdfobjekt->Write(8,getValueForNode($paletteChildNodes,"giesstag"));$pdfobjekt->Ln();
 
 	// pole pro cislo dilu
 	$pdfobjekt->Rect($x_pocatek,$y_pocatek-10+30+3,52,24);
@@ -741,7 +741,7 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 35);
 	$pdfobjekt->SetX($paletaPoziceX+5);
 	$pdfobjekt->SetY(28+$y_offset+25);
-	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"fremdpos"), "0", 0 , "R");
+	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"giesstag"), "0", 0 , "R");
 	
 	
 	$pdfobjekt->SetFont("FreeSans", "", 20);
@@ -779,7 +779,7 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 35);
 	$pdfobjekt->SetX($paletaPoziceX+5);
 	$pdfobjekt->SetY(28+$y_offset+25);
-	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"fremdpos"), "0", 0 , "R");
+	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"giesstag"), "0", 0 , "R");
 
 	$pdfobjekt->SetFont("FreeSans", "", 20);
 	//$pdfobjekt->SetXY(10,10);

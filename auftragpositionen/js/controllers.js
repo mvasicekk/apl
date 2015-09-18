@@ -6,6 +6,27 @@
 
 var aplApp = angular.module('auftragposApp');
 
+aplApp.directive("enterfocus", function () {
+        return {
+            restrict: "A",
+            link: function ($scope, elem, attrs) {
+                var focusables = $(":focusable");
+                elem.bind("keydown", function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code === 13) {
+                        var current = focusables.index(this);
+                        var next = focusables.eq(current + 1).length ? focusables.eq(current + 1) : focusables.eq(0);
+			console.log('current='+current+' next=');
+			console.log(next);
+                        next.focus();
+			next.select();
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+});
+	
 aplApp.directive('palcanexistValidator', function($http, $q) {
     return {
         require: 'ngModel',
@@ -24,7 +45,7 @@ aplApp.directive('palcanexistValidator', function($http, $q) {
     };
 });
 
-aplApp.controller('detailController', function ($filter,$scope, $routeParams,$http,$timeout,$window) {
+aplApp.controller('detailController', function (setfocus,$filter,$scope, $routeParams,$http,$timeout,$window) {
     
     var auftragTable;
     
@@ -83,6 +104,7 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
     $scope.teilOnSelect = function($item, $model){
 	    console.log($item);
 	    $scope.getTeilInfo();
+	    $('#gew').focus();
     }
     
     $scope.refreshTeil = function (e) {
@@ -142,6 +164,13 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
 			if($scope.teilInfo.teil.status=='ALT'||$scope.teilInfo.teil.status=='GSP'){
 			    $scope.allowErfassen = false;
 			}
+			$timeout(function() {
+			    var element = $window.document.getElementById('gew');
+			    if(element){
+				element.focus();
+				element.select();
+			    }
+			});
 		    });
     }
     
@@ -185,6 +214,26 @@ aplApp.controller('detailController', function ($filter,$scope, $routeParams,$ht
 		    $scope.dpos[i].kzgut='';
 		}
 	    }
+	}
+    }
+    
+    $scope.explanmitChange = function(){
+	// pokud je prazdny tak nedelam nic
+	if($scope.positionInfo.explanmit==''){
+	    return;
+	}
+	//test jestli je na zacatku P
+	
+	$scope.positionInfo.explanmit = $scope.positionInfo.explanmit.toUpperCase();
+	console.log($scope.positionInfo.explanmit.indexOf('P'));
+	if($scope.positionInfo.explanmit.indexOf('P')===0){
+	    console.log('mam p na zacatku, nedelam nic');
+	    // P mam na zacatku nedelam nic
+	}
+	else{
+	    // na zacatek pridam P
+	    console.log('pridavam P na zacatek');
+	    $scope.positionInfo.explanmit = 'P'+$scope.positionInfo.explanmit;
 	}
     }
 });

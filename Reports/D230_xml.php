@@ -25,7 +25,7 @@ $sql.=" dkopf.verpackungmenge,teilbez,teillang,gew,`art guseisen` as artguseisen
 $sql.=" dkopf.brgew,dkopf.restmengen_verw,";
 $sql.=" dverp.id,dverp.verp_id,dverp.verp_stk,`eink-artikel`.`art-name1` as verp_name,";  
 $sql.="`muster-platz` as musterplatz,DATE_FORMAT(`muster-vom`,'%d.%m.%Y') as mustervom,";
-$sql.=" dpos_id,`abgnr` as taetnr,`TaetBez-Aby-D` as tatbez_d,`TaetBez-Aby-T` as tatbez_t,vzaby,dpos.mittel,fremdpos,";
+$sql.=" dpos_id,`abgnr` as taetnr,`TaetBez-Aby-D` as tatbez_d,`TaetBez-Aby-T` as tatbez_t,vzaby,dpos.mittel,fremdpos,giesstag,";
 $sql.=" if(`vz-min-aby`<>0,round(60/`vz-min-aby`),0) as ks_hod";
 $sql.=" from dauftr";
 $sql.=" join daufkopf using(auftragsnr)";
@@ -78,6 +78,7 @@ $options = array(
 								'musterplatz',
 								'mustervom',
 								'fremdpos',
+								'giesstag',
         							'taetigkeiten'=>array(
 									'rootTag'=>'taetigkeiten',
 									'rowTag'=>'taetigkeit',

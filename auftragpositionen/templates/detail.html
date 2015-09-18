@@ -20,7 +20,7 @@
 			    <ui-select
 				    autofocus
 				    ng-model="teil.selected" 
-				    ng-disabled="disabled" 
+				    enterfocus
 				    reset-search-input="false" 
 				    theme="bootstrap"
 				    on-select="teilOnSelect($item, $model)"
@@ -64,96 +64,132 @@
 		    <!-- restmenge, verpackung-->
 		    <div class="row">
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">Restmenge verw.</label>
-				<input ng-model="teilInfo.teil.restmengen_verw" disabled type="text" class="form-control">
-			    </div>	    
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">Verpackungmenge</label>
-				<input ng-model="teilInfo.teil.verpackungmenge" disabled type="text" class="form-control text-right">
-			    </div>	    
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">Br. Gewicht [kg]</label>
-				<input ng-model="teilInfo.teil.BrGew" disabled type="text" class="form-control text-right">
-			    </div>	    
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">NettoGewich [kg]</label>
-				<input required="" ng-model="teilInfo.teil.Gew" type="text" class="form-control text-right">
-			    </div>	    
 			</div>
 		    </div>
-		    
-		    <!-- -->
 		    <div class="row">
 			<div class="col-sm-3">
-			    <div class="form-group">
+				<input ng-model="teilInfo.teil.restmengen_verw" disabled type="text" class="form-control">
+			</div>
+			<div class="col-sm-3">
+				<input ng-model="teilInfo.teil.verpackungmenge" disabled type="text" class="form-control text-right">
+			</div>
+			<div class="col-sm-3">
+				<input ng-model="teilInfo.teil.BrGew" disabled type="text" class="form-control text-right">
+			</div>
+			<div class="col-sm-3">
+				<input name="gew" id='gew' enterfocus required="" ng-model="teilInfo.teil.Gew" type="text" class="form-control text-right">
+			</div>
+		    </div>
+		    <!------------------------------------------------------------------------------------------------------>
+		    <!-- informace pro vytvoreni palet -->
+		    <div class="row">
+			<div class="col-sm-3">
 				<label for="">PalStūckzahl / pocet palet</label>
-				<input required="" min="0" max="99" ng-model="positionInfo.palstk" type="number" class="form-control text-right">
-			    </div>	    
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">Stk pro Pal / kusu na palete</label>
-				<input required="" min="0" max="99999" ng-model="positionInfo.stkpropal" type="number" class="form-control text-right">
-			    </div>	    
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">erste Palnummer / cislo prvni palety</label>
-				<input  name="erstepal" stkinc="{{positionInfo.palstk}}:{{positionInfo.increment}}:{{auftragsnr}}" palcanexist-validator required="" ng-model-options="{allowInvalid: true,updateOn: 'default blur', debounce: { default: 200, blur: 0 }}" min="0" max="9999" ng-model="positionInfo.firstpal" type="number" class="form-control text-right">
-			    </div>	    
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
 				<label for="">Increment / prirustek</label>
-				<input  required="" min="1" max="100"  ng-model="positionInfo.increment" type="number" class="form-control text-right">
-			    </div>	    
 			</div>
 		    </div>
-		    
-		    <!-- -->
 		    <div class="row">
 			<div class="col-sm-3">
-			    <div title="aus Auftrag: {{positionInfo.fremdausauftrag}}" class="form-group">
-				<label for="">fremdauftr</label>
-				<input title="aus Auftrag: {{positionInfo.fremdausauftrag}}" ng-model="positionInfo.fremdauftr" type="text" class="form-control text-left">
-			    </div>	    
+				<input  enterfocus required="" min="0" max="99" ng-model="positionInfo.palstk" type="number" class="form-control text-right">
+			</div>
+			<div class="col-sm-3">
+				<input  enterfocus required="" min="0" max="99999" ng-model="positionInfo.stkpropal" type="number" class="form-control text-right">
+			</div>
+			<div class="col-sm-3">
+				<input   enterfocus name="erstepal" stkinc="{{positionInfo.palstk}}:{{positionInfo.increment}}:{{auftragsnr}}" palcanexist-validator required="" ng-model-options="{allowInvalid: true,updateOn: 'default blur', debounce: { default: 200, blur: 0 }}" min="0" max="9999" ng-model="positionInfo.firstpal" type="number" class="form-control text-right">
+			</div>
+			<div class="col-sm-3">
+				<input   enterfocus required="" min="1" max="100"  ng-model="positionInfo.increment" type="number" class="form-control text-right">
+			</div>
+		    </div>
+		    <!------------------------------------------------------------------------------------------------------------>
+		    
+		    <!-- -->
+		    		    <div class="row">
+			<div class="col-sm-3">
+				<label title="aus Auftrag: {{positionInfo.fremdausauftrag}}" for="">fremdauftr</label>
+			</div>
+			<div class="col-sm-3">
+				<label title="aus Auftrag: {{positionInfo.fremdausauftrag}}" for="">fremdpos</label>
+			</div>
+			<div class="col-sm-3">
+				<label for="">giesstag</label>
+			</div>
+			<div class="col-sm-3">
+				<label for="">EX geplant mit</label>
+			</div>
+		    </div>
+
+		    <div class="row">
+			<div class="col-sm-3">
+				<input  enterfocus title="aus Auftrag: {{positionInfo.fremdausauftrag}}" ng-model="positionInfo.fremdauftr" type="text" class="form-control text-left">
 			</div>
 			<div title="aus Auftrag: {{positionInfo.fremdausauftrag}}" class="col-sm-3">
-			    <div class="form-group">
-				<label for="">fremdpos</label>
-				<input title="aus Auftrag: {{positionInfo.fremdausauftrag}}" ng-model="positionInfo.fremdpos" type="text" class="form-control text-right">
-			    </div>	    
+				<input  enterfocus title="aus Auftrag: {{positionInfo.fremdausauftrag}}" ng-model="positionInfo.fremdpos" type="text" class="form-control text-right">
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
-				<label for="">giesstag</label>
-				<input ng-model="positionInfo.gt" type="text" class="form-control text-left">
-			    </div>	    
+				<input  enterfocus ng-model="positionInfo.gt" type="text" class="form-control text-left">
 			</div>
 			<div class="col-sm-3">
-			    <div class="form-group">
-				<label for="">EX geplant mit</label>
-				<input ng-model="positionInfo.explanmit" type="text" class="form-control">
-			    </div>	    
+			    <input  enterfocus ng-change="explanmitChange()" ng-model="positionInfo.explanmit" maxlength="9" type="text" class="form-control">
 			</div>
 		    </div>
-		    
+		    <!---------------------------------------------------------------->
 		    <!-- -->
 		    <div class="row">
 			<div class="col-sm-6">
-			    <button type='button' ng-click="posErstellen('formValid')" ng-show="(erfassenform.$valid && allowErfassen)" class="btn btn-info form-control">Positionen erstellen</button>
+			    <button  type='button' ng-click="posErstellen('formValid')" ng-show="(erfassenform.$valid && allowErfassen)" class="btn btn-info form-control">Positionen erstellen</button>
 			</div>
 			<div class="col-sm-6">
 			    <button type='button' ng-click="endeClick()" class="btn btn-danger form-control">Ende / konec</button>
 			</div>
 		    </div>
+		    
+		    <!-- dokumenty k dilu -->
+		    <div ng-if="teilInfo.dokumente.length>0" class="row">
+			<div class="col-sm-12">
+			    <table id='dokutable' class="table table-condensed table-striped">
+				<thead>
+				    <tr>
+					<th>dokunr</th>
+					<th>dokutyp</th>
+					<th>freigabe am</th>
+					<th>freigabe vom</th>
+					<th>musterplatz</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    <tr ng-repeat="d in teilInfo.dokumente">
+					<td>{{d.doku_nr}}</td>
+					<td>{{d.doku_beschreibung}}</td>
+					<td>{{d.freigabe_am}}</td>
+					<td>{{d.freigabe_vom}}</td>
+					<td>{{d.musterplatz}}</td>
+				    </tr>
+				</tbody>
+			    </table>
+			</div>
+		    </div>
+		    
+		    
 		</div>
 	    </div>
 

@@ -52,6 +52,18 @@ require_once '../db.php';
 
     $explanmit = "P".$kunde."99999";
     
+    // jake mam dokumenty k dilu - stejna tabulka jako na prac papiru
+    
+    $dokLegendArray = $a->getTeilDokuDistinctDokuArray($teil,TRUE);
+//    if($dokLegendArray!==NULL){
+//	foreach ($dokLegendArray as $i=>$row){
+//	    $dokunr = $row['doku_nr'];
+//	    $dokuTypArray = $a->getDokuTypArray($dokunr);
+//	    $dokLegendArray[$i]['dokutyp'] = $dokuTypArray[0]['doku_beschreibung'];
+//	}
+//    }
+    $teilInfo['dokumente'] = $dokLegendArray;
+    
     $returnArray = array(
 	'e'=>$e,
 	'teilInfo'=>$teilInfo,

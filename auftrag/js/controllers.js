@@ -261,6 +261,15 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    });
 	}
     };
+    
+    $scope.makeEditable = function(r){
+	r.edit=1;
+	//+ zmenit na tlacitko pro ulozeni radku
+    }
+    $scope.saveDposRow = function(r){
+	// pomoct http.post ulozit radek a pote nastevit edit=0
+	r.edit=0;
+    }
 });
 
 

@@ -80,7 +80,11 @@ div.page-header h4{
 }
 #dauftr tr.kzgut{
 	font-weight: bold;
-	background-color: lightyellow;
+	background-color: yellow;
+}
+
+#dauftr tr.edited{
+	background-color: lightgreen;
 }
 
 #dauftr td.newpal{
