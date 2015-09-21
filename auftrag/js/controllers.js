@@ -9,6 +9,9 @@ var aplApp = angular.module('auftragApp');
 aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout) {
     
     var auftragTable;
+
+    // pro uchovani hodnot pred editaci radku
+    $scope.dauftragOriginalArray = [];
     
     $scope.formDataChanged = false;
     $scope.auftragsnr = $routeParams.auftragsnr;
@@ -264,11 +267,61 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     
     $scope.makeEditable = function(r){
 	r.edit=1;
+	console.log(r);
+	// schovam si puvodni hodnoty pro pripad cancelEditDposRow
+	$scope.dauftragOriginalArray.push(JSON.parse(JSON.stringify(r)));
+	console.log($scope.dauftragOriginalArray);
 	//+ zmenit na tlacitko pro ulozeni radku
     }
     $scope.saveDposRow = function(r){
 	// pomoct http.post ulozit radek a pote nastevit edit=0
 	r.edit=0;
+	//odstranit polozku z dauftragOriginalArray
+	for(i=0;i<$scope.dauftragOriginalArray.length;i++){
+	    if(r.id_dauftr==$scope.dauftragOriginalArray[i].id_dauftr){
+		//odstranit polozku z pole
+		$scope.dauftragOriginalArray.splice(i,1);
+		break;
+	    }
+	}
+	console.log($scope.dauftragOriginalArray);
+	// a vlastni ulozeni
+	var params = {r: r};
+	    return $http.post(
+		    './saveDposRow.php',
+		    {params: params}
+	    ).then(function (response) {
+		console.log(response.data);
+		$scope.dauftrPos = response.data.dauftragPositionen;
+	    });
+    }
+    
+    $scope.cancelEditDposRow = function(r){
+	//r.edit=0;
+	original = undefined;
+	//najit polozku v dauftragOriginalArray,vratit puvodni stav a odstranit z pole
+	for(i=0;i<$scope.dauftragOriginalArray.length;i++){
+	    if(r.id_dauftr==$scope.dauftragOriginalArray[i].id_dauftr){
+		original = JSON.parse(JSON.stringify($scope.dauftragOriginalArray[i]));
+		//odstranit polozku z pole
+		$scope.dauftragOriginalArray.splice(i,1);
+		break;
+	    }
+	}
+	if(original!==undefined){
+	    for(i=0;i<$scope.dauftrPos.length;i++){
+		if(original.id_dauftr==$scope.dauftrPos[i].id_dauftr){
+		    for(p in original){
+			if(original.hasOwnProperty(p)){
+			    $scope.dauftrPos[i][p] = original[p];
+			}
+		    }
+		    $scope.dauftrPos[i].edit=0;
+		    break;
+		}
+	    }
+	}
+	console.log($scope.dauftragOriginalArray);
     }
 });
 

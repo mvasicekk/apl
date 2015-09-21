@@ -194,12 +194,12 @@ aplApp.controller('detailController', function (setfocus,$filter,$scope, $routeP
 		    )
 		    .then(function (response) {
 			//presunout se na spravu zakazky
-			$window.location.href = '../dauftr/dauftr.php?auftragsnr='+response.data.auftrag;
+			$window.location.href = '../auftrag/auftrag.php#/det/'+response.data.auftrag;
 		    });
     };
     
     $scope.endeClick = function(){
-	$window.location.href = '../dauftr/dauftr.php?auftragsnr='+$scope.auftragsnr;
+	$window.location.href = '../auftrag/auftrag.php#/det/'+$scope.auftragsnr;
     };
     
     $scope.updateKzGut = function(r){

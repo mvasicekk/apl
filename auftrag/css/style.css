@@ -77,6 +77,7 @@ div.page-header h4{
 
 #dauftr td{
     padding: 1px;
+    vertical-align: middle;
 }
 #dauftr tr.kzgut{
 	font-weight: bold;

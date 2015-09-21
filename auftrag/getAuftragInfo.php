@@ -27,8 +27,13 @@ if($dauftrPos!==NULL){
 	$ex = $row['ex'];
 	$hatRechnung = 0;
 	if(strlen(trim($ex))>0){
-	    $exInfoArray = $a->getAuftragInfoArray($auftragsnr);
-	    $hatRechnung = $exInfoArray[0]['hatrechnung'];
+	    $exInfoArray = $a->getAuftragInfoArray($ex);
+	    if($exInfoArray!==NULL){
+		$hatRechnung = $exInfoArray[0]['hatrechnung'];
+	    }
+	    else{
+		$hatRechnung = 0;
+	    }
 	}
 	$dauftrPos[$p]['hatrechnung']=$hatRechnung;
 	$dauftrPos[$p]['edit']=0;

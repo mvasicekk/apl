@@ -8243,6 +8243,67 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
 	return mysql_affected_rows();
     }
     
+    
+//    function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk,$termin,$auftragsnr_exp,$pos_pal_nr_exp,$fremdauftr,$fremdpos,$dauftr_id)
+//{
+//	$dauftrRow = getDauftrRowFromId($dauftr_id);
+//	
+//	$pos_pal_nr_exp=chop($_GET['pos_pal_nr_exp']);
+//	if(strlen($pos_pal_nr_exp)==0)
+//		$pos_pal_nr_exp='NULL';
+//		
+//	$auftragsnr=$dauftrRow['auftragsnr'];
+//	$pal=$dauftrRow['pos-pal-nr'];
+//	$teil=$dauftrRow['teil'];
+//	$sql = "update dauftr set `stück`='$stk',termin='$termin',`auftragsnr-exp`=$auftragsnr_exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";
+//	$sql.=" where ((auftragsnr='$auftragsnr') and (teil='$teil') and (`pos-pal-nr`='$pal')) limit 20";
+//	mysql_query('set names utf8');
+//	mysql_query($sql);
+//	$mysql_error=mysql_error();
+//	
+//	// musim vzhledem ke zmene poctu importnich kusu udelat i zmenu v dlagerbew
+//	// najdu di odpovidajici import_auftrag,teil,import_pal
+//	// mam z predesla
+//
+//	// zmena nemuzu udelat jednoduchy update, protoze v pripade, ze mam udelanou inventuru, tak se mi posune
+//	// pri updatu i timestamp a ten nemuzu natvrdo zapsat.
+//
+//	// musim udelat storno zaznam a vytvorit novy
+//	// nejdriv si vytahnu stary zaznam
+//	// musim vystornovat sumu vsech kusu daneho dilu
+//	// TODO: nemusi spravne fungovat pokud se v prubehu zmeni prvni sklad
+//	$sql_select = "select sum(gut_stk) as gut_stk,max(lager_nach) as lager_nach from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
+//	$res = mysql_query($sql_select);
+//	$row = mysql_fetch_array($res);
+//	$gut_stk = $row['gut_stk'];
+//	$storno_stk = $gut_stk * (-1);
+//	$lager_nach = $row['lager_nach'];
+//	$user = get_user_pc();
+//
+//	// pripravim storno zaznam
+//	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+//	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
+//	// pokud je co stornovat, provedu prikaz
+//	if($storno_stk!=0)
+//        mysql_query($sql_insert_storno);
+//
+//	// pripravim novy zaznam
+//	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+//	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
+//	mysql_query($sql_insert_storno);
+//
+//	$archiv = $potvrzeni - (45 * $kolem);
+//	// pri uprave poctu kusu u dilu, ktery uz ma inventuru zobrazim hlaseni
+//	// co mam vratit za hodnotu a jak ji vyhodnotit ?
+//	// 1. zjistim si datum inventury dilu
+//
+//	//
+//	//	$sql_update = "update dlagerbew set gut_stk='$stk' where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0')) limit 1";
+//	//	mysql_query($sql_update);
+//	
+//	return $mysql_error;
+//}
+
     /**
      *
      * @param type $stk
@@ -8254,23 +8315,17 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
      * @param type $dauftr_id
      * @return type 
      */
-    public function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id) {
+    public function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id,$gt,$user) {
+
 	$dauftrRow = $this->getDauftrRow($dauftr_id);
 
-	$pos_pal_nr_exp = chop($_GET['pos_pal_nr_exp']);
-	if (strlen($pos_pal_nr_exp) == 0)
-	    $pos_pal_nr_exp = 'NULL';
-	
-//	$stkImportUrsprung = $dauftrRow['stk'];
-	
 	$auftragsnr = $dauftrRow['auftragsnr'];
-	$pal = $dauftrRow['pos-pal-nr'];
+	$pal = $dauftrRow['pal'];
 	$teil = $dauftrRow['teil'];
-	$sql = "update dauftr set `stück`='$stk',termin='$termin',`auftragsnr-exp`=$auftragsnr_exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";
+	
+	$sql = "update dauftr set giesstag='$gt',`stück`='$stk',termin='$termin',`auftragsnr-exp`=$auftragsnr_exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";
 	$sql.=" where ((auftragsnr='$auftragsnr') and (teil='$teil') and (`pos-pal-nr`='$pal')) limit 20";
-	mysql_query('set names utf8');
-	mysql_query($sql);
-	$mysql_error = mysql_error();
+	$this->query($sql);
 
 	// musim vzhledem ke zmene poctu importnich kusu udelat i zmenu v dlagerbew
 	// najdu di odpovidajici import_auftrag,teil,import_pal
@@ -8283,27 +8338,25 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
 	// TODO: nemusi spravne fungovat pokud se v prubehu zmeni prvni sklad
 	// to cele provedu jen v pripade ze se zmenil pocet importnich kusu
 
-//	if ($stk != $stkImportUrsprung) {
-	    $sql_select = "select sum(gut_stk) as gut_stk,max(lager_nach) as lager_nach from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
-	    $res = mysql_query($sql_select);
-	    $row = mysql_fetch_array($res);
-	    $gut_stk = $row['gut_stk'];
-	    $storno_stk = $gut_stk * (-1);
-	    $lager_nach = $row['lager_nach'];
-	    $user = get_user_pc();
-
-	    // pripravim storno zaznam
-	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
-	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
-	    // pokud je co stornovat, provedu prikaz
-	    if ($storno_stk != 0)
-		mysql_query($sql_insert_storno);
-
-	    // pripravim novy zaznam
-	    $sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
-	    $sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
-	    mysql_query($sql_insert_storno);
-//	}
+	$sql_select = "select sum(gut_stk) as gut_stk,max(lager_nach) as lager_nach from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
+	$rows = $this->getQueryRows($sql_select);
+	$row = $rows[0];
+	$gut_stk = $row['gut_stk'];
+	$storno_stk = $gut_stk * (-1);
+	$lager_nach = $row['lager_nach'];
+	
+	// pripravim storno zaznam
+	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$storno_stk','0','$lager_nach','$user')";
+	
+	// pokud je co stornovat, provedu prikaz
+	if ($storno_stk != 0){
+	    $this->query($sql_insert_storno);
+	}
+	// pripravim novy zaznam
+	$sql_insert_storno = "insert into dlagerbew (auftrag_import,teil,pal_import,gut_stk,lager_von,lager_nach,comp_user_accessuser)";
+	$sql_insert_storno.=" values ('$auftragsnr','$teil','$pal','$stk','0','$lager_nach','$user')";
+	$this->query($sql_insert_storno);
 
 	return $mysql_error;
     }
