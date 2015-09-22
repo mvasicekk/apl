@@ -807,6 +807,96 @@ public function grantAccess($user,$pass,$ip){
 		return $pole;
     }
 
+
+    /**
+     * 
+     * @param type $rechnung
+     * @param type $mazac
+     * @return type
+     */
+    public function backupRechnung($rechnung,$mazac){
+	$sqlSelect = "select * from drech where (auftragsnr='$rechnung')";
+	$rows = $this->getQueryRows($sqlSelect);
+//	$resSelect = mysql_query($sqlSelect);
+	if($rows!==NULL){
+		foreach($rows as $row){
+			$sqlInsert = "insert into drechdeleted ";
+			$sqlInsert.= "(AuftragsNr,";
+			$sqlInsert.= "Teil,";
+			$sqlInsert.= "`Stück`,";
+			$sqlInsert.= "Ausschuss,";
+			$sqlInsert.= "DM,";
+			$sqlInsert.= "`DM-Mehr`,";
+			$sqlInsert.= "Datum,";
+			$sqlInsert.= "Text1,";
+			$sqlInsert.= "Text2,";
+			$sqlInsert.= "`Taet-kz`,";
+			$sqlInsert.= "`Best-Nr`,";
+			$sqlInsert.= "`datum-auslief`,";
+			$sqlInsert.= "`pos-pal-nr`,";
+			$sqlInsert.= "fremdauftr,";
+			$sqlInsert.= "fremdpos,";
+			$sqlInsert.= "teilbez,";
+			$sqlInsert.= "kunde,";
+			$sqlInsert.= "vom,";
+			$sqlInsert.= "an,";
+			$sqlInsert.= "waehrung,";
+			$sqlInsert.= "origauftrag,";
+			$sqlInsert.= "deluser)";
+			$sqlInsert.= " values(";
+			$sqlInsert.= "'".$row['AuftragsNr']."',";
+			$sqlInsert.= "'".$row['Teil']."',";
+			$sqlInsert.= "'".$row['Stück']."',";
+			$sqlInsert.= "'".$row['Ausschuss']."',";
+			$sqlInsert.= "'".$row['DM']."',";
+			$sqlInsert.= "'".$row['DM-Mehr']."',";
+			$sqlInsert.= "'".$row['Datum']."',";
+			$sqlInsert.= "'".$row['Text1']."',";
+			$sqlInsert.= "'".$row['Text2']."',";
+			$sqlInsert.= "'".$row['Taet-kz']."',";
+			$sqlInsert.= "'".$row['Best-Nr']."',";
+			$sqlInsert.= "'".$row['datum-auslief']."',";
+			$sqlInsert.= "'".$row['pos-pal-nr']."',";
+			
+			if(strlen($row['fremdauftr'])==0)
+				$sqlInsert.="null,";
+			else
+				$sqlInsert.= "'".$row['fremdauftr']."',";
+				
+			if(strlen($row['fremdpos'])==0)
+				$sqlInsert.="null,";
+			else
+				$sqlInsert.= "'".$row['fremdpos']."',";
+				
+			$sqlInsert.= "'".$row['teilbez']."',";
+			$sqlInsert.= "'".$row['kunde']."',";
+			$sqlInsert.= "'".$row['vom']."',";
+			$sqlInsert.= "'".$row['an']."',";
+			$sqlInsert.= "'".$row['waehrung']."',";
+			
+			if(strlen($row['origauftrag'])==0)
+				$sqlInsert.="null,";
+			else
+				$sqlInsert.= "'".$row['origauftrag']."',";
+				
+			$sqlInsert.= "'"."$mazac')";
+			$this->query($sqlInsert);
+		}
+	}
+	return $chyby;
+}
+
+/**
+ * 
+ * @param type $auftragsnr
+ */
+    public function ImStkSpeichern($auftragsnr){
+	$sql = "update dauftr set im_stk=`stück` where auftragsnr='$auftragsnr'";
+	$this->query($sql);
+	$sql = "update daufkopf set im_stk_gespeichert=1 where auftragsnr='$auftragsnr'";
+	$this->query($sql);
+    }
+    
     /**
      *
      * @return type 
@@ -983,6 +1073,30 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	    return $rows;
 	}
     }
+    
+    /**
+ * vraci pole obsahujici datumy faktury a ausliefer
+ *
+ * @param <type> $rechnung cislo faktury
+ * @return array
+ * datum['fertig']
+ * datum['ausliefer_datum']
+ */
+public function getRechnungDatums($rechnung) {
+	$sql = "select daufkopf.fertig,daufkopf.ausliefer_datum from daufkopf where daufkopf.auftragsnr='$rechnung'";
+	$rows = $this->getQueryRows($sql);
+	if ($rows !== NULL) {
+	    $row = $rows[0];
+	    $datumy['fertig'] = $row['fertig'];
+	    $datumy['ausliefer_datum'] = $row['ausliefer_datum'];
+	} else {
+	    $datumy['fertig'] = "";
+	    $datumy['ausliefer_datum'] = "";
+	}
+
+	return $datumy;
+    }
+
     /**
      * vrati posledni cislo MA faktury ulozene u zakaznika
      * 
@@ -1232,6 +1346,19 @@ public function istExportiert($import, $impal){
 	}
 
 	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * smaze fakturu
+     *
+     * @param unknown_type $auftrag cislo faktury, kterou mam smazat
+     */
+    function deleteRechnung($auftrag) {
+	$sqlDelete = "delete from drech where (auftragsnr='$auftrag')";
+	$smazano = $this->query($sqlDelete);
+	$sqlUpdate = "update daufkopf set fertig='2100-01-01',ma_rechnr=0 where auftragsnr='$auftrag' limit 1";
+	$this->query($sqlUpdate);
+	return $smazano;
     }
 
     /**
@@ -3015,7 +3142,9 @@ public function istExportiert($import, $impal){
 	if($rows!==NULL){
 	    $gtA = array();
 	    foreach ($rows as $row){
-		array_push($gtA,$row['giesstag']);
+		if(strlen(trim($row['giesstag']))>0){
+		    array_push($gtA,$row['giesstag']);
+		}
 	    }
 	    return $gtA;
 	}
@@ -4990,6 +5119,33 @@ public function istExportiert($import, $impal){
         return mysql_affected_rows();
     }
 
+    /**
+     * 
+     * @param type $dauftr_id
+     * @param type $ganzePalette
+     */
+    public function deleteDauftr($dauftr_id,$ganzePalette=FALSE){
+	if($ganzePalette===TRUE){
+	    $dr = $this->getDauftrRow($dauftr_id);
+	    if($dr!==NULL){
+		$auftragsnr = $dr['auftragsnr'];
+		$teil = $dr['teil'];
+		$pal = $dr['pal'];
+		$sql = "delete from dauftr where auftragsnr='$auftragsnr' and `pos-pal-nr`='$pal' and teil='$teil' limit 50";
+		$sql_lager = "delete from dlagerbew where ((auftrag_import='$auftragsnr') and (pal_import='$pal') and (teil='$teil') and (lager_von='0'))";
+	    }
+	}
+	else{
+	    $sql = "delete from dauftr where id_dauftr='$dauftr_id' limit 1";
+	}
+	if(strlen($sql)>0){
+	    $this->query($sql);
+	}
+	if(strlen($sql_lager)>0){
+	    $this->query($sql_lager);
+	}
+    }
+    
     /**
      *
      * @param integer $id
@@ -8315,7 +8471,7 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
      * @param type $dauftr_id
      * @return type 
      */
-    public function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id,$gt,$user) {
+    public function updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id,$gt,$user,$bemerkung) {
 
 	$dauftrRow = $this->getDauftrRow($dauftr_id);
 
@@ -8323,7 +8479,7 @@ public function getUrlaubTageInMonatIst($persnr,$monat,$jahr) {
 	$pal = $dauftrRow['pal'];
 	$teil = $dauftrRow['teil'];
 	
-	$sql = "update dauftr set giesstag='$gt',`stück`='$stk',termin='$termin',`auftragsnr-exp`=$auftragsnr_exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";
+	$sql = "update dauftr set bemerkung='$bemerkung',giesstag='$gt',`stück`='$stk',termin='$termin',`auftragsnr-exp`=$auftragsnr_exp,`pal-nr-exp`=$pos_pal_nr_exp,fremdauftr='$fremdauftr',fremdpos='$fremdpos'";
 	$sql.=" where ((auftragsnr='$auftragsnr') and (teil='$teil') and (`pos-pal-nr`='$pal')) limit 20";
 	$this->query($sql);
 

@@ -33,6 +33,7 @@ if(strlen($stk_exp)==0){
 $fremdauftr=chop($o->params->r->fremdauftr);
 $fremdpos=chop($o->params->r->fremdpos);
 $gt = trim($o->params->r->giesstag);
+$bemerkung = trim($o->params->r->bemerkung);
 $KzGut=chop($o->params->r->KzGut);
 	//cokoliv jineho nez mezeru nahradim pismenem G
 if(strlen($KzGut)>0){
@@ -68,7 +69,7 @@ $user = $ident;
 $invDatum = "";
     
 if ($KzGut == 'G') {
-    $myerror = $a->updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id,$gt,$user);
+    $myerror = $a->updateDauftr_Termin_AuftragsnrExp_PalExp_fremdauftr_fremdpos($stk, $termin, $auftragsnr_exp, $pos_pal_nr_exp, $fremdauftr, $fremdpos, $dauftr_id,$gt,$user,$bemerkung);
     // zjistitit, zda uz dil nahodou nemel inventuru
     $invDatum = $a->getInventurDatumForTeil($a->getTeilFromDauftrId($dauftr_id));
     $dauftrStampRow = $a->getDauftrRow($dauftr_id);
@@ -137,6 +138,7 @@ $sql.=" `stk-exp`=".$stk_exp.",";
 $sql.=" `fremdauftr`='".$fremdauftr."',";
 $sql.=" `fremdpos`='".$fremdpos."',";
 $sql.=" `giesstag`='".$gt."',";
+$sql.=" `bemerkung`='".$bemerkung."',";
 $sql.=" `KzGut`='".$KzGut."',";
 $sql.=" `comp_user_accessuser`='".$ident."'";
 $sql.=" where (id_dauftr=".$dauftr_id.") limit 1";

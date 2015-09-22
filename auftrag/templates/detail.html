@@ -100,7 +100,7 @@
 			    <label style="display:block;" for="fertig">Rechnung am</label>
 			    <input style="width:7em;display:inline-block;vertical-align: middle;" ng-model="auftragInfo.fertigdat1" type="text" disabled maxlength="8" ui-date="dateOptions" class="form-control" id="fertig" placeholder="Rechnug am">
 			    <!--tlacitko pro smazani faktury-->
-			    <button style="display: inline-block;vertical-align: middle;width:auto;" ng-if="auftragInfo.hatrechnung==1" class="btn btn-danger form-control">Re Lō</button>
+			    <button ng-click="deleteRechnung(auftragInfo)" style="display: inline-block;vertical-align: middle;width:auto;" ng-if="auftragInfo.hatrechnung==1" class="btn btn-danger form-control">Re Lō</button>
 			</div>
 		    </div>
 		</div>
@@ -110,7 +110,6 @@
 	    <a href="../dbehaelter/beheingabe.php?auftrag={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">Behaelter bew.</a>
 	    <a href="../dauftr/editDauftrForm.php?import={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">edit Auftrpositionen</a>
 	    <a href="../dauftr/splitPal.php?import={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">split Pal</a>
-	    <a href="" ng-show="auftragInfo.im_stk_gespeichert===null" class="btn btn-block btn-xs btn-success">Auftragsmenge speichern</a>
 	</div>
 	
     </div>
@@ -119,7 +118,7 @@
 	<div class="col-sm-3">
 	    <a href="../auftragpositionen/auftragpositionen.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Position erstellen</a>
 	    <a href="../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={{auftragInfo.auftragsnr}};0;9999&report=D235" class="btn btn-xs btn-block btn-info">D230 - Arbeitspapiere/DUPLEX</a>
-	    <a href="" class="btn btn-xs btn-block btn-info">Auftragsmenge speichern</a>
+	    <a ng-click="auftragsMengeSpeichern(auftragInfo)" href="" ng-show="auftragInfo.im_stk_gespeichert===null" class="btn btn-block btn-xs btn-success">Auftragsmenge speichern</a>
 	    <a href="../d607i/d607i.php" class="btn btn-xs btn-block btn-info">D607i</a>
 	</div>
 	<div class="col-sm-3">
@@ -147,7 +146,7 @@
 	    <table id="dauftr" st-table="displayDauftrPos" st-safe-src="dauftrPos" class="table table-bordered table-striped table-condensed table-hover">
 	    <thead>
 	    <tr>
-		<th class="no-print" colspan="15">
+		<th class="no-print" colspan="17">
 		    <input st-search="" class="form-control" placeholder="global suchen / hledat ..." type="text"/>
 		    <div class="checkbox-inline">
 		    <label class="checkbox-inline">
@@ -159,7 +158,8 @@
 	    <tr>
 		<th st-sort="teil">Teil</th>
 		<th st-sort="imp_pal">Pal</th>
-		<th>Stk</th>
+		<th title="Bestand aktuell">BA-Stk</th>
+		<th title="laut Lieferschein">IM-Stk</th>
 		<th>Preis</th>
 		<th>Kennz</th>
 		<th>TaetNr</th>
@@ -171,6 +171,7 @@
 		<th>FremdAuftr</th>
 		<th>FremdPos</th>
 		<th>GT</th>
+		<th>Bemerk</th>
 		<th style="width: 6em;"></th>
 	    </tr>
 	    </thead>
@@ -182,7 +183,8 @@
 			<input maxlength="4" ng-if="r.edit==1" ng-model="r.imp_stk" type="text" class="form-control input-sm text-right">
 			<span ng-if="r.edit==0" >{{r.imp_stk}}</span>
 		    </td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">
+		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.im_stk}}</td>
+		    <td ng-dblclick="preisUpdate(r)" class="text-right" ng-class="{newpal:r.newpal==1}">
 <!--			<input ng-if="r.edit==1" ng-model="r.preis" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.preis|number:4}}</span>-->
 			{{r.preis|number:4}}
@@ -219,6 +221,10 @@
 			<span ng-if="r.edit==0" >{{r.giesstag}}</span>
 		    </td>
 		    <td ng-class="{newpal:r.newpal==1}">
+			<input ng-if="r.edit==1" ng-model="r.bemerkung" type="text" class="form-control input-sm">
+			<span ng-if="r.edit==0" >{{r.bemerkung}}</span>
+		    </td>
+		    <td ng-class="{newpal:r.newpal==1}">
 			<span ng-if="r.hatrechnung==1" class="text-danger badge text-justify">RECHNUNG</span>
 			<div class="btn-group btn-group-xs btn-group-justified" role="group" ng-if="r.hatrechnung==0">
 			    <div ng-if="r.edit==0" class="btn-group btn-group-xs" role="group">
@@ -227,7 +233,7 @@
 				</button>
 			    </div>
 			    <div ng-if="r.edit==0" class="btn-group btn-group-xs" role="group">
-				<button class="btn btn-sm btn-danger">
+				<button ng-click="deleteDposRow(r)" class="btn btn-sm btn-danger">
 				    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 				</button>
 			    </div>

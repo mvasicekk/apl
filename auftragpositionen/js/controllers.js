@@ -67,7 +67,8 @@ aplApp.controller('detailController', function (setfocus,$filter,$scope, $routeP
 	fremdpos:'',
 	gt:'',
 	fremdausauftrag:'',
-	explanmit:''
+	explanmit:'',
+	bemerkung:''
     };
     
     $scope.teil = {};

@@ -20,9 +20,12 @@ $fremdpos = $o->positionInfo->fremdpos;
 $gt = $o->positionInfo->gt;
 $pal_erst = $o->positionInfo->firstpal;
 //$fremdausauftrag=$_GET['fremdausauftrag'];
-$netgewicht = floatval($o->teilInfo->teil->Gew);
+$ng = str_replace(',', '.', $o->teilInfo->teil->Gew);
+$netgewicht = floatval($ng);
 $increment = $o->positionInfo->increment;
 $exgeplannt = $o->positionInfo->explanmit;
+$bemerkung = trim($o->positionInfo->bemerkung);
+
 $positionen = $o->dpos;
 $auftragsnr = $o->auftrag;
 $kunde = $o->teilInfo->teil->Kunde;
@@ -47,9 +50,9 @@ for ($i = 0; $i < $pal_nr; $i++) {
 	// TODO do dauftr nezapisovat operace 3
 	if (($kz_druck != 0)&&($abgnr!=3)) {
 	    if ($Gtat == 'G') {
-		$sql = "insert into dauftr (giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,kg_stk_bestellung,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
+		$sql = "insert into dauftr (bemerkung,giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,kg_stk_bestellung,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
 		$sql.="vzkd,vzaby,comp_user_accessuser,inserted,termin) values";
-		$sql.="	('$gt','$auftragsnr','$teil','$stk_pro_pal','$preis','$fremdauftr','$fremdpos','$netgewicht','$tatkz',";
+		$sql.="	('$bemerkung','$gt','$auftragsnr','$teil','$stk_pro_pal','$preis','$fremdauftr','$fremdpos','$netgewicht','$tatkz',";
 		$sql.="'$paleta','$abgnr','$Gtat','$vzkd','$vzaby','$user',NOW(),'$exgeplannt')";
 	    } else {
 		$sql = "insert into dauftr (giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";

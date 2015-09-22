@@ -1,24 +1,25 @@
-<?php
+<?
 session_start();
 require_once '../db.php';
 
-$inputData = $_GET;
-
-// zjistim zda mam hodnotu value ulozenou v databazi artiklu
+$data = file_get_contents("php://input");
+$o = json_decode($data);
 
 $a = AplDB::getInstance();
+$ar = 0;
+$dauftr_id = $o->params->r->id_dauftr;
+$auftragsnr = $o->params->r->auftragsnr;
+$KzGut=chop($o->params->r->KzGut);
 
-$auftragsnr = $_GET['auftragsnr'];
-
-$auftragInfo = NULL;
-
-$auftragInfoA = $a->getAuftragInfoArray($auftragsnr);
-if($auftragInfoA!==NULL){
-    $auftragInfo = $auftragInfoA[0];
+if($KzGut=='G'){
+    $sql = $a->deleteDauftr($dauftr_id,TRUE);
+}
+else{
+    $sql = $a->deleteDauftr($dauftr_id,FALSE);
 }
 
-// dauftrpositionen
 
+// vztahnu updatnute radky -----------------------------------------------------
 $dauftrPos = $a->getDauftrRowsForImport($auftragsnr);
 if($dauftrPos!==NULL){
     $oldpal = $dauftrPos[0]['imp_pal'];
@@ -47,14 +48,11 @@ if($dauftrPos!==NULL){
     }
 }
 
-$puser = $_SESSION['user'];
-$preisupdate = $a->getDisplaySec('dauftr', 'preisupdate', $puser);
-
 $returnArray = array(
-    "auftragInfo"=>$auftragInfo,
-    "dauftrPos"=>$dauftrPos,
-    "preisupdate"=>$preisupdate,
-    "user"=>$puser
-);
-
-echo json_encode($returnArray);
+	'ar'=>$ar,
+	'sql'=>$sql,
+	'dauftragPositionen'=>$dauftrPos,
+	'myerror'=>$myerror,
+    );
+    
+    echo json_encode($returnArray);

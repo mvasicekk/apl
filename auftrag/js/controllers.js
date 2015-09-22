@@ -6,13 +6,14 @@
 
 var aplApp = angular.module('auftragApp');
 
-aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout) {
+aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location) {
     
     var auftragTable;
 
     // pro uchovani hodnot pred editaci radku
     $scope.dauftragOriginalArray = [];
-    
+    $scope.preisupdate = false;
+    $scope.username;
     $scope.formDataChanged = false;
     $scope.auftragsnr = $routeParams.auftragsnr;
     $scope.auftragInfo = undefined;
@@ -116,6 +117,10 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	    $scope.auftragsnr = $item.auftragsnr;
 	    $routeParams.auftragsnr=$scope.auftragsnr;
 	    $scope.getAuftragInfo();
+	    //prenastavit url
+	    console.log($location.url());
+	    $location.url('/det/'+$scope.auftragsnr);
+	    
     }
     
     $scope.zielortOnSelect = function($item, $model){
@@ -197,6 +202,10 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			$scope.dauftrPos = response.data.dauftrPos;
 			$scope.auftrag.selected.auftragsnr = response.data.auftragInfo.auftragsnr;
 			$scope.displayDauftrPos = [].concat($scope.dauftrPos);
+			
+			$scope.preisupdate = response.data.preisupdate;
+			$scope.username = response.data.user;
+			
 			$scope.refreshZielort();
 			//nastavit zielort do select boxu podle zielort_id v auftragInfo
 			
@@ -294,6 +303,71 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		console.log(response.data);
 		$scope.dauftrPos = response.data.dauftragPositionen;
 	    });
+    }
+
+    $scope.preisUpdate = function(r){
+	var href = '../dauftr/preisupdateformular.php?id_dauftr='+r.id_dauftr+'&level='+'0';
+	if(($scope.preisupdate==true)&&(r.hatrechnung==0)){
+	    $window.location.href = href;
+	}
+    }
+
+    $scope.deleteRechnung = function(ai){
+	console.log('deleteRechnung ');
+	console.log(ai);
+	var d = $window.confirm('Rechnung wirklich loeschen / opravdu smazat fakturu ?');
+	if(d){
+	    console.log('mazu');
+	    // a vlastni smazani
+		var params = {r: ai};
+		return $http.post(
+		    './deleteRechnung.php',
+		    {params: params}
+		).then(function (response) {
+		    $scope.getAuftragInfo();
+		});
+	}
+    }
+    
+    /**
+     * 
+     * @param {type} auftragInfo
+     * @returns {undefined}
+     */
+    $scope.auftragsMengeSpeichern = function(auftragInfo){
+	var d = $window.confirm('Importmenge speichern ?');
+	if (d) {
+	    	// a vlastni smazani
+		var params = {r: $scope.auftragInfo};
+		return $http.post(
+		    './imStkSpeichern.php',
+		    {params: params}
+		).then(function (response) {
+		    console.log(response.data);
+		    $scope.getAuftragInfo();
+		});
+	}
+    }
+    
+    $scope.deleteDposRow = function(r){
+	if(r.KzGut=='G'){
+	    var text = "Loeschen ganze Palette ? / smazat celou paletu ?";
+	}
+	else{
+	    var text = "Loeschen Position ? / smazat pozici ?";
+	}
+	var d = $window.confirm(text);
+	if (d) {
+	    	// a vlastni smazani
+		var params = {r: r};
+		return $http.post(
+		    './deleteDposRow.php',
+		    {params: params}
+		).then(function (response) {
+		    console.log(response.data);
+		    $scope.dauftrPos = response.data.dauftragPositionen;
+		});
+	}
     }
     
     $scope.cancelEditDposRow = function(r){

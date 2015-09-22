@@ -75,6 +75,14 @@ div.page-header h4{
     }
 }
 
+table#dauftr{
+    font-size:0.8em;
+}
+
+table#dauftr th{
+    font-size:0.8em;
+}
+
 #dauftr td{
     padding: 1px;
     vertical-align: middle;

@@ -295,7 +295,7 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	//cislo zakaznika + exportinfo
 	// sloupec s datumem
 	if($bToday){
-	    $pdf->SetFillColor(255,255,230);
+	    $pdf->SetFillColor(255,255,0);
 	}
 	else if($dayClass=='Sat'){
 	    $pdf->SetFillColor(200,200,200);
@@ -362,7 +362,7 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	    }
 	    else{
 		if($bToday){
-		    $pdf->SetFillColor(255,255,230);
+		    $pdf->SetFillColor(255,255,0);
 		}   
 		else if($dayClass=='Sat'){
 		    $pdf->SetFillColor(200,200,200);
@@ -384,7 +384,7 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	//stat + importinfo
 	// prostor pro datum
 	if($bToday){
-	    $pdf->SetFillColor(255,255,230);
+	    $pdf->SetFillColor(255,255,0);
 	}
 	else if($dayClass=='Sat'){
 	    $pdf->SetFillColor(200,200,200);
@@ -432,7 +432,7 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	    }
 	    else{
 		if($bToday){
-		    $pdf->SetFillColor(255,255,230);
+		    $pdf->SetFillColor(255,255,0);
 		}
 		else if($dayClass=='Sat'){
 		    $pdf->SetFillColor(200,200,200);
@@ -454,7 +454,7 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	$pdf->Ln();
 
 	if($bToday){
-	    $pdf->SetFillColor(255,255,230);
+	    $pdf->SetFillColor(255,255,0);
 	}
 	else if($dayClass=='Sat'){
 	    $pdf->SetFillColor(200,200,200);
