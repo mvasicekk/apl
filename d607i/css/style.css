@@ -171,3 +171,9 @@ div.reklInfoField{
 	background-repeat: no-repeat;
 	z-index: 9999;
 }
+.progress{
+     display: inline-block;
+    margin-bottom: 0;
+    margin-left: 1em;
+    width: 76%;
+}

@@ -128,6 +128,11 @@
 		    </div>
     		    <div class="">
 			{{minutenOption}}-rest
+			<div class="progress">
+			    <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{getCompleteProzent(r.palInfo,zeilenD[zeilenIndex].palInfo,minutenOption)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{getCompleteProzent(r.palInfo,zeilenD[zeilenIndex].palInfo,minutenOption)}}%">
+				<span class="">{{getCompleteProzent(r.palInfo,zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}% Fertig</span>
+			    </div>
+			</div>
 		    </div>
 		</td>
 		<td style="white-space: nowrap;" class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumteilmin'" >

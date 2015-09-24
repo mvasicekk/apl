@@ -6,6 +6,27 @@
 
 var aplApp = angular.module('auftragApp');
 
+aplApp.directive("enterfocus", function () {
+        return {
+            restrict: "A",
+            link: function ($scope, elem, attrs) {
+                var focusables = $(":focusable");
+                elem.bind("keydown", function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code === 13) {
+                        var current = focusables.index(this);
+                        var next = focusables.eq(current + 1).length ? focusables.eq(current + 1) : focusables.eq(0);
+			console.log('current='+current+' next=');
+			console.log(next);
+                        next.focus();
+			next.select();
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+});
+
 aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location) {
     
     var auftragTable;
@@ -397,6 +418,105 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	}
 	console.log($scope.dauftragOriginalArray);
     }
+    
+//        $scope.openBrana = function(cislobrany){
+//	var params = {brana:cislobrany,user:$scope.username};
+//		return $http.post(
+//		    'http://172.16.1.236/brany/open',
+//		    {params: params}
+//		).then(function (response) {
+//		    console.log(response.data);
+//		});
+//    }
+
 });
 
+
+//listController -----------------------------------------------------------------
+aplApp.controller('listController', function ($scope, $routeParams,$http,$timeout,$window,$location) {
+    $scope.auftragsnr = "";
+    $scope.auftrags = [];
+    $scope.createNew = false;
+    $scope.createNewKundeError = '';
+    
+    $scope.getAuftragsMatch = function () {
+	var params = {a: $scope.auftragsnr};
+	return $http.post(
+		'./getAuftragsMatch.php',
+		{params: params}
+	).then(function (response) {
+	    console.log(response.data);
+	    $scope.auftrags = response.data.auftrags;
+	    if(($scope.auftrags==null) && ($scope.auftragsnr.length==8)){
+		$scope.createNew = true;
+		var prvniTriCisla = $scope.auftragsnr.substring(0,3);
+		cislo = parseInt(prvniTriCisla);
+		//var cislo = parseInt(kw.value)/1000;
+		// test jestli je cislo delitelne 10
+		// upravu budu provadet u zakaznika 140
+		zbytek=cislo%10;
+		if((zbytek>0)&&((cislo-zbytek)==140))
+		{
+			$scope.newkunde=cislo-zbytek;
+		}
+		else
+		{
+                    // pomoc pri zadavani cisla zakaznika
+                    if(cislo==358)  cislo=355;
+                    if(cislo==350)  cislo=355;
+		    if(cislo==352)  cislo=355;
+                    if(cislo==106)  cislo=107;
+                    if(cislo==131)  cislo=130;
+		    if(cislo==132)  cislo=130;
+		    if(cislo==112)  cislo=111;
+		    if(cislo==113)  cislo=111;
+		    if(cislo==198)  cislo=195;
+                    $scope.newkunde = cislo;
+		}
+		$timeout(function() {
+		    var element = $window.document.getElementById('newkunde');
+		    if(element){
+			element.focus();
+			element.select();
+		    }
+		});
+	    }
+	    else{
+		$scope.createNew = false;
+	    }
+	});
+    }
+    
+    $scope.listRowClicked = function(auftrag){
+	console.log(auftrag);
+	$location.path('det/'+auftrag.auftragsnr);
+	//$window.location.href = './det/'+auftrag.auftragsnr;
+    }
+    
+    $scope.goToAufrag = function(e){
+	console.log('goToAuftrag event.keyCode='+e.which);
+	if($scope.auftrags!==null){
+	    if (($scope.auftrags.length>=1)&&(e.which==13)) {
+		$location.path('det/'+$scope.auftrags[0].auftragsnr);
+	    }
+	}
+    }
+    
+    $scope.createNewAuftrag = function(){
+	console.log('create new auftrag');
+	console.log($scope.newkunde);
+	console.log($scope.auftragsnr);
+	var params = {kunde:$scope.newkunde,auftragsnr:$scope.auftragsnr};
+		return $http.post(
+		    './createNewAuftrag.php',
+		    {params: params}
+		).then(function (response) {
+		    console.log(response.data);
+		    $scope.createNewKundeError = response.data.createError;
+		    if(response.data.created){
+			$location.path('det/'+$scope.auftragsnr);
+		    }
+		});
+    }
+});
 

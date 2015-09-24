@@ -241,6 +241,10 @@ class AplDB {
 	return mysql_affected_rows();
     }
     
+    public function insertToSecurityLog($user,$action){
+	$sql = "insert into securitylog (`user`,`action`) values('$user','$action')";
+	$this->query($sql);
+    }
     /**
      * 
      */
@@ -530,6 +534,13 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    public function checkUserPIN($login,$pin){
+	$rows = $this->getQueryRows("select id_benutzer from dbenutzer where name='$login' and pin='$pin'");
+	if($rows===NULL){
+	    return FALSE;
+	}
+	return TRUE;
+    }
     /**
      * 
      * @param type $ex

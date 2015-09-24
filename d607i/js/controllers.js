@@ -54,6 +54,24 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
      * @param {type} e
      * @returns {undefined}
      */
+    $scope.getCompleteProzent = function(palInfoSoll,palInfoIst,minutenOption){
+	var retValue = 0;
+	var soll = $scope.getSumMinuten(palInfoSoll,minutenOption);
+	var ist = $scope.getSumMinuten(palInfoIst,minutenOption);
+	if(soll!=0){
+	    retValue = ist/soll*100;
+	    if(retValue>100){
+		// hodnoty na 100 procenr ometim na 100
+		retValue=100;
+	    }
+	}
+	return retValue;
+    }
+    /**
+     * 
+     * @param {type} e
+     * @returns {undefined}
+     */
     $scope.getZeilen = function(e){
 	console.log('getZeilen event.keyCode='+e.which);
 	if (((($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3))||($scope.kundeMatch.length==3))&&(e.which==13)) {

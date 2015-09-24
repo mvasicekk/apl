@@ -7,8 +7,6 @@
 	<title>
 	    APL Abydos
 	</title>    
-	<link rel="stylesheet" href="./styl_common.css" type="text/css">
-	<link rel="stylesheet" href="./styl.css" type="text/css">
 	<script type="text/javascript" src="./js/jquery-1.11.0.min.js"></script>
 	
 	<script type="text/javascript" src="./js/jquery.jqplot.min.js"></script>
@@ -21,6 +19,17 @@
 	<script type="text/javascript" src="./js/plugins/jqplot.canvasOverlay.min.js"></script>
 	<script type="text/javascript" src="./js/plugins/jqplot.highlighter.min.js"></script>
 	<script type="text/javascript" src="./js/plugins/jqplot.cursor.min.js"></script>
+	
+{*	<script src="./brany/bower_components/jquery/dist/jquery.min.js"></script>*}
+<!--{*	Bootstrap*}-->
+    <link href="./brany/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./brany/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <script src="./brany/js/brany.js"></script>
+{*    <link href="./brany/css/brany.css" rel="stylesheet">*}
+    
+	<link rel="stylesheet" href="./styl_common.css" type="text/css">
+	<link rel="stylesheet" href="./styl.css" type="text/css">
 	
 	<script type="text/javascript" src="./apl.js"></script>
 	{literal}
@@ -52,7 +61,8 @@
 
 		<fieldset class='buttonsection auftraege'>
 		    <legend>Auftraege / zakazky</legend>
-		    <input style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dauftr/auftragsuchen.php'" />
+{*		    <input style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dauftr/auftragsuchen.php'" />*}
+		    <input style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./auftrag/auftrag.php#/list'" />
 {*		    <input style="" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dauftr/auftragsuchen.php'" />*}
 		    <input style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" />
 		    <input style="display:{$display_sec.umtermin};" type="button" value="Umterminieren" id="umtermin" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./dauftr/umterminieren/umterminieren.php'" />
@@ -132,7 +142,27 @@
 
 	{if $prihlasen}
 	    <div id="leistungtabelle">
-
+		<div style="display:{$display_sec.branydiv};width:100%" id="branydiv">
+		    <input type="hidden" id="userinfo" value="{$user}" />
+		    <div class="container-fluid">
+			<div class="row">
+			    <div class="col-xs-12 text-center">
+				<span id="sock_status" class="badge">not connected</span>
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="col-md-4 text-center">
+				<input type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN"/>
+			    </div>
+			    <div class="col-md-4 text-center">
+				<button class="btn btn-block btn-success" id="brana1Button">brana1</button>
+			    </div>
+			    <div class="col-md-4 text-center">
+				<button class="btn btn-block btn-success" id="brana2Button">brana2</button>
+			    </div>
+			</div>
+		    </div>
+		</div>
 <!--		<a title="kundenminuten aktuell" href="graph/leistung_akt_monat_gross.php" ><img border=0 src="graph/leistung_akt_monat.php"></a>-->
 		<table class="monatleistungtable" border="0">
 

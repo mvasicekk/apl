@@ -6,7 +6,7 @@ $(document).ready(function(){
     var sock = undefined;
     startSock();
     setInterval(check,5000);
-    $('button[id^=pi_]').bind('click',openBrana);
+    $('button[id^=brana]').bind('click',openBrana);
     
 });
 
@@ -16,11 +16,26 @@ function isObject(obj) {
 
 function openBrana(e){
     var iD = $(this).attr('id');
+    var u = $('#userinfo').val();
+    var pin = $('#branaPin').val();
+    
     console.log(e+" "+iD);
-    if(sock){
-	var messageToSend = JSON.stringify({msg:"branaButtonClicked",id:iD});
-	sock.send(messageToSend);
-    }
+    	// ulozit info o stisknuti do logu
+	$.post('./saveToLog.php',
+            {
+                id:iD,
+                u:u,
+		pin:pin
+            },
+            function(data){
+                    console.log(data);
+		    if((data.pinOk===true) && (sock)){
+			var messageToSend = JSON.stringify({msg:"branaButtonClicked",id:iD,loginfo:u});
+			sock.send(messageToSend);
+		    }
+            },
+            'json'
+        );
 }
 
 function startSock(){

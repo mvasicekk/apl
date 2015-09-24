@@ -159,10 +159,15 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 	// adresa zakaznika
 	$pdfobjekt->SetFont("FreeSans", "", 9);
 	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"name1"),'0',1,'L',0);
-	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"name2"),'0',1,'L',0);
+	$name2 = trim(getValueForNode($childnodes,"name2"));
+	if(strlen($name2)>0){
+	    $pdfobjekt->Cell(100,5,$name2,'0',1,'L',0);
+	}
+	
 	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"strasse"),'0',1,'L',0);
-	$pdfobjekt->Ln();
+	//$pdfobjekt->Ln();
 	$pdfobjekt->Cell(100,5,getValueForNode($childnodes,"land")."-".getValueForNode($childnodes,"plz")." ".getValueForNode($childnodes,"ort"),'0',1,'L',0);
+	$pdfobjekt->Ln();
         $pdfobjekt->Cell(100,5,'IC: '.getValueForNode($childnodes,"ico")." DIC: ".getValueForNode($childnodes,"dic"),'0',1,'L',0);
 	
 	//datum faktury a lieferdatum

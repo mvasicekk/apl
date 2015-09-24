@@ -123,6 +123,7 @@ $sqlDA.="     dauftr.`pos-pal-nr` as im_pal,";
 $sqlDA.="     if(drueck.`auss-art` is null,0,drueck.`auss-art`) as aart,     ";
 $sqlDA.="     sum(if(drueck.`Auss-Stück` is null,0,drueck.`Auss-Stück`)) as sum_auss_stk";
 $sqlDA.=" from dauftr";
+$sqlDA.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
 $sqlDA.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=dauftr.teil and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.TaetNr=dauftr.abgnr";
 $sqlDA.=" where (1)";
 if(strlen($kundeMatch)==3){
