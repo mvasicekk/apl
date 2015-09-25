@@ -10,6 +10,8 @@ $pal1 = $_POST['pal1'];
 $pal2 = $_POST['pal2'];
 $pal2stk = $_POST['pal2stk'];
 $persnr = $_POST['persnr'];
+$gt = $_POST['gt'];
+$termin = $_POST['termin'];
 $drueckHotData = $_POST['drueckHotData'];
 
 $dauftrLog="";
@@ -42,8 +44,10 @@ if($dauftrRows!==NULL){
 	}
 	else{
 	    // bude insert
-	    $insertDauftrSql = "insert into dauftr (auftragsnr,teil,`pos-pal-nr`,preis,`stück`,`mehrarb-kz`,fremdauftr,fremdpos,KzGut,abgnr,VzKd,VzAby,comp_user_accessuser,inserted)";
+	    $insertDauftrSql = "insert into dauftr (giesstag,termin,auftragsnr,teil,`pos-pal-nr`,preis,`stück`,`mehrarb-kz`,fremdauftr,fremdpos,KzGut,abgnr,VzKd,VzAby,comp_user_accessuser,inserted)";
 	    $insertDauftrSql.= "values(";
+	    $insertDauftrSql.= "'".$gt."',";
+	    $insertDauftrSql.= "'".$termin."',";
 	    $insertDauftrSql.= "'".$dr['auftragsnr']."',";
 	    $insertDauftrSql.= "'".$dr['teil']."',";
 	    $insertDauftrSql.= "'".$pal2."',";

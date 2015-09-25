@@ -2677,6 +2677,7 @@ public function istExportiert($import, $impal){
 	$sql.=" dauftr.teil,";
 	$sql.=" dauftr.`pos-pal-nr` as pal,";
 	$sql.=" dauftr.termin,";
+	$sql.=" dauftr.giesstag,";
 	$sql.=" dauftr.preis,";
 	$sql.=" dauftr.`stück` as stk,";
 	$sql.=" dauftr.`mehrarb-kz` as tatkz,";

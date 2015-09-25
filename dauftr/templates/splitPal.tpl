@@ -63,7 +63,12 @@
 	    <input type="number" id="pal2stk" value="0" />
 	    <label for="persnr">Persnr</label>
 	    <input type="number" id="persnr" value="0" />
-	    <input type="button" id="gosplit" value="Split !" />
+	    <input type="button" id="gosplit" value="Split !" /><br>
+	    <label for="pal2gt">GT</label>
+	    <input type="text" id="pal2gt" value="" />
+    	    <label for="pal2termin">Termin</label>
+	    <input type="text" id="pal2termin" value="" />
+	    
 	</fieldset>
 	    
 	    

@@ -8,6 +8,9 @@ $id = $_POST['id'];
 $import = intval(trim($_POST['import']));
 $impal = intval(trim($_POST['pal1']));
 
+$kunde = $a->getKundeFromAuftransnr($import);
+$explanmit = "P".$kunde."99999";
+
 $isEx = FALSE;
 $rmArray = $a->getRMArray($import,$impal);
 // $rmArray upravim, najdu pozice s vice stejnymi abgnr
@@ -55,7 +58,20 @@ for($i=count($rmArrayNew)-1;$i>=0;$i--){
 
 $rmArrayNew1 = array_reverse($rmArrayNew1);
 
+$termin = "";
+$gt = "";	
 $dauftrArray = $a->getDauftrRowsForImportPal($import, $impal);
+// vztahnu si giesstag a termin
+if($dauftrArray!==NULL){
+    foreach ($dauftrArray as $r){
+	if($r['kzgut']=='G'){
+	    $termin = $r['termin'];
+	    $gt = $r['giesstag'];
+	    break;
+	}
+    }
+}
+
 $isEx = $a->istExportiert($import, $impal);
 
 $retArray = array(
@@ -64,7 +80,9 @@ $retArray = array(
     'impal'=>$impal,
     'rows'=>$rmArrayNew1,
     'dauftrRows'=>$dauftrArray,
-    'isEx'=>$isEx
+    'isEx'=>$isEx,
+    'termin'=>$explanmit,
+    'gt'=>$gt,
 );
 
 

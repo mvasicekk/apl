@@ -148,6 +148,8 @@ function gosplitClicked(event){
 		    pal2: $('#pal2').val(),
 		    pal2stk: $('#pal2stk').val(),
 		    persnr: $('#persnr').val(),
+		    gt: $('#pal2gt').val(),
+		    termin: $('#pal2termin').val(),
 		    drueckHotData:hot.getData()
 		},
 	function (data) {
@@ -236,7 +238,10 @@ function vonParamChanged(event) {
 function updateRMTable(data, et) {
 
     hotDA.loadData(data.dauftrRows);
-    
+    //pripravim navrhy pro gt a termin
+    $('#pal2gt').val(data.gt);
+    $('#pal2termin').val(data.termin);
+	
     if(data.rows && data.rows.length>0){
 	hot.loadData(data.rows);
 	//pripravim nove cislo palety

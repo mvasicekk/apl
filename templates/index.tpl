@@ -152,13 +152,13 @@
 			</div>
 			<div class="row">
 			    <div class="col-md-4 text-center">
-				<input type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN"/>
+				<input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
 			    </div>
 			    <div class="col-md-4 text-center">
-				<button class="btn btn-block btn-success" id="brana1Button">brana1</button>
+				<button class="btn btn-block btn-success" id="brana1Button">horní brana</button>
 			    </div>
 			    <div class="col-md-4 text-center">
-				<button class="btn btn-block btn-success" id="brana2Button">brana2</button>
+				<button class="btn btn-block btn-success" id="brana2Button">dolní brana</button>
 			    </div>
 			</div>
 		    </div>
@@ -198,12 +198,9 @@
 			</tr>
 		    {/foreach}
 		</table>
+		<div id="myChart">
+		</div>
 	    </div>
-	{/if}
-
-	{if $prihlasen}
-	<div id="myChart">
-	</div>
 	{/if}
     </body>
 </html>

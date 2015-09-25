@@ -73,6 +73,8 @@ div.page-header h4{
     #d607it a[href]:after {
 	content: none;
     }
+    
+    .page-break	{ page-break-after: always; }
 }
 
 tr.sumteil{
