@@ -145,6 +145,12 @@ table#d607it tr:hover{
 
 table#d607it td.teilOddelovac{
     background-color:#5bc0de;
+    height:0.4em;
+    padding: 0;
+}
+
+table#d607it tr.sumteiloddelovac{
+    
 }
 
 table#d607it td.canedit{
