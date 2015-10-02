@@ -1,0 +1,49 @@
+
+/*.head
+{
+    background-color: rgb(255,230,153);
+    border: solid;
+}*/
+
+/*.pinput
+{
+    width: 50%;
+    float: right;
+}*/
+.phead
+{
+    background-color: #FFE699 !important;
+    color: black !important;
+}
+
+/*nav.navbar:nth-child(1)
+{
+    margin-top: -41px;
+}*/
+hr.clear{
+    visibility: hidden;
+    margin: 0;
+    clear: both;
+}
+h4.panel-title{
+    display:inline-block;
+}
+
+label.vcentercheckbox{
+    margin-top: 1.5em;
+}
+.nadpisH5
+{
+    width: 14.333%;
+    float: left;
+    color:blue;
+}
+
+.Grenpozadi
+{
+    background-color:rgba(0,255,0,0.3);
+
+}
+
+
+

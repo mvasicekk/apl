@@ -4,16 +4,21 @@
     <div class="page-header">
 	<h4>D607 intern</h4>
     </div>
+<!--    <p>
+	{{securityInfo|json}}
+    </p>-->
     <table id='d607it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class='no-print'>
 		<th style="width:8em;min-width:8em;" colspan="{{1}}">
-		    <input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchVon" placeholder="termin von" type="text"/><br>
-		    <input  tabindex="5" class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" maxlength="8" placeholder="import" type="text"/>
+		    <input autofocus tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchVon" placeholder="termin von" type="text"/>
+		    <input tabindex="4" ng-keypress="getZeilen($event)" ng-model="terminVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
+		    <input  tabindex="6" class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" maxlength="10" placeholder="teil" type="text"/>
 		</th>
 		<th style="width:10em;min-width:8em;" colspan="{{1}}">
-		    <input tabindex="2"  style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchBis" placeholder="termin bis" type="text"/><br>
-		    <input  tabindex="4" class="form-control" ng-keypress="getZeilen($event)" ng-model="teilMatch" maxlength="10" placeholder="teil" type="text"/>
+		    <input tabindex="2"  style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="terminMatchBis" placeholder="termin bis" type="text"/>
+		    <input tabindex="5" ng-keypress="getZeilen($event)" ng-model="terminBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
+		    <input  disabled class="form-control" ng-keypress="getZeilen($event)" ng-model="importMatch" maxlength="8" placeholder="import" type="text"/>
 		</th>
 		<th colspan="{{3}}" style="vertical-align: top;">
 		    ( <input  tabindex="3" style="display:inline-block;width:5em" class="form-control" ng-keypress="getZeilen($event)" ng-model="kundeMatch" maxlength="3" placeholder="Kunde" type="text"/> ) 
@@ -23,7 +28,7 @@
 		    <button class='btn btn-info' ng-click="showPrintDialog()">Drucken</button>
 		    <div class="checkbox-inline">
 		    <label class="checkbox-inline">
-			<input ng-model="mitPaletten" type="checkbox">mit Paletten
+			<input ng-click="updateFloatHead()" ng-model="mitPaletten" type="checkbox">mit Paletten
 		    </label>
 		    </div>
 		    <div class="checkbox-inline">
@@ -31,26 +36,49 @@
 			<input ng-model="mitReklamation" type="checkbox">Reklamationen zeigen
 		    </label>
 		    </div>
+		    <div class="checkbox-inline">
+			<label class="checkbox-inline">
+			    <input ng-click="updateFloatHead()" ng-model="mitMinuten" type="checkbox">Minuten zeigen
+			</label>
+		    </div>
 	
-		    <label class="radio-inline">
+		    <label ng-show="mitMinuten && securityInfo.showArray.vzkd_radio" id="vzkd_radio" class="radio-inline">
 			<input ng-model="minutenOption" type="radio" name="minutenRadioOptions" id="inlineRadio1" value="vzkd"> VzKd
 		    </label>
-		    <label class="radio-inline">
+		    <label ng-show="mitMinuten" class="radio-inline">
 			<input ng-model="minutenOption" type="radio" name="minutenRadioOptions" id="inlineRadio2" value="vzaby"> VzAby
 		    </label>
 		</th>
 	    </tr>
 	    <tr>
-		<th>Import <span ng-show="importMatch.length>0">(*{{importMatch}}*)</span></th>
-		<th>Teil <span ng-show="teilMatch.length>0">(*{{teilMatch}}*)</span></th>
-		<th style="width:4em;">Pal</th>
-		<th style="width:4em;">GT</th>
-		<th>IM Stk</th>
-		<th class="text-center" ng-repeat="tat in abgnrKeysArray">{{tat}}</th>
-		<th class="text-center" ng-repeat="auss in aartKeysArray">A {{auss}}</th>
-		<th class="text-center" >G-tat</th>
-		<th class="text-center" >to IMP</th>
-		<th class="text-center" >Bemerkung</th>
+		<th style="vertical-align: middle;">Teil <span ng-show="teilMatch.length>0">(*{{teilMatch}}*)</span></th>
+		<th style="vertical-align: middle;"><span ng-show="mitPaletten">Import <span ng-show="importMatch.length>0">(*{{importMatch}}*)</span></span></th>
+		<th style="vertical-align: middle;">
+		    <span ng-show="mitPaletten">Pal</span>
+		</th>
+		<th style="vertical-align: middle;">
+		    <span ng-show="mitPaletten">GT</span>
+		    <button ng-show="gt_editable===false && mitPaletten && securityInfo.showArray.gt_edit" ng-click="makeEditable_gt(true)" class="btn btn-sm no-print">
+			<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+		    </button>
+		    <button ng-show="gt_editable===true && mitPaletten && securityInfo.showArray.gt_edit" ng-click="makeEditable_gt(false)" class="btn btn-sm btn-success no-print">
+			<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+		    </button>
+		</th>
+		<th style="vertical-align: middle;" class="text-center" >
+		    <span ng-show="mitPaletten">Bemerkung</span>
+		    <button ng-show="bemerkung_editable===false && mitPaletten && securityInfo.showArray.bemerkung_edit" ng-click="makeEditable_bemerkung(true)" class="btn btn-sm no-print">
+			<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+		    </button>
+		    <button ng-show="bemerkung_editable===true && mitPaletten && securityInfo.showArray.bemerkung_edit" ng-click="makeEditable_bemerkung(false)" class="btn btn-sm btn-success no-print">
+			<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+		    </button>
+		</th>
+		<th style="vertical-align: middle;">IM Stk</th>
+		<th style="vertical-align: middle;" class="text-center" ng-repeat="tat in abgnrKeysArray">{{tat}}</th>
+		<th style="vertical-align: middle;" class="text-center" ng-repeat="auss in aartKeysArray">A {{auss}}</th>
+		<th style="vertical-align: middle;" class="text-center" >G-tat</th>
+		<th style="vertical-align: middle;" class="text-center" >to IMP</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -66,12 +94,17 @@
 		    {{t}} {{terminArray[t]}}
 		</td>
 	    </tr>
-	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')||(r.section=='sumteilmin')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
-		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
+	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')||(r.section=='sumteilmin')||(r.section=='sumteiloddelovac')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.teil}}</td>
+		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="rightBorderDetail text-right">{{r.pal}}</td>
-		<td ng-class="r.section" ng-if="r.section=='detail'" class="rightBorderDetail text-right">
-		    <input style="border:none;height: auto;padding: 3px;font-size: 0.9em;line-height: normal;" type="text" ng-change="dauftrRowChange(r,'gt')" ng-model-options="{ updateOn: 'blur' }" ng-model="r.giesstag" class="input-xs form-control">
+		<td ng-class="r.section" ng-show="r.section=='detail'" class="text-left">
+		    <span  ng-show="gt_editable===false">{{r.giesstag}}</span>
+		    <input ng-show="gt_editable===true" style="font-size:0.9em;border-color:blue;padding:0;" type="text" ng-change="dauftrRowChange(r,'gt')" ng-model-options="{ updateOn: 'blur' }" ng-model="r.giesstag" class="input-xs form-control">
+		</td>
+		<td ng-class="r.section" ng-class="{editmode:bemerkung_editable===true}" ng-if="r.section=='detail'" class="rightBorderDetail text-left">
+		    <span  ng-show="bemerkung_editable===false">{{r.palInfo.bemerkung}}</span>
+		    <input ng-show="bemerkung_editable===true" style="font-size:0.9em;border-color:blue;padding:0;" type="text" ng-change="dauftrRowChange(r,'bemerkung')" ng-model-options="{ updateOn: 'blur' }" ng-model="r.palInfo.bemerkung" class="input-xs form-control">
 		</td>
 		<td class="rightBorderDetail text-right" ng-class="r.section" ng-if="r.section=='detail'">{{r.palInfo.sum_im_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
@@ -84,12 +117,10 @@
 		</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
-		<td ng-class="r.section" ng-if="r.section=='detail'" class="text-left">
-		    <input style="border:none;height: auto;padding: 3px;font-size: 0.9em;line-height: normal;" type="text" ng-change="dauftrRowChange(r,'bemerkung')" ng-model-options="{ updateOn: 'blur' }" ng-model="r.palInfo.bemerkung" class="input-xs form-control">
-		</td>
+		
 
 		<!--zapati pro dil-->
-		<td class="rightBorderSumTeil" colspan="4" ng-class="r.section" ng-if="r.section=='sumteil'">
+		<td class="rightBorderSumTeil" colspan="5" ng-class="r.section" ng-if="r.section=='sumteil'">
 		    <div class="teilfield">
 			<a style="color:#000;" ng-href="../dkopf/dkopf.php?teil={{r.teil}}" target="_blank">{{r.teil}}</a>
 		    </div>
@@ -118,11 +149,10 @@
 		</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-info text-right">{{zeilenD[zeilenIndex].palInfo.sum_G_stk}}</td>
 		<td ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">{{r.palInfo.sum_im_gew|number:2}}</td>
-		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right">
-		</td>
+		<!--<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteil'" class="text-right"></td>-->
 
 		<!--zapati pro dil minuten-->
-		<td class="rightBorderSumTeil" colspan="4" ng-class="r.section" ng-if="r.section=='sumteilmin'">
+		<td class="rightBorderSumTeil" colspan="5" ng-class="r.section" ng-if="r.section=='sumteilmin' && mitMinuten">
 		    <div class="">
 			{{minutenOption}}-soll
 		    </div>
@@ -135,7 +165,7 @@
 			</div>
 		    </div>
 		</td>
-		<td style="white-space: nowrap;" class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumteilmin'" >
+		<td style="white-space: nowrap;" class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumteilmin' && mitMinuten" >
 		    <div>
 			{{getSumMinuten(r.palInfo,minutenOption)|celecislo}}
 		    </div>
@@ -143,7 +173,7 @@
 			{{getSumMinuten(r.palInfo,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}
 		    </div>
 		</td>
-		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteilmin' && mitMinuten" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
 		    <div ng-if="zeilenD[zeilenIndex].palInfo.hasOwnProperty(tat)" title="abgnr:{{tat}}">
 			<div>
 			    {{getSumMinuten(r.palInfo[tat],minutenOption)|celecislo}}
@@ -153,20 +183,23 @@
 			</div>
 		    </div>
 		</td>
-		<td ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-if="r.section=='sumteilmin'" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray"></td>
-		<td ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-info text-right"></td>
-		<td ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-right"></td>
-		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-right">
-		    
+		<td ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-if="r.section=='sumteilmin' && mitMinuten" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray"></td>
+		<td ng-class="r.section" ng-if="r.section=='sumteilmin' && mitMinuten" class="text-info text-right"></td>
+		<td ng-class="r.section" ng-if="r.section=='sumteilmin' && mitMinuten" class="text-right"></td>
+		<!--<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumteilmin'" class="text-right"></td>-->
+	    
+	    
+	    <!--zapati pro dil oddelovac dilu, zobrazit jen v pripade, kdyz ukazuju i palety-->
+		<td class="teilOddelovac" colspan="{{6+abgnrKeysArray.length+aartKeysArray.length+2}}" ng-if="r.section=='sumteiloddelovac' && mitPaletten">
 		</td>
 
 	    </tr>
 	</tbody>
 	
 	<!--Suma pro celou tabulku-->
-	<tbody class="sumTable" ng-if="zeilen!==null && zeilen.length>0">
+	<tbody class="sumTable" ng-if="zeilen!==null && zeilen.length>0 && mitMinuten">
 	    <tr style="white-space: nowrap;">
-		<td class="rightBorderSumTeil" colspan="4">
+		<td class="rightBorderSumTeil" colspan="5">
 		    <div>
 			Sum Stk
 		    </div>
@@ -206,7 +239,7 @@
 		<td class="text-right" ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-repeat="auss in aartKeysArray">{{sumReport.auss[auss].sum_auss_stk}}</td>
 		<td></td>
 		<td class="text-right">{{sumReport.sum_im_gew|number:2}}</td>
-		<td></td>
+		<!--<td></td>-->
 	    </tr>
 	</tbody>
 

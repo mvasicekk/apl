@@ -1,0 +1,181 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23.7.2015, 9:40:51
+    Author     : jr
+*/
+
+
+div.page-header{
+    background-color: lightyellow;
+    text-align: center;
+    margin: 0px 0px 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+div.page-header h4{
+    margin: 0px;
+}
+
+.st-sort-ascent:before{
+    content: '\25B2';
+  }
+
+  .st-sort-descent:before{
+    content: '\25BC';
+  }
+
+  .table > thead > tr > th {
+    background-color: #DCEAF5;
+  }
+  
+  th[st-sort]{
+      cursor: pointer;
+  }
+  
+
+/*.table-fixed thead {
+  width: 97%;
+}
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}*/
+
+@media print
+{    
+    * {
+	background: inherit;
+	color: inherit;
+    }
+    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+    
+    #d550it{
+	font-size: 0.7em;
+    }
+    
+    #d550it a[href]:after {
+	content: none;
+    }
+    
+    .page-break	{ page-break-after: always; }
+}
+
+tr.sumteil{
+    font-weight: bold;
+    font-style: italic;
+}
+
+#d550it td.detail{
+	font-size: 0.8em;
+}
+
+#d550it a.btn-xs{
+	width: 6em;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 0.8em;
+	margin-bottom: 2px;
+}
+
+#d550it td.teilinfo{
+	font-size: 0.7em;
+	font-weight: normal;
+}
+    
+table#d550it td.sumteil{
+    border-top: 2px solid #88D144;
+    /*border-bottom: 2px solid #88D144;*/
+    background-color: #e5ffe5;
+}
+
+table#d550it td.sumteilmin{
+    /*border-top: 2px solid #88D144;*/
+    border-bottom: 2px solid #88D144;
+    background-color: #e5ffe5;
+}
+
+table#d550it td.terminzahlavi{
+    background-color: #ffffbb;
+    font-weight: bold;
+    border-bottom: 2px solid #88D144;
+    border-top: 2px solid #88D144;
+}
+
+table#d550it td.leftBorderDetail{
+    border-left: 2px solid #88D144;
+}
+
+table#d550it td.rightBorderDetail{
+    border-right: 2px solid #88D144;
+}
+
+table#d550it td.leftBorderSumTeil{
+    border-left: 2px solid #88D144;
+}
+
+table#d550it tbody.sumTable td{
+    background-color: #E0EFEF;
+}
+
+
+table#d550it tbody.sumTable{
+    font-size: 0.8em;
+}
+
+table#d550it td.rightBorderSumTeil{
+    border-right: 2px solid #88D144;
+}
+
+div.teilfield{
+    display: inline-block;
+    min-width: 10em;
+}
+
+div.teilInfoField{
+    display: inline-block;
+    font-size: 0.7em;
+    font-weight: normal;
+}
+
+div.reklInfoField{
+    font-size: 0.9em;
+    color: red;
+}
+
+#spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -100px 0 0 -100px;
+	height: 200px;
+	width: 200px;
+	text-indent: 250px;
+	white-space: nowrap;
+	overflow: hidden;
+	background-image: url(../../images/spinner2.gif);
+	background-repeat: no-repeat;
+	z-index: 9999;
+}
+.progress{
+     display: inline-block;
+    margin-bottom: 0;
+    margin-left: 1em;
+    width: 76%;
+}

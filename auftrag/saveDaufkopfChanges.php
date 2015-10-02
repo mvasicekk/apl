@@ -50,6 +50,8 @@ if(count($propChanges)>0){
 //$sql = "insert into dreklamation (rekl_datum) values('$rekl_datum')";
 //$insertId = $apl->insert($sql);
 
+$ar=$a->query($sql);
+
 $returnArray = array(
 	'ar'=>$ar,
 	'propChanges'=>$propChanges,

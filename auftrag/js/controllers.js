@@ -31,6 +31,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     
     var auftragTable;
 
+    $scope.securityInfo = undefined;
     // pro uchovani hodnot pred editaci radku
     $scope.dauftragOriginalArray = [];
     $scope.preisupdate = false;
@@ -239,7 +240,19 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    });
     };
     
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'auftrag'
+	};
+	return $http.post('./getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+		    }
+		);
+    }
+    
     // init
+    $scope.initSecurity();
     $scope.getAuftragInfo();
     
     $scope.showPrintDialog = function(){

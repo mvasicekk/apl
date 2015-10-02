@@ -1,0 +1,56 @@
+<div id="spinner"></div>
+
+<div class="container-fluid">
+    <div class="page-header">
+	<h4>D550 (interaktiv)</h4>
+    </div>
+    <table ng-init="columns=5" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
+	<thead>
+	    <tr class='no-print'>
+		<th style="width:8em;min-width:8em;" colspan="{{1}}">
+		    <input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="3" ng-model="kundeVon" placeholder="Kunde von" type="text"/>
+		    <input tabindex="2" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="3" ng-model="kundeBis" placeholder="Kunde bis" type="text"/>
+		</th>
+		<th style="width:10em;min-width:8em;" colspan="{{1}}">
+		    <input ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
+		    <input ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
+		</th>
+		<th colspan="{{columns-2}}">
+		    
+		</th>
+	    </tr>
+	    <tr>
+		<th>Teil</th>
+		<th>IMA-Nr</th>
+		<th>EMA-Nr</th>
+		<th>Von</th>
+		<th>Bemerkung</th>
+	    </tr>
+	</thead>
+	<tbody ng-if="zeilen===null">
+	    <tr>
+		<td colspan="{{columns}}" class="text-center text-danger">
+		    <h1>Keine Data !</h1>
+		</td>
+	    </tr>
+	</tbody>
+	<tbody class="page-break" ng-repeat="t in teileKeysArray">
+	    <tr>
+		<td class="terminzahlavi" colspan="{{columns}}">
+		    {{t}}
+		</td>
+	    </tr>
+	    <tr ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+
+	    </tr>
+	</tbody>
+	
+	<tfoot>
+<!--	    <tr>
+		<td colspan="{{5 + abgnrKeysArray.length + aartKeysArray.length}}" class="text-center">
+		    <div st-pagination="true" st-items-by-page="50" st-displayed-pages="10"></div>
+		</td>
+	    </tr>-->
+	</tfoot>
+    </table>
+</div>

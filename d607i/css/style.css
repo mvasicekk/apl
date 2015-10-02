@@ -139,6 +139,22 @@ table#d607it tbody.sumTable{
     font-size: 0.8em;
 }
 
+table#d607it tr:hover{
+    background-color:yellow;
+}
+
+table#d607it td.teilOddelovac{
+    background-color:#5bc0de;
+}
+
+table#d607it td.canedit{
+    cursor: pointer;
+}
+
+table#d607it td.editmode{
+    padding:0;
+}
+
 table#d607it td.rightBorderSumTeil{
     border-right: 2px solid #88D144;
 }

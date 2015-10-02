@@ -9,16 +9,28 @@ var aplApp = angular.module('d607iApp');
 aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 //    $scope.terminMatch = '';
     $scope.terminMatchVon = '';
+    $scope.terminVon = null;
+    $scope.terminBis = null;
     $scope.terminMatchBis = '';
     $scope.importMatch = '';
     $scope.teilMatch = '';
     $scope.kundeMatch = '';
     $scope.mitPaletten = false;
     $scope.mitReklamation = false;
+    $scope.mitMinuten = false;
+    $scope.gt_editable = false;
+    $scope.bemerkung_editable = false;
+    
     $scope.minutenOption = 'vzaby';
+    $scope.securityInfo = undefined;
     
     var d607it;
     
+    $scope.dateOptions = {
+		dateFormat: 'dd.mm.yy',
+		firstDay: 1
+    };
+	    
     $scope.$on('$viewContentLoaded', function(event) {
 	    d607it = $('#d607it');
 	    $('#spinner').hide();
@@ -67,6 +79,33 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 	}
 	return retValue;
     }
+    
+    $scope.updateFloatHead = function(){
+	$timeout(function(){
+			    d607it.floatThead('destroy');
+			    d607it.floatThead();
+			    d607it.floatThead('reflow');
+			    $('#spinner').hide();
+			},100);
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.makeEditable_gt = function(v){
+	console.log('makeEditable_gt'+v);
+	$scope.gt_editable=v;
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.makeEditable_bemerkung = function(v){
+	console.log('makeEditable_bemerkung'+v);
+	$scope.bemerkung_editable=v;
+    }
     /**
      * 
      * @param {type} e
@@ -74,13 +113,33 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
      */
     $scope.getZeilen = function(e){
 	console.log('getZeilen event.keyCode='+e.which);
-	if (((($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3))||($scope.kundeMatch.length==3))&&(e.which==13)) {
+	console.log($scope.terminVon);
+	if (
+		(
+		(($scope.terminMatchVon.length >= 3)&&($scope.terminMatchBis.length >= 3))
+		||($scope.kundeMatch.length==3)
+//		||(($scope.terminVon!==null)&&($scope.terminBis!==null)&&($scope.kundeMatch.length==3))
+		||(($scope.terminVon!==null)&&($scope.terminBis!==null))
+		)
+		&&
+		(e.which==13)
+	    ) {
 	    $('#spinner').show();
+	    if(($scope.terminVon!==null)&&($scope.terminBis!==null)){
+		var v = $scope.terminVon.getTime();
+		var b = $scope.terminBis.getTime();
+	    }
+	    else{
+		var v = null;
+		var b = null;
+	    }
 	    $http.get('./getD607i.php?terminvon=' + $scope.terminMatchVon
 		    +'&terminbis='+$scope.terminMatchBis
 		    +'&import='+$scope.importMatch
 		    +'&teil='+$scope.teilMatch
 		    +'&kunde='+$scope.kundeMatch
+		    +'&von='+v
+		    +'&bis='+b
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;
@@ -93,15 +152,26 @@ aplApp.controller('d607iController', function ($scope, $http,$timeout) {
 			$scope.terminArray = data.terminArray;
 			$scope.teileArray = data.teileArray;
 			$scope.sumReport = data.sumReport;
-			$timeout(function(){
-			    d607it.floatThead('destroy');
-			    d607it.floatThead();
-			    d607it.floatThead('reflow');
-			    $('#spinner').hide();
-			},100);
+			
+			$scope.updateFloatHead();
 		    });
 	}
     };
+    
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'d607i'
+	};
+	return $http.post('./getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+		    }
+		);
+    }
+    
+    
+    // inicializace controlleru
+    $scope.initSecurity();
 });
 
 

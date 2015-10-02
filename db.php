@@ -2792,7 +2792,7 @@ public function istExportiert($import, $impal){
      * @param type $dauftrId 
      */
     public function getDauftrRow($dauftrId){
-	$sql = "select id_dauftr as id,termin,fremdauftr,fremdpos,auftragsnr,`pos-pal-nr` as pal,teil,`stück` as stk,abgnr,`auftragsnr-exp` as ex,`stk-exp` as ex_stk from dauftr where id_dauftr='$dauftrId'";
+	$sql = "select id_dauftr as id,termin,fremdauftr,fremdpos,auftragsnr,`pos-pal-nr` as pal,teil,`stück` as stk,abgnr,`auftragsnr-exp` as ex,`stk-exp` as ex_stk,giesstag from dauftr where id_dauftr='$dauftrId'";
         $res = mysql_query($sql);
         if (mysql_affected_rows() > 0) {
             $row = mysql_fetch_assoc($res);

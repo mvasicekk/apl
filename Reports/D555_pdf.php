@@ -173,20 +173,37 @@ foreach($imas as $ima){
 	}
     }
     
+    
     //zjisteni skutecnych palet
     // plus zjisteni poctu kusu
     $menge = 0;
     $palArraySkutecne = array();
+    $seskupenePole = array();
 //    $emaPalArray = explode(';', getValueForNode($imaChilds, 'ema_palarray'));
     if(is_array($dauftrIdArray)){
 	foreach ($dauftrIdArray as $i){
 	    $dauftrRow = $apl->getDauftrRow($i);
 	    if($dauftrRow!==NULL){
-		array_push($palArraySkutecne, array('im'=>$dauftrRow['auftragsnr'],'pal'=>$dauftrRow['pal'],'stk'=>$dauftrRow['stk'],'pos'=>$dauftrRow['fremdpos']));
+		array_push($palArraySkutecne, array('im'=>$dauftrRow['auftragsnr'],'pal'=>$dauftrRow['pal'],'stk'=>$dauftrRow['stk'],'pos'=>$dauftrRow['fremdpos'],'gt'=>$dauftrRow['giesstag']));
+		$import = $dauftrRow['auftragsnr'];
+		$pos = $dauftrRow['fremdpos'];
+		$gt = $dauftrRow['giesstag'];
+		$stk = intval($dauftrRow['stk']);
+		$seskupenePole[$import][$pos][$gt]['stk']+=$stk;
+		$imInfoArray = $apl->getAuftragInfoArray($import);
+		$bestellNr = $imInfoArray[0]['bestellnr'];
+		$aufdatArray = explode('.',$imInfoArray[0]['aufdat']);
+		$minpreis = floatval($imInfoArray[0]['minpreis']);
+		$aufdat = $aufdatArray[2].'-'.$aufdatArray[1].'-'.$aufdatArray[0];
+		$seskupenePole[$import]['auftraginfo']['bestellnr'] = $bestellNr;
+		$seskupenePole[$import]['auftraginfo']['aufdat'] = $aufdat;
 		$menge+=intval($dauftrRow['stk']);
 	    }
 	}
     }
+
+    
+//    AplDB::varDump($palArraySkutecne);
     
     $pdf->SetFont("FreeSans", "B", 10);
     $pdf->Cell(0, 10, $emanr, '0', 1, 'L', 0);
@@ -196,35 +213,68 @@ foreach($imas as $ima){
     $pdf->SetFont("FreeSans", "", 12);
     $pdf->Cell(0, 10, '( '.$teiloriginal.' )'.' '.$teilbezeichnung, '0', 1, 'L', 0);
     
-    $minpreis = 0;
+    //$minpreis = 0;
     //seznam importu (pozic)
-    if(is_array($palArraySkutecne)){
+    if(is_array($seskupenePole)){
 	//hlavicka
 	$pdf->SetFont("FreeSans", "B", 10);
 	$pdf->SetFillColor(255,255,200);
 	$pdf->Cell(30, 5, "Best.Nr", 'BT', 0, 'L', 1);
 	$pdf->Cell(35, 5, "Import", 'BT', 0, 'L', 1);
-	$pdf->Cell(40, 5, "vom", 'BT', 0, 'L', 1);
-	$pdf->Cell(0, 5, "Pos.", 'BT', 1, 'L', 1);
+	$pdf->Cell(30, 5, "vom", 'BT', 0, 'L', 1);
+	$pdf->Cell(30, 5, "Pos.", 'BT', 0, 'L', 1);
+	$pdf->Cell(30, 5, "GT", 'BT', 0, 'L', 1);
+	$pdf->Cell(0, 5, "Menge (Stk) - gemeldet", 'BT', 1, 'R', 1);
 	//pozice
 	$pdf->SetFont("FreeSans", "", 10);
-	$posOld='-*-*-';
-	foreach ($palArraySkutecne as $pas){
-	    if($posOld==$pas['im'].'-'.$pas['pos']) continue;
-	    $imInfoArray = $apl->getAuftragInfoArray($pas['im']);
-	    $bestellNr = $imInfoArray[0]['bestellnr'];
-	    $aufdatArray = explode('.',$imInfoArray[0]['aufdat']);
-	    $minpreis = floatval($imInfoArray[0]['minpreis']);
-	    $aufdat = $aufdatArray[2].'-'.$aufdatArray[1].'-'.$aufdatArray[0];
-	    $pdf->Cell(30, 5, $bestellNr, '0', 0, 'L', 0);
-	    $pdf->Cell(35, 5, $pas['im'], '0', 0, 'L', 0);
-	    $pdf->Cell(40, 5, $aufdat, '0', 0, 'L', 0);
-	    $pdf->Cell(0, 5, $pas['pos'], '0', 1, 'L', 0);
-	    $posOld=$pas['im'].'-'.$pas['pos'];
+	foreach ($seskupenePole as $im=>$imInfo){
+	    foreach ($imInfo as $pos=>$posInfo){
+		if($pos=="auftraginfo"){
+		    continue;
+		}
+		foreach ($posInfo as $gt=>$gtInfo){
+		    $pdf->Cell(30, 5, $imInfo['auftraginfo']['bestellnr'], '0', 0, 'L', 0);
+		    $pdf->Cell(35, 5, $im, '0', 0, 'L', 0);
+		    $pdf->Cell(30, 5, $imInfo['auftraginfo']['aufdat'], '0', 0, 'L', 0);
+		    $pdf->Cell(30, 5, $pos, '0', 0, 'L', 0);
+		    $pdf->Cell(30, 5, $gt, '0', 0, 'L', 0);
+		    $pdf->Cell(0, 5, $gtInfo['stk'], '0', 1, 'R', 0);
+		}
+	    }
 	}
 	//podtrhnout
 	$pdf->Cell(0, 2, "", 'T', 1, 'L', 0);
     }
+    
+    
+//    if(is_array($palArraySkutecne)){
+//	//hlavicka
+//	$pdf->SetFont("FreeSans", "B", 10);
+//	$pdf->SetFillColor(255,255,200);
+//	$pdf->Cell(30, 5, "Best.Nr", 'BT', 0, 'L', 1);
+//	$pdf->Cell(35, 5, "Import", 'BT', 0, 'L', 1);
+//	$pdf->Cell(40, 5, "vom", 'BT', 0, 'L', 1);
+//	$pdf->Cell(0, 5, "Pos.", 'BT', 1, 'L', 1);
+//	//pozice
+//	$pdf->SetFont("FreeSans", "", 10);
+//	$posOld='-*-*-';
+//	foreach ($palArraySkutecne as $pas){
+//	    if($posOld==$pas['im'].'-'.$pas['pos']) continue;
+//	    $imInfoArray = $apl->getAuftragInfoArray($pas['im']);
+//	    $bestellNr = $imInfoArray[0]['bestellnr'];
+//	    $aufdatArray = explode('.',$imInfoArray[0]['aufdat']);
+//	    $minpreis = floatval($imInfoArray[0]['minpreis']);
+//	    $aufdat = $aufdatArray[2].'-'.$aufdatArray[1].'-'.$aufdatArray[0];
+//	    $pdf->Cell(30, 5, $bestellNr, '0', 0, 'L', 0);
+//	    $pdf->Cell(35, 5, $pas['im'], '0', 0, 'L', 0);
+//	    $pdf->Cell(40, 5, $aufdat, '0', 0, 'L', 0);
+//	    $pdf->Cell(0, 5, $pas['pos'], '0', 1, 'L', 0);
+//	    $posOld=$pas['im'].'-'.$pas['pos'];
+//	}
+//	//podtrhnout
+//	$pdf->Cell(0, 2, "", 'T', 1, 'L', 0);
+//    }
+    
     
     $pdf->Ln();
     //antrag auf Mehrleistung - popis
@@ -242,6 +292,9 @@ foreach($imas as $ima){
 	
     $pdf->Ln();
     
+//    AplDB::varDump($tatArray);
+//    AplDB::varDump($minpreis);
+//    exit();
     //seznam operaci, pocet kusu, cena
     if(count($tatArray)>0){
 	//hlavicka
@@ -250,8 +303,8 @@ foreach($imas as $ima){
 	$pdf->Cell(55, 5, "Mehrarbeit", 'BT', 0, 'L', 1);
 	$pdf->Cell(15, 5, "Menge", 'BT', 0, 'R', 1);
 	$pdf->Cell(35, 5, "Vorgabezeit", 'BT', 0, 'R', 1);
-	$pdf->Cell(35, 5, "Kosten(Stk)", 'BT', 0, 'R', 1);
-	$pdf->Cell(40, 5, "Kosten(SUM)", 'BT', 0, 'R', 1);
+	$pdf->Cell(35, 5, "Kosten (Stk)", 'BT', 0, 'R', 1);
+	$pdf->Cell(40, 5, "Kosten (SUM)", 'BT', 0, 'R', 1);
 	$pdf->Cell(0, 5, "", 'BT', 1, 'L', 1);
 	$pdf->SetFont("FreeSans", "", 10);
 	$sumVzKd = 0;
@@ -297,19 +350,23 @@ foreach($imas as $ima){
     //tabulka erstellung/genehmigung
     $pdf->Ln();
     $pdf->SetFont("FreeSans", "B", 10);
-    $pdf->Cell(90, 5, "Erstellung", '0', 0, 'L', 0);
-    $pdf->Cell(0, 5, "Genehmigung", '0', 1, 'L', 0);
+    $pdf->Cell(60, 5, "Erstellt", '0', 0, 'L', 0);
+    $pdf->Cell(60, 5, "Sachlich geprūft", '0', 0, 'L', 0);
+    $pdf->Cell(0, 5, "Genehmigt", '0', 1, 'L', 0);
+    
     $pdf->SetFont("FreeSans", "", 10);
     $pdf->Cell(15, 5, "am:", '0', 0, 'L', 0);
     $am = substr(getValueForNode($imaChilds, 'ema_antrag_am'),0,10);
-    $pdf->Cell(90-15, 5, $am, '0', 0, 'L', 0);
-    $pdf->Cell(15, 5, "am:", '0', 0, 'L', 0);
-    $pdf->Cell(0, 5, "", '0', 1, 'L', 0);
+    $pdf->Cell(60-15, 5, $am, '0', 0, 'L', 0);
+    $pdf->Cell(60, 5, "am:", '0', 0, 'L', 0);
+    $pdf->Cell(0, 5, "am:", '0', 1, 'L', 0);
+    
+    
     $pdf->Cell(15, 5, "vom:", '0', 0, 'L', 0);
     $vom = getValueForNode($imaChilds, 'ema_antrag_vom');
-    $pdf->Cell(90-15, 5, $vom, '0', 0, 'L', 0);
-    $pdf->Cell(15, 5, "vom:", '0', 0, 'L', 0);
-    $pdf->Cell(0, 5, "", '0', 1, 'L', 0);
+    $pdf->Cell(60-15, 5, $vom, '0', 0, 'L', 0);
+    $pdf->Cell(60, 5, "vom:", '0', 0, 'L', 0);
+    $pdf->Cell(0, 5, "vom:", '0', 1, 'L', 0);
 
     
     //anlagen
@@ -373,6 +430,11 @@ foreach($imas as $ima){
     }
 }
 
+$pdf->Output();
+//AplDB::varDump($seskupenePole);
+exit();
+    
+    
 $stamp = date('YmdHis');
 //Close and output PDF document
 $teilnrNew = strtr($teilnr, '/', '-');

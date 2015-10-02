@@ -93,6 +93,8 @@ $element=$domxml->createElement("parameters");
 $parametry=$domxml->firstChild;
 $parametry->appendChild($element);
 $i=1;
+
+if(is_array($p)){
 foreach($p as $var=>$value)
 {
 	$poradinode=$domxml->createElement("N".$i);
@@ -102,6 +104,8 @@ foreach($p as $var=>$value)
 	$poradinode->appendChild($labelnode);
 	$poradinode->appendChild($valuenode);
 	$i++;
+}
+    
 }
 
 

@@ -14,9 +14,16 @@ $terminMatchBis = trim($_GET['terminbis']);
 $importMatch = trim($_GET['import']);
 $teilMatch = trim($_GET['teil']);
 $kundeMatch = trim($_GET['kunde']);
+$terminVon1 = trim($_GET['von']);
+$terminBis1 = trim($_GET['bis']);
+if(intval($terminVon1)>0 && intval($terminBis1)>0){
+    $terminVon = date('Y-m-d',  $terminVon1/1000);
+    $terminBis = date('Y-m-d',  $terminBis1/1000)." 23:59:59";
+}
 
 $sql.=" select ";
 $sql.="     if(dauftr.termin is null or dauftr.termin='','NOTERMIN',dauftr.termin) as termin,";
+$sql.="     dt.ex_datum_soll,";
 $sql.="     dauftr.auftragsnr,";
 $sql.="     DATE_FORMAT(daufkopf.aufdat,'%d.%m.%y') as import_datum,";
 $sql.="     dauftr.teil,";
@@ -32,6 +39,7 @@ $sql.="     sum(dauftr.VzAby*dauftr.`stück`) as sum_vzaby";
 $sql.=" from dauftr";
 $sql.=" join dkopf on dkopf.teil=dauftr.teil";
 $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+$sql.=" left join daufkopf dt on dt.auftragsnr=SUBSTRING(dauftr.termin,2)";
 $sql.=" where (1)";
 if(strlen($kundeMatch)==3){
     $sql.="     and (daufkopf.kunde='$kundeMatch')";
@@ -44,6 +52,9 @@ if(strlen(trim($importMatch))>0){
 }
 if(strlen(trim($teilMatch))>0){
     $sql.="     and dauftr.teil like '%$teilMatch%'";    
+}
+if($terminVon!=NULL && $terminBis!=NULL){
+    $sql.="   and (  dt.ex_datum_soll between '$terminVon' and '$terminBis')";
 }
 $sql.="     and dauftr.`auftragsnr-exp` is null";
 $sql.=" group by";
@@ -77,6 +88,7 @@ $sqlD.="     sum(if(drueck.`Stück` is not null,if(auss_typ=4,(drueck.`Stück`+d
 
 $sqlD.=" from dauftr";
 $sqlD.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+$sqlD.=" left join daufkopf dt on dt.auftragsnr=SUBSTRING(dauftr.termin,2)";
 $sqlD.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=dauftr.teil and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.TaetNr=dauftr.abgnr";
 $sqlD.=" where (1)";
 if(strlen($kundeMatch)==3){
@@ -90,6 +102,9 @@ if(strlen(trim($importMatch))>0){
 }
 if(strlen(trim($teilMatch))>0){
     $sqlD.="     and dauftr.teil like '%$teilMatch%'";    
+}
+if($terminVon!=NULL && $terminBis!=NULL){
+    $sqlD.="   and (  dt.ex_datum_soll between '$terminVon' and '$terminBis')";
 }
 
 //$sqlD.="     dauftr.termin like 'P$terminMatch%'";
@@ -124,6 +139,7 @@ $sqlDA.="     if(drueck.`auss-art` is null,0,drueck.`auss-art`) as aart,     ";
 $sqlDA.="     sum(if(drueck.`Auss-Stück` is null,0,drueck.`Auss-Stück`)) as sum_auss_stk";
 $sqlDA.=" from dauftr";
 $sqlDA.=" join daufkopf on daufkopf.auftragsnr=dauftr.auftragsnr";
+$sqlDA.=" left join daufkopf dt on dt.auftragsnr=SUBSTRING(dauftr.termin,2)";
 $sqlDA.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=dauftr.teil and drueck.`pos-pal-nr`=dauftr.`pos-pal-nr` and drueck.TaetNr=dauftr.abgnr";
 $sqlDA.=" where (1)";
 if(strlen($kundeMatch)==3){
@@ -137,6 +153,9 @@ if(strlen(trim($importMatch))>0){
 }
 if(strlen(trim($teilMatch))>0){
     $sqlDA.="     and dauftr.teil like '%$teilMatch%'";    
+}
+if($terminVon!=NULL && $terminBis!=NULL){
+    $sqlDA.="   and (  dt.ex_datum_soll between '$terminVon' and '$terminBis')";
 }
 
 //$sqlDA.="     dauftr.termin like 'P$terminMatch%'";
@@ -166,7 +185,11 @@ $sqlDA.="     dauftr.`pos-pal-nr`";
     
 $aartArray = array();
 
-if (((strlen($terminMatchVon)>=3)&&(strlen($terminMatchBis)>=3))||(strlen($kundeMatch)==3)) {
+if (((strlen($terminMatchVon)>=3)&&(strlen($terminMatchBis)>=3))
+	||(strlen($kundeMatch)==3)
+//	||(($terminVon!=NULL) && ($terminBis!=NULL) && (strlen($kundeMatch)==3))
+	||(($terminVon!=NULL) && ($terminBis!=NULL))
+    ) {
     $rows = $a->getQueryRows($sql);
     $rowsD = $a->getQueryRows($sqlD);
     $rowsDA = $a->getQueryRows($sqlDA);
@@ -242,6 +265,7 @@ if ($rows != NULL) {
 	    }
 	    array_push($zeilenArray, array("section"=>"sumteil","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	    array_push($zeilenArray, array("section"=>"sumteilmin","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
+	    array_push($zeilenArray, array("section"=>"sumteiloddelovac","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
     }
 }
@@ -285,6 +309,7 @@ if ($rowsD != NULL) {
 	    }
 	    array_push($zeilenDArray, array("section" => "sumteil", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	    array_push($zeilenDArray, array("section" => "sumteilmin", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
+	    array_push($zeilenDArray, array("section" => "sumteiloddelovac", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
     }
 }
@@ -329,16 +354,18 @@ if ($rowsD != NULL) {
 	    }
 	    array_push($zeilenDAArray, array("section"=>"sumteil","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	    array_push($zeilenDAArray, array("section"=>"sumteilmin","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
+	    array_push($zeilenDAArray, array("section"=>"sumteiloddelovac","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
     }
 }
 
 $returnArray = array(
-//    "rows"=>$rows,
-//    "inputData" => $inputData,
+    'von'=>$terminVon,
+    'bis'=>$terminBis,
+    'von1'=>$terminVon1,
+    'bis1'=>$terminBis1,
     "sumReport"=>$sumReport,
     "zeilen" => $zeilenArray,
-//    "zeilenRaw" => $zeilen,
     "zeilenD" => $zeilenDArray,
     "zeilenDA" => $zeilenDAArray,
     "abgnrKeysArray" => $abgnrKeysArray,
@@ -347,8 +374,6 @@ $returnArray = array(
     "terminArray"=>$terminArray,
     "termin"=>$terminMatch,
     "sql"=>$sql,
-//    "sqlD"=>$sqlD,
-//    "sqlDA"=>$sqlDA,
     "teileArray"=>$teileArray,
 );
 
