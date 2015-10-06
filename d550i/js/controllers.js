@@ -11,6 +11,8 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
     $scope.kundeBis = "";
     $scope.datumVon;
     $scope.datumBis;
+    $scope.teilMatch="";
+    $scope.mitImportDetail=false;
     
     var d550it;
     
@@ -44,6 +46,7 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 		(
 		(($scope.kundeVon.length==3)&&($scope.kundeBis.length==3))
 		||(($scope.datumVon!==null)&&($scope.datumBis!==null))
+		||(($scope.teilMatch.length>0))
 		)
 		&&
 		(e.which==13)
@@ -55,8 +58,8 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 		var b = $scope.datumBis.getTime();
 	    }
 	    else{
-		var v = null;
-		var b = null;
+		var v = 0;
+		var b = 0;
 	    }
 	    console.log('posilam get pozadavek');
 	    
@@ -64,6 +67,7 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 		    +'&kundebis='+$scope.kundeBis
 		    +'&von='+v
 		    +'&bis='+b
+		    +'&teil='+$scope.teilMatch
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;

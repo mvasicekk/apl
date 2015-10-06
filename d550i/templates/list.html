@@ -4,27 +4,37 @@
     <div class="page-header">
 	<h4>D550 (interaktiv)</h4>
     </div>
-    <table ng-init="columns=5" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
+    <table ng-init="columns=10" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class='no-print'>
 		<th style="width:8em;min-width:8em;" colspan="{{1}}">
 		    <input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="3" ng-model="kundeVon" placeholder="Kunde von" type="text"/>
 		    <input tabindex="2" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="3" ng-model="kundeBis" placeholder="Kunde bis" type="text"/>
+		    <input tabindex="3" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="10" ng-model="teilMatch" placeholder="Teil" type="text"/>
 		</th>
 		<th style="width:10em;min-width:8em;" colspan="{{1}}">
 		    <input ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
 		    <input ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
 		</th>
 		<th colspan="{{columns-2}}">
-		    
+		    <div class="checkbox-inline">
+			<label class="checkbox-inline">
+			    <input ng-model="mitImportDetail" type="checkbox">Importe zeigen
+			</label>
+		    </div>		    
 		</th>
 	    </tr>
 	    <tr>
-		<th>Teil</th>
 		<th>IMA-Nr</th>
 		<th>EMA-Nr</th>
 		<th>Von</th>
 		<th>Bemerkung</th>
+		<th class="text-right">Stk gemeldet</th>
+		<th class="text-right">Stk genehmigt</th>
+		<th class="text-right">Stk bearbeitet</th>
+		<th class="text-right">Stk berechnet</th>
+		<th>Tat / Zeit</th>
+		<th>Rechnung</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -34,14 +44,86 @@
 		</td>
 	    </tr>
 	</tbody>
-	<tbody class="page-break" ng-repeat="t in teileKeysArray">
-	    <tr>
-		<td class="terminzahlavi" colspan="{{columns}}">
-		    {{t}}
-		</td>
-	    </tr>
+	<tbody>
 	    <tr ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+		<!--kunde header-->
+		<td colspan="{{columns}}" class="{{r.section}}" ng-show="r.section=='kundeheader'">
+		    {{r.kunde}}
+		</td>
+		
+		<!--teil header-->
+		<td colspan="{{columns}}" class="{{r.section}}" ng-show="r.section=='teilheader'">
+		    {{r.teil}} - {{r.teilInfo.Teilbez}}
+		</td>
+		
+		<!--dma detail-->
+		<td  ng-show="r.section=='dmadetail'" ng-class="{ima_inarbeit:(r.dmaRow.ema_genehmigt==0&&r.dmaRow.ima_genehmigt==0),ima_genehmigt:r.dmaRow.ima_genehmigt>0,ima_nicht_genehmigt:r.dmaRow.ima_genehmigt<0}">
+		    {{r.dmaRow.imanr}}
+		</td>
+		<td ng-show="r.section=='dmadetail'" ng-class="{ima_inarbeit:(r.dmaRow.ema_genehmigt==0&&r.dmaRow.ima_genehmigt==0),ima_genehmigt:r.dmaRow.ema_genehmigt>0,ima_nicht_genehmigt:r.dmaRow.ema_genehmigt<0}">
+		    {{r.dmaRow.emanr}}
+		</td>
+		<td ng-show="r.section=='dmadetail'">
+		    {{r.dmaRow.imavon}}
+		</td>
+		<td ng-show="r.section=='dmadetail'">
+		    {{r.dmaRow.bemerkung}}
+		</td>
+		<!--kusy gemeldet-->
+		<td class="text-right" ng-show="r.section=='dmadetail'">
+		    <span title="IMA gemeldete Stk" ng-show="r.summen.ema_antrag===undefined">{{r.summen.ima_antrag.ba_stk}}(i)</span>
+		    <span title="EMA gemeldete Stk" ng-show="r.summen.ema_antrag!==undefined">{{r.summen.ema_antrag.ba_stk}}(e)</span>
+		</td>
+		<!--kusy genehmigt-->
+		<td class="text-right" ng-show="r.section=='dmadetail'">
+    		    <span title="IMA genehmigte Stk" ng-show="r.summen.ema_genehmigt===undefined">{{r.summen.ima_genehmigt.ba_stk}}(i)</span>
+		    <span title="EMA genehmigte Stk" ng-show="r.summen.ema_genehmigt!==undefined">{{r.summen.ema_genehmigt.ba_stk}}(e)</span>
+		</td>
+		<!--kusy bearbeitet-->
+		<td class="text-right" ng-show="r.section=='dmadetail'">
+		</td>
+		<!--kusy berechnet-->
+		<td class="text-right" ng-show="r.section=='dmadetail'">
+		</td>
+		<!--tat und zeit-->
+		<td ng-show="r.section=='dmadetail'">
+		    {{r.dmaRow.tatundzeitarray}}
+		</td>
+		<!--rechnung-->
+		<td ng-show="r.section=='dmadetail'">
+		    in Rechnungen :
+		</td>
+		
+		
+		<!--import ima antrag detail----------------------------------->
+		<td colspan="4" class="{{r.section}}" ng-show="r.section=='importdetail' && mitImportDetail">
+		    {{r.import}}
+		</td>
 
+		<!--kusy gemeldet-->
+		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
+		    BA[Stk]:{{r.antragImportStk.ba_stk}} / IMP[Stk]:{{r.antragImportStk.im_stk}}
+		</td>
+		<!--kusy genehmigt-->
+		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
+		    BA[Stk]:{{r.antragImportStk.ba_stk}} / IMP[Stk]:{{r.antragImportStk.im_stk}}
+		</td>
+		<!--kusy bearbeitet-->
+		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
+		    
+		</td>
+		<!--kusy berechnet-->
+		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
+		</td>
+		<!--tat und zeit-->
+		<td ng-show="r.section=='importdetail' && mitImportDetail">
+		    {{r.dmaRow.tatundzeitarray}}
+		</td>
+		<!--rechnung-->
+		<td ng-show="r.section=='importdetail' && mitImportDetail">
+		    
+		</td>
+		<!-------------------------------------------------------------------->
 	    </tr>
 	</tbody>
 	

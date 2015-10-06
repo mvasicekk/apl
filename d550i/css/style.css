@@ -94,11 +94,39 @@ tr.sumteil{
 	margin-bottom: 2px;
 }
 
+
+#d550it td{
+	padding: 3px;
+}
 #d550it td.teilinfo{
 	font-size: 0.7em;
 	font-weight: normal;
 }
-    
+   
+#d550it td.ima_genehmigt{
+	background-color: limegreen;
+}
+
+#d550it td.ima_inarbeit{
+	background-color: #ffffbb;
+}
+
+#d550it td.ima_nicht_genehmigt{
+	background-color: #fdd;
+}
+
+#d550it td.teilheader{
+	font-weight: bold;
+	background-color: #eef;
+	border-top: 3px solid #00f;
+}
+
+#d550it td.kundeheader{
+	font-weight: bold;
+	background-color: #ffd;
+	border-top: 3px solid #ff0;
+}
+
 table#d550it td.sumteil{
     border-top: 2px solid #88D144;
     /*border-bottom: 2px solid #88D144;*/
