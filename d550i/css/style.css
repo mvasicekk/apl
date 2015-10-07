@@ -97,12 +97,18 @@ tr.sumteil{
 
 #d550it td{
 	padding: 3px;
+	font-size: 0.8em;
 }
 #d550it td.teilinfo{
 	font-size: 0.7em;
 	font-weight: normal;
 }
    
+#d550it td.dmadetail{
+	background-color: #efe;
+	border-top: 3px solid #0F0;
+}
+
 #d550it td.ima_genehmigt{
 	background-color: limegreen;
 }

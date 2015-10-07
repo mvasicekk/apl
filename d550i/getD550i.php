@@ -89,11 +89,25 @@ if(
 	    $kunde = $dma['kunde'];
 	    $teil = $dma['teil'];
 	    $imanr = $dma['imanr'];
+	    
 	    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['dma'] = $dma;
+	    
+	    // pozadovane a povolene pozice pro vicepraci
 	    $dauftrIdArray['ima_antrag'] = explode(";", $dma['ima_dauftrid_array']);
 	    $dauftrIdArray['ima_genehmigt'] = explode(";", $dma['ima_dauftrid_array_genehmigt']);
 	    $dauftrIdArray['ema_antrag'] = explode(";", $dma['ema_dauftrid_array']);
 	    $dauftrIdArray['ema_genehmigt'] = explode(";", $dma['ema_dauftrid_array_genehmigt']);
+	    
+	    // pozadovane a povolene operace a casy pro vicepraci, vytvoreni pole pro dalsi praci
+	    
+	    $tatZeitArray['ima_antrag'] = explode(";", $dma['tatundzeitarray']);
+	    $tatZeitArray['ima_genehmigt'] = explode(";", $dma['ima_tatundzeitarray_genehmigt']);
+	    $tatZeitArray['ema_antrag'] = explode(";", $dma['ema_tatundzeitarray']);
+	    $tatZeitArray['ema_genehmigt'] = explode(";", $dma['ema_tatundzeitarray_genehmigt']);
+	    
+	    $tatZeitArray = explode(";", $dma['tatundzeitarray']);
+	    
+	    
 	    $importStkArray = array();
 	    foreach ($dauftrIdArray as $typ => $idArray) {
 		$pocetId[$typ] = 0;

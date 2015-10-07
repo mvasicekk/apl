@@ -57,41 +57,41 @@
 		</td>
 		
 		<!--dma detail-->
-		<td  ng-show="r.section=='dmadetail'" ng-class="{ima_inarbeit:(r.dmaRow.ema_genehmigt==0&&r.dmaRow.ima_genehmigt==0),ima_genehmigt:r.dmaRow.ima_genehmigt>0,ima_nicht_genehmigt:r.dmaRow.ima_genehmigt<0}">
+		<td  class="{{r.section}}" ng-show="r.section=='dmadetail'" ng-class="{ima_inarbeit:(r.dmaRow.ema_genehmigt==0&&r.dmaRow.ima_genehmigt==0),ima_genehmigt:r.dmaRow.ima_genehmigt>0,ima_nicht_genehmigt:r.dmaRow.ima_genehmigt<0}">
 		    {{r.dmaRow.imanr}}
 		</td>
-		<td ng-show="r.section=='dmadetail'" ng-class="{ima_inarbeit:(r.dmaRow.ema_genehmigt==0&&r.dmaRow.ima_genehmigt==0),ima_genehmigt:r.dmaRow.ema_genehmigt>0,ima_nicht_genehmigt:r.dmaRow.ema_genehmigt<0}">
+		<td class="{{r.section}}" ng-show="r.section=='dmadetail'" ng-class="{ima_inarbeit:(r.dmaRow.ema_genehmigt==0&&r.dmaRow.ima_genehmigt==0),ima_genehmigt:r.dmaRow.ema_genehmigt>0,ima_nicht_genehmigt:r.dmaRow.ema_genehmigt<0}">
 		    {{r.dmaRow.emanr}}
 		</td>
-		<td ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}}" ng-show="r.section=='dmadetail'">
 		    {{r.dmaRow.imavon}}
 		</td>
-		<td ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}}" ng-show="r.section=='dmadetail'">
 		    {{r.dmaRow.bemerkung}}
 		</td>
 		<!--kusy gemeldet-->
-		<td class="text-right" ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
 		    <span title="IMA gemeldete Stk" ng-show="r.summen.ema_antrag===undefined">{{r.summen.ima_antrag.ba_stk}}(i)</span>
 		    <span title="EMA gemeldete Stk" ng-show="r.summen.ema_antrag!==undefined">{{r.summen.ema_antrag.ba_stk}}(e)</span>
 		</td>
 		<!--kusy genehmigt-->
-		<td class="text-right" ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
     		    <span title="IMA genehmigte Stk" ng-show="r.summen.ema_genehmigt===undefined">{{r.summen.ima_genehmigt.ba_stk}}(i)</span>
 		    <span title="EMA genehmigte Stk" ng-show="r.summen.ema_genehmigt!==undefined">{{r.summen.ema_genehmigt.ba_stk}}(e)</span>
 		</td>
 		<!--kusy bearbeitet-->
-		<td class="text-right" ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
 		</td>
 		<!--kusy berechnet-->
-		<td class="text-right" ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
 		</td>
 		<!--tat und zeit-->
-		<td ng-show="r.section=='dmadetail'">
+		<td class="{{r.section}}" ng-show="r.section=='dmadetail'">
 		    {{r.dmaRow.tatundzeitarray}}
 		</td>
 		<!--rechnung-->
-		<td ng-show="r.section=='dmadetail'">
-		    in Rechnungen :
+		<td class="{{r.section}}" ng-show="r.section=='dmadetail'">
+		    
 		</td>
 		
 		
@@ -102,11 +102,11 @@
 
 		<!--kusy gemeldet-->
 		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
-		    BA[Stk]:{{r.antragImportStk.ba_stk}} / IMP[Stk]:{{r.antragImportStk.im_stk}}
+		    {{r.antragImportStk.ba_stk}}(ba)
 		</td>
 		<!--kusy genehmigt-->
 		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
-		    BA[Stk]:{{r.antragImportStk.ba_stk}} / IMP[Stk]:{{r.antragImportStk.im_stk}}
+		    {{r.antragImportStk.ba_stk}}(ba)
 		</td>
 		<!--kusy bearbeitet-->
 		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
