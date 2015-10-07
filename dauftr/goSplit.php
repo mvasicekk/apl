@@ -130,6 +130,12 @@ if($rmArray!==NULL){
 	    }
 	}
 	
+	//posledni zachrana (napr. pro abgnr=95
+	if(trim($oe)==""){
+	    if(count($oes4abgnrA)>0){
+		$oe = $oes4abgnrA[0];
+	    }
+	}
 	if(trim($oe)=="") $oe="?";
 
 	$gutStk = 0;

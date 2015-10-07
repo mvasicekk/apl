@@ -28,7 +28,7 @@
 		<th>IMA-Nr</th>
 		<th>EMA-Nr</th>
 		<th>Von</th>
-		<th>Bemerkung</th>
+		<th>Bemerkung <span ng-show="mitImportDetail">( Import / abgnr )</span></th>
 		<th class="text-right">Stk gemeldet</th>
 		<th class="text-right">Stk genehmigt</th>
 		<th class="text-right">Stk bearbeitet</th>
@@ -95,32 +95,76 @@
 		</td>
 		
 		
+		<!-- tahle sekce zatim neprinasi zadnou hodnotu, tak nezobrazovat 
 		<!--import ima antrag detail----------------------------------->
-		<td colspan="4" class="{{r.section}}" ng-show="r.section=='importdetail' && mitImportDetail">
+<!--		<td colspan="4" class="{{r.section}}" ng-show="r.section=='importdetail' && mitImportDetail">
 		    {{r.import}}
 		</td>
 
-		<!--kusy gemeldet-->
+		kusy gemeldet
 		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
+		    <span title="IMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag===undefined">{{r.antragImportStk.stk.ima_antrag.ba_stk}}(i)</span>
+		    <span title="EMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag!==undefined">{{r.antragImportStk.stk.ema_antrag.ba_stk}}(e)</span>
+		    {{r.antragImportStk.stk.ima_antrag.ba_stk}}(ba)
+		</td>
+		kusy genehmigt
+		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
+       		    <span title="IMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt===undefined">{{r.antragImportStk.stk.ima_genehmigt.ba_stk}}(i)</span>
+		    <span title="EMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt!==undefined">{{r.antragImportStk.stk.ema_genehmigt.ba_stk}}(e)</span>
 		    {{r.antragImportStk.ba_stk}}(ba)
 		</td>
-		<!--kusy genehmigt-->
-		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
-		    {{r.antragImportStk.ba_stk}}(ba)
-		</td>
-		<!--kusy bearbeitet-->
+		kusy bearbeitet
 		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
 		    
 		</td>
-		<!--kusy berechnet-->
+		kusy berechnet
 		<td class="text-right" ng-show="r.section=='importdetail' && mitImportDetail">
 		</td>
-		<!--tat und zeit-->
+		tat und zeit
 		<td ng-show="r.section=='importdetail' && mitImportDetail">
 		    {{r.dmaRow.tatundzeitarray}}
 		</td>
-		<!--rechnung-->
+		rechnung
 		<td ng-show="r.section=='importdetail' && mitImportDetail">
+		    
+		</td>-->
+		<!-------------------------------------------------------------------->
+		
+		
+		<!--importabgnrdetail-->
+		<td colspan="3" class="{{r.section}}" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		    
+		</td>
+		<td class="{{r.section}}" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		    {{r.import}} / {{r.abgnr}}
+		</td>
+
+		<!--kusy gemeldet-->
+		<td class="text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		    <span title="IMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag===undefined">{{r.antragImportStk.stk.ima_antrag.ba_stk}}(i)</span>
+		    <span title="EMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag!==undefined">{{r.antragImportStk.stk.ema_antrag.ba_stk}}(e)</span>
+		    <!--{{r.antragImportStk.stk.ima_antrag.ba_stk}}(ba)-->
+		</td>
+		<!--kusy genehmigt-->
+		<td class="text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		    <span title="IMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt===undefined">{{r.antragImportStk.stk.ima_genehmigt.ba_stk}}(i)</span>
+		    <span title="EMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt!==undefined">{{r.antragImportStk.stk.ema_genehmigt.ba_stk}}(e)</span>
+		    <!--{{r.antragImportStk.ba_stk}}(ba)-->
+		</td>
+		<!--kusy bearbeitet-->
+		<td class="text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		    <span title="IMA Stk" ng-show="r.stkArray.ema_antrag===undefined">{{r.stkArray.ima_antrag}}(i)</span>
+		    <span title="EMA Stk" ng-show="r.stkArray.ema_antrag!==undefined">{{r.stkArray.ema_antrag}}(e)</span>
+		</td>
+		<!--kusy berechnet-->
+		<td class="text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		</td>
+		<!--tat und zeit-->
+		<td ng-show="r.section=='importabgnrdetail' && mitImportDetail">
+		    {{r.dmaRow.tatundzeitarray}}
+		</td>
+		<!--rechnung-->
+		<td ng-show="r.section=='importabgnrdetail' && mitImportDetail">
 		    
 		</td>
 		<!-------------------------------------------------------------------->

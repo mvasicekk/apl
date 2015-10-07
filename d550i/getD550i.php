@@ -105,8 +105,20 @@ if(
 	    $tatZeitArray['ema_antrag'] = explode(";", $dma['ema_tatundzeitarray']);
 	    $tatZeitArray['ema_genehmigt'] = explode(";", $dma['ema_tatundzeitarray_genehmigt']);
 	    
-	    $tatZeitArray = explode(";", $dma['tatundzeitarray']);
+	    $importTatZeitArray = array();
 	    
+	    foreach ($tatZeitArray as $typ=>$tatZeitStringArray){
+		if(is_array($tatZeitStringArray)){
+		    //pole stringu ve forme abrng:vzaby[:vzkd]
+		    $importTatZeitArray[$typ] = array();
+		    foreach($tatZeitStringArray as $t1){
+			$tza = explode(":", $t1);
+			array_push($importTatZeitArray[$typ],array('abgnr'=>$tza[0],'vzaby'=>  floatval($tza[1]),'vzkd'=>  floatval($tza[2])));
+		    }
+		}
+	    }
+	    
+	    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['tatzeit'] = $importTatZeitArray;
 	    
 	    $importStkArray = array();
 	    foreach ($dauftrIdArray as $typ => $idArray) {
@@ -138,9 +150,19 @@ if(
 	    foreach ($importStkArray as $typ=>$importArray){
 		foreach ($importArray as $import=>$stkArray){
 		    //importy
-		    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import] = $stkArray;		    
+		    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk'][$typ] = $stkArray;		    
 		}
 	    }
+	    //bearbeitet stk
+	    foreach ($zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'] as $import=>$ar){
+		foreach($importTatZeitArray as $typ=>$tatArray){
+		    foreach ($tatArray as $index=>$abgnrArray){
+			$tat = $abgnrArray['abgnr'];
+			$zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk_bearbeitet'][$tat][$typ] = $a->getDrueckGutStkForImportAbgnr($import,$tat);
+		    }
+		}
+	    }
+	    
 	}
 	
 	
@@ -163,6 +185,9 @@ if(
 		    if(is_array($importe)){
 			foreach ($importe as $import=>$imArray){
 			    array_push($zeilenArray, array("section"=>"importdetail","import"=>$import,"antragImportStk"=>$imArray));
+			    foreach ($imArray['stk_bearbeitet'] as $abgnr=>$stkArray){
+				array_push($zeilenArray, array("section"=>"importabgnrdetail","import"=>$import,"abgnr"=>$abgnr,"stkArray"=>$stkArray,"antragImportStk"=>$imArray));
+			    }
 			}
 		    }
 		}

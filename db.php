@@ -989,6 +989,25 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
 
     /**
+     * 
+     * @param type $import
+     * @param type $tat
+     */
+    public function getDrueckGutStkForImportAbgnr($import,$tat){
+	$stk = 0;
+	$sql.=" select sum(drueck.`Stück`) as gstk";
+	$sql.=" from drueck";
+	$sql.=" where";
+	$sql.=" auftragsnr='$import'";
+	$sql.=" and";
+	$sql.=" TaetNr='$tat'";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $stk = intval($rows[0]['gstk']);
+	}
+	return $stk;
+    }
+    /**
      * pro uvodni stranku apl
      * @return array
      */
