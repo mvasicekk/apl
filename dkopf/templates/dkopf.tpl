@@ -54,7 +54,7 @@ souradnice
 </div>
 
 <div id="formular_header">
-Arbeitsplan pflegen / Sprava pracovniho planu
+Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 </div>
 
 <div id="formular_telo">

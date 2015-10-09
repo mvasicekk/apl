@@ -75,6 +75,7 @@ require_once '../db.php';
 	$formDiv.="<div class='closebutton' id='closebutton_imaeditform'>X</div>";
 	$formDiv.="<input type='hidden' id='imaid' value='$imaid'>";
 	$formDiv.="<p id='spinner'>zpracovávám dotaz ....</p>";
+	$formDiv.="<h1 class='teilheader'>$teil</h1>";
 	$formDiv.="<fieldset id='imapart'>";
 	$formDiv.="<legend>IMA</legend>";	
 	$formDiv.="<label for='imanr'>IMA_Nr:</label><input class='$imagenehmigtClass' style='text-align:left;' type='text' id='imanr' size='17' readonly='readonly' value='".$ir['imanr']."'/>";
@@ -89,11 +90,9 @@ require_once '../db.php';
 	$genehmigtBemerkung = trim($ir['ima_genehmigt_bemerkung']);
 	$genehmigtButtonText = $ir['ima_genehmigt']>0?'genehmigt':'genehmigen';
 	
-	$formDiv.="<label for='imabemerkung'>Bemerkung:</label><input $disabledIfEMAGenehmigt $rdonlyIfGenehmigt style='text-align:left;' type='text' size='50' maxlength='255' id='imabemerkung_$imaid' acturl='./updateIMABemerkung.php' value='".$ir['bemerkung']."' /><br>";
 	
-	$formDiv.="<label for=ima_genehmigt_bemerkung_$imaid>Bemerk.:</label><input $disabledIfEMAGenehmigt ".$edit_sec['ima_genehmigt_bemerkung']." id='ima_genehmigt_bemerkung_$imaid' $rdonlyIfGenehmigt style='text-align:left;' type='text' size='35' maxlength='255' value='$genehmigtBemerkung'/>";
-	$formDiv.="<label for=ima_genehmigt_user_$imaid>vom:</label><input id='ima_genehmigt_user_$imaid' readonly='readonly' style='text-align:left;' type='text' size='4' value='$genehmigtUser'/>";
-	$formDiv.="<label for=ima_genehmigt_stamp_$imaid>am:</label><input id='ima_genehmigt_stamp_$imaid' readonly='readonly' style='text-align:left;' type='text' size='10' value='$genehmigtStamp'/>";
+	
+	
 	
 	if($ir['ema_genehmigt']==0){
 	    $elementId='imagenehmigtflag';
@@ -109,7 +108,7 @@ require_once '../db.php';
 	    //anforderung ******************************************************
 	    $formDiv.="<td>";
 	    $formDiv.="<fieldset>";
-		$formDiv.="<legend>Anforderung</legend>";
+		$formDiv.="<legend>IMA Anforderung</legend>";
 		//tabulka pro pozadavek ****************************************
 		$formDiv.="<table>";
 		    //auftragsnr_array *****************************************
@@ -149,6 +148,17 @@ require_once '../db.php';
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_tatarray_e' value='".$ir['tatundzeitarray']."' />";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
+		    $formDiv.="<tr>";
+		    $formDiv.="<td colspan='2'>";
+    			$formDiv.="Bemerkung:<br>";
+			$elementId="imabemerkung_$imaid";
+			$formDiv.="<span style='width:99%;'>";
+			$formDiv.="<textarea style='height: 6em;margin: 2px;width: 99%;' $rdonlyIfGenehmigt $disabledIfEMAGenehmigt ".$edit_sec[$elementId]." acturl='./updateIMABemerkung.php' id='$elementId'>";
+			$formDiv.= $ir['bemerkung'];
+			$formDiv.="</textarea>";
+			$formDiv.="</span>";
+		    $formDiv.="</td>";
+		    $formDiv.="</tr>";
 		// konec tabulky pro pozadavek *********************************
 		$formDiv.="</table>";
 	    $formDiv.="</fieldset>";
@@ -157,7 +167,7 @@ require_once '../db.php';
 	    $formDiv.="<td>";
 	    if($ir['ema_genehmigt']==0){
 	    $formDiv.="<fieldset class='genehmigt'>";
-		$formDiv.="<legend>genehmigt</legend>";
+		$formDiv.="<legend>IMA genehmigt</legend>";
 		//tabulka pro schvaleni ****************************************
 		$formDiv.="<table>";
 		    //auftragarray *********************************************
@@ -209,6 +219,44 @@ require_once '../db.php';
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_tatarray_gen' value='".$ir['ima_tatundzeitarray_genehmigt']."' /><br>";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
+		    
+    		    $formDiv.="<tr>";
+		    $formDiv.="<td colspan='2'>";
+    			$formDiv.="Bemerkung:<br>";
+			$elementId="ima_genehmigt_bemerkung_$imaid";
+			$formDiv.="<span style='width:99%;'>";
+			$formDiv.="<textarea $rdonlyIfGenehmigt style='height: 6em;margin: 2px;width: 99%;' $disabledIfEMAGenehmigt ".$edit_sec['ima_genehmigt_bemerkung']." id='$elementId'>";
+			$formDiv.= $genehmigtBemerkung;
+			$formDiv.="</textarea>";
+			$formDiv.="</span>";
+		    $formDiv.="</td>";
+		    $formDiv.="</tr>";
+
+		    $formDiv.="<tr>";
+		    $formDiv.="<td class=''>";
+		    $formDiv.="genehmigt vom";
+		    $formDiv.="</td>";
+		    $formDiv.="<td class=''>";
+		    $elementId="ima_genehmigt_user_$imaid";
+		    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+		    $formDiv.="<input id='ima_genehmigt_user_$imaid' readonly='readonly' type='text' size='40' value='$genehmigtUser' />";
+		    $formDiv.="</span>";
+		    $formDiv.="</td>";
+		    $formDiv.="</tr>";
+
+		    //<input  />";
+		    $formDiv.="<tr>";
+		    $formDiv.="<td class=''>";
+		    $formDiv.="genehmigt vom";
+		    $formDiv.="</td>";
+		    $formDiv.="<td class=''>";
+		    $elementId="ima_genehmigt_stamp_$imaid";
+		    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+		    $formDiv.="<input id='ima_genehmigt_stamp_$imaid' readonly='readonly' type='text' size='40' value='$genehmigtStamp' />";
+		    $formDiv.="</span>";
+		    $formDiv.="</td>";
+		    $formDiv.="</tr>";
+
 		    $formDiv.="</table>";
 		    $formDiv.="</fieldset>";
 	    }
