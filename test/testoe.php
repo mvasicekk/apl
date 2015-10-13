@@ -23,7 +23,7 @@ foreach ($oes4abgnrA1 as $oe1) {
 echo "oes4abgnrA<br>";
 AplDB::varDump($oes4abgnrA);
 
-$import = 195000424;
+$import = 195000452;
 $pg = $a->getPGFromAuftragsnr($import);
 
 echo "pg<br>";

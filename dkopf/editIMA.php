@@ -80,6 +80,7 @@ require_once '../db.php';
 	$formDiv.="<legend>IMA</legend>";	
 	$formDiv.="<label for='imanr'>IMA_Nr:</label><input class='$imagenehmigtClass' style='text-align:left;' type='text' id='imanr' size='17' readonly='readonly' value='".$ir['imanr']."'/>";
 	
+	$imaGenehmigtFlag = $ir['ima_genehmigt']>0?TRUE:FALSE;
 	$rdonlyIfGenehmigt = $ir['ima_genehmigt']<>0?'readonly="readonly"':'';
 	$rdonlyIfEMAGenehmigt = $ir['ema_genehmigt']<>0?'readonly="readonly"':'';
 	$disabledIfGenehmigt = $ir['ima_genehmigt']<>0?'disabled="disabled"':'';
@@ -100,6 +101,14 @@ require_once '../db.php';
 	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imagenehmigtflag_$imaid' value='genehmigen' acturl='./updateIMAGenehmigt.php?nicht=0'/>";
 	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imangenehmigtflag_$imaid' value='nicht genehmigen' acturl='./updateIMAGenehmigt.php?nicht=1'/>";
 	    $formDiv.="</span>";
+	    if($imaGenehmigtFlag){
+		$elementId='ima2emaflag';
+		$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
+		$formDiv.="<input style='text-align:left;' type='button' id='ima2ema_$imaid' value='IMA->EMA' acturl='./updateIMAGenehmigt.php?nicht=2'/>";
+		$formDiv.="</span>";
+	    }
+	    
+	    
 	}
 	
 	//tabulka pro rozdeleni na Anforderung a genehmigt

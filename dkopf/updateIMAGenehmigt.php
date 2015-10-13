@@ -7,6 +7,9 @@ $id = $_POST['id'];
 $value = trim($_POST['value']);
 $bemerkung_g = trim($_POST['bemerkung_g']);
 $ch = intval($_POST['ch']);
+if(strstr($id, 'ima2ema')!==FALSE){
+    $ch = 2;
+}
 $imaid = $_POST['imaid'];
 $nicht = $_GET['nicht'];
 $ma = $_GET['ma'];
@@ -148,6 +151,18 @@ if ($ma == 'ema') {
 	    @mail($recipient, $subject, $message, $headers);
 	}
     }
+    if($ch ==2){
+	//stisknuto ima2ema
+	$imaInfoArray = $apl->getIMAInfoArray($imaid);
+	$ir = $imaInfoArray[0];
+	$imanr = $ir['imanr'];
+	//ima bude opet otevrena
+	$arF = $apl->updateIMAField('ima_genehmigt', 0, $imaid);
+	//k povolovaci poznamce pridam info o tom, kdo imu opet uvolnil
+	$d = date('Y-m-d H:i:s');
+	$gbemerk = $bemerkung_g." - IMA->EMA von $user am $d";
+	$arB = $apl->updateIMAField('ima_genehmigt_bemerkung',$gbemerk , $imaid);
+    }
 }
 
 $returnArray = array(
@@ -165,6 +180,8 @@ $returnArray = array(
     'imaInfoArray' => $imaInfoArray,
     'ma' => $ma,
     'nicht' => $nicht,
+    'ch'=>$ch,
+    'gbemerk'=>$gbemerk,
 );
 echo json_encode($returnArray);
 ?>

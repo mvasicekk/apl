@@ -96,6 +96,7 @@ if($dauftrRows!==NULL){
 $rmArray = $drueckHotData;
 if($rmArray!==NULL){
     foreach ($rmArray as $rm){
+	//$oe = "?";
 	$vzArray = $a->getVZFromDauftr($import,$pal1,$rm['abgnr']);
 	if($vzArray!=NULL){
 	    $vzkd = $vzArray[0]['vzkd'];
@@ -109,7 +110,7 @@ if($rmArray!==NULL){
 	$verbVon = date('Y-m-d')." 00:00:00";
 	$verbBis = date('Y-m-d')." 00:00:00";
 	
-	$oe = "?";
+	
 	
 	$oes4abgnr = $a->getOEForAbgnr($rm['abgnr']);
 	$oes4abgnrA1 = split(";", $oes4abgnr);

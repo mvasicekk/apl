@@ -224,7 +224,7 @@ foreach($imas as $ima){
 	$pdf->Cell(30, 5, "vom", 'BT', 0, 'L', 1);
 	$pdf->Cell(30, 5, "Pos.", 'BT', 0, 'L', 1);
 	$pdf->Cell(30, 5, "GT", 'BT', 0, 'L', 1);
-	$pdf->Cell(0, 5, "Menge (Stk) - gemeldet", 'BT', 1, 'R', 1);
+	$pdf->Cell(0, 5, "Menge (Stk)", 'BT', 1, 'R', 1);
 	//pozice
 	$pdf->SetFont("FreeSans", "", 10);
 	foreach ($seskupenePole as $im=>$imInfo){
@@ -301,7 +301,7 @@ foreach($imas as $ima){
 	$pdf->SetFont("FreeSans", "B", 10);
 	$pdf->SetFillColor(255,255,200);
 	$pdf->Cell(55, 5, "Mehrarbeit", 'BT', 0, 'L', 1);
-	$pdf->Cell(15, 5, "Menge", 'BT', 0, 'R', 1);
+	$pdf->Cell(15, 5, "Menge (SUM)", 'BT', 0, 'R', 1);
 	$pdf->Cell(35, 5, "Vorgabezeit", 'BT', 0, 'R', 1);
 	$pdf->Cell(35, 5, "Kosten (Stk)", 'BT', 0, 'R', 1);
 	$pdf->Cell(40, 5, "Kosten (SUM)", 'BT', 0, 'R', 1);
@@ -355,19 +355,17 @@ foreach($imas as $ima){
     $pdf->Cell(0, 5, "Genehmigt", '0', 1, 'L', 0);
     
     $pdf->SetFont("FreeSans", "", 10);
+    $pdf->Cell(15, 5, "von:", '0', 0, 'L', 0);
+    $vom = getValueForNode($imaChilds, 'ema_antrag_vom');
+    $pdf->Cell(60-15, 5, $vom, '0', 0, 'L', 0);
+    $pdf->Cell(60, 5, "von:", '0', 0, 'L', 0);
+    $pdf->Cell(0, 5, "von:", '0', 1, 'L', 0);
+
     $pdf->Cell(15, 5, "am:", '0', 0, 'L', 0);
     $am = substr(getValueForNode($imaChilds, 'ema_antrag_am'),0,10);
     $pdf->Cell(60-15, 5, $am, '0', 0, 'L', 0);
     $pdf->Cell(60, 5, "am:", '0', 0, 'L', 0);
     $pdf->Cell(0, 5, "am:", '0', 1, 'L', 0);
-    
-    
-    $pdf->Cell(15, 5, "vom:", '0', 0, 'L', 0);
-    $vom = getValueForNode($imaChilds, 'ema_antrag_vom');
-    $pdf->Cell(60-15, 5, $vom, '0', 0, 'L', 0);
-    $pdf->Cell(60, 5, "vom:", '0', 0, 'L', 0);
-    $pdf->Cell(0, 5, "vom:", '0', 1, 'L', 0);
-
     
     //anlagen
     $pdf->Ln();
@@ -430,9 +428,9 @@ foreach($imas as $ima){
     }
 }
 
-$pdf->Output();
-//AplDB::varDump($seskupenePole);
-exit();
+//$pdf->Output();
+////AplDB::varDump($seskupenePole);
+//exit();
     
     
 $stamp = date('YmdHis');

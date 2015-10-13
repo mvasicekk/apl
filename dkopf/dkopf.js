@@ -1133,6 +1133,7 @@ function updateshowEditIMA(data){
 	$('div#imaeditform input[id^=ema_select_tat]').bind('click',emaSelectTatArray);
 	$('div#imaeditform input[id^=imagenehmigtflag_]').bind('click',imaGenehmigtFlagClicked);
 	$('div#imaeditform input[id^=imangenehmigtflag_]').bind('click',imaGenehmigtFlagClicked);
+	$('div#imaeditform input[id^=ima2ema_]').bind('click',imaGenehmigtFlagClicked);
 	$('div#imaeditform input[id^=emagenehmigtflag_]').bind('click',emaGenehmigtFlagClicked);
 	$('div#imaeditform input[id^=emangenehmigtflag_]').bind('click',emaGenehmigtFlagClicked);
 	$('div#imaeditform input:checkbox[id^=anlage_]').bind('click',imaAnlageChboxClicked);
@@ -1481,7 +1482,7 @@ function updateNewFileTable(data){
 function imaEditFieldChanged(id){
     //alert('fieldChanged:'+id);
     var acturl = './updateDMAField.php';
-    var bemerkid = $('input[id^=imabemerkung_]').attr('id');
+    var bemerkid = $('textarea[id^=imabemerkung_]').attr('id');
     
     $.post(acturl,
         {
@@ -1602,7 +1603,13 @@ function updateGenehmigtFlagClicked(data){
     $('#ima_select_auftragsnr_e').hide();
     $('#ima_select_pal_e').hide();
     $('#ima_select_tat_e').hide();
-    $('#emapart').hide();
+    if(data.ch==2 && data.nicht==2){
+	$('#emapart').show();
+    }
+    else{
+	$('#emapart').hide();
+    }
+    
     $('input[id^=imabemerkung_]').attr('readonly','readonly');
     $('input[id^=ima_genehmigt_bemerkung_]').attr('readonly','readonly');
 }
