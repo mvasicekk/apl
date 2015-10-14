@@ -196,6 +196,7 @@ if (((strlen($terminMatchVon)>=3)&&(strlen($terminMatchBis)>=3))
 }
 
 $sumReport = array();
+$sumTermin = array();
 
 if ($rows != NULL) {
     foreach ($rows as $r) {
@@ -240,6 +241,7 @@ if ($rows != NULL) {
 
     $zeilenArray = array();
     foreach ($zeilen as $termin => $teile) {
+	$sumTermin = array();
 	foreach ($teile as $teil => $importe) {
 	    $teilSummen = array();
 	    foreach ($importe as $import => $paletten) {
@@ -247,6 +249,7 @@ if ($rows != NULL) {
 		    array_push($zeilenArray, array("section"=>"detail","termin" => $termin, "giesstag"=>$palInfoArray['gt'],"import_datum"=>$palInfoArray['import_datum'],"import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $palInfoArray));
 		    $sumReport['sum_im_stk']+=$palInfoArray['sum_im_stk'];
 		    $sumReport['sum_im_gew']+=$palInfoArray['sum_im_gew'];
+		    $sumTermin[$termin]['sum_im_gew']+=$palInfoArray['sum_im_gew'];
 		    foreach ($palInfoArray as $klic=>$tatArray){
 			if(!is_array($tatArray)){
 			    $teilSummen[$klic] += floatval($palInfoArray[$klic]);
@@ -255,6 +258,8 @@ if ($rows != NULL) {
 			    foreach ($tatArray as $tat=>$val){
 				$sumReport['soll'][$tat]+=$val;
 				$sumReport['soll'][$klic][$tat]+=$val;
+				$sumTermin[$termin]['soll'][$tat]+=$val;
+				$sumTermin[$termin]['soll'][$klic][$tat]+=$val;
 //				$teilSummen["sum_vzkd"] += $val;
 				$teilSummen[$tat] += $val;
 				$teilSummen[$klic][$tat] += $val;
@@ -267,6 +272,7 @@ if ($rows != NULL) {
 	    array_push($zeilenArray, array("section"=>"sumteilmin","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	    array_push($zeilenArray, array("section"=>"sumteiloddelovac","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
+	array_push($zeilenArray, array("section"=>"sumtermin","termin" => $termin,"palInfo" => $sumTermin));
     }
 }
 
@@ -287,6 +293,7 @@ if ($rowsD != NULL) {
 
     $zeilenDArray = array();
     foreach ($zeilenD as $termin => $teile) {
+	$sumTermin = array();
 	foreach ($teile as $teil => $importe) {
 	    $teilSummen = array();
 	    foreach ($importe as $import => $paletten) {
@@ -299,6 +306,8 @@ if ($rowsD != NULL) {
 			    foreach ($tatArray as $tat => $val) {
 				$sumReport['ist'][$tat]+=$val;
 				$sumReport['ist'][$klic][$tat]+=$val;
+				$sumTermin[$termin]['ist'][$tat]+=$val;
+				$sumTermin[$termin]['ist'][$klic][$tat]+=$val;
 //				$teilSummen["sum_vzkd"] += $val;
 				$teilSummen[$tat] += $val;
 				$teilSummen[$klic][$tat] += $val;
@@ -311,6 +320,7 @@ if ($rowsD != NULL) {
 	    array_push($zeilenDArray, array("section" => "sumteilmin", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	    array_push($zeilenDArray, array("section" => "sumteiloddelovac", "termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
+	array_push($zeilenDArray, array("section"=>"sumtermin","termin" => $termin,"palInfo" => $sumTermin));
     }
 }
 
@@ -334,6 +344,7 @@ if ($rowsD != NULL) {
 
     $zeilenDAArray = array();
     foreach ($zeilenDA as $termin => $teile) {
+	$sumTermin = array();
 	foreach ($teile as $teil => $importe) {
 	    $teilSummen = array();
 	    foreach ($importe as $import => $paletten) {
@@ -356,6 +367,7 @@ if ($rowsD != NULL) {
 	    array_push($zeilenDAArray, array("section"=>"sumteilmin","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	    array_push($zeilenDAArray, array("section"=>"sumteiloddelovac","termin" => $termin, "import" => $import, "teil" => $teil, "pal" => $pal, "palInfo" => $teilSummen));
 	}
+	array_push($zeilenDAArray, array("section"=>"sumtermin","termin" => $termin,"palInfo" => $sumTermin));
     }
 }
 

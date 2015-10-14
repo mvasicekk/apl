@@ -486,13 +486,17 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	$pdfobjekt->SetX($x_pocatek+52+5);
 	$pdfobjekt->SetFont("FreeSans", "B", 20);
-	$pdfobjekt->Write(25,getValueForNode($importChildNodes,"auftragsnr")."/");
+	$im = getValueForNode($importChildNodes,"auftragsnr");
+	$pdfobjekt->Write(25,$im."/");
 	$x1 = $pdfobjekt->GetX();
 	$pdfobjekt->SetFont("FreeSans", "B", 18);
-	$pdfobjekt->Write(25,getValueForNode($paletteChildNodes,"pal"));
+	$pal = getValueForNode($paletteChildNodes,"pal");
+	$pdfobjekt->Write(25,$pal);
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	$pdfobjekt->SetXY($x1,$y1);
-	$pdfobjekt->Write(8,getValueForNode($paletteChildNodes,"giesstag"));$pdfobjekt->Ln();
+	$a = AplDB::getInstance();
+	$gt = $a->getGiesstagImportPalette($im,$pal);
+	$pdfobjekt->Write(8,$gt);$pdfobjekt->Ln();
 
 	// pole pro cislo dilu
 	$pdfobjekt->Rect($x_pocatek,$y_pocatek-10+30+3,52,24);
@@ -732,16 +736,27 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Text(150,15+$y_offset,getValueForNode($paletteChildNodes,"stk"));
 
 	$pdfobjekt->SetFont("FreeSans", "B", $auftragsnr_vyska);
+	
+	
+	
 	$pdfobjekt->Text(10,50+$y_offset,getValueForNode($paletteChildNodes,"auftragsnr")."/");
 
 	$pdfobjekt->SetFont("FreeSans", "", 70);
+	
+	
 	$pdfobjekt->Text($paletaPoziceX,50+$y_offset,getValueForNode($paletteChildNodes,"pal"));
 	$pdfobjekt->SetFont("FreeSans", "", 15);
 	$pdfobjekt->Text($paletaPoziceX+5,28+$y_offset,"Palette / paleta");
 	$pdfobjekt->SetFont("FreeSans", "B", 35);
 	$pdfobjekt->SetX($paletaPoziceX+5);
 	$pdfobjekt->SetY(28+$y_offset+25);
-	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"giesstag"), "0", 0 , "R");
+	
+	$a = AplDB::getInstance();
+	$im = getValueForNode($paletteChildNodes,"auftragsnr");
+	$pal = getValueForNode($paletteChildNodes,"pal");
+	$gt = $a->getGiesstagImportPalette($im,$pal);
+	
+	$pdfobjekt->Cell(189, 20, $gt, "0", 0 , "R");
 	
 	
 	$pdfobjekt->SetFont("FreeSans", "", 20);
@@ -779,7 +794,7 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->SetFont("FreeSans", "B", 35);
 	$pdfobjekt->SetX($paletaPoziceX+5);
 	$pdfobjekt->SetY(28+$y_offset+25);
-	$pdfobjekt->Cell(189, 20, getValueForNode($paletteChildNodes,"giesstag"), "0", 0 , "R");
+	$pdfobjekt->Cell(189, 20, $gt, "0", 0 , "R");
 
 	$pdfobjekt->SetFont("FreeSans", "", 20);
 	//$pdfobjekt->SetXY(10,10);

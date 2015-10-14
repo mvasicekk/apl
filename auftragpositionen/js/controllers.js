@@ -162,7 +162,7 @@ aplApp.controller('detailController', function (setfocus,$filter,$scope, $routeP
 			$scope.positionInfo.fremdausauftrag = response.data.fremdauftrausauftrag;
 			$scope.positionInfo.explanmit = response.data.explanmit;
 			$scope.displaydpos = [].concat($scope.dpos);
-			if($scope.teilInfo.teil.status=='ALT'||$scope.teilInfo.teil.status=='GSP'){
+			if($scope.teilInfo.teil.status=='ALT'||$scope.teilInfo.teil.status=='GSP'||$scope.teilInfo.teil.status=='ZT'){
 			    $scope.allowErfassen = false;
 			}
 			$timeout(function() {

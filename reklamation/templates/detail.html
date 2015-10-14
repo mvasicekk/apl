@@ -696,17 +696,21 @@
 			    </ui-select>
 			    </th>
 			    <th></th>
+			    <th></th>
 			    <th><button ng-click="addSchulung()" id='add_schulung' type="button" class="btn btn-sm btn-primary btn-block">+</button></th>
 			    </tr>
 			    <tr>
 				<th class="text-right">PersNr</th>
-				<th colspan="2" >Name</th>
+				<th colspan="1" >Name</th>
+				<th colspan="1" >Verursacher</th>
+				<th colspan="1" ></th>
 			    </tr>
 			    </thead>
 			    <tbody>
 				<tr ng-repeat="a in rekl.schulungen">
 				    <td class="text-right">{{a.persnr}}</td>
 				    <td>{{a.name}}</td>
+				    <td><input ng-click="editSchulung(a,'ursacher')" ng-model="a.rekl_verursacher" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"></td>
 				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
 				</tr>
 			    </tbody>

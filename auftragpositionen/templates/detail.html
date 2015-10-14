@@ -50,14 +50,21 @@
 		    <div ng-show="teilInfo.teil.status=='ALT'" class="row">
 			<div class="col-sm-12">
 			    <div class="form-group">
-				<input disabled type="text" class="form-control text-danger" value="ALTES Teil, nicht benutzen !!!">
+				<input readonly type="text" style="background-color: orangered;" class="form-control text-danger bg-danger" value="ALTES Teil, nicht benutzen !!!">
+			    </div>	    
+			</div>
+		    </div>
+		    <div ng-show="teilInfo.teil.status=='ZT'" class="row">
+			<div class="col-sm-12">
+			    <div class="form-group">
+				<input readonly type="text" style="background-color: orange;" class="form-control text-danger bg-warning" value="Zeitaufnahme und Technologie prufen">
 			    </div>	    
 			</div>
 		    </div>
 		    <div ng-show="teilInfo.teil.status=='GSP'" class="row">
 			<div class="col-sm-12">
 			    <div class="form-group">
-				<input disabled type="text" class="form-control text-danger" value="gesperrtes Teil, nicht benutzen !!!">
+				<input readonly type="text" class="form-control text-danger" value="gesperrtes Teil, nicht benutzen !!!">
 			    </div>	    
 			</div>
 		    </div>

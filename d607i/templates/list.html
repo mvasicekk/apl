@@ -94,7 +94,7 @@
 		    {{t}} {{terminArray[t]}}
 		</td>
 	    </tr>
-	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')||(r.section=='sumteilmin')||(r.section=='sumteiloddelovac')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+	    <tr ng-show="((r.section=='detail')&&(mitPaletten))||(r.section=='sumteil')||(r.section=='sumteilmin')||(r.section=='sumteiloddelovac')||(r.section=='sumtermin')" ng-class="r.section" ng-if="r.termin==t" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.teil}}</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'">{{r.import}} ({{r.import_datum}})</td>
 		<td ng-class="r.section" ng-if="r.section=='detail'" class="rightBorderDetail text-right">{{r.pal}}</td>
@@ -191,8 +191,45 @@
 	    
 	    <!--zapati pro dil oddelovac dilu, zobrazit jen v pripade, kdyz ukazuju i palety-->
 		<td class="teilOddelovac" colspan="{{6+abgnrKeysArray.length+aartKeysArray.length+2}}" ng-if="r.section=='sumteiloddelovac' && mitPaletten"></td>
-
-	    </tr>
+	    
+	    
+	    <!--zapati pro termin-->
+		<td class="rightBorderSumTeil" colspan="5" ng-class="r.section" ng-if="r.section=='sumtermin' && mitMinuten">
+		    <div class="">
+			{{minutenOption}}-soll
+		    </div>
+    		    <div class="">
+			{{minutenOption}}-rest
+<!--			<div class="progress">
+			    <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{getCompleteProzent(r.palInfo,zeilenD[zeilenIndex].palInfo,minutenOption)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{getCompleteProzent(r.palInfo,zeilenD[zeilenIndex].palInfo,minutenOption)}}%">
+				<span class="">{{getCompleteProzent(r.palInfo,zeilenD[zeilenIndex].palInfo,minutenOption)|celecislo}}% Fertig</span>
+			    </div>
+			</div>-->
+		    </div>
+		</td>
+		<td style="white-space: nowrap;" class="rightBorderSumTeil text-right" ng-class="r.section" ng-if="r.section=='sumtermin' && mitMinuten" >
+		    <div>
+			{{getSumMinuten(r.palInfo[t].soll,minutenOption)|celecislo}}
+		    </div>
+		    <div>
+			{{getSumMinuten(r.palInfo[t].soll,minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo[t].ist,minutenOption)|celecislo}}
+		    </div>
+		</td>
+		<td style="white-space: nowrap;" ng-class="r.section" ng-if="r.section=='sumtermin' && mitMinuten" class="text-info text-right" ng-repeat="tat in abgnrKeysArray">
+		    <div ng-if="zeilenD[zeilenIndex].palInfo[t].ist.hasOwnProperty(tat)" title="abgnr:{{tat}}">
+			<div>
+			    {{getSumMinuten(r.palInfo[t].soll[tat],minutenOption)|celecislo}}
+			</div>
+			<div>
+			    {{getSumMinuten(r.palInfo[t].soll[tat],minutenOption)-getSumMinuten(zeilenD[zeilenIndex].palInfo[t].ist[tat],minutenOption)|celecislo}}
+			</div>
+		    </div>
+		</td>
+		<td ng-class="{leftBorderSumTeil:$first,rightBorderSumTeil:$last}" ng-if="r.section=='sumtermin' && mitMinuten" class="text-info text-right {{r.section}}" ng-repeat="auss in aartKeysArray"></td>
+		<td ng-class="r.section" ng-if="r.section=='sumtermin' && mitMinuten" class="text-info text-right"></td>
+		<td ng-class="r.section" ng-if="r.section=='sumtermin' && mitMinuten" class="text-right">{{r.palInfo[t].sum_im_gew|number:2}}</td>
+	</tr>
+<!------------------------------------------------------------------------------------>
 	</tbody>
 	
 	<!--Suma pro celou tabulku-->

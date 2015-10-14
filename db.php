@@ -1173,6 +1173,27 @@ public function getRechnungDatums($rechnung) {
         return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $im
+     * @param type $pal
+     */
+    public function getGiesstagImportPalette($im,$pal){
+	$sql = "select giesstag from dauftr where auftragsnr='$im' and `pos-pal-nr`='$pal' and kzgut='G'";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    return trim($rows[0]['giesstag']);
+	}
+	else{
+	    return '';
+	}
+    }
+    
+    /**
+     * 
+     * @param type $place_id
+     * @return type
+     */
     public function getInfoPanelsForPlaceId($place_id){
     $sql.=" select ";
     $sql.=" dinfotable.id,";

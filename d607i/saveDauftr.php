@@ -17,7 +17,9 @@ if($field=='bemerkung'){
 }
 
 if($field=='gt'){
-    $sql = "update dauftr set giesstag='$gt' where (auftragsnr='$import') and (`pos-pal-nr`='$pal') and (kzgut='G') limit 1";
+//    $sql = "update dauftr set giesstag='$gt' where (auftragsnr='$import') and (`pos-pal-nr`='$pal') and (kzgut='G') limit 1";
+    // gt dat na celou paletu
+    $sql = "update dauftr set giesstag='$gt' where (auftragsnr='$import') and (`pos-pal-nr`='$pal')";
 }
 
 $ar = $a->query($sql);

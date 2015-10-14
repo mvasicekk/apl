@@ -224,6 +224,17 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	    // schovat tlacitka save = vyresit pomoc ngShow s podminkou na vyplneny datum rekl_erledigt_am
 	}
 
+	$scope.editSchulung = function(a,f){
+	    if(f==='ursacher'){
+		console.log('editSchulung');
+		console.log(a);
+		console.log(a.rekl_verursacher);
+		$http.post('./editSchulungVorschlag.php', {id: a.id, f:'rekl_verursacher',value:a.rekl_verursacher}).success(function (data) {
+		// nikde nic neaktualizuju
+	    });
+	    }
+	}
+	
 	$scope.delSchulung = function (id) {
 	    console.log('delSchulung ' + id);
 	    $http.post('./delSchulungVorschlag.php', {id: id, rekl_id: $scope.rekl.id}).success(function (data) {
