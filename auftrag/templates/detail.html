@@ -2,14 +2,24 @@
 
 <div class="container-fluid">
     <div class="page-header">
-	<h4>Auftrag pflegen / sprava zakazky 
-	<span class="label label-info">{{auftragInfo.auftragsnr}}</span>
-	<span ng-show="formDataChanged" class="label label-danger">... saving changes</span>
-	</h4>
+	<div class="row">
+	    <div class="col-sm-10">
+		<h4>Auftrag pflegen / sprava zakazky 
+		<span class="label label-info">{{auftragInfo.auftragsnr}}</span>
+		<span ng-show="formDataChanged" class="label label-danger">... saving changes</span>
+		</h4>
+	    </div>
+	    <div class="col-sm-2">
+		<a href="" ng-click="showPrintDialog()" class="btn btn-block btn-xs btn-info">Drucken</a>		
+	    </div>
+	</div>
     </div>
 
 <!--    <p>
-	{{securityInfo|json}}
+	SecInfo:
+    <pre>
+	{{securityInfo.editArray|json}}
+    </pre>
     </p>-->
     
     <div class="row">
@@ -37,13 +47,13 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label for="bestellnr">Bestellnr</label>
-			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.bestellnr" type="text" maxlength="30" class="form-control" id="bestellnr" placeholder="bestellnr">
+			    <input ng-readonly="!securityInfo.editArray.bestellnr" ng-blur="testFormChanges()" ng-model="auftragInfo.bestellnr" type="text" maxlength="30" class="form-control" id="bestellnr" placeholder="bestellnr">
 			</div>
 		    </div>
 		    <div class="col-sm-6">
 			<div class="form-group">
 			    <label for="bemerkung">Bemerkung</label>
-			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.bemerkung" type="text" maxlength="255" class="form-control" id="bemerkung" placeholder="Bemerkung">
+			    <input ng-readonly="!securityInfo.editArray.bemerkung" ng-blur="testFormChanges()" ng-model="auftragInfo.bemerkung" type="text" maxlength="255" class="form-control" id="bemerkung" placeholder="Bemerkung">
 			</div>
 		    </div>
 		</div>
@@ -51,16 +61,16 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="imsoll">Im SOLL</label>
-			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.imsolldat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum">
+			    <input ng-disabled="!securityInfo.editArray.imsolldatum" ng-blur="testFormChanges()" ng-model="auftragInfo.imsolldat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Im Soll Datum">
 			    <!--u timepickeru nefunguje ng-blur, proto ng-change-->
-			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.imsolldat1" show-meridian="false" show-spinners="false"></timepicker>
+			    <timepicker ng-readonly="!securityInfo.editArray.imsolldatum" ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.imsolldat1" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="exsoll">Ex SOLL</label>
-			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.exsolldat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
-			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.exsolldat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
+			    <input ng-readonly="!securityInfo.editArray.exsolldatum" ng-blur="testFormChanges()" ng-model="auftragInfo.exsolldat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Ex Soll Datum">
+			    <timepicker ng-readonly="!securityInfo.editArray.exsolldatum" ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.exsolldat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-6">
@@ -69,7 +79,7 @@
 			    <ui-select
 				    ng-change="testFormChanges()" 
 				    ng-model="zielort.selected" 
-				    ng-disabled="disabled" 
+				    ng-disabled="!securityInfo.editArray.zielort" 
 				    reset-search-input="false" 
 				    theme="bootstrap"
 				    on-select="zielortOnSelect($item, $model)"
@@ -88,15 +98,15 @@
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="imist">Auftragseingang</label>
-			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.aufdat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
-			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.aufdat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
+			    <input ng-disabled="!securityInfo.editArray.aufdat" ng-blur="testFormChanges()" ng-model="auftragInfo.aufdat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Auftragseingang Datum">
+			    <timepicker ng-disabled="!securityInfo.editArray.aufdat" ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.aufdat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
 			<div class="form-group">
 			    <label style="display:block;" for="geliefert">ausgeliefert am</label>
-			    <input ng-blur="testFormChanges()" ng-model="auftragInfo.auslieferdat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
-			    <timepicker ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.auslieferdat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
+			    <input ng-disabled="!securityInfo.editArray.ausliefdat" ng-blur="testFormChanges()" ng-model="auftragInfo.auslieferdat1" style="display:inline-block;width:7em;vertical-align: middle;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="ausgeliefert am Datum">
+			    <timepicker ng-disabled="!securityInfo.editArray.ausliefdat" ng-change="testFormChanges()" style="display:inline-block;vertical-align: middle;" ng-model="auftragInfo.auslieferdat1" ng-change="changed()" show-meridian="false" show-spinners="false"></timepicker>
 			</div>
 		    </div>
 		    <div class="col-sm-3">
@@ -105,42 +115,57 @@
 			    <input style="width:7em;display:inline-block;vertical-align: middle;" ng-model="auftragInfo.fertigdat1" type="text" disabled maxlength="8" ui-date="dateOptions" class="form-control" id="fertig" placeholder="Rechnug am">
 			    <!--tlacitko pro smazani faktury-->
 			    <button ng-click="deleteRechnung(auftragInfo)" style="display: inline-block;vertical-align: middle;width:auto;" ng-if="auftragInfo.hatrechnung==1" class="btn btn-danger form-control">Re Lō</button>
+			    <a ng-show="securityInfo.showArray.rechnung" href="../dauftr/rechnung/rechnung_berechnen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Rechnung</a>
 			</div>
 		    </div>
 		</div>
 	</div>
 	<div class="col-sm-2 no-print">
-	    <a href="" ng-click="showPrintDialog()" class="btn btn-block btn-xs btn-info">Drucken</a>
 	    <a href="../dbehaelter/beheingabe.php?auftrag={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">Behaelter bew.</a>
-	    <a href="../dauftr/editDauftrForm.php?import={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">edit Auftrpositionen</a>
-	    <a ng-show="securityInfo.showArray.splitpal" href="../dauftr/splitPal.php?import={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">split Pal</a>
+	    
+	    <!--<div class="btn-group">-->
+	    <!--</div>-->
 	</div>
 	
     </div>
     
     <div class="row no-print">
 	<div class="col-sm-3">
-	    <a href="../auftragpositionen/auftragpositionen.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Position erstellen</a>
-	    <a href="../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={{auftragInfo.auftragsnr}};0;9999&report=D235" class="btn btn-xs btn-block btn-info">D230 - Arbeitspapiere/DUPLEX</a>
-	    <a ng-click="auftragsMengeSpeichern(auftragInfo)" href="" ng-show="auftragInfo.im_stk_gespeichert===null" class="btn btn-block btn-xs btn-success">Auftragsmenge speichern</a>
+	    <a ng-show="securityInfo.showArray.positionerstellen" href="../auftragpositionen/auftragpositionen.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Position erstellen</a>
+	    <a ng-show="securityInfo.showArray.d230" href="../get_parameters.php?popisky=AuftragsNr;Pal von;Pal bis&promenne=auftragsnr;palvon;palbis&values={{auftragInfo.auftragsnr}};0;9999&report=D235" class="btn btn-xs btn-block btn-info">D230 - Arbeitspapiere/DUPLEX</a>
+	    <a ng-show="securityInfo.showArray.splitpal" href="../dauftr/splitPal.php?import={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">split Pal</a>
+	    <a ng-show="securityInfo.showArray.amspeichern" ng-click="auftragsMengeSpeichern(auftragInfo)" href="" ng-show="auftragInfo.im_stk_gespeichert===null" class="btn btn-block btn-xs btn-success">Auftragsmenge speichern</a>
+	</div>
+	<div class="col-sm-3">
+	    <a ng-show="securityInfo.showArray.d605" href="../get_parameters.php?popisky=Import&promenne=auftragsnr&values={{auftragInfo.auftragsnr}}&report=D605" class="btn btn-xs btn-block btn-info">D605 Import</a>
 	    <a ng-show="securityInfo.showArray.d607i" href="../d607i/d607i.php" class="btn btn-xs btn-block btn-info">D607i</a>
+	    <a ng-show="securityInfo.showArray.liefavis" href="" class="btn btn-xs btn-block btn-info">Liefer AVIS</a>
+	    <!--<a href="../get_parameters.php?popisky=Export&promenne=export&values={{auftragInfo.auftragsnr}}&report=D606" class="btn btn-xs btn-block btn-info">D606 Export</a>-->
+	    <!--<a href="../get_parameters.php?popisky=Geplant mit von;Geplant mit bis;Neue Seite nach Teil;Teil;Reporttyp,*RA&promenne=von;bis;teilpager;teil;reporttyp&values={{auftragInfo.auftragsnr}};{{auftragInfo.auftragsnr}};0;*;Detail,Detail mit Summen,nur Summen,Info an Kunden&report=D607" class="btn btn-xs btn-block btn-info">D607 Plan</a>-->
 	</div>
 	<div class="col-sm-3">
-	    <a href="../get_parameters.php?popisky=Import&promenne=auftragsnr&values={{auftragInfo.auftragsnr}}&report=D605" class="btn btn-xs btn-block btn-info">D605 Import</a>
-	    <a href="../get_parameters.php?popisky=Export&promenne=export&values={{auftragInfo.auftragsnr}}&report=D606" class="btn btn-xs btn-block btn-info">D606 Export</a>
-	    <a href="../get_parameters.php?popisky=Geplant mit von;Geplant mit bis;Neue Seite nach Teil;Teil;Reporttyp,*RA&promenne=von;bis;teilpager;teil;reporttyp&values={{auftragInfo.auftragsnr}};{{auftragInfo.auftragsnr}};0;*;Detail,Detail mit Summen,nur Summen,Info an Kunden&report=D607" class="btn btn-xs btn-block btn-info">D607 Plan</a>
-	    <a href="../dauftr/exporttablo.php?export={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Exporttablo</a>
+	    <a ng-show="securityInfo.showArray.exportfullen" href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>
+	    <a ng-show="securityInfo.showArray.exportloeschen" href="../dauftr/export_fullen/export_loeschen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export loeschen</a>
+	    <a ng-show="securityInfo.showArray.exporttablo" href="../dauftr/exporttablo.php?export={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Exporttablo</a>
+	    <!--<a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710" class="btn btn-xs btn-block btn-info">D710 - Lieferungsuebersicht</a>-->
+	    <!--<a href="../get_parameters.php?popisky=Export (leer = Blanko );Teil;Termin;Text,*RA;Wassermarke,*RA;Format,*RA&promenne=export;teil;termin;popisek;watermark;format&values={{auftragInfo.auftragsnr}};*;{{auftragInfo.ausliefer_datum}};FREIGABE,ZWEIFLER;nein,ja;6x auf A4,2x auf A4&report=D64X" class="btn btn-xs btn-block btn-info">D6XX - Freigabezettel</a>-->
 	</div>
 	<div class="col-sm-3">
-	    <a href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>
-	    <a href="../dauftr/export_fullen/export_loeschen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export loeschen</a>
-	    <a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710" class="btn btn-xs btn-block btn-info">D710 - Lieferungsuebersicht</a>
-	    <a href="../get_parameters.php?popisky=Export (leer = Blanko );Teil;Termin;Text,*RA;Wassermarke,*RA;Format,*RA&promenne=export;teil;termin;popisek;watermark;format&values={{auftragInfo.auftragsnr}};*;{{auftragInfo.ausliefer_datum}};FREIGABE,ZWEIFLER;nein,ja;6x auf A4,2x auf A4&report=D64X" class="btn btn-xs btn-block btn-info">D6XX - Freigabezettel</a>
-	</div>
-	<div class="col-sm-3">
-	    <a ng-show="securityInfo.showArray.rechnung" href="../dauftr/rechnung/rechnung_berechnen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Rechnung</a>
-	    <a disabled href="" class="btn btn-xs btn-block btn-info">Rechnung exportieren</a>
-	    <a disabled href="" class="btn btn-xs btn-block btn-info">Rechnung importiere</a>
+	    <div class="btn-group btn-group-justified">
+		<div class="btn-group dropup">
+    	    <button ng-show="securityInfo.showArray.ls" type="button" class="btn btn-xs btn-block btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		Liefer- und leist. uebersicht <span class="caret"></span>
+	    </button>
+	    <ul class="dropdown-menu">
+		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710">D710</a></li>
+		<li><a href="#">D728</a></li>
+		<li><a href="#">D729</a></li>
+	    </ul>
+		    </div>
+	    </div>
+
+<!--	    <a disabled href="" class="btn btn-xs btn-block btn-info">Rechnung exportieren</a>
+	    <a disabled href="" class="btn btn-xs btn-block btn-info">Rechnung importiere</a>-->
 	    <a href="../index.php" class="btn btn-xs btn-block btn-danger">Ende / konec</a>
 	</div>
     </div>
@@ -150,7 +175,7 @@
 	    <table id="dauftr" st-table="displayDauftrPos" st-safe-src="dauftrPos" class="table table-bordered table-striped table-condensed table-hover">
 	    <thead>
 	    <tr>
-		<th class="no-print" colspan="17">
+		<th class="no-print" colspan="15">
 		    <input st-search="" class="form-control" placeholder="global suchen / hledat ..." type="text"/>
 		    <div class="checkbox-inline">
 		    <label class="checkbox-inline">
@@ -158,13 +183,16 @@
 		    </label>
 		    </div>
 		</th>
+		<th colspan="2">
+		    <a ng-show="securityInfo.showArray.editauftrpos" href="../dauftr/editDauftrForm.php?import={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">edit Auftrpositionen</a>
+		</th>
 	    </tr>
 	    <tr>
 		<th st-sort="teil">Teil</th>
 		<th st-sort="imp_pal">Pal</th>
 		<th title="Bestand aktuell">BA-Stk</th>
 		<th title="laut Lieferschein">IM-Stk</th>
-		<th>Preis</th>
+		<th ng-show="securityInfo.showArray.dauftrpreis">Preis</th>
 		<th>Kennz</th>
 		<th>TaetNr</th>
 		<th>G</th>
@@ -188,7 +216,7 @@
 			<span ng-if="r.edit==0" >{{r.imp_stk}}</span>
 		    </td>
 		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.im_stk}}</td>
-		    <td ng-dblclick="preisUpdate(r)" class="text-right" ng-class="{newpal:r.newpal==1}">
+		    <td ng-show="securityInfo.showArray.dauftrpreis" ng-dblclick="preisUpdate(r)" class="text-right" ng-class="{newpal:r.newpal==1}">
 <!--			<input ng-if="r.edit==1" ng-model="r.preis" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.preis|number:4}}</span>-->
 			{{r.preis|number:4}}
@@ -232,12 +260,12 @@
 			<span ng-if="r.hatrechnung==1" class="text-danger badge text-justify">RECHNUNG</span>
 			<div class="btn-group btn-group-xs btn-group-justified" role="group" ng-if="r.hatrechnung==0">
 			    <div ng-if="r.edit==0" class="btn-group btn-group-xs" role="group">
-				<button ng-click="makeEditable(r)" class="btn btn-sm">
+				<button ng-show="securityInfo.showArray.editdauftr" ng-click="makeEditable(r)" class="btn btn-sm">
 				    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 				</button>
 			    </div>
 			    <div ng-if="r.edit==0" class="btn-group btn-group-xs" role="group">
-				<button ng-click="deleteDposRow(r)" class="btn btn-sm btn-danger">
+				<button ng-show="securityInfo.showArray.deldauftr" ng-click="deleteDposRow(r)" class="btn btn-sm btn-danger">
 				    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 				</button>
 			    </div>

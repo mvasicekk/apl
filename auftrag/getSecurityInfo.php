@@ -15,6 +15,7 @@ $user = $_SESSION['user'];
 $userpc = $a->get_user_pc();
 $rolesArray = $a->getUserRolesArray($user);
 $showArray = array();
+$editArray = array();
 
 //security
 $elementsIdArray = $a->getResourcesForFormId($form_id);
@@ -22,6 +23,7 @@ $display_sec = array();
 if ($elementsIdArray !== NULL) {
     foreach ($elementsIdArray as $elementId) {
 	$showArray[$elementId] = $a->getDisplaySec($form_id, $elementId, $user);
+	$editArray[$elementId] = $a->getPrivilegeSecFull($form_id, $elementId, $user,"schreiben");
     }
 }
 
@@ -31,6 +33,7 @@ $securityInfo = array(
     'userpc'=>$userpc,
     'roles'=>$rolesArray,
     'showArray'=>$showArray,
+    'editArray'=>$editArray,
 );
 
 $returnArray = array(

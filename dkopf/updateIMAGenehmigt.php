@@ -162,6 +162,7 @@ if ($ma == 'ema') {
 	$d = date('Y-m-d H:i:s');
 	$gbemerk = $bemerkung_g." - IMA->EMA von $user am $d";
 	$arB = $apl->updateIMAField('ima_genehmigt_bemerkung',$gbemerk , $imaid);
+	// vztvoreni pozic v auftragu
     }
 }
 

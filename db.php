@@ -3892,6 +3892,70 @@ public function istExportiert($import, $impal){
     }
 
     
+    public function getPrivilegeSecFull($form_id,$element_id,$puser,$privilege='lesen'){
+	$sql = "select id from resources where form_id='$form_id' and element_id='$element_id'";
+	$rowsResources = $this->getQueryRows($sql);
+	if($rowsResources===NULL){
+	    // nic jsem k elementu nenasel, privilegium povolim
+//	    echo "$element_id nenalezen<br>";
+	    return TRUE;
+	}
+	else{
+	    $eId = $rowsResources[0]['id'];
+	}
+	
+//	echo "eId = $eId<br>";
+	$sql = "select role_id,allowed from acl join privileges on privileges.id=acl.privilege_id where resource_id='$eId' and privileges.name='$privilege'";
+	$rowsPrivilege = $this->getQueryRows($sql);
+	if($rowsPrivilege!==NULL){
+//	    AplDB::varDump($rowsPrivilege);
+//	    echo "mam privilegia testuji dal<br>";
+	    //mam nejaka privilegia testuji dal
+	    //uzivatelovi role
+	    $sql="select role_id from dbenutzerroles where benutzername='$puser'";
+	    $rowsUserRoles = $this->getQueryRows($sql);
+	    if($rowsUserRoles===NULL){
+		//uzivatel nema zadnou roli, zadne privilegium nebude
+//		echo "$puser nema zadnou roli<br>";
+		return FALSE;
+	    }
+	    else{
+		//uzivatel ma role
+//		AplDB::varDump($rowsUserRoles);
+		//projedu role s Y pro dane rousource a privilegium
+		foreach ($rowsPrivilege as $pr){
+		    if($pr['allowed']=='Y'){
+			// projedu vsechny role uzivatele
+			foreach($rowsUserRoles as $ur){
+			    if($ur['role_id']==$pr['role_id']){
+//				echo "nasel jsem shodu allowed=Y role_id=".$ur['role_id']."<br>";
+				return TRUE;
+			    }
+			}
+		    }
+		}
+		//projedu role s N pro dane rousource a privilegium
+		foreach ($rowsPrivilege as $pr){
+		    if($pr['allowed']=='N'){
+			// projedu vsechny role uzivatele
+			foreach($rowsUserRoles as $ur){
+			    if($ur['role_id']==$pr['role_id']){
+//				echo "nasel jsem shodu allowed=N role_id=".$ur['role_id']."<br>";
+				return FALSE;
+			    }
+			}
+		    }
+		}
+		return FALSE;
+	    }
+	}
+	else{
+	    //nic jsem pro privilegium a resource_id nenasel, => privilegium beru jako allowed
+//	    echo "privilegium $privilege v acl nenalezeno<br>";
+	    return TRUE;
+	}
+    }
+    
     /**
      * pomoci privilegii budu jen zakazovat, pokud nezakazu je privilegium 
      * povolene
