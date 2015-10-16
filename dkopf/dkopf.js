@@ -1293,31 +1293,26 @@ function generiereDauftrPositionen(event){
  * @param {type} data
  * @returns {undefined}
  */
-function updateGeneriereDauftrPositionen(data){
+function updateGeneriereDauftrPositionen(data) {
 
-//    alert("dposAr="+data.dposAr
-//	+"\ndposNew="+data.dposNew
-//	+"\ndauftrInserted="+data.dauftrInserted
-//	+"\ndauftrUpdated="+data.dauftrUpdated
-//	+"\ndrueckUpdated="+data.drueckUpdated
-//	);
-
-	if(data.dauftrInserted>0 || data.dauftrUpdated>0){
+    if (data.maTyp != 'ima') {
+	if (data.dauftrInserted > 0 || data.dauftrUpdated > 0) {
 	    $('#previewtable').remove();
 	    var thIs = $('#ema_dauftr_generieren');
 	    var acturl = thIs.attr('acturl');
-    
+
 	    $.post(acturl,
-	    {
-		id:thIs.attr('id'),
-		imaid:$('#imaid').val()
-	    },
-	    function(data){
+		    {
+			id: thIs.attr('id'),
+			imaid: $('#imaid').val()
+		    },
+	    function (data) {
 		updateEmaDauftrGenerieren(data);
 	    },
-	    'json'
-	    );    
+		    'json'
+	    );
 	}
+    }
 }
 
 /**
@@ -1595,6 +1590,20 @@ function updateEMAGenehmigtFlagClicked(data){
 }
 
 function updateGenehmigtFlagClicked(data){
+    
+    var imanr = $('div#imaeditform input#imanr').val();
+    $.post('./createDauftrDMAPositionen.php',
+	{
+	    id:$(this).attr('id'),
+	    ima:imanr,
+	    maTyp:'ima'
+	},
+	function(data){
+	    updateGeneriereDauftrPositionen(data);
+	},
+	'json'
+    );    
+    
     $('input[id^=imagenehmigtflag_]').attr('disabled','disabled');
     $('input[id^=imangenehmigtflag_]').attr('disabled','disabled');
     $('#ima_select_auftragsnr_gen').hide();
@@ -1604,6 +1613,7 @@ function updateGenehmigtFlagClicked(data){
     $('#ima_select_pal_e').hide();
     $('#ima_select_tat_e').hide();
     if(data.ch==2 && data.nicht==2){
+	//mozna bude lepsi znovu nacist editimaform ?
 	$('#emapart').show();
     }
     else{

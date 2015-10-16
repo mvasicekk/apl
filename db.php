@@ -480,10 +480,20 @@ class AplDB {
     
     /**
      * 
+     * @param type $datum
+     */
+    public function makeNewRundlauf($datum){
+	$sql = "insert into drundlauf (ab_aby_soll_datetime,dspediteur_id)";
+	$sql.=" values('$datum',1)";
+	$this->query($sql);
+	return mysql_insert_id();
+    }
+    /**
+     * 
      */
     public function getRundlaufInfoArray($id){
 	$sql.=" select";
-	$sql.=" drundlauf.*";
+	$sql.=" DATE_FORMAT(drundlauf.ab_aby_soll_datetime,'%Y-%m-%d') as ab_datum_f,drundlauf.*";
 	$sql.=" from drundlauf";
 	$sql.=" where drundlauf.id='$id'";
 	return $this->getQueryRows($sql);
@@ -646,7 +656,7 @@ class AplDB {
 	    $textCZ = $r[0]['oper_CZ'];
 	    $textDE = $r[0]['oper_D'];
 	    $sql = "insert into dpos (Teil,`TaetNr-Aby`,`TaetBez-Aby-D`,`TaetBez-Aby-T`,`VZ-min-kunde`,`vz-min-aby`,`kz-druck`)";
-	    $sql.=" values('$teil','$tat','$textDE','$textCZ','$vzkd','$vzaby',1)";
+	    $sql.=" values('$teil','$tat','$textDE','$textCZ','$vzkd','$vzaby',0)";
 	    mysql_query($sql);
 	    return mysql_insert_id();
 	}
@@ -1526,10 +1536,12 @@ public function istExportiert($import, $impal){
 		$termin = $dr['termin'];
 		$fremdpos = $dr['fremdpos'];
 		$fremdauftr = $dr['fremdauftr'];
+		$im_stk = $dr['im_stk'];
+		$giesstag = $dr['giesstag'];
 		//pismeno do faktury
 		$kz = $this->getKZForAbgnr($abgnr);
-		$sql = "insert into dauftr (auftragsnr,teil,`stück`,termin,fremdauftr,fremdpos,`mehrarb-kz`,`pos-pal-nr`,abgnr,preis,`VzAby`,`VzKd`,comp_user_accessuser)";
-		$sql.="values('$im','$teil','$stk','$termin','$fremdauftr','$fremdpos','$kz','$pal','$abgnr','$preis','$vzaby','$vzkd','$user')";
+		$sql = "insert into dauftr (im_stk,giesstag,auftragsnr,teil,`stück`,termin,fremdauftr,fremdpos,`mehrarb-kz`,`pos-pal-nr`,abgnr,preis,`VzAby`,`VzKd`,comp_user_accessuser)";
+		$sql.="values('$im_stk','$giesstag','$im','$teil','$stk','$termin','$fremdauftr','$fremdpos','$kz','$pal','$abgnr','$preis','$vzaby','$vzkd','$user')";
 		mysql_query($sql);
 		return mysql_insert_id();
 	    }
@@ -2546,6 +2558,14 @@ public function istExportiert($import, $impal){
 	    $this->insertDlagerBew($dil, $auftragsnr, $pal, $zbyvaKusu, 0, $eL, "XX", $ident);
     }
 
+    /**
+     * 
+     * @param type $id
+     */
+    public function deleteRundlauf($id){
+	$sql = "delete from drundlauf where id='$id'";
+	return $this->query($sql);
+    }
     /**
      * 
      * @param type $teil

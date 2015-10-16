@@ -4,9 +4,17 @@ $apl = AplDB::getInstance();
 
     $lid = $_POST['id'];
     $id = substr($lid, strpos($lid,'_')+1);
+    $newLkw = $_POST['newLkw'];
     
+    if($newLkw==1){
+	// vytvorit novy lkw
+	$datum = substr($lid, strrpos($lid, '_')+1);
+	$id = $apl->makeNewRundlauf($datum);
+    }
 
     $lkwInfoArray = $apl->getRundlaufInfoArray($id);
+    $datum = $lkwInfoArray[0]['ab_datum_f'];
+    
 //    $imSollDatum = substr($kundeBoxId, strpos($kundeBoxId, '_')+1,10);
 //    $kunde = substr($kundeBoxId, strrpos($kundeBoxId, '_')+1);
 //    
@@ -15,7 +23,9 @@ $apl = AplDB::getInstance();
     $lkw = $lkwInfoArray[0];
     $div.= "<div class='editlkwdiv' id='editlkw_$id'>";
     $div.="<div style='float:right;' class='closebutton' id='closebutton_lkwedit_$id'>X</div>";
-    $div.="<h4 style='margin:0;'>LKW - Edit</h4>";
+    $operace = $newLkw==1?'Neu':'Edit';
+    
+    $div.="<h4 style='margin:0;'>LKW - $operace</h4>";
     $div.="<div class='payloadList'>";
     $imexArray = $apl->getRundlaufImExArray($id);
     if($imexArray!==NULL){
@@ -276,16 +286,20 @@ $apl = AplDB::getInstance();
     $div.="</table>";
     //odeslat pozadavek
     $div.= "<input style='margin-top:0.2em;' type='button' id='savelkwbutton_$id' acturl='lkwSave.php' value='speichern' />";
+    $div.= "<input style='margin-top:0.2em;' type='button' id='deletelkwbutton_$id' acturl='lkwDelete.php' value='loeschen' />";
     $div.= "</div>";
+    $div.= "<input type='hidden' id='th' value='tagheader_$datum' />";
 }
 
 
 $returnArray = array(
+	'newLkw'=>$newLkw,
 	'lid'=>$lid,
 	'lkwInfoArray'=>$lkwInfoArray,
 	'lkwId'=>$id,
 	'div'=>$div,
 	'divid'=>"editlkw_$id",
+	'tagheaderid'=>'tagheader_'.$datum,
     );
 
     

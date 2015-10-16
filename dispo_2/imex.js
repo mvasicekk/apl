@@ -208,18 +208,34 @@ function erstellenPlanImportButtonClick(event){
  * @returns {undefined}
  */
 function datumHeaderDblClicked(event){
-    var datumHeaderId = $(this).attr('id');
-    var acturl = 'datumHeaderDblClicked.php';
+    
+    event.preventDefault();
+    event.stopPropagation();
+    var id = $(this).attr('id');
+    var acturl = 'lkwEdit.php';
     $.post(acturl,
     {
-	datumHeaderId:datumHeaderId
+	id:id,
+	newLkw:1
     },
     function(data){
-	updatedatumHeaderDblClicked(data);
-//	updatekundeBoxDblClicked(data);
+	updateLkwDblClicked(data);
     },
     'json'
-    );        
+    );
+    
+//    var datumHeaderId = $(this).attr('id');
+//    var acturl = 'datumHeaderDblClicked.php';
+//    $.post(acturl,
+//    {
+//	datumHeaderId:datumHeaderId
+//    },
+//    function(data){
+//	updatedatumHeaderDblClicked(data);
+////	updatekundeBoxDblClicked(data);
+//    },
+//    'json'
+//    );        
 }
 
 /**
@@ -412,38 +428,47 @@ function updateLkwDblClicked(data) {
     // pridam ke vsem draggable imex odchyceni udalosti click
     $('.draggable').unbind('click');
     $('.draggable').on('click',draggableClick);
-//    $('#' + data.divid).droppable(
-//	    {
-//		accept: ".draggable",
-////		    activeClass: "ui-state-highlight",
-//		addClasses: false,
-//		hoverClass: "drop-hover",
-//		drop: function (event, ui) {
-//		    //alert(ui.draggable.attr('id')+' polozen na '+$(this).attr('id'));
-//		    event.preventDefault();
-//		    event.stopPropagation();
-//		    ui.helper.remove();
-//		    var acturl = 'updateDropToLkw.php';
-//		    $.post(acturl,
-//			    {
-//				target_id: $(this).attr('id'),
-//				dropped_id: ui.draggable.attr('id'),
-//			    },
-//			    function (data) {
-//				updateDroppedToLkw(data);
-//			    },
-//			    'json'
-//			    );
-//		}
-//	    }
-//    );
     makeLkwPayloadDraggable(data);
-
 
     $(".datepicker").datepicker($.datepicker.regional["de"]);
     $('#' + data.divid).bind('keypress', submitLkwEdit);
     $('input[id^=savelkwbutton_]').bind('click', saveLkwButtonClick);
+    $('input[id^=deletelkwbutton_]').bind('click', deleteLkwButtonClick);
     $('div[id^=closebutton_]').bind('click', closeButtonClick);
+}
+
+function deleteLkwButtonClick(e) {
+    console.log($(this).attr('id'));
+    var url = $(this).attr('acturl');
+    console.log(url);
+    $.post(url,
+	    {
+		id: $(this).attr('id'),
+		th:$('#th').val()
+	    },
+    function (data) {
+	updatelkwDeleteClick(data);
+    },
+	    'json'
+	    );
+}
+
+
+function updatelkwDeleteClick(data){
+    console.log(data);
+    $('#'+data.divid).remove();
+    $('#'+data.th).html(data.tagDiv);
+    $('.lkwdraggable').bind('dblclick',lkwDblClicked);
+    $('.lkwdraggable').draggable({
+	    axis: "y",
+	    start: function(){
+		$(this).css({"z-index":"999"});
+	    },
+	    stop: function(){
+		$(this).css({"background-color":""});
+	    }
+	});
+	$('.lkwdraggable').css({"cursor":"pointer"});
 }
 
 function updateDeletePayloadId(data){
@@ -521,7 +546,29 @@ function updatedatumHeaderDblClicked(data){
     $('#'+data.divid).show('slide');
     $('#'+data.divid).draggable();
     $('div[id^=closebutton_]').bind('click',closeButtonClick);
+    $('input[id^=erstellenbutton_]').bind('click',lkwErstellenClick);
 }
+
+function lkwErstellenClick(e) {
+    console.log($(this).attr('id'));
+    var url = $(this).attr('acturl');
+    console.log(url);
+    $.post(url,
+	    {
+		id: $(this).attr('id')
+	    },
+    function (data) {
+	updatelkwErstellenClick(data);
+    },
+	    'json'
+	    );
+}
+
+
+function updatelkwErstellenClick(data){
+    
+}
+
 
 function updatekundeBoxDblClicked(data){
 //    if($('#'+data.divid).length!=0){
