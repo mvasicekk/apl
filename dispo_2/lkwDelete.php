@@ -7,6 +7,7 @@ $a = $apl;
     $id = substr($lid, strpos($lid,'_')+1);
 
     $ar = $apl->deleteRundlauf($id);
+    $ar = $apl->deleteRundlaufImEx($id);
     $th = $_POST['th'];
     
     $datum = substr($th, strrpos($th, '_')+1);
@@ -47,7 +48,9 @@ $a = $apl;
 	}
 	
 	$tagdatum = $datum;
-	$tagDiv = "$datum";
+	$dnyvTydnu = array('Ne','Po','Út','St','Čt','Pá','So');
+	$den = $dnyvTydnu[date('w',  strtotime($tagdatum))];
+	$tagDiv = "$datum $den";
 	if(count($lkwDatumArray)>0){
 	    foreach ($lkwDatumArray[$tagdatum] as $lkw){
 		$tagDiv.="<div title='".$lkw['id']."' id='"."lkw_".$lkw['id']."' class='"."lkw lkwdraggable lkw_".$lkw['id']."'>".$lkw['lkw_kz']."/".$lkw['imexstr']."</div>";

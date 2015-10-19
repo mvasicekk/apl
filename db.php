@@ -2558,12 +2558,24 @@ public function istExportiert($import, $impal){
 	    $this->insertDlagerBew($dil, $auftragsnr, $pal, $zbyvaKusu, 0, $eL, "XX", $ident);
     }
 
+    public function deleteRundlaufImEx($id){
+	$sql = "delete from drundlaufimex where rundlauf_id='$id'";
+	return $this->query($sql);
+    }
     /**
      * 
      * @param type $id
      */
     public function deleteRundlauf($id){
 	$sql = "delete from drundlauf where id='$id'";
+	return $this->query($sql);
+    }
+    
+    /**
+     * 
+     */
+    public function updateRundlaufField($field,$value,$id){
+	$sql = "update drundlauf set `$field`='$value' where id='$id' limit 1";
 	return $this->query($sql);
     }
     /**

@@ -7,8 +7,10 @@ require_once '../db.php';
 
     $id=$_POST['id'];
     $imanr = $_POST['ima'];
+    $maTyp = $_POST['maTyp'];
 
-//    $imanr = "IMA_138_1410211502";
+//    $imanr = "IMA_195_1510081416";
+//    $maTyp = 'ima';
     
     $apl = AplDB::getInstance();
     $ar = 0;
@@ -19,10 +21,19 @@ require_once '../db.php';
     if($imaInfoArray!==NULL){
 	$ir = $imaInfoArray[0];
 	$teil = $ir['teil'];
-	$imArray = explode(';', $ir['ema_auftragsarray_genehmigt']);
-	$palArray = explode(';', $ir['ema_palarray_genehmigt']);
-	$dauftrIdArray = explode(';', $ir['ema_dauftrid_array_genehmigt']);
-	$tatArray = explode(';', $ir['ema_tatundzeitarray_genehmigt']);
+	if($maTyp=='ima'){
+	    $imArray = explode(';', $ir['ima_auftragsarray_genehmigt']);
+	    $palArray = explode(';', $ir['ima_palarray_genehmigt']);
+	    $dauftrIdArray = explode(';', $ir['ima_dauftrid_array_genehmigt']);
+	    $tatArray = explode(';', $ir['ima_tatundzeitarray_genehmigt']);
+	}
+	else{
+	    $imArray = explode(';', $ir['ema_auftragsarray_genehmigt']);
+	    $palArray = explode(';', $ir['ema_palarray_genehmigt']);
+	    $dauftrIdArray = explode(';', $ir['ema_dauftrid_array_genehmigt']);
+	    $tatArray = explode(';', $ir['ema_tatundzeitarray_genehmigt']);
+	}
+	
 	if(is_array($imArray) && is_array($palArray) && is_array($tatArray) && is_array($dauftrIdArray)){
 	    $palArraySkutecne = array();
 	    foreach ($dauftrIdArray as $i){
@@ -32,6 +43,9 @@ require_once '../db.php';
 		}
 	    }
 
+//	    echo "palArraySkutecne<hr>";
+//	    AplDB::varDump($palArraySkutecne);
+	    
 	    //vytvorim si pole se skutecnyma pozicema k vytvoreni
 	    $imPalTatArrayToCreate = array();
 	    foreach ($palArraySkutecne as $ps){
@@ -40,6 +54,9 @@ require_once '../db.php';
 		    array_push($imPalTatArrayToCreate, array('im'=>$ps['im'],'pal'=>$ps['pal'],'stk'=>  intval($ps['stk']),'tat'=>$tatnr,'vzaby'=>  floatval($vzaby),'vzkd'=>  floatval($vzkd)));
 		}
 	    }
+	    
+//	    echo "imPalTatArrayToCreate<hr>";
+//	    AplDB::varDump($imPalTatArrayToCreate);
 	    
 	    //ted pojedu po jednotlivych polozkach pole a budu kontrolovat aktualni hodnoty v auftragu
 	    //tj, jestli existuje stejna pozice a jake ma hodnoty vzaby a vzkd
@@ -60,6 +77,9 @@ require_once '../db.php';
 		}
 	    }
 
+//	    echo "previewArray<hr>";
+//	    AplDB::varDump($previewArray);
+	    
 //	    echo "<pre>";
 //	    var_dump($previewArray);
 //	    echo "</pre>";
@@ -88,17 +108,26 @@ require_once '../db.php';
 		if($action=="create"){
 //		    echo "DAUFTR-CREATE:$kunde,$im,$minPreis,$rundenStellen,$teil,$pal,$stk,$tatneu,$preis,$vzkd,$vzaby,$action<br>";
 		    $user = $apl->get_user_pc();
+		    if($maTyp=='ima'){
+			// pokud vytvarim ze schvalene IMA, nastavim vzdy preis a vzkd na 0
+			$preis = 0;
+			$vzkd = 0;
+		    }
 		    $insertDauftrLastId=$apl->insertDauftrRowFromTemplate($im, $teil, $preis, $stk, $pal, $tatneu, $vzkd, $vzaby, $user);
 		    $dauftrInserted++;
 		}
 		if($action=="update"){
 		    if($vzaby!=$vzabyDauftr || $vzkd!=$vzkdDauftr){
 //			echo "DAUFTR-UPDATE:$kunde,$im,$minPreis,$rundenStellen,$teil,$pal,$stk,$tatneu,$preis,$vzkd,$vzaby,$action<br>";
-			$apl->updateDauftrField($pa['id'], 'vzkd', $vzkd);
 			$apl->updateDauftrField($pa['id'], 'vzaby', $vzaby);
-			$apl->updateDauftrField($pa['id'], 'preis', $preis);
+			if($maTyp!="ima"){
+			    // vzkd a preis upravim jen v pripade EMA
+			    $apl->updateDauftrField($pa['id'], 'vzkd', $vzkd);
+			    $apl->updateDauftrField($pa['id'], 'preis', $preis);
+			}
 			$dauftrUpdated++;
 		    }
+
 		    //test zda mam uvedenou pozici v DRUECK
 		    $drueckRows = $apl->getDrueckRowsForImTeilPalTat($im,$teil,$pal,$tatneu);
 		    if($drueckRows!==NULL){
@@ -109,7 +138,9 @@ require_once '../db.php';
 			    $vzabyDrueck = $dr['VZ-IST'];
 			    if($vzaby!=$vzabyDrueck || $vzkd!=$vzkdDrueck){
 //				echo "DRUECK:$drueckId,$vzkdDrueck,$vzabyDrueck<br>";
-				$apl->updateDrueckField($drueckId,'VZ-SOLL',$vzkd);
+				if($maTyp!='ima'){
+				    $apl->updateDrueckField($drueckId,'VZ-SOLL',$vzkd);
+				}
 				$apl->updateDrueckField($drueckId,'VZ-IST',$vzaby);
 				$drueckUpdated++;
 			    }
@@ -119,6 +150,7 @@ require_once '../db.php';
 	    }
 	}
 	
+//	echo "kontrola dpos pro pozadovane operace<hr>";
 	// kontrola dpos pro pozadovane operace
 	$dposNew = 0;
 	$dposAr = 0;
@@ -135,8 +167,11 @@ require_once '../db.php';
 		    $dposId = $dpr['id'];
 		    if($vzaby!=$vzabyDpos || $vzkd!=$vzkdDpos){
 			// provedu update
-			$ar = $apl->updateDposVZ($dposId,$vzaby,$vzkd);
-			$dposAr = $ar;
+			// jen v pripade EMA
+			if($maTyp!='ima'){
+			    $ar = $apl->updateDposVZ($dposId,$vzaby,$vzkd);
+			    $dposAr = $ar;
+			}
 //			echo "$dposAr,$dposId,$vzabyDpos,$vzkdDpos<br>";
 		    }
 		}
@@ -144,6 +179,7 @@ require_once '../db.php';
 	    else {
 		// TODO
 		// pro danou operaci jeste nemam zaznam v dpos, musim ho vytvorit
+//		echo "pro danou operaci jeste nemam zaznam v dpos, musim ho vytvorit<hr>";
 		$insertId = $apl->insertNewDPOS($teil,$tat,$vzaby,$vzkd);
 		$dposAr = $insertId;
 		$dposNew = 1;
@@ -153,6 +189,7 @@ require_once '../db.php';
     }
     
     $returnArray = array(
+	'maTyp'=>$maTyp,
 	'insertDauftrLastId'=>$insertDauftrLastId,
 	'imanr'=>$imanr,
 	'dposAr'=>$dposAr,

@@ -1592,7 +1592,9 @@ function updateEMAGenehmigtFlagClicked(data){
 function updateGenehmigtFlagClicked(data){
     
     var imanr = $('div#imaeditform input#imanr').val();
-    $.post('./createDauftrDMAPositionen.php',
+    
+    if(data.ma=='ima'){
+	$.post('./createDauftrDMAPositionen.php',
 	{
 	    id:$(this).attr('id'),
 	    ima:imanr,
@@ -1602,7 +1604,9 @@ function updateGenehmigtFlagClicked(data){
 	    updateGeneriereDauftrPositionen(data);
 	},
 	'json'
-    );    
+	);    
+    }
+    
     
     $('input[id^=imagenehmigtflag_]').attr('disabled','disabled');
     $('input[id^=imangenehmigtflag_]').attr('disabled','disabled');
@@ -1613,8 +1617,21 @@ function updateGenehmigtFlagClicked(data){
     $('#ima_select_pal_e').hide();
     $('#ima_select_tat_e').hide();
     if(data.ch==2 && data.nicht==2){
+	$('#imaeditform').remove();
 	//mozna bude lepsi znovu nacist editimaform ?
-	$('#emapart').show();
+	var id='i_ima_edit_'+data.imaid;
+	var acturl = $('#'+id).attr('acturl');
+	$.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val()
+        },
+        function(data){
+            updateshowEditIMA(data);
+        },
+        'json'
+        );
+	
     }
     else{
 	$('#emapart').hide();

@@ -457,7 +457,13 @@ function deleteLkwButtonClick(e) {
 function updatelkwDeleteClick(data){
     console.log(data);
     $('#'+data.divid).remove();
+    
+    for(d in data.divsToUpdate){
+	console.log(d);
+    }
     $('#'+data.th).html(data.tagDiv);
+    
+    
     $('.lkwdraggable').bind('dblclick',lkwDblClicked);
     $('.lkwdraggable').draggable({
 	    axis: "y",
@@ -478,14 +484,26 @@ function updateDeletePayloadId(data){
     
 }
 
-function saveLkwButtonClick(){
+function saveLkwButtonClick() {
     console.log('saveLkwButtonClick');
     //vytvorit mapu vsech inputu
     var map = {};
-    $(this).parent().find('input').each(function() {
+    $(this).parent().find('input').each(function () {
 	map[$(this).attr("id")] = $(this).val();
     });
     console.log(map);
+    var url = $(this).attr('acturl');
+    $.post(url,
+	    {
+		id: $(this).attr('id'),
+		params:map,
+		th: $('#th').val()
+	    },
+    function (data) {
+	updatelkwDeleteClick(data);
+    },
+	    'json'
+	    );
 }
 
 /**
