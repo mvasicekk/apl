@@ -26,6 +26,7 @@ $a = $apl;
 	
 	// ab_aby_ort ----------------------------------------------------------
 	$ab_aby_ort = trim($fa['ab_aby_ort']);
+	$a->updateRundlaufField('ab_aby_ort',$ab_aby_ort,$id);
 	
 	// ab_aby_soll_datetime ------------------------------------------------
 	$ab_aby_soll_date = $fa['ab_aby_soll_date'];
@@ -40,6 +41,40 @@ $a = $apl;
 	$ab_aby_ist_date = $fa['ab_aby_ist_date'];
 	$ab_aby_ist_time = $fa['ab_aby_ist_time'];
 	$ab_aby_ist_datetime = $apl->datetimeOrNull($ab_aby_ist_date,$ab_aby_ist_time);
+	
+	//  ----------------------------------------------------------
+	$lkw_kz = trim($fa['lkw_kz']);
+	$a->updateRundlaufField('lkw_kz',$lkw_kz,$id);	
+	
+	//  proforma ----------------------------------------------------------
+	$v = trim($fa['proforma']);
+	$a->updateRundlaufField('proforma',$v,$id);	
+	
+	//  fahrername ----------------------------------------------------------
+	$v = trim($fa['fahrername']);
+	$a->updateRundlaufField('fahrername',$v,$id);	
+	
+	//  an_aby_nutzlast ----------------------------------------------------------
+	$v = trim($fa['an_aby_nutzlast']);
+	$a->updateRundlaufField('an_aby_nutzlast',$v,$id);	
+	
+	// bemerkung ----------------------------------------------------------
+	$v = trim($fa['bemerkung']);
+	$a->updateRundlaufField('bemerkung',$v,$id);	
+	
+	// preis ----------------------------------------------------------
+	$v = intval($fa['preis']);
+	$a->updateRundlaufField('preis',$v,$id);	
+	
+	// rabatt ----------------------------------------------------------
+	$v = floatval(strtr($fa['rabatt'],',','.'));
+	$a->updateRundlaufField('rabatt',$v,$id);	
+	
+	// betrag ----------------------------------------------------------
+	$v = floatval(strtr($fa['betrag'],',','.'));
+	$a->updateRundlaufField('betrag',$v,$id);	
+	
+	// nasleduji casy a datumy ---------------------------------------------
 	
     }
     // nactu novy seznam rundlaufu pro dany datum ------------------------------

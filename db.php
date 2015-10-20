@@ -4152,8 +4152,11 @@ public function istExportiert($import, $impal){
     public function getPersonalArray($value, $ohneAustritt = TRUE, $pole = 0) {
 
         $sql = "select persnr,name,vorname from dpers where 1";
-        if ($ohneAustritt === TRUE)
-            $sql.= " and (austritt is null or austritt<eintritt)";
+	if ($ohneAustritt === TRUE){
+	    $sql.= " and (austritt is null or austritt<eintritt)";
+	    $sql.= " and (dpersstatus='MA')";
+	}
+            
         if ($pole == 0)
             $sql.= " and persnr=$value";
         if ($pole == 1) {

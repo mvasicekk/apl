@@ -98,8 +98,8 @@ require_once '../db.php';
 	if($ir['ema_genehmigt']==0){
 	    $elementId='imagenehmigtflag';
 	    $formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imagenehmigtflag_$imaid' value='genehmigen' acturl='./updateIMAGenehmigt.php?nicht=0'/>";
-	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imangenehmigtflag_$imaid' value='nicht genehmigen' acturl='./updateIMAGenehmigt.php?nicht=1'/>";
+	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imagenehmigtflag_$imaid' value='genehmigen' acturl='./updateIMAGenehmigt.php?ma=ima&nicht=0'/>";
+	    $formDiv.="<input $disabledIfGenehmigt style='text-align:left;' type='button' id='imangenehmigtflag_$imaid' value='nicht genehmigen' acturl='./updateIMAGenehmigt.php?ma=ima&nicht=1'/>";
 	    $formDiv.="</span>";
 	    if($imaGenehmigtFlag){
 		$elementId='ima2emaflag';

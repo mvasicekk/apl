@@ -26,16 +26,16 @@ $(document).ready(function(){
 	$('.draggable').bind('dblclick',draggableImExDblClicked);
 	$('.draggable').draggable({zIndex: 999});
 	
-	$('.lkwdraggable').draggable({
-	    axis: "y",
-	    start: function(){
-		
-		$(this).css({"z-index":"999"});
-	    },
-	    stop: function(){
-		$(this).css({"background-color":""});
-	    }
-	});
+//	$('.lkwdraggable').draggable({
+//	    axis: "y",
+//	    start: function(){
+//		
+//		$(this).css({"z-index":"999"});
+//	    },
+//	    stop: function(){
+//		$(this).css({"background-color":""});
+//	    }
+//	});
 	$('.selectable').selectable();
 	$('.draggable').css({"cursor":"pointer"});
 	$('.lkwdraggable').css({"cursor":"pointer"});
@@ -460,26 +460,31 @@ function updatelkwDeleteClick(data){
     
     for(d in data.divsToUpdate){
 	console.log(d);
+	console.log(data.divsToUpdate[d]);
+	$('#tagheader_'+d).html(data.divsToUpdate[d]);
     }
-    $('#'+data.th).html(data.tagDiv);
+    //$('#'+data.th).html(data.tagDiv);
     
-    
+    $('.lkwdraggable').unbind('dblclick');
     $('.lkwdraggable').bind('dblclick',lkwDblClicked);
-    $('.lkwdraggable').draggable({
-	    axis: "y",
-	    start: function(){
-		$(this).css({"z-index":"999"});
-	    },
-	    stop: function(){
-		$(this).css({"background-color":""});
-	    }
-	});
+//    $('.lkwdraggable').draggable({
+//	    axis: "y",
+//	    start: function(){
+//		$(this).css({"z-index":"999"});
+//	    },
+//	    stop: function(){
+//		$(this).css({"background-color":""});
+//	    }
+//	});
 	$('.lkwdraggable').css({"cursor":"pointer"});
 }
 
 function updateDeletePayloadId(data){
     $('div.payloadList').html(data.payloadDiv);
     $('div.lkw_'+data.rundlaufid).html(data.lkwDiv);
+    console.log(data);
+    $('#ab_aby_soll_date_'+data.rundlaufid).val(data.ab_aby_soll_date_vorschlag);
+    $('#ab_aby_soll_time_'+data.rundlaufid).val(data.ab_aby_soll_time_vorschlag);
     makeLkwPayloadDraggable(data);
     
 }

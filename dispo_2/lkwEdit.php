@@ -287,8 +287,9 @@ $apl = AplDB::getInstance();
     //odeslat pozadavek
     $div.= "<input style='margin-top:0.2em;' type='button' id='savelkwbutton_$id' acturl='lkwSave.php' value='speichern' />";
     $div.= "<input style='margin-top:0.2em;' type='button' id='deletelkwbutton_$id' acturl='lkwDelete.php' value='loeschen' />";
-    $div.= "</div>";
     $div.= "<input type='hidden' id='th' value='tagheader_$datum' />";
+    $div.= "</div>";
+    
 }
 
 
