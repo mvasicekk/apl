@@ -68,7 +68,7 @@ table.monatleistungtable
 
     #leistungtabelle {
 	background-color:rgb(179,179,179);
-	width: 40%; 
+	width: 43%; 
 	float: left;
 	margin-left: 2em;
 	margin-top: 1em;
@@ -86,7 +86,7 @@ table.monatleistungtable
 	float: left;
 	margin-top: 1em;
 	margin-left: 2em;
-	width: 40%;
+	//width: 40%;
 	height: 20em;
     }
     
