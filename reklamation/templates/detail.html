@@ -18,10 +18,6 @@
 	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
 		Speichern / uložit
 	    </button>
-    	    <button ng-show="rekl.rekl_erledigt_am1==null" ng-click="reklBeenden()" class="btn btn-primary" type="button">
-		Reklamation beenden
-	    </button>
-
 	</div>
     </div>
 
@@ -104,7 +100,12 @@
 
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label"  for="erl">Erledigt am:</label>
-				<input disabled readonly ng-model="rekl.rekl_erledigt_am1" ui-date="dateOptions" type="text" class="form-control pinput" id="erl" placeholder="Erledigt am">
+				<div class="input-group">
+				    <input disabled readonly ng-model="rekl.rekl_erledigt_am1" ui-date="dateOptions" type="text" class="form-control pinput" id="erl" placeholder="Erledigt am">
+				    <span class="input-group-btn">
+					<button ng-if="rekl.rekl_erledigt_am1==null" ng-click="reklBeenden()" class="btn btn-success btn-sm" type="button">Reklamation beenden</button>
+				    </span>
+				</div>
 			    </div>
 			</div>
 
@@ -786,7 +787,7 @@
 
     <div class="row">
 	<div class="col-md-12">
-	    <button ng-click="reklSave()" class="btn btn-primary" type="button">
+	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
 		Speichern / uložit
 	    </button>
 	</div>

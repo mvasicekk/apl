@@ -30,7 +30,9 @@ $aplDB = AplDB::getInstance();
 	{
 		// budu kontrolovat jen interni operace
 		// zkusim nejdriv najit operaci v pracovnim planu u dilu	
-		$sql="select `TaetBez-Aby-D` as bezd,`TaetBez-Aby-T` as bezt,`TaetNr-Aby` as abgnr,`VZ-min-kunde` as vzkd,`vz-min-aby` as vzaby from dpos join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby` where ((dpos.`Teil`='".$teil."') and (dtaetkz='I')  and (`TaetNr-Aby`<>'3') and (`TaetNr-Aby`='".$value."')) order by abgnr";
+		//$sql="select `TaetBez-Aby-D` as bezd,`TaetBez-Aby-T` as bezt,`TaetNr-Aby` as abgnr,`VZ-min-kunde` as vzkd,`vz-min-aby` as vzaby from dpos join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby` where ((dpos.`Teil`='".$teil."') and (dtaetkz='I')  and (`TaetNr-Aby`<>'3') and (`TaetNr-Aby`='".$value."')) order by abgnr";
+		// 2015-10-22 nepovolit operace 4000 az 4999
+		$sql="select `TaetBez-Aby-D` as bezd,`TaetBez-Aby-T` as bezt,`TaetNr-Aby` as abgnr,`VZ-min-kunde` as vzkd,`vz-min-aby` as vzaby from dpos join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby` where ((dpos.`Teil`='".$teil."') and (dtaetkz='I')  and (`TaetNr-Aby`<>'3') and (`TaetNr-Aby`<'4000' or `TaetNr-Aby`>'4999') and (`TaetNr-Aby`='".$value."')) order by abgnr";
 		$result = mysql_query($sql);
 		if(mysql_affected_rows()>0)
 		{
@@ -56,8 +58,12 @@ $aplDB = AplDB::getInstance();
 			// a jeste musim rozlisit zdanejde o zakazku 999999		
 			if($auftragsnr==999999||$auftragsnr==99999999)
 			    $sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999) and (`abg-nr`='$value')) order by abgnr";
-			else
-			    $sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000) and (`abg-nr`='$value')) order by abgnr";
+			else{
+			    //$sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000) and (`abg-nr`='$value')) order by abgnr";
+			    // 2015-10-22 nepovolit 4000-4999, musi byt v auftragu
+			    $sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000) and (`abg-nr`<4000 or `abg-nr`>4999) and (`abg-nr`='$value')) order by abgnr";    
+			}
+			    
 			
 			$result = mysql_query($sql);
 			if(mysql_affected_rows()>0)
