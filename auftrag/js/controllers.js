@@ -467,13 +467,13 @@ aplApp.controller('listController', function ($scope, $routeParams,$http,$timeou
 		//var cislo = parseInt(kw.value)/1000;
 		// test jestli je cislo delitelne 10
 		// upravu budu provadet u zakaznika 140
-		zbytek=cislo%10;
-		if((zbytek>0)&&((cislo-zbytek)==140))
-		{
-			$scope.newkunde=cislo-zbytek;
-		}
-		else
-		{
+//		zbytek=cislo%10;
+//		if((zbytek>0)&&((cislo-zbytek)==140))
+//		{
+//			$scope.newkunde=cislo-zbytek;
+//		}
+//		else
+//		{
                     // pomoc pri zadavani cisla zakaznika
                     if(cislo==358)  cislo=355;
                     if(cislo==350)  cislo=355;
@@ -485,7 +485,7 @@ aplApp.controller('listController', function ($scope, $routeParams,$http,$timeou
 		    if(cislo==113)  cislo=111;
 		    if(cislo==198)  cislo=195;
                     $scope.newkunde = cislo;
-		}
+//		}
 		$timeout(function() {
 		    var element = $window.document.getElementById('newkunde');
 		    if(element){

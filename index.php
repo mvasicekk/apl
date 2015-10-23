@@ -108,6 +108,11 @@ while ($row = mysql_fetch_array($res)) {
 }
 $smarty->assign("zakazkyEX", $zakazkyEX);
 
+//seznam souboru pro tv
+$cesta = $apl->getGdatPath()."Aby 10 Sonstiges - Ostatní/Televize Jidelna/Video/Aktual video";
+$files = $apl->getFilesForPath($cesta);
+$smarty->assign("tvFiles", $files);
+
 //zjistit seznam roli pro uzivatele
 require_once './assignsecurity.php';
 

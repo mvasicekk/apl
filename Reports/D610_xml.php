@@ -30,7 +30,8 @@ $sql.="     sum(if(dauftr.kzgut='G',(dauftr.`stück`*dkopf.Gew)/1000,0)) as sum_
 $sql.=" from dauftr";
 $sql.=" join dkopf on dkopf.Teil=dauftr.teil";
 $sql.=" where";
-$sql.="     dauftr.termin='$termin'";
+$sql.="     (dauftr.termin='$termin')";
+$sql.="     and (dauftr.`auftragsnr-exp` is null)";
 $sql.=" group by dauftr.teil";
 
 //echo "$sql";
@@ -58,7 +59,7 @@ $options = array(
 // vytahnu si parametry z XML souboru
 // tady ziskam vystup dotazu ve forme XML					
 $domxml = $query2xml->getXML($sql,$options);
-$domxml->encoding="windows-1250";
+//$domxml->encoding="windows-1250";
 
 // pokusy s polem parameters
 // rozkouskovat si ho na jednotlive polozky

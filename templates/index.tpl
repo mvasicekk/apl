@@ -143,6 +143,32 @@
 
 	{if $prihlasen}
 	    <div id="leistungtabelle">
+		<div id="tvfiles" style="width:100%;">
+		    <div class="panel panel-info">
+		    <a role="button" data-toggle="collapse" href="#tvinfo" aria-expanded="true" aria-controls="tvinfo">
+			<div class="panel-heading">
+			    <h4 class="panel-title panel-info">
+				<span class="glyphicon glyphicon-film" aria-hidden="true"></span>
+				&nbsp;TV
+			    </h4>
+			</div>
+		    </a>
+		    <div id="tvinfo" class="panel-collapse collapse">
+			<div class="panel-body">
+			    <table class="table">
+				{foreach key=poradi item=file from=$tvFiles}
+				    <tr>
+					<td>
+					    <a target='_blank' href="{$file.url}">{$file.filename}</a>
+					</td>
+				    </tr>
+				{/foreach}
+			    </table>
+			</div>
+		    </div>
+		    </div>
+		</div>
+		
 		<div style="display:{$display_sec.branydiv};width:100%" id="branydiv">
 		    <input type="hidden" id="userinfo" value="{$user}" />
 		    <div class="container-fluid">
