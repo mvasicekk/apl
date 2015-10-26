@@ -54,6 +54,14 @@ $a = $apl;
 	$v = trim($fa['fahrername']);
 	$a->updateRundlaufField('fahrername',$v,$id);	
 	
+	//  spediteur_id -------------------------------------------------------
+	$v = intval($fa['spediteur_id']);
+	$a->updateRundlaufField('dspediteur_id',$v,$id);	
+	
+	//  an_kunde_ort_id -------------------------------------------------------
+	$v = intval($fa['an_kunde_ort_id']);
+	$a->updateRundlaufField('an_kunde_ort_id',$v,$id);	
+	
 	//  an_aby_nutzlast ----------------------------------------------------------
 	$v = trim($fa['an_aby_nutzlast']);
 	$a->updateRundlaufField('an_aby_nutzlast',$v,$id);	

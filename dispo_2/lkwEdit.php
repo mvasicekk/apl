@@ -29,13 +29,31 @@ $apl = AplDB::getInstance();
     $div.="<div class='payloadList'>";
     $imexArray = $apl->getRundlaufImExArray($id);
     if($imexArray!==NULL){
+	$anKundeOrtArray = array();
 	foreach ($imexArray as $imex){
 	    $payload = $imex['imex'].$imex['auftragsnr'];
 	    $payloadId = $imex['id'];
 	    $ie=$imex['imex'];
+    	    if($ie=='E'){
+		// v pripade exportu muzu podle nejnizsiho ex_soll navrhnout ab_aby_soll_datetime
+		// take muzu navrhnout An Kunde Ort
+		$aI = $apl->getAuftragInfoArray($imex['auftragsnr']);
+		if($aI!==NULL){
+		    $anKundeOrtArray[$aI[0]['zielort_id']]=$imex['auftragsnr'];
+		}
+	    }
 	    $div.="<div id='payloadId_$payloadId' class='lkwPayLoad payLoad_$ie'>$payload</div>";
 	}
+	//an kunde ort div, pripravit
+	$divAnKundeOrtId= "<select id='an_kunde_ort_id_$id'>";
+	foreach ($anKundeOrtArray as $zielort_id=>$ex){
+	    $zielortName = $apl->getZielortName($zielort_id);
+	    $selected = $zielort_id==$lkwInfoArray[0]['an_kunde_ort_id']?'selected':'';
+	    $divAnKundeOrtId.= "<option $selected value='".$zielort_id."'>$zielortName</option>";
+	}
+	$divAnKundeOrtId.= "</select>";
     }
+    
     $div.="</div>";
     $div.="<table class='formtable'>";
     //abbfahrt Abydos
@@ -44,7 +62,7 @@ $apl = AplDB::getInstance();
     $div.= "Abfahrt Abydos - Ort";
     $div.="</td>";
     $div.="<td>";
-    $div.="<input type='text' id='ab_aby_ort_$id' maxlength='30' size='20' value='".$lkw['ab_aby_ort']."' />";
+    $div.="<input readonly type='text' id='ab_aby_ort_$id' maxlength='30' size='20' value='".$lkw['ab_aby_ort']."' />";
     $div.="</td>";
     $div.="</tr>";
     
@@ -103,8 +121,13 @@ $apl = AplDB::getInstance();
     $div.= "Spediteur";
     $div.="</td>";
     $div.="<td>";
-    $dateValue = $lkw['dspediteur_id'];
-    $div.="<input type='text' id='spediteur_id_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="<select id='spediteur_id_$id'>";
+    $spedArray = $apl->getSpediteurArray();
+    foreach ($spedArray as $sped){
+	$selected = $sped['id']==$lkw['dspediteur_id']?'selected':'';
+	$div.="<option $selected value='".$sped['id']."'>".$sped['name']."</option>";
+    }
+    $div.="</select>";
     $div.="</td>";
     $div.="</tr>";
 
@@ -129,12 +152,23 @@ $apl = AplDB::getInstance();
     $div.="</tr>";
 
     // ankunft kunde
+//    $div.="<tr>";
+//    $div.="<td>";
+//    $div.= "Ankunft Kunde - Ort";
+//    $div.="</td>";
+//    $div.="<td>";
+//    $div.="<input type='text' id='an_kunde_ort_$id' maxlength='30' size='20' value='".$lkw['an_kunde_ort']."' />";
+//    $div.="</td>";
+//    $div.="</tr>";
+    
     $div.="<tr>";
     $div.="<td>";
-    $div.= "Ankunft Kunde - Ort";
+    $div.= "Ankunft Kunde - Ort (ID)";
     $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='an_kunde_ort_$id' maxlength='30' size='20' value='".$lkw['an_kunde_ort']."' />";
+    $div.="<td id='an_kunde_ort_td_$id'>";
+    
+    $div.= $divAnKundeOrtId;
+    
     $div.="</td>";
     $div.="</tr>";
     
@@ -184,7 +218,7 @@ $apl = AplDB::getInstance();
     $div.= "Ankunft Abydos - Ort";
     $div.="</td>";
     $div.="<td>";
-    $div.="<input type='text' id='an_aby_ort_$id' maxlength='30' size='20' value='".$lkw['an_aby_ort']."' />";
+    $div.="<input readonly type='text' id='an_aby_ort_$id' maxlength='30' size='20' value='".$lkw['an_aby_ort']."' />";
     $div.="</td>";
     $div.="</tr>";
     

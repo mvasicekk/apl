@@ -498,6 +498,16 @@ class AplDB {
 	$sql.=" where drundlauf.id='$id'";
 	return $this->getQueryRows($sql);
     }
+    
+    
+    /**
+     * 
+     */
+    public function getSpediteurArray(){
+	$sql.=" select id,`name` from dspediteur order by name";
+	return $this->getQueryRows($sql);
+    }
+    
     /**
      * 
      * @param type $datumVon
@@ -545,6 +555,8 @@ class AplDB {
     }
 
     public function checkUserPIN($login,$pin){
+	$salt = "abydosgates";
+	$pin = md5($pin);
 	$rows = $this->getQueryRows("select id_benutzer from dbenutzer where name='$login' and pin='$pin'");
 	if($rows===NULL){
 	    return FALSE;
@@ -1229,6 +1241,7 @@ public function getRechnungDatums($rechnung) {
 	$sql = "select dinfopanelplaces.id,dinfopanelplaces.place from dinfopanelplaces order by place";
         return $this->getQueryRows($sql);
     }
+    
     /**
      *
      * @param type $datumDB 

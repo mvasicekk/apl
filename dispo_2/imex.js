@@ -485,6 +485,8 @@ function updateDeletePayloadId(data){
     console.log(data);
     $('#ab_aby_soll_date_'+data.rundlaufid).val(data.ab_aby_soll_date_vorschlag);
     $('#ab_aby_soll_time_'+data.rundlaufid).val(data.ab_aby_soll_time_vorschlag);
+    
+    $('#an_kunde_ort_td_'+data.rundlaufid).html(data.anKundeOrtDiv);
     makeLkwPayloadDraggable(data);
     
 }
@@ -494,6 +496,9 @@ function saveLkwButtonClick() {
     //vytvorit mapu vsech inputu
     var map = {};
     $(this).parent().find('input').each(function () {
+	map[$(this).attr("id")] = $(this).val();
+    });
+    $(this).parent().find('select').each(function () {
 	map[$(this).attr("id")] = $(this).val();
     });
     console.log(map);

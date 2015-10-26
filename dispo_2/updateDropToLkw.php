@@ -15,6 +15,8 @@ $rundlaufid = substr($target_id, strpos($target_id, '_')+1);
 $ie = $imex=="im"?'I':'E';
 $auftragsnr = substr($dropped_id, strpos($dropped_id, '_')+1);
 
+$lkwInfoArray = $apl->getRundlaufInfoArray($rundlaufid);
+
 $insertid = $a->addRundlaufPayload($rundlaufid,$ie,$auftragsnr);
 $ab_aby_soll_datetime = strtotime('2100-01-01');
 $ab_aby_soll_datetimeVorschlag = "";
@@ -23,6 +25,7 @@ if($insertid>0){
     $imexArray = $apl->getRundlaufImExArray($rundlaufid);
     if($imexArray!==NULL){
 	$pocet=0;
+	$anKundeOrtArray = array();
 	foreach ($imexArray as $imex){
 	    $payload = $imex['imex'].$imex['auftragsnr'];
 	    $payloadId = $imex['id'];
@@ -32,6 +35,7 @@ if($insertid>0){
 	    }
 	    if($ie=='E'){
 		// v pripade exportu muzu podle nejnizsiho ex_soll navrhnout ab_aby_soll_datetime
+		// take muzu navrhnout An Kunde Ort
 		$aI = $apl->getAuftragInfoArray($imex['auftragsnr']);
 		if($aI!==NULL){
 		    $ex_soll_datetime = $aI[0]['ex_soll_datetime'];
@@ -39,6 +43,7 @@ if($insertid>0){
 		    if($exStime<$ab_aby_soll_datetime){
 			$ab_aby_soll_datetime = $exStime;
 		    }
+		    $anKundeOrtArray[$aI[0]['zielort_id']]=$imex['auftragsnr'];
 		}
 	    }
 	    $payloadDiv.="<div id='payloadId_$payloadId' class='lkwPayLoad payLoad_$ie'>$payload</div>";
@@ -46,6 +51,14 @@ if($insertid>0){
 	}
 	$ab_aby_soll_dateVorschlag = date('d.m.Y',$ab_aby_soll_datetime);
 	$ab_aby_soll_timeVorschlag = date('H:i',$ab_aby_soll_datetime);
+	//an kunde ort div, pripravit
+	$anKundeOrtDiv = "<select id='an_kunde_ort_id_$rundlaufid'>";
+	foreach ($anKundeOrtArray as $zielort_id=>$ex){
+	    $zielortName = $apl->getZielortName($zielort_id);
+	    $selected = $zielort_id==$lkwInfoArray[0]['an_kunde_ort_id']?'selected':'';
+	    $anKundeOrtDiv.= "<option $selected value='".$zielort_id."'>$zielortName</option>";
+	}
+	$anKundeOrtDiv.= "</select>";
     }
 
     $lkwDiv = "";
@@ -66,6 +79,8 @@ if($insertid>0){
 }
 
 $returnArray = array(
+    'anKundeOrtDiv'=>$anKundeOrtDiv,
+    'an_kunde_ort_array'=>$anKundeOrtArray,
     'ab_aby_soll_date_vorschlag'=>$ab_aby_soll_dateVorschlag,
     'ab_aby_soll_time_vorschlag'=>$ab_aby_soll_timeVorschlag,
     'target_id' => $target_id,
