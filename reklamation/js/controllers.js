@@ -16,6 +16,18 @@ aplApp.controller('reklController', function ($scope, $http) {
 aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
     function ($scope, $routeParams, $http) {
 	
+	
+	var initSecurity = function(){
+	var p={
+	    form_id:'reklamation'
+	};
+	return $http.post('./getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+		    }
+		);
+	}
+	
 	var initDetail = function () {
 	    $scope.rekl = undefined;
 	    $scope.disabled = undefined;
@@ -108,6 +120,14 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	    initDetail();
 	}
 
+	initSecurity();
+	
+	$scope.reklOpen = function(){
+	    $http.post('./openRekl.php', {rekl: $scope.rekl}).success(function (data) {
+		//$scope.reklid = data.reklid;
+		$scope.rekl.rekl_erledigt_am1 = null;
+	    });
+	}
 	/**
 	 * 
 	 * @returns {undefined}
@@ -300,5 +320,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 		$scope.schulungPersnrArray = response.data.persnrArray;
 	    });
 	};
+	
+	
     }]);
 

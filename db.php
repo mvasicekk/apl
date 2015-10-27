@@ -445,6 +445,18 @@ class AplDB {
 	$sql = "delete from drundlaufimex where rundlauf_id='$rundlaufid' and id='$id'";
 	mysql_query($sql);
     }
+    
+    public function getRundlaufIdForExport($auftragsnr){
+	$sql = "select drundlaufimex.rundlauf_id from drundlaufimex where auftragsnr='$auftragsnr' and imex='E'";
+	$r = $this->getQueryRows($sql);
+	if($r===NULL){
+	    return NULL;
+	}
+	else{
+	    return $r[0]['rundlauf_id'];
+	}
+    }
+    
     /**
      * 
      * @param type $id
@@ -503,8 +515,14 @@ class AplDB {
     /**
      * 
      */
-    public function getSpediteurArray(){
-	$sql.=" select id,`name` from dspediteur order by name";
+    public function getSpediteurArray($id=NULL){
+	if($id===NULL){
+	    $sql.=" select id,`name` from dspediteur order by name";
+	}
+	else{
+	    $sql.=" select id,`name` from dspediteur where id='$id'";
+	}
+	
 	return $this->getQueryRows($sql);
     }
     
@@ -2986,6 +3004,25 @@ public function istExportiert($import, $impal){
     }
 
     
+    public function getBehaelterInExport($auftragsnr){
+	$sql.=" select ";
+	$sql.=" dbehaelterbew.behaelternr,";
+	$sql.=" `eink-artikel`.`art-name1` as behname,";
+	$sql.=" dbehaelterbew.zustand_id,";
+	$sql.=" dbehaelterzustand.zustand_text,";
+	$sql.=" sum(dbehaelterbew.stk) as sum_stk";
+	$sql.=" from dbehaelterbew";
+	$sql.=" join dbehaelterzustand on dbehaelterzustand.zustand_id=dbehaelterbew.zustand_id";
+	$sql.=" join `eink-artikel` on `eink-artikel`.`art-nr`=dbehaelterbew.behaelternr";
+	$sql.=" where";
+	$sql.=" dbehaelterbew.export='$auftragsnr'";
+	$sql.=" group by";
+	$sql.=" dbehaelterbew.behaelternr,";
+	$sql.=" dbehaelterbew.zustand_id";
+	$sql.=" having";
+	$sql.=" sum_stk>0";
+	return $this->getQueryRows($sql);
+    }
     /**
      * 
      * @param type $username
@@ -4311,6 +4348,25 @@ public function istExportiert($import, $impal){
 	else{
 	    return '';
 	}
+    }
+    
+    /**
+     * 
+     * @param type $kunde
+     * @param type $standard
+     * @return type
+     */
+    public function getZielortStandardInfoArray($kunde,$standard=10){
+	$sql = "select * from zielorte where kunde='$kunde' and standard='$standard'";
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
+     * @param type $zielortid
+     */
+    public function getZielortInfoArray($zielortid){
+	$sql = "select * from zielorte where id='$zielortid'";
+	return $this->getQueryRows($sql);
     }
     /**
      *

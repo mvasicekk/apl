@@ -46,6 +46,10 @@ $a = $apl;
 	$lkw_kz = trim($fa['lkw_kz']);
 	$a->updateRundlaufField('lkw_kz',$lkw_kz,$id);	
 	
+	//  naves ----------------------------------------------------------
+	$naves_kz = trim($fa['naves_kz']);
+	$a->updateRundlaufField('naves_kz',$naves_kz,$id);	
+	
 	//  proforma ----------------------------------------------------------
 	$v = trim($fa['proforma']);
 	$a->updateRundlaufField('proforma',$v,$id);	

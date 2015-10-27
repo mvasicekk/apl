@@ -104,6 +104,7 @@
 				    <input disabled readonly ng-model="rekl.rekl_erledigt_am1" ui-date="dateOptions" type="text" class="form-control pinput" id="erl" placeholder="Erledigt am">
 				    <span class="input-group-btn">
 					<button ng-if="rekl.rekl_erledigt_am1==null" ng-click="reklBeenden()" class="btn btn-success btn-sm" type="button">Reklamation beenden</button>
+					<button ng-if="rekl.rekl_erledigt_am1!=null && securityInfo.showArray.rekloeffnen" ng-click="reklOpen()" class="btn btn-warning btn-sm" type="button">Reklamation offnen</button>
 				    </span>
 				</div>
 			    </div>

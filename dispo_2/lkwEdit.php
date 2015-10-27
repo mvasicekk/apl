@@ -141,13 +141,23 @@ $apl = AplDB::getInstance();
     $div.="</td>";
     $div.="</tr>";
     
-    $div.="<tr class='endsection'>";
+    $div.="<tr>";
     $div.="<td>";
     $div.= "LKW-Nr.";
     $div.="</td>";
     $div.="<td>";
     $dateValue = $lkw['lkw_kz'];
     $div.="<input type='text' id='lkw_kz_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="</td>";
+    $div.="</tr>";
+    
+    $div.="<tr class='endsection'>";
+    $div.="<td>";
+    $div.= "Anh-Nr.";
+    $div.="</td>";
+    $div.="<td>";
+    $dateValue = $lkw['naves_kz'];
+    $div.="<input type='text' id='naves_kz_$id' maxlength='10' size='10' value='".$dateValue."' />";
     $div.="</td>";
     $div.="</tr>";
 
