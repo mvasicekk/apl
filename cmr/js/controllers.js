@@ -176,7 +176,48 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     }
     
     
+    /**
+     * 
+     * @param {type} r
+     * @param {type} field
+     * @returns {undefined}
+     */
+    $scope.rundlaufChanged = function(r,field){
+	var params = {rundlaufInfo: r,field:field};
+	    return $http.post(
+		    './saveRundlaufChanges.php',
+		    {params: params}
+	    ).then(function (response) {
+		console.log(response.data);
+	    });
+    }
     
+
+/**
+ * 
+ * @returns {undefined}
+ */
+    $scope.cmrGenerieren = function(){
+    	    console.log('cmr generieren');
+	    var params = {
+		auftragInfo:$scope.auftragInfo,
+		rundlaufInfo: $scope.rundlaufInfo,
+		zielOrtInfo:$scope.zielOrtInfo,
+		zielOrtInfoStandard:$scope.zielOrtInfoStandard,
+		pokynyProOdesilatele:$scope.pokynyProOdesilatele,
+		username:$scope.username,
+		usernameFull:$scope.usernameFull,
+		palArray:$scope.palArray
+	    };
+	    $http.post('../Reports/CMR_pdf.php', params).then(function (response) {
+		console.log('cmr generiert ' + response.data);
+		$scope.filename = response.data.filename;
+		$scope.pdfPath = response.data.pdfPath;
+		$scope.pdfReady = true;
+	    });
+	
+    }
+
     /**
      * 
      * @param {type} e
@@ -195,8 +236,11 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			$scope.pokynyProOdesilatele = response.data.pokynyProOdesilatele;
 			$scope.username = response.data.user;
 			$scope.usernameFull = response.data.userFull;
+			// palety + priam 5 volnych pozic
 			$scope.palArray = response.data.palArray;
-			
+			for(i=0;i<5;i++){
+			    $scope.palArray.push({behaelternr:'',behname:'',zustand_id:'',zustand_text:'',sum_stk:'',editable:true});
+			}
 		    });
     };
     

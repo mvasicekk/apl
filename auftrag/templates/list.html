@@ -13,7 +13,7 @@
 		<span id="helpBlock" class="help-block">min. 3 Zeichen eingeben, zeigt max. 100 Ergebnisse / zadejte min. 3 znaky, zobrazi se max. 100 výsledků</span>
 	    </div>
 	</div>
-	<div ng-show="createNew==true" class="col-sm-4">
+	<div ng-show="createNew==true && securityInfo.showArray.newauftrag" class="col-sm-4">
 	    <div class="input-group">
 		<input enterfocus name='newkunde' id='newkunde' ng-model="newkunde" type="text" maxlength="3" class="form-control" id="newkunde" placeholder="Kundenr eingeben">
 		<span class="input-group-btn">

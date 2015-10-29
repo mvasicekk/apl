@@ -9,7 +9,8 @@ require_once '../db.php';
 
     $persnrArray = NULL;
     if(strlen($e)>=2){
-	$persnrArray = $apl->getPersonalArrayMatch($e,TRUE,1);
+	// povolit i lidi s vystupem
+	$persnrArray = $apl->getPersonalArrayMatch($e,FALSE,1);
 	$persnrArray1 = $persnrArray['rows'];
     }
     

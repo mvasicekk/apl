@@ -114,7 +114,7 @@
 			    <label style="display:block;" for="fertig">Rechnung am</label>
 			    <input style="width:7em;display:inline-block;vertical-align: middle;" ng-model="auftragInfo.fertigdat1" type="text" disabled maxlength="8" ui-date="dateOptions" class="form-control" id="fertig" placeholder="Rechnug am">
 			    <!--tlacitko pro smazani faktury-->
-			    <button ng-click="deleteRechnung(auftragInfo)" style="display: inline-block;vertical-align: middle;width:auto;" ng-if="auftragInfo.hatrechnung==1" class="btn btn-danger form-control">Re Lō</button>
+			    <button ng-click="deleteRechnung(auftragInfo)" style="display: inline-block;vertical-align: middle;width:auto;" ng-if="auftragInfo.hatrechnung==1 && securityInfo.showArray.delrechnung" class="btn btn-danger form-control">Re Lō</button>
 			    <a ng-show="securityInfo.showArray.rechnung" href="../dauftr/rechnung/rechnung_berechnen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Rechnung</a>
 			</div>
 		    </div>
@@ -122,9 +122,6 @@
 	</div>
 	<div class="col-sm-2 no-print">
 	    <a href="../dbehaelter/beheingabe.php?auftrag={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">Behaelter bew.</a>
-	    
-	    <!--<div class="btn-group">-->
-	    <!--</div>-->
 	</div>
 	
     </div>
@@ -289,3 +286,4 @@
     </div>    
     
 </div>
+

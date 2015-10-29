@@ -36,6 +36,8 @@ if($rundlaufId!==NULL){
     $rI = $a->getRundlaufInfoArray($rundlaufId);
     if($rI!==NULL){
 	$rundlaufInfo = $rI[0];
+	$rundlaufInfo['bruttogewicht'] = 0;
+	
 	$lieferantA = $a->getSpediteurArray($rundlaufInfo['dspediteur_id']);
 	if($lieferantA!==NULL){
 	    $rundlaufInfo['spediteurname'] = $lieferantA[0]['name'];

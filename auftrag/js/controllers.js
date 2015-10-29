@@ -451,6 +451,20 @@ aplApp.controller('listController', function ($scope, $routeParams,$http,$timeou
     $scope.auftrags = [];
     $scope.createNew = false;
     $scope.createNewKundeError = '';
+    $scope.securityInfo = undefined;
+    
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'auftragsuchen'
+	};
+	return $http.post('./getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+		    }
+		);
+    }
+    
+    $scope.initSecurity();
     
     $scope.getAuftragsMatch = function () {
 	var params = {a: $scope.auftragsnr};

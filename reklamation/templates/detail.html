@@ -15,7 +15,9 @@
     
     <div class="row">
 	<div class="col-md-12">
-	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
+	    <!--<button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">-->
+	    <!--zatim povoleno bez ohledu na stav reklamace-->
+	    <button ng-click="reklSave()" class="btn btn-primary" type="button">
 		Speichern / uložit
 	    </button>
 	</div>
@@ -646,7 +648,8 @@
 			    <thead>
 				<tr id='uploader'>
 				    <th colspan="2">{{rekl.savePath|limitTo:255:10}}<div id='filelist'></div></th>
-			    <th><button ng-show="rekl.rekl_erledigt_am1==null" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+			    <!--<th><button ng-show="rekl.rekl_erledigt_am1==null" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>-->
+			    <th><button id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
 			    </tr>
 			    <tr>
 				<th>name</th>
@@ -681,7 +684,8 @@
 		    <div class="col-md-12">
 			<table class="table table-condensed table-responsive">
 			    <thead>
-				<tr ng-show="rekl.rekl_erledigt_am1==null">
+			    <!--<tr ng-show="rekl.rekl_erledigt_am1==null">-->
+			    <tr>
 				    <th>
 			    <ui-select
 				ng-model="schulungPersnr.selected" 
@@ -713,7 +717,8 @@
 				    <td class="text-right">{{a.persnr}}</td>
 				    <td>{{a.name}}</td>
 				    <td><input ng-click="editSchulung(a,'ursacher')" ng-model="a.rekl_verursacher" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"></td>
-				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <!--<td><button ng-show="rekl.rekl_erledigt_am1==null" ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>-->
+				    <td><button ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
 				</tr>
 			    </tbody>
 			</table>
@@ -736,7 +741,8 @@
 		    <div class="col-md-12">
 			<table class="table table-condensed table-responsive">
 			    <thead>
-				<tr ng-show="rekl.rekl_erledigt_am1==null">
+				<!--<tr ng-show="rekl.rekl_erledigt_am1==null">-->
+				<tr>
 				    <th><input ui-date="dateOptions" ng-model="abmahnungDatum" type="text" class="form-control"></th>
 				    <th>
 			    <ui-select
@@ -775,7 +781,8 @@
 				    <td class="text-right">{{a.vorschlag_betrag}}</td>
 				    <td>{{a.vorschlag_von}}</td>
 				    <td>{{a.vorschlag_bemerkung}}</td>
-				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <!--<td><button ng-show="rekl.rekl_erledigt_am1==null" ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>-->
+				    <td><button ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
 				</tr>
 			    </tbody>
 			</table>
@@ -788,7 +795,9 @@
 
     <div class="row">
 	<div class="col-md-12">
-	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
+	    <!--<button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">-->
+	    <!--povoleno bez ohledu na stav reklamace-->
+	    <button ng-click="reklSave()" class="btn btn-primary" type="button">
 		Speichern / uložit
 	    </button>
 	</div>

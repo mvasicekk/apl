@@ -1,4 +1,5 @@
 <?
+session_start();
 require_once '../db.php';
 
 function toDBDate($t){
@@ -18,8 +19,10 @@ $rekl = $o->rekl;
 $apl = AplDB::getInstance();
 $insertId = -1;
 
+$user = $_SESSION['user'];
+
 $rekl_datum = toDBDate($o->rekl_datum);
-$sql = "insert into dreklamation (rekl_datum) values('$rekl_datum')";
+$sql = "insert into dreklamation (rekl_datum,erstellt) values('$rekl_datum','$user')";
 $insertId = $apl->insert($sql);
 
 $returnArray = array(
