@@ -66,6 +66,7 @@ if ($imex == 'im') {
 		$importeDatumArray[$importDatum][$kunde] = array();
 	    }
 	    		$draggable=$imRow['ausliefer_datum']=='noex'&&$imRow['fertig']=='norech'?'draggable':'';
+			$draggable='draggable';
 		array_push($importeDatumArray[$importDatum][$kunde]
 			,array(
 			    'kunde'=>$imRow['kunde'],
@@ -75,6 +76,7 @@ if ($imex == 'im') {
 			    'im_soll_time'=>$imRow['im_soll_time'],
 			    'vzkdsoll_import'=>$a->getVzKdSollImport($imRow['import']),
 			    'draggable'=>$draggable,
+			    'imauto'=>$a->isAuftragImRundlauf($imRow['import'],'I')?'imauto':'',
 			)
 			);
 	}
@@ -91,6 +93,7 @@ if ($imex == 'im') {
 	    }
 	    $vzkdRest = $a->getRestVzkdForEx($exRow['export']);
 	    $draggable = ($exRow['ausliefer_datum'] == 'noex') && ($exRow['fertig'] == 'norech') ? 'draggable' : '';
+	    $draggable='draggable';
 	    array_push($exporteDatumArray[$exportDatum][$kunde]
 		    , array(
 		'kunde' => $exRow['kunde'],
@@ -100,7 +103,8 @@ if ($imex == 'im') {
 		'fertig' => $exRow['fertig'],
 		'draggable' => $draggable,
 		'zielort' => $exRow['zielort'],
-		'exporttime' => $exRow['export_time']
+		'exporttime' => $exRow['export_time'],
+		'imauto'=>$a->isAuftragImRundlauf($exRow['export'],'E')?'imauto':'',
 		    )
 	    );
 	}

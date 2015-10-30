@@ -438,6 +438,20 @@ class AplDB {
 
     /**
      * 
+     * @param type $auftrag
+     */
+    public function isAuftragImRundlauf($auftrag,$ie){
+	$sql = "select rundlauf_id from drundlaufimex where auftragsnr='$auftrag' and imex='$ie' limit 1";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return TRUE;
+	}
+	else{
+	    return FALSE;
+	}
+    }
+    /**
+     * 
      * @param type $id
      * @param type $rundlaufid
      */
@@ -1393,6 +1407,25 @@ public function istExportiert($import, $impal){
     
     /**
      * 
+     * @param type $reklnr
+     * @return type
+     */
+    public function getReklInfoFromReklNr($reklnr){
+	$sql = "select * from dreklamation where rekl_nr='$reklnr'";
+	return $this->getQueryRows($sql);
+    }
+    
+    /**
+     * 
+     */
+    public function deleteDummyReklamationen($id=NULL){
+	if($id===NULL){
+	    $sql = "delete from dreklamation where kunde=0 and kd_rekl_nr is null and kd_kd_rekl_nr is null and teil=''";
+	    $this->query($sql);
+	}
+    }
+    /**
+     * 
      */
     public function getReklamationenArray($reklid = NULL) {
 	if ($reklid === NULL) {
@@ -1758,7 +1791,7 @@ public function istExportiert($import, $impal){
      * @param type $reklid
      */
     public function getSchulungenForReklamation($reklid){
-	$sql.="select dpersschulung.*,CONCAT(dpers.name,' ',dpers.vorname) as name from dpersschulung join dpers on dpers.persnr=dpersschulung.persnr where dpersschulung.rekl_id='$reklid'";
+	$sql.="select dpersschulung.*,CONCAT(dpers.name,' ',dpers.vorname) as name from dpersschulung join dpers on dpers.persnr=dpersschulung.persnr where dpersschulung.rekl_id='$reklid' order by dpers.persnr";
 	return $this->getQueryRows($sql);
     }
     

@@ -7,7 +7,11 @@ require_once '../db.php';
 
     $apl = AplDB::getInstance();
 
+    
+    $apl->deleteDummyReklamationen();
     $reklamationen = $apl->getReklamationenArray();
+    // vyhodit nulove reklamace
+    
     
     $returnArray = array(
 	"inputData"=>$inputData,

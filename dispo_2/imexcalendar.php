@@ -111,6 +111,7 @@ $smarty = new Smarty;
 			    'im_soll_time'=>$imRow['im_soll_time'],
 			    'vzkdsoll_import'=>$a->getVzKdSollImport($imRow['import']),
 			    'draggable'=>$draggable,
+			    'imauto'=>$a->isAuftragImRundlauf($imRow['import'],'I')?'imauto':'',
 			)
 			);
 	    }
@@ -138,7 +139,8 @@ $smarty = new Smarty;
 			    'fertig'=>$exRow['fertig'],
 			    'draggable'=>$draggable,
 			    'zielort'=>$exRow['zielort'],
-			    'exporttime'=>$exRow['export_time']
+			    'exporttime'=>$exRow['export_time'],
+			    'imauto'=>$a->isAuftragImRundlauf($exRow['export'],'E')?'imauto':'',
 			)
 			);
 	    }

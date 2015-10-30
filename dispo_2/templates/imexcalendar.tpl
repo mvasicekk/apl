@@ -41,9 +41,9 @@
 		</th>
 		
 		{foreach from=$kundenArray item=kunde key=kundenr}
-		    <td id="tag_{$tag.datum}_{$kundenr}" class="kundeTagBox droppable">{foreach from=$importeDatumArray[$tagdatum][$kundenr] item=import}<div title="BestellNr:{$import.bestellnr}" id="im_{$import.import}" class="importnr {$import.draggable}">Im<b>{$import.import}</b>/{$import.im_soll_time}<br>IM:vzkd&nbsp;{$import.vzkdsoll_import}</div>{/foreach}
+		    <td id="tag_{$tag.datum}_{$kundenr}" class="kundeTagBox droppable">{foreach from=$importeDatumArray[$tagdatum][$kundenr] item=import}<div title="BestellNr:{$import.bestellnr}" id="im_{$import.import}" class="importnr {$import.draggable} {$import.imauto}">Im<b>{$import.import}</b>/{$import.im_soll_time}<br>IM:vzkd&nbsp;{$import.vzkdsoll_import}</div>{/foreach}
 			{if count($importeDatumArray[$tagdatum][$kundenr])>0}<br>{/if}
-			{foreach from=$exporteDatumArray[$tagdatum][$kundenr] item=export}<div title="{$export.zielort}" id="ex_{$export.export}" class="selectable exportnr {$export.draggable} {$export.auslief} {$export.fertig}">Ex<b>{$export.export}</b>/{$export.exporttime}<br>{$export.zielort}<br>Rest:<b>{$export.vzkdrest}</b></div>{/foreach}
+			{foreach from=$exporteDatumArray[$tagdatum][$kundenr] item=export}<div title="{$export.zielort}" id="ex_{$export.export}" class="selectable exportnr {$export.draggable} {$export.auslief} {$export.fertig} {$export.imauto}">Ex<b>{$export.export}</b>/{$export.exporttime}<br>{$export.zielort}<br>Rest:<b>{$export.vzkdrest}</b></div>{/foreach}
 		    </td>
 		{/foreach}
 	    </tr>

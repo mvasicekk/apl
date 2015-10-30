@@ -431,3 +431,8 @@ table.tagsummetable td.summinvalue{
     font-weight: bold;
     font-size: 22px;
 }
+
+
+div.imauto{
+    border:2px solid blue;
+}
