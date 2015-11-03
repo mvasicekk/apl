@@ -113,7 +113,7 @@ if ($imex == 'im') {
     $targetTD = "";
     if (is_array($importeDatumArray[$datumVon][$kundeVon])) {
 	foreach ($importeDatumArray[$datumVon][$kundeVon] as $import) {
-	    $targetTD.="<div title='BestellNr:".$import['bestellnr']."' id='im_" . $import['import'] . "' class='importnr ".$import['draggable']."'>Im<b>" . $import['import'] . "</b>/" . $import['im_soll_time'] . "<br>IM:vzkd&nbsp;".$import['vzkdsoll_import']."</div>";
+	    $targetTD.="<div title='BestellNr:".$import['bestellnr']."' id='im_" . $import['import'] . "' class='importnr ".$import['draggable']." ".$import['imauto']."'>Im<b>" . $import['import'] . "</b>/" . $import['im_soll_time'] . "<br>IM:vzkd&nbsp;".$import['vzkdsoll_import']."</div>";
 	}
 	if (count($importeDatumArray[$datumVon][$kundeVon]) > 0) {
 	    $targetTD.="<br>";
@@ -121,7 +121,7 @@ if ($imex == 'im') {
     }
     if (is_array($exporteDatumArray[$datumVon][$kundeVon])) {
 	foreach ($exporteDatumArray[$datumVon][$kundeVon] as $export) {
-	    $targetTD.="<div id='ex_" . $export['export'] . "' class='exportnr " . $export['draggable'] . " " . $export['auslief'] . " " . $export['fertig'] . "'>Ex<b>" . $export['export'] . "</b>/" . $export['exporttime'] . "<br>" . $export['zielort'] . "<br>Rest:<b>".$export['vzkdrest']."</b></div>";
+	    $targetTD.="<div id='ex_" . $export['export'] . "' class='exportnr " . $export['draggable'] . " " . $export['auslief']. " " . $export['imauto'] . " " . $export['fertig'] . "'>Ex<b>" . $export['export'] . "</b>/" . $export['exporttime'] . "<br>" . $export['zielort'] . "<br>Rest:<b>".$export['vzkdrest']."</b></div>";
 	}
     }
     

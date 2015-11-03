@@ -450,6 +450,15 @@ class AplDB {
 	    return FALSE;
 	}
     }
+    
+    /**
+     * 
+     * @param type $id
+     */
+    public function getPayloadInfo($id){
+	$sql.="select * from drundlaufimex where id='$id'";
+	return $this->getQueryRows($sql);
+    }
     /**
      * 
      * @param type $id
@@ -1218,6 +1227,14 @@ public function getRechnungDatums($rechnung) {
         return $ma_rechnr;
     }
 
+    /**
+     * 
+     * @return type
+     */
+    public function getAnlagenTypen(){
+	$sql.=" select * from anlagentypen order by beschreibung";
+	return $this->getQueryRows($sql);
+    }
     /**
      *
      * @return type 

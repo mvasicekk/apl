@@ -8,6 +8,13 @@ $apl = AplDB::getInstance();
     $id = substr($lid, strpos($lid,'_')+1);
     $rundlaufid = substr($rid, strpos($rid,'_')+1);
     
+    $payloadInfoA = $apl->getPayloadInfo($id);
+    if($payloadInfoA!==NULL){
+	$payloadInfo = $payloadInfoA[0];
+	$imex = $payloadInfo['imex']=='E'?'ex':'im';
+	$imexDivToUpdate = $imex.'_'.$payloadInfo['auftragsnr'];
+    }
+    
     $apl->deletePayloadRundlauf($id,$rundlaufid);
     
     $imexArray = $apl->getRundlaufImExArray($rundlaufid);
@@ -33,6 +40,7 @@ $apl = AplDB::getInstance();
     }
 
 $returnArray = array(
+	'imexDivToUpdate'=>$imexDivToUpdate,
 	'lid'=>$lid,
 	'id'=>$id,
 	'rundlaufid'=>$rundlaufid,

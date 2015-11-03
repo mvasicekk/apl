@@ -34,7 +34,7 @@ $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
 $params="";
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "Dxxx - Frachtbrief - Speditionauftrag", $auftragInfo->auftragsnr);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D610 - Frachtbrief - Speditionauftrag", $auftragInfo->auftragsnr);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -50,7 +50,7 @@ $pdf->SetAutoPageBreak(TRUE,15);
 
 $pdf->setPrintHeader(TRUE);
 $pdf->setPrintFooter(TRUE);
-
+$pdf->setCellPaddings(3, 1, 3, 1);
 //$pdf->setPrintHeader(false);
 //$pdf->setPrintFooter(false);
 
@@ -127,10 +127,12 @@ $pdf->AddPage();
 //1
 $fill = TRUE;
 $pdf->SetFont("FreeSans", "B", 6);
+$pdf->setCellPaddings(1, 0, 0, 0);
 $pdf->SetFillColor(230, 230, 230);
 $pdf->MultiCell(90, 3, "Odesílatel (jméno, adresa, země) / Absender (Name, Adresse, Land)", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
-$pdf->MultiCell(0, 3, "EX", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
+$pdf->MultiCell(0, 3, "FrachtbriefNr.", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->Ln(3);
+$pdf->setCellPaddings(3, 1, 3, 1);
 $pdf->SetFont("FreeSans", "B", 8);
 $pdf->MultiCell(90, 27, "Abydos s.r.o.\nHazlov 247\nCZ 351 32 Hazlov", 'LRBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
 $pdf->SetFont("FreeSans", "B", 11);
@@ -140,11 +142,13 @@ $pdf->Ln(27);
 //2
 $fill = TRUE;
 $pdf->SetFont("FreeSans", "B", 6);
+$pdf->setCellPaddings(1, 0, 0, 0);
 $pdf->SetFillColor(230, 230, 230);
 $pdf->MultiCell(90, 3, "Příjemce (jméno, adresa, země) / Empfānger (Name, Adresse, Land)", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->MultiCell(0, 3, "Dopravce (jméno, adresa, země) / Frachtfūhrer (Name, Anschrift, Land)", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->Ln(3);
 $pdf->SetFont("FreeSans", "", 8);
+$pdf->setCellPaddings(3,1,3,1);
 $obsah = $zielOrtInfo->firma;
 if(intval($zielOrtInfo->standard)!=10){
     $obsah.= " in Name ".$zielOrtInfoStandard->firma;
@@ -161,14 +165,16 @@ $pdf->Ln(27);
 //3
 $fill = TRUE;
 $pdf->SetFont("FreeSans", "B", 6);
+$pdf->setCellPaddings(1, 0, 1, 0);
 $pdf->SetFillColor(230, 230, 230);
-$pdf->MultiCell(20, 2*3, "Počet\nAnzahl", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
+$pdf->MultiCell(20, 2*3, "Počet\nAnzahl", 'LRBT', 'R', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->MultiCell(55, 2*3, "Druh obalu\nArt der Verpackung", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->MultiCell(70, 2*3, "Označení zboží\nBezeichnung des Gutes", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
-$pdf->MultiCell(0, 2*3, "Hr.hmotnost v kg\nBruttogewicht kg", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
+$pdf->MultiCell(0, 2*3, "Hr.hmotnost v kg\nBruttogewicht kg", 'LRBT', 'R', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->Ln(2*3);
 
 $pdf->SetFont("FreeSans", "", 8);
+$pdf->setCellPaddings(3,1,3,1);
 $pocetBeh = 0;
 foreach ($palArray as $pal){
     if(strlen(trim($pal->behname))>0){
@@ -198,19 +204,23 @@ $pdf->Ln(7*$zbyvaRadku);
 $obsah = '';
 $pdf->MultiCell(20+55+70, 7, $obsah, 'LB', 'R', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
 $obsah = number_format($rundlaufInfo->bruttogewicht,0,',',' ');
+$pdf->SetFont("FreeSans", "B", 8);
 $pdf->MultiCell(0, 7, $obsah, 'LRBT', 'R', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
 $pdf->Ln(7);
 
 //4
 $fill = TRUE;
 $pdf->SetFont("FreeSans", "B", 6);
+$pdf->setCellPaddings(1, 0, 0, 0);
 $pdf->SetFillColor(230, 230, 230);
 $pdf->MultiCell(90, 3, "Pokyny odesílatele / Anweisungen des Absenders", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->MultiCell(0, 3, "Místo a datum vystavení / Ort und Datum der Ausfertigung", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->Ln(3);
 $pdf->SetFont("FreeSans", "", 8);
+$pdf->setCellPaddings(3,1,3,1);
 $obsah = $pokynyProOdesilatele;
-$pdf->MultiCell(90, 30, $obsah, 'LRBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
+$pdf->SetFont("FreeSans", "B", 8);
+$pdf->MultiCell(90, 30, $obsah, 'LRBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'T', TRUE);
 $pdf->SetFont("FreeSans", "", 8);
 $obsah = "Hazlov, ".date('d.m.Y');
 $pdf->MultiCell(45, 30, $obsah, 'LBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'B', TRUE);
@@ -222,18 +232,20 @@ $pdf->Ln(30);
 $fill = TRUE;
 $pdf->SetFont("FreeSans", "B", 6);
 $pdf->SetFillColor(230, 230, 230);
+$pdf->setCellPaddings(1, 0, 0, 0);
 $pdf->MultiCell(90, 3, "SPZ / Amtl. Kennzeichnung", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->MultiCell(0, 3, "Datum, podpis a razítko dopravce / Datum, Unterschrift und Stempeldes Frachtfūhrers", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->Ln(3);
 $pdf->SetFont("FreeSans", "", 8);
+$pdf->setCellPaddings(3,1,3,1);
 $obsah = "Vozidlo - tahač / Kfz";
 $obsah.= "\nPřívěs - návěs / Anhānger";
 $obsah.= "\nJméno řidiče / Name des Fahrers";
-$pdf->MultiCell(45, 30, $obsah, 'LBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
+$pdf->MultiCell(50, 30, $obsah, 'LBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'M', TRUE);
 $obsah = $rundlaufInfo->lkw_kz;
 $obsah.= "\n".$rundlaufInfo->naves_kz;
 $obsah.= "\n".$rundlaufInfo->fahrername;
-$pdf->MultiCell(45, 30, $obsah, 'RBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
+$pdf->MultiCell(40, 30, $obsah, 'RBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'M', TRUE);
 $pdf->SetFont("FreeSans", "", 8);
 $obsah = '';
 $pdf->MultiCell(0, 30, $obsah, 'LRBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'B', TRUE);
@@ -243,12 +255,14 @@ $pdf->Ln(30);
 $fill = TRUE;
 $pdf->SetFont("FreeSans", "B", 6);
 $pdf->SetFillColor(230, 230, 230);
+$pdf->setCellPaddings(1, 0, 0, 0);
 $pdf->MultiCell(90, 3, "Poznámka / Bemerkung", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->MultiCell(0, 3, "Datum, podpis a razítko příjemce / Datum, Unterschrift und Stempel des Empfāngers", 'LRBT', 'L', $fill, 0, '', '', TRUE, 0, FALSE, TRUE, 3, 'B', TRUE);
 $pdf->Ln(3);
+$pdf->setCellPaddings(3,1,3,1);
 $pdf->SetFont("FreeSans", "", 8);
 $obsah = $rundlaufInfo->bemerkung;
-$pdf->MultiCell(90, 30, $obsah, 'LBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'M', TRUE);
+$pdf->MultiCell(90, 30, $obsah, 'LBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'T', TRUE);
 $obsah = '';
 $pdf->MultiCell(0, 30, $obsah, 'LRBT', 'L', FALSE, 0, '', '', TRUE, 0, FALSE, TRUE, 7, 'B', TRUE);
 $pdf->Ln(30);

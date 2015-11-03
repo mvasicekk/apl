@@ -172,20 +172,20 @@
 		<div style="display:{$display_sec.branydiv};width:100%" id="branydiv">
 		    <input type="hidden" id="userinfo" value="{$user}" />
 		    <div class="container-fluid">
-			<div class="row">
+			{*<div class="row">
 			    <div class="col-xs-12 text-center">
 				<span id="sock_status" class="badge">not connected</span>
 			    </div>
-			</div>
+			</div>*}
 			<div class="row">
 			    <div class="col-md-4 text-center">
 				<input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
 			    </div>
 			    <div class="col-md-4 text-center">
-				<button class="btn btn-block btn-success" id="brana1Button">horní brana</button>
+				<button class="btn btn-block btn-default" id="brana1Button">horní brana</button>
 			    </div>
 			    <div class="col-md-4 text-center">
-				<button class="btn btn-block btn-success" id="brana2Button">dolní brana</button>
+				<button class="btn btn-block btn-default" id="brana2Button">dolní brana</button>
 			    </div>
 			</div>
 		    </div>

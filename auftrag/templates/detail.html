@@ -138,12 +138,14 @@
 	    <a ng-show="securityInfo.showArray.d607i" href="../d607i/d607i.php" class="btn btn-xs btn-block btn-info">D607i</a>
 	    <a ng-show="securityInfo.showArray.liefavis" href="../get_parameters.php?popisky=Plan (ohne P)&promenne=termin!number&values={{auftragInfo.auftragsnr}}&report=D610" class="btn btn-xs btn-block btn-info">Liefer AVIS</a>
 	    <!--<a href="../get_parameters.php?popisky=Export&promenne=export&values={{auftragInfo.auftragsnr}}&report=D606" class="btn btn-xs btn-block btn-info">D606 Export</a>-->
-	    <a href="../get_parameters.php?popisky=Geplant mit von;Geplant mit bis;Neue Seite nach Teil;Teil;Reporttyp,*RA&promenne=von;bis;teilpager;teil;reporttyp&values={{auftragInfo.auftragsnr}};{{auftragInfo.auftragsnr}};0;*;Detail,Detail mit Summen,nur Summen,Info an Kunden&report=D607" class="btn btn-xs btn-block btn-info">D607 Plan</a>
+	    <!--<a href="../get_parameters.php?popisky=Geplant mit von;Geplant mit bis;Neue Seite nach Teil;Teil;Reporttyp,*RA&promenne=von;bis;teilpager;teil;reporttyp&values={{auftragInfo.auftragsnr}};{{auftragInfo.auftragsnr}};0;*;Detail,Detail mit Summen,nur Summen,Info an Kunden&report=D607" class="btn btn-xs btn-block btn-info">D607 Plan</a>-->
 	</div>
 	<div class="col-sm-3">
 	    <a ng-show="securityInfo.showArray.exportfullen" href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>
 	    <a ng-show="securityInfo.showArray.exportloeschen" href="../dauftr/export_fullen/export_loeschen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export loeschen</a>
 	    <a ng-show="securityInfo.showArray.exporttablo" href="../dauftr/exporttablo.php?export={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Exporttablo</a>
+	    <a ng-show="securityInfo.showArray.exporttablo" href="../cmr/cmr.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">CMR</a>
+	    
 	    <!--<a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710" class="btn btn-xs btn-block btn-info">D710 - Lieferungsuebersicht</a>-->
 	    <!--<a href="../get_parameters.php?popisky=Export (leer = Blanko );Teil;Termin;Text,*RA;Wassermarke,*RA;Format,*RA&promenne=export;teil;termin;popisek;watermark;format&values={{auftragInfo.auftragsnr}};*;{{auftragInfo.ausliefer_datum}};FREIGABE,ZWEIFLER;nein,ja;6x auf A4,2x auf A4&report=D64X" class="btn btn-xs btn-block btn-info">D6XX - Freigabezettel</a>-->
 	</div>

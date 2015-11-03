@@ -487,6 +487,7 @@ function updateDeletePayloadId(data){
     $('#ab_aby_soll_time_'+data.rundlaufid).val(data.ab_aby_soll_time_vorschlag);
     
     $('#an_kunde_ort_td_'+data.rundlaufid).html(data.anKundeOrtDiv);
+    $('#'+data.imexDivToUpdate).removeClass('imauto');
     makeLkwPayloadDraggable(data);
     
 }
@@ -635,6 +636,8 @@ function zielortChange(event){
 
 
 function updateDroppedToLkw(data){
+    $('#'+data.imexDivToUpdate).addClass('imauto');
+    data.imexDivToUpdate = '';
     updateDeletePayloadId(data);
 }
 

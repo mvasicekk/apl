@@ -21,6 +21,10 @@ $insertid = $a->addRundlaufPayload($rundlaufid,$ie,$auftragsnr);
 $ab_aby_soll_datetime = strtotime('2100-01-01');
 $ab_aby_soll_datetimeVorschlag = "";
 
+$imexDivToUpdate = $imex.'_'.$auftragsnr;
+
+$imexArrayToUpdate = array();
+
 if($insertid>0){
     $imexArray = $apl->getRundlaufImExArray($rundlaufid);
     if($imexArray!==NULL){
@@ -30,6 +34,8 @@ if($insertid>0){
 	    $payload = $imex['imex'].$imex['auftragsnr'];
 	    $payloadId = $imex['id'];
 	    $ie=$imex['imex'];
+	    $prefix = $ie=='E'?'ex':'im';
+	    array_push($imexArrayToUpdate,$prefix.$imex['auftragsnr']);
 	    if($pocet>3){
 		$payloadDiv.="<br>";
 	    }
@@ -79,6 +85,7 @@ if($insertid>0){
 }
 
 $returnArray = array(
+    'imexDivToUpdate'=>$imexDivToUpdate,
     'anKundeOrtDiv'=>$anKundeOrtDiv,
     'an_kunde_ort_array'=>$anKundeOrtArray,
     'ab_aby_soll_date_vorschlag'=>$ab_aby_soll_dateVorschlag,

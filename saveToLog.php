@@ -11,7 +11,7 @@ $ar = 0;
 $u = $a->get_user_pc();
 $login = $_SESSION['user'];
 
-$user = $u."($pin)";
+$user = $u."( ".md5($pin).  " )";
 $action = "pristup k brane ".$id;
 
 // overit pin

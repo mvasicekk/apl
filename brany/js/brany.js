@@ -18,6 +18,7 @@ function openBrana(e){
     var iD = $(this).attr('id');
     var u = $('#userinfo').val();
     var pin = $('#branaPin').val();
+    $('#branaPin').val('');
     
     console.log(e+" "+iD);
     	// ulozit info o stisknuti do logu
@@ -32,6 +33,7 @@ function openBrana(e){
 		    if((data.pinOk===true) && (sock)){
 			var messageToSend = JSON.stringify({msg:"branaButtonClicked",id:iD,loginfo:u});
 			sock.send(messageToSend);
+			console.log('pin was ok sending message to nodered');
 		    }
             },
             'json'
@@ -90,13 +92,25 @@ function startSock(){
  * @returns {undefined}
  */
 function setOnOff(id, stav) {
+    console.log(Date());
+    var buttonId = '';
+    
+    if(id=='pi_40'){
+	//brana1 zavreno
+	buttonId = 'brana1Button';
+    }
+    if(id=='pi_36'){
+	//brana2 zavreno
+	buttonId = 'brana2Button';
+    }
+    
     if (stav == 'on') {
-	$('#' + id).addClass('on');
-	$('#' + id).removeClass('off');
+	$('#' + buttonId).addClass('on');
+	$('#' + buttonId).removeClass('off');
     }
     else {
-	$('#' + id).addClass('off');
-	$('#' + id).removeClass('on');
+	$('#' + buttonId).addClass('off');
+	$('#' + buttonId).removeClass('on');
     }
 }
 /**
