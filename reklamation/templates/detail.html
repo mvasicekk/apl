@@ -3,6 +3,10 @@
     <button type="button" class="btn btn-danger">Neu</button>
 </nav>-->
 
+<!--<p>
+    {{rekl|json}}
+</p>-->
+
 <div class="container-fluid">
 <!--    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseDebug" aria-expanded="false" aria-controls="collapseDebug">
 	debuginfo
@@ -46,6 +50,7 @@
 				    ng-disabled="disabled" 
 				    reset-search-input="false" 
 				    theme="bootstrap"
+				    on-select="kundeOnSelect($item, $model)"
 				>
 				<ui-select-match placeholder="Kundenr oder name">{{$select.selected.kunde}}</ui-select-match>
 				<ui-select-choices repeat="p in kundeArray track by $index"
@@ -649,7 +654,7 @@
 				<tr id='uploader'>
 				    <th colspan="2">{{rekl.savePath|limitTo:255:10}}<div id='filelist'></div></th>
 			    <!--<th><button ng-show="rekl.rekl_erledigt_am1==null" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>-->
-			    <th><button id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+			    <th><button ng-disabled="rekl.kunde==0 || rekl.teil=='' || rekl.rekl_nr==''" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
 			    </tr>
 			    <tr>
 				<th>name</th>

@@ -212,9 +212,15 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 
 	$scope.teilOnSelect = function($item, $model){
 	    console.log($item);
+	    $scope.rekl.teil = $scope.teil.selected.teil;
 	    $http.get('./getTeilGew.php?teil=' + $item.teil).success(function (data) {
 		    $scope.rekl.teilgew = parseFloat(data.tia.Gew);
 		});
+	}
+	
+	$scope.kundeOnSelect = function($item, $model){
+	    console.log($item);
+	    $scope.rekl.kunde = $scope.kunde.selected.kunde;
 	}
 	
 	$scope.reklSave = function () {

@@ -1437,7 +1437,7 @@ public function istExportiert($import, $impal){
      */
     public function deleteDummyReklamationen($id=NULL){
 	if($id===NULL){
-	    $sql = "delete from dreklamation where kunde=0 and kd_rekl_nr is null and kd_kd_rekl_nr is null and teil=''";
+	    $sql = "delete from dreklamation where kunde=0 and teil=''";
 	    $this->query($sql);
 	}
     }
