@@ -109,7 +109,8 @@ while ($row = mysql_fetch_array($res)) {
 $smarty->assign("zakazkyEX", $zakazkyEX);
 
 //seznam souboru pro tv
-$cesta = $apl->getGdatPath()."Aby 10 Sonstiges - Ostatní/Televize Jidelna/Video/Aktual video";
+//Aby 18 Mitarbeiter -\05 Projekte - Projekty\Projekt TV Abydos\Aktual video\
+$cesta = $apl->getGdatPath()."Aby 18 Mitarbeiter -/05 Projekte - Projekty/Projekt TV Abydos/Aktual video";
 $files = $apl->getFilesForPath($cesta);
 $smarty->assign("tvFiles", $files);
 

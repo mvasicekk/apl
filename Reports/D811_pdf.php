@@ -92,7 +92,7 @@ $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
-$params="";
+//$params="";
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D811 - Rundlauf", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
@@ -232,10 +232,17 @@ function zapati_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 	    'R', 1
     );
     
+    //dummy
+    $obsah = "";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    'R', 1
+    );
+    
     $obsah = getValueForNode($childs, 'betrag');
     $obsah = number_format($obsah, 2, ',', ' ');
     $pdf->Cell(
-	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    20, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
 	    'R', 1
     );
     
@@ -265,8 +272,10 @@ function imex_radek($pdf, $cells, $childs, $vyskaRadku) {
 
     $imex = getValueForNode($childs, 'imex');
     $auftragsnr = getValueForNode($childs, 'auftragsnr');
-
+    $frachtExp = $a->getFrachtForExport($auftragsnr);
     $palArrayA = $a->getBehaelterInExport($auftragsnr);
+    $auftragInfo = $a->getAuftragInfoArray($auftragsnr);
+    
     $palObsah = "";
     if($palArrayA!==NULL){
 	foreach ($palArrayA as $pal){
@@ -305,6 +314,15 @@ function imex_radek($pdf, $cells, $childs, $vyskaRadku) {
 	    'L', 0
     );
 
+    if($imex=='E'){
+	$obsah = number_format($frachtExp,2,',',' ').$auftragInfo[0]['waehr_kz'];
+	$pdf->Cell(
+	    20, $vyskaRadku, $obsah, '', 0, // odradkovat
+	    'R', 0
+	);
+    }
+    
+    
     $pdf->SetFont("FreeSans", "I", 7);
     if(strlen($zielort)>0){
 	$obsah = $palObsah;

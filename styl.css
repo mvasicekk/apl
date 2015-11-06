@@ -244,10 +244,27 @@ td.sestavypopis
 	font-weight:bold;
 }
 
+button.closed{
+    background-color:red;
+}
+
+button.opening{
+    background-color:orange;
+}
+
+button.open{
+    background-color:lightgreen;
+}
+
+
 button.on{
     background-color:orange;
 }
 
 button.off{
     background-color:red;
+}
+
+.btn-default:focus,.btn:focus{
+    outline:none;
 }

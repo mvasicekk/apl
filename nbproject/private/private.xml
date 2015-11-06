@@ -4,10 +4,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/apl.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/templates/index.tpl</file>
-            <file>file:/home/jr/NetBeansProjects/apl/styl.css</file>
-            <file>file:/home/jr/NetBeansProjects/apl/brany/js/brany.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/D811_xml.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/reklamation/templates/detail.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/CMR_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/D811_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/reports.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/cmr/getAuftragInfo.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/reklamation/js/app.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/S220_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/reklamation/js/controllers.js</file>
         </group>
     </open-files>
 </project-private>
