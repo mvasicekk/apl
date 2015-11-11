@@ -465,6 +465,10 @@ function updatelkwDeleteClick(data){
     }
     //$('#'+data.th).html(data.tagDiv);
     
+    for(ie in data.imexArrayToUpdate){
+	console.log('remove imauto class for '+data.imexArrayToUpdate[ie]);
+	$('#'+data.imexArrayToUpdate[ie]).removeClass('imauto');
+    }
     $('.lkwdraggable').unbind('dblclick');
     $('.lkwdraggable').bind('dblclick',lkwDblClicked);
 //    $('.lkwdraggable').draggable({
@@ -483,10 +487,18 @@ function updateDeletePayloadId(data){
     $('div.payloadList').html(data.payloadDiv);
     $('div.lkw_'+data.rundlaufid).html(data.lkwDiv);
     console.log(data);
-    $('#ab_aby_soll_date_'+data.rundlaufid).val(data.ab_aby_soll_date_vorschlag);
-    $('#ab_aby_soll_time_'+data.rundlaufid).val(data.ab_aby_soll_time_vorschlag);
+    if(data.exCount>0){
+	$('#ab_aby_soll_date_'+data.rundlaufid).val(data.ab_aby_soll_date_vorschlag);
+	$('#ab_aby_soll_time_'+data.rundlaufid).val(data.ab_aby_soll_time_vorschlag);
+    }
+    if(data.imCount>0){
+	$('#an_aby_soll_date_'+data.rundlaufid).val(data.an_aby_soll_date_vorschlag);
+	$('#an_aby_soll_time_'+data.rundlaufid).val(data.an_aby_soll_time_vorschlag);
+    }
     
-    $('#an_kunde_ort_td_'+data.rundlaufid).html(data.anKundeOrtDiv);
+    //$('#an_kunde_ort_td_'+data.rundlaufid).html(data.anKundeOrtDiv);
+    $('#an_kunde_div_'+data.rundlaufid).html(data.divAnKundeZielorte);
+    
     $('#'+data.imexDivToUpdate).removeClass('imauto');
     makeLkwPayloadDraggable(data);
     

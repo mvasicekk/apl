@@ -7,6 +7,9 @@
       ImExCalendar
     </title>
 
+{*<link href="../brany/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="../brany/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+*}
 <link rel="stylesheet" href="./styl.css" type="text/css">
 <!--jQuery dependencies-->
 <link rel="stylesheet" href="../js/jquery-ui-1.10.4/themes/base/jquery-ui.css" />

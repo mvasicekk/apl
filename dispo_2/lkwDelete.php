@@ -1,14 +1,23 @@
 <?
-
 require_once '../db.php';
+require_once './commons.php';
+
 $apl = AplDB::getInstance();
 $a = $apl;
 
 $lid = $_POST['id'];
 $id = substr($lid, strpos($lid, '_') + 1);
 
-$ar = $apl->deleteRundlauf($id);
+
+
+$sectionA = getLkwFormDivs($id);
+
 $ar = $apl->deleteRundlaufImEx($id);
+$imexArrayToUpdate = $sectionA['imexArrayToUpdate'];
+
+
+$ar = $apl->deleteRundlauf($id);
+
 $th = $_POST['th'];
 
 $datum = substr($th, strrpos($th, '_') + 1);
@@ -69,6 +78,7 @@ foreach ($datumsToUpdate as $datum) {
 
 
 $returnArray = array(
+    'imexArrayToUpdate'=>$imexArrayToUpdate,
     'divsToUpdate' => $divsToUpdate,
     'datumsToUpdate' => $datumsToUpdate,
     'lid' => $lid,

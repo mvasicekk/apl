@@ -11,6 +11,10 @@ tr.endsection td{
     border-bottom: 2px solid black;
 }
 
+tr.startsection td{
+    border-top: 2px solid black;
+}
+
 table.formtable{
     width: 100%;
     border-collapse: collapse;
@@ -19,7 +23,7 @@ table.formtable{
 
 table.formtable input{
     border: none;
-    font-size: 0.7em;
+    font-size: 1.1em;
 }
 
 table.formtable td{
@@ -435,4 +439,8 @@ table.tagsummetable td.summinvalue{
 
 div.imauto{
     border:2px solid blue;
+}
+
+tr.header{
+    font-weight: bold;
 }

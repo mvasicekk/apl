@@ -1,6 +1,7 @@
 <?
 
 require_once '../db.php';
+require_once './commons.php';
 
 $target_id = $_POST['target_id'];
 $dropped_id = $_POST['dropped_id'];
@@ -23,50 +24,19 @@ $ab_aby_soll_datetimeVorschlag = "";
 
 $imexDivToUpdate = $imex.'_'.$auftragsnr;
 
-$imexArrayToUpdate = array();
-
 if($insertid>0){
-    $imexArray = $apl->getRundlaufImExArray($rundlaufid);
-    if($imexArray!==NULL){
-	$pocet=0;
-	$anKundeOrtArray = array();
-	foreach ($imexArray as $imex){
-	    $payload = $imex['imex'].$imex['auftragsnr'];
-	    $payloadId = $imex['id'];
-	    $ie=$imex['imex'];
-	    $prefix = $ie=='E'?'ex':'im';
-	    array_push($imexArrayToUpdate,$prefix.$imex['auftragsnr']);
-	    if($pocet>3){
-		$payloadDiv.="<br>";
-	    }
-	    if($ie=='E'){
-		// v pripade exportu muzu podle nejnizsiho ex_soll navrhnout ab_aby_soll_datetime
-		// take muzu navrhnout An Kunde Ort
-		$aI = $apl->getAuftragInfoArray($imex['auftragsnr']);
-		if($aI!==NULL){
-		    $ex_soll_datetime = $aI[0]['ex_soll_datetime'];
-		    $exStime = strtotime($ex_soll_datetime);
-		    if($exStime<$ab_aby_soll_datetime){
-			$ab_aby_soll_datetime = $exStime;
-		    }
-		    $anKundeOrtArray[$aI[0]['zielort_id']]=$imex['auftragsnr'];
-		}
-	    }
-	    $payloadDiv.="<div id='payloadId_$payloadId' class='lkwPayLoad payLoad_$ie'>$payload</div>";
-	    $pocet++;
-	}
-	$ab_aby_soll_dateVorschlag = date('d.m.Y',$ab_aby_soll_datetime);
-	$ab_aby_soll_timeVorschlag = date('H:i',$ab_aby_soll_datetime);
-	//an kunde ort div, pripravit
-	$anKundeOrtDiv = "<select id='an_kunde_ort_id_$rundlaufid'>";
-	foreach ($anKundeOrtArray as $zielort_id=>$ex){
-	    $zielortName = $apl->getZielortName($zielort_id);
-	    $selected = $zielort_id==$lkwInfoArray[0]['an_kunde_ort_id']?'selected':'';
-	    $anKundeOrtDiv.= "<option $selected value='".$zielort_id."'>$zielortName</option>";
-	}
-	$anKundeOrtDiv.= "</select>";
-    }
-
+    $sectionA = getLkwFormDivs($rundlaufid);
+    $exCount = $sectionA['exCount'];
+    $imCount = $sectionA['imCount'];
+    $divAnKundeZielorte = $sectionA['divAnKundeZielorte'];
+    $ab_aby_soll_dateVorschlag = $sectionA['ab_aby_soll_dateVorschlag'];
+    $ab_aby_soll_timeVorschlag = $sectionA['ab_aby_soll_timeVorschlag'];
+    $an_aby_soll_dateVorschlag = $sectionA['an_aby_soll_dateVorschlag'];
+    $an_aby_soll_timeVorschlag = $sectionA['an_aby_soll_timeVorschlag'];
+    $payloadDiv = $sectionA['payloadDiv'];
+    $imexArrayToUpdate = $sectionA['imexArrayToUpdate'];
+    $imexArray = $sectionA['imexArray'];
+    
     $lkwDiv = "";
     $imexStr = "";
     if($imexArray!==NULL){
@@ -75,8 +45,10 @@ if($insertid>0){
 	    $auftrStr = substr($imex['auftragsnr'],4);
 	    if($pocet>1){
 		$imexStr.="<br>";
+		$pocet = 0;
 	    }
 	    $imexStr.= "<span style='border:1px solid black;padding:0.1em;' class='payLoad_".$imex['imex']."'>".$auftrStr."</span>";
+	    $pocet++;
 	}
 	$rliA= $apl->getRundlaufInfoArray($rundlaufid);
 	$rli = $rliA[0];
@@ -85,11 +57,16 @@ if($insertid>0){
 }
 
 $returnArray = array(
+    'exCount'=>$exCount,
+    'imCount'=>$imCount,
+    'divAnKundeZielorte'=>$divAnKundeZielorte,
     'imexDivToUpdate'=>$imexDivToUpdate,
     'anKundeOrtDiv'=>$anKundeOrtDiv,
     'an_kunde_ort_array'=>$anKundeOrtArray,
     'ab_aby_soll_date_vorschlag'=>$ab_aby_soll_dateVorschlag,
     'ab_aby_soll_time_vorschlag'=>$ab_aby_soll_timeVorschlag,
+    'an_aby_soll_date_vorschlag'=>$an_aby_soll_dateVorschlag,
+    'an_aby_soll_time_vorschlag'=>$an_aby_soll_timeVorschlag,
     'target_id' => $target_id,
     'dropped_id' => $dropped_id,
     'ie'=>$ie,

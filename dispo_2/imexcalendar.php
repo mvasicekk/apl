@@ -77,14 +77,14 @@ $smarty = new Smarty;
 		    }
 		    array_push($lkwDatumArray[$ab_aby], $lkwRow);
 		}
-		if(strlen(trim($an_aby))>0){
-		    if(!is_array($lkwDatumArray[$an_aby])){
-			$lkwDatumArray[$an_aby] = array();
-		    }
-		    if($ab_aby!=$an_aby){
-			array_push($lkwDatumArray[$an_aby], $lkwRow);
-		    }
-		}
+//		if(strlen(trim($an_aby))>0){
+//		    if(!is_array($lkwDatumArray[$an_aby])){
+//			$lkwDatumArray[$an_aby] = array();
+//		    }
+//		    if($ab_aby!=$an_aby){
+//			array_push($lkwDatumArray[$an_aby], $lkwRow);
+//		    }
+//		}
 	    }
 	}
 	

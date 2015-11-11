@@ -37,6 +37,14 @@ $a = $apl;
 	    $a->updateRundlaufField('ab_aby_soll_datetime',$ab_aby_soll_datetime,$id);
 	}
 	
+	// an_aby_soll_datetime ------------------------------------------------
+	$an_aby_soll_date = $fa['an_aby_soll_date'];
+	$an_aby_soll_time = $fa['an_aby_soll_time'];
+	$an_aby_soll_datetime = $apl->datetimeOrNull($an_aby_soll_date,$an_aby_soll_time);
+	if($an_aby_soll_datetime!==NULL){
+	    $a->updateRundlaufField('an_aby_soll_datetime',$an_aby_soll_datetime,$id);
+	}
+	
 	// ab_aby_ist_datetime -------------------------------------------------
 	$ab_aby_ist_date = $fa['ab_aby_ist_date'];
 	$ab_aby_ist_time = $fa['ab_aby_ist_time'];
@@ -102,9 +110,15 @@ $a = $apl;
 	    $imexArray = $a->getRundlaufImExArray($lkwRow['id']);
 	    $imexStr = "";
 	    if ($imexArray !== NULL) {
+		$pocet=0;
 		foreach ($imexArray as $imex) {
 		    $auftrStr = substr($imex['auftragsnr'], 4);
+		    if($pocet>1){
+			$imexStr.="<br>";
+			$pocet = 0;
+		    }
 		    $imexStr.= "<span style='border:1px solid black;padding:0.1em;' class='payLoad_" . $imex['imex'] . "'>" . $auftrStr . "</span>";
+		    $pocet++;
 		}
 	    }
 

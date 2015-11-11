@@ -12,8 +12,8 @@ $(document).ready(function(){
 
 
 var stavyPinu = {
-    pi_32:undefined,	//brana2 otevreno = on
-    pi_36:undefined,	//brana2 zavreno = off
+    pi_32:undefined,	//brana2 otevreno = on, magnet na kridlech vrat
+    pi_36:undefined,	//brana2 zavreno = off, magnet na stredu kridel
     pi_38:undefined,	//brana1 otevreno = on
     pi_40:undefined	//brana1 zavreno = off
 };

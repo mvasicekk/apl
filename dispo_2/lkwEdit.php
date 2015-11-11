@@ -1,5 +1,7 @@
 <?
 require_once '../db.php';
+require_once './commons.php';
+
 $apl = AplDB::getInstance();
 
     $lid = $_POST['id'];
@@ -18,6 +20,16 @@ $apl = AplDB::getInstance();
 //    $imSollDatum = substr($kundeBoxId, strpos($kundeBoxId, '_')+1,10);
 //    $kunde = substr($kundeBoxId, strrpos($kundeBoxId, '_')+1);
 //    
+    
+    $sectionA = getLkwFormDivs($id);
+//    $exCount = $sectionA['exCount'];
+    $divAnKundeZielorte = $sectionA['divAnKundeZielorte'];
+//    $ab_aby_soll_dateVorschlag = $sectionA['ab_aby_soll_dateVorschlag'];
+//    $ab_aby_soll_timeVorschlag = $sectionA['ab_aby_soll_timeVorschlag'];
+    $payloadDiv = $sectionA['payloadDiv'];
+//    $imexArrayToUpdate = $sectionA['imexArrayToUpdate'];
+    $imexArray = $sectionA['imexArray'];
+
     $div = "";
     if ($lkwInfoArray !== NULL) {
     $lkw = $lkwInfoArray[0];
@@ -27,90 +39,52 @@ $apl = AplDB::getInstance();
     
     $div.="<h4 style='margin:0;'>LKW - $operace</h4>";
     $div.="<div class='payloadList'>";
-    $imexArray = $apl->getRundlaufImExArray($id);
-    if($imexArray!==NULL){
-	$anKundeOrtArray = array();
-	foreach ($imexArray as $imex){
-	    $payload = $imex['imex'].$imex['auftragsnr'];
-	    $payloadId = $imex['id'];
-	    $ie=$imex['imex'];
-    	    if($ie=='E'){
-		// v pripade exportu muzu podle nejnizsiho ex_soll navrhnout ab_aby_soll_datetime
-		// take muzu navrhnout An Kunde Ort
-		$aI = $apl->getAuftragInfoArray($imex['auftragsnr']);
-		if($aI!==NULL){
-		    $anKundeOrtArray[$aI[0]['zielort_id']]=$imex['auftragsnr'];
-		}
-	    }
-	    $div.="<div id='payloadId_$payloadId' class='lkwPayLoad payLoad_$ie'>$payload</div>";
-	}
-	//an kunde ort div, pripravit
-	$divAnKundeOrtId= "<select id='an_kunde_ort_id_$id'>";
-	foreach ($anKundeOrtArray as $zielort_id=>$ex){
-	    $zielortName = $apl->getZielortName($zielort_id);
-	    $selected = $zielort_id==$lkwInfoArray[0]['an_kunde_ort_id']?'selected':'';
-	    $divAnKundeOrtId.= "<option $selected value='".$zielort_id."'>$zielortName</option>";
-	}
-	$divAnKundeOrtId.= "</select>";
-    }
+    
+    $div.=$payloadDiv;
     
     $div.="</div>";
     $div.="<table class='formtable'>";
     //abbfahrt Abydos
-    $div.="<tr>";
+    $div.="<tbody id='ab_aby_div_$id'>";
+    $div.="<tr class='header'>";
+	$div.="<td>Abfahrt Abydos</td>";
+	$div.="<td>Soll Tag/Zeit</td>";
+	$div.="<td>Ist Tag/Zeit</td>";
+    $div.="</tr>";
+    
+    $div.="<tr class='endsection'>";
     $div.="<td>";
     $div.= "Abfahrt Abydos - Ort";
     $div.="</td>";
-    $div.="<td>";
-    $div.="<input readonly type='text' id='ab_aby_ort_$id' maxlength='30' size='20' value='".$lkw['ab_aby_ort']."' />";
-    $div.="</td>";
-    $div.="</tr>";
-    
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Abfahrt Abydos - Soll Tag";
-    $div.="</td>";
+    //soll
     $div.="<td>";
     $dateValue = date('d.m.Y',strtotime($lkw['ab_aby_soll_datetime']));
-    $div.="<input class='datepicker' type='text' id='ab_aby_soll_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Abfahrt Abydos - Soll Zeit";
-    $div.="</td>";
-    $div.="<td>";
+    $div.="<input disabled='disabled' class='datepicker' type='text' id='ab_aby_soll_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="/";
     $dateValue = date('H:i',strtotime($lkw['ab_aby_soll_datetime']));
-    $div.="<input type='text' id='ab_aby_soll_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
+    $div.="<input disabled='disabled' type='text' id='ab_aby_soll_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
     $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Abfahrt Abydos - Ist Tag";
-    $div.="</td>";
+    
+    //ist
     $div.="<td>";
     $dateValue = date('d.m.Y',strtotime($lkw['ab_aby_ist_datetime']));
-    $div.="<input class='datepicker' type='text' id='ab_aby_ist_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr class='endsection'>";
-    $div.="<td>";
-    $div.= "Abfahrt Abydos - Ist Zeit";
-    $div.="</td>";
-    $div.="<td>";
+    $div.="<input disabled='disabled' class='datepicker' type='text' id='ab_aby_ist_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="/";
     $dateValue = date('H:i',strtotime($lkw['ab_aby_ist_datetime']));
-    $div.="<input type='text' id='ab_aby_ist_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
+    $div.="<input disabled='disabled' type='text' id='ab_aby_ist_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
     $div.="</td>";
-    $div.="</tr>";
 
+    $div.="</tr>";
+    
+    $div.="</tbody>";
+    //--------------------------------------------------------------------------
+    //spediteur
+    $div.="<tbody id='spediteur_div_$id'>";
     $div.="<tr>";
     $div.="<td>";
     $div.= "Proforma";
     $div.="</td>";
-    $div.="<td>";
+    $div.="<td colspan='2'>";
     $dateValue = $lkw['proforma'];
     $div.="<input type='text' id='proforma_$id' maxlength='10' size='10' value='".$dateValue."' />";
     $div.="</td>";
@@ -120,7 +94,7 @@ $apl = AplDB::getInstance();
     $div.="<td>";
     $div.= "Spediteur";
     $div.="</td>";
-    $div.="<td>";
+    $div.="<td colspan='2'>";
     $div.="<select id='spediteur_id_$id'>";
     $spedArray = $apl->getSpediteurArray();
     foreach ($spedArray as $sped){
@@ -135,9 +109,9 @@ $apl = AplDB::getInstance();
     $div.="<td>";
     $div.= "Fahrername";
     $div.="</td>";
-    $div.="<td>";
+    $div.="<td colspan='2'>";
     $dateValue = $lkw['fahrername'];
-    $div.="<input type='text' id='fahrername_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="<input type='text' id='fahrername_$id' maxlength='32' style='width:100%;text-align:left;' value='".$dateValue."' />";
     $div.="</td>";
     $div.="</tr>";
     
@@ -145,7 +119,7 @@ $apl = AplDB::getInstance();
     $div.="<td>";
     $div.= "LKW-Nr.";
     $div.="</td>";
-    $div.="<td>";
+    $div.="<td colspan='2'>";
     $dateValue = $lkw['lkw_kz'];
     $div.="<input type='text' id='lkw_kz_$id' maxlength='10' size='10' value='".$dateValue."' />";
     $div.="</td>";
@@ -155,139 +129,70 @@ $apl = AplDB::getInstance();
     $div.="<td>";
     $div.= "Anh-Nr.";
     $div.="</td>";
-    $div.="<td>";
+    $div.="<td colspan='2'>";
     $dateValue = $lkw['naves_kz'];
     $div.="<input type='text' id='naves_kz_$id' maxlength='10' size='10' value='".$dateValue."' />";
     $div.="</td>";
     $div.="</tr>";
+    $div.="</tbody>";
 
-    // ankunft kunde
-//    $div.="<tr>";
-//    $div.="<td>";
-//    $div.= "Ankunft Kunde - Ort";
-//    $div.="</td>";
-//    $div.="<td>";
-//    $div.="<input type='text' id='an_kunde_ort_$id' maxlength='30' size='20' value='".$lkw['an_kunde_ort']."' />";
-//    $div.="</td>";
-//    $div.="</tr>";
-    
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Kunde - Ort (ID)";
-    $div.="</td>";
-    $div.="<td id='an_kunde_ort_td_$id'>";
-    
-    $div.= $divAnKundeOrtId;
-    
-    $div.="</td>";
-    $div.="</tr>";
-    
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Kunde - Soll Tag";
-    $div.="</td>";
-    $div.="<td>";
-    $dateValue = date('d.m.Y',strtotime($lkw['an_kunde_soll_datetime']));
-    $div.="<input class='datepicker' type='text' id='an_kunde_soll_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Kunde - Soll Zeit";
-    $div.="</td>";
-    $div.="<td>";
-    $dateValue = date('H:i',strtotime($lkw['an_kunde_soll_datetime']));
-    $div.="<input type='text' id='an_kunde_soll_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Kunde - Ist Tag";
-    $div.="</td>";
-    $div.="<td>";
-    $dateValue = date('d.m.Y',strtotime($lkw['an_kunde_ist_datetime']));
-    $div.="<input class='datepicker' type='text' id='an_kunde_ist_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr class='endsection'>";
-    $div.="<td>";
-    $div.= "Ankunft Kunde - Ist Zeit";
-    $div.="</td>";
-    $div.="<td>";
-    $dateValue = date('H:i',strtotime($lkw['an_kunde_ist_datetime']));
-    $div.="<input type='text' id='an_kunde_ist_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
+    // ankunft kunde -----------------------------------------------------------
+    $div.="<tbody id='an_kunde_div_$id'>";
+    $div.=$divAnKundeZielorte;
+    $div.="</tbody>";
+    //--------------------------------------------------------------------------
     
     // ankunft Abydos
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Abydos - Ort";
-    $div.="</td>";
-    $div.="<td>";
-    $div.="<input readonly type='text' id='an_aby_ort_$id' maxlength='30' size='20' value='".$lkw['an_aby_ort']."' />";
-    $div.="</td>";
+    $div.="<tbody id='an_aby_div_$id'>";
+        $div.="<tr  class='startsection header'>";
+	$div.="<td>Ankunft Abydos</td>";
+	$div.="<td>Soll Tag/Zeit</td>";
+	$div.="<td>Ist Tag/Zeit</td>";
     $div.="</tr>";
     
     $div.="<tr>";
     $div.="<td>";
-    $div.= "Ankunft Abydos - Soll Tag";
+    $div.= "Akunft Abydos - Ort";
     $div.="</td>";
+    //soll
     $div.="<td>";
     $dateValue = date('d.m.Y',strtotime($lkw['an_aby_soll_datetime']));
-    $div.="<input class='datepicker' type='text' id='an_aby_soll_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Abydos - Soll Zeit";
-    $div.="</td>";
-    $div.="<td>";
+    $div.="<input disabled='disabled' class='datepicker' type='text' id='an_aby_soll_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="/";
     $dateValue = date('H:i',strtotime($lkw['an_aby_soll_datetime']));
-    $div.="<input type='text' id='an_aby_soll_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
+    $div.="<input disabled='disabled' type='text' id='an_aby_soll_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
     $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Abydos - Ist Tag";
-    $div.="</td>";
+    
+    //ist
     $div.="<td>";
     $dateValue = date('d.m.Y',strtotime($lkw['an_aby_ist_datetime']));
-    $div.="<input class='datepicker' type='text' id='an_aby_ist_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Ankunft Abydos - Ist Zeit";
-    $div.="</td>";
-    $div.="<td>";
+    $div.="<input disabled='disabled' class='datepicker' type='text' id='an_aby_ist_date_$id' maxlength='10' size='10' value='".$dateValue."' />";
+    $div.="/";
     $dateValue = date('H:i',strtotime($lkw['an_aby_ist_datetime']));
-    $div.="<input type='text' id='an_aby_ist_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
+    $div.="<input disabled='disabled' type='text' id='an_aby_ist_time_$id' maxlength='5' size='5' value='".$dateValue."' />";
     $div.="</td>";
-    $div.="</tr>";
 
+    $div.="</tr>";
+//------------------------------------------------------------------------------
     $div.="<tr class='endsection'>";
     $div.="<td>";
     $div.= "Ankunft Abydos - Nutzlast";
     $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='an_aby_nutzlast_$id' maxlength='5' size='5' value='".$lkw['an_aby_nutzlast']."' />";
+    $div.="<td colspan='2'>";
+    $div.="<input type='text' id='an_aby_nutzlast_$id' maxlength='5' size='6' style='text-align:right;' value='".$lkw['an_aby_nutzlast']."' />";
     $div.="</td>";
     $div.="</tr>";
-
-    //sonst
+    $div.="</tbody>";
+    
+    
+    //sonst --------------------------------------------------------------------
+    $div.="<tbody id='sonst_div_$id'>";
     $div.="<tr>";
     $div.="<td>";
     $div.= "Bemerkung";
     $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='bemerkung_$id' maxlength='30' size='20' value='".$lkw['bemerkung']."' />";
+    $div.="<td colspan='2'>";
+    $div.="<input type='text' id='bemerkung_$id' maxlength='30' style='width:100%;' value='".$lkw['bemerkung']."' />";
     $div.="</td>";
     $div.="</tr>";
 
@@ -295,8 +200,8 @@ $apl = AplDB::getInstance();
     $div.="<td>";
     $div.= "Preis vereinbart";
     $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='preis_$id' maxlength='6' size='6' value='".$lkw['preis']."' />";
+    $div.="<td colspan='2'>";
+    $div.="<input type='text' id='preis_$id' maxlength='6' size='6' style='text-align:right;' value='".$lkw['preis']."' />";
     $div.="</td>";
     $div.="</tr>";
 
@@ -304,29 +209,12 @@ $apl = AplDB::getInstance();
     $div.="<td>";
     $div.= "Rabatt [%]";
     $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='rabatt_$id' maxlength='6' size='6' value='".$lkw['rabatt']."' />";
+    $div.="<td colspan='2'>";
+    $div.="<input type='text' id='rabatt_$id' maxlength='6' size='6' style='text-align:right;' value='".$lkw['rabatt']."' />";
     $div.="</td>";
     $div.="</tr>";
 
-    $div.="<tr>";
-    $div.="<td>";
-    $div.= "Betrag";
-    $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='betrag_$id' maxlength='6' size='6' value='".$lkw['betrag']."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
-    $div.="<tr class='endsection'>";
-    $div.="<td>";
-    $div.= "Rechnung";
-    $div.="</td>";
-    $div.="<td>";
-    $div.="<input type='text' id='rechnung_$id' maxlength='8' size='8' value='".$lkw['rechnung']."' />";
-    $div.="</td>";
-    $div.="</tr>";
-
+    $div.="</tbody>";
     $div.="</table>";
     //odeslat pozadavek
     $div.= "<input style='margin-top:0.2em;' type='button' id='savelkwbutton_$id' acturl='lkwSave.php' value='speichern' />";
@@ -338,6 +226,7 @@ $apl = AplDB::getInstance();
 
 
 $returnArray = array(
+	'sectionA'=>$sectionA,
 	'newLkw'=>$newLkw,
 	'lid'=>$lid,
 	'lkwInfoArray'=>$lkwInfoArray,

@@ -15,6 +15,17 @@ $von = $apl->make_DB_datum($_GET['terminvon'])." 00:00:00";
 $bis = $apl->make_DB_datum($_GET['terminbis'])." 23:59:59";
 $spedvon = $_GET['spedvon'];
 $spedbis = $_GET['spedbis'];
+$bSpediteur = $_GET['typ']=="Dispo"?FALSE:TRUE;
+$kundevon = $_GET['kundevon'];
+$kundebis = $_GET['kundebis'];
+
+
+$k = $_GET['kurs'];
+
+if($k=="aktuell")
+    $kurs = number_format($apl->getKurs(date('Y-m-d'), 'EUR', 'CZK'), 2);
+else
+    $kurs = number_format($apl->getKurs('2099-12-31', 'EUR', 'CZK'), 2);
 
 require_once('D811_xml.php');
 
@@ -56,6 +67,18 @@ array(
 );
 //exit();
 
+$sumFrachtLkw = array(
+    'preis_czk'=>0,
+    'kosten_eur'=>0,
+    'betrag_eur'=>0
+);
+
+$sumFrachtBericht  = array(
+    'preis_czk'=>0,
+    'kosten_eur'=>0,
+    'betrag_eur'=>0
+);
+
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
 $parameters=$domxml->getElementsByTagName("parameters");
@@ -93,7 +116,11 @@ $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
 //$params="";
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D811 - Rundlauf", $params);
+$kursSuffix = "(kurs:$kurs)";
+if($bSpediteur){
+    $kursSuffix="";
+}
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D811 - Rundlauf", $params.$kursSuffix);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -111,6 +138,7 @@ $pdf->setPrintHeader(TRUE);
 $pdf->setPrintFooter(TRUE);
 
 $pdf->AddPage();
+page_header($pdf, "", "", 5, array(255,255,230));
 
 $lkws = $domxml->getElementsByTagName("rundlauf");
 $lkColor = 0;
@@ -134,15 +162,23 @@ foreach ($lkws as $lkw){
     }
     $c = $lkwColors[$lkColor];
 //    AplDB::varDump($c);
+    test_pageoverflow($pdf, 5, "");
     zahlavi_lkw($pdf, $cells, $lkwChilds, 5,$c);
     $imexs = $lkw->getElementsByTagName('pay');
     foreach($imexs as $imex){
 	$imexChilds = $imex->childNodes;
+	test_pageoverflow($pdf, 5, "");
 	imex_radek($pdf, $cells, $imexChilds, 3);
     }
+    test_pageoverflow($pdf, 5, "");
     zapati_lkw($pdf, $cells, $lkwChilds, 5,$c);
     $lkwCounter++;
 }
+
+if(!$bSpediteur){
+    zapati_bericht($pdf, $cells, $lkwChilds, 5,array(255,255,255));
+}
+
 $pdf->Output();
 
 //------------------------------------------------------------------------------
@@ -169,6 +205,11 @@ function getValueForNode($nodelist, $nodename) {
  */
 function zahlavi_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 
+    global $sumFrachtLkw;
+
+    $sumFrachtLkw['preis_czk']=0;
+    $sumFrachtLkw['kosten_eur']=0;
+    $sumFrachtLkw['betrag_eur']=0;
     
     $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
 
@@ -207,7 +248,7 @@ function zahlavi_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 
 /**
  * 
- * @param type $pdf
+ * @param TCPDF $pdf
  * @param type $cells
  * @param type $childs
  * @param type $vyskaRadku
@@ -215,16 +256,23 @@ function zahlavi_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
  */
 function zapati_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 
+    global $sumFrachtLkw;
+    global $sumFrachtBericht;
+    global $kurs;
+    global $bSpediteur;
+    
     $pdf->SetFont("FreeSans", "B", 8);
     $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
 
+    $preisVereinbart = floatval(getValueForNode($childs, 'preis'));
     $obsah = getValueForNode($childs, 'preis');
-    $obsah = number_format($obsah, 0, ',', ' ');
+    $obsah = number_format($obsah, 0, ',', ' ')."CZK";
     $pdf->Cell(
 	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
 	    'R', 1
     );
     
+    $rabatt = floatval(getValueForNode($childs, 'rabatt'));
     $obsah = getValueForNode($childs, 'rabatt');
     $obsah = number_format($obsah, 2, ',', ' ')."%";
     $pdf->Cell(
@@ -232,27 +280,222 @@ function zapati_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 	    'R', 1
     );
     
-    //dummy
-    $obsah = "";
+    //kosten EUR
+    $kostenCZK = ($preisVereinbart - $preisVereinbart*$rabatt/100);
+    $kostenEUR = $kostenCZK / $kurs;
+    $obsah = number_format($kostenEUR, 2, ',', ' ')."EUR";
+    $ram = "LRB";
+    if($bSpediteur){
+	$obsah = "";
+	$ram = "B";
+    }
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, $ram, 0, // odradkovat
+	    'R', 1
+    );
+    
+    $obsah = $sumFrachtLkw['betrag_eur'];
+    $obsah = number_format($obsah, 2, ',', ' ')."EUR";
+    $ram = "LRB";
+    if($bSpediteur){
+	$obsah = "";
+	$ram = "B";
+    }
+    $pdf->Cell(
+	    20, $vyskaRadku, $obsah, $ram, 0, // odradkovat
+	    'R', 1
+    );
+    
+    $obsah = $sumFrachtLkw['betrag_eur'] - $kostenEUR;
+    if($obsah<0){
+	$pdf->setColorArray('text', array(255,0,0));
+    }
+    else{
+	$pdf->setColorArray('text', array(0,0,0));
+    }
+    $obsah = number_format($obsah, 2, ',', ' ')."EUR";
+    $ram = "LRB";
+    if($bSpediteur){
+	$obsah = "";
+	$ram = "RB";
+    }
+    $pdf->Cell(
+	    0, $vyskaRadku, $obsah, $ram, 0, // odradkovat
+	    'R', 1
+    );
+    
+    $sumFrachtBericht['preis_czk'] += $preisVereinbart;
+    $sumFrachtBericht['kosten_eur'] += $kostenEUR;
+    $sumFrachtBericht['betrag_eur'] += $sumFrachtLkw['betrag_eur'];
+    
+    $pdf->setColorArray('text', array(0,0,0));
+    $pdf->Ln();
+}
+
+function test_pageoverflow($pdfobjekt,$vysradku,$cellhead)
+{
+	// pokud bych prelezl s nasledujicim vystupem vysku stranky
+	// tak vytvorim novou stranku i se zahlavim
+	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
+	{
+		$pdfobjekt->AddPage();
+		page_header($pdfobjekt, "", "", 5, array(255,255,230));
+	}
+}
+
+/**
+ * 
+ * @param type $pdf
+ * @param type $cells
+ * @param type $childs
+ * @param type $vyskaRadku
+ * @param type $rgb
+ */
+function page_header($pdf, $cells, $childs, $vyskaRadku, $rgb) {
+
+    global $bSpediteur;
+    
+    $pdf->SetFont("FreeSans", "B", 7);
+    $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
+
+    //hlavicka
+    $obsah = "Preis vereinb.[CZK]";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRBT', 0, // odradkovat
+	    'R', 1
+    );
+    $obsah = "Rabatt [%]";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRBT', 0, // odradkovat
+	    'R', 1
+    );
+    
+    
+    $obsah = "Kosten [EUR]";
+    $ram = "LRBT";
+    if($bSpediteur){
+	$obsah = "";
+	$ram = "BT";
+    }
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, $ram, 0, // odradkovat
+	    'R', 1
+    );
+    
+    $obsah = "Betrag [EUR]";
+    $ram = "LRBT";
+    if($bSpediteur){
+	$obsah = "";
+	$ram = "BT";
+    }
+    $pdf->Cell(
+	    20, $vyskaRadku, $obsah, $ram, 0, // odradkovat
+	    'R', 1
+    );
+    
+    
+    $obsah = "Betrag - Kosten [EUR]";
+    $ram = "LRBT";
+    
+    if($bSpediteur){
+	$obsah = "";
+	$ram = "RBT";
+    }
+
+    $pdf->Cell(
+	    0, $vyskaRadku, $obsah, $ram, 1, // odradkovat
+	    'R', 1
+    );
+    
+    //--------------------------------------------------------------------------
+    
+}
+/**
+ * 
+ * @global array $sumFrachtBericht
+ * @param type $pdf
+ * @param type $cells
+ * @param type $childs
+ * @param type $vyskaRadku
+ * @param type $rgb
+ */
+function zapati_bericht($pdf, $cells, $childs, $vyskaRadku, $rgb) {
+
+    global $sumFrachtBericht;
+    $pdf->Ln($vyskaRadku);
+    
+    $pdf->SetFont("FreeSans", "B", 7);
+    $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
+
+    //hlavicka
+    $obsah = "Preis vereinb.[CZK]";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRBT', 0, // odradkovat
+	    'R', 1
+    );
+    $obsah = "Rabatt [%]";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRBT', 0, // odradkovat
+	    'R', 1
+    );
+    $obsah = "Kosten [EUR]";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRBT', 0, // odradkovat
+	    'R', 1
+    );
+    $obsah = "Betrag [EUR]";
+    $pdf->Cell(
+	    20, $vyskaRadku, $obsah, 'LRBT', 0, // odradkovat
+	    'R', 1
+    );
+    $obsah = "Betrag - Kosten [EUR]";
+    $pdf->Cell(
+	    0, $vyskaRadku, $obsah, 'LRBT', 1, // odradkovat
+	    'R', 1
+    );
+    
+    //--------------------------------------------------------------------------
+    
+    $pdf->SetFont("FreeSans", "B", 8);
+    $obsah = number_format($sumFrachtBericht['preis_czk'], 0, ',', ' ')."CZK";
     $pdf->Cell(
 	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
 	    'R', 1
     );
     
-    $obsah = getValueForNode($childs, 'betrag');
-    $obsah = number_format($obsah, 2, ',', ' ');
+    $obsah = '';
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    'R', 1
+    );
+    
+    //kosten EUR
+    $obsah = number_format($sumFrachtBericht['kosten_eur'], 2, ',', ' ')."EUR";
+    $pdf->Cell(
+	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    'R', 1
+    );
+    
+    $obsah = number_format($sumFrachtBericht['betrag_eur'], 2, ',', ' ')."EUR";
     $pdf->Cell(
 	    20, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
 	    'R', 1
     );
     
-    $obsah = getValueForNode($childs, 'rechnung');
-    //$obsah = number_format($obsah, 2, ',', ' ')."%";
+    $obsah = $sumFrachtBericht['betrag_eur'] - $sumFrachtBericht['kosten_eur'];
+    if($obsah<0){
+	$pdf->setColorArray('text', array(255,0,0));
+    }
+    else{
+	$pdf->setColorArray('text', array(0,0,0));
+    }
+    $obsah = number_format($obsah, 2, ',', ' ')."EUR";
     $pdf->Cell(
 	    0, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
 	    'R', 1
     );
     
+    $pdf->setColorArray('text', array(0,0,0));
     $pdf->Ln();
 }
 
@@ -266,15 +509,31 @@ function zapati_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
  */
 function imex_radek($pdf, $cells, $childs, $vyskaRadku) {
 
+    global $kurs;
+    global $sumFrachtLkw;
+    global $bSpediteur;
+    
     $a = AplDB::getInstance();
     $pdf->SetFont("FreeSans", "", 7);
     
 
     $imex = getValueForNode($childs, 'imex');
     $auftragsnr = getValueForNode($childs, 'auftragsnr');
-    $frachtExp = $a->getFrachtForExport($auftragsnr);
+    $frachtExp1 = $a->getFrachtForExport($auftragsnr);
     $palArrayA = $a->getBehaelterInExport($auftragsnr);
     $auftragInfo = $a->getAuftragInfoArray($auftragsnr);
+
+    if($auftragInfo[0]['waehr_kz']=='CZK'){
+	$frachtExp = $frachtExp1 / $kurs;
+    }
+    else{
+	$frachtExp = $frachtExp1;
+    }
+
+    if($imex=='E'){
+	$sumFrachtLkw['betrag_eur'] += $frachtExp;
+    }
+    
     
     $palObsah = "";
     if($palArrayA!==NULL){
@@ -315,7 +574,10 @@ function imex_radek($pdf, $cells, $childs, $vyskaRadku) {
     );
 
     if($imex=='E'){
-	$obsah = number_format($frachtExp,2,',',' ').$auftragInfo[0]['waehr_kz'];
+	$obsah = number_format($frachtExp1,2,',',' ').$auftragInfo[0]['waehr_kz'];
+	if($bSpediteur){
+	    $obsah = "";
+	}
 	$pdf->Cell(
 	    20, $vyskaRadku, $obsah, '', 0, // odradkovat
 	    'R', 0

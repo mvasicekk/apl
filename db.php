@@ -438,6 +438,21 @@ class AplDB {
 
     /**
      * 
+     * @param type $datumVon
+     * @param type $datumBis
+     */
+    public function getRundlaufMatch($datumVon,$datumBis,$spediteur){
+	if($spediteur=='*'){
+	    $sql = "select * from drundlauf where ab_aby_soll_datetime between '$datumVon' and '$datumBis'";
+	}
+	else{
+	    $sql = "select * from drundlauf where ab_aby_soll_datetime between '$datumVon' and '$datumBis' and dspediteur_id='$spediteur'";
+	}
+	
+	return $this->getQueryRows($sql);
+    }
+    /**
+     * 
      * @param type $auftrag
      */
     public function isAuftragImRundlauf($auftrag,$ie){
@@ -562,8 +577,8 @@ class AplDB {
 	$sql.=" from drundlauf";
 	$sql.=" where ";
 	$sql.=" drundlauf.ab_aby_soll_datetime between '$datumVon 00:00:00' and '$datumBis 23:59:59'";
-	$sql.=" or";
-	$sql.=" drundlauf.an_aby_soll_datetime between '$datumVon 00:00:00' and '$datumBis 23:59:59'";
+//	$sql.=" or";
+//	$sql.=" drundlauf.an_aby_soll_datetime between '$datumVon 00:00:00' and '$datumBis 23:59:59'";
 	return $this->getQueryRows($sql);
     }
     /**
