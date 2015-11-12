@@ -168,7 +168,7 @@ foreach ($lkws as $lkw){
     foreach($imexs as $imex){
 	$imexChilds = $imex->childNodes;
 	test_pageoverflow($pdf, 5, "");
-	imex_radek($pdf, $cells, $imexChilds, 3);
+	imex_radek($pdf, $cells, $imexChilds,$lkwChilds, 3);
     }
     test_pageoverflow($pdf, 5, "");
     zapati_lkw($pdf, $cells, $lkwChilds, 5,$c);
@@ -216,25 +216,24 @@ function zahlavi_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
     $pdf->SetFont("FreeSans", "B", 8);
     $obsah = "".date('d.m.Y H:i',strtotime(getValueForNode($childs, 'ab_aby_soll_datetime')));
     $pdf->Cell(
-	    45, $vyskaRadku, $obsah, 'LT', 0, // odradkovat
+	    25, $vyskaRadku, $obsah, 'LT', 0, // odradkovat
 	    'L', 1
     );
     
     $pdf->SetFont("FreeSans", "", 8);
-    $obsah = getValueForNode($childs, 'id');
-    
+    $obsah = getValueForNode($childs, 'spediteurname')."( ".getValueForNode($childs, 'id')." )";
     $pdf->Cell(
-	    20, $vyskaRadku, $obsah, 'T', 0, // odradkovat
+	    70, $vyskaRadku, $obsah, 'T', 0, // odradkovat
 	    'L', 1
     );
-    
-    
-    $pdf->SetFont("FreeSans", "", 8);
-    $obsah = getValueForNode($childs, 'spediteurname');
-    $pdf->Cell(
-	    50, $vyskaRadku, $obsah, 'T', 0, // odradkovat
-	    'L', 1
-    );
+//    
+//    
+//    $pdf->SetFont("FreeSans", "", 8);
+//    $obsah = getValueForNode($childs, 'spediteurname');
+//    $pdf->Cell(
+//	    50, $vyskaRadku, $obsah, 'T', 0, // odradkovat
+//	    'L', 1
+//    );
     
     $obsah = getValueForNode($childs, 'bemerkung');
     $pdf->SetFont("FreeSans", "", 7);
@@ -507,7 +506,7 @@ function zapati_bericht($pdf, $cells, $childs, $vyskaRadku, $rgb) {
  * @param type $vyskaRadku
  * @param type $rgb
  */
-function imex_radek($pdf, $cells, $childs, $vyskaRadku) {
+function imex_radek($pdf, $cells, $childs,$lkwchilds, $vyskaRadku) {
 
     global $kurs;
     global $sumFrachtLkw;
@@ -561,11 +560,12 @@ function imex_radek($pdf, $cells, $childs, $vyskaRadku) {
     );
     
     $zielort = trim(getValueForNode($childs, 'zielort'));
+    $an_aby_soll_datetime = date('d.m.Y H:i',strtotime(getValueForNode($lkwchilds, 'an_aby_soll_datetime')));
     if(strlen($zielort)>0){
 	$obsah = "--> ".$zielort;
     }
     else{
-	$obsah = "";
+	$obsah = "--> Abydos am: ".$an_aby_soll_datetime;
     }
     
     $pdf->Cell(

@@ -434,7 +434,44 @@ function updateLkwDblClicked(data) {
     $('#' + data.divid).bind('keypress', submitLkwEdit);
     $('input[id^=savelkwbutton_]').bind('click', saveLkwButtonClick);
     $('input[id^=deletelkwbutton_]').bind('click', deleteLkwButtonClick);
+    $('input[id^=updateabantimes_]').bind('click', updateAbAnTimesButtonClick);
     $('div[id^=closebutton_]').bind('click', closeButtonClick);
+}
+
+/**
+ * 
+ * @param {type} e
+ * @returns {undefined}
+ */
+function updateAbAnTimesButtonClick(e){
+    console.log($(this).attr('id'));
+    var url = $(this).attr('acturl');
+    console.log(url);
+    $.post(url,
+	    {
+		id: $(this).attr('id')
+	    },
+    function (data) {
+	updateUpdateAbAnTimesButtonClick(data);
+    },
+	    'json'
+	    );
+}
+
+/**
+ * 
+ * @param {type} data
+ * @returns {undefined}
+ */
+function updateUpdateAbAnTimesButtonClick(data){
+    if(data.exCount>0){
+	$('#ab_aby_soll_date_'+data.rundlaufid).val(data.ab_aby_soll_date_vorschlag);
+	$('#ab_aby_soll_time_'+data.rundlaufid).val(data.ab_aby_soll_time_vorschlag);
+    }
+    if(data.imCount>0){
+	$('#an_aby_soll_date_'+data.rundlaufid).val(data.an_aby_soll_date_vorschlag);
+	$('#an_aby_soll_time_'+data.rundlaufid).val(data.an_aby_soll_time_vorschlag);
+    }
 }
 
 function deleteLkwButtonClick(e) {
@@ -660,6 +697,11 @@ function updateDropped(data){
 	//udelat draggable
 	$('.draggable').unbind('dblclick');
 	$('.draggable').bind('dblclick',draggableImExDblClicked);
+	
+	//kdyz plni auto importama, exportama a pohne si importem nebo exportem, tak musim znovu pridat odchyceni udalosti
+	$('.draggable').unbind('click');
+	$('.draggable').on('click',draggableClick);
+	
 	$('.draggable').draggable({zIndex: 999});
 	$('.draggable').css({"cursor":"pointer"});
 

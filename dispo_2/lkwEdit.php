@@ -41,7 +41,9 @@ $apl = AplDB::getInstance();
     $div.="<div class='payloadList'>";
     
     $div.=$payloadDiv;
-    
+    if(count($imexArray)>0){
+	$div.= "<input type='button' id='updateabantimes_$id' acturl='updateAbAnTimes.php' value='Ab An refr' />";
+    }
     $div.="</div>";
     $div.="<table class='formtable'>";
     //abbfahrt Abydos

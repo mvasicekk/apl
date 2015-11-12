@@ -82,3 +82,15 @@ div.imexStr{
     margin-top: 3px;
     margin-bottom: 3px;
 }
+
+div.page-header{
+    background-color: lightyellow;
+    text-align: center;
+    margin: 0px 0px 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+legend{
+    margin-bottom: 5px;
+}

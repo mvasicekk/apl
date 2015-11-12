@@ -31,14 +31,18 @@ $(document).ready(function () {
 	    naves_kz: null,
 	    preis: null,
 	    rabatt: null,
+	    proforma:null,
 	    bemerkung: null
 	},
 	stretchH: 'last',
 	startRows: 1,
 	startCols: 4,
+	minSpareRows: 0,
+	minSpareCols: 0,
 	columnSorting:true,
 	currentRowClassName: 'currentRow',
 	currentColClassName: 'currentCol',
+	fillHandle:false,   // zakazat natahovaci tahatko, protoze moc nefunguje
 	colHeaders: [
 	    'id', 
 	    'Abfahrt Aby Soll',
@@ -50,6 +54,7 @@ $(document).ready(function () {
 	    'Anh. KZ',
 	    'Preis vereinbart',
 	    'Rabatt',
+	    'Proforma',
 	    'Bemerkung'
 	],
 	columns: [
@@ -63,8 +68,13 @@ $(document).ready(function () {
 	    {data: 'naves_kz'},
 	    {data: 'preis', type: 'numeric', allowInvalid: false},
 	    {data: 'rabatt', type: 'numeric', allowInvalid: false},
+	    {data: 'proforma'},
 	    {data: 'bemerkung'}
 	],
+	afterCreateRow: function (index, numberOfRows) {
+			    // nedovolit pridat nove radky
+			    data.splice(index, numberOfRows);
+			},
 	//minSpareRows: 25,
 	afterChange: function (changes, source) {
 	    // pripojit hodnotu id_vorschuss k poli
