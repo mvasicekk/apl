@@ -1415,6 +1415,27 @@ public function istExportiert($import, $impal){
     }
 
     /**
+     * 
+     * @param type $ex
+     * @param type $teil
+     * @return type
+     */
+    public function getLastPalBehExport($ex,$teil=NULL){
+	$lastPal = 0;
+	if($teil==NULL){
+	    $sql = "select max(dbehexport.ex_pal) as lastpal from dbehexport where export='$ex'";
+	}
+	else{
+	    $sql = "select max(dbehexport.ex_pal) as lastpal from dbehexport where export='$ex' and teil='$teil'";
+	}
+	
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    $lastPal = intval($r[0]['lastpal']);
+	}
+	return $lastPal;
+    }
+    /**
      *
      * @param int $typid 
      */
@@ -1505,6 +1526,16 @@ public function istExportiert($import, $impal){
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $field
+     * @param type $value
+     * @param type $id
+     */
+    public function updateBehExport($field,$value,$id){
+	$sql = "update dbehexport set `$field`='$value' where id='$id' limit 1";
+	return $this->query($sql);
+    }
     /**
      * smaze fakturu
      *
