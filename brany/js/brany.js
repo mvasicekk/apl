@@ -140,7 +140,7 @@ function updateBranyClasses(){
     }
     else
     {
-	bId = 'brana2Button';
+	bId = 'brana1Button';
 	$('#' + bId).addClass('opening');
 	$('#' + bId).removeClass('open');
 	$('#' + bId).removeClass('closed');
@@ -157,73 +157,6 @@ function updateBranyClasses(){
     }
 }
 
-/**
- * 
- * @param {type} id
- * @param {type} stav
- * @returns {undefined}
- */
-function setOnOff(id, stav) {
-    console.log(Date());
-    console.log('id='+id+' stav='+stav);
-    
-    var buttonId = '';
-    
-    //brana2
-    if(id=='pi_36' && stav=='off'){
-	//brana se zavrela
-	var buttonId = 'brana2Button';
-	$('#' + buttonId).addClass('closed');
-	$('#' + buttonId).removeClass('opening');
-	$('#' + buttonId).removeClass('open');
-    }
-
-    if(id=='pi_32' && stav=='on'){
-	//brana se zcela otevrela
-	var buttonId = 'brana2Button';
-	$('#' + buttonId).addClass('open');
-	$('#' + buttonId).removeClass('opening');
-	$('#' + buttonId).removeClass('closed');
-    }
-    
-    //brana1
-    if(id=='pi_40' && stav=='off'){
-	//brana se zavrela
-	var buttonId = 'brana1Button';
-	$('#' + buttonId).addClass('closed');
-	$('#' + buttonId).removeClass('opening');
-	$('#' + buttonId).removeClass('open');
-    }
-    
-    if(id=='pi_38' && stav=='on'){
-	//brana se zcela otevrela
-	var buttonId = 'brana1Button';
-	$('#' + buttonId).addClass('open');
-	$('#' + buttonId).removeClass('opening');
-	$('#' + buttonId).removeClass('closed');
-    }
-//    
-//    
-//    
-//    
-//    if(id=='pi_40'){
-//	//brana1 zavreno
-//	buttonId = 'brana1Button';
-//    }
-//    if(id=='pi_36'){
-//	//brana2 zavreno
-//	buttonId = 'brana2Button';
-//    }
-//    
-//    if (stav == 'on') {
-//	$('#' + buttonId).addClass('on');
-//	$('#' + buttonId).removeClass('off');
-//    }
-//    else {
-//	$('#' + buttonId).addClass('off');
-//	$('#' + buttonId).removeClass('on');
-//    }
-}
 /**
  * 
  * @returns {undefined}

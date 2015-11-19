@@ -88,7 +88,7 @@ $apl = AplDB::getInstance();
     $div.="</tr>";
     
     //navrh na termin
-    $exVorschlag = substr($imnrNavrh, 0,3)."999";
+    $exVorschlag = substr($imnrNavrh, 0,3)."99999";
     $div.="<tr>";
     $div.="<td>";
     $div.= "Ex geplant mit:";

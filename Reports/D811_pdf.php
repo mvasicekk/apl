@@ -162,7 +162,8 @@ foreach ($lkws as $lkw){
     }
     $c = $lkwColors[$lkColor];
 //    AplDB::varDump($c);
-    test_pageoverflow($pdf, 5, "");
+    //hlavicka a alespon 1 radek ?
+    test_pageoverflow($pdf, 5+5, "");
     zahlavi_lkw($pdf, $cells, $lkwChilds, 5,$c);
     $imexs = $lkw->getElementsByTagName('pay');
     foreach($imexs as $imex){
@@ -263,11 +264,20 @@ function zapati_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
     $pdf->SetFont("FreeSans", "B", 8);
     $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
 
+    $proforma = getValueForNode($childs, 'proforma');
+    $obsah = $proforma;
+    $pdf->SetFont("FreeSans", "B", 6);
+    $pdf->Cell(
+	    9, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    'R', 1
+    );
+    
+    $pdf->SetFont("FreeSans", "B", 7.5);
     $preisVereinbart = floatval(getValueForNode($childs, 'preis'));
     $obsah = getValueForNode($childs, 'preis');
     $obsah = number_format($obsah, 0, ',', ' ')."CZK";
     $pdf->Cell(
-	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    16, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
 	    'R', 1
     );
     

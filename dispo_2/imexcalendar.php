@@ -38,6 +38,8 @@ $smarty = new Smarty;
 	    }
 	}
 	
+	$pocetDnuPredAktualnimDnem = 14;
+	
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
 	// + 14 dnu

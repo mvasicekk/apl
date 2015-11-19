@@ -205,8 +205,18 @@ if ($rowsDA != NULL) {
 }
 
 
-$sqlBehArray = "select * from dbehexport where dbehexport.teil='$t' and dbehexport.export='$ex' order by teil,ex_pal";
+$sqlBehArray = "select * from dbehexport where dbehexport.teil='$t' and dbehexport.export='$ex' order by gedruckt_am,teil,ex_pal";
 $behArray = $apl->getQueryRows($sqlBehArray);
+//zjistim kolik mam pozic bez datumu, abych mohl povolit/zakazat tlacitko pro tisk - tisknu jen pozice bez datumu
+$nochNichtGedruckt = 0;
+if($behArray!==NULL){
+    foreach ($behArray as $beh){
+	$gedrucktAm = trim($beh['gedruckt_am']);
+	if(strlen($gedrucktAm)==0){
+	    $nochNichtGedruckt++;
+	}
+    }
+}
 
 $returnArray = array(
     't' => $t,
@@ -219,5 +229,6 @@ $returnArray = array(
     'zeilenArray' => $zeilenArray,
     'zeilenDArray' => $zeilenDArray,
     'zeilenDAArray' => $zeilenDAArray,
+    'nochNichtGedruckt'=>$nochNichtGedruckt,
 );
 echo json_encode($returnArray);
