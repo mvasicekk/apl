@@ -420,22 +420,24 @@ function draggableClick(event) {
  * @returns {undefined}
  */
 function updateLkwDblClicked(data) {
-    $('body').append(data.div);
-    $('#' + data.divid).hide();
-    $('#' + data.divid).center();
-    $('#' + data.divid).show('slide');
-    $('#' + data.divid).draggable();
-    // pridam ke vsem draggable imex odchyceni udalosti click
-    $('.draggable').unbind('click');
-    $('.draggable').on('click',draggableClick);
-    makeLkwPayloadDraggable(data);
+    if (data.lkwInfoArray[0].archiv == 0) {
+	$('body').append(data.div);
+	$('#' + data.divid).hide();
+	$('#' + data.divid).center();
+	$('#' + data.divid).show('slide');
+	$('#' + data.divid).draggable();
+	// pridam ke vsem draggable imex odchyceni udalosti click
+	$('.draggable').unbind('click');
+	$('.draggable').on('click', draggableClick);
+	makeLkwPayloadDraggable(data);
 
-    $(".datepicker").datepicker($.datepicker.regional["de"]);
-    $('#' + data.divid).bind('keypress', submitLkwEdit);
-    $('input[id^=savelkwbutton_]').bind('click', saveLkwButtonClick);
-    $('input[id^=deletelkwbutton_]').bind('click', deleteLkwButtonClick);
-    $('input[id^=updateabantimes_]').bind('click', updateAbAnTimesButtonClick);
-    $('div[id^=closebutton_]').bind('click', closeButtonClick);
+	$(".datepicker").datepicker($.datepicker.regional["de"]);
+	$('#' + data.divid).bind('keypress', submitLkwEdit);
+	$('input[id^=savelkwbutton_]').bind('click', saveLkwButtonClick);
+	$('input[id^=deletelkwbutton_]').bind('click', deleteLkwButtonClick);
+	$('input[id^=updateabantimes_]').bind('click', updateAbAnTimesButtonClick);
+	$('div[id^=closebutton_]').bind('click', closeButtonClick);
+    }
 }
 
 /**

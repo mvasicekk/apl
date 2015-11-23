@@ -224,6 +224,8 @@
 				    <th>Teil</th>
 				    <th class="text-right">Ex Pal</th>
 				    <th  class="text-right">Ex Stk</th>
+				    <th  class="text-right">von Import</th>
+				    <th  class="text-right">Im Pal</th>
 				    <th class="text-center">nicht in Export</th>
 				    <th>gedruck am</th>
 				</tr>
@@ -233,6 +235,12 @@
 				    <td>{{pal.teil}}</td>
 				    <td class="text-right">{{pal.ex_pal}}</td>
 				    <td class="text-right">{{pal.ex_stk_gut}}</td>
+				    <td class="text-right">
+					<input type="text" ng-change="palBehChanged(pal,'import')" ng-model="pal.import" maxlength="8" size="8"/>
+				    </td>
+				    <td class="text-right">
+					<input type="text" ng-change="palBehChanged(pal,'im_pal')" ng-model="pal.im_pal" maxlength="255" size="10"/>
+				    </td>
 				    <td class="text-center">
 					<input type="checkbox" ng-model="pal.nicht_in_export" ng-true-value="'1'" ng-false-value="'0'" ng-change="nichtInExportChanged(pal)"/>
 				    </td>

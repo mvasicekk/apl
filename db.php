@@ -211,6 +211,42 @@ class AplDB {
 	return $recipients;
     }
 
+    
+    /**
+     * 
+     * @param type $reportname
+     * @param type $password
+     * @param type $user
+     * @param type $usePassword
+     * @return boolean
+     */
+    public function testReportPassword($reportname,$password,$user,$usePassword=0)
+{
+	//dbConnect();
+        if($usePassword!=0)
+            $sql = "select user from reportsecurity where((reportname='$reportname') and (user='$user') and (password='$password'))";
+        else
+            $sql = "select user from reportsecurity where((reportname='$reportname') and (user='$user'))";
+
+//	echo $sql;
+	$res=mysql_query($sql);
+
+        if(mysql_affected_rows()>0){
+                if($usePassword==1)
+                    return true;
+                else{
+                    // zkontroluju znovu zadane heslo uzivatele
+                    $sql = "select dbenutzer.name from dbenutzer where name='$user' and password='$password'";
+                    $res=mysql_query($sql);
+                    if(mysql_affected_rows()>0)
+                        return true;
+                    else
+                        return false;
+                }
+        }
+	else
+		return false;
+}
     /**
      * vrati cislo zakaznika podle zadaneho dilu
      * 
@@ -573,6 +609,7 @@ class AplDB {
 	$sql.=" select ";
 	$sql.=" DATE_FORMAT(ab_aby_soll_datetime,'%Y-%m-%d') as ab_aby,";
 	$sql.=" DATE_FORMAT(an_aby_soll_datetime,'%Y-%m-%d') as an_aby,";
+	$sql.=" if(drundlauf.archiv=1,'archived','') as archived,";
 	$sql.=" drundlauf.id,drundlauf.dspediteur_id,drundlauf.lkw_kz";
 	$sql.=" from drundlauf";
 	$sql.=" where ";

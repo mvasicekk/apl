@@ -40,7 +40,7 @@
 	    <tr id="tag_{$tag.datum}" class="{$tag.tagname} {$tag.dnes}">
 		<th id="tagheader_{$tag.datum}" class="datumheader">
 		    {$tag.datum}&nbsp;{$tag.tagname}
-		    {foreach from=$lkwDatumArray[$tagdatum] item=lkw}<div title="{$lkw.id}" id="lkw_{$lkw.id}" class="lkw lkwdraggable lkw_{$lkw.id}">{$lkw.lkw_kz}/{$lkw.imexstr}</div>{/foreach}
+		    {foreach from=$lkwDatumArray[$tagdatum] item=lkw}<div title="{$lkw.id}" id="lkw_{$lkw.id}" class="lkw lkwdraggable lkw_{$lkw.id} {$lkw.archived}">{$lkw.lkw_kz}/{$lkw.imexstr}</div>{/foreach}
 		</th>
 		
 		{foreach from=$kundenArray item=kunde key=kundenr}

@@ -19,6 +19,7 @@ $bSpediteur = $_GET['typ']=="Dispo"?FALSE:TRUE;
 $kundevon = $_GET['kundevon'];
 $kundebis = $_GET['kundebis'];
 
+$password = $_GET['password'];
 
 $k = $_GET['kurs'];
 
@@ -26,6 +27,18 @@ if($k=="aktuell")
     $kurs = number_format($apl->getKurs(date('Y-m-d'), 'EUR', 'CZK'), 2);
 else
     $kurs = number_format($apl->getKurs('2099-12-31', 'EUR', 'CZK'), 2);
+
+$access = TRUE;
+
+if(!$bSpediteur){
+    $access = $apl->testReportPassword("D811",$password,$_SESSION['user'],0);
+}
+
+
+if(!$access){
+    echo "<h1>Nepovoleny pristup.</h1>";
+    exit();
+}
 
 require_once('D811_xml.php');
 
@@ -75,6 +88,7 @@ $sumFrachtLkw = array(
 
 $sumFrachtBericht  = array(
     'preis_czk'=>0,
+    'kosten_czk'=>0,
     'kosten_eur'=>0,
     'betrag_eur'=>0
 );
@@ -281,16 +295,28 @@ function zapati_lkw($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 	    'R', 1
     );
     
+    
+    $pdf->SetFont("FreeSans", "B", 6);
     $rabatt = floatval(getValueForNode($childs, 'rabatt'));
     $obsah = getValueForNode($childs, 'rabatt');
     $obsah = number_format($obsah, 2, ',', ' ')."%";
     $pdf->Cell(
-	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    8, $vyskaRadku, $obsah, 'LB', 0, // odradkovat
 	    'R', 1
     );
     
+    $rabatt = floatval(getValueForNode($childs, 'rabatt'));
+    $obsah = ($preisVereinbart - $preisVereinbart*$rabatt/100);
+    $obsah = " -> ".number_format($obsah, 2, ',', ' ')."CZK";
+    $pdf->Cell(
+	    17, $vyskaRadku, $obsah, 'RB', 0, // odradkovat
+	    'R', 1
+    );
+    
+    $pdf->SetFont("FreeSans", "B", 7.5);
     //kosten EUR
     $kostenCZK = ($preisVereinbart - $preisVereinbart*$rabatt/100);
+    $sumFrachtBericht['kosten_czk']+=$kostenCZK;
     $kostenEUR = $kostenCZK / $kurs;
     $obsah = number_format($kostenEUR, 2, ',', ' ')."EUR";
     $ram = "LRB";
@@ -472,12 +498,20 @@ function zapati_bericht($pdf, $cells, $childs, $vyskaRadku, $rgb) {
 	    'R', 1
     );
     
-    $obsah = '';
+    $pdf->SetFont("FreeSans", "B", 6.5);
+    $r = 100*(1-$sumFrachtBericht['kosten_czk']/$sumFrachtBericht['preis_czk']);
+    $obsah = number_format($r, 2, ',', ' ')."%";
     $pdf->Cell(
-	    25, $vyskaRadku, $obsah, 'LRB', 0, // odradkovat
+	    8, $vyskaRadku, $obsah, 'LB', 0, // odradkovat
+	    'R', 1
+    );
+    $obsah = " -> ".number_format($sumFrachtBericht['kosten_czk'], 0, ',', ' ')."CZK";
+    $pdf->Cell(
+	    17, $vyskaRadku, $obsah, 'RB', 0, // odradkovat
 	    'R', 1
     );
     
+    $pdf->SetFont("FreeSans", "B", 8);
     //kosten EUR
     $obsah = number_format($sumFrachtBericht['kosten_eur'], 2, ',', ' ')."EUR";
     $pdf->Cell(

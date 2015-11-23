@@ -69,7 +69,7 @@ foreach ($datumsToUpdate as $datum) {
     $tagDiv = "$datum $den";
     if (count($lkwDatumArray) > 0) {
 	foreach ($lkwDatumArray[$tagdatum] as $lkw) {
-	    $tagDiv.="<div title='" . $lkw['id'] . "' id='" . "lkw_" . $lkw['id'] . "' class='" . "lkw lkwdraggable lkw_" . $lkw['id'] . "'>" . $lkw['lkw_kz'] . "/" . $lkw['imexstr'] . "</div>";
+	    $tagDiv.="<div title='" . $lkw['id'] . "' id='" . "lkw_" . $lkw['id'] . "' class='" . "lkw ".$lkw['archived']." lkwdraggable lkw_" . $lkw['id'] . "'>" . $lkw['lkw_kz'] . "/" . $lkw['imexstr'] . "</div>";
 	}
     }
     $divsToUpdate[$datum] = $tagDiv;

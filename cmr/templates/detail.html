@@ -65,9 +65,10 @@ CZ 35132 Hazlov
 	    </pre>
 	</div>
 	<div class="col-sm-6">
-	    <pre>
-{{rundlaufInfo.spediteurname}}
-	    </pre>
+	    <label>Spediteur</label>
+	    <select ng-change="rundlaufChanged(rundlaufInfo,'dspediteur_id')" ng-model="rundlaufInfo.dspediteur_id" class="form-control">
+		<option ng-repeat="sp in spedArray" value="{{sp.id}}" ng-selected="sp.id==rundlaufInfo.dspediteur_id">{{sp.name}}</option>
+	    </select>
 	</div>
     </div>
 

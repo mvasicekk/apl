@@ -15,6 +15,8 @@ $apl = AplDB::getInstance();
     }
 
     $lkwInfoArray = $apl->getRundlaufInfoArray($id);
+    
+    
     $datum = $lkwInfoArray[0]['ab_datum_f'];
     
 //    $imSollDatum = substr($kundeBoxId, strpos($kundeBoxId, '_')+1,10);

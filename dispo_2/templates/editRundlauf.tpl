@@ -5,15 +5,14 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />          
 
-	<link href="../brany/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-	<script src="../brany/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	{*	<link rel="stylesheet" href="../styl_common.css" type="text/css">*}
-
-
 	<!--jQuery dependencies-->
 	<link rel="stylesheet" href="../js/jquery-ui-1.10.4/themes/base/jquery-ui.css" />
 	<script src="../js/jquery-1.11.0.min.js" type="text/javascript"></script>
 	<script src="../js/jquery-ui-1.11.0/jquery-ui.min.js" type="text/javascript"></script>
+
+	<link href="../brany/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="../brany/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	{*	<link rel="stylesheet" href="../styl_common.css" type="text/css">*}
 
 	{*	Handsontable files*}
 	<script src="../libs/moment/moment.js"></script>
@@ -36,7 +35,7 @@
 	    <div class="page-header">
 		<div class="row">
 		    <div class="col-sm-12">
-			<h4 class="text-left">
+			<h4 class="text-center">
 			    <span class="glyphicon glyphicon-road"></span>
 			    Edit Rundlauf
 			</h4>

@@ -131,6 +131,27 @@ aplApp.controller('dbehexportController',function($scope,$http){
 	    $scope.nochNichtGedruckt = response.data.nochNichtGedruckt;
 	});
     }
+    
+    /**
+     * 
+     * @param {type} pal
+     * @param {type} field
+     * @returns {undefined}
+     */
+    $scope.palBehChanged = function(pal,field){
+	console.log(pal);
+	params = {
+	    field: field,
+	    value: pal[field],
+	    id: pal.id
+	};
+	return $http.post(
+		'./updateBehData.php',
+		{params: params}
+	).then(function (response) {
+	    console.log(response.data);
+	});
+    }
     /**
      * 
      * @param {type} pal

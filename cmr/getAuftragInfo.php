@@ -58,7 +58,9 @@ if($palArrayA!==NULL){
     $palArray = $palArrayA;
 }
 
+$spedArray = $a->getSpediteurArray();
 $returnArray = array(
+    'spedArray'=>$spedArray,
     'palArray'=>$palArray,
     'pokynyProOdesilatele'=>$pokynyProOdesilatele,
     'zielortInfoStandard'=>$zielortInfoStandard,

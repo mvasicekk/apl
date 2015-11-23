@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     var container = document.getElementById('exceltable');
-    var hot;
+    //var hot;
 
     yellowRenderer = function (instance, td, row, col, prop, value, cellProperties) {
 	Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -21,7 +21,8 @@ $(document).ready(function () {
     hot = new Handsontable(container, {
 	data: [],
 	dataSchema: {
-	    id: null, 
+	    id: null
+	    ,delstr:null,
 	    ab_aby_soll_datetime: null, 
 	    imexstr: null, 
 //	    dspediteur_id: null, 
@@ -32,7 +33,9 @@ $(document).ready(function () {
 	    preis: null,
 	    rabatt: null,
 	    proforma:null,
+	    archiv:null,
 	    bemerkung: null
+	    
 	},
 	stretchH: 'last',
 	startRows: 1,
@@ -45,6 +48,7 @@ $(document).ready(function () {
 	fillHandle:false,   // zakazat natahovaci tahatko, protoze moc nefunguje
 	colHeaders: [
 	    'id', 
+	    '',
 	    'Abfahrt Aby Soll',
 	    'ImEx', 
 //	    'SpediteurId',
@@ -55,10 +59,12 @@ $(document).ready(function () {
 	    'Preis vereinbart',
 	    'Rabatt',
 	    'Proforma',
+	    'Archiv',
 	    'Bemerkung'
 	],
 	columns: [
 	    {data: 'id', renderer: greenRenderer, readOnly: true},
+	    {data: 'delstr',readOnly:true,renderer:'html'},
 	    {data: 'ab_aby_soll_datetime', readOnly: true},
 	    {data: 'imexstr', readOnly:true,renderer:'html'},
 //	    {data: 'dspediteur_id', type: 'numeric', readOnly:true},
@@ -69,6 +75,7 @@ $(document).ready(function () {
 	    {data: 'preis', type: 'numeric', allowInvalid: false},
 	    {data: 'rabatt', type: 'numeric', allowInvalid: false},
 	    {data: 'proforma'},
+	    {data: 'archiv', type: 'numeric', allowInvalid: false},
 	    {data: 'bemerkung'}
 	],
 	afterCreateRow: function (index, numberOfRows) {
@@ -177,33 +184,8 @@ $(document).ready(function () {
  */
 function afterChangeExcelTable(data, et) {
     console.log(data);
-//    var idArrayUpdate = data.idArrayUpdate;
-//
-//    //updatnu id vlozenych radku
-//    for (i = 0; i < idArrayUpdate.length; i++) {
-//	var row = idArrayUpdate[i].row;
-//	var iId = idArrayUpdate[i].insertId;
-//	if (idArrayUpdate[i].typ == 'insert') {
-//	    et.setDataAtRowProp(row, 'id_vorschuss', iId, 'update_id_vorschuss');
-//	}
-//
-//	if (idArrayUpdate[i].typ == 'update') {
-//	    var row = idArrayUpdate[i].row;
-//	    var prop = idArrayUpdate[i].prop;
-////	    alert("afterChangeExcelTable, row="+row+",prop="+prop);
-//	    if (idArrayUpdate[i].ar <= 0) {
-//		//vratit starou hodnotu
-//		et.setDataAtRowProp(row, prop, idArrayUpdate[i].oldValue, 'return_oldvalue');
-//	    }
-//	}
-//
-////	if(idArrayUpdate[i].typ=='persnr_update'){
-////	    var row = idArrayUpdate[i].row;
-////	    var prop = idArrayUpdate[i].prop;
-////	    et.setDataAtRowProp(row,'name',idArrayUpdate[i].name,'persnr_update');
-////	}
-//    }
 }
+
 /**
  * 
  * @param {type} data
@@ -212,6 +194,28 @@ function afterChangeExcelTable(data, et) {
  */
 function updateExcelTable(data, et) {
     et.loadData(data.rows);
+    $('button[id^=delRundlauf_]').unbind('click');
+    $('button[id^=delRundlauf_]').bind('click',delRundlaufClicked);
+}
+
+function delRundlaufClicked(e) {
+    console.log('delRundlauf clicked');
+    var d = window.confirm('wirklich loeschen / opravdu smazat ?');
+    if (d) {
+	$.post('./getRundlauf.php',
+		{
+		    id: $(this).attr('id'),
+		    datum_val_von: $('#datumVon').val(),
+		    datum_val_bis: $('#datumBis').val(),
+		    spediteur: $('#spediteur').val(),
+		    action: 'delRundlauf'
+		},
+	function (data) {
+	    updateExcelTable(data, hot);
+	},
+		'json'
+		);
+    }
 }
 //******************************************************************************
 /**

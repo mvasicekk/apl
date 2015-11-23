@@ -141,6 +141,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.auftragOnSelect = function($item, $model){
 	    console.log($item);
 	    $scope.auftragsnr = $item.auftragsnr;
+	    
 	    $routeParams.auftragsnr=$scope.auftragsnr;
 	    $scope.getAuftragInfo();
 	    //prenastavit url
@@ -183,6 +184,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
      * @returns {undefined}
      */
     $scope.rundlaufChanged = function(r,field){
+	console.log('rundlaufChanged:'+field);
 	var params = {rundlaufInfo: r,field:field};
 	    return $http.post(
 		    './saveRundlaufChanges.php',
@@ -229,6 +231,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	    $http.get('./getAuftragInfo.php?auftragsnr=' + $scope.auftragsnr
 		    )
 		    .then(function (response) {
+			
 			$scope.auftragInfo = response.data.auftragInfo;
 			$scope.rundlaufInfo = response.data.rundlaufInfo;
 			$scope.zielOrtInfo = response.data.zielOrtInfo;
@@ -236,6 +239,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			$scope.pokynyProOdesilatele = response.data.pokynyProOdesilatele;
 			$scope.username = response.data.user;
 			$scope.usernameFull = response.data.userFull;
+			$scope.spedArray = response.data.spedArray;
 			// palety + priam 5 volnych pozic
 			$scope.palArray = response.data.palArray;
 			for(i=0;i<5;i++){
