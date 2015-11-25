@@ -15,13 +15,13 @@ $datumVon = trim($_GET['von']);
 $datumBis = trim($_GET['bis']);
 $teil = trim($_GET['teil']);
 
-if($datumVon!=0 && $datumBis!=0){
-    $datumVon = date('Y-m-d',  $datumVon/1000);
-    $datumBis = date('Y-m-d',  $datumBis/1000)." 23:59:59";
+if ($datumVon != 0 && $datumBis != 0) {
+    $datumVon = date('Y-m-d', $datumVon / 1000);
+    $datumBis = date('Y-m-d', $datumBis / 1000) . " 23:59:59";
 }
 
 $zeilenArray = array();
-$sql="";
+$sql = "";
 $sql.=" select ";
 $sql.="     dma.id,";
 $sql.="     dma.imanr,";
@@ -63,13 +63,13 @@ $sql.="     dma.stamp";
 $sql.=" from dma";
 $sql.=" join dkopf on dkopf.Teil=dma.teil";
 $sql.=" where (1)";
-if($datumVon!=0 && $datumBis!=0){
+if ($datumVon != 0 && $datumBis != 0) {
     $sql.="   and (dma.stamp between '$datumVon' and '$datumBis')";
 }
-if($kundeVon!=0 && $kundeBis!=0){
+if ($kundeVon != 0 && $kundeBis != 0) {
     $sql.="   and (dkopf.Kunde between '$kundeVon' and '$kundeBis')";
 }
-if(strlen($teil)>0){
+if (strlen($teil) > 0) {
     $sql.="   and (dma.teil like '%$teil%')";
 }
 
@@ -77,49 +77,53 @@ $sql.=" order by ";
 $sql.="     dkopf.Kunde,";
 $sql.="     dma.teil";
 
-if(
-    ($datumVon!=0 && $datumBis!=0)
-    ||($kundeVon!=0 && $kundeBis!=0)
-    ||(strlen($teil)>0)
-)
-{
+if (
+	($datumVon != 0 && $datumBis != 0) || ($kundeVon != 0 && $kundeBis != 0) || (strlen($teil) > 0)
+) {
     $dmaArray = $a->getQueryRows($sql);
-    if($dmaArray!==NULL){
-	foreach ($dmaArray as $dma){
+    if ($dmaArray !== NULL) {
+	foreach ($dmaArray as $dma) {
 	    $kunde = $dma['kunde'];
 	    $teil = $dma['teil'];
 	    $imanr = $dma['imanr'];
-	    
+
 	    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['dma'] = $dma;
-	    
+
+	    //$pokusna['kd'] = $defered['ax']-$collected['ydiff'];
+	    // uz tady muzu rozdelit podle schvaleni/zamitnuti ima/ema, ktere dauftr pozice me zajimaji
+	    // 
 	    // pozadovane a povolene pozice pro vicepraci
 	    $dauftrIdArray['ima_antrag'] = explode(";", $dma['ima_dauftrid_array']);
 	    $dauftrIdArray['ima_genehmigt'] = explode(";", $dma['ima_dauftrid_array_genehmigt']);
 	    $dauftrIdArray['ema_antrag'] = explode(";", $dma['ema_dauftrid_array']);
 	    $dauftrIdArray['ema_genehmigt'] = explode(";", $dma['ema_dauftrid_array_genehmigt']);
-	    
+
 	    // pozadovane a povolene operace a casy pro vicepraci, vytvoreni pole pro dalsi praci
-	    
+
 	    $tatZeitArray['ima_antrag'] = explode(";", $dma['tatundzeitarray']);
 	    $tatZeitArray['ima_genehmigt'] = explode(";", $dma['ima_tatundzeitarray_genehmigt']);
 	    $tatZeitArray['ema_antrag'] = explode(";", $dma['ema_tatundzeitarray']);
 	    $tatZeitArray['ema_genehmigt'] = explode(";", $dma['ema_tatundzeitarray_genehmigt']);
-	    
+
+
 	    $importTatZeitArray = array();
-	    
-	    foreach ($tatZeitArray as $typ=>$tatZeitStringArray){
-		if(is_array($tatZeitStringArray)){
+
+	    foreach ($tatZeitArray as $typ => $tatZeitStringArray) {
+		if (is_array($tatZeitStringArray)) {
 		    //pole stringu ve forme abrng:vzaby[:vzkd]
 		    $importTatZeitArray[$typ] = array();
-		    foreach($tatZeitStringArray as $t1){
+		    foreach ($tatZeitStringArray as $t1) {
 			$tza = explode(":", $t1);
-			array_push($importTatZeitArray[$typ],array('abgnr'=>$tza[0],'vzaby'=>  floatval($tza[1]),'vzkd'=>  floatval($tza[2])));
+			$abgnr = intval($tza[0]);
+			if ($abgnr > 0) {
+			    array_push($importTatZeitArray[$typ], array('abgnr' => $tza[0], 'vzaby' => floatval($tza[1]), 'vzkd' => floatval($tza[2])));
+			}
 		    }
 		}
 	    }
-	    
+
 	    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['tatzeit'] = $importTatZeitArray;
-	    
+
 	    $importStkArray = array();
 	    foreach ($dauftrIdArray as $typ => $idArray) {
 		$pocetId[$typ] = 0;
@@ -132,7 +136,7 @@ if(
 			    $pocetDauftrRows[$typ] ++;
 			    $importStkArray[$typ][$dauftrRow['auftragsnr']]['ba_stk']+=$dauftrRow['stk'];
 			    $importStkArray[$typ][$dauftrRow['auftragsnr']]['im_stk']+=$dauftrRow['im_stk'];
-			    
+
 			    //sumy pro skupiny
 			    //kunde
 			    $zeilen['kunden'][$kunde]['summen'][$typ]['ba_stk']+=$dauftrRow['stk'];
@@ -147,68 +151,89 @@ if(
 		    }
 		}
 	    }
-	    foreach ($importStkArray as $typ=>$importArray){
-		foreach ($importArray as $import=>$stkArray){
+	    foreach ($importStkArray as $typ => $importArray) {
+		foreach ($importArray as $import => $stkArray) {
 		    //importy
-		    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk'][$typ] = $stkArray;		    
+		    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk'][$typ] = $stkArray;
 		}
 	    }
 	    //bearbeitet stk
-	    foreach ($zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'] as $import=>$ar){
-		foreach($importTatZeitArray as $typ=>$tatArray){
-		    foreach ($tatArray as $index=>$abgnrArray){
-			$tat = $abgnrArray['abgnr'];
-			$zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk_bearbeitet'][$tat][$typ] = $a->getDrueckGutStkForImportAbgnr($import,$tat);
+	    if (is_array($zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'])) {
+		foreach ($zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'] as $import => $ar) {
+		    foreach ($importTatZeitArray as $typ => $tatArray) {
+			foreach ($tatArray as $index => $abgnrArray) {
+			    $tat = $abgnrArray['abgnr'];
+			    $stkBearbeitet = $a->getDrueckGutStkForImportAbgnr($import, $teil, $tat);
+			    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk_bearbeitet'][$tat][$typ] = $stkBearbeitet;
+			    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['summen'][$tat][$typ]['stk_bearbeitet']+=$stkBearbeitet;
+			    $drechInfo = $a->getDrechGutStkForImportAbgnr($import, $teil, $tat);
+			    $stkBerechnet = $drechInfo['gstk'];
+			    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['stk_berechnet'][$tat][$typ] = $stkBerechnet;
+			    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['summen'][$tat][$typ]['stk_berechnet']+=$stkBerechnet;
+			    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['importe'][$import]['rechnr'][$tat][$typ] = $drechInfo['rechnr'];
+			}
 		    }
 		}
 	    }
-	    
 	}
-	
-	
+
+
 	//vytvoreni sekci pro tabulku
-	foreach ($zeilen['kunden'] as $kunde=>$kundeArray){
-	    array_push($zeilenArray, array("section"=>"kundeheader","kunde"=>$kunde));
-	    foreach ($kundeArray['teile'] as $teil=>$teilArray){
+	foreach ($zeilen['kunden'] as $kunde => $kundeArray) {
+	    array_push($zeilenArray, array("section" => "kundeheader", "kunde" => $kunde));
+	    foreach ($kundeArray['teile'] as $teil => $teilArray) {
 		$teilInfo = $a->getTeilInfoArray($teil);
-		array_push($zeilenArray, array("section"=>"teilheader","teil"=>$teil,"teilInfo"=>$teilInfo));
-		foreach($teilArray['ma'] as $imanr=>$dma1){
+		array_push($zeilenArray, array("section" => "teilheader", "teil" => $teil, "teilInfo" => $teilInfo));
+		foreach ($teilArray['ma'] as $imanr => $dma1) {
 		    $summen = $dma1['summen'];
 		    $importe = $dma1['importe'];
 		    $dma = $dma1['dma'];
 		    $teileCount[$dma['teil']]+=1;
+		    $tatZeit = $dma1['tatzeit'];
+		    $emaAntragTatZeitArray = $tatZeit['ema_antrag'];
+		    $imaAntragTatZeitArray = $tatZeit['ima_antrag'];
 		    //uprava nekterych poli
 		    //imavon - jen jmeno uzivatele
-		    $dma['imavon'] = substr($dma['imavon'], strrpos($dma['imavon'], '/')+1);
-		    array_push($zeilenArray, array("section"=>"dmadetail","dmaRow"=>$dma,"summen"=>$summen));
+		    $dma['imavon'] = substr($dma['imavon'], strrpos($dma['imavon'], '/') + 1);
+		    array_push($zeilenArray, array("section" => "dmaheader", "dmaRow" => $dma, "summen" => $summen));
+		    //detail pro dma podle poctu pozadovanych operaci
+		    $tatZeitArray = $imaAntragTatZeitArray;
+		    if (count($emaAntragTatZeitArray) > 0) {
+			// pokud mam pozadavek na ema, dam prednost operacim v pozadavku na ema
+			$tatZeitArray = $emaAntragTatZeitArray;
+		    }
+		    foreach ($tatZeitArray as $ind => $tatZeitInfo) {
+			array_push($zeilenArray, array("section" => "dmadetail", "dmaRow" => $dma, "summen" => $summen, "tatzeitinfo" => $tatZeitInfo));
+		    }
+
 		    //sekce pro importy
-		    if(is_array($importe)){
-			foreach ($importe as $import=>$imArray){
-			    array_push($zeilenArray, array("section"=>"importdetail","import"=>$import,"antragImportStk"=>$imArray));
-			    foreach ($imArray['stk_bearbeitet'] as $abgnr=>$stkArray){
-				array_push($zeilenArray, array("section"=>"importabgnrdetail","import"=>$import,"abgnr"=>$abgnr,"stkArray"=>$stkArray,"antragImportStk"=>$imArray));
+		    if (is_array($importe)) {
+			foreach ($importe as $import => $imArray) {
+			    array_push($zeilenArray, array("section" => "importdetail", "import" => $import, "antragImportStk" => $imArray));
+			    foreach ($imArray['stk_bearbeitet'] as $abgnr => $stkArray) {
+				array_push($zeilenArray, array("section" => "importabgnrdetail", "import" => $import, "abgnr" => $abgnr, "stkArray" => $stkArray, "antragImportStk" => $imArray));
 			    }
 			}
 		    }
 		}
 	    }
 	}
-	    
+
 	$teileKeysArray = array_keys($teileCount);
     }
 }
 
 
 $returnArray = array(
-    'zeilenraw'=>$zeilen,
-    'von'=>$datumVon,
-    'bis'=>$datumBis,
-    'kundevon'=>$kundeVon,
-    'kundebis'=>$kundeBis,
+    'zeilenraw' => $zeilen,
+    'von' => $datumVon,
+    'bis' => $datumBis,
+    'kundevon' => $kundeVon,
+    'kundebis' => $kundeBis,
     "zeilen" => $zeilenArray,
-    "teileKeysArray"=>$teileKeysArray,
-    "dmaArray"=>$dmaArray,
-    "sql_dma"=>$sql,
+    "teileKeysArray" => $teileKeysArray,
+    "dmaArray" => $dmaArray,
+    "sql_dma" => $sql,
 );
 
 echo json_encode($returnArray);

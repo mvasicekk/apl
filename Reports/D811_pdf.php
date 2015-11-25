@@ -115,7 +115,8 @@ foreach ($parameters as $param)
 			if($par->nodeName=="value")
 				$value=$par->nodeValue;
 		}
-		$params .= $label.": ".$value."  ";
+		if(strtolower($label)!="password")
+		    $params .= $label.": ".$value."  ";
 	}
 }
 

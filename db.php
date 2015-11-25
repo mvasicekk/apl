@@ -1108,7 +1108,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param type $import
      * @param type $tat
      */
-    public function getDrueckGutStkForImportAbgnr($import,$tat){
+    public function getDrueckGutStkForImportAbgnr($import,$teil,$tat){
 	$stk = 0;
 	$sql.=" select sum(drueck.`Stück`) as gstk";
 	$sql.=" from drueck";
@@ -1116,12 +1116,37 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" auftragsnr='$import'";
 	$sql.=" and";
 	$sql.=" TaetNr='$tat'";
+	$sql.=" and";
+	$sql.=" teil='$teil'";
 	$rows = $this->getQueryRows($sql);
 	if($rows!==NULL){
 	    $stk = intval($rows[0]['gstk']);
 	}
 	return $stk;
     }
+    
+    public function getDrechGutStkForImportAbgnr($import,$teil,$tat){
+	$stk = 0;
+	$rechnr = '';
+	
+	$sql.=" select ";
+	$sql.=" AuftragsNr as rechnr,";
+	$sql.=" sum(drech.`Stück`) as gstk";
+	$sql.=" from drech";
+	$sql.=" where";
+	$sql.=" origauftrag='$import'";
+	$sql.=" and";
+	$sql.=" abgnr='$tat'";
+	$sql.=" and";
+	$sql.=" teil='$teil'";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $stk = intval($rows[0]['gstk']);
+	    $rechnr = $rows[0]['rechnr'];
+	}
+	return array('gstk'=>$stk,'rechnr'=>$rechnr);
+    }
+    
     /**
      * pro uvodni stranku apl
      * @return array
