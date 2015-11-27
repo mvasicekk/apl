@@ -1,0 +1,47 @@
+<div id="spinner"></div>
+
+<div class="container-fluid">
+    <div class="page-header">
+	<h4>Pers Auswertung (interaktiv)</h4>
+    </div>
+    <table id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-condensed table-hover">
+	<thead>
+	    <tr class="no-print">
+		<th style="" colspan="{{1}}">
+		    <input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persVon" placeholder="PersNr von" type="text"/>
+		    <input tabindex="2" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persBis" placeholder="PersNr bis" type="text"/>
+		</th>
+		<th style="" colspan="{{1}}">
+		    <input ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
+		    <input ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
+		</th>
+		<th colspan="{{monthsArray.length}}">
+		    <button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
+		</th>
+	    </tr>
+	    <tr>
+		<th style="width:4em;">PersNr</th>
+		<th style="width:8em;">Name</th>
+		<th ng-repeat="month in monthsArray">{{month}}</th>
+	    </tr>
+	</thead>
+	<tbody ng-if="zeilen===null">
+	    <tr>
+		<td colspan="2" class="text-center text-danger">
+		    <h1>Keine Data !</h1>
+		</td>
+	    </tr>
+	</tbody>
+	<tbody>
+	    <tr ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+	</tbody>
+	
+	<tfoot>
+<!--	    <tr>
+		<td colspan="{{5 + abgnrKeysArray.length + aartKeysArray.length}}" class="text-center">
+		    <div st-pagination="true" st-items-by-page="50" st-displayed-pages="10"></div>
+		</td>
+	    </tr>-->
+	</tfoot>
+    </table>
+</div>

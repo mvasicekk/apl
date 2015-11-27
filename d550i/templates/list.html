@@ -22,7 +22,15 @@
 			<label class="checkbox-inline">
 			    <input ng-model="mitImportDetail" type="checkbox">Importe zeigen
 			</label>
-		    </div>		    
+		    </div>
+		    <div style="margin-left:2em;">
+		    <label class="radio">
+			<input ng-model="stkOption" type="radio" name="stkRadioOptions" id="inlineRadio1" value="ba">Bestand aktuell
+		    </label>
+		    <label class="radio">
+			<input ng-model="stkOption" type="radio" name="stkRadioOptions" id="inlineRadio2" value="im">Import (nach "Auftragsmenge speichern")
+		    </label>
+		    </div>
 		</th>
 	    </tr>
 	    <tr>
@@ -91,13 +99,25 @@
 		</td>
 		<!--kusy gemeldet-->
 		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
-		    <span title="IMA gemeldete Stk" ng-show="r.summen.ema_antrag===undefined">{{r.summen.ima_antrag.ba_stk}}</span>
-		    <span title="EMA gemeldete Stk" ng-show="r.summen.ema_antrag!==undefined">{{r.summen.ema_antrag.ba_stk}}</span>
+		    <span title="IMA gemeldete Stk" ng-show="r.summen.ema_antrag===undefined">
+			<span ng-show="stkOption=='ba'">{{r.summen.ima_antrag.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.summen.ima_antrag.im_stk}}</span>
+		    </span>
+		    <span title="EMA gemeldete Stk" ng-show="r.summen.ema_antrag!==undefined">
+			<span ng-show="stkOption=='ba'">{{r.summen.ema_antrag.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.summen.ema_antrag.im_stk}}</span>
+		    </span>
 		</td>
 		<!--kusy genehmigt-->
 		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
-    		    <span title="IMA genehmigte Stk" ng-show="r.summen.ema_genehmigt===undefined">{{r.summen.ima_genehmigt.ba_stk}}</span>
-		    <span title="EMA genehmigte Stk" ng-show="r.summen.ema_genehmigt!==undefined">{{r.summen.ema_genehmigt.ba_stk}}</span>
+    		    <span title="IMA genehmigte Stk" ng-show="r.summen.ema_genehmigt===undefined">
+			<span ng-show="stkOption=='ba'">{{r.summen.ima_genehmigt.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.summen.ima_genehmigt.im_stk}}</span>
+		    </span>
+		    <span title="EMA genehmigte Stk" ng-show="r.summen.ema_genehmigt!==undefined">
+			<span ng-show="stkOption=='ba'">{{r.summen.ema_genehmigt.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.summen.ema_genehmigt.im_stk}}</span>
+		    </span>
 		</td>
 		<!--kusy bearbeitet-->
 		<td class="{{r.section}} text-right" ng-show="r.section=='dmadetail'">
@@ -115,7 +135,7 @@
 
 		<!--importabgnrdetail-->
 		<td colspan="2" class="{{r.section}} text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
-		    {{r.import}}
+		    <a target="_blank" href="../auftrag/auftrag.php#/det/{{r.import}}">{{r.import}}</a>
 		</td>
 		<td class="{{r.section}} text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
 		    {{r.abgnr}}
@@ -126,14 +146,26 @@
 
 		<!--kusy gemeldet-->
 		<td class="text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
-		    <span title="IMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag===undefined">{{r.antragImportStk.stk.ima_antrag.ba_stk}}</span>
-		    <span title="EMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag!==undefined">{{r.antragImportStk.stk.ema_antrag.ba_stk}}</span>
+		    <span title="IMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag===undefined">
+			<span ng-show="stkOption=='ba'">{{r.antragImportStk.stk.ima_antrag.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.antragImportStk.stk.ima_antrag.im_stk}}</span>
+		    </span>
+		    <span title="EMA gemeldete Stk" ng-show="r.antragImportStk.stk.ema_antrag!==undefined">
+			<span ng-show="stkOption=='ba'">{{r.antragImportStk.stk.ema_antrag.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.antragImportStk.stk.ema_antrag.im_stk}}</span>
+		    </span>
 		    <!--{{r.antragImportStk.stk.ima_antrag.ba_stk}}(ba)-->
 		</td>
 		<!--kusy genehmigt-->
 		<td class="text-right" ng-show="r.section=='importabgnrdetail' && mitImportDetail">
-		    <span title="IMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt===undefined">{{r.antragImportStk.stk.ima_genehmigt.ba_stk}}</span>
-		    <span title="EMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt!==undefined">{{r.antragImportStk.stk.ema_genehmigt.ba_stk}}</span>
+		    <span title="IMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt===undefined">
+			<span ng-show="stkOption=='ba'">{{r.antragImportStk.stk.ima_genehmigt.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.antragImportStk.stk.ima_genehmigt.im_stk}}</span>
+		    </span>
+		    <span title="EMA genehmigte Stk" ng-show="r.antragImportStk.stk.ema_genehmigt!==undefined">
+			<span ng-show="stkOption=='ba'">{{r.antragImportStk.stk.ema_genehmigt.ba_stk}}</span>
+			<span ng-show="stkOption=='im'">{{r.antragImportStk.stk.ema_genehmigt.im_stk}}</span>
+		    </span>
 		    <!--{{r.antragImportStk.ba_stk}}(ba)-->
 		</td>
 		<!--kusy bearbeitet-->

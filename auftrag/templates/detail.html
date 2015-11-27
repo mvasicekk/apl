@@ -121,6 +121,7 @@
 		</div>
 	</div>
 	<div class="col-sm-2 no-print">
+	    <a href="#/list" class="btn btn-block btn-xs btn-info">Auftrag suchen / NEU</a>
 	    <a href="../dbehaelter/beheingabe.php?auftrag={{auftragInfo.auftragsnr}}" class="btn btn-block btn-xs btn-info">Behaelter bew.</a>
 	</div>
 	
@@ -144,7 +145,7 @@
 	    <a ng-show="securityInfo.showArray.exportfullen" href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>
 	    <a ng-show="securityInfo.showArray.exportloeschen" href="../dauftr/export_fullen/export_loeschen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export loeschen</a>
 	    <a ng-show="securityInfo.showArray.exporttablo" href="../dauftr/exporttablo.php?export={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Exporttablo</a>
-	    <a ng-show="securityInfo.showArray.exporttablo" href="../cmr/cmr.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">CMR</a>
+	    <a ng-show="securityInfo.showArray.cmr" href="../cmr/cmr.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">CMR</a>
 	    
 	    <!--<a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710" class="btn btn-xs btn-block btn-info">D710 - Lieferungsuebersicht</a>-->
 	    <!--<a href="../get_parameters.php?popisky=Export (leer = Blanko );Teil;Termin;Text,*RA;Wassermarke,*RA;Format,*RA&promenne=export;teil;termin;popisek;watermark;format&values={{auftragInfo.auftragsnr}};*;{{auftragInfo.ausliefer_datum}};FREIGABE,ZWEIFLER;nein,ja;6x auf A4,2x auf A4&report=D64X" class="btn btn-xs btn-block btn-info">D6XX - Freigabezettel</a>-->
@@ -157,9 +158,9 @@
 	    </button>
 	    <ul class="dropdown-menu">
 		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710">D710</a></li>
-		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE;Typ,*RA&promenne=export!number;termin;typ&values=;{{auftragInfo.ausliefer_datum}};Gute Teile,Ausschuss,Mehrarbeit&report=D720">D720 (G/A)</a></li>
-		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE;Typ,*RA&promenne=export!number;termin;typ&values=;{{auftragInfo.ausliefer_datum}};Gute Teile,Ausschuss,Mehrarbeit&report=D725">D725 (AArt)</a></li>
-		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE;Typ,*RA&promenne=export!number;termin;typ&values=;{{auftragInfo.ausliefer_datum}};Gute Teile,Ausschuss,Mehrarbeit&report=D728">D728 (2D-code)</a></li>
+		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE;Typ,*RA&promenne=export!number;termin;typ&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}};Gute Teile,Ausschuss,Mehrarbeit&report=D720">D720 (G/A)</a></li>
+		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE;Typ,*RA&promenne=export!number;termin;typ&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}};Gute Teile,Ausschuss,Mehrarbeit&report=D725">D725 (AArt)</a></li>
+		<li><a href="../get_parameters.php?popisky=Export;Termin,*DATE;Typ,*RA&promenne=export!number;termin;typ&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}};Gute Teile,Ausschuss,Mehrarbeit&report=D728">D728 (2D-code)</a></li>
 	    </ul>
 		    </div>
 	    </div>
@@ -209,7 +210,9 @@
 	    </thead>
 	    <tbody>
 		<tr ng-if="r.KzGut=='G' || (showAlleTat)" ng-class="{kzgut:(r.KzGut=='G')&&(showAlleTat),edited:r.edit==1}" ng-repeat="r in displayDauftrPos">
-		    <td class="" ng-class="{newpal:r.newpal==1}">{{r.teil}}</td>
+		    <td class="" ng-class="{newpal:r.newpal==1}">
+			<a target="_blank" href="../dkopf/dkopf.php?teil={{r.teil}}">{{r.teil}}</a>
+		    </td>
 		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.imp_pal}}</td>
 		    <td class="text-right" ng-class="{newpal:r.newpal==1}">
 			<input maxlength="4" ng-if="r.edit==1" ng-model="r.imp_stk" type="text" class="form-control input-sm text-right">
@@ -230,7 +233,9 @@
 		    </td>
 		    <td ng-class="{newpal:r.newpal==1}">
 			<input maxlength="8" ng-if="r.edit==1" ng-model="r.ex" type="text" class="form-control input-sm">
-			<span ng-if="r.edit==0" >{{r.ex}}</span>
+			<span ng-if="r.edit==0" >
+			    <a href="#/det/{{r.ex}}">{{r.ex}}</a>
+			</span>
 		    </td>
 		    <td class="text-right" ng-class="{newpal:r.newpal==1}">
 			<input maxlength="4" ng-if="r.edit==1" ng-model="r.palex" type="text" class="form-control input-sm text-right">

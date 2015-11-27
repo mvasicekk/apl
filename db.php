@@ -715,6 +715,104 @@ class AplDB {
 	return $this->getQueryRows($sql);
     }
 
+    
+public function getDMAInfo($imanr){
+    $sql = "select * from dma where imanr='$imanr'";
+    return $this->getQueryRows($sql);
+}
+
+
+/**
+ * 
+ * @global type $apl
+ * @param type $imanr
+ * @param type $didTyp
+ * @return type
+ */
+function getDauftrIdArrayForIMA($imanr, $didTyp) {
+    
+    $dmaA = $this->getDMAInfo($imanr);
+
+    if ($dmaA !== NULL) {
+	$dma = $dmaA[0];
+
+//	echo "<h1>" . $dma['imanr'] . "</h1>";
+	//AplDB::varDump($dma);
+	// pro kazdy import z auftragsnrarray, zkusim najit id_dauftr
+	$teil = $dma['teil'];
+	$imaAntrag_AuftragArray = split(';', $dma['auftragsnrarray']);
+	$imaAntrag_PalArray = split(';', $dma['palarray']);
+	$imaAntrag_DIdArray = split(';', $dma['ima_dauftrid_array']);
+
+	$emaAntrag_AuftragArray = split(';', $dma['ema_auftragsarray']);
+	$emaAntrag_PalArray = split(';', $dma['ema_palarray']);
+	$emaAntrag_DIdArray = split(';', $dma['ema_dauftrid_array']);
+
+	$imaGenehmigt_AuftragArray = split(';', $dma['ima_auftragsnrarray_genehmigt']);
+	$imaGenehmigt_PalArray = split(';', $dma['ima_palarray_genehmigt']);
+	$imaGenehmigt_DIdArray = split(';', $dma['ima_dauftrid_array_genehmigt']);
+
+	$emaGenehmigt_AuftragArray = split(';', $dma['ema_auftragsarray_genehmigt']);
+	$emaGenehmigt_PalArray = split(';', $dma['ema_palarray_genehmigt']);
+	$emaGenehmigt_DIdArray = split(';', $dma['ema_dauftrid_array_genehmigt']);
+
+
+	$importPalArray = array(
+	    'imaAntrag' => array(
+		'imArray' => $imaAntrag_AuftragArray,
+		'palArray' => $imaAntrag_PalArray,
+		'DIdArray' => $imaAntrag_DIdArray,
+	    ),
+	    'emaAntrag' => array(
+		'imArray' => $emaAntrag_AuftragArray,
+		'palArray' => $emaAntrag_PalArray,
+		'DIdArray' => $emaAntrag_DIdArray,
+	    ),
+	    'imaGenehmigt' => array(
+		'imArray' => $imaGenehmigt_AuftragArray,
+		'palArray' => $imaGenehmigt_PalArray,
+		'DIdArray' => $imaGenehmigt_DIdArray,
+	    ),
+	    'emaGenehmigt' => array(
+		'imArray' => $emaGenehmigt_AuftragArray,
+		'palArray' => $emaGenehmigt_PalArray,
+		'DIdArray' => $emaGenehmigt_DIdArray,
+	    ),
+	);
+
+	$imPalA = $importPalArray[$didTyp];
+	$typ = $didTyp;
+
+//	echo "<h3>" . $typ . "</h3>";
+	$DIdArray = array();
+	if (is_array($imPalA['imArray'])) {
+	    foreach ($imPalA['imArray'] as $imaAntrag_Auftrag) {
+		// kazdej auftrag zkusim zkombinovat s kazdou paletou a najit odpovidajici id_dauftr v kombinaci s teil a kzgut='G'
+		if (is_array($imPalA['palArray'])) {
+		    foreach ($imPalA['palArray'] as $imaAntrag_Pal) {
+			$sql = "select dauftr.id_dauftr from dauftr where auftragsnr='$imaAntrag_Auftrag' and `pos-pal-nr`='$imaAntrag_Pal' and teil='$teil' and KzGut='G'";
+			$dauftrRows = $this->getQueryRows($sql);
+			$id_dauftr = 0;
+			if ($dauftrRows !== NULL) {
+			    $id_dauftr = $dauftrRows[0]['id_dauftr'];
+			}
+			if ($id_dauftr > 0) {
+//			    echo "$imaAntrag_Auftrag - $imaAntrag_Pal ($teil) - $id_dauftr<br>";
+			    array_push($DIdArray, $id_dauftr);
+			}
+		    }
+		}
+//		echo "<hr>";
+	    }
+	}
+	sort($DIdArray);
+//	echo "DIdArray (read):" . join(',', $DIdArray) . "<br>";
+	sort($imPalA['DIdArray']);
+//	echo "DIdArray (saved) :" . join(',', $imPalA['DIdArray']);
+    }
+    return array('did_read'=>$DIdArray,'did_saved'=>$imPalA['DIdArray']);
+}
+
     /**
      * 
      * @param type $kundeVon
@@ -1139,10 +1237,17 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.=" abgnr='$tat'";
 	$sql.=" and";
 	$sql.=" teil='$teil'";
+	$sql.=" group by AuftragsNr";
 	$rows = $this->getQueryRows($sql);
 	if($rows!==NULL){
-	    $stk = intval($rows[0]['gstk']);
-	    $rechnr = $rows[0]['rechnr'];
+	    foreach ($rows as $row){
+		$stk+= intval($row['gstk']);
+		$rechnr.= $row['rechnr'].",";
+	    }
+	}
+	//odstranit carku na konci
+	if(strlen($rechnr)>0){
+	    $rechnr = substr($rechnr, 0,strlen($rechnr)-1);
 	}
 	return array('gstk'=>$stk,'rechnr'=>$rechnr);
     }

@@ -24,7 +24,7 @@
     
     <script src="./bower_components/angular-smart-table/dist/smart-table.min.js"></script>
     
-    <script type="text/javascript" src="../plupload/js/plupload.full.js"></script>
+{*    <script type="text/javascript" src="../plupload/js/plupload.full.js"></script>*}
     
     <script src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="./bower_components/angular-ui-select/dist/select.min.js"></script>

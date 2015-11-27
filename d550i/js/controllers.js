@@ -13,6 +13,7 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
     $scope.datumBis;
     $scope.teilMatch="";
     $scope.mitImportDetail=false;
+    $scope.stkOption = 'ba';
     
     var d550it;
     
@@ -62,7 +63,7 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 		var b = 0;
 	    }
 	    console.log('posilam get pozadavek');
-	    
+	    $('#spinner').show();
 	    $http.get('./getD550i.php?kundevon=' + $scope.kundeVon
 		    +'&kundebis='+$scope.kundeBis
 		    +'&von='+v

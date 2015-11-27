@@ -466,6 +466,12 @@ aplApp.controller('listController', function ($scope, $routeParams,$http,$timeou
     
     $scope.initSecurity();
     
+    var such = $window.document.getElementById('auftragsnr');
+    if (such) {
+	such.focus();
+	such.select();
+    }
+    
     $scope.getAuftragsMatch = function () {
 	var params = {a: $scope.auftragsnr};
 	return $http.post(
