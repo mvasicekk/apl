@@ -322,6 +322,41 @@ class AplDB {
 	    );
     }
 
+    
+    /**
+     * 
+     * @param type $atyp
+     * @param type $year
+     * @param type $month
+     * @param type $persnr
+     * @return int
+     */
+    public function getGewAussTypYearMonthPersnr($atyp, $year, $month, $persnr) {
+	$sql.=" select";
+	$sql.=" drueck.PersNr,";
+	$sql.=" sum(drueck.`Auss-Stück`*dkopf.Gew) as auss_gew";
+	$sql.=" from";
+	$sql.=" drueck";
+	$sql.=" join dkopf on dkopf.Teil=drueck.Teil";
+	$sql.=" where";
+	$sql.=" persnr='$persnr'";
+	$sql.=" and";
+	$sql.=" MONTH(drueck.Datum)='$month'";
+	$sql.=" and";
+	$sql.=" YEAR(drueck.Datum)='$year'";
+	$sql.=" and";
+	$sql.=" drueck.auss_typ='$atyp'";
+	$sql.=" group by";
+	$sql.=" drueck.PersNr";
+
+	$rows = $this->getQueryRows($sql);
+	if ($rows !== NULL) {
+	    return floatval($rows[0]['auss_gew']);
+	} else {
+	    return 0;
+	}
+    }
+
     /**
      *
      * @param int $persnr
@@ -357,6 +392,35 @@ class AplDB {
             return 0;
     }
 
+
+    /**
+     * 
+     */
+    public function getTatTageBetweenDatums($tat, $von, $bis, $persnr) {
+	$sql.=" select";
+	$sql.=" dzeit.PersNr as persnr,";
+	$sql.=" dzeit.tat,";
+	$sql.=" count(dzeit.Datum) as pocet";
+	$sql.=" from";
+	$sql.=" dzeit";
+	$sql.=" where";
+	$sql.=" dzeit.persnr='$persnr'";
+	$sql.=" and dzeit.datum between '$von' and '$bis'";
+	$sql.=" group by";
+	$sql.=" dzeit.persnr,";
+	$sql.=" dzeit.tat";
+	$sql.=" having";
+	$sql.=" dzeit.tat='$tat'";
+	
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    return intval($rows[0]['pocet']);
+	}
+	else{
+	    return 0;
+	}
+    }
+    
 
     /**
      *
@@ -618,6 +682,35 @@ class AplDB {
 //	$sql.=" drundlauf.an_aby_soll_datetime between '$datumVon 00:00:00' and '$datumBis 23:59:59'";
 	return $this->getQueryRows($sql);
     }
+    
+    /**
+     * 
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     */
+    public function getPersLeistungArray($persnr, $von, $bis) {
+	$sql.=" select";
+	$sql.=" drueck.PersNr,";
+	$sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+	$sql.=" sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord";
+	$sql.=" from";
+	$sql.=" drueck";
+	$sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	$sql.=" where";
+	$sql.=" drueck.PersNr='$persnr'";
+	$sql.=" and drueck.Datum between '$von' and '$bis'";
+	$sql.=" group by PersNr";
+	
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    return $rows[0];
+	}
+	else{
+	    return NULL;
+	}
+    }
+
     /**
      * 
      * @param type $kundeVon

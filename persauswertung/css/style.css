@@ -99,9 +99,11 @@ tr.sumteil{
 	padding: 3px;
 	font-size: 0.8em;
 }
-#d550it td.teilinfo{
-	font-size: 0.7em;
-	font-weight: normal;
+
+#d550it td.persheader{
+	border-top: 2px solid black;
+	font-weight: bold;
+	background-color:#cfc;
 }
    
 #d550it td.dmadetail{
@@ -126,10 +128,12 @@ tr.sumteil{
 	background-color: #fdd;
 }
 
-#d550it td.teilheader{
-	font-weight: bold;
-	background-color: #eef;
-	border-top: 3px solid #00f;
+#d550it tr.A6{
+	background-color: #fee;
+}
+
+#d550it tr.leistung{
+	background-color: #eee;
 }
 
 #d550it td.kundeheader{

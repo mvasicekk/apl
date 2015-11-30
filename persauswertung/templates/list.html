@@ -4,7 +4,7 @@
     <div class="page-header">
 	<h4>Pers Auswertung (interaktiv)</h4>
     </div>
-    <table id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-condensed table-hover">
+    <table id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class="no-print">
 		<th style="" colspan="{{1}}">
@@ -22,7 +22,7 @@
 	    <tr>
 		<th style="width:4em;">PersNr</th>
 		<th style="width:8em;">Name</th>
-		<th ng-repeat="month in monthsArray">{{month}}</th>
+		<th ng-repeat="month in monthsArray" class="text-center">{{month}}</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -33,7 +33,29 @@
 	    </tr>
 	</tbody>
 	<tbody>
-	    <tr ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+	    <tr class="{{r.group}}" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+		
+		<!--persheader---------------------------------------------- -->
+		<td class="{{r.section}}" ng-if="r.section=='persheader'">
+		    {{r.persnr}}
+		</td>
+		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length}}">
+		    {{r.name}}
+		</td>
+		
+		<!--groupdetail--------------------------------------------- -->
+		<td class="{{r.section}}" ng-if="r.section=='groupdetail'">
+		    {{r.group}}
+		</td>
+		<td class="{{r.section}}" ng-if="r.section=='groupdetail'">
+		    {{r.groupDetail}}
+		</td>
+		<td ng-repeat="mo in monthsArray" class="{{r.section}} text-right" ng-if="r.section=='groupdetail'">
+		    <span ng-if="r.monthValues.hasOwnProperty(mo)" title="{{mo}}">
+			{{r.monthValues[mo]}}
+		    </span>
+		</td>
+	    </tr>
 	</tbody>
 	
 	<tfoot>
