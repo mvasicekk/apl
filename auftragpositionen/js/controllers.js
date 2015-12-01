@@ -190,6 +190,7 @@ aplApp.controller('detailController', function (setfocus,$filter,$scope, $routeP
      * @returns {undefined}
      */
     $scope.posErstellen = function(info){
+	    $scope.allowErfassen = false;
 	    var params = {teil: $scope.teil.selected.teil,auftrag:$scope.auftragsnr,positionInfo:$scope.positionInfo,dpos:$scope.dpos,teilInfo:$scope.teilInfo};
 	    $http.post('./posErstellen.php',{params:params}
 		    )

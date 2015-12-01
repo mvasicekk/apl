@@ -15,7 +15,7 @@
 		    <input ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
 		    <input ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
 		</th>
-		<th colspan="{{monthsArray.length}}">
+		<th colspan="{{monthsArray.length + 1}}">
 		    <button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
 		</th>
 	    </tr>
@@ -23,6 +23,7 @@
 		<th style="width:4em;">PersNr</th>
 		<th style="width:8em;">Name</th>
 		<th ng-repeat="month in monthsArray" class="text-center">{{month}}</th>
+		<th class="text-right">Sum</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -39,7 +40,7 @@
 		<td class="{{r.section}}" ng-if="r.section=='persheader'">
 		    {{r.persnr}}
 		</td>
-		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length}}">
+		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length + 1}}">
 		    {{r.name}}
 		</td>
 		
@@ -54,6 +55,10 @@
 		    <span ng-if="r.monthValues.hasOwnProperty(mo)" title="{{mo}}">
 			{{r.monthValues[mo]}}
 		    </span>
+		</td>
+		<!--suma-->
+		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail'">
+		    {{r.monthValues.sum}}
 		</td>
 	    </tr>
 	</tbody>

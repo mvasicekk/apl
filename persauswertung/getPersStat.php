@@ -4,6 +4,42 @@ require_once '../db.php';
 
 $inputData = $_GET;
 
+// utility functions -----------------------------------------------------------
+function getSumRow($a) {
+    $sum = 0;
+    if (is_array($a)) {
+	foreach ($a as $val) {
+	    $sum+=$val;
+	}
+    }
+    return $sum;
+}
+
+function getAvgRow($a) {
+    $sum = 0;
+    $count = 0;
+    $avg = 0;
+    if (is_array($a)) {
+	foreach ($a as $val) {
+	    $sum+=$val;
+	    $count++;
+	}
+    }
+    
+    if($count>0){
+	$avg = $sum/$count;
+    }
+    return $avg;
+}
+
+function formatRowValues(&$a,$decimals,$decsep,$thoussep){
+    foreach ($a as $index=>$valArr){
+	$a[$index] = $a[$index]!=0?number_format($a[$index],$decimals,$decsep,$thoussep):'';
+    }
+}
+
+
+
 // zjistim zda mam hodnotu value ulozenou v databazi artiklu
 
 $a = AplDB::getInstance();
@@ -90,13 +126,13 @@ foreach ($persnrArray as $p) {
 
 	    $sumGew = floatval($zeilen[$persnr]['A6']['sum_gew'][$yearMonth]);
 
-	    $zeilen[$persnr]['A6']['sum_gew'][$yearMonth] = $sumGew == 0 ? '' : number_format($sumGew, 0, ',', ' ');
-	    $zeilen[$persnr]['A6']['a6_gew'][$yearMonth] = $a6Gew == 0 ? '' : number_format($a6Gew, 0, ',', ' ');
+//	    $zeilen[$persnr]['A6']['sum_gew'][$yearMonth] = $sumGew == 0 ? '' : number_format($sumGew, 0, ',', ' ');
+	    $zeilen[$persnr]['A6']['a6_gew'][$yearMonth] = $a6Gew;
 
 	    if (($sumGew != 0) && ($a6Gew!=0)) {
-		$zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = number_format(($a6Gew / $sumGew) * 100, 2, ',', ' ');
+		$zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = ($a6Gew / $sumGew) * 100;
 	    } else {
-		$zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = '';
+		$zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = 0;
 	    }
 	}
     }
@@ -190,14 +226,14 @@ foreach ($persnrArray as $p) {
 	    $yearMonth = date('y-m', strtotime($datum));
 	    $monthsArray[$yearMonth]+=1;
 	    
-	    if($pr['tat']=='n' || $pr['tat']=='z'){
+	    if($pr['tat']=='n' || $pr['tat']=='z'|| $pr['tat']=='d'|| $pr['tat']=='nw'){
 		// nacitat jen ty, ktere me zajimaji
 		$zeilen[$persnr]['dzeit'][$pr['tat']][$yearMonth]+=1;
 	    }
 	}
     }
     
-    // leistung
+    // leistung ----------------------------------------------------------------
     foreach ($monthsArrayAll as $yearMonth=>$dayCount){
 	$year = 2000 + intval(substr($yearMonth, 0, 2));
 	$month = intval(substr($yearMonth, 3));
@@ -236,8 +272,8 @@ foreach ($persnrArray as $p) {
 	$leistungsGradGanzMonatR = $ganzMonatNormMinuten!=0?(($vzaby_akkord+$vzaby_zeit) /  $ganzMonatNormMinuten):0;
 	$leistungsGradR = $monatNormMinuten!=0?(($vzaby_akkord+$vzaby_zeit) / $monatNormMinuten):0;
 	
-	$leistungsGradGanzMonat = $ganzMonatNormMinuten!=0?number_format($leistungsGradGanzMonatR*100,0):'';
-	$leistungsGrad = $monatNormMinuten!=0?number_format($leistungsGradR*100,0):'';
+	$leistungsGradGanzMonat = $leistungsGradGanzMonatR*100;
+	$leistungsGrad = $leistungsGradR*100;
 	
 	
 	$leistPraemieBerechnet1 = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonatR) * $arbTageProMonat;
@@ -251,22 +287,102 @@ foreach ($persnrArray as $p) {
                 $leistPraemieBerechnet = $leistPraemieBerechnet1;
         }
 	
-	$zeilen[$persnr]['leistung']['daycount'][$yearMonth] = $dayCount;
-	$zeilen[$persnr]['leistung']['arbTageProMonat'][$yearMonth] = $arbTageProMonat;
+//	$zeilen[$persnr]['leistung']['daycount'][$yearMonth] = $dayCount;
+//	$zeilen[$persnr]['leistung']['arbTageProMonat'][$yearMonth] = $arbTageProMonat;
 	$zeilen[$persnr]['leistung']['ganzMonatNormMinuten'][$yearMonth] = $ganzMonatNormMinuten;
-	$zeilen[$persnr]['leistung']['arbTagePersMonat'][$yearMonth] = $arbTagePersMonat;
-	$zeilen[$persnr]['leistung']['dTage'][$yearMonth] = $dTage;
-	$zeilen[$persnr]['leistung']['nwTage'][$yearMonth] = $nwTage;
+//	$zeilen[$persnr]['leistung']['arbTagePersMonat'][$yearMonth] = $arbTagePersMonat;
+//	$zeilen[$persnr]['leistung']['dTage'][$yearMonth] = $dTage;
+//	$zeilen[$persnr]['leistung']['nwTage'][$yearMonth] = $nwTage;
 	$zeilen[$persnr]['leistung']['monatNormMinuten'][$yearMonth] = $monatNormMinuten;
-	$zeilen[$persnr]['leistung']['vzaby'][$yearMonth] = number_format($vzaby,0,',',' ');
-	$zeilen[$persnr]['leistung']['vzaby_akkord'][$yearMonth] = number_format($vzaby_akkord,0,',',' ');
-	$zeilen[$persnr]['leistung']['vzaby_zeit'][$yearMonth] = number_format($vzaby_zeit,0,',',' ');
-	$zeilen[$persnr]['leistung']['leistfaktor'][$yearMonth] = $leistFaktor;
+//	$zeilen[$persnr]['leistung']['vzaby'][$yearMonth] = number_format($vzaby,0,',',' ');
+	$zeilen[$persnr]['leistung']['vzaby_akkord'][$yearMonth] = $vzaby_akkord;
+	$zeilen[$persnr]['leistung']['vzaby_zeit'][$yearMonth] = $vzaby_zeit;
+//	$zeilen[$persnr]['leistung']['leistfaktor'][$yearMonth] = $leistFaktor;
 	$zeilen[$persnr]['leistung']['leistGrad'][$yearMonth] = $leistungsGrad;
 	$zeilen[$persnr]['leistung']['leistGradGanzMonat'][$yearMonth] = $leistungsGradGanzMonat;
-	$zeilen[$persnr]['leistung']['leistPrem'][$yearMonth] = $leistPraemieBerechnet;
+//	$zeilen[$persnr]['leistung']['leistPrem'][$yearMonth] = $leistPraemieBerechnet;
     }
     
+    
+//    HF reparaturen -----------------------------------------------------------
+    $sql=" select";
+    $sql.=" dreparaturkopf.persnr_ma as persnr,";
+    $sql.=" dreparaturkopf.datum,";
+    $sql.=" sum((dreparaturkopf.repzeit*5)+if(dreparaturpos.anzahl is null,0,dreparaturpos.anzahl)*if(dreparaturpos.et_alt=1,if(`eink-artikel`.`art-vr-preis` is null,0,`eink-artikel`.`art-vr-preis`*0.4),if(`eink-artikel`.`art-vr-preis` is null,0,`eink-artikel`.`art-vr-preis`))) as sum_rep_kosten";
+    $sql.=" from dreparaturkopf";
+    $sql.=" join dreparatur_geraete on dreparatur_geraete.invnummer=dreparaturkopf.invnummer";
+    $sql.=" join dreparatur_anlagen on dreparatur_anlagen.anlage_id=dreparatur_geraete.anlage_id";
+    $sql.=" left join dreparaturpos on dreparaturpos.reparatur_id=dreparaturkopf.id";
+    $sql.=" left join `eink-artikel` on CONVERT(`eink-artikel`.`art-nr`,char)=convert(dreparaturpos.artnr,char)";
+    $sql.=" where";
+    $sql.=" dreparaturkopf.datum between '$datumVon' and '$datumBis'";
+    $sql.=" and dreparaturkopf.persnr_ma='$persnr'";
+    $sql.=" group by";
+    $sql.=" dreparaturkopf.persnr_ma,";
+    $sql.=" dreparaturkopf.datum";
+    
+        
+    $monthsArray = array();
+    $persRows = $a->getQueryRows($sql);
+    if ($persRows !== NULL) {
+	foreach ($persRows as $pr) {
+	    $datum = $pr['datum'];
+	    $month = date('m', strtotime($datum));
+	    $yearMonth = date('y-m', strtotime($datum));
+	    $monthsArray[$yearMonth]+=1;
+	    $sumKosten = 1.1 * $pr['sum_rep_kosten'];
+	    $zeilen[$persnr]['HF_repkosten']['repkosten'][$yearMonth]+=$sumKosten;
+	}
+    }
+    
+    $sql=" select ";
+    $sql.=" persnr,";
+    $sql.=" datum,";
+    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(auss_typ=4,`VZ-SOLL`*(`Stück`+`Auss-Stück`),`VZ-SOLL`*(`Stück`)),0)) as sumvzkd_11,";
+    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(auss_typ=4,`VZ-SOLL`*(`Stück`+`Auss-Stück`),`VZ-SOLL`*(`Stück`)),0)) as sumvzkd_51";
+    $sql.=" from drueck";
+    $sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
+    $sql.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
+    $sql.=" where ";
+    $sql.=" daufkopf.kunde<>355 and";
+    $sql.=" datum between '$datumVon' and '$datumBis'";
+    $sql.=" and persnr='$persnr'";
+    $sql.=" group by ";
+    $sql.=" persnr,";
+    $sql.=" datum";
+    $sql.=" having (sumvzkd_11<>0 or sumvzkd_51<>0)";
+    
+    $monthsArray = array();
+    $persRows = $a->getQueryRows($sql);
+    if ($persRows !== NULL) {
+	foreach ($persRows as $pr) {
+	    $datum = $pr['datum'];
+	    $month = date('m', strtotime($datum));
+	    $yearMonth = date('y-m', strtotime($datum));
+	    $monthsArray[$yearMonth]+=1;
+	    $zeilen[$persnr]['HF_repkosten']['vzkd_S0011'][$yearMonth]+=$pr['sumvzkd_11'];
+	    $zeilen[$persnr]['HF_repkosten']['vzkd_S0051'][$yearMonth]+=$pr['sumvzkd_51'];
+	    $zeilen[$persnr]['HF_repkosten']['vzkd_sum'][$yearMonth]+=($pr['sumvzkd_11']+$pr['sumvzkd_51']);
+
+	}
+	
+	foreach ($monthsArrayAll as $yearMonth=>$dayCount){
+	    $year = 2000 + intval(substr($yearMonth, 0, 2));
+	    $month = intval(substr($yearMonth, 3));
+	    
+	    $vzkd_S0011 = $zeilen[$persnr]['HF_repkosten']['vzkd_S0011'][$yearMonth];
+	    $vzkd_S0051 = $zeilen[$persnr]['HF_repkosten']['vzkd_S0051'][$yearMonth];
+	    $vzkd_sum = $zeilen[$persnr]['HF_repkosten']['vzkd_sum'][$yearMonth];
+	    $repKosten = $zeilen[$persnr]['HF_repkosten']['repkosten'][$yearMonth];
+	    
+//	    $zeilen[$persnr]['HF_repkosten']['repkosten'][$yearMonth] = $repKosten!=0?number_format($zeilen[$persnr]['HF_repkosten']['repkosten'][$yearMonth],0,',',' '):'';
+//	    $zeilen[$persnr]['HF_repkosten']['vzkd_S0011'][$yearMonth] = $vzkd_S0011!=0?number_format($vzkd_S0011,0,',',' '):'';
+//	    $zeilen[$persnr]['HF_repkosten']['vzkd_S0051'][$yearMonth] = $vzkd_S0051!=0?number_format($vzkd_S0051,0,',',' '):'';
+//	    $zeilen[$persnr]['HF_repkosten']['vzkd_sum'][$yearMonth] = $vzkd_sum!=0?number_format($vzkd_sum,0,',',' '):'';
+	    $zeilen[$persnr]['HF_repkosten']['faktor'][$yearMonth] = $vzkd_sum!=0?$repKosten/$vzkd_sum:0;
+	}
+
+    }
 }
 
 $zeilenArray = array();
@@ -274,9 +390,73 @@ $zeilenArray = array();
 $monthsArrayAll = array_keys($monthsArrayAll);
 sort($monthsArrayAll);
 
+// hodnoty do sloupce Sum a formtovani
+foreach ($persnrArray as $p) {
+    $persnr = $p['persnr'];
+    // naplneni hodnot ve sloupci sum
+    $zeilen[$persnr]['A6']['sum_gew']['sum'] = getSumRow($zeilen[$persnr]['A6']['sum_gew']);
+    $zeilen[$persnr]['A6']['a6_gew']['sum'] = getSumRow($zeilen[$persnr]['A6']['a6_gew']);
+    $zeilen[$persnr]['A6']['a6_prozent']['sum'] = $zeilen[$persnr]['A6']['sum_gew']['sum']!=0?$zeilen[$persnr]['A6']['a6_gew']['sum']/$zeilen[$persnr]['A6']['sum_gew']['sum']*100:0;
+    // jen kdy mam nejakou reklamaci
+    if(is_array($zeilen[$persnr]['rekl']['sum_bewertung_I'])){
+	$zeilen[$persnr]['rekl']['sum_bewertung_I']['sum'] = getSumRow($zeilen[$persnr]['rekl']['sum_bewertung_I']);
+    }
+    if(is_array($zeilen[$persnr]['rekl']['sum_bewertung_E'])){
+	$zeilen[$persnr]['rekl']['sum_bewertung_E']['sum'] = getSumRow($zeilen[$persnr]['rekl']['sum_bewertung_E']);
+    }
+    
+    if(is_array($zeilen[$persnr]['dzeit'])){
+	foreach ($zeilen[$persnr]['dzeit'] as $tat=>$t){
+	    $zeilen[$persnr]['dzeit'][$tat]['sum'] = getSumRow($zeilen[$persnr]['dzeit'][$tat]);
+	}
+    }
+    if(is_array($zeilen[$persnr]['abmahnung'])){
+	foreach ($zeilen[$persnr]['abmahnung'] as $tat=>$t){
+	    $zeilen[$persnr]['abmahnung'][$tat]['sum'] = getSumRow($zeilen[$persnr]['abmahnung'][$tat]);
+	}
+    }
+    
+
+    $zeilen[$persnr]['leistung']['vzaby_akkord']['sum'] = getSumRow($zeilen[$persnr]['leistung']['vzaby_akkord']);
+    $zeilen[$persnr]['leistung']['vzaby_zeit']['sum'] = getSumRow($zeilen[$persnr]['leistung']['vzaby_zeit']);
+    $zeilen[$persnr]['leistung']['ganzMonatNormMinuten']['sum'] = getSumRow($zeilen[$persnr]['leistung']['ganzMonatNormMinuten']);
+    $zeilen[$persnr]['leistung']['monatNormMinuten']['sum'] = getSumRow($zeilen[$persnr]['leistung']['monatNormMinuten']);
+    $citatel = $zeilen[$persnr]['leistung']['vzaby_akkord']['sum'] + $zeilen[$persnr]['leistung']['vzaby_zeit']['sum'];
+    
+    $zeilen[$persnr]['leistung']['leistGrad']['sum'] = $zeilen[$persnr]['leistung']['monatNormMinuten']['sum']!=0?$citatel/$zeilen[$persnr]['leistung']['monatNormMinuten']['sum']*100:0;
+    $zeilen[$persnr]['leistung']['leistGradGanzMonat']['sum'] = $zeilen[$persnr]['leistung']['ganzMonatNormMinuten']['sum']!=0?$citatel/$zeilen[$persnr]['leistung']['ganzMonatNormMinuten']['sum']*100:0;
+    
+    $zeilen[$persnr]['HF_repkosten']['repkosten']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['repkosten']);
+    $zeilen[$persnr]['HF_repkosten']['vzkd_S0011']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_S0011']);
+    $zeilen[$persnr]['HF_repkosten']['vzkd_S0051']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_S0051']);
+    $zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_sum']);
+    $zeilen[$persnr]['HF_repkosten']['faktor']['sum'] = $zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum']!=0?$zeilen[$persnr]['HF_repkosten']['repkosten']['sum']/$zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum']:0;
+    
+// zformatovani hodnot v radku
+    formatRowValues($zeilen[$persnr]['A6']['sum_gew'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['A6']['a6_gew'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['A6']['a6_prozent'],2,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['vzaby_akkord'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['vzaby_zeit'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['leistGrad'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['leistGradGanzMonat'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['leistGradGanzMonat'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['ganzMonatNormMinuten'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['monatNormMinuten'],0,',',' ');
+    
+    formatRowValues($zeilen[$persnr]['HF_repkosten']['repkosten'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['HF_repkosten']['vzkd_S0011'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['HF_repkosten']['vzkd_S0051'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['HF_repkosten']['vzkd_sum'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['HF_repkosten']['faktor'],2,',',' ');
+    
+    
+}
+
 foreach ($persnrArray as $p) {
     $persnr = $p['persnr'];
     $rowsArray = $zeilen[$persnr];
+    
     $nameA = $a->getNameVorname($persnr);
     $name = "";
     if ($nameA !== NULL) {

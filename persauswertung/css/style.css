@@ -136,6 +136,26 @@ tr.sumteil{
 	background-color: #eee;
 }
 
+#d550it tr.abmahnung{
+	background-color: #eef;
+}
+
+#d550it tr.rekl{
+	background-color: #ffe;
+}
+
+#d550it tr.HF_repkosten{
+	background-color: #efe;
+}
+
+#d550it tr.dzeit{
+	background-color: #fff;
+}
+
+#d550it td.sumcolumn{
+	font-weight:bold;
+}
+
 #d550it td.kundeheader{
 	font-weight: bold;
 	background-color: #ffd;
