@@ -26,7 +26,9 @@ $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
 $params="";
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S362 - Reklamationsbericht x Māngelrūge", $reklnr);
+
+$teil = $reklInfo[0]['teil'];
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S362 - Reklamationsbericht ( Teil: $teil )", $reklnr);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -127,6 +129,7 @@ if($reklInfo!==NULL){
 	//AplDB::varDump($rekl);
 	$abmahnungen = $apl->getAbmahnungenForReklamation($rekl['id']);
 	$schulungen = $apl->getSchulungenForReklamation($rekl['id']);
+	$teilInfo = $apl->getTeilInfoArray($rekl['teil']);
 //	AplDB::varDump($abmahnungen);
 	$pdf->AddPage();
 	$yTop = $pdf->getY();
@@ -135,31 +138,77 @@ if($reklInfo!==NULL){
 	$pdf->SetFillColor(255, 255, 230);
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell(20+25, $schulungHeaderHeight, "Grundingo", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Grundinfo", '0', 1, 'L', $fill);
 	//reklnr
-	$pdf->Cell(20, $schulungHeaderHeight, "Rekl.Nr.:", 'LRBT', 0, 'L', $fill);
+	$pdf->Cell(20, $schulungHeaderHeight, "Rekl.Nr.:", '0', 0, 'L', 0);
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 0;
 	$obsah = $rekl['rekl_nr'];
-	$pdf->Cell(25, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'L', $fill);
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//erhalten am
+	$pdf->Cell(20, $schulungHeaderHeight, "Erhalten am: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$fill = 0;
+	$obsah = date('d.m.Y',strtotime($rekl['rekl_datum']));
+	$pdf->SetFont("FreeSans", "", 7);
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//bearbeiter_kunde
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Bearbeiter Kd: ", '0', 0, 'L', 0);
+	$fill = 0;
+	$obsah = $rekl['bearbeiter_kunde'];
+	$pdf->SetFont("FreeSans", "", 7);
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
 	
 	//kd reklnr
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell(20, $schulungHeaderHeight, "Kd Rekl.Nr.:", 'LRBT', 0, 'L', $fill);
+	$pdf->Cell(20, $schulungHeaderHeight, "Kd Rekl.Nr.:", '0', 0, 'L', 0);
 	$pdf->SetFont("FreeSans", "", 7);
 	$fill = 0;
 	$obsah = $rekl['kd_rekl_nr'];
-	$pdf->Cell(25, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'L', $fill);
+	$pdf->SetFont("FreeSans", "", 7);
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//erledigt am
+	$pdf->SetFont("FreeSans", "B", 7);
+	$fill = 1;
+	$pdf->Cell(20, $schulungHeaderHeight, "Erledigt am:", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$fill = 0;
+	if(strtotime($rekl['rekl_erledigt_am'])){
+	    $obsah = date('d.m.Y',  strtotime($rekl['rekl_erledigt_am']));
+	}
+	else{
+	    $obsah = "";
+	}
+	$pdf->SetFont("FreeSans", "", 7);
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	// per Email, .....
+	if($rekl['mt_email']!="0"){
+	    $obsah = "per Email";
+	}
+	if($rekl['mt_telefon']!="0"){
+	    $obsah = "\nper Telefon";
+	}
+	if($rekl['mt_mund']!="0"){
+	    $obsah = "\nMūndlich";
+	}
+	
+	$pdf->MultiCell(55, $schulungHeaderHeight, $obsah, '0', 'L', 0, 1, '', '', TRUE, 0, FALSE, TRUE, 0, 'T', TRUE);
 	
 	//kdkd reklnr
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell(20, $schulungHeaderHeight, "KdKd Rekl.Nr.:", 'LRBT', 0, 'L', $fill);
+	$pdf->Cell(20, $schulungHeaderHeight, "KdKd Rekl.Nr.:", '0', 0, 'L', 0);
 	$pdf->SetFont("FreeSans", "", 7);
 	$fill = 0;
 	$obsah = $rekl['kd_kd_rekl_nr'];
-	$pdf->Cell(25, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'L', $fill);
+	$pdf->SetFont("FreeSans", "", 7);
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
 	
 	$pdf->Ln(5);
 	
@@ -167,75 +216,70 @@ if($reklInfo!==NULL){
 	$pdf->SetFillColor(255, 255, 230);
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell(20+25+50, $schulungHeaderHeight, "Teilinfo - Identifikation", 'LRBT', 1, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "Export / Beh", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(25, $schulungHeaderHeight, "Interne Bewertung", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(50, $schulungHeaderHeight, "Datum", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Teilinfo - Identifikation", '0', 1, 'L', $fill);
 	
+	//teil
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Teil: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$obsah = $rekl['teil'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//liefermenge
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Liefermenge: ", '0', 0, 'L', 0);
 	$pdf->SetFont("FreeSans", "", 7);
-	$fill = 0;
+	$obsah = $rekl['stk_expediert'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
 	
-	$obsah = $rekl['export']." / ".$rekl['export_beh'];
-	$pdf->MultiCell(
-		20, 
-		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
-		$obsah , 
-		'LRBT', 
-		'L', 
-		$fill, 
-		0,				//Indicates where the current position should go after the call
-		'', 
-		'', 
-		TRUE,	    //reset last cell height
-		0,	    // font stretch mode
-		FALSE,	    //is html
-		TRUE,	    // uses internal padding
-		15,	    // max height, 0 disabled
-		'T',	    // valign
-		TRUE	    // fit to cell reduces font size
-	);
+	//auftrag
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Auftrag: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = $rekl['export'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
 	
-	$obsah = $rekl['interne_bewertung'];
-	$pdf->SetFont("FreeSans", "B", 10);
-	$pdf->MultiCell(
-		25, 
-		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
-		$obsah , 
-		'LRBT', 
-		'C', 
-		$fill, 
-		0,				//Indicates where the current position should go after the call
-		'', 
-		'', 
-		TRUE,	    //reset last cell height
-		0,	    // font stretch mode
-		FALSE,	    //is html
-		TRUE,	    // uses internal padding
-		15,	    // max height, 0 disabled
-		'M',	    // valign
-		TRUE	    // fit to cell reduces font size
-	);
+	//teil gewicht
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Gewicht : ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = number_format($teilInfo['Gew'],3,',',' ')." kg";
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
 	
-	$obsah = "Erhalten am: ".date('d.m.Y',strtotime($rekl['rekl_datum']))."\n\nErledigt am:  ".date('d.m.Y',strtotime($rekl['rekl_erledigt_am']));
-	$pdf->SetFont("FreeSans", "", 8);
-	$pdf->MultiCell(
-		50, 
-		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
-		$obsah , 
-		'LRBT', 
-		'L', 
-		$fill, 
-		1,				//Indicates where the current position should go after the call
-		'', 
-		'', 
-		TRUE,	    //reset last cell height
-		0,	    // font stretch mode
-		FALSE,	    //is html
-		TRUE,	    // uses internal padding
-		15,	    // max height, 0 disabled
-		'M',	    // valign
-		TRUE	    // fit to cell reduces font size
-	);
+	//reklamiert
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Reklamiert: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = $rekl['stk_reklammiert'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//behaelter
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Behālter: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = $rekl['export_beh'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
+	
+	//charge / GT
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Charge / GT: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = $rekl['giesstag'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//stempel
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Stempel: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = $rekl['stempel'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
+	
+	//praegestempel
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(20, $schulungHeaderHeight, "Prāgestempel: ", '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "", 7);
+	$obsah = $rekl['pragestempel'];
+	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
 	
 	$pdf->Ln(5);
 	//kosten
@@ -243,42 +287,70 @@ if($reklInfo!==NULL){
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
 	//header
-	$pdf->Cell(20, $schulungHeaderHeight, "", 'LRBT', 0, 'L', 0);
-	$pdf->Cell(20, $schulungHeaderHeight, "Ausschuss", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "Nacharbeit", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "Nicht Anerkannt", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "Unklar", 'LRBT', 1, 'L', $fill);
+	$tbWidth = 18;
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', 0);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Ausschuss", 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Nacharbeit", 'LRBT', 0, 'R', $fill);
+	$pdf->SetFont("FreeSans", "B", 6);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Nicht Anerkannt", 'LRBT', 0, 'R', $fill);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Unklar", 'LRBT', 1, 'R', $fill);
+	
+	//zapamatovat x a y pro interne bewertung
+	$ibX = $pdf->GetX();
+	$ibY = $pdf->GetY();
+	
 	$fill = 0;
 	//stk
-	$pdf->Cell(20, $schulungHeaderHeight, "Stūck", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Stūck", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = number_format($rekl['anerkannt_stk_ausschuss'],0,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
 	$obsah = number_format($rekl['anerkannt_stk_nacharbeit'],0,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
 	$obsah = number_format($rekl['anerkannt_stk_nein'],0,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
 	$obsah = number_format($rekl['unklar_stk'],0,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
 
 	
 	//Gewicht 
-	$pdf->Cell(20, $schulungHeaderHeight, "Gewicht", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Gewicht", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
 	$gew = $apl->getTeilGewicht($rekl['teil']);
 	$obsah = number_format($rekl['anerkannt_stk_ausschuss']*$gew,1,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
 	$obsah = number_format($rekl['anerkannt_stk_nacharbeit']*$gew,1,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
 	$obsah = number_format($rekl['anerkannt_stk_nein']*$gew,1,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
 	$obsah = number_format($rekl['unklar_stk']*$gew,1,',',' ');
-	$pdf->Cell(20, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
 	
 	//CZK
-	$pdf->Cell(20, $schulungHeaderHeight, "CZK", 'LRBT', 0, 'L', 1);
-	$pdf->Cell(20, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell(20, $schulungHeaderHeight, "", 'LRBT', 1, 'L', $fill);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "CZK", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 1, 'L', $fill);
+	
+	//interne bewertung
+	
+	$pdf->SetY($ibY-$schulungHeaderHeight);
+	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
+	
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, $schulungHeaderHeight, "Interne Bewertung", 'LRT', 1, 'C', 1);
+	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
+	$pdf->SetFont("FreeSans", "B", 15);
+	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, 3*$schulungHeaderHeight, "7", 'LRB', 1, 'C', 0);
+	
+	
 	
 	$pdf->Ln(5);
 	
@@ -307,7 +379,7 @@ if($reklInfo!==NULL){
 	$pdf->SetFillColor(255, 255, 230);
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Anlagen", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Anlagen", '0', 1, 'L', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	//$obsah = "";
@@ -315,7 +387,7 @@ if($reklInfo!==NULL){
 		$persTabsXOffset-20, 
 		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
 		$obsah , 
-		'LRBT', 
+		'0', 
 		'L', 
 		$fill, 
 		1,				//Indicates where the current position should go after the call
@@ -336,7 +408,7 @@ if($reklInfo!==NULL){
 	$pdf->SetFillColor(255, 255, 230);
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Problembeschreibung", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Problembeschreibung", '0', 1, 'L', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = trim($rekl['beschr_abweichung']);
@@ -344,7 +416,7 @@ if($reklInfo!==NULL){
 		$persTabsXOffset-20, 
 		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
 		$obsah , 
-		'LRBT', 
+		'0', 
 		'L', 
 		$fill, 
 		1,				//Indicates where the current position should go after the call
@@ -361,7 +433,7 @@ if($reklInfo!==NULL){
 	//fehlerursachen
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Fehlerursachen", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Fehlerursachen", '0', 1, 'L', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = trim($rekl['beschr_ursache']);
@@ -369,7 +441,7 @@ if($reklInfo!==NULL){
 		$persTabsXOffset-20, 
 		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
 		$obsah , 
-		'LRBT', 
+		'0', 
 		'L', 
 		$fill, 
 		1,				//Indicates where the current position should go after the call
@@ -386,7 +458,7 @@ if($reklInfo!==NULL){
 	//art der beseitigung
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Art der Beseitigung ", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Art der Beseitigung ", '0', 1, 'L', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = trim($rekl['beschr_beseitigung']);
@@ -394,7 +466,7 @@ if($reklInfo!==NULL){
 		$persTabsXOffset-20, 
 		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
 		$obsah , 
-		'LRBT', 
+		'0', 
 		'L', 
 		$fill, 
 		1,				//Indicates where the current position should go after the call
@@ -411,7 +483,7 @@ if($reklInfo!==NULL){
 	//bemerkung
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Bemerkung", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Bemerkung", '0', 1, 'L', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = trim($rekl['bemerkung']);
@@ -419,7 +491,7 @@ if($reklInfo!==NULL){
 		$persTabsXOffset-20, 
 		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
 		$obsah , 
-		'LRBT', 
+		'0', 
 		'L', 
 		$fill, 
 		1,				//Indicates where the current position should go after the call
@@ -434,8 +506,6 @@ if($reklInfo!==NULL){
 		TRUE	    // fit to cell reduces font size
 	);
 	
-	
-	
 	//Mitarbeiterschulung
 	$fill = 1;
 	$pdf->SetFillColor(255, 255, 230);
@@ -445,7 +515,8 @@ if($reklInfo!==NULL){
 	$pdf->SetY($yTop);
 	$pdf->SetX($persTabsXOffset);
 	
-	$pdf->Cell(25+35+25+35, $schulungHeaderHeight, "Mitarbeiterschulung: ($pocetSchulungen)", 'LRBT', 1, 'L', $fill);
+	$pdf->Cell(25+35+25+35, $schulungHeaderHeight, "Mitarbeiterschulung: ($pocetSchulungen)", '0', 1, 'L', $fill);
+	$pdf->Ln();
 	if($schulungen!=NULL){
 	    $pdf->SetFont("FreeSans", "B", 7);
 	    $pdf->SetX($persTabsXOffset);
@@ -497,113 +568,34 @@ if($reklInfo!==NULL){
 	    }
 	}
 	
+	
+	// podpisy, erstellt am, zu laetzt geaendert, abgeschlossen am
+	$pdf->SetFont("FreeSans", "B", 8);
+	$pdf->SetY($pdf->getPageHeight()-PDF_MARGIN_BOTTOM);
+	$pdf->SetX($persTabsXOffset);
+	$obsah = "erstellt: ";
+	$userInfo = $apl->getUserInfoArray($rekl['erstellt']);
+	$obsah.= $userInfo['realname'];
+	$obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['rekl_datum']));
+	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 1, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
+	$obsah = "zu lātzt geāndert: ";
+	$userInfo = $apl->getUserInfoArray($rekl['letzt_geandert']);
+	$obsah.= $userInfo['realname'];
+	$obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['stamp']));
+	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 1, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
+	$obsah = "abgeschlossen: ";
+	$userInfo = $apl->getUserInfoArray($rekl['abgeschlossen']);
+	$obsah.= $userInfo['realname'];
+	if(strtotime($rekl['rekl_erledigt_am'])){
+	    $obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['rekl_erledigt_am']));
+	}
+	else{
+	    $obsah.="\nam: ";
+	}
+	
+	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 1, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
     }
 }
-
-
-//MultiCell  This method allows printing text with line breaks. They can be automatic (as soon as the text reaches the right border of the cell) or explicit (via the \n character). As many cells as necessary are output, one below the other. Text can be aligned, centered or justified. The cell block can be framed and the background painted. 
-//Parameters:
-//$w
-//(float) Width of cells. If 0, they extend up to the right margin of the page.
-//$h
-//(float) Cell minimum height. The cell extends automatically if needed.
-//$txt
-//(string) String to print
-//$border
-//(mixed) Indicates if borders must be drawn around the cell. The value can be a number:
-//0: no border (default)
-//1: frame
-//or a string containing some or all of the following characters (in any order):
-//L: left
-//T: top
-//R: right
-//B: bottom
-//or an array of line styles for each border group - for example: array('LTRB' => array('width' => 2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)))
-//$align
-//(string) Allows to center or align the text. Possible values are:
-//L or empty string: left align
-//C: center
-//R: right align
-//J: justification (default value when $ishtml=false)
-//$fill
-//(boolean) Indicates if the cell background must be painted (true) or transparent (false).
-//$ln
-//(int) Indicates where the current position should go after the call. Possible values are:
-//0: to the right
-//1: to the beginning of the next line [DEFAULT]
-//2: below
-//$x
-//(float) x position in user units
-//$y
-//(float) y position in user units
-//$reseth
-//(boolean) if true reset the last cell height (default true).
-//$stretch
-//(int) font stretch mode:
-//0 = disabled
-//1 = horizontal scaling only if text is larger than cell width
-//2 = forced horizontal scaling to fit cell width
-//3 = character spacing only if text is larger than cell width
-//4 = forced character spacing to fit cell width
-//General font stretching and scaling values will be preserved when possible.
-//$ishtml
-//(boolean) INTERNAL USE ONLY -- set to true if $txt is HTML content (default = false). Never set this parameter to true, use instead writeHTMLCell() or writeHTML() methods.
-//$autopadding
-//(boolean) if true, uses internal padding and automatically adjust it to account for line width.
-//$maxh
-//(float) maximum height. It should be >= $h and less then remaining space to the bottom of the page, or 0 for disable this feature. This feature works only when $ishtml=false.
-//$valign
-//(string) Vertical alignment of text (requires $maxh = $h > 0). Possible values are:
-//T: TOP
-//M: middle
-//B: bottom
-//. This feature works only when $ishtml=false and the cell must fit in a single page.
-//$fitcell
-//(boolean) if true attempt to fit all the text within the cell by reducing the font size (do not work in HTML mode). $maxh must be greater than 0 and wqual to $h.
-//Returns:
-//Type:
-//int
-//Description:
-//Return the number of cells or 1 for html mode.
-//$pdf->MultiCell($w, $h, $txt, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell)
-
-
-	//Abmahnung Vorschlaege
-//	$fill = 1;
-//	$pdf->SetFillColor(255, 255, 230);
-//	$pdf->SetFont("FreeSans", "B", 7);
-//	$pocetAbmahnungen = count($abmahnungen);
-//	$pdf->SetX($persTabsXOffset);
-//	$pdf->Cell(0, $abmahnungHeaderHeight, "Abmahnung Vorschlaege: ($pocetAbmahnungen)", 'LRBT', 1, 'L', $fill);
-//	if($abmahnungen!=NULL){
-//	    $pdf->SetFont("FreeSans", "B", 7);
-//	    $pdf->SetX($persTabsXOffset);
-//	    $pdf->Cell(23, $abmahnungRowHeight, 'Datum', 'LRBT', 0, 'L', $fill);
-//	    $pdf->Cell(10, $abmahnungRowHeight, 'PersNr', 'LBT', 0, 'R', $fill);
-//	    $pdf->Cell(30, $abmahnungRowHeight, 'Name', 'RBT', 0, 'L', $fill);
-//	    $pdf->Cell(23, $abmahnungRowHeight, 'Betrag', 'LRBT', 0, 'R', $fill);
-//	    $pdf->Cell(11, $abmahnungRowHeight, 'Von', 'LRBT', 0, 'L', $fill);
-//	    $pdf->Cell(0, $abmahnungRowHeight, 'Bemerkung', 'LRBT', 1, 'L', $fill);
-//	    $counter = 0;
-//	    foreach ($abmahnungen as $abmahnung){
-//		$pdf->SetX($persTabsXOffset);
-//		$fill = 0;
-//		$pdf->SetFont("FreeSans", "", 7);
-//		$pdf->Cell(23, $abmahnungRowHeight, date('d.m.Y',strtotime($abmahnung['datum'])), 'LRBT', 0, 'L', $fill);
-//		$nameA = $apl->getNameVorname($abmahnung['persnr']);
-//		$name = $nameA['name'].' '.$nameA['vorname'];
-//		$pdf->Cell(10, $abmahnungRowHeight, $abmahnung['persnr'], 'LBT', 0, 'R', $fill);
-//		$pdf->Cell(30, $abmahnungRowHeight, $name, 'RBT', 0, 'L', $fill);
-//		$pdf->Cell(23, $abmahnungRowHeight, $abmahnung['vorschlag_betrag'], 'LRBT', 0, 'R', $fill);
-//		$pdf->Cell(11, $abmahnungRowHeight, $abmahnung['vorschlag_von'], 'LRBT', 0, 'L', $fill);
-//		$pdf->Cell(0, $abmahnungRowHeight, $abmahnung['vorschlag_bemerkung'], 'LRBT', 1, 'L', $fill);
-//		$counter++;
-//		if($counter>9){
-//		    //zobrazit max. 10radku
-//		    break;
-//		}
-//	    }
-//	}
 
 $pdf->Output();
 

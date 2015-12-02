@@ -1,4 +1,5 @@
 <?
+session_start();
 require_once '../db.php';
 
 function toDBDate($t){
@@ -15,9 +16,11 @@ $data = file_get_contents("php://input");
 
 $o = json_decode($data);
 $rekl = $o->rekl;
+$beenden = $o->beenden;
 $apl = AplDB::getInstance();
 $updatedRows = -1;
 
+$user = $_SESSION['user'];
 
 //sanace obsahu v promennych, prirazeni k nazvum sloupcu v DB
 $reklId = $rekl->id;
@@ -138,6 +141,8 @@ $returnArray = array(
 	"reklId"=>$reklId,
 	"objdata"=>$o,
 	"sql"=>$sql,
+	"beenden"=>$beenden,
+	"user"=>$user,
     );
     
     echo json_encode($returnArray);

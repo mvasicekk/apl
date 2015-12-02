@@ -31,7 +31,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	var initDetail = function () {
 	    $scope.rekl = undefined;
 	    $scope.disabled = undefined;
-
+	    $scope.bBeenden = 0;
 	    $scope.abmahnungVorschlagUser = undefined;
 	    $scope.abmahnungBemerkung = "";
 	    $scope.abmahnungVorschlagBetrag = 0;
@@ -230,10 +230,12 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	    $scope.rekl.teil = $scope.teil.selected.teil;
 
 	    var params = {
-		rekl: $scope.rekl
+		rekl: $scope.rekl,
+		beenden:$scope.bBeenden
 	    };
 	    $http.post('./reklSave.php', params).success(function (data) {
 		console.log('rekl saved ' + data);
+		$scope.bBeenden = 0;
 		initDetail();
 	    });
 	}
@@ -246,6 +248,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	    console.log('reklBeenden');
 	    // ulozit aktualni datum do rekl_erledigt_am
 	    $scope.rekl.rekl_erledigt_am1 = new Date();
+	    $scope.bBeenden = 1;
 	    $scope.reklSave();
 	    // schovat tlacitka save = vyresit pomoc ngShow s podminkou na vyplneny datum rekl_erledigt_am
 	}
