@@ -4,6 +4,9 @@
     <div class="page-header">
 	<h4>Pers Auswertung (interaktiv)</h4>
     </div>
+<!--    <div>
+	{{showGroups|json}}
+    </div>-->
     <table id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class="no-print">
@@ -15,7 +18,14 @@
 		    <input ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
 		    <input ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
 		</th>
-		<th colspan="{{monthsArray.length + 1}}">
+		<th colspan="{{monthsArray.length + 2}}">
+		    <div>
+		    <div ng-repeat="group in groups" class="checkbox-inline">
+		    <label class="checkbox-inline">
+			<input ng-model="showGroups[group].show" type="checkbox">{{group}}
+		    </label>
+		    </div>
+		    </div>
 		    <button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
 		</th>
 	    </tr>
@@ -24,6 +34,7 @@
 		<th style="width:8em;">Name</th>
 		<th ng-repeat="month in monthsArray" class="text-center">{{month}}</th>
 		<th class="text-right">Sum</th>
+		<th class="text-right">CZK / Koef</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -43,22 +54,30 @@
 		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length + 1}}">
 		    {{r.name}}
 		</td>
+		<td class="{{r.section}} text-right" ng-if="r.section=='persheader'" >
+		    {{r.sumPremieCZK}}CZK
+		</td>
+		
 		
 		<!--groupdetail--------------------------------------------- -->
-		<td class="{{r.section}}" ng-if="r.section=='groupdetail'">
+		<td class="{{r.section}}" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
 		    {{r.group}}
 		</td>
-		<td class="{{r.section}}" ng-if="r.section=='groupdetail'">
+		<td class="{{r.section}}" ng-if="r.section=='groupdetail'  && showGroups[r.group].show">
 		    {{r.groupDetail}}
 		</td>
-		<td ng-repeat="mo in monthsArray" class="{{r.section}} text-right" ng-if="r.section=='groupdetail'">
-		    <span ng-if="r.monthValues.hasOwnProperty(mo)" title="{{mo}}">
+		<td ng-repeat="mo in monthsArray" class="{{r.section}} text-right" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
+		    <span id="row_{{zeilenIndex}}_{{mo}}" style="cursor: pointer;" ng-click="monthValueClicked($event,r)" ng-if="r.monthValues.hasOwnProperty(mo)" title="{{mo}}">
 			{{r.monthValues[mo]}}
 		    </span>
 		</td>
 		<!--suma-->
-		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail'">
+		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
 		    {{r.monthValues.sum}}
+		</td>
+		<!--czk / koef-->
+		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
+		    {{r.monthValues.czk}}
 		</td>
 	    </tr>
 	</tbody>

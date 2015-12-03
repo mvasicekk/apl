@@ -16,6 +16,7 @@ aplApp.controller('reklController', function ($scope, $http) {
 aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
     function ($scope, $routeParams, $http) {
 	
+	$scope.beenden = 0;
 	
 	var initSecurity = function(){
 	var p={
@@ -28,14 +29,15 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 		);
 	}
 	
-	var initDetail = function () {
+	var initDetail = function (save) {
 	    $scope.rekl = undefined;
 	    $scope.disabled = undefined;
-	    $scope.bBeenden = 0;
+
 	    $scope.abmahnungVorschlagUser = undefined;
 	    $scope.abmahnungBemerkung = "";
 	    $scope.abmahnungVorschlagBetrag = 0;
 	    $scope.abmahnungDatum = new Date();
+	    
 
 	    $scope.dateOptions = {
 		dateFormat: 'dd.mm.yy',
@@ -66,7 +68,8 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 		    url: '../upload.php?savepath=' + data.rekl.savePath
 		});
 
-		uploader.init();
+                if(save!==1){
+                uploader.init();
 		uploader.bind('FilesAdded', function (up, files) {
 		    $.each(files, function (i, file) {
 			$('#filelist').append(
@@ -99,7 +102,9 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 		    $http.get('./getReklDetail.php?reklid=' + $scope.reklid).success(function (data) {
 			$scope.rekl = data.rekl;
 		    });
-		});
+		});    
+                }
+		
 
 	    });
 	}
@@ -231,12 +236,12 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 
 	    var params = {
 		rekl: $scope.rekl,
-		beenden:$scope.bBeenden
+		beenden: $scope.beenden
 	    };
 	    $http.post('./reklSave.php', params).success(function (data) {
 		console.log('rekl saved ' + data);
-		$scope.bBeenden = 0;
-		initDetail();
+		$scope.beenden = 0;
+		initDetail(1);
 	    });
 	}
 
@@ -248,7 +253,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	    console.log('reklBeenden');
 	    // ulozit aktualni datum do rekl_erledigt_am
 	    $scope.rekl.rekl_erledigt_am1 = new Date();
-	    $scope.bBeenden = 1;
+	    $scope.beenden = 1;
 	    $scope.reklSave();
 	    // schovat tlacitka save = vyresit pomoc ngShow s podminkou na vyplneny datum rekl_erledigt_am
 	}

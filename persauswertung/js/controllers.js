@@ -11,6 +11,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
     $scope.persBis = "";
     $scope.datumVon;
     $scope.datumBis;
+    $scope.showGroups = {};
     
     var d550it;
     
@@ -23,6 +24,26 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 	    d550it = $('#d550it');
 	    $('#spinner').hide();
     });
+    
+    $scope.monthValueClicked = function(e,r){
+	var eId = e.target.id;
+	//zlikvidovat popovery
+	$('div[id^=popover]').popover('destroy');
+	$http.post('./getDetailContent.php', {r: r,eId:eId}).then(function (response) {
+	    var content = response.data.content;
+	    var popOptions = {
+		container:'body',
+		content:response.data.content,
+		html:true,
+		placement:'top',
+		title:'Detail',
+		trigger:'manual',
+	    };
+	    $('#'+eId).popover(popOptions);
+	    $('#'+eId).popover('show');
+	});
+	console.log(r);
+    }
     
     $scope.showPrintDialog = function(){
 	d550it.floatThead('destroy');
@@ -67,6 +88,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;
+			$scope.groups = data.groups;
 			$scope.monthsArray = data.monthsArray;
 			$scope.dZeilen = [].concat($scope.zeilen);
 			$timeout(function(){

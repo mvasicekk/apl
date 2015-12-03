@@ -5,6 +5,43 @@ require_once '../db.php';
 $inputData = $_GET;
 
 // utility functions -----------------------------------------------------------
+function getKoefMonths($mesicu){
+    $koef=0;
+    if($mesicu>=9){
+	$koef = 1;
+    }
+    else if($mesicu>=6){
+	$koef = 0.8;
+    }
+    else if($mesicu>=3){
+	$koef = 0.5;
+    }
+    else if($mesicu>=1){
+	$koef = 0.2;
+    }
+    return $koef;
+}
+
+function getKoefYears($mesicu){
+    $koef=0;
+    if($mesicu>=10){
+	$koef = 2;
+    }
+    else if($mesicu>=5){
+	$koef = 1.5;
+    }
+    else if($mesicu>=3){
+	$koef = 1.3;
+    }
+    else if($mesicu>=2){
+	$koef = 1.2;
+    }
+    else if($mesicu>=1){
+	$koef = 1;
+    }
+    return $koef;
+}
+
 function getSumRow($a) {
     $sum = 0;
     if (is_array($a)) {
@@ -77,6 +114,34 @@ $persnrArray = $a->getQueryRows($sql);
 
 foreach ($persnrArray as $p) {
     $persnr = $p['persnr'];
+    
+    //loajalita ----------------------------------------------------------------
+    //loajalita, hodnoty jen do sloupce sum
+    $eintritt = $a->getEintrittsDatumDB($persnr);
+    $zeilen[$persnr]['loajalita']['eintritt']['sum'] = date('d.m.Y',strtotime($eintritt));
+    // pocet mesicu pp do datumu $bisDatum
+    $d1 = strtotime($eintritt);
+    $d2 = strtotime($datumBis);
+    $min_date = min($d1, $d2);
+    $max_date = max($d1, $d2);
+    $mesicu = 0;
+    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+	$mesicu++;
+    }
+    $zeilen[$persnr]['loajalita']['pp_months']['sum'] = $mesicu;
+    $zeilen[$persnr]['loajalita']['pp_months']['czk'] = getKoefMonths($mesicu);
+    //pocet let do datumBis
+    $zeilen[$persnr]['loajalita']['pp_years']['sum'] = number_format($mesicu/12,1,',',' ');
+    $roku = $mesicu / 12;
+    $loajalitaPp_yearsCzk[$persnr] = getKoefYears($roku);
+    $zeilen[$persnr]['loajalita']['pp_years']['czk'] = $loajalitaPp_yearsCzk[$persnr];
+    //"rocni" fond hodin, presne od datumVon do datumBis
+    $aTageFond = $a->getArbTageBetweenDatums($datumVon, $datumBis);
+    $zeilen[$persnr]['loajalita']['von_bis_fond_days']['sum'] = $aTageFond;
+    $zeilen[$persnr]['loajalita']['von_bis_fond_hours']['sum'] = $aTageFond*8;
+    
+    
+    
     // Ausschuss ---------------------------------------------------------------
     $sql =" select";
     $sql.="     drueck.PersNr as persnr,";
@@ -410,13 +475,34 @@ foreach ($persnrArray as $p) {
 	    $zeilen[$persnr]['dzeit'][$tat]['sum'] = getSumRow($zeilen[$persnr]['dzeit'][$tat]);
 	}
     }
+    if(!is_array($zeilen[$persnr]['dzeit']['z'])){
+	// pokud nemam zadna zetka, tak pridam nulovou sumu umele, abych mel kam pridat penize za poctivou praci
+	$zeilen[$persnr]['dzeit']['z']['sum'] = 0;
+    }
+    
     if(is_array($zeilen[$persnr]['abmahnung'])){
 	foreach ($zeilen[$persnr]['abmahnung'] as $tat=>$t){
 	    $zeilen[$persnr]['abmahnung'][$tat]['sum'] = getSumRow($zeilen[$persnr]['abmahnung'][$tat]);
 	}
     }
-    
 
+    
+    
+    // spocitat sumy pro mesice
+    $persATage = $a->getATageProPersnrBetweenDatums($persnr, $datumVon, $datumBis);
+    $zeilen[$persnr]['dzeit']['von_bis_anw_nurarbtage']['sum'] = $persATage;
+    $fondAnwProzent = $aTageFond!=0?$persATage/$aTageFond:0;
+    
+    $zeilen[$persnr]['dzeit']['von_bis_anw_nurarbtage']['sum'] = $persATage." / ".number_format($fondAnwProzent*100,0,',',' ')."%";
+    $bezZCZK = 0;
+    if($fondAnwProzent>=0.6 && $zeilen[$persnr]['dzeit']['z']['sum']==0){
+	$bezZCZK = 2500;
+    }
+    $sumPremieCZK[$persnr]+=$bezZCZK;
+    
+    $zeilen[$persnr]['dzeit']['z']['czk'] = number_format($bezZCZK,0,',',' ')."CZK";
+    
+    
     $zeilen[$persnr]['leistung']['vzaby_akkord']['sum'] = getSumRow($zeilen[$persnr]['leistung']['vzaby_akkord']);
     $zeilen[$persnr]['leistung']['vzaby_zeit']['sum'] = getSumRow($zeilen[$persnr]['leistung']['vzaby_zeit']);
     $zeilen[$persnr]['leistung']['ganzMonatNormMinuten']['sum'] = getSumRow($zeilen[$persnr]['leistung']['ganzMonatNormMinuten']);
@@ -431,6 +517,10 @@ foreach ($persnrArray as $p) {
     $zeilen[$persnr]['HF_repkosten']['vzkd_S0051']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_S0051']);
     $zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_sum']);
     $zeilen[$persnr]['HF_repkosten']['faktor']['sum'] = $zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum']!=0?$zeilen[$persnr]['HF_repkosten']['repkosten']['sum']/$zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum']:0;
+    
+    // celkova sum CZK pro osobu
+    // nasobit koeficientem za loajalitu podle let
+    $sumPremieCZK[$persnr] = $sumPremieCZK[$persnr] * $loajalitaPp_yearsCzk[$persnr];
     
 // zformatovani hodnot v radku
     formatRowValues($zeilen[$persnr]['A6']['sum_gew'],0,',',' ');
@@ -453,6 +543,9 @@ foreach ($persnrArray as $p) {
     
 }
 
+$groups = array();
+$groupDetails = array();
+
 foreach ($persnrArray as $p) {
     $persnr = $p['persnr'];
     $rowsArray = $zeilen[$persnr];
@@ -462,17 +555,54 @@ foreach ($persnrArray as $p) {
     if ($nameA !== NULL) {
 	$name = $nameA['name'] . ' ' . $nameA['vorname'];
     }
-    array_push($zeilenArray, array('section' => 'persheader', 'persnr' => $persnr, 'name' => $name));
+    array_push($zeilenArray, array('section' => 'persheader', 'persnr' => $persnr, 'name' => $name,'sumPremieCZK'=>  number_format($sumPremieCZK[$persnr],0,',',' ')));
     if (is_array($rowsArray)) {
 	foreach ($rowsArray as $group => $groupArray) {
 	    foreach ($groupArray as $groupDetail => $monthArray) {
+		$groups[$group]+=1;
+		$groupDetails[$groupDetail]+=1;
 		array_push($zeilenArray, array('section' => 'groupdetail', 'persnr' => $persnr, 'name' => $name, 'group' => $group, 'groupDetail' => $groupDetail, 'monthValues' => $monthArray));
 	    }
 	}
     }
 }
 
+// vytahnout si pomocna pole
+
+// grupy
+$Groups = array_keys($groups);
+sort($Groups);
+// detaily
+$GroupDetails = array_keys($groupDetails);
+sort($GroupDetails);
+
+$groupsInfoArray = array(
+    'A6'=>array(
+	'label'=>'Kvalita A6'
+    ),
+    'HF_repkosten'=>array(
+	'label'=>'Reparaturkosten HF'
+    ),
+    'abmahnung'=>array(
+	'label'=>'Abmahnungen'
+    ),
+    'dzeit'=>array(
+	'label'=>'Anwesenheit'
+    ),
+    'leistung'=>array(
+	'label'=>'Leistung'
+    ),
+    'loajalita'=>array(
+	'label'=>'Loajalita'
+    ),
+    'rekl'=>array(
+	'label'=>'Reklamace'
+    ),
+);
+
 $returnArray = array(
+    "groupDetails"=>$GroupDetails,
+    "groups"=>$Groups,
     'persNrArray'=>$persnrArray,
     'monthsArray'=>$monthsArrayAll,
     'zeilenraw' => $zeilen,

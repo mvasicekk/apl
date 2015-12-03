@@ -112,10 +112,15 @@ $field2Value = array(
     'mt_datum' => toDBDate($rekl->mt_datum1),	//*
 //'negativ_muster'=>,
     'identif_hinweise' => trim($rekl->identif_hinweise),
+    'letzt_geandert' => $user,
 //'kd_kd_kd_rekl_nr'=>,
 //'stk_unklar'=>,
 );
 
+// v pripade ze se ukoncuje reklamace
+if(intval($beenden)!=0){
+    $field2Value['abgeschlossen'] = $user;
+}
 // vytvorit updatovaci dotaz
 // mam reklId -> je to update
 if($reklId>0){

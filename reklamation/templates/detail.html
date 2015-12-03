@@ -137,7 +137,7 @@
 				</label>
 			    </div>
 
-			    <div class="form-group col-md-4 form-group-sm">
+			    <div ng-show="1==0" class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="dm">Datum Mitteilung:</label>
 				<input ng-model="rekl.mt_datum1" ui-date="dateOptions" type="text" class="form-control pinput" id="dm" placeholder="Datum Mitteilung">
 			    </div>
@@ -174,12 +174,12 @@
 			    </div>-->
 
 			    <div class="form-group col-md-4 form-group-sm">
-				<label for="EX">EX:</label>  
+				<label for="EX">Auftrag (IM x EX):</label>  
 				<input maxlength="255" ng-model="rekl.export" type="text" class="form-control pinput" id="EX" placeholder="EX">
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm">
-				<label for="Exp">Exp-Beh:</label>  
+				<label for="Exp">Behālter:</label>  
 				<input maxlength="255" ng-model="rekl.export_beh" type="text" class="form-control pinput" id="Exp" placeholder="Exp-Beh">
 			    </div>
 

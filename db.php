@@ -488,6 +488,26 @@ class AplDB {
         }
     }
 
+    public function getReklamationenMitVerursacherVonBis($persnr, $von, $bis) {
+	$sql = " select";
+	$sql.= " dreklamation.id,";
+	$sql.= " dreklamation.rekl_nr,";
+	$sql.= " dreklamation.teil,";
+	$sql.= " dreklamation.beschr_abweichung";
+	$sql.= " from";
+	$sql.= " dreklamation";
+	$sql.= " join dpersschulung on dpersschulung.rekl_id=dreklamation.id";
+	$sql.= " where";
+	$sql.= " dreklamation.rekl_datum between '$von' and '$bis'";
+	$sql.= " and dpersschulung.persnr='$persnr'";
+	$sql.= " and dpersschulung.rekl_verursacher<>0";
+	$sql.= " group by";
+	$sql.= " dpersschulung.persnr,";
+	$sql.= " dreklamation.rekl_nr";
+	
+	return $this->getQueryRows($sql);
+    }
+
     /**
      * vrati kurs pro prepocet mezi menami, kurs platny pro datum
      * 

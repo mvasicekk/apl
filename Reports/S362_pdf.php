@@ -577,12 +577,12 @@ if($reklInfo!==NULL){
 	$userInfo = $apl->getUserInfoArray($rekl['erstellt']);
 	$obsah.= $userInfo['realname'];
 	$obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['rekl_datum']));
-	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 1, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
+	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 0, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
 	$obsah = "zu lātzt geāndert: ";
 	$userInfo = $apl->getUserInfoArray($rekl['letzt_geandert']);
 	$obsah.= $userInfo['realname'];
 	$obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['stamp']));
-	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 1, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
+	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 0, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
 	$obsah = "abgeschlossen: ";
 	$userInfo = $apl->getUserInfoArray($rekl['abgeschlossen']);
 	$obsah.= $userInfo['realname'];
@@ -593,7 +593,7 @@ if($reklInfo!==NULL){
 	    $obsah.="\nam: ";
 	}
 	
-	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 1, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
+	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 0, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
     }
 }
 
