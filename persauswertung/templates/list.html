@@ -52,7 +52,7 @@
 		    {{r.persnr}}
 		</td>
 		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length + 1}}">
-		    {{r.name}}
+		    {{r.name}} ( {{r.regeloe}} )
 		</td>
 		<td class="{{r.section}} text-right" ng-if="r.section=='persheader'" >
 		    {{r.sumPremieCZK}}CZK
@@ -67,7 +67,7 @@
 		    {{r.groupDetail}}
 		</td>
 		<td ng-repeat="mo in monthsArray" class="{{r.section}} text-right" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
-		    <span id="row_{{zeilenIndex}}_{{mo}}" style="cursor: pointer;" ng-click="monthValueClicked($event,r)" ng-if="r.monthValues.hasOwnProperty(mo)" title="{{mo}}">
+		    <span id="row_{{zeilenIndex}}_{{mo}}" style="cursor: pointer;" ng-click="monthValueClicked($event,r)" ng-if="r.monthValues.hasOwnProperty(mo)">
 			{{r.monthValues[mo]}}
 		    </span>
 		</td>

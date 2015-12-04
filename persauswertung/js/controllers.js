@@ -28,15 +28,19 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
     $scope.monthValueClicked = function(e,r){
 	var eId = e.target.id;
 	//zlikvidovat popovery
-	$('div[id^=popover]').popover('destroy');
+	if($('div[id^=popover]').length>0){
+	    $('div[id^=popover]').popover('destroy');
+	    return;
+	}
+	
 	$http.post('./getDetailContent.php', {r: r,eId:eId}).then(function (response) {
 	    var content = response.data.content;
 	    var popOptions = {
 		container:'body',
 		content:response.data.content,
 		html:true,
-		placement:'top',
-		title:'Detail',
+		placement:'bottom',
+		title:response.data.title,
 		trigger:'manual',
 	    };
 	    $('#'+eId).popover(popOptions);
@@ -80,6 +84,9 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		var b = 0;
 	    }
 	    console.log('posilam get pozadavek');
+	    if($('div[id^=popover]').length>0){
+		$('div[id^=popover]').popover('destroy');
+	    }
 	    $('#spinner').show();
 	    $http.get('./getPersStat.php?persvon=' + $scope.persVon
 		    +'&persbis='+$scope.persBis

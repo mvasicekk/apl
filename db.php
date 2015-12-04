@@ -493,7 +493,9 @@ class AplDB {
 	$sql.= " dreklamation.id,";
 	$sql.= " dreklamation.rekl_nr,";
 	$sql.= " dreklamation.teil,";
-	$sql.= " dreklamation.beschr_abweichung";
+	$sql.= " dreklamation.beschr_abweichung,";
+	$sql.= " dreklamation.beschr_ursache,";
+	$sql.= " dreklamation.interne_bewertung";
 	$sql.= " from";
 	$sql.= " dreklamation";
 	$sql.= " join dpersschulung on dpersschulung.rekl_id=dreklamation.id";
@@ -1366,6 +1368,38 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
     
     /**
+     * 
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type
+     */
+    public function getLeistungArrayPersVonBis($persnr, $von, $bis) {
+	$sql.=" select";
+	$sql.=" drueck.PersNr as persnr,";
+	$sql.=" dpers.leistfaktor,";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" drueck.TaetNr as abgnr,";
+	$sql.=" `dtaetkz-abg`.`Name` as abgnr_name,";
+	$sql.=" sum(if(auss_typ=4,(`Stück`+`Auss-Stück`)*`VZ-IST`,(`Stück`)*`VZ-IST`)) as sum_vzaby,";
+	$sql.=" sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord";
+	$sql.=" from drueck";
+	$sql.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
+	$sql.=" join dpers on dpers.PersNr=drueck.PersNr";
+	$sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	$sql.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
+	$sql.=" where";
+	$sql.=" drueck.persnr='$persnr'";
+	$sql.=" and datum between '$von' and '$bis'";
+	$sql.=" group by";
+	$sql.=" drueck.PersNr,";
+	$sql.=" daufkopf.kunde,";
+	$sql.=" drueck.TaetNr";
+
+	return $this->getQueryRows($sql);
+    }
+
+    /**
      * pro uvodni stranku apl
      * @return array
      */
@@ -2127,6 +2161,37 @@ public function istExportiert($import, $impal){
 	$sql.="values('$persnr','$grund','$datum','$betr','$dreklamation_id','$vorschlag','$vorschlag_von','$vorschlag_betrag','$vorschlag_bemerkung')";
 	$this->query($sql);
 	return mysql_insert_id();
+    }
+    
+    /**
+     * 
+     * @param type $ausstyp
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type
+     */
+    public function getAussArrayPersnrVonBis($ausstyp,$persnr,$von,$bis){
+	$sql.=" select";
+	$sql.=" drueck.Datum as datum,";
+	$sql.=" drueck.auftragsnr,";
+	$sql.=" drueck.Teil as teil,";
+	$sql.=" dkopf.Gew as gew,";
+	$sql.=" drueck.`pos-pal-nr` as pal,";
+	$sql.=" drueck.TaetNr as abgnr,";
+	$sql.=" drueck.`Auss-Stück` as auss_stk";
+	$sql.=" from drueck";
+	$sql.=" join dkopf on dkopf.Teil=drueck.Teil";
+	$sql.=" where";
+	$sql.=" persnr='$persnr'";
+	$sql.=" and datum between '$von' and '$bis'";
+	$sql.=" and auss_typ='$ausstyp'";
+	$sql.=" order by";
+	$sql.=" drueck.Datum,";
+	$sql.=" drueck.auftragsnr,";
+	$sql.=" drueck.teil";
+//	return $sql;
+	return $this->getQueryRows($sql);
     }
     
     /**

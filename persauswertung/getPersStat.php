@@ -291,7 +291,7 @@ foreach ($persnrArray as $p) {
 	    $yearMonth = date('y-m', strtotime($datum));
 	    $monthsArray[$yearMonth]+=1;
 	    
-	    if($pr['tat']=='n' || $pr['tat']=='z'|| $pr['tat']=='d'|| $pr['tat']=='nw'){
+	    if($pr['tat']=='n' || $pr['tat']=='z'|| $pr['tat']=='d'|| $pr['tat']=='nw'|| $pr['tat']=='nv'){
 		// nacitat jen ty, ktere me zajimaji
 		$zeilen[$persnr]['dzeit'][$pr['tat']][$yearMonth]+=1;
 	    }
@@ -555,7 +555,9 @@ foreach ($persnrArray as $p) {
     if ($nameA !== NULL) {
 	$name = $nameA['name'] . ' ' . $nameA['vorname'];
     }
-    array_push($zeilenArray, array('section' => 'persheader', 'persnr' => $persnr, 'name' => $name,'sumPremieCZK'=>  number_format($sumPremieCZK[$persnr],0,',',' ')));
+    $persInfoA = $a->getPersInfoArray($persnr);
+    $regelOE = $persInfoA[0]['regeloe'];
+    array_push($zeilenArray, array('section' => 'persheader','regeloe'=>$regelOE, 'persnr' => $persnr, 'name' => $name,'sumPremieCZK'=>  number_format($sumPremieCZK[$persnr],0,',',' ')));
     if (is_array($rowsArray)) {
 	foreach ($rowsArray as $group => $groupArray) {
 	    foreach ($groupArray as $groupDetail => $monthArray) {

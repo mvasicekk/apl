@@ -246,3 +246,11 @@ div.reklInfoField{
     margin-left: 1em;
     width: 76%;
 }
+
+div.popover{
+    max-width: 600px;
+}
+
+.table{
+    margin-bottom:2px;
+}
