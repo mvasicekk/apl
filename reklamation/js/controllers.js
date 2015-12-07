@@ -28,6 +28,42 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 		    }
 		);
 	}
+
+/**
+ * 
+ * @returns {undefined}
+ */
+	$scope.ausschussKostenVorschlag = function(){
+	    var p={};
+	    p.teil = $scope.rekl.teil;
+	    p.aussStk = $scope.rekl.anerkannt_stk_ausschuss;
+	    return $http.post('./getAussKostenVorschlag.php',p).then(
+		    function(response){
+			console.log(response.data);
+			$scope.preisVorschlag_Ausschuss = response.data.preisVorschlag;
+			$scope.preisVorschlag_Ausschuss_Vom = response.data.vom;
+			$scope.rekl.anerkannt_ausschuss_preis_eur = response.data.preisVorschlag;
+			$scope.recalcKurs('EURtoCZK','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk');
+		    }
+		);
+	}
+	/**
+	 * 
+	 * @param {type} fromto
+	 * @param {type} propertyEUR
+	 * @param {type} propertyCZK
+	 * @returns {undefined}
+	 */
+	$scope.recalcKurs = function(fromto,propertyEUR,propertyCZK){
+	    console.log('recalcKurz:'+fromto+"propEUR="+propertyEUR+"propCZK="+propertyCZK);
+	    if(fromto=='EURtoCZK'){
+		$scope.rekl[propertyCZK] = $scope.rekl.kurs_EUR_CZK * $scope.rekl[propertyEUR];
+	    }
+	    else{
+		$scope.rekl[propertyEUR] = $scope.rekl.kurs_EUR_CZK!=0?$scope.rekl[propertyCZK]/$scope.rekl.kurs_EUR_CZK:0;
+	    }
+	}
+	
 	
 	var initDetail = function (save) {
 	    $scope.rekl = undefined;

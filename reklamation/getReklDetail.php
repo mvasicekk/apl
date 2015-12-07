@@ -29,6 +29,19 @@ require_once '../db.php';
 	//schulungen
 	$schulungen = $apl->getSchulungenForReklamation($rekl['id']);
 	$rekl['schulungen'] = $schulungen;
+	
+	// kurs
+	$kurs = $apl->getKurs($rekl['rekl_datum'], 'EUR', 'CZK');
+	$rekl['kurs_EUR_CZK'] = $kurs;
+	
+	
+	// prepocitat kosten v EUR na CZK
+	$rekl['anerkannt_ausschuss_preis_czk'] = $kurs * $rekl['anerkannt_ausschuss_preis_eur'];
+	$rekl['anerkannt_nacharbeit_preis_czk'] = $kurs * $rekl['anerkannt_nacharbeit_preis_eur'];
+	$rekl['dif_falsch_deklariert_preis_czk'] = $kurs * $rekl['dif_falsch_deklariert_preis_eur'];
+	$rekl['verpackung_preis_czk'] = $kurs * $rekl['verpackung_preis_eur'];
+	$rekl['kreislauf_preis_czk'] = $kurs * $rekl['kreislauf_preis_eur'];
+	$rekl['pauschale_preis_czk'] = $kurs * $rekl['pauschale_preis_eur'];
     }
     
     $returnArray = array(

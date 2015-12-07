@@ -37,6 +37,7 @@ $sql.="`Kunde`='" . $kunde . "',";
 $sql.="`Teilbez`='" . $bezeichnung . "',";
 $sql.="`Gew`='" . $gew . "',";
 $sql.="`BrGew`='" . $brgew . "',";
+$sql.="`Wst`='" . $wst . "',";
 $sql.="`FA`='" . $fa . "',";
 $sql.="`verpackungmenge`='" . $vm . "',";
 $sql.="`stk_pro_gehaenge`='" . $spg . "',";

@@ -282,77 +282,161 @@ if($reklInfo!==NULL){
 	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
 	
 	$pdf->Ln(5);
+	
+
 	//kosten
 	$pdf->SetFillColor(255, 255, 230);
-	$pdf->SetFont("FreeSans", "B", 7);
-	$fill = 1;
 	//header
 	$tbWidth = 18;
-	$pdf->SetFont("FreeSans", "B", 7);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', 0);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Ausschuss", 'LRBT', 0, 'R', $fill);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Nacharbeit", 'LRBT', 0, 'R', $fill);
-	$pdf->SetFont("FreeSans", "B", 6);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Nicht Anerkannt", 'LRBT', 0, 'R', $fill);
-	$pdf->SetFont("FreeSans", "B", 7);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Unklar", 'LRBT', 1, 'R', $fill);
+	$fill = 0;
 	
+	$gew = $apl->getTeilGewicht($rekl['teil']);
+	$kurs = $apl->getKurs($rekl['rekl_datum'], 'EUR', 'CZK');
+
+	//header
+	$pdf->SetFont("FreeSans", "B", 8);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Interne Bewertung:    ".$rekl['interne_bewertung'], '0', 0, 'L', 0);
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Stk", 'LRBT', 0, 'R', 1);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Gewicht", 'LRBT', 0, 'R', 1);
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Kosten[CZK]", 'LRBT', 1, 'R', 1);
+
 	//zapamatovat x a y pro interne bewertung
 	$ibX = $pdf->GetX();
 	$ibY = $pdf->GetY();
-	
-	$fill = 0;
-	//stk
+
+	//ausschuss
 	$pdf->SetFont("FreeSans", "B", 7);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Stūck", 'LRBT', 0, 'L', 1);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Ausschuss", 'LRBT', 0, 'L', 1);
 	$pdf->SetFont("FreeSans", "", 7);
+	//stk
 	$obsah = number_format($rekl['anerkannt_stk_ausschuss'],0,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//gewicht
+	$obsah = number_format($rekl['anerkannt_stk_ausschuss']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//kosten czk
+	$obsah = number_format($rekl['anerkannt_ausschuss_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+	
+	//nacharbeit
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Nacharbeit", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	//stk
 	$obsah = number_format($rekl['anerkannt_stk_nacharbeit'],0,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
-	$obsah = number_format($rekl['anerkannt_stk_nein'],0,',',' ');
+	//gewicht
+	$obsah = number_format($rekl['anerkannt_stk_nacharbeit']*$gew,2,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
-	$obsah = number_format($rekl['unklar_stk'],0,',',' ');
+	//kosten czk
+	$obsah = number_format($rekl['anerkannt_nacharbeit_preis_eur']*$kurs,2,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
 
-	
-	//Gewicht 
+	//Dif / falsch deklariert
 	$pdf->SetFont("FreeSans", "B", 7);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "Gewicht", 'LRBT', 0, 'L', 1);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Dif / falsch deklariert", 'LRBT', 0, 'L', 1);
 	$pdf->SetFont("FreeSans", "", 7);
-	$gew = $apl->getTeilGewicht($rekl['teil']);
-	$obsah = number_format($rekl['anerkannt_stk_ausschuss']*$gew,1,',',' ');
+	//stk
+	$obsah = number_format($rekl['dif_falsch_deklariert_stk'],0,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
-	$obsah = number_format($rekl['anerkannt_stk_nacharbeit']*$gew,1,',',' ');
+	//gewicht
+	$obsah = number_format($rekl['dif_falsch_deklariert_stk']*$gew,2,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
-	$obsah = number_format($rekl['anerkannt_stk_nein']*$gew,1,',',' ');
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
-	$obsah = number_format($rekl['unklar_stk']*$gew,1,',',' ');
+	//kosten czk
+	$obsah = number_format($rekl['dif_falsch_deklariert_preis_eur']*$kurs,2,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
 	
-	//CZK
+	// Verpackung
 	$pdf->SetFont("FreeSans", "B", 7);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "CZK", 'LRBT', 0, 'L', 1);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Verpackung", 'LRBT', 0, 'L', 1);
 	$pdf->SetFont("FreeSans", "", 7);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 0, 'L', $fill);
-	$pdf->Cell($tbWidth, $schulungHeaderHeight, "", 'LRBT', 1, 'L', $fill);
+	//stk
+	$obsah = number_format($rekl['verpackung_stk'],0,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//gewicht
+	$obsah = number_format($rekl['verpackung_stk']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//kosten czk
+	$obsah = number_format($rekl['verpackung_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+
+	//  Kreislauf
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Kreislauf", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	//stk
+	$obsah = number_format($rekl['kreislauf_stk'],0,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//gewicht
+	$obsah = number_format($rekl['kreislauf_stk']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//kosten czk
+	$obsah = number_format($rekl['kreislauf_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+
+	//  Unklar
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Unklar", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	//stk
+	$obsah = number_format($rekl['unklar_stk'],0,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//gewicht
+	$obsah = number_format($rekl['unklar_stk']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//kosten czk
+	$pdf->SetFillColor(240, 240, 240);
+	$obsah = '';//number_format($rekl['kreislauf_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', 1);
+	$pdf->SetFillColor(255, 255, 230);
 	
+	//  nicht anerkannt
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "nicht anerkannt", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	//stk
+	$obsah = number_format($rekl['anerkannt_stk_nein'],0,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//gewicht
+	$obsah = number_format($rekl['anerkannt_stk_nein']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//kosten czk
+	$pdf->SetFillColor(240, 240, 240);
+	$obsah = '';//number_format($rekl['kreislauf_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', 1);
+	$pdf->SetFillColor(255, 255, 230);
+
+	//  Pauschale
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Pauschale", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	//stk
+	$pdf->SetFillColor(240, 240, 240);
+	$obsah = '';//number_format($rekl['anerkannt_stk_nein'],0,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', 1);
+	//gewicht
+	$obsah = '';//number_format($rekl['anerkannt_stk_nein']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', 1);
+	$pdf->SetFillColor(255, 255, 230);
+	//kosten czk
+	$obsah = number_format($rekl['pauschale_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+
 	//interne bewertung
 	
 	$pdf->SetY($ibY-$schulungHeaderHeight);
 	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
-	
-	$pdf->SetFont("FreeSans", "B", 7);
-	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, $schulungHeaderHeight, "Interne Bewertung", 'LRT', 1, 'C', 1);
-	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
-	$pdf->SetFont("FreeSans", "B", 15);
-	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, 3*$schulungHeaderHeight, "7", 'LRB', 1, 'C', 0);
-	
-	
-	
-	$pdf->Ln(5);
+//	
+//	$pdf->SetFont("FreeSans", "B", 7);
+//	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, $schulungHeaderHeight, "Interne Bewertung", 'LRT', 1, 'C', 1);
+//	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
+//	$pdf->SetFont("FreeSans", "B", 15);
+//	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, 3*$schulungHeaderHeight, $rekl['interne_bewertung'], 'LRB', 1, 'C', 0);
+//	
+//	
+//	
+//	$pdf->Ln(5);
 	
 	//anlagen
 	$anlagen = array();
@@ -374,17 +458,19 @@ if($reklInfo!==NULL){
 	    }
 	}
 	foreach($anlagen as $beschr=>$poc){
-		$obsah.=$beschr." ($poc) ";
+		$obsah.=$beschr." ($poc x)\n";
         }
 	$pdf->SetFillColor(255, 255, 230);
 	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Anlagen", '0', 1, 'L', $fill);
+	$pdf->Cell($persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, $schulungHeaderHeight, "Anlagen", '0', 1, 'L', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	//$obsah = "";
+	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);
 	$pdf->MultiCell(
-		$persTabsXOffset-20, 
+		$persTabsXOffset-20-(5*$tbWidth-5+PDF_MARGIN_LEFT)+5, 
 		$problemBeschreibungMinHeight,	// cell minimum height, extends if needed
 		$obsah , 
 		'0', 
@@ -397,7 +483,7 @@ if($reklInfo!==NULL){
 		0,	    // font stretch mode
 		FALSE,	    //is html
 		TRUE,	    // uses internal padding
-		10,	    // max height, 0 disabled
+		40,	    // max height, 0 disabled
 		'T',	    // valign
 		TRUE	    // fit to cell reduces font size
 	);
@@ -552,7 +638,7 @@ if($reklInfo!==NULL){
 		$obsah = '';
 		if($verursacher){
 		    //oznacit verursacher
-		    $pdf->Image('./patmat.jpg', $pdf->GetX(),$pdf->GetY(),0,$schulungRowHeight);
+		    $pdf->Image('./mracoun.png', $pdf->GetX()-($schulungRowHeight/2.5)-1,$pdf->GetY()+1,0,$schulungRowHeight/2.5);
 		    //$obsah = 'X';
 		}
 		//$obsah = $schulung['rekl_verursacher'];
@@ -575,17 +661,17 @@ if($reklInfo!==NULL){
 	$pdf->SetX($persTabsXOffset);
 	$obsah = "erstellt: ";
 	$userInfo = $apl->getUserInfoArray($rekl['erstellt']);
-	$obsah.= $userInfo['realname'];
+	$obsah.= $rekl['erstellt'];//$userInfo['realname'];
 	$obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['rekl_datum']));
 	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 0, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
 	$obsah = "zu lātzt geāndert: ";
 	$userInfo = $apl->getUserInfoArray($rekl['letzt_geandert']);
-	$obsah.= $userInfo['realname'];
+	$obsah.= $rekl['letzt_geandert'];//$userInfo['realname'];
 	$obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['stamp']));
 	$pdf->MultiCell(40, 5, $obsah, '0', 'L', 0, 0, '', '', TRUE, 0, FALSE, TRUE, 10, 'T', TRUE);
 	$obsah = "abgeschlossen: ";
 	$userInfo = $apl->getUserInfoArray($rekl['abgeschlossen']);
-	$obsah.= $userInfo['realname'];
+	$obsah.= $rekl['abgeschlossen'];//$userInfo['realname'];
 	if(strtotime($rekl['rekl_erledigt_am'])){
 	    $obsah.="\nam: ".date('d.m.Y',  strtotime($rekl['rekl_erledigt_am']));
 	}

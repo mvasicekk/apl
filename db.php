@@ -2558,6 +2558,16 @@ public function istExportiert($import, $impal){
         }
     }
     
+    public function getWerkstoffPreis($kunde,$werkstoffId){
+	$sql = "select werkstoffpreise.preis_pro_kg from werkstoffpreise where werkstoff_id='$werkstoffId' and kunde='$kunde'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return floatval($r[0]['preis_pro_kg']);
+	}
+	else{
+	    return 0;
+	}
+    }
     /**
      *
      * @param type $auftragsnr

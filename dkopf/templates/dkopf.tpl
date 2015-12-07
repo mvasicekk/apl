@@ -105,8 +105,11 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 			</span>
 			
 			<span style="display:{$display_sec.wst_sec};" id="wst_sec">
-			    <label for="wst">Werkst. / material</label>
-			    <input {$edit_sec.wst_sec} size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>
+			    <label for="wst">Werkst. / material {$werkstoffe_selected}</label>
+			    <select name="wst" id="wst" {$edit_sec.wst_sec}>
+				{html_options values=$werkstoffe_ids output=$werkstoffe_values selected=$werkstoffe_selected  }
+			    </select>
+{*			    <input {$edit_sec.wst_sec} size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>*}
 			</span>
 
 			<span style="display:{$display_sec.fa_sec};" id="fa_sec">
@@ -509,7 +512,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 												+'&bezeichnung='+encodeControlValue('bezeichnung')
 												+'&gew='+encodeControlValue('gew')
 												+'&brgew='+encodeControlValue('brgew')
-												+'&wst='+encodeControlValue('wst')
+												+'&wst='+encodeSelectControlValue('wst')
 												+'&fa='+encodeControlValue('fa')
 												+'&vm='+encodeControlValue('vm')
                                                                                                 +'&spg='+encodeControlValue('spg')

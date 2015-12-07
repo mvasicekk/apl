@@ -95,6 +95,7 @@ $smarty = new Smarty;
 		
 		$smarty->assign("vom1_selected",$row['Muster-Freigabe-1']);
 		$smarty->assign("vom2_selected",$row['Muster-Freigabe-2']);
+		$wst = $row['Wst'];
 		
 		$sql="select name from mustervom order by name";
 		$res=mysql_query($sql);
@@ -154,6 +155,22 @@ $smarty = new Smarty;
 		$smarty->assign("letzte_reklamationen",$letzteReklamationen);
 		$letzteReklamationArray = $a->getLetzteReklamation($teil);
 		$smarty->assign("letzte_reklamationen_array",$letzteReklamationArray);
+		
+		//werkstoffe
+		$a = AplDB::getInstance();
+		$werkstoffe_values = array();
+		$werkstoffe_ids = array();
+		$werkA = $a->getQueryRows("select * from werkstoffe order by beschreibung");
+		foreach ($werkA as $werk){
+		    array_push($werkstoffe_values,$werk['beschreibung']);
+		    array_push($werkstoffe_ids,$werk['id']);
+		}
+		array_push($werkstoffe_values,"----------");
+		array_push($werkstoffe_ids,"0");
+		$smarty->assign("werkstoffe_values",$werkstoffe_values);
+		$smarty->assign("werkstoffe_ids",$werkstoffe_ids);
+		if($wst==''|$wst=NULL) $wst = 0;
+		$smarty->assign("werkstoffe_selected","$wst");
 		
 		
 		//security
