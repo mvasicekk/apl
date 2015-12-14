@@ -82,6 +82,7 @@ tr.sumteil{
     font-style: italic;
 }
 
+
 #d607it td.detail{
 	font-size: 0.8em;
 }
@@ -166,6 +167,10 @@ table#d607it td.canedit{
 
 table#d607it td.editmode{
     padding:0;
+}
+
+table#d607it th{
+    font-size: 0.7em;
 }
 
 table#d607it td.rightBorderSumTeil{

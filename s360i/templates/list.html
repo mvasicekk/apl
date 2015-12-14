@@ -1,0 +1,251 @@
+<div id="spinner"></div>
+
+<div class="container-fluid">
+    <div class="page-header">
+	<h4>S360 (interaktiv)</h4>
+    </div>
+<!--    <div>
+	{{showGroups|json}}
+    </div>-->
+<table ng-init="columns=15" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover table-responsive">
+	<thead>
+	    <tr class="no-print">
+		<th colspan="{{columns}}">
+		    <div style="display:inline-block;">
+			<input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="kundeVon" placeholder="Kunde von" type="text"/>
+			<input tabindex="2" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="kundeBis" placeholder="Kunde bis" type="text"/>
+		    </div>
+		    <div style="display:inline-block;">
+			<input tabindex="3" ng-model="reklVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Erhalten von">
+			<input tabindex="4" ng-model="reklBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Erhalten bis">
+		    </div>
+		    <div style="display:inline-block;">
+			<input tabindex="5" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="reklnr" placeholder="ReklNr" type="text"/>
+		    </div>
+		    <div style="display:inline-block;vertical-align:top;">
+		    <label class="radio-inline">
+			<input ng-model="wahrung" type="radio" name="wahrungRadioOptions" id="inlineRadio1" value="EUR"> EUR
+		    </label>
+		    <label class="radio-inline">
+			<input ng-model="wahrung" type="radio" name="wahrungRadioOptions" id="inlineRadio2" value="CZK"> CZK
+		    </label>
+		    </div>
+<!--		    <div>
+		    <div ng-repeat="group in groups" class="checkbox-inline">
+		    <label class="checkbox-inline">
+			<input ng-model="showGroups[group].show" type="checkbox">{{group}}
+		    </label>
+		    </div>
+		    </div>-->
+		    <div style="display:inline-block;">
+			<button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
+		    </div>
+		</th>
+	    </tr>
+	    <tr>
+		<th>
+		    ReklNr<hr>
+		    Kd.Rekl
+		</th>
+		<th>Auftrag</th>
+		<th>
+		    Erhalten am<hr>
+		    Erledigt am
+		</th>
+		<th>Abweichung</th>
+		<th>Ursache</th>
+		<th>Art der Beseitigung</th>
+		<th>
+		    Teil<hr>
+		    Giesstag
+		</th>
+		<th class="text-right">Stk expediert</th>
+		<th class="text-right">Stk reklamiert</th>
+		<th class="text-right">Bewertung</th>
+		<th class="text-right">
+		    Stk<br>
+		    Ausschuss<hr>
+		    Nacharbeit<hr>
+		    Dif / falsch deklariert<hr>
+		    Verpackung<hr>
+		    Kreislauf<hr>
+		    Unklar<hr>
+		    nicht anerkannt
+		</th>
+		<th class="text-right">Kosten[{{wahrung}}]</th>
+		<th class="text-right">Abmahn. Betrag [CZK]</th>
+		<th>erstellt</th>
+		<th>Bemerkung</th>
+	    </tr>
+	</thead>
+	<tbody ng-if="zeilen===null">
+	    <tr>
+		<td colspan="{{columns}}" class="text-center text-danger">
+		    <h1>Keine Data !</h1>
+		</td>
+	    </tr>
+	</tbody>
+	<tbody>
+	    <tr class="{{r.section}}" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+		
+		<!--kundeheader------------------------------------------------> 
+		<td colspan="{{columns-6}}" class="{{r.section}}" ng-if="r.section=='kundeheader'">
+		    {{r.kunde}}
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		    {{r.summen.interne_bewertung}}
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		    
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		    <span ng-show="wahrung=='EUR'">{{
+			r.summen.anerkannt_ausschuss_preis_eur
+			+r.summen.anerkannt_nacharbeit_preis_eur
+			+r.summen.dif_falsch_deklariert_preis_eur
+			+r.summen.verpackung_preis_eur
+			+r.summen.kreislauf_preis_eur
+			+r.summen.pauschale_preis_eur|number:2
+			}}</span>
+		    <span ng-show="wahrung=='CZK'">{{
+			r.summen.anerkannt_ausschuss_preis_czk
+			+r.summen.anerkannt_nacharbeit_preis_czk
+			+r.summen.dif_falsch_deklariert_preis_czk
+			+r.summen.verpackung_preis_czk
+			+r.summen.kreislauf_preis_czk
+			+r.summen.pauschale_preis_czk|number:2
+			}}</span>
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		    {{r.summen.abmahnungenbetrag}}
+		</td>
+		<td colspan="{{2}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		    
+		</td>
+		
+		<!--rekldetail---------------------------------------------- -->
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    <a target="_blank" href="../reklamation/reklamation.php#/detail/{{r.rekl.id}}">{{r.rekl.rekl_nr}}</a><hr>
+		    {{r.rekl.kd_rekl_nr}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.export}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    <div title="erhalten am">{{r.rekl.rekl_datum}}</div><hr>
+		    <div title="erledigt am" style="position:absolute;">{{r.rekl.rekl_erledigt_am}}</div>
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.beschr_abweichung}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.beschr_ursache}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.beschr_beseitigung}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    <a target="_blank" href="../dkopf/dkopf.php?teil={{r.rekl.teil}}">{{r.rekl.teil}}</a><hr>
+		    <div title="giesstag">{{r.rekl.giesstag}}</div>
+		</td>
+		
+		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.stk_expediert}}
+		</td>
+		
+		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.stk_reklammiert}}
+		</td>
+		
+		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.interne_bewertung}}
+		</td>
+		
+		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.anerkannt_stk_ausschuss}}<hr>
+		    {{r.rekl.anerkannt_stk_nacharbeit}}<hr>
+		    {{r.rekl.dif_falsch_deklariert_stk}}<hr>
+		    {{r.rekl.verpackung_stk}}<hr>
+		    {{r.rekl.kreislauf_stk}}<hr>
+		    {{r.rekl.unklar_stk}}<hr>
+		    {{r.rekl.anerkannt_stk_nein}}
+		</td>
+		
+		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    <span ng-show="wahrung=='EUR'">{{
+			r.rekl.anerkannt_ausschuss_preis_eur
+			+r.rekl.anerkannt_nacharbeit_preis_eur
+			+r.rekl.dif_falsch_deklariert_preis_eur
+			+r.rekl.verpackung_preis_eur
+			+r.rekl.kreislauf_preis_eur
+			+r.rekl.pauschale_preis_eur|number:2
+			}}</span>
+		    <span ng-show="wahrung=='CZK'">{{
+			r.rekl.anerkannt_ausschuss_preis_czk
+			+r.rekl.anerkannt_nacharbeit_preis_czk
+			+r.rekl.dif_falsch_deklariert_preis_czk
+			+r.rekl.verpackung_preis_czk
+			+r.rekl.kreislauf_preis_czk
+			+r.rekl.pauschale_preis_czk|number:2
+			}}</span>
+		</td>
+		
+		<td class="{{r.section}}  text-right" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.abmahnungenbetrag}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.erstellt}}
+		</td>
+		
+		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		    {{r.rekl.bemerkung}}
+		</td>
+		
+		<!--tableSummen------------------------------------------------> 
+		<td colspan="{{columns-6}}" class="{{r.section}}" ng-if="r.section=='tableSummen'">
+		    Gesamtsumme
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		    {{r.summen.interne_bewertung}}
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		    
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		    <span ng-show="wahrung=='EUR'">{{
+			r.summen.anerkannt_ausschuss_preis_eur
+			+r.summen.anerkannt_nacharbeit_preis_eur
+			+r.summen.dif_falsch_deklariert_preis_eur
+			+r.summen.verpackung_preis_eur
+			+r.summen.kreislauf_preis_eur
+			+r.summen.pauschale_preis_eur|number:2
+			}}</span>
+		    <span ng-show="wahrung=='CZK'">{{
+			r.summen.anerkannt_ausschuss_preis_czk
+			+r.summen.anerkannt_nacharbeit_preis_czk
+			+r.summen.dif_falsch_deklariert_preis_czk
+			+r.summen.verpackung_preis_czk
+			+r.summen.kreislauf_preis_czk
+			+r.summen.pauschale_preis_czk|number:2
+			}}</span>
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		    {{r.summen.abmahnungenbetrag}}
+		</td>
+		<td colspan="{{2}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		    
+		</td>
+	    </tr>
+	</tbody>
+	
+	<tfoot>
+	</tfoot>
+    </table>
+</div>

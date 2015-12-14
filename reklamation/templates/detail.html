@@ -19,9 +19,9 @@
     
     <div class="row">
 	<div class="col-md-12">
-	    <!--<button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">-->
+	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
 	    <!--zatim povoleno bez ohledu na stav reklamace-->
-	    <button ng-click="reklSave()" class="btn btn-primary" type="button">
+	    <!--<button ng-click="reklSave()" class="btn btn-primary" type="button">-->
 		Speichern / uložit
 	    </button>
 	</div>
@@ -466,11 +466,11 @@
 				<thead>
 				    <tr>
 					<th></th>
-					<th>Stk</th>
-					<th>Gew ({{rekl.teilgew}} kg/Stk)</th>
+					<th class="text-right" >Stk</th>
+					<th class="text-right" >Gew ({{rekl.teilgew}} kg/Stk)</th>
 					<th>Beleg Nr</th>
-					<th>Kosten [EUR]</th>
-					<th>Kosten [CZK] {{rekl.kurs_EUR_CZK}}CZK=1EUR</th>
+					<th class="text-right" >Kosten [EUR]</th>
+					<th class="text-right" >Kosten [CZK] {{rekl.kurs_EUR_CZK}}CZK=1EUR</th>
 				    </tr>
 				</thead>
 				<tbody>
@@ -487,97 +487,97 @@
 					    </div>
 					</td>
 					<td>
-					    <input readonly value="{{rekl.anerkannt_stk_ausschuss*rekl.teilgew}}" type="text" class="form-control" id="aussgew" placeholder="Gew">
+					    <input readonly value="{{rekl.anerkannt_stk_ausschuss*rekl.teilgew}}" type="text" class="form-control text-right" id="aussgew" placeholder="Gew">
 					</td>
 					<td>
 					    <input ng-model="rekl.anerkannt_ausschuss_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('EURtoCZK','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_eur" type="text" class="form-control" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('EURtoCZK','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('CZKtoEUR','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_czk" type="text" class="form-control" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('CZKtoEUR','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				    <tr>
 					<th>Nacharbeit</th>
 					<td>
-					    <input ng-model="rekl.anerkannt_stk_nacharbeit" type="text" class="form-control" placeholder="Stk">
+					    <input ng-model="rekl.anerkannt_stk_nacharbeit" type="text" class="form-control text-right" placeholder="Stk">
 					</td>
 					<td>
-					    <input readonly value="{{rekl.anerkannt_stk_nacharbeit*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					    <input readonly value="{{rekl.anerkannt_stk_nacharbeit*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
 					    <input ng-model="rekl.anerkannt_nacharbeit_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('EURtoCZK','anerkannt_nacharbeit_preis_eur','anerkannt_nacharbeit_preis_czk')" ng-model="rekl.anerkannt_nacharbeit_preis_eur" type="text" class="form-control" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','anerkannt_nacharbeit_preis_eur','anerkannt_nacharbeit_preis_czk')" ng-model="rekl.anerkannt_nacharbeit_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('CZKtoEUR','anerkannt_nacharbeit_preis_eur','anerkannt_nacharbeit_preis_czk')" ng-model="rekl.anerkannt_nacharbeit_preis_czk" type="text" class="form-control" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','anerkannt_nacharbeit_preis_eur','anerkannt_nacharbeit_preis_czk')" ng-model="rekl.anerkannt_nacharbeit_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				    <tr>
 					<th>Dif / falsch deklariert</th>
 					<td>
-					    <input ng-model="rekl.dif_falsch_deklariert_stk" type="text" class="form-control" placeholder="Stk">
+					    <input ng-model="rekl.dif_falsch_deklariert_stk" type="text" class="form-control text-right" placeholder="Stk">
 					</td>
 					<td>
-					    <input readonly value="{{rekl.dif_falsch_deklariert_stk*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					    <input readonly value="{{rekl.dif_falsch_deklariert_stk*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
 					    <input ng-model="rekl.dif_falsch_deklariert_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('EURtoCZK','dif_falsch_deklariert_preis_eur','dif_falsch_deklariert_preis_czk')" ng-model="rekl.dif_falsch_deklariert_preis_eur" type="text" class="form-control" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','dif_falsch_deklariert_preis_eur','dif_falsch_deklariert_preis_czk')" ng-model="rekl.dif_falsch_deklariert_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('CZKtoEUR','dif_falsch_deklariert_preis_eur','dif_falsch_deklariert_preis_czk')" ng-model="rekl.dif_falsch_deklariert_preis_czk" type="text" class="form-control" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','dif_falsch_deklariert_preis_eur','dif_falsch_deklariert_preis_czk')" ng-model="rekl.dif_falsch_deklariert_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				    <tr>
 					<th>Verpackung</th>
 					<td>
-					    <input ng-model="rekl.verpackung_stk" type="text" class="form-control" placeholder="Stk">
+					    <input ng-model="rekl.verpackung_stk" type="text" class="form-control text-right" placeholder="Stk">
 					</td>
 					<td>
-					    <input readonly value="0" type="text" class="form-control" placeholder="Gew">
+					    <input readonly value="0" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
 					    <input ng-model="rekl.verpackung_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('EURtoCZK','verpackung_preis_eur','verpackung_preis_czk')" ng-model="rekl.verpackung_preis_eur" type="text" class="form-control" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','verpackung_preis_eur','verpackung_preis_czk')" ng-model="rekl.verpackung_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('CZKtoEUR','verpackung_preis_eur','verpackung_preis_czk')" ng-model="rekl.verpackung_preis_czk" type="text" class="form-control" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','verpackung_preis_eur','verpackung_preis_czk')" ng-model="rekl.verpackung_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				    <tr>
 					<th>Kreislauf</th>
 					<td>
-					    <input ng-model="rekl.kreislauf_stk" type="text" class="form-control" placeholder="Stk">
+					    <input ng-model="rekl.kreislauf_stk" type="text" class="form-control text-right" placeholder="Stk">
 					</td>
 					<td>
-					    <input readonly value="{{rekl.kreislauf_stk*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					    <input readonly value="{{rekl.kreislauf_stk*rekl.teilgew}}" type="text" class="text-right form-control" placeholder="Gew">
 					</td>
 					<td>
 					    <input ng-model="rekl.kreislauf_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('EURtoCZK','kreislauf_preis_eur','kreislauf_preis_czk')" ng-model="rekl.kreislauf_preis_eur" type="text" class="form-control" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','kreislauf_preis_eur','kreislauf_preis_czk')" ng-model="rekl.kreislauf_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('CZKtoEUR','kreislauf_preis_eur','kreislauf_preis_czk')" ng-model="rekl.kreislauf_preis_czk" type="text" class="form-control" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','kreislauf_preis_eur','kreislauf_preis_czk')" ng-model="rekl.kreislauf_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				    <tr>
 					<th>Unklar</th>
 					<td>
-					    <input ng-model="rekl.unklar_stk" type="text" class="form-control" placeholder="Stk">
+					    <input ng-model="rekl.unklar_stk" type="text" class="form-control text-right" placeholder="Stk">
 					</td>
 					<td>
-					    <input readonly value="{{rekl.unklar_stk*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					    <input readonly value="{{rekl.unklar_stk*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td></td>
 					<td></td>
@@ -586,10 +586,10 @@
 				    <tr>
 					<th>nicht anerkannt</th>
 					<td>
-					    <input ng-model="rekl.anerkannt_stk_nein" type="text" class="form-control" placeholder="Stk">
+					    <input ng-model="rekl.anerkannt_stk_nein" type="text" class="form-control text-right" placeholder="Stk">
 					</td>
 					<td>
-					    <input readonly value="{{rekl.anerkannt_stk_nein*rekl.teilgew}}" type="text" class="form-control" placeholder="Gew">
+					    <input readonly value="{{rekl.anerkannt_stk_nein*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td></td>
 					<td></td>
@@ -607,10 +607,10 @@
 					    <input ng-model="rekl.pauschale_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('EURtoCZK','pauschale_preis_eur','pauschale_preis_czk')" ng-model="rekl.pauschale_preis_eur" type="text" class="form-control" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','pauschale_preis_eur','pauschale_preis_czk')" ng-model="rekl.pauschale_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input ng-change="recalcKurs('CZKtoEUR','pauschale_preis_eur','pauschale_preis_czk')" ng-model="rekl.pauschale_preis_czk" type="text" class="form-control" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','pauschale_preis_eur','pauschale_preis_czk')" ng-model="rekl.pauschale_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				</tbody>
@@ -641,7 +641,7 @@
 	    </div>
 	</div>
 
-	<!--Kosten-->
+<!--	Kosten
 	<div class="panel panel-primary">
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseKosten" aria-expanded="false" aria-controls="collapseKosten">
 		<div class="panel-heading phead" role="tab" id="headingKosten">
@@ -654,7 +654,7 @@
 		    <img src="/images/sb.jpg">
 		</div>
 	    </div>
-	</div>
+	</div>-->
 
 	<!--Bemerkung-->
 	<div class="panel panel-primary">
@@ -732,8 +732,8 @@
 			    <thead>
 				<tr id='uploader'>
 				    <th colspan="2">{{rekl.savePath|limitTo:255:10}}<div id='filelist'></div></th>
-			    <!--<th><button ng-show="rekl.rekl_erledigt_am1==null" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>-->
-			    <th><button ng-disabled="rekl.kunde==0 || rekl.teil=='' || rekl.rekl_nr==''" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+			    <th><button ng-show="rekl.rekl_erledigt_am1==null" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>
+			    <!--<th><button ng-disabled="rekl.kunde==0 || rekl.teil=='' || rekl.rekl_nr==''" id='pickfiles' type="button" class="btn btn-sm btn-primary btn-block">add files</button></th>-->
 			    </tr>
 			    <tr>
 				<th>name</th>
@@ -768,8 +768,8 @@
 		    <div class="col-md-12">
 			<table class="table table-condensed table-responsive">
 			    <thead>
-			    <!--<tr ng-show="rekl.rekl_erledigt_am1==null">-->
-			    <tr>
+			    <tr ng-show="rekl.rekl_erledigt_am1==null">
+			    <!--<tr>-->
 				    <th>
 			    <ui-select
 				ng-model="schulungPersnr.selected" 
@@ -801,8 +801,8 @@
 				    <td class="text-right">{{a.persnr}}</td>
 				    <td>{{a.name}}</td>
 				    <td><input ng-click="editSchulung(a,'ursacher')" ng-model="a.rekl_verursacher" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"></td>
-				    <!--<td><button ng-show="rekl.rekl_erledigt_am1==null" ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>-->
-				    <td><button ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <!--<td><button ng-click="delSchulung(a.id)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>-->
 				</tr>
 			    </tbody>
 			</table>
@@ -825,8 +825,8 @@
 		    <div class="col-md-12">
 			<table class="table table-condensed table-responsive">
 			    <thead>
-				<!--<tr ng-show="rekl.rekl_erledigt_am1==null">-->
-				<tr>
+				<tr ng-show="rekl.rekl_erledigt_am1==null">
+				<!--<tr>-->
 				    <th><input ui-date="dateOptions" ng-model="abmahnungDatum" type="text" class="form-control"></th>
 				    <th>
 			    <ui-select
@@ -865,8 +865,8 @@
 				    <td class="text-right">{{a.vorschlag_betrag}}</td>
 				    <td>{{a.vorschlag_von}}</td>
 				    <td>{{a.vorschlag_bemerkung}}</td>
-				    <!--<td><button ng-show="rekl.rekl_erledigt_am1==null" ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>-->
-				    <td><button ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <td><button ng-show="rekl.rekl_erledigt_am1==null" ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>
+				    <!--<td><button ng-show="a.vorschlag==1" ng-click="delAbmahnung(a.ID)" type="button" class="btn btn-sm btn-danger btn-block">-</button></td>-->
 				</tr>
 			    </tbody>
 			</table>
@@ -879,9 +879,9 @@
 
     <div class="row">
 	<div class="col-md-12">
-	    <!--<button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">-->
+	    <button ng-click="reklSave()" ng-show="rekl.rekl_erledigt_am1==null" class="btn btn-primary" type="button">
 	    <!--povoleno bez ohledu na stav reklamace-->
-	    <button ng-click="reklSave()" class="btn btn-primary" type="button">
+	    <!--<button ng-click="reklSave()" class="btn btn-primary" type="button">-->
 		Speichern / uložit
 	    </button>
 	</div>

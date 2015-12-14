@@ -110,7 +110,7 @@
 
 		    <div id='rs_S36X' style="display:{$display_sec.rs_S36X}">
 			<input id="S360" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Erhalten am von,*DATE;Erhalten am bis,*DATE;ReklNr&promenne=kundevon!number;kundebis!number;erhvon;erhbis;reklnr&values=111;999;{$prvnidenroku};{$now};*&report=S360'" class='reportbutton' type="button"  name="S360" value="S360 - Übersicht Mängelrüge"/>
-			<input id="S362" onClick="location.href='../get_parameters.php?popisky=ReklNr&promenne=reklnr&values=&report=S362'" class='reportbutton' type="button"  name="S362" value="S362 - Mängelrüge"/>
+			<input id="S362" onClick="location.href='../get_parameters.php?popisky=ReklNr&promenne=reklnr&values=&report=S362'" class='reportbutton' type="button"  name="S362" value="S362 - Reklamationsbericht"/>
 		    </div>
 		    
 		    <div id='rs_S34XX' style="display:{$display_sec.rs_S34XX}">

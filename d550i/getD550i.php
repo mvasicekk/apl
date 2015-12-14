@@ -14,6 +14,7 @@ $kundeBis = intval(trim($_GET['kundebis']));
 $datumVon = trim($_GET['von']);
 $datumBis = trim($_GET['bis']);
 $teil = trim($_GET['teil']);
+$export = trim($_GET['export']);
 
 if ($datumVon != 0 && $datumBis != 0) {
     $datumVon = date('Y-m-d', $datumVon / 1000);
@@ -82,11 +83,37 @@ if (
 ) {
     $dmaArray = $a->getQueryRows($sql);
     if ($dmaArray !== NULL) {
+	// pokud bude zadan export, musim seznam ima zredukovat jen na ty, ktere maji import a dil obsazen v danem exportu
+	$imanrArrayWithExport = array();
+	$imaMatchExportArray = array();
+	foreach ($dmaArray as $dma){
+	    $kunde = $dma['kunde'];
+	    $teil = $dma['teil'];
+	    $imanr = $dma['imanr'];
+	    $arr = $a->getDauftrIdArrayForIMA($imanr, 'imaAntrag');
+	    $dauftrIdArray['ima_antrag'] = $arr['did_read'];
+	    if(is_array($dauftrIdArray['ima_antrag'])){
+		foreach ($dauftrIdArray['ima_antrag'] as $dauftrid){
+		    $dauftrrow = $a->getDauftrRow($dauftrid);
+		    $ex = $dauftrrow['ex'];
+		    if($ex==$export){
+			$imanrArrayWithExport[$imanr]+=1;
+		    }
+		}
+	    }
+	    $imaMatchExportArray = array_keys($imanrArrayWithExport);
+	}
 	foreach ($dmaArray as $dma) {
 	    $kunde = $dma['kunde'];
 	    $teil = $dma['teil'];
 	    $imanr = $dma['imanr'];
 
+	    if(strlen($export)>0){
+		if(!in_array($imanr, $imaMatchExportArray)){
+		    continue;
+		}
+	    }
+	    
 	    $zeilen['kunden'][$kunde]['teile'][$teil]['ma'][$imanr]['dma'] = $dma;
 
 	    //$pokusna['kd'] = $defered['ax']-$collected['ydiff'];
@@ -235,6 +262,8 @@ if (
 
 
 $returnArray = array(
+    'imaMatchExportArray'=>$imaMatchExportArray,
+    'imanrArrayWithExport'=>$imanrArrayWithExport,
     'zeilenraw' => $zeilen,
     'von' => $datumVon,
     'bis' => $datumBis,

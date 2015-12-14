@@ -558,6 +558,20 @@ class AplDB {
 	return mysql_affected_rows();
     }
 
+    public function getBetragSumAbmahnungenForReklId($reklId){
+	$sql.=" select";
+	$sql.=" sum(dabmahnung.vorschlag_betrag) as betrag";
+	$sql.=" from dabmahnung";
+	$sql.=" where";
+	$sql.=" dabmahnung.dreklamation_id='$reklId'";
+	$r = $this->getQueryRows($sql);
+	if($r!==NULL){
+	    return floatval($r[0]['betrag']);
+	}
+	else{
+	    return 0;
+	}
+    }
     /**
      * 
      * @param type $datumVon

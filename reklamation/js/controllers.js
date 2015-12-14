@@ -57,10 +57,16 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 	$scope.recalcKurs = function(fromto,propertyEUR,propertyCZK){
 	    console.log('recalcKurz:'+fromto+"propEUR="+propertyEUR+"propCZK="+propertyCZK);
 	    if(fromto=='EURtoCZK'){
-		$scope.rekl[propertyCZK] = $scope.rekl.kurs_EUR_CZK * $scope.rekl[propertyEUR];
+		var v = $scope.rekl[propertyEUR].toString();
+		v = numeral().unformat(v.replace(',','.'));
+		$scope.rekl[propertyCZK] = $scope.rekl.kurs_EUR_CZK * v;
+		$scope.rekl[propertyEUR] = numeral(v).format('0.0000');
 	    }
 	    else{
-		$scope.rekl[propertyEUR] = $scope.rekl.kurs_EUR_CZK!=0?$scope.rekl[propertyCZK]/$scope.rekl.kurs_EUR_CZK:0;
+		var v = $scope.rekl[propertyCZK].toString();
+		v = numeral().unformat(v.replace(',','.'));
+		$scope.rekl[propertyEUR] = $scope.rekl.kurs_EUR_CZK!=0?v/$scope.rekl.kurs_EUR_CZK:0;
+		$scope.rekl[propertyCZK] = numeral(v).format('0.0000');
 	    }
 	}
 	

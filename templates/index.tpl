@@ -69,8 +69,8 @@
 	<!--	    <input style="display:{$display_sec.cmr};" type="button" value="CMR" id="cmr" class="abyStartButton" onClick="location.href=''" />-->
 {*		    <input style="display:{$display_sec.rundlauf};" type="button" value="Rundlauf" id="rundlauf"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=rundlauf&presenter=Dispo'" />*}
 		    <input style="display:{$display_sec.dispo};" type="button" value="Dispo" id="dispo"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./dispo_2/dispo.php'" />
-		    <input style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=reklamation&presenter=Reklamation&uziv={$user}'" />
-		    <input style="display:{$display_sec.reklamation};" type="button" value="Reklamation NEU" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./reklamation/reklamation.php'" />
+{*		    <input style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=reklamation&presenter=Reklamation&uziv={$user}'" />*}
+		    <input style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./reklamation/reklamation.php'" />
 		    <input style="display:{$display_sec.infopanely};" type="button" value="Infopanely" id="infopanely" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./infopanely/places.php'" />
 		</fieldset>
 

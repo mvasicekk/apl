@@ -12,6 +12,7 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
     $scope.datumVon;
     $scope.datumBis;
     $scope.teilMatch="";
+    $scope.exMatch="";
     $scope.mitImportDetail=false;
     $scope.stkOption = 'ba';
     
@@ -69,6 +70,7 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 		    +'&von='+v
 		    +'&bis='+b
 		    +'&teil='+$scope.teilMatch
+		    +'&export='+$scope.exMatch
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;

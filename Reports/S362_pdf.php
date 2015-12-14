@@ -445,21 +445,28 @@ if($reklInfo!==NULL){
 	$path=$apl->getGdatPath()."".$apl->getKundeGdatPath($rekl['kunde'])."/200 Teile/".$rekl['teil']."/".AplDB::$DIRS_FOR_TEIL_FINAL['100']."/".$rekl['rekl_nr'];
 	
 	$files = $apl->getFilesForPath($path);
+	$pocetPriloh = count($files);
 	
+	$pocet = 0;
 	foreach ($anlagenTypen as $anlage){
 	    //zjistit pocet priloh daneho typu
-	    $pocet = 0;
+	    
 	    foreach ($files as $file){
 		//$obsah.=$anlage['beschreibung']." ".strtoupper($anlage['muster'])." ".strtoupper($file['filename']);
 		if(strstr(strtoupper($file['filename']), strtoupper($anlage['muster']))!==FALSE){
 		    $anlagen[$anlage['beschreibung']]++;
+		    $pocet++;
 		    //$obsah.=$anlage['beschreibung']." ($pocet) ".$file['filename'];
 		}
 	    }
 	}
+	$sonstPocet = $pocetPriloh - $pocet;
 	foreach($anlagen as $beschr=>$poc){
 		$obsah.=$beschr." ($poc x)\n";
         }
+	if($sonstPocet>0){
+	    $obsah.="Sonst ($sonstPocet x)\n";
+	}
 	$pdf->SetFillColor(255, 255, 230);
 	$pdf->SetFont("FreeSans", "B", 7);
 	$pdf->SetX(PDF_MARGIN_LEFT+5*$tbWidth+5);

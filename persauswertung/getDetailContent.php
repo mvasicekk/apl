@@ -33,7 +33,8 @@ if (($group == 'rekl') && (($groupDetail == 'sum_bewertung_E')||$groupDetail == 
 	foreach ($reklArray as $rekl){
 	    $reklIE = substr($rekl['rekl_nr'],0,1);
 	    if($ie=='I' && $reklIE=='I'){
-		$content.="<a href='../reklamation/reklamation.php#/detail/".$rekl['id']."' target='_blank' class='btn btn-warning'>".$rekl['rekl_nr']."</a>";
+		
+		$content.="<a href='../Reports/S362_pdf.php?report=S362&reklnr=".$rekl['rekl_nr']."&reklnr_label=ReklNr&tl_tisk=pdf' target='_blank' class='btn btn-warning'>".$rekl['rekl_nr']."</a>";
 		$content.="<span>&nbsp;Interne Bewertung: <strong>".$rekl['interne_bewertung']."</strong></span>";
 		$content.="<div><h4>Teil: "."<a href='../dkopf/dkopf.php?teil=".$rekl['teil']."' target='_blank' >".$rekl['teil']."</a>"."</h4>";
 		$content.="<p>".$rekl['beschr_abweichung']."</p>";
@@ -41,7 +42,7 @@ if (($group == 'rekl') && (($groupDetail == 'sum_bewertung_E')||$groupDetail == 
 		$content.="<hr></div>";
 	    }
 	    if($ie=='E' && $reklIE=='E'){
-		$content.="<a href='../reklamation/reklamation.php#/detail/".$rekl['id']."' target='_blank' class='btn btn-danger'>".$rekl['rekl_nr']."</a>";
+		$content.="<a href='../Reports/S362_pdf.php?report=S362&reklnr=".$rekl['rekl_nr']."&reklnr_label=ReklNr&tl_tisk=pdf' target='_blank' class='btn btn-danger'>".$rekl['rekl_nr']."</a>";
 		$content.="<span>&nbsp;Interne Bewertung: <strong>".$rekl['interne_bewertung']."</strong></span>";
 		$content.="<div><h4>Teil: "."<a href='../dkopf/dkopf.php?teil=".$rekl['teil']."' target='_blank' >".$rekl['teil']."</a>"."</h4>";
 		$content.="<p>".$rekl['beschr_abweichung']."</p>";
