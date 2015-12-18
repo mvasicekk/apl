@@ -35,7 +35,10 @@
 	    <a role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 		<div class="panel-heading phead" role="tab" id="headingOne">
 		    <h4 class="panel-title"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Grundinfo</h4>
-		    <div style="float:right;"><span ng-show="rekl.rekl_erledigt_am1!=null">Beendet am: {{rekl.rekl_erledigt_am1|date:'dd.MM.yyyy'}} | </span>KD Reklnr: {{rekl.kd_rekl_nr}} | {{rekl.rekl_nr}} | {{rekl.teil}}</div>
+		    <div style="float:right;">
+			<span ng-show="rekl.rekl_erledigt_am1!=null">Beendet am: {{rekl.rekl_erledigt_am1|date:'dd.MM.yyyy'}} | </span>KD Reklnr: {{rekl.kd_rekl_nr}} | {{rekl.rekl_nr}} | {{rekl.teil}}
+			<a target="_blank" href="../Reports/S362_pdf.php?report=S362&reklnr={{rekl.rekl_nr}}&reklnr_label=ReklNr&tl_tisk=pdf" class="btn btn-primary">S362 - Reklamationsbericht</a>
+		    </div>
 		    <hr class="clear">
 		</div>
             </a>

@@ -15,6 +15,8 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
     $scope.exMatch="";
     $scope.mitImportDetail=false;
     $scope.stkOption = 'ba';
+    $scope.securityInfo = undefined;
+    $scope.columns=10;
     
     var d550it;
     
@@ -28,6 +30,18 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 	    $('#spinner').hide();
     });
     
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'d550i'
+	};
+	return $http.post('./getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+			$scope.columns = $scope.securityInfo.showArray.vzkd_column?10:9;     
+		    }
+		);
+    }
+    
     $scope.showPrintDialog = function(){
 	d550it.floatThead('destroy');
 	window.onafterprint = function(){
@@ -37,6 +51,23 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 	window.print();
     };
     
+    $scope.toggleShowEditBemerkung = function(r){
+//	console.log('toggle edit Bemerkung')
+//	console.log(r);
+	if(r.dmaRow.showEditBemerkung==undefined || r.dmaRow.showEditBemerkung===false){
+	    r.dmaRow.showEditBemerkung=true;
+	}
+	else{
+	    r.dmaRow.showEditBemerkung=false;
+	}
+    }
+    
+    $scope.bemerkungChanged = function(r,field){
+//	console.log(e);
+	$http.post('./updateDMAField.php', {r: r,field:field}).then(function (response) {
+		
+	    });
+    }
     /**
      * 
      * @param {type} e
@@ -85,6 +116,8 @@ aplApp.controller('d550iController', function ($scope, $http,$timeout) {
 		    });
 	}
     };
+    
+    $scope.initSecurity();
 });
 
 

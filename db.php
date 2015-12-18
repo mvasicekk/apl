@@ -4667,7 +4667,7 @@ public function istExportiert($import, $impal){
      */
     public function getPersonalArrayMatch($value, $ohneAustritt = TRUE, $pole = 0) {
 
-        $sql = "select persnr,name,vorname from dpers where 1";
+        $sql = "select persnr,name,vorname,austritt from dpers where 1";
         if ($ohneAustritt === TRUE)
             $sql.= " and (austritt is null or austritt<eintritt)";
         if ($pole == 0)
@@ -4873,6 +4873,10 @@ public function istExportiert($import, $impal){
 	return $this->getQueryRows($sql);
     }
 
+    public function updateDMAField($dmaid,$field,$value){
+	$sql = "update dma set `$field`='$value' where id='$dmaid' limit 1";
+	return $this->query($sql);
+    }
     /**
      * 
      */
@@ -6846,6 +6850,28 @@ public function istExportiert($import, $impal){
     }
     
 
+    public function deleteGenehmigtPositionen($imaid,$matyp){
+	if($matyp=='ima'){
+	    $this->updateIMAField('ima_auftragsnrarray_genehmigt', '', $imaid);
+	    $this->updateIMAField('ima_palarray_genehmigt', '', $imaid);
+	    $this->updateIMAField('ima_tatundzeitarray_genehmigt', '', $imaid);
+	    $this->updateIMAField('ima_dauftrid_array_genehmigt', '', $imaid);
+	}
+	else{
+	    $this->updateIMAField('ema_auftragsarray_genehmigt', '', $imaid);
+	    $this->updateIMAField('ema_palarray_genehmigt', '', $imaid);
+	    $this->updateIMAField('ema_tatundzeitarray_genehmigt', '', $imaid);
+	    $this->updateIMAField('ema_dauftrid_array_genehmigt', '', $imaid);
+	}
+    }
+    
+    /**
+     * 
+     * @param type $field
+     * @param type $value
+     * @param type $imaid
+     * @return type
+     */
     public function updateIMAField($field,$value,$imaid){
 	if($value===NULL)
 	    $sql = "update dma set `$field`=null where id='$imaid'";

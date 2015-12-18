@@ -46,8 +46,35 @@ td.genehmigt{
     background-color: #f88;
 }    
 
+
+fieldset.emaanforderungfieldset{
+    background-color: #eee;
+}
+fieldset.emagenehmigtfieldset{
+    background-color: #eee;
+}
+fieldset.imaanforderungfieldset{
+    background-color: #eee;
+}
+fieldset.imagenehmigtfieldset{
+    background-color: #eee;
+}
+
+fieldset.emaanforderungfieldset legend{
+    background-color: #eee;
+}
+fieldset.emagenehmigtfieldset legend{
+    background-color: #eee;
+}
+fieldset.imaanforderungfieldset legend{
+    background-color: #eee;
+}
+fieldset.imagenehmigtfieldset legend{
+    background-color: #eee;
+}
+
 .inprocess{
-    background-color: #ff8;
+    background-color: #ffd;
 }    
 
 fieldset.genehmigt{
@@ -231,12 +258,12 @@ td{
 }    
 
 #imapart{
-    background-color: #ffd;
+    /*background-color: #ffd;*/
     border: 2px solid #ff0;
 }
 
 #emapart{
-    background-color: #dfd;
+    /*background-color: #dfd;*/
     border: 2px solid #0f0;
 }
 

@@ -16,7 +16,17 @@ require_once '../db.php';
     
     if($persnrArray1!==NULL){
 	foreach ($persnrArray1 as $i=>$row){
-	    $persnrArray1[$i]['formattedPersnr'] = sprintf("%03d - %s %s",$row['persnr'],$row['name'],$row['vorname']);
+	    $austritt = $row['austritt'];
+	    if(strlen(trim($austritt))>0){
+		$d = strtotime($austritt)?date('d.m.Y',  strtotime($austritt)):'';
+		$austrittStr = " ( Austritt am : $d )";
+		$austrittClass = "austritt";
+	    }
+	    else{
+		$austrittStr = "";
+		$austrittClass = "";
+	    }
+	    $persnrArray1[$i]['formattedPersnr'] = sprintf("<div class='$austrittClass'>%d - %s %s $austrittStr</div>",$row['persnr'],$row['name'],$row['vorname']);
 	}
     }
 

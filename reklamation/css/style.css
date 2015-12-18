@@ -23,3 +23,7 @@ and open the template in the editor.
   th[st-sort]{
       cursor: pointer;
   }
+  
+  div.austritt{
+      background-color:#fdd;
+  }

@@ -169,8 +169,8 @@ $smarty = new Smarty;
 		array_push($werkstoffe_ids,"0");
 		$smarty->assign("werkstoffe_values",$werkstoffe_values);
 		$smarty->assign("werkstoffe_ids",$werkstoffe_ids);
-		if($wst==''|$wst=NULL) $wst = 0;
-		$smarty->assign("werkstoffe_selected","$wst");
+		if($wst==''||$wst===NULL) $wst = 0;
+		$smarty->assign("werkstoffe_selected",$wst);
 		
 		
 		//security

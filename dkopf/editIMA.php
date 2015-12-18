@@ -54,7 +54,7 @@ require_once '../db.php';
 	if($ir['ima_genehmigt']>0){
 	    $imagenehmigtClass = 'genehmigt';
 	}
-	else if($ima['ima_genehmigt']<0){
+	else if($ir['ima_genehmigt']<0){
 	    $imagenehmigtClass = 'nichtgenehmigt';
 	}
 	else{
@@ -64,7 +64,7 @@ require_once '../db.php';
 	if($ir['ema_genehmigt']>0){
 	    $emagenehmigtClass = 'genehmigt';
 	}
-	else if($ima['ema_genehmigt']<0){
+	else if($ir['ema_genehmigt']<0){
 	    $emagenehmigtClass = 'nichtgenehmigt';
 	}
 	else{
@@ -76,7 +76,7 @@ require_once '../db.php';
 	$formDiv.="<input type='hidden' id='imaid' value='$imaid'>";
 	$formDiv.="<p id='spinner'>zpracovávám dotaz ....</p>";
 	$formDiv.="<h1 class='teilheader'>$teil</h1>";
-	$formDiv.="<fieldset id='imapart'>";
+	$formDiv.="<fieldset class='$imagenehmigtClass' id='imapart'>";
 	$formDiv.="<legend>IMA</legend>";	
 	$formDiv.="<label for='imanr'>IMA_Nr:</label><input class='$imagenehmigtClass' style='text-align:left;' type='text' id='imanr' size='17' readonly='readonly' value='".$ir['imanr']."'/>";
 	
@@ -116,7 +116,7 @@ require_once '../db.php';
 	    $formDiv.="<tr>";
 	    //anforderung ******************************************************
 	    $formDiv.="<td>";
-	    $formDiv.="<fieldset>";
+	    $formDiv.="<fieldset class='imaanforderungfieldset'>";
 		$formDiv.="<legend>IMA Anforderung</legend>";
 		//tabulka pro pozadavek ****************************************
 		$formDiv.="<table>";
@@ -175,56 +175,56 @@ require_once '../db.php';
 	    //genehmigt ********************************************************
 	    $formDiv.="<td>";
 	    if($ir['ema_genehmigt']==0){
-	    $formDiv.="<fieldset class='genehmigt'>";
-		$formDiv.="<legend>IMA genehmigt</legend>";
+	    $formDiv.="<fieldset class='imagenehmigtfieldset'>";
+		$formDiv.="<legend>IMA Entscheidung</legend>";
 		//tabulka pro schvaleni ****************************************
 		$formDiv.="<table>";
 		    //auftragarray *********************************************
 		    $formDiv.="<tr>";
-		    $formDiv.="<td class='genehmigt'>";
+		    $formDiv.="<td class=''>";
 		    if($ir['ima_genehmigt']==0){
 			$elementId='ima_select_auftragsnr_gen';
 			$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-			$formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php?anforderung=0&ma=ima&genehmigt=1' id='ima_select_auftragsnr_gen' value='IM genehmigt' />";
+			$formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php?anforderung=0&ma=ima&genehmigt=1' id='ima_select_auftragsnr_gen' value='IM' />";
 			$formDiv.="</span>";
 		    }
 		    else
 			$formDiv.="";
 		    $formDiv.="</td>";
-		    $formDiv.="<td class='genehmigt'>";
+		    $formDiv.="<td class=''>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_imarray_gen' value='".$ir['ima_auftragsnrarray_genehmigt']."' /><br>";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    //palarray *************************************************
 		    $formDiv.="<tr>";
-		    $formDiv.="<td class='genehmigt'>";
+		    $formDiv.="<td class=''>";
 		    if($ir['ima_genehmigt']==0){
 			$elementId='ima_select_pal_gen';
 			$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-			$formDiv.="<input type='button' acturl='./selectPalArray.php?anforderung=0&ma=ima&genehmigt=1' id='ima_select_pal_gen' value='Pal genehmigt' />";
+			$formDiv.="<input type='button' acturl='./selectPalArray.php?anforderung=0&ma=ima&genehmigt=1' id='ima_select_pal_gen' value='Pal' />";
 			$formDiv.="</span>";			
 		    }
 		    else
 			$formDiv.="";
 		    $formDiv.="</td>";
-		    $formDiv.="<td class='genehmigt'>";
+		    $formDiv.="<td class=''>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_palarray_gen' value='".$ir['ima_palarray_genehmigt']."' /><br>";
 		    $formDiv.="<input type='hidden' id='ima_dauftrid_gen' value='".$ir['ima_dauftrid_array_genehmigt']."' />";		    
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
 		    //tatundzeit_array
 		    $formDiv.="<tr>";
-		    $formDiv.="<td class='genehmigt'>";
+		    $formDiv.="<td class=''>";
 		    if($ir['ima_genehmigt']==0){
 			$elementId='ima_select_tat_gen';
 			$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-			$formDiv.="<input type='button' acturl='./selectTatArray.php?anforderung=0&ma=ima&genehmigt=1' id='ima_select_tat_gen' value='Tat genehmigt' />";
+			$formDiv.="<input type='button' acturl='./selectTatArray.php?anforderung=0&ma=ima&genehmigt=1' id='ima_select_tat_gen' value='Tat' />";
 			$formDiv.="</span>";			
 		    }
 		    else
 			$formDiv.="";
 		    $formDiv.="</td>";
-		    $formDiv.="<td class='genehmigt'>";
+		    $formDiv.="<td class=''>";
 		    $formDiv.="<input type='text' size='40' readonly='readonly' id='ima_tatarray_gen' value='".$ir['ima_tatundzeitarray_genehmigt']."' /><br>";
 		    $formDiv.="</td>";
 		    $formDiv.="</tr>";
@@ -243,7 +243,7 @@ require_once '../db.php';
 
 		    $formDiv.="<tr>";
 		    $formDiv.="<td class=''>";
-		    $formDiv.="genehmigt vom";
+		    $formDiv.="Entscheidung von";
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
 		    $elementId="ima_genehmigt_user_$imaid";
@@ -256,7 +256,7 @@ require_once '../db.php';
 		    //<input  />";
 		    $formDiv.="<tr>";
 		    $formDiv.="<td class=''>";
-		    $formDiv.="genehmigt vom";
+		    $formDiv.="Entscheidung am";
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
 		    $elementId="ima_genehmigt_stamp_$imaid";
@@ -351,7 +351,7 @@ require_once '../db.php';
 // EMA part
 // zobrazit jen v pripade, ze neni povolena IMA
 	if($ir['ima_genehmigt']==0){
-	$formDiv.="<fieldset id='emapart'>";
+	$formDiv.="<fieldset class='$emagenehmigtClass' id='emapart'>";
 	$formDiv.="<legend>EMA</legend>";
 	$lastEmaNr = $apl->getLastEMANr($kunde);
 	$emaNr = '';
@@ -374,7 +374,7 @@ require_once '../db.php';
 	$formDiv.="<tr>";
 	$formDiv.="<td>";
 	//tabulka pro zadost o vicepraci EMA
-	$formDiv.="<fieldset class=''>";
+	$formDiv.="<fieldset class='emaanforderungfieldset'>";
 	$formDiv.="<legend>EMA Anforderung</legend>";
 	//tabulka pro zadost EMA ****************************************
 	    $formDiv.="<table>";
@@ -457,8 +457,8 @@ require_once '../db.php';
 	$formDiv.="</td>";
 	$formDiv.="<td>";
 	//tabulka pro schvalenou vicepraci EMA
-	$formDiv.="<fieldset class='genehmigt'>";
-	$formDiv.="<legend>EMA genehmigt</legend>";
+	$formDiv.="<fieldset class='emagenehmigtfieldset'>";
+	$formDiv.="<legend>EMA Entscheidung</legend>";
 	//tabulka pro zadost EMA ****************************************
 	    $formDiv.="<table>";
 	    //auftragarray *********************************************
@@ -467,7 +467,7 @@ require_once '../db.php';
 		    if($ir['ema_genehmigt']==0){
 			$elementId='ema_select_auftragsnr_gem';
 			$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-			$formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php?anforderung=0&ma=ema' id='ema_select_auftragsnr_gem' value='IM angef.' />";
+			$formDiv.="<input type='button' acturl='./selectAuftragsnrArray.php?anforderung=0&ma=ema' id='ema_select_auftragsnr_gem' value='IM' />";
 			$formDiv.="</span>";
 		    }
 		    else
@@ -483,7 +483,7 @@ require_once '../db.php';
 		    if($ir['ema_genehmigt']==0){
 			$elementId='ema_select_pal_gem';
 			$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-			$formDiv.="<input type='button' acturl='./selectPalArray.php?anforderung=0&ma=ema' id='ema_select_pal_gem' value='Pal angef.' />";
+			$formDiv.="<input type='button' acturl='./selectPalArray.php?anforderung=0&ma=ema' id='ema_select_pal_gem' value='Pal' />";
 			$formDiv.="</span>";
 		    }
 		    else
@@ -500,7 +500,7 @@ require_once '../db.php';
 		    if($ir['ema_genehmigt']==0){
 			$elementId='ema_select_tat_gem';
 			$formDiv.="<span style='display:".$display_sec[$elementId].";'>";
-			$formDiv.="<input type='button' acturl='./selectTatArray.php?anforderung=0&ma=ema' id='ema_select_tat_gem' value='Tat angef.' />";
+			$formDiv.="<input type='button' acturl='./selectTatArray.php?anforderung=0&ma=ema' id='ema_select_tat_gem' value='Tat' />";
 			$formDiv.="</span>";
 		    }
 		    else
@@ -514,7 +514,7 @@ require_once '../db.php';
 		    $formDiv.="<tr>";
 		    $formDiv.="<td colspan='2'>";
 //		    if($ir['ema_genehmigt']==0){
-			$formDiv.="EMA genehmigt Bemerkung:<br>";
+			$formDiv.="EMA Entscheidung Bemerkung:<br>";
 			$elementId='ema_genehmigt_bemerkung';
 //			$formDiv.="<span style='display:".$display_sec[$elementId].";width:99%;'>";
 			$formDiv.="<span style='width:99%;'>";
@@ -528,7 +528,7 @@ require_once '../db.php';
     		    // ema_genehmigt_user
 		    $formDiv.="<tr>";
 		    $formDiv.="<td class=''>";
-		    $formDiv.="genehmigt vom";
+		    $formDiv.="Entscheidung von";
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
 		    $elementId='ema_genehmigt_user';
@@ -541,7 +541,7 @@ require_once '../db.php';
     		    // ema_genehmigt_stamp
 		    $formDiv.="<tr>";
 		    $formDiv.="<td class=''>";
-		    $formDiv.="genehmigt am";
+		    $formDiv.="Entscheidung am";
 		    $formDiv.="</td>";
 		    $formDiv.="<td class=''>";
 		    $obsah = substr($ir['ema_genehmigt_stamp'],0,10);

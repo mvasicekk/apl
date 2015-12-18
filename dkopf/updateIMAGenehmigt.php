@@ -81,6 +81,8 @@ if ($ma == 'ema') {
 	    $message.=" <h4>EMA byla zamítnuta</h4>";
 	    $message.=" poznamka : " . $ir['ema_genehmigt_bemerkung'] . "<br>";
 	    $message.=" zamítnul : " . $user . "<br>";
+	    //pokud mam zadane nejake importy, pal , tat dauftrid pro ema genehmigt, tak vymazat
+	    $apl->deleteGenehmigtPositionen($imaid,'ema');
 	}
 
 	$message.="<hr>odeslano na : " . join(',', $recipients) . "<br>";
@@ -140,6 +142,7 @@ if ($ma == 'ema') {
 	    $message.=" <h4>IMA byla zamitnuta</h4>";
 	    $message.=" poznamka : $bemerkung_g<br>";
 	    $message.=" byla zamitnuty : " . $user . "<br>";
+	    $apl->deleteGenehmigtPositionen($imaid,'ima');
 	}
 
 	$message.="<hr>odeslano na : " . join(',', $recipients) . "<br>";

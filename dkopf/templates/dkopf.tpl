@@ -107,9 +107,9 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 			<span style="display:{$display_sec.wst_sec};" id="wst_sec">
 			    <label for="wst">Werkst. / material {$werkstoffe_selected}</label>
 			    <select name="wst" id="wst" {$edit_sec.wst_sec}>
-				{html_options values=$werkstoffe_ids output=$werkstoffe_values selected=$werkstoffe_selected  }
+				{html_options values=$werkstoffe_ids output=$werkstoffe_values selected=$werkstoffe_selected }
 			    </select>
-{*			    <input {$edit_sec.wst_sec} size="3" type="text" id="wst" name="wst" value="{$wst_value}"/>*}
+{*			    <input readonly size="3" type="text" value="{$wst_value}"/>*}
 			</span>
 
 			<span style="display:{$display_sec.fa_sec};" id="fa_sec">
