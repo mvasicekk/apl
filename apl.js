@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    $('input:first').focus();
-    $('input:first').select();
+//    $('input:first').focus();
+//    $('input:first').select();
 
     // schovam sekce s tlacitkama, ktere neobsahuji zadna viditelna tlacitka
     // vybrat vsechny fieldsety na uvodni strance
@@ -16,6 +16,61 @@ $(document).ready(function(){
     // graf
     $.getJSON('./getGraphData.php', function(data) {
 	var pole = data.leistungTablearray.pole;
+	console.log(pole);
+	
+	var barWidth = 60;
+	var barPadding = 3;
+	var svgHeight = 300;
+	var pg1Array = [];
+	pole.forEach(
+		function(item){
+		    //console.log(item);
+		    pg1Array.push(item.pg1);
+		});
+	
+	var maxValue = d3.max(pg1Array);
+	//console.log(maxValue);
+	var graphGroup = d3.select('svg').append('g');
+	
+	function xloc(d,i){
+	    return i*(barWidth+barPadding);
+	}
+	
+	function yloc(d){
+	    return svgHeight-d*(svgHeight/maxValue);
+	}
+	
+	function translator(d,i){
+	    return "translate("+xloc(d,i)+","+yloc(d)+")";
+	    //return "translate("+xloc(d,i)+","+0+")";
+	}
+	
+	var barGroup = graphGroup.selectAll('g')
+		.data(pg1Array)
+		.enter()
+		.append('g')
+		.attr('transform',translator);
+	
+	barGroup.selectAll("rect")
+		.data(pg1Array)
+		.enter()
+		.append('rect')
+		.attr({
+		    fill:'steelblue',
+		    width:barWidth,
+		    height:function(d){return d*(svgHeight/maxValue);}
+		});
+	var textTranslator = "translate(" + barWidth / 2 + ",10)";
+	barGroup.append('text')
+	    .text(function(d) { return Math.round(d); })
+	    .attr({
+		fill: 'white',
+		'alignment-baseline': 'before-edge',
+		'text-anchor': 'middle',
+		transform: textTranslator
+	    })
+	    .style('font', '10px sans-serif');
+
 	var hodnoty_pg1 = [];
 	var hodnoty_pg4 = [];
 	var hodnoty_celkem = [];

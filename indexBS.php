@@ -58,7 +58,12 @@ $display_sec = array();
 $puser = $_SESSION['user'];
 if ($elementsIdArray !== NULL) {
     foreach ($elementsIdArray as $elementId) {
-	$display_sec[$elementId] = $apl->getDisplaySec('start', $elementId, $puser) ? 'inline-block' : 'none';
+	$show = 'inline-block';
+	//vyjimka pro branydiv
+	if($elementId=='branydiv'){
+	    $show = 'block';
+	}
+	$display_sec[$elementId] = $apl->getDisplaySec('start', $elementId, $puser) ? $show : 'none';
     }
 }
 $smarty->assign("display_sec", $display_sec);
@@ -107,6 +112,12 @@ while ($row = mysql_fetch_array($res)) {
     $zakazkyEX[$row['auftragsnr']] = $row;
 }
 $smarty->assign("zakazkyEX", $zakazkyEX);
+
+//seznam souboru pro tv
+//Aby 18 Mitarbeiter -\05 Projekte - Projekty\Projekt TV Abydos\Aktual video\
+$cesta = $apl->getGdatPath()."Aby 18 Mitarbeiter -/05 Projekte - Projekty/Projekt TV Abydos/Aktual video";
+$files = $apl->getFilesForPath($cesta);
+$smarty->assign("tvFiles", $files);
 
 //zjistit seznam roli pro uzivatele
 require_once './assignsecurity.php';

@@ -49,6 +49,40 @@ td.progresspolozka
 	padding: 1px;
 }
 
+
+button.closed{
+    background-color:red;
+}
+
+button.opening{
+    background-color:orange;
+}
+
+button.open{
+    background-color:lightgreen;
+}
+
+
+button.on{
+    background-color:orange;
+}
+
+button.off{
+    background-color:red;
+}
+
+.btn-default:focus,.btn:focus{
+    outline:none;
+}
+
+.btn-default{
+    //background-color: #ffffff;
+}
+
+#branydiv{
+    margin-top:5px;
+    margin-bottom:5px;
+}
 /*#logindiv {
     margin-left: auto;
     margin-right: auto;

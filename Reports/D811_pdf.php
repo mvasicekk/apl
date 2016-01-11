@@ -21,12 +21,19 @@ $kundebis = $_GET['kundebis'];
 
 $password = $_GET['password'];
 
-$k = $_GET['kurs'];
+//$k = $_GET['kurs'];
 
-if($k=="aktuell")
-    $kurs = number_format($apl->getKurs(date('Y-m-d'), 'EUR', 'CZK'), 2);
-else
-    $kurs = number_format($apl->getKurs('2099-12-31', 'EUR', 'CZK'), 2);
+// TODO kurs by mel byt podle ab_aby_soll_datetime - tj. podle datumu odjezdu kamionu
+// TODO kurs by mel byt podle ab_aby_soll_datetime - tj. podle datumu odjezdu kamionu
+
+//if($k=="aktuell"){
+//    $kurs = number_format($apl->getKurs(date('Y-m-d'), 'EUR', 'CZK'), 2);
+//    //$kurs = number_format($apl->getKurs(date('Y-m-d',  strtotime($bis)), 'EUR', 'CZK'), 2);
+//}
+//else
+//    $kurs = number_format($apl->getKurs('2099-12-31', 'EUR', 'CZK'), 2);
+
+$kurs = number_format($apl->getKurs(date('Y-m-d',strtotime($von)), 'EUR', 'CZK'), 3);
 
 $access = TRUE;
 
@@ -39,6 +46,7 @@ if(!$access){
     echo "<h1>Nepovoleny pristup.</h1>";
     exit();
 }
+
 
 require_once('D811_xml.php');
 
@@ -130,11 +138,25 @@ $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
+$kursVon = $kurs;
+$kursBis = number_format($apl->getKurs(date('Y-m-d',strtotime($bis)), 'EUR', 'CZK'), 3);
+if($kursVon!=$kursBis){
+    // pokud mam dva ruzne kurzy pro von a bit, tak je zobrazim oba
+    $kursBisStr = " ,zum ".date('d.m.Y',  strtotime($bis))." : $kursBis CZK/EUR";
+}
+else{
+    $kursBisStr = "";
+}
+
+
+// pozorne
 //$params="";
-$kursSuffix = "(kurs:$kurs)";
+$kursSuffix = "\n(kurs zum ".date('d.m.Y',  strtotime($von))." : $kurs CZK/EUR".$kursBisStr." )";
 if($bSpediteur){
     $kursSuffix="";
 }
+
+
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D811 - Rundlauf", $params.$kursSuffix);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
@@ -165,6 +187,11 @@ foreach ($lkws as $lkw){
     $lkwChilds = $lkw->childNodes;
     
     $abDatum = substr(getValueForNode($lkwChilds, 'ab_aby_soll_datetime'),0,10);
+    $abDateTime = getValueForNode($lkwChilds, 'ab_aby_soll_datetime');
+    
+    // kurs nastavim podle datumu ab_aby_soll_datetime
+    $kurs = $apl->getKurs(date('Y-m-d',  strtotime($abDateTime)), 'EUR', 'CZK');
+
     if($abDatumOld!=$abDatum){
 	$lkColor++;
 	$abDatumOld = $abDatum;

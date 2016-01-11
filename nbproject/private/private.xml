@@ -5,9 +5,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/d550i/js/controllers.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/d550i/updateDMAField.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/d550i/templates/list.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/utils/ppm.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/D811_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/S311_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/dkopf/editIMA.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/S310_pdf.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/S313_pdf.php</file>
         </group>
     </open-files>
 </project-private>

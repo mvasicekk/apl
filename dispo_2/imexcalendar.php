@@ -38,14 +38,14 @@ $smarty = new Smarty;
 	    }
 	}
 	
-	$pocetDnuPredAktualnimDnem = 14;
+	$pocetDnuPredAktualnimDnem = 14+7;
 	
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
 	// + 14 dnu
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	//mkti
-	$konecRokuTime = mktime(23, 59, 59, 3, 1,2016);
+	$konecRokuTime = mktime(23, 59, 59, 3, 31,2016);
 	$datumBis = date('Y-m-d',  $konecRokuTime);
 	$datetime1 = new DateTime($datumBis);
 	$datetime2 = new DateTime($datumVon);

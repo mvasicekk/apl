@@ -23,7 +23,7 @@ $a = AplDB::getInstance();
 $kundeVon = 1;
 $kundeBis = 99999;
 $datVon = '2015-01-01';
-$datBis = '2015-12-31';
+$datBis = '2016-12-31';
 
 $kdArray = array(
     111,122,130,138,195
@@ -138,6 +138,9 @@ $sql.=" group by";
 $sql.="     YEAR(calendar.datum),";
 $sql.="     MONTH(calendar.datum),";
 $sql.="     WEEKOFYEAR(calendar.datum)";
+// 2016-01-04 uprava razeni podle jahrm,monat,letzt_datum_kw misto jahrm,monat,kw
+$sql.=" ORDER BY";
+$sql.=" jahr,monat,letzt_datum_kw";
 
 $ppmRows = $a->getQueryRows($sql);
 
@@ -210,8 +213,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_ppm']+=$stk_ppm;
-		$sumJahr[$kunde]['stk_ppm']+=$stk_ppm;
+		$sumMonat[$kunde][$jahr][$monat]['stk_ppm']+=$stk_ppm;
+		$sumJahr[$kunde][$jahr]['stk_ppm']+=$stk_ppm;
 		echo "<td  class='$section' style='text-align:right;'>";
 		echo $stk_ppm;
 		echo "</td>";
@@ -226,8 +229,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_all']+=$stk_all;
-		$sumJahr[$kunde]['stk_all']+=$stk_all;
+		$sumMonat[$kunde][$jahr][$monat]['stk_all']+=$stk_all;
+		$sumJahr[$kunde][$jahr]['stk_all']+=$stk_all;
 		echo "<td  class='$section' style='text-align:right;'>";
 		echo $stk_all;
 		echo "</td>";
@@ -242,8 +245,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_import']+=$stk_import;
-		$sumJahr[$kunde]['stk_import']+=$stk_import;
+		$sumMonat[$kunde][$jahr][$monat]['stk_import']+=$stk_import;
+		$sumJahr[$kunde][$jahr]['stk_import']+=$stk_import;
 		echo "<td  class='$section' style='text-align:right;'>";
 		echo $stk_import;
 		echo "</td>";
@@ -258,8 +261,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_ex_gut']+=$stk_ex_gut;
-		$sumJahr[$kunde]['stk_ex_gut']+=$stk_ex_gut;
+		$sumMonat[$kunde][$jahr][$monat]['stk_ex_gut']+=$stk_ex_gut;
+		$sumJahr[$kunde][$jahr]['stk_ex_gut']+=$stk_ex_gut;
 //		echo "<td style='text-align:right;'>";
 //		echo $stk_ex_gut;
 //		echo "</td>";
@@ -274,8 +277,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_ex_auss2']+=$stk_ex_auss2;
-		$sumJahr[$kunde]['stk_ex_auss2']+=$stk_ex_auss2;
+		$sumMonat[$kunde][$jahr][$monat]['stk_ex_auss2']+=$stk_ex_auss2;
+		$sumJahr[$kunde][$jahr]['stk_ex_auss2']+=$stk_ex_auss2;
 //		echo "<td style='text-align:right;'>";
 //		echo $stk_ex_auss2;
 //		echo "</td>";
@@ -290,8 +293,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_ex_auss4']+=$stk_ex_auss4;
-		$sumJahr[$kunde]['stk_ex_auss4']+=$stk_ex_auss4;
+		$sumMonat[$kunde][$jahr][$monat]['stk_ex_auss4']+=$stk_ex_auss4;
+		$sumJahr[$kunde][$jahr]['stk_ex_auss4']+=$stk_ex_auss4;
 //		echo "<td style='text-align:right;'>";
 //		echo $stk_ex_auss4;
 //		echo "</td>";
@@ -306,8 +309,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_ex_auss6']+=$stk_ex_auss6;
-		$sumJahr[$kunde]['stk_ex_auss6']+=$stk_ex_auss6;
+		$sumMonat[$kunde][$jahr][$monat]['stk_ex_auss6']+=$stk_ex_auss6;
+		$sumJahr[$kunde][$jahr]['stk_ex_auss6']+=$stk_ex_auss6;
 //		echo "<td style='text-align:right;'>";
 //		echo $stk_ex_auss6;
 //		echo "</td>";
@@ -322,8 +325,8 @@ foreach ($kdArray as $kunde) {
 			}
 		    }
 		}
-		$sumMonat[$kunde][$monat]['stk_ex_gesamt']+=$stk_ex_gesamt;
-		$sumJahr[$kunde]['stk_ex_gesamt']+=$stk_ex_gesamt;
+		$sumMonat[$kunde][$jahr][$monat]['stk_ex_gesamt']+=$stk_ex_gesamt;
+		$sumJahr[$kunde][$jahr]['stk_ex_gesamt']+=$stk_ex_gesamt;
 		echo "<td  class='$section' style='text-align:right;'>";
 		echo $stk_ex_gesamt;
 		echo "</td>";
@@ -348,10 +351,10 @@ foreach ($kdArray as $kunde) {
 		echo "</tr>";
 	    }
 	    //ppm vypocty
-	    $ppmPpmImport = $sumMonat[$kunde][$monat]['stk_import'] != 0 ? 1e6 / $sumMonat[$kunde][$monat]['stk_import'] * $sumMonat[$kunde][$monat]['stk_ppm'] : 0;
-	    $ppmAllImport = $sumMonat[$kunde][$monat]['stk_import'] != 0 ? 1e6 / $sumMonat[$kunde][$monat]['stk_import'] * $sumMonat[$kunde][$monat]['stk_all'] : 0;
-	    $ppmPpmExport = $sumMonat[$kunde][$monat]['stk_ex_gesamt'] != 0 ? 1e6 / $sumMonat[$kunde][$monat]['stk_ex_gesamt'] * $sumMonat[$kunde][$monat]['stk_ppm'] : 0;
-	    $ppmAllExport = $sumMonat[$kunde][$monat]['stk_ex_gesamt'] != 0 ? 1e6 / $sumMonat[$kunde][$monat]['stk_ex_gesamt'] * $sumMonat[$kunde][$monat]['stk_all'] : 0;
+	    $ppmPpmImport = $sumMonat[$kunde][$jahr][$monat]['stk_import'] != 0 ? 1e6 / $sumMonat[$kunde][$jahr][$monat]['stk_import'] * $sumMonat[$kunde][$jahr][$monat]['stk_ppm'] : 0;
+	    $ppmAllImport = $sumMonat[$kunde][$jahr][$monat]['stk_import'] != 0 ? 1e6 / $sumMonat[$kunde][$jahr][$monat]['stk_import'] * $sumMonat[$kunde][$jahr][$monat]['stk_all'] : 0;
+	    $ppmPpmExport = $sumMonat[$kunde][$jahr][$monat]['stk_ex_gesamt'] != 0 ? 1e6 / $sumMonat[$kunde][$jahr][$monat]['stk_ex_gesamt'] * $sumMonat[$kunde][$jahr][$monat]['stk_ppm'] : 0;
+	    $ppmAllExport = $sumMonat[$kunde][$jahr][$monat]['stk_ex_gesamt'] != 0 ? 1e6 / $sumMonat[$kunde][$jahr][$monat]['stk_ex_gesamt'] * $sumMonat[$kunde][$jahr][$monat]['stk_all'] : 0;
 	    echo "<tr  class='$msection' style='bagkground-color:lightred;'>";
 	    echo "<td  class='$msection' colspan='4'>";
 	    echo "Sum monat $monat";
@@ -374,10 +377,10 @@ foreach ($kdArray as $kunde) {
 	    echo "</tr>";
 	}
 	//ppm vypocty
-	$ppmPpmImport = $sumJahr[$kunde]['stk_import'] != 0 ? 1e6 / $sumJahr[$kunde]['stk_import'] * $sumJahr[$kunde]['stk_ppm'] : 0;
-	$ppmAllImport = $sumJahr[$kunde]['stk_import'] != 0 ? 1e6 / $sumJahr[$kunde]['stk_import'] * $sumJahr[$kunde]['stk_all'] : 0;
-	$ppmPpmExport = $sumJahr[$kunde]['stk_ex_gesamt'] != 0 ? 1e6 / $sumJahr[$kunde]['stk_ex_gesamt'] * $sumJahr[$kunde]['stk_ppm'] : 0;
-	$ppmAllExport = $sumJahr[$kunde]['stk_ex_gesamt'] != 0 ? 1e6 / $sumJahr[$kunde]['stk_ex_gesamt'] * $sumJahr[$kunde]['stk_all'] : 0;
+	$ppmPpmImport = $sumJahr[$kunde][$jahr]['stk_import'] != 0 ? 1e6 / $sumJahr[$kunde][$jahr]['stk_import'] * $sumJahr[$kunde][$jahr]['stk_ppm'] : 0;
+	$ppmAllImport = $sumJahr[$kunde][$jahr]['stk_import'] != 0 ? 1e6 / $sumJahr[$kunde][$jahr]['stk_import'] * $sumJahr[$kunde][$jahr]['stk_all'] : 0;
+	$ppmPpmExport = $sumJahr[$kunde][$jahr]['stk_ex_gesamt'] != 0 ? 1e6 / $sumJahr[$kunde][$jahr]['stk_ex_gesamt'] * $sumJahr[$kunde][$jahr]['stk_ppm'] : 0;
+	$ppmAllExport = $sumJahr[$kunde][$jahr]['stk_ex_gesamt'] != 0 ? 1e6 / $sumJahr[$kunde][$jahr]['stk_ex_gesamt'] * $sumJahr[$kunde][$jahr]['stk_all'] : 0;
 	echo "<tr  class='$kundeSection' style='bagkground-color:lightred;'>";
 	echo "<td  class='$kundeSection' colspan='4'>";
 	echo "Sum Kunde $kunde";

@@ -20,14 +20,23 @@
 	<script type="text/javascript" src="./js/plugins/jqplot.canvasOverlay.min.js"></script>
 
 {*bootstrap*}
-        <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
+	<link href="./brany/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="./brany/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	
+{*d3	*}
+	<script src="./brany/bower_components/d3/d3.min.js"></script>
+        
+{*	<link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="./libs/bootstrap/js/bootstrap.min.js">
         <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap-theme.min.css">
+*}
 	
 {*custom styl	*}
-        <link rel="stylesheet" href="./styl_common.css" type="text/css">
+{*        <link rel="stylesheet" href="./styl_common.css" type="text/css">*}
         <link rel="stylesheet" href="./stylBS.css" type="text/css">
 
 {*custom js	*}
+	<script src="./brany/js/brany.js"></script>
 	<script type="text/javascript" src="./apl.js"></script>
     </head>
     
@@ -46,9 +55,9 @@
 			<div class="row">
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dzeitedata};" type="button" value="Anwesenheitserfassung lt. Leistung" id="dzeitedata" onClick="location.href='./personal/doc_root/index.php?action=edataAnw&presenter=DpersAnwesenheit'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dpers};" type="button" value="Personal Pflegen" id="dpers" onClick="okno=window.open();okno.location.href='./personal/doc_root/index.php?presenter=Persinfo'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dzeit};" type="button" value="Anwesenheitserfassung" id="dzeit" onClick="location.href='./dzeit/dzeit.php'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung" id="anwesenheitplan"  onClick="location.href='./personal/doc_root/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.vorschuss} ;" type="button" value="Vorschuss" id="vorschuss"  onClick="location.href='./dpers/vorschuss.php'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.dzeit};" type="button" value="Anwesenheitserfassung" id="dzeit" onClick="location.href='./dzeit/dzeit.php'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung" id="anwesenheitplan"  onClick="location.href='./personal/doc_root/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.vorschuss} ;" type="button" value="Vorschuss" id="vorschuss"  onClick="location.href='./dpers/vorschuss.php'" /></div>
 			</div>
 		    </div>
 		</div>
@@ -71,12 +80,12 @@
 		    </div>
 		    <div class="panel-body ">
 			<div class="row">
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dauftr/auftragsuchen.php'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./auftrag/auftrag.php#/list'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.umtermin};" type="button" value="Umterminieren" id="umtermin" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./dauftr/umterminieren/umterminieren.php'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.rundlauf};" type="button" value="Rundlauf" id="rundlauf"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=rundlauf&presenter=Dispo'" /></div>
+{*			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.rundlauf};" type="button" value="Rundlauf" id="rundlauf"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=rundlauf&presenter=Dispo'" /></div>*}
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dispo};" type="button" value="Dispo" id="dispo"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./dispo_2/dispo.php'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block"style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=reklamation&presenter=Reklamation&uziv={$user}'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block"style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./reklamation/reklamation.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.infopanely};" type="button" value="Infopanely" id="infopanely" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./infopanely/places.php'" /></div>
 			</div>
 		    </div>
@@ -149,6 +158,63 @@
 	    <div class="container-fluid col-md-6">
 		<div class="row">
 		    <div class="col-xs-12">
+			<div id="tvfiles" style="width:100%;">
+			    <div class="panel panel-info">
+				<a role="button" data-toggle="collapse" href="#tvinfo" aria-expanded="true" aria-controls="tvinfo">
+				    <div class="panel-heading">
+					<h4 class="panel-title panel-info">
+					    <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
+					    &nbsp;TV
+					</h4>
+				    </div>
+				</a>
+				<div id="tvinfo" class="panel-collapse collapse">
+				    <div class="panel-body">
+					<table class="table">
+					    {foreach key=poradi item=file from=$tvFiles}
+						<tr>
+						    <td>
+							<a target='_blank' href="{$file.url}">{$file.filename}</a>
+						    </td>
+						</tr>
+					    {/foreach}
+					</table>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+		
+	    <div class="row">
+		<div class="col-xs-12">
+		    <div style="display:{$display_sec.branydiv};" id="branydiv">
+			<input type="hidden" id="userinfo" value="{$user}" />
+			<div class="container-fluid">
+			    {*<div class="row">
+			    <div class="col-xs-12 text-center">
+			    <span id="sock_status" class="badge">not connected</span>
+			    </div>
+			    </div>*}
+			    <div class="row">
+				<div class="col-md-4 text-center">
+				    <input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
+				</div>
+				<div class="col-md-4 text-center">
+				    <button class="btn btn-block" id="brana1Button">horní brana</button>
+				</div>
+				<div class="col-md-4 text-center">
+				    <button class="btn btn-block" id="brana2Button">dolní brana</button>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+
+			
+		<div class="row">
+		    <div class="col-xs-12">
 		    <div class="table-responsive">
 			<table  class="table table-bordered table-condensed table-striped">
 			    <thead>
@@ -187,6 +253,16 @@
 		<div class="row">
 		    <div class="col-xs-12">
 	    		<div id="myChart"></div>
+		    </div>
+		</div>	    
+			    
+		<div class="row">
+		    <div class="col-xs-12">
+			<div id="svgChart">
+			    <svg width="100%" height="300" style="border:1px solid black;">
+			    
+			    </svg>
+			</div>
 		    </div>
 		</div>	    
 	    </div>

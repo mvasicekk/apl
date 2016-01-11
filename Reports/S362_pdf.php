@@ -450,14 +450,15 @@ if($reklInfo!==NULL){
 	$pocet = 0;
 	foreach ($anlagenTypen as $anlage){
 	    //zjistit pocet priloh daneho typu
-	    
-	    foreach ($files as $file){
+	    if($files!==NULL){
+		foreach ($files as $file){
 		//$obsah.=$anlage['beschreibung']." ".strtoupper($anlage['muster'])." ".strtoupper($file['filename']);
 		if(strstr(strtoupper($file['filename']), strtoupper($anlage['muster']))!==FALSE){
 		    $anlagen[$anlage['beschreibung']]++;
 		    $pocet++;
 		    //$obsah.=$anlage['beschreibung']." ($pocet) ".$file['filename'];
 		}
+	    }
 	    }
 	}
 	$sonstPocet = $pocetPriloh - $pocet;
