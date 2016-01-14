@@ -92,8 +92,10 @@ function getValueForNode($nodelist,$nodename)
 }
 
 
-require_once('../tcpdf/config/lang/eng.php');
-require_once('../tcpdf/tcpdf.php');
+//require_once('../tcpdf/config/lang/eng.php');
+//require_once('../tcpdf/tcpdf.php');
+
+require_once('../tcpdf_new/tcpdf.php');
 
 $pdf = new TCPDF('P','mm','A4',1);
 
@@ -102,6 +104,7 @@ $pdf->SetAuthor(PDF_AUTHOR);
 $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
+
 
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D555 Mehrarbeitsanmeldung", $params);
 //set margins
@@ -119,7 +122,7 @@ $pdf->setFooterFont(Array("FreeSans", '', 8));
 $pdf->setLanguageArray($l); //set language items
 
 //initialize document
-$pdf->AliasNbPages();
+//$pdf->AliasNbPages();
 $pdf->SetFont("FreeSans", "", 8);
 
 $pdf->AddPage();
@@ -274,14 +277,111 @@ foreach($imas as $ima){
 //	//podtrhnout
 //	$pdf->Cell(0, 2, "", 'T', 1, 'L', 0);
 //    }
+
+    /*
+float
+$w
+Width of cells. If 0, they extend up to the right margin of the page.
+ 
+float
+$h
+Cell minimum height. The cell extends automatically if needed.
+ 
+string
+$txt
+String to print
+ 
+mixed
+$border
+Indicates if borders must be drawn around the cell. The value can be a number:
+0: no border (default)
+1: frame
+or a string containing some or all of the following characters (in any order):
+L: left
+T: top
+R: right
+B: bottom
+or an array of line styles for each border group - for example: array('LTRB' => array('width' => 2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)))
+ 
+string
+$align
+Allows to center or align the text. Possible values are:
+L or empty string: left align
+C: center
+R: right align
+J: justification (default value when $ishtml=false)
+ 
+boolean
+$fill
+Indicates if the cell background must be painted (true) or transparent (false).
+ 
+int
+$ln
+Indicates where the current position should go after the call. Possible values are:
+0: to the right
+1: to the beginning of the next line [DEFAULT]
+2: below
+ 
+float
+$x
+x position in user units
+ 
+float
+$y
+y position in user units
+ 
+boolean
+$reseth
+if true reset the last cell height (default true).
+ 
+int
+$stretch
+font stretch mode:
+0 = disabled
+1 = horizontal scaling only if text is larger than cell width
+2 = forced horizontal scaling to fit cell width
+3 = character spacing only if text is larger than cell width
+4 = forced character spacing to fit cell width
+General font stretching and scaling values will be preserved when possible.
+ 
+boolean
+$ishtml
+set to true if $txt is HTML content (default = false).
+ 
+boolean
+$autopadding
+if true, uses internal padding and automatically adjust it to account for line width.
+ 
+float
+$maxh
+maximum height. It should be >= $h and less then remaining space to the bottom of the page, or 0 for disable this feature. This feature works only when $ishtml=false.
+ 
+string
+$valign
+Vertical alignment of text (requires $maxh = $h > 0). Possible values are:
+T: TOP
+M: middle
+B: bottom
+. This feature works only when $ishtml=false.
+ 
+boolean
+$fitcell
+if true attempt to fit all the text within the cell by reducing the font size.
+Returns:
     
-    
-    $pdf->Ln();
+endif
+     * 
+     */
+    //$pdf->Ln();
     //antrag auf Mehrleistung - popis
     $pdf->SetFont("FreeSans", "B", 10);
     $pdf->Cell(0, 5, "Antrag auf Mehrleistung:", '0', 1, 'L', 0);
     //pro jednotlive radky vykreslim bunky
     $emaAntragText = trim(getValueForNode($imaChilds, 'ema_antrag_text'));
+    $pdf->SetFont("FreeSans", "", 10);
+    $pdf->MultiCell(0, 5, $emaAntragText, '0', 'L', 0, 0, '', '', FALSE, 0, FALSE, FALSE, 0);
+    
+    /*
     $emaAntragTextArray = preg_split('/\n|\r\n?/', $emaAntragText);
     if(is_array($emaAntragTextArray)){
 	$pdf->SetFont("FreeSans", "", 10);
@@ -289,6 +389,8 @@ foreach($imas as $ima){
 	    $pdf->Cell(0, 5, $text, '0', 1, 'L', 0);
 	}
     }
+     * 
+     */
 	
     $pdf->Ln();
     
@@ -418,10 +520,12 @@ foreach($imas as $ima){
 			$y = $pdf->GetY();
 		    }
 		    $pdf->Image($anlagenDir . '/' . $filenameNew, $x, $y, $imgWidth, $imgHeight);
-		    $pdf->Text($x, $y + $imgHeight + 3, $anlage);
+		    //$pdf->Text($x, $y + $imgHeight + 3, $anlage);
+		    $pdf->Text($x, $y + $imgHeight, $anlage);
 		    unlink($anlagenDir . '/' . $filenameNew);
 		    array_push($anlagenPathArray, $anlagePath);
-		    $y+=$imgHeight + $imgMezera + 3;
+		    //$y+=$imgHeight + $imgMezera + 3;
+		    $y+=$imgHeight + $imgMezera;
 		}
 	    }
 	}
@@ -443,6 +547,7 @@ if(!file_exists($anlagenDir)){
 }
 			
 $pdf->Output($anlagenDir.'/'.$filename, 'F');
+//$pdf->Output();
 //vzgenerovat novou tabulku se souborama k IMA
 $imaInfoArray = $apl->getIMAInfoArray($imaid);
 $emaAnlagenArray = array();
@@ -513,6 +618,7 @@ $formDiv.="</table>";
 //poslat email s prilohou
 //1. komu poslat
 //prihlasenemu uzivateli ( musi mit emailovou adresu ! )
+
 $user = $apl->get_user_pc();
 $username = substr($user, strrpos($user, '/')+1);
 $userInfo = $apl->getUserInfoArray($username);

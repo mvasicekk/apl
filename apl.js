@@ -17,31 +17,80 @@ $(document).ready(function(){
     $.getJSON('./getGraphData.php', function(data) {
 	var pole = data.leistungTablearray.pole;
 	console.log(pole);
+
+//	var pg1Array = [];
+	var margin = {left:80,top:10,right:10,bottom:10};
+//	pole.forEach(
+//		function(item){
+//		    //console.log(item);
+//		    pg1Array.push(item.celkem);
+//		});
+	var pg1Array = pole.map(function(d){
+	    return +d.celkem;
+	});
 	
-	var barWidth = 60;
-	var barPadding = 3;
-	var svgHeight = 300;
-	var pg1Array = [];
-	pole.forEach(
-		function(item){
-		    //console.log(item);
-		    pg1Array.push(item.pg1);
-		});
+	var datumArray = pole.map(function(d){
+	    return d.datum;
+	});
 	
+	console.log(pg1Array);
 	var maxValue = d3.max(pg1Array);
+	maxValue = 85000;
+	
+	var zoomBehavior = d3.behavior.zoom()
+		.scaleExtent([0.1,10])
+		.on('zoom',onZoom);
+	
 	//console.log(maxValue);
-	var graphGroup = d3.select('svg').append('g');
+	var svg = d3.select('svg');
+	svg.call(zoomBehavior);
 	
-	function xloc(d,i){
-	    return i*(barWidth+barPadding);
-	}
+	function onZoom(){
+	    svg.attr('transform','translate(' + d3.event.translate +
+	    ')' +' scale('+d3.event.scale+')');
+	};
 	
-	function yloc(d){
-	    return svgHeight-d*(svgHeight/maxValue);
-	}
+	var svgWidth = parseInt(svg.style('width'));
+	var svgHeight = parseInt(svg.style('height'));
+	var bands = d3.scale.ordinal()
+		.domain(datumArray)
+		.rangeRoundBands([0,svgWidth-margin.left-margin.right],0.1);
+	console.log('bands');
+	console.log(bands.range());
+	console.log(bands.rangeBand());
+	
+	var barWidthWithPadding = (svgWidth-margin.left-margin.right)/pg1Array.length;
+	var barPadding = 5;
+	var barWidth = barWidthWithPadding - barPadding;
+	
+	var totalWidth = svgWidth;
+	var totalHeight = svgHeight;
+	
+	var yScale = d3.scale.linear()
+		.domain([0,maxValue])
+		.range([0,(totalHeight-margin.top-margin.bottom)]);
+	
+	console.log('svg width='+svgWidth);
+	
+	svg.append('rect').attr({
+            width: totalWidth,
+            height: totalHeight,
+            fill: 'lightyellow',
+            stroke: 'black',
+            'stroke-width': 1
+        });
+	
+	var graphGroup = svg.append('g')
+		.attr('transform','translate('+margin.left+','+margin.top+')');
+	
+	graphGroup.append('rect').attr({
+            fill: 'rgba(0,0,0,0.1)',
+            width:  totalWidth - (margin.left + margin.right),
+            height: totalHeight - (margin.bottom + margin.top)
+        });
 	
 	function translator(d,i){
-	    return "translate("+xloc(d,i)+","+yloc(d)+")";
+	    return "translate("+bands.range()[i]+","+((totalHeight-margin.top-margin.bottom)-yScale(d))+")";
 	    //return "translate("+xloc(d,i)+","+0+")";
 	}
 	
@@ -51,26 +100,58 @@ $(document).ready(function(){
 		.append('g')
 		.attr('transform',translator);
 	
-	barGroup.selectAll("rect")
-		.data(pg1Array)
-		.enter()
-		.append('rect')
+	barGroup.append('rect')
 		.attr({
 		    fill:'steelblue',
 		    width:barWidth,
-		    height:function(d){return d*(svgHeight/maxValue);}
+		    height:function(d){return yScale(d);}
+		})
+		.on('mouseenter',function(d,i){
+		    d3.select(this).attr({'stroke':'red','stroke-width':'2px'});
+		})
+		.on('mouseout',function(d,i){
+		    d3.select(this).attr({'stroke':'none','stroke-width':'0px'});
 		});
-	var textTranslator = "translate(" + barWidth / 2 + ",10)";
+	
+	
+	var textTranslator = "translate(" + bands.rangeBand() / 2 + ",10)";
 	barGroup.append('text')
 	    .text(function(d) { return Math.round(d); })
 	    .attr({
 		fill: 'white',
-		'alignment-baseline': 'before-edge',
-		'text-anchor': 'middle',
-		transform: textTranslator
+		dx:10,
+		dy:0,
+		'text-anchor':'start',
+		transform: 'rotate(60)'
 	    })
-	    .style('font', '10px sans-serif');
+	    .style('font', '10px sans-serif')
+	    .style('font-weight', 'bold');
 
+	// osy
+	var axisGroup = svg.append('g');
+	
+	var scale = d3.scale
+		.linear()
+		.domain([maxValue,0])
+		.range([0,totalHeight-margin.top-margin.bottom]);
+	var axis = d3.svg.axis()
+		.orient('left')
+		.scale(scale);
+	var axisNodes = axisGroup.call(axis);
+	var domain = axisNodes.selectAll('.domain');
+	domain.attr({
+	    fill:'none',
+	    'stroke-width':1,
+	    stroke:'black'
+	});
+	var ticks = axisNodes.selectAll('.tick line');
+	ticks.attr({
+	    fill:'none',
+	    'stroke-width':1,
+	    stroke:'black'
+	});
+	axisGroup.attr('transform','translate('+margin.left+','+margin.top+')');
+	
 	var hodnoty_pg1 = [];
 	var hodnoty_pg4 = [];
 	var hodnoty_celkem = [];
