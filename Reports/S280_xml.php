@@ -143,7 +143,8 @@ if($teil!='%')
     $sql .=" and (dkopf.teil like '$teil')";
 $sql.=")";
 $sql.=" group by drueck_id order by datum,persnr,auftragsnr,von,teil,taetnr";
-echo "sql=$sql"."<br>";
+
+//echo "sql=$sql"."<br>";
 
 
 $query2xml = XML_Query2XML::factory($db);
