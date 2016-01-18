@@ -34,10 +34,11 @@ require_once '../db.php';
 	array(2,3,6),
 	array(
 	    "jr@abydos.cz",
-	    "hl@abydos.cz",
+	    //"hl@abydos.cz",
 	    "rk@abydos.cz",
 	    "gu@abydos.cz"),
 	array(
+	    "hl@abydos.cz",
 	    "bb@abydos.cz",
 	    "rb@abydos.cz",
 	    "ok@abydos.cz",
