@@ -30,6 +30,10 @@ $amnr=$_GET['amnr'];
 $amnr = strtr($amnr, '*', '%');
 if(strlen($amnr)==1 && $amnr=='%') $amnr = '';
 
+$bemerkung=$_GET['bemerkung'];
+$bemerkung = strtr($bemerkung, '*', '%');
+if(strlen($bemerkung)==1 && $bemerkung=='%') $bemerkung = '';
+
 $benutzer=$_GET['benutzer'];
 $benutzer = strtr($benutzer, '*', '%');
 if(strlen($benutzer)==1 && $benutzer=='%') $benutzer = '';

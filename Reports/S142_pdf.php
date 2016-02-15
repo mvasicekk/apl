@@ -2385,6 +2385,8 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     //prescasove hodiny ve ve vybranem mesici
     $maStdMonat = $mehrarb-$mehrarbVor;
     
+    //2016-02-05 spravne by melo byt
+    //$mehrarb-=$endOfVorYearStd;
     
     $mehrarb-=$startStd;
     $mehrarbVor-=$startStd;

@@ -9,7 +9,7 @@ $sl = $_GET['showalllist'];
 
 $bAll = $sl=='block'?TRUE:FALSE;
 
-//$bAll = FALSE;
+$bAll = TRUE;
 
 $ar = $a->getEinkaufAnforderungenArray($u,$bAll);
 

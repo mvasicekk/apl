@@ -16,11 +16,22 @@ $group = $o->r->group;
 $groupDetail = $o->r->groupDetail;
 $persnr = $o->r->persnr;
 $yearMonth = substr($eId,  strrpos($eId, '_')+1);
+$bSumColumn = $yearMonth=='sum'?TRUE:FALSE;
+
+$rolesArray = $a->getUserRolesArray($user);
+
+// nejdriv odchytit sloupec se sumama
+if($bSumColumn){
+    $title = "Detail fuer Summe $group/$groupDetail";
+    $content.="<div>";
+    $content.="<h4 class='alert alert-warning'>Co zobrazit pro sumu ?</h4>";
+    $content.="<p>mozna graf pro jednotlive mesice ?</p>";
+    $content.="</div>";
+}
+else{
 $year = 2000 + intval(substr($yearMonth, 0, 2));
 $month = intval(substr($yearMonth, 3));
 $dayCount = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-$rolesArray = $a->getUserRolesArray($user);
 
 if (($group == 'rekl') && (($groupDetail == 'sum_bewertung_E')||$groupDetail == 'sum_bewertung_I')) {
     $title = "Detail Reklamationen $group/$groupDetail in $yearMonth";
@@ -144,6 +155,138 @@ else if (($group == 'leistung') && (($groupDetail == 'vzaby_akkord')||($groupDet
 	$content.="</table>";
     }
     
+}
+else if (($group == 'A6') && (($groupDetail == 'bewertung')||($groupDetail == 'a6_prozent'))) {
+    $title = "Bewertung - Kriterien";
+    //vytahnu prislusnou sekci z tabulky bewertung_kriteria
+    $yearMonth = substr($year,2,2)."-$month";
+    $kunde = 100;
+    $bereich = "q_auss";
+    $infoArray = $a->getBewertungKriteriumInfo($kunde, $bereich, $yearMonth);
+    
+    //$content = $infoArray;
+    
+    if($infoArray!==NULL){
+	$content.="<table class='table table-condensed table-bordered table-striped'>";
+	$content.="<tr>";
+	$content.="<th>Kunde</th>";
+	$content.="<th>Bereich</th>";
+	$content.="<th>Grenze</th>";
+	$content.="<th>Bis / Von</th>";
+	$content.="<th>Bewertung</th>";
+	$content.="</tr>";
+	foreach ($infoArray as $info) {
+		$content.="<tr>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['kunde'] . "";
+		$content.="</td>";
+		$content.="<td class='text-left'>";
+		$content.="" . $info['bereich'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . number_format($info['grenze'],4, ',',' ') . "";
+		$content.="</td>";
+		$content.="<td class='text-left'>";
+		$content.="" . $info['bis_von'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['bewertung'] . "";
+		$content.="</td>";
+		$content.="</tr>";
+	}
+	$content.="</table>";
+    }
+    
+}
+else if (($group == 'rekl') && (($groupDetail == 'bewertung_E')||($groupDetail == 'bewertung_I'))) {
+    $title = "Bewertung - Kriterien";
+    //vytahnu prislusnou sekci z tabulky bewertung_kriteria
+    $yearMonth = substr($year,2,2)."-$month";
+    $kunde = 100;
+    $bereich = "q_reklamationen";
+    $infoArray = $a->getBewertungKriteriumInfo($kunde, $bereich, $yearMonth);
+    
+    //$content = $infoArray;
+    
+    if($infoArray!==NULL){
+	$content.="<table class='table table-condensed table-bordered table-striped'>";
+	$content.="<tr>";
+	$content.="<th>Kunde</th>";
+	$content.="<th>Bereich</th>";
+	$content.="<th>Grenze</th>";
+	$content.="<th>Bis / Von</th>";
+	$content.="<th>Interval[Monate]</th>";
+	$content.="<th>Bewertung</th>";
+	$content.="</tr>";
+	foreach ($infoArray as $info) {
+		$content.="<tr>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['kunde'] . "";
+		$content.="</td>";
+		$content.="<td class='text-left'>";
+		$content.="" . $info['bereich'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . number_format($info['grenze'],4, ',',' ') . "";
+		$content.="</td>";
+		$content.="<td class='text-left'>";
+		$content.="" . $info['bis_von'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['interval_monate'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['bewertung'] . "";
+		$content.="</td>";
+		$content.="</tr>";
+	}
+	$content.="</table>";
+    }
+}
+else if (($group == 'HF_repkosten') && (($groupDetail == 'bewertung')||($groupDetail == 'faktor'))) {
+    $title = "Bewertung - Kriterien";
+    //vytahnu prislusnou sekci z tabulky bewertung_kriteria
+    $yearMonth = substr($year,2,2)."-$month";
+    $kunde = 100;
+    $bereich = "q_reparaturen";
+    $infoArray = $a->getBewertungKriteriumInfo($kunde, $bereich, $yearMonth);
+    
+    //$content = $infoArray;
+    
+    if($infoArray!==NULL){
+	$content.="<table class='table table-condensed table-bordered table-striped'>";
+	$content.="<tr>";
+	$content.="<th>Kunde</th>";
+	$content.="<th>Bereich</th>";
+	$content.="<th>Grenze</th>";
+	$content.="<th>Bis / Von</th>";
+	$content.="<th>Interval[Monate]</th>";
+	$content.="<th>Bewertung</th>";
+	$content.="</tr>";
+	foreach ($infoArray as $info) {
+		$content.="<tr>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['kunde'] . "";
+		$content.="</td>";
+		$content.="<td class='text-left'>";
+		$content.="" . $info['bereich'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . number_format($info['grenze'],4, ',',' ') . "";
+		$content.="</td>";
+		$content.="<td class='text-left'>";
+		$content.="" . $info['bis_von'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['interval_monate'] . "";
+		$content.="</td>";
+		$content.="<td class='text-right'>";
+		$content.="" . $info['bewertung'] . "";
+		$content.="</td>";
+		$content.="</tr>";
+	}
+	$content.="</table>";
+    }
 }else {
     $content.="<div>";
     $content.="<h4 class='alert alert-warning'>Detaily zatim definovany pouze pro:</h4>";
@@ -157,12 +300,16 @@ else if (($group == 'leistung') && (($groupDetail == 'vzaby_akkord')||($groupDet
 //    $content.="<div>$persnr</div>";
 //    $content.="<div>$yearMonth</div>";
 }
+    
+}
 
 
 $returnArray = array(
     'title'=>$title,
     'user'=>$user,
     'content'=>$content,
+    'yearMonth'=>$yearMonth,
+    'bSumColumn'=>$bSumColumn
 );
 
 echo json_encode($returnArray);

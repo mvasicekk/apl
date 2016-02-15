@@ -35,6 +35,9 @@
     <script src="./bower_components/floatThead/dist/jquery.floatThead.min.js"></script>
     <script src="./bower_components/numeral/numeral.js"></script>
     
+    <script src="./bower_components/qrcode/lib/qrcode.min.js"></script>
+    <script src="./bower_components/angular-qr/angular-qr.min.js"></script>
+    
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
     <script src="../js/filters.js"></script>

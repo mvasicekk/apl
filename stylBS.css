@@ -83,229 +83,51 @@ button.off{
     margin-top:5px;
     margin-bottom:5px;
 }
-/*#logindiv {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
+
+/*--------------------------------------------------------------------------------*/
+/*----------------------------- styly pro graf -----------------------------------*/
+/*--------------------------------------------------------------------------------*/
+path {
+    stroke: steelblue;
+    stroke-width: 0.2;
+    fill: none;
 }
 
-table.logintable{
-    background-color:rgb(220,220,220);
-    border: solid 1px black;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1em;
-    width: 100%;
+.pg1norma{
+    fill:#f00;
+    font-weight: lighter;
+}
+.pg1norma,.line_pg1 {
+        stroke:#f00;
+	stroke-width:0.2px;
 }
 
-fieldset.buttonsection{
-    margin: 0px;
-    padding: 0px;
-    text-align: left;
-    padding-left: 0.1em;
-    padding-right: 0.1em;
-    margin-top: 0.1em;
-    padding-bottom: 0.4em;
-    background-color: #ccc;
-    padding-top: 0.3em;
+.pg4norma,.line_pg4 {
+        stroke:#aaf;
+	stroke-width:0.2px;
 }
 
-fieldset.buttonsection legend{
-    width: 90%;
-    background-color: #ff0;
-    padding: 0.3em;
-    text-align: center;
-    font-weight: bold;
-    margin: 0px;
-    border: 1px solid;
-}    
-
-#leistungtabelle {
-    background-color:rgb(179,179,179);
-    width: 100%; 
-    margin-top: 1em;
+.celkemnorma,.line_celkem {
+        stroke:#0a0;
+	stroke-width:0.2px;
 }
 
-#tlacitka {
-    background-color:rgb(179,179,179);
-    width: 100%;
-}
-#logintable{
-    width: 100%;
+.line_pg1,
+.line_pg4,
+.line_celkem{
+	stroke-width: 3;
 }
 
-#myChart{
-    background-color:rgb(179,179,179);
-    margin-top: 1em;
-    width: 100%;
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
 }
 
-table.monatleistungtable
-{
-	background-color:rgb(220,220,220);
-	border: solid 1px black;
-	width: 100%;
+.tick line{
+    stroke: grey;
+    stroke-width: 1;
+    opacity: 0.1;
 }
-
-
-@media screen and (min-width:780px){
-    table.logintable{
-	width: 50%;
-	margin-top: 1em;
-    }
-
-    #leistungtabelle {
-	background-color:rgb(179,179,179);
-	width: 40%; 
-	float: left;
-	margin-left: 2em;
-	margin-top: 1em;
-    }
-
-    #tlacitka {
-	background-color:rgb(179,179,179);
-	width: 50%;
-	float: left;
-	margin-top: 1em;
-	margin-left: 1em;
-    }
-    #logintable{
-        background-color:rgb(179,179,179);
-        width: 60%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-
-    #myChart{
-	float: left;
-	margin-top: 1em;
-	margin-left: 2em;
-	height: 20em;
-    }
-    
-    table.paramtable
-    {
-	margin-top: 1em;
-	width: 50%;
-    }
-}
-
-
-#celek{width:1020px;}
-#headers{width: 400px;}
-#headers h1 { width: 200px; height: 30px; color: rgb(255,51,102);float:left; font: normal small-caps bolder 30px bolder Verdana;}
-
-#headers h2{width: 200px; float:left; height: 30px; font: normal normal bold 13px bold Verdana;}
-
-#raw{color: rgb(0,255,0); font-weight: bold; }
-
-#tables{float: left; margin-right: 30px;}
-#table1{ background-color: rgb(179,179,179); clear: left;}
-#table1 th{width: 75px; font: normal normal bold 15px bold Verdana;}
-#table1 td{text-align: right; border-right: solid 1px black; border-top: solid 1px black; font: normal normal bold 20px bold Verdana;}
-
-#table2{}
-#table2 th{width: 70px; font: normal normal normal 13px normal Verdana;}
-#table2 td{text-align: right;    background-color: rgb(255,255,255); border-right: solid 1px black; border-top: solid 1px black; font: normal normal normal 13px normal Verdana; margin:0px;}
-
-
-
-table.logintable
-{
-	position:relative;
-	top:10px;
-	background-color:rgb(220,220,220);
-	border: solid 1px black;
-}
-
-table.formulartable
-{
-	position:relative;
-	top:10px;
-	background-color:rgb(220,220,220);
-	border: solid 1px black;
-}
-
-
-
-tr.login_username
-{
-	background-color:rgb(220,220,220);
-	
-}
-
-tr.login_username
-{
-	background-color:rgb(220,220,220);
-	
-}
-
-
-
-
-
-
-td.personalpopis
-{
-	background-color:rgb(255,255,200);
-	text-align:center;
-	font-weight: bold;
-	border-bottom: dotted 1px black;
-	padding: 5px;
-}
-
-td.kundenpopis
-{
-	background-color:rgb(255,255,200);
-	text-align:center;
-	font-weight: bold;
-	border-bottom: dotted 1px black;
-	padding: 5px;
-}
-
-td.auftragpopis
-{
-	background-color:rgb(255,255,200);
-	text-align:center;
-	font-weight: bold;
-	border-bottom: dotted 1px black;
-	padding: 5px;
-}
-
-td.hlasenipopis
-{
-	background-color:rgb(255,255,200);
-	text-align:center;
-	font-weight: bold;
-	border-bottom: dotted 1px black;
-	padding: 5px;
-}
-
-td.sestavypopis
-{
-	background-color:rgb(255,255,200);
-	text-align:center;
-	font-weight: bold;
-	border-bottom: dotted 1px black;
-	padding: 5px;
-}
-
-
-.cleaner{clear: both; visibility: hidden;}
-
-
-
-.formularbutton
-{
-	width:180px;
-	font-size:10px;
-}
-.formularEndbutton
-{
-	width:180px;
-	font-size:10px;
-	background-color:rgb(255,0,0);
-	color:rgb(255,255,255);
-	font-weight:bold;
-}*/

@@ -282,10 +282,18 @@ class AplDB {
 	$this->query($sql);
     }
     /**
-     * 
+     *  tabulka vykonu pro kazdou produktgruppe zvlast
+     *  radky - datumy
+     *  sloupce - typy minut
      */
-    public function getLeistungTable() {
-	$sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),day(current_date())-1) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit 30";
+    public function getLeistungTable($daysBack=NULL) {
+	if($daysBack===NULL){
+	    $sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),day(current_date())-1) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit 31";
+	}
+	else{
+	    $sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),$daysBack) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit $daysBack";
+	}
+	
 	//echo $sql_leistung;
 	mysql_query('set names utf8');
 
@@ -1508,6 +1516,83 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	else{
 	    return $rows;
 	}
+    }
+    
+    /**
+     * 
+     * @param type $kunde
+     * @param type $bereich
+     * @param type $value
+     * @param type $yearMonth
+     */
+    public function getBewertungKriterium($kunde,$bereich,$value,$vonbis,$yearMonth,$interval=NULL){
+	// $yearMonth = 15-01
+	$year = 2000+intval(substr($yearMonth, 0, 2));
+	$month = substr($yearMonth,3,2);
+	$day = 1;
+	$dateTime = date('Y-m-d',strtotime("$year-$month-$day"));
+	$sql="";
+	$bewertung = 0;
+	
+	if($vonbis=='bis'){
+	    $sql.=" select";
+	    $sql.=" bewertung_kriteria.bewertung,";
+	    $sql.=" bewertung_kriteria.grenze";
+	    $sql.=" from bewertung_kriteria";
+	    $sql.=" where";
+	    $sql.=" grenze>='$value'";
+	    $sql.=" and";
+	    $sql.=" bereich='$bereich'";
+	    $sql.=" and";
+	    $sql.=" kunde='$kunde'";
+	    $sql.=" and";
+	    $sql.=" gilt_ab<='$dateTime'";
+	    $sql.=" and";
+	    $sql.=" interval_monate='$interval'";
+	    $sql.=" order by";
+	    $sql.=" gilt_ab desc,";
+	    $sql.=" grenze asc";
+	    $rows = $this->getQueryRows($sql);
+	    if($rows!==NULL){
+		$bewertung = $rows[0]['bewertung'];
+	    }
+	    else{
+		$bewertung = 6;
+	    }
+	}
+	
+	return $bewertung;
+    }
+    
+    public function getBewertungKriteriumInfo($kunde,$bereich,$yearMonth){
+	// $yearMonth = 15-01
+	$year = 2000+intval(substr($yearMonth, 0, 2));
+	$month = substr($yearMonth,3,2);
+	$day = 1;
+	$dateTime = date('Y-m-d',strtotime("$year-$month-$day"));
+	$sql="";
+	
+	$sql.=" select";
+	$sql.=" kunde,";
+	$sql.=" bereich,";
+	$sql.=" grenze,";
+	$sql.=" bis_von,";
+	$sql.=" interval_monate,";
+	$sql.=" bewertung";
+	$sql.=" from bewertung_kriteria";
+	$sql.=" where";
+	$sql.=" kunde='$kunde'";
+	$sql.=" and";
+	$sql.=" bereich='$bereich'";
+	$sql.=" and";
+	$sql.=" gilt_ab<='$dateTime'";
+	$sql.=" order by";
+	$sql.=" gilt_ab desc,";
+	$sql.=" interval_monate asc,";
+	$sql.=" grenze asc";
+	
+	return $this->getQueryRows($sql);
+	//return $sql;
     }
     
     /**

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+// kurzor do vyhledavaciho policka pro zakazku
 //    $('input:first').focus();
 //    $('input:first').select();
 
@@ -14,240 +15,268 @@ $(document).ready(function(){
     });
     
     // graf
-    $.getJSON('./getGraphData.php', function(data) {
-	var pole = data.leistungTablearray.pole;
-	console.log(pole);
+    makeGraph(31);
+});
 
-//	var pg1Array = [];
-	var margin = {left:80,top:10,right:10,bottom:10};
-//	pole.forEach(
-//		function(item){
-//		    //console.log(item);
-//		    pg1Array.push(item.celkem);
-//		});
-	var pg1Array = pole.map(function(d){
-	    return +d.celkem;
-	});
-	
-	var datumArray = pole.map(function(d){
-	    return d.datum;
-	});
-	
-	console.log(pg1Array);
-	var maxValue = d3.max(pg1Array);
-	maxValue = 85000;
-	
-	var zoomBehavior = d3.behavior.zoom()
-		.scaleExtent([0.1,10])
-		.on('zoom',onZoom);
-	
-	//console.log(maxValue);
+function updateData(daysBack){
+    makeGraph(daysBack);
+}
+
+/**
+ * vytvoreni grafu
+ * 
+ * @param {int} daysBack - pocet zpetne zobrazenych v grafu
+ * @returns {undefined}
+ 
+ */
+function makeGraph(daysBack){
+        $.getJSON('./getGraphData.php?daysBack='+daysBack+' ', function(data) {
+
+	//definice okraju,prostoru
+	var margin = {left:80,top:10,right:20,bottom:60};
+		
 	var svg = d3.select('svg');
-	svg.call(zoomBehavior);
-	
-	function onZoom(){
-	    svg.attr('transform','translate(' + d3.event.translate +
-	    ')' +' scale('+d3.event.scale+')');
-	};
-	
 	var svgWidth = parseInt(svg.style('width'));
 	var svgHeight = parseInt(svg.style('height'));
-	var bands = d3.scale.ordinal()
-		.domain(datumArray)
-		.rangeRoundBands([0,svgWidth-margin.left-margin.right],0.1);
-	console.log('bands');
-	console.log(bands.range());
-	console.log(bands.rangeBand());
+	var graphWidth = svgWidth-margin.left-margin.right;
+	var graphHeight = svgHeight-margin.top-margin.bottom;
 	
-	var barWidthWithPadding = (svgWidth-margin.left-margin.right)/pg1Array.length;
-	var barPadding = 5;
-	var barWidth = barWidthWithPadding - barPadding;
+	// ziskani dat
+	//var pole = data.leistungTablearray.pole;
+	var pole = data.graphTablearray.pole;
+	var datumNestedArray = d3.nest()
+		.key(function(el){return d3.time.format('%d.%m.%Y').parse(el.datum)})
+		.entries(pole);
 	
-	var totalWidth = svgWidth;
-	var totalHeight = svgHeight;
+//	datumNestedArray.sort(function(a,b){
+//	    if(Date.parse(a.key)>Date.parse(b.key)){
+//		return 1;
+//	    }
+//	    if(Date.parse(a.key)<Date.parse(b.key)){
+//		return -1;
+//	    }
+//	    return 0;
+//	});
+//	console.log(datumNestedArray);
 	
-	var yScale = d3.scale.linear()
-		.domain([0,maxValue])
-		.range([0,(totalHeight-margin.top-margin.bottom)]);
+	yDomain = d3.extent(datumNestedArray,function(el){
+	    return +el.values[0].celkem;
+	});
+	//console.log(yDomain);
+
+	var datumArray = datumNestedArray.map(function(d){
+	    return Date.parse(d.key);
+	});
+	//console.log(datumArray);
 	
-	console.log('svg width='+svgWidth);
+	maxValue = 85000;
+
+	//var x = d3.time.scale().range([0,graphWidth]);
+	var x = d3.time.scale().range([graphWidth,0]);
+	xDomain = d3.extent(datumArray, function(d) { return d; }); 
+	//console.log(xDomain);
+	x.domain(xDomain);
 	
-	svg.append('rect').attr({
-            width: totalWidth,
-            height: totalHeight,
-            fill: 'lightyellow',
-            stroke: 'black',
-            'stroke-width': 1
+	var y = d3.scale.linear().range([graphHeight, 0]);
+	y.domain([0,maxValue]);
+
+	// prostor pro graf
+	    svg.append('rect').attr({
+            width: svgWidth,
+            height: svgHeight,
+            fill: '#fff',
+            stroke: 'none',
+            'stroke-width': 0
         });
 	
 	var graphGroup = svg.append('g')
 		.attr('transform','translate('+margin.left+','+margin.top+')');
 	
 	graphGroup.append('rect').attr({
-            fill: 'rgba(0,0,0,0.1)',
-            width:  totalWidth - (margin.left + margin.right),
-            height: totalHeight - (margin.bottom + margin.top)
+            fill: 'rgba(255,255,200,0.1)',
+            width:  graphWidth,
+            height: graphHeight
         });
-	
-	function translator(d,i){
-	    return "translate("+bands.range()[i]+","+((totalHeight-margin.top-margin.bottom)-yScale(d))+")";
-	    //return "translate("+xloc(d,i)+","+0+")";
-	}
-	
-	var barGroup = graphGroup.selectAll('g')
-		.data(pg1Array)
-		.enter()
-		.append('g')
-		.attr('transform',translator);
-	
-	barGroup.append('rect')
-		.attr({
-		    fill:'steelblue',
-		    width:barWidth,
-		    height:function(d){return yScale(d);}
-		})
-		.on('mouseenter',function(d,i){
-		    d3.select(this).attr({'stroke':'red','stroke-width':'2px'});
-		})
-		.on('mouseout',function(d,i){
-		    d3.select(this).attr({'stroke':'none','stroke-width':'0px'});
-		});
-	
-	
-	var textTranslator = "translate(" + bands.rangeBand() / 2 + ",10)";
-	barGroup.append('text')
-	    .text(function(d) { return Math.round(d); })
-	    .attr({
-		fill: 'white',
-		dx:10,
-		dy:0,
-		'text-anchor':'start',
-		transform: 'rotate(60)'
-	    })
-	    .style('font', '10px sans-serif')
-	    .style('font-weight', 'bold');
 
+	var trans = d3.select("body").transition();
+	
+	var valueline_celkem = d3.svg.line()
+		.interpolate("linear")
+		.x(function(d){return x(Date.parse(d.key));})
+		.y(function(d){return y(+d.values[0].celkem);});
+	
+	var valueline_pg1 = d3.svg.line()
+		.interpolate("linear")
+		.x(function(d){return x(Date.parse(d.key));})
+		.y(function(d){return y(+d.values[0].pg1);});
+	
+	var valueline_pg4 = d3.svg.line()
+		.interpolate("linear")
+		.x(function(d){return x(Date.parse(d.key));})
+		.y(function(d){return y(+d.values[0].pg4);});
+	
+	
+	var normy = [
+	    {
+		hranice:58000,
+		trida:'pg1norma',
+		label:'Guss'
+	    },
+	    {
+		hranice:17000,
+		trida:'pg4norma',
+		label:'NE'
+	    },
+	    {
+		hranice:75000,
+		trida:'celkemnorma',
+		label:'Sum'
+	    },
+	];
+	
+	graphGroup.append("path")
+	    .attr("class", "line_celkem")
+	    .attr("d", valueline_celkem(datumNestedArray))
+	    .on("mouseover",function(d){
+		graphGroup.selectAll('circle')
+		    .data(datumNestedArray)
+		    .enter()
+		    .append('circle')
+		    .attr("cx",function(d){ return x(Date.parse(d.key));})
+		    .attr("cy",function(d){ return y(+d.values[0].celkem);})
+		    .attr('r',8)
+		    .style('fill','lightyellow')
+		    .style('pointer-events','none') // nereagovat na udalosti mysi na vytvorenych krouzcich
+						    // pokud mam krouzky blizko u sebe, nereaguje mi totiz celkem_line
+		    .style('stroke','black');
+	    })
+	    .on("mouseout",function(d){
+		graphGroup.selectAll('circle')
+		.remove();
+	    });
+    
+    
+//	graphGroup.selectAll('circle')
+//		.data(datumNestedArray)
+//		.enter()
+//		.append('circle')
+//		.attr("cx",function(d){ return x(Date.parse(d.key));})
+//		.attr("cy",function(d){ return y(+d.values[0].celkem);})
+//		.attr('r',3);
+//	
+	graphGroup.append("path")
+	    .attr("class", "line_pg1")
+	    .attr("d", valueline_pg1(datumNestedArray));
+    
+	graphGroup.append("path")
+	    .attr("class", "line_pg4")
+	    .attr("d", valueline_pg4(datumNestedArray));
+
+	normy.forEach(function(element,index){
+	    //console.log(element);
+	    var pgnorma = [{x:0,y:y(element.hranice)},{x:graphWidth,y:y(element.hranice)}];
+	    var normapg = d3.svg.line()
+		.x(function(d) { return d.x; })
+		.y(function(d) { return d.y; })
+		.interpolate("linear");
+	
+	    graphGroup.append("path")
+		.attr("class", element.trida)
+		.attr("d", normapg(pgnorma));
+	
+	    graphGroup.append("text")
+	    // text label for the x axis
+//	    .attr("x", graphWidth )
+//	    .attr("y", y(element.hranice) )
+	    .attr("class", element.trida)
+	    .attr("dy", "1.2em")
+	    //.attr("transform", "rotate(-90)")
+	    .style("text-anchor", "middle")
+	    .style("fill", "true")
+	    .style("font-size", "10px")
+	    .attr("transform", "translate(" + graphWidth + "," + y(element.hranice) + ") rotate(-90)")
+	    .text(element.label+" "+element.hranice);
+
+	});
+
+//	var t = d3.select("body").transition();
+//	t.select('path.line_celkem')
+//		.duration(2000)
+//		.attr("d", valueline_celkem(datumNestedArray));
+	
 	// osy
-	var axisGroup = svg.append('g');
+	var xAxis = d3.svg.axis().scale(x)
+	    .orient("bottom")
+	    .tickFormat(d3.time.format('%y-%m-%d'))
+	    .tickSize(-graphHeight)
+	    .ticks(12);
+    
+    	var xAxisOffset = graphHeight+margin.top;
+	var xAxisNodes = svg.append("g")
+	// Add the X Axis
+	.attr("class", "x axis")
+	.attr("transform", "translate("  + margin.left + "," + xAxisOffset + ")")
+	.style("font-size", "10px")
+	.call(xAxis)
+	.selectAll("text")  // natoceni textu, aby se mi vesly nazvy mesicu
+	.style("text-anchor", "end")
+	.attr("dx", "-.8em")
+	.attr("dy", ".15em")
+	.attr("transform", "rotate(-65)");
 	
-	var scale = d3.scale
-		.linear()
-		.domain([maxValue,0])
-		.range([0,totalHeight-margin.top-margin.bottom]);
-	var axis = d3.svg.axis()
-		.orient('left')
-		.scale(scale);
-	var axisNodes = axisGroup.call(axis);
-	var domain = axisNodes.selectAll('.domain');
-	domain.attr({
+	xAxisNodes.selectAll('.domain')
+		.attr({
+			fill:'none',
+			'stroke-width':1,
+			stroke:'black'
+		});
+	var xTicks = xAxisNodes.selectAll('.tick line');
+	xTicks.attr({
+	    fill:'none',
+	    'stroke-width':1,
+	    stroke:'grey'
+	});
+	
+//	svg.append("text")
+//	    // text label for the x axis
+//	    .attr("x", margin.left + graphWidth/2 )
+//	    .attr("y", graphHeight + margin.bottom )
+//	    .attr("dy", "0.5em" )
+//	    //.attr("transform", "rotate(-45)")
+//	    .style("text-anchor", "middle")
+//	    .text("Datum");
+
+
+	var yAxis = d3.svg.axis().scale(y)
+	    .orient("left").ticks(10);
+	var yAxisOffset = margin.top;
+	var yAxisNodes = svg.append("g")
+	// Add the Y Axis
+	.attr("class", "y axis")
+	.attr("transform", "translate("  + margin.left + "," + yAxisOffset + ")")
+	.call(yAxis);
+	
+	yAxisNodes.selectAll('.domain')
+		.attr({
+			fill:'none',
+			'stroke-width':1,
+			stroke:'black'
+		});
+	var yTicks = yAxisNodes.selectAll('.tick line');
+	yTicks.attr({
 	    fill:'none',
 	    'stroke-width':1,
 	    stroke:'black'
 	});
-	var ticks = axisNodes.selectAll('.tick line');
-	ticks.attr({
-	    fill:'none',
-	    'stroke-width':1,
-	    stroke:'black'
-	});
-	axisGroup.attr('transform','translate('+margin.left+','+margin.top+')');
 	
-	var hodnoty_pg1 = [];
-	var hodnoty_pg4 = [];
-	var hodnoty_celkem = [];
-	var ticks = [];
-	for (var i = 0; i < pole.length; i++) {
-	    hodnoty_pg1[i]=parseInt(pole[pole.length-i-1].pg1);
-	    hodnoty_pg4[i]=parseInt(pole[pole.length-i-1].pg4);
-	    hodnoty_celkem[i]=parseInt(pole[pole.length-i-1].celkem);
-	    ticks[i]=i;
-	}
-	ticks[ticks.length]=ticks.length;
-	ticks[ticks.length+1]=ticks.length+1;
+	svg.append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", 0)
+	    .attr("x",0 - (graphHeight / 2))
+	    .attr("dy", "1em")
+	    .style("text-anchor", "middle")
+	    .text("VzKd");
 	
-	$.jqplot(
-		'myChart', 
-		[hodnoty_pg1,hodnoty_pg4,hodnoty_celkem],
-		{
-		    highlighter: {
-			show: true,
-			sizeAdjust: 7.5
-		    },
-		    cursor: {
-			show: false
-		    },
-		    seriesColors:["#4bb2c5", "#EAA228", "#c5b47f"],
-		    legend:{
-			show:true,
-			location: 'nw'
-		    },
-		    canvasOverlay:{
-			show:true,
-			objects:[
-			    {
-				dashedHorizontalLine:{
-				    name: 'KemperZiel',
-				    y: 17000,
-				    lineWidth:2,
-				    color:'#EAA228',
-				    shadow:true
-				}
-			    },
-			    {
-				dashedHorizontalLine:{
-				    name: 'SummeZiel',
-				    y: 75000,
-				    lineWidth:2,
-				    color:'#c5b47f',
-				    shadow:true
-				}
-			    },
-			    {
-				dashedHorizontalLine:{
-				    name: 'GussZiel',
-				    y: 58000,
-				    lineWidth:2,
-				    color:'#4bb2c5',
-				    shadow:true
-				}
-			    }
-			]
-		    },
-		    title:'',
-		    axesDefaults:{
-			labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-		    },
-		    series:[{label:"Guss"},{label:"NE"},{label:"Sum"}],
-		    seriesDefaults:{
-			rendererOptions:{
-			    animation: { 
-				show: false
-			    }
-			}
-		    },
-		    axes:{
-			xaxis:{
-			    label:'Tag in akt. Monat',
-			    min: 0,
-			    max:31,
-//			    ticks:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
-			    ticks:[0,5,10,15,20,25,31],
-			    tickOptions:{
-				formatString:"%d"
-			    },
-//			    numberTicks:31
-			},
-			yaxis:{
-			    label:'VzKd[min]',
-			    min: 0,
-			    ticks:[0,5000,10000,17000,25000,30000,40000,50000,58000,70000,75000,85000],
-			    tickOptions:{
-				formatString:"%d"
-			    },
-			    max:85000
-			}
-		    }
-		}
-	);
+	
     });
-});
+}

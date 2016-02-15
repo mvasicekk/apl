@@ -38,6 +38,7 @@ if (isset($_POST['eingeben'])) {
 	    $recipient .= ",lv@abydos.cz";
 	    $recipient .= ",ko@abydos.cz";
 	    $recipient .= ",msu@abydos.cz";
+	    $recipient .= ",lna@abydos.cz";
 	    
 	    
 	    $subject = "Einkaufaufforderung von $user ($artikel)";

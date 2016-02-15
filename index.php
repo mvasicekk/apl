@@ -58,7 +58,12 @@ $display_sec = array();
 $puser = $_SESSION['user'];
 if ($elementsIdArray !== NULL) {
     foreach ($elementsIdArray as $elementId) {
-	$display_sec[$elementId] = $apl->getDisplaySec('start', $elementId, $puser) ? 'inline-block' : 'none';
+	$show = 'inline-block';
+	//vyjimka pro branydiv
+	if($elementId=='branydiv'){
+	    $show = 'block';
+	}
+	$display_sec[$elementId] = $apl->getDisplaySec('start', $elementId, $puser) ? $show : 'none';
     }
 }
 $smarty->assign("display_sec", $display_sec);
@@ -117,6 +122,6 @@ $smarty->assign("tvFiles", $files);
 //zjistit seznam roli pro uzivatele
 require_once './assignsecurity.php';
 
-$smarty->display('index.tpl');
+$smarty->display('indexBS.tpl');
 ?>
 

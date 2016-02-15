@@ -21,15 +21,19 @@ $apl = AplDB::getInstance();
 $ar = 0;
 $user = get_user_pc();
 
+// pokud bude diky roli 
+// druhe pole obsahuje adresy pro vynechani v pripade, ze role nebo prvni pole adresu zahrnuji.
+
 $recipients = $apl->getRecipientsArray(
 	array(2,3,6),
 	array(
 	    "jr@abydos.cz",
-	    "hl@abydos.cz",
+	    //"hl@abydos.cz",
 	    "rk@abydos.cz",
 	    "gu@abydos.cz"),
 	array(
 	    "bb@abydos.cz",
+	    "hl@abydos.cz",
 	    "rb@abydos.cz",
 	    "ok@abydos.cz",
 	    "ne@abydos.cz")

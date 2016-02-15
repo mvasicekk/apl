@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('persstatApp',['ngSanitize','ui.select','ui.date','ngRoute','smart-table','aplFilters','ui.bootstrap']);
+var aplApp = angular.module('persstatApp',['ja.qr','ngSanitize','ui.select','ui.date','ngRoute','smart-table','aplFilters','ui.bootstrap']);
 
 aplApp.config(['$routeProvider',
     function($routeProvider){

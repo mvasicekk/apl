@@ -7,6 +7,39 @@
 <!--    <div>
 	{{showGroups|json}}
     </div>-->
+<div class="row">
+    <div class="col-md-6">
+    <table class="table table-bordered table-condensed table-striped">
+	<thead>
+	    <tr>
+		<th>kunde</th>
+		<th>bereich <input ng-model="krsearch.bereich"></th>
+		<th>grenze</th>
+		<th>interval monate</th>
+		<th>bewertung</th>
+		<th>czk</th>
+	    </tr>
+	</thead>
+	<tbody>
+	    <tr ng-repeat="kriterium in BewertungKriteria|filter:krsearch">
+		<td>{{kriterium.kunde}}</td>
+		<td>{{kriterium.bereich}}</td>
+		<td><input type="text" class="form-control" ng-model="kriterium.grenze"  ng-change="kriteriaChanged(kriterium,kriterium.grenze);"/></td>
+		<td>{{kriterium.interval_monate}}</td>
+		<td>{{kriterium.bewertung}}</td>
+		<td></td>
+	    </tr>
+	</tbody>
+    </table> 
+    </div>
+    <div class="col-md-6">
+	<div>
+	    <input type="text" ng-model="hodnota" />
+	    <p>{{getBewertungKriterium(hodnota,100,'q_auss',1)|json}}</p>
+	</div>
+    </div>
+</div>
+
     <table id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class="no-print">
@@ -23,6 +56,11 @@
 		    <div ng-repeat="group in groups" class="checkbox-inline">
 		    <label class="checkbox-inline">
 			<input ng-model="showGroups[group].show" type="checkbox">{{group}}
+		    </label>
+		    </div>
+		    <div class="checkbox-inline">
+		    <label class="checkbox-inline">
+			<input ng-model="showQR" type="checkbox">QR
 		    </label>
 		    </div>
 		    </div>
@@ -48,8 +86,9 @@
 	    <tr class="{{r.group}}" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
 		
 		<!--persheader---------------------------------------------- -->
-		<td class="{{r.section}}" ng-if="r.section=='persheader'">
+		<td class="{{r.section}}" ng-init="qrText=r.persnr+'\n'+r.name;" ng-if="r.section=='persheader'">
 		    {{r.persnr}}
+		    <qr text="r.persnr+' '+'nejaky jmeno'" size='100' ng-if='showQR'></qr>
 		</td>
 		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length + 1}}">
 		    {{r.name}} ( {{r.regeloe}} )
@@ -72,7 +111,7 @@
 		    </span>
 		</td>
 		<!--suma-->
-		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
+		<td class="{{r.section}} text-right sumcolumn" id="row_{{zeilenIndex}}_sum" style="cursor: pointer;" ng-click="monthValueClicked($event,r)" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
 		    {{r.monthValues.sum}}
 		</td>
 		<!--czk / koef-->

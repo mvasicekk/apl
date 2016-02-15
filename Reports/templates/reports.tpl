@@ -80,7 +80,7 @@
 		    </div>
 
 		    <div id='rs_S190' style="display:{$display_sec.rs_S190}">
-			<input id="S190" onClick="location.href='../get_parameters.php?popisky=Persnr von;Persnr bis;Datum von,*DATE;Datum bis,*DATE;AmNr;OE;Benutzer;Reporttyp,*RA&promenne=persnrvon!number;persnrbis!number;datumvon;datumbis;amnr;oe;benutzer;reporttyp&values=1;99999;;;*;*;*;summe,detail,sort lt.og-oe&report=S190'" class='reportbutton' type="button"  name="S190" value="S190 - Arbeitsmittelausgabe"/>	
+			<input id="S190" onClick="location.href='../get_parameters.php?popisky=Persnr von;Persnr bis;Datum von,*DATE;Datum bis,*DATE;AmNr;OE;Benutzer;Bemerkung;Reporttyp,*RA&promenne=persnrvon!number;persnrbis!number;datumvon;datumbis;amnr;oe;benutzer;bemerkung;reporttyp&values=1;99999;;;*;*;*;*;summe,detail,sort lt.og-oe&report=S190'" class='reportbutton' type="button"  name="S190" value="S190 - Arbeitsmittelausgabe"/>	
 		    </div>
 		    
 		    <div id='rs_S2XX' style="display:{$display_sec.rs_S2XX}">

@@ -80,6 +80,8 @@ $sql.=" where (dambew.`PersNr` between '$persnrvon' and '$persnrbis') and (dambe
 //$sql.=" where (dambew.`PersNr` between '$persnrvon' and '$persnrbis') and (dambew.`Datum` between '$datumvon' and '$datumbis') and (amnr_typ=1) and (dambew.amnr>100000)";
 if(strlen($amnr)>0)
     $sql.=" and (dambew.amnr like '$amnr')";
+if(strlen($bemerkung)>0)
+    $sql.=" and (dambew.bemerkung like '$bemerkung')";
 if(strlen($benutzer)>0)
     $sql.=" and (dambew.comp_user_accessuser like '$benutzer')";
 if(strlen($oeWhere)>0)

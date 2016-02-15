@@ -250,26 +250,45 @@
 		</div>
 	    
 			   
-		<div class="row">
+		{*<div class="row">
 		    <div class="col-xs-12">
 	    		<div id="myChart"></div>
 		    </div>
-		</div>	    
-			    
+		</div>	    *}
+		
 		<div class="row">
 		    <div class="col-xs-12">
 			<div id="svgChart">
-			    <svg width="100%" height="300" style="border:1px solid black;">
+			    <svg width="100%" height="400" style="">
 			    
 			    </svg>
 			</div>
 		    </div>
-		</div>	    
+		</div>	   
+		<div class="row" id="option">
+		    <div class="btn-group btn-group-sm btn-group-justified" role="group" aria-label="...">
+			<div class="btn-group" role="group">
+			    <button class="btn btn-info" value="week" onclick="updateData(7)">Week</button>
+			</div>
+			<div class="btn-group" role="group">
+			    <button class="btn btn-info" value="month" onclick="updateData(31)" >Month</button>
+			</div>
+			<div class="btn-group" role="group">
+			    <button class="btn btn-info" value="120 days" onclick="updateData(120)" >120 days</button>
+			</div>
+			<div class="btn-group" role="group">
+			    <button class="btn btn-info" value="year" onclick="updateData(365)" >Year</button>
+			</div>
+			<div class="btn-group" role="group">
+			    <button class="btn btn-info" value="year" onclick="updateData(730)" >2 Years</button>
+			</div>
+		    </div>
+		</div>
 	    </div>
             {else}
 		<div class="row">
 	    <div class="container-fluid col-md-6 col-md-offset-3">
-		<form action="indexBS.php" method="post" id="logintable" class="loginform">
+		<form action="index.php" method="post" id="logintable" class="loginform">
 		<div class="panel panel-default">
 		    <div class="panel-heading" >Anmelden / Přihlásit se</div>
 		    <div class="panel-body ">

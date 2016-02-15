@@ -199,6 +199,11 @@ foreach ($persnrArray as $p) {
 	    } else {
 		$zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = 0;
 	    }
+	    
+	    //vyhodnoceni pomoci kriterii
+	    $value = $zeilen[$persnr]['A6']['a6_prozent'][$yearMonth];
+	    $bew = $a->getBewertungKriterium(100,'q_auss',$value,'bis',$yearMonth,1);
+	    $zeilen[$persnr]['A6']['bewertung'][$yearMonth] = $bew;
 	}
     }
     
@@ -231,10 +236,25 @@ foreach ($persnrArray as $p) {
 	    $ie = strtoupper(substr($pr['rekl_nr'], 0,1));
 	    if($ie=='I'){
 		$zeilen[$persnr]['rekl']['sum_bewertung_I'][$yearMonth]+=$pr['interne_bewertung'];
+		$zeilen[$persnr]['rekl']['bewertung_I'][$yearMonth] = 0;
 	    }
 	    if($ie=='E'){
 		$zeilen[$persnr]['rekl']['sum_bewertung_E'][$yearMonth]+=$pr['interne_bewertung'];
+		$zeilen[$persnr]['rekl']['bewertung_E'][$yearMonth] = 0;
 	    }
+	}
+	//projit vsechny mesice pro vyhodnoceni kriterii
+	$monthsArray = array_keys($monthsArrayAll);
+	sort($monthsArray);
+	foreach ($monthsArray as $yearMonth) {
+	    //vyhodnoceni pomoci kriterii I
+	    $value = $zeilen[$persnr]['rekl']['sum_bewertung_I'][$yearMonth];
+	    $bew = $a->getBewertungKriterium(100, 'q_reklamationen', $value, 'bis', $yearMonth, 1);
+	    $zeilen[$persnr]['rekl']['bewertung_I'][$yearMonth] = $bew;
+	    //vyhodnoceni pomoci kriterii E
+	    $value = $zeilen[$persnr]['rekl']['sum_bewertung_E'][$yearMonth];
+	    $bew = $a->getBewertungKriterium(100, 'q_reklamationen', $value, 'bis', $yearMonth, 1);
+	    $zeilen[$persnr]['rekl']['bewertung_E'][$yearMonth] = $bew;
 	}
     }
     
@@ -445,6 +465,10 @@ foreach ($persnrArray as $p) {
 //	    $zeilen[$persnr]['HF_repkosten']['vzkd_S0051'][$yearMonth] = $vzkd_S0051!=0?number_format($vzkd_S0051,0,',',' '):'';
 //	    $zeilen[$persnr]['HF_repkosten']['vzkd_sum'][$yearMonth] = $vzkd_sum!=0?number_format($vzkd_sum,0,',',' '):'';
 	    $zeilen[$persnr]['HF_repkosten']['faktor'][$yearMonth] = $vzkd_sum!=0?$repKosten/$vzkd_sum:0;
+	    //vyhodnoceni pomoci kriterii
+	    $value = floatval(round($zeilen[$persnr]['HF_repkosten']['faktor'][$yearMonth],2));
+	    $bew = $a->getBewertungKriterium(100, 'q_reparaturen', $value, 'bis', $yearMonth, 1);
+	    $zeilen[$persnr]['HF_repkosten']['bewertung'][$yearMonth] = $bew;
 	}
 
     }
@@ -462,13 +486,31 @@ foreach ($persnrArray as $p) {
     $zeilen[$persnr]['A6']['sum_gew']['sum'] = getSumRow($zeilen[$persnr]['A6']['sum_gew']);
     $zeilen[$persnr]['A6']['a6_gew']['sum'] = getSumRow($zeilen[$persnr]['A6']['a6_gew']);
     $zeilen[$persnr]['A6']['a6_prozent']['sum'] = $zeilen[$persnr]['A6']['sum_gew']['sum']!=0?$zeilen[$persnr]['A6']['a6_gew']['sum']/$zeilen[$persnr]['A6']['sum_gew']['sum']*100:0;
+    // kriteria
+    $value = $zeilen[$persnr]['A6']['a6_prozent']['sum'];
+    $yearMonth = substr($datumBis, 2, 5); // z 2015-12-31 vyberu 15-12
+    $bew = $a->getBewertungKriterium(100,'q_auss',$value,'bis',$yearMonth,1);
+    $zeilen[$persnr]['A6']['bewertung']['sum'] = $bew;
+    
     // jen kdy mam nejakou reklamaci
     if(is_array($zeilen[$persnr]['rekl']['sum_bewertung_I'])){
 	$zeilen[$persnr]['rekl']['sum_bewertung_I']['sum'] = getSumRow($zeilen[$persnr]['rekl']['sum_bewertung_I']);
     }
+    // kriteria i kdyz nemam zadne reklamace
+    $value = $zeilen[$persnr]['rekl']['sum_bewertung_I']['sum'];
+    $yearMonth = substr($datumBis, 2, 5); // z 2015-12-31 vyberu 15-12
+    $bew = $a->getBewertungKriterium(100,'q_reklamationen',$value,'bis',$yearMonth,12);
+    $zeilen[$persnr]['rekl']['bewertung_I']['sum'] = $bew;
+    
     if(is_array($zeilen[$persnr]['rekl']['sum_bewertung_E'])){
 	$zeilen[$persnr]['rekl']['sum_bewertung_E']['sum'] = getSumRow($zeilen[$persnr]['rekl']['sum_bewertung_E']);
     }
+    // kriteria i kdyz nemam zadne reklamace
+    $value = $zeilen[$persnr]['rekl']['sum_bewertung_E']['sum'];
+    $yearMonth = substr($datumBis, 2, 5); // z 2015-12-31 vyberu 15-12
+    $bew = $a->getBewertungKriterium(100,'q_reklamationen',$value,'bis',$yearMonth,12);
+    $zeilen[$persnr]['rekl']['bewertung_E']['sum'] = $bew;
+    
     
     if(is_array($zeilen[$persnr]['dzeit'])){
 	foreach ($zeilen[$persnr]['dzeit'] as $tat=>$t){
@@ -517,6 +559,12 @@ foreach ($persnrArray as $p) {
     $zeilen[$persnr]['HF_repkosten']['vzkd_S0051']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_S0051']);
     $zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['vzkd_sum']);
     $zeilen[$persnr]['HF_repkosten']['faktor']['sum'] = $zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum']!=0?$zeilen[$persnr]['HF_repkosten']['repkosten']['sum']/$zeilen[$persnr]['HF_repkosten']['vzkd_sum']['sum']:0;
+    
+    //vyhodnoceni pomoci kriterii
+    $value = floatval(round($zeilen[$persnr]['HF_repkosten']['faktor']['sum'],2));
+    $yearMonth = substr($datumBis, 2, 5); // z 2015-12-31 vyberu 15-12
+    $bew = $a->getBewertungKriterium(100, 'q_reparaturen', $value, 'bis', $yearMonth, 12);
+    $zeilen[$persnr]['HF_repkosten']['bewertung']['sum'] = $bew;
     
     // celkova sum CZK pro osobu
     // nasobit koeficientem za loajalitu podle let
