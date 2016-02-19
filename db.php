@@ -1941,6 +1941,16 @@ public function istExportiert($import, $impal){
 
     /**
      * 
+     * @param type $id
+     * @param type $field
+     * @param type $value
+     */
+    public function updateBewertungKriteriaField($id,$field,$value){
+	$sql = "update bewertung_kriteria set `$field`='$value' where id='$id' limit 1";
+	return $this->query($sql);
+    }
+    /**
+     * 
      * @param type $field
      * @param type $value
      * @param type $id

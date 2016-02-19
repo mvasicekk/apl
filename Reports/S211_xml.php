@@ -33,9 +33,11 @@ $sql.=" join dksd";
 $sql.=" on (daufkopf.kunde=dksd.kunde)";
 $sql.=" left join  drueck";
 $sql.=" on  ((dauftr.auftragsnr=drueck.auftragsnr) and (dauftr.teil=drueck.teil)  and  (dauftr.`pos-pal-nr`=drueck.`pos-pal-nr`))";
-$sql.=" left join dpos on (dpos.teil=drueck.teil) and (dpos.`taetnr-aby`=drueck.taetnr)";
+//2016-02-17 zbytecne spojeni na dpos, v pripade zvojenych operaci v dpos s potom zdvojuji i kusy s S211
+//$sql.=" left join dpos on (dpos.teil=drueck.teil) and (dpos.`taetnr-aby`=drueck.taetnr)";
 $sql.=" where ((`auftragsnr-exp`='".$export."' )  and  (dauftr.kzgut='G') and (drueck.taetnr is not null) and (drueck.taetnr between $tatvon and $tatbis))";
-$sql.=" group by daufkopf.kunde,dauftr.`auftragsnr-exp`, dauftr.teil,dauftr.auftragsnr, drueck.taetnr,dpos.kzgut";
+//2016-02-17
+$sql.=" group by daufkopf.kunde,dauftr.`auftragsnr-exp`, dauftr.teil,dauftr.auftragsnr, drueck.taetnr";//,dpos.kzgut";
 
 //echo "sql=$sql"."<br>";
 

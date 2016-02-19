@@ -7,50 +7,23 @@
 <!--    <div>
 	{{showGroups|json}}
     </div>-->
-<div class="row">
-    <div class="col-md-6">
-    <table class="table table-bordered table-condensed table-striped">
-	<thead>
-	    <tr>
-		<th>kunde</th>
-		<th>bereich <input ng-model="krsearch.bereich"></th>
-		<th>grenze</th>
-		<th>interval monate</th>
-		<th>bewertung</th>
-		<th>czk</th>
-	    </tr>
-	</thead>
-	<tbody>
-	    <tr ng-repeat="kriterium in BewertungKriteria|filter:krsearch">
-		<td>{{kriterium.kunde}}</td>
-		<td>{{kriterium.bereich}}</td>
-		<td><input type="text" class="form-control" ng-model="kriterium.grenze"  ng-change="kriteriaChanged(kriterium,kriterium.grenze);"/></td>
-		<td>{{kriterium.interval_monate}}</td>
-		<td>{{kriterium.bewertung}}</td>
-		<td></td>
-	    </tr>
-	</tbody>
-    </table> 
-    </div>
-    <div class="col-md-6">
-	<div>
-	    <input type="text" ng-model="hodnota" />
-	    <p>{{getBewertungKriterium(hodnota,100,'q_auss',1)|json}}</p>
-	</div>
-    </div>
-</div>
 
+<div class="row">
+    <div class="col-xs-12">
     <table id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover">
 	<thead>
 	    <tr class="no-print">
 		<th style="" colspan="{{1}}">
-		    <input tabindex="1" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persVon" placeholder="PersNr von" type="text"/>
-		    <input tabindex="2" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persBis" placeholder="PersNr bis" type="text"/>
+		    <input tabindex="1" ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
+		    <input tabindex="2" ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
 		</th>
+		
 		<th style="" colspan="{{1}}">
-		    <input ng-model="datumVon" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="von Datum">
-		    <input ng-model="datumBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="bis Datum">
+		    <input tabindex="3" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persVon" placeholder="PersNr von" type="text"/>
+		    <input tabindex="4" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persBis" placeholder="PersNr bis" type="text"/>
+		    <input tabindex="5" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="stammOE" placeholder="stammOE" type="text"/>
 		</th>
+		
 		<th colspan="{{monthsArray.length + 2}}">
 		    <div>
 		    <div ng-repeat="group in groups" class="checkbox-inline">
@@ -72,7 +45,7 @@
 		<th style="width:8em;">Name</th>
 		<th ng-repeat="month in monthsArray" class="text-center">{{month}}</th>
 		<th class="text-right">Sum</th>
-		<th class="text-right">CZK / Koef</th>
+		<!--<th class="text-right">CZK / Koef</th>-->
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -84,18 +57,22 @@
 	</tbody>
 	<tbody>
 	    <tr class="{{r.group}}" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+
 		
 		<!--persheader---------------------------------------------- -->
 		<td class="{{r.section}}" ng-init="qrText=r.persnr+'\n'+r.name;" ng-if="r.section=='persheader'">
 		    {{r.persnr}}
 		    <qr text="r.persnr+' '+'nejaky jmeno'" size='100' ng-if='showQR'></qr>
 		</td>
-		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="{{1 + monthsArray.length + 1}}">
-		    {{r.name}} ( {{r.regeloe}} )
+		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="1">
+		    {{r.name}}<br>{{r.regeloe}}
 		</td>
-		<td class="{{r.section}} text-right" ng-if="r.section=='persheader'" >
+		<td class="{{r.section}} text-right" ng-if="r.section=='persheader'"  ng-repeat="(prop,val) in r.monthValues">
+		    {{val}}
+		</td>
+<!--		<td class="{{r.section}} text-right" ng-if="r.section=='persheader'" >
 		    {{r.sumPremieCZK}}CZK
-		</td>
+		</td>-->
 		
 		
 		<!--groupdetail--------------------------------------------- -->
@@ -115,9 +92,31 @@
 		    {{r.monthValues.sum}}
 		</td>
 		<!--czk / koef-->
-		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
+<!--		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='groupdetail' && showGroups[r.group].show">
 		    {{r.monthValues.czk}}
+		</td>-->
+
+		<!--summebetrag--------------------------------------------- -->
+		<td class="{{r.section}}" ng-if="r.section=='summebetrag'">
+		    Summe {{r.group}}
 		</td>
+		<td class="{{r.section}}" ng-if="r.section=='summebetrag'">
+		    {{r.groupDetail}}
+		</td>
+		<td ng-repeat="mo in monthsArray" class="{{r.section}} text-right" ng-if="r.section=='summebetrag'">
+		    <span id="row_{{zeilenIndex}}_{{mo}}" style="cursor: pointer;" ng-click="monthValueClicked($event,r)" ng-if="r.monthValues.hasOwnProperty(mo)">
+			{{r.monthValues[mo]}}
+		    </span>
+		</td>
+		<!--suma-->
+		<td class="{{r.section}} text-right sumcolumn" id="row_{{zeilenIndex}}_sum" style="cursor: pointer;" ng-click="monthValueClicked($event,r)" ng-if="r.section=='summebetrag'">
+		    {{r.monthValues.sum}}
+		</td>
+		<!--czk / koef-->
+<!--		<td class="{{r.section}} text-right sumcolumn" ng-if="r.section=='summebetrag'">
+		    
+		</td>-->
+		
 	    </tr>
 	</tbody>
 	
@@ -129,4 +128,51 @@
 	    </tr>-->
 	</tfoot>
     </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+    <table class="table table-bordered table-condensed table-striped kriteriatable" ng-init="krsearch.bereich='x'">
+	<thead>
+	    <tr>
+		<th>kunde</th>
+		<th>bereich <input  class="form-control" ng-model="krsearch.bereich" /></th>
+		<th class="text-right">grenze</th>
+		<th class="text-right">interval monate</th>
+		<th class="text-right">bewertung <input  size="1" class="form-control text-right" ng-model="krsearch.bewertung" /></th>
+		<th>czk</th>
+		<th class="text-center">stammOE</th>
+	    </tr>
+	</thead>
+	<tbody>
+	    <tr ng-repeat="kriterium in BewertungKriteria|filter:krsearch">
+		<td>{{kriterium.kunde}}</td>
+		<td>{{kriterium.bereich}}</td>
+		<td><input type="text" class="form-control text-right" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="kriterium.grenze"  ng-change="kriteriaChanged(kriterium,kriterium.grenze,'grenze')"/></td>
+		<td class="text-right">{{kriterium.interval_monate}}</td>
+		<td class="text-right">{{kriterium.bewertung}}</td>
+		<td><input type="text" class="form-control text-right" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}"  ng-model="kriterium.betrag"  ng-change="kriteriaChanged(kriterium,kriterium.betrag,'betrag')"/></td>
+		<td><input type="text" class="form-control text-center" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}"  ng-model="kriterium.oe"  ng-change="kriteriaChanged(kriterium,kriterium.oe,'oe')"/></td>
+	    </tr>
+	</tbody>
+    </table> 
+    </div>
+    <div class="col-md-5">
+	<table class="table table-bordered table-condensed table-striped">
+	    <thead>
+		<tr>
+		    <th>bereich</th>
+		    <th class="text-right">summe jahr</th>
+		</tr>
+	    </thead>
+	    <tbody>
+		<tr ng-repeat="(prop,val) in betragSumme" class="{{val.group}}">
+		    <td>{{prop}}</td>
+		    <td class="text-right">{{val.monthValues.sum}}</td>
+		</tr>
+	    </tbody>
+	</table>
+    </div>
+</div>
 </div>
