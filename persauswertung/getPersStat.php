@@ -342,9 +342,11 @@ foreach ($persnrArray as $p) {
     $sql = " select";
     $sql.= " dzeit.PersNr as persnr,";
     $sql.= " dzeit.tat,";
+    $sql.= " dtattypen.oestatus,";
     $sql.= " dzeit.Datum as datum";
     $sql.= " from";
     $sql.= " dzeit";
+    $sql.= " join dtattypen on dtattypen.tat=dzeit.tat";
     $sql.= " where";
     $sql.= " dzeit.persnr='$persnr'";
     $sql.= " and dzeit.datum between '$datumVon' and '$datumBis'";
@@ -609,7 +611,7 @@ foreach ($persnrArray as $p) {
     }
     $sumPremieCZK[$persnr]+=$bezZCZK;
     
-    $zeilen[$persnr]['dzeit']['z']['czk'] = number_format($bezZCZK,0,',',' ')."CZK";
+    //$zeilen[$persnr]['dzeit']['z']['czk'] = number_format($bezZCZK,0,',',' ')."CZK";
     
     
     $zeilen[$persnr]['leistung']['vzaby_akkord']['sum'] = getSumRow($zeilen[$persnr]['leistung']['vzaby_akkord']);

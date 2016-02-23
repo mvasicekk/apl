@@ -24,6 +24,8 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
     ];
     $scope.betragSumme = {};
     $scope.personalSumme = {};
+    $scope.gesamtPersonalSumme = {};
+    $scope.zeilenraw = {};
 
     /**
      * 
@@ -64,6 +66,47 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		}
 	    }
 	});
+	
+	//budou nasledovat multiplikatory pro z, 60% anwesenheit, leistungsgrad
+	for(persnr in sumObj){
+	    // z, pro vybrane persnr vyfiltruju radek s hodnotami, pouzilo zeilenraw pro jednodussi pristup
+	    if($scope.zeilenraw.hasOwnProperty(persnr)){
+		// zetka
+		var zetka = $scope.zeilenraw[persnr].dzeit.z;
+		//console.log('persnr='+persnr+', zetka=');
+		//console.log(zetka);
+		for(mesic in zetka){
+		    var pocetZ = zetka[mesic];
+		    var inter = mesic=='sum'?12:1;
+		    var kriterium = $scope.getBewertungKriterium(pocetZ,100,'dzeit_z',inter,'abcd');
+		    console.log(kriterium);
+		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
+		    sumObj[persnr].monthValues[mesic] *= multi;
+		}
+		
+		//nasobeni leistungfaktorem
+		var leistFaktoren = $scope.zeilenraw[persnr].leistung.leistGrad;
+		for(mesic in leistFaktoren){
+		    var faktor = parseFloat(leistFaktoren[mesic]);
+		    faktor = isNaN(faktor)?0:faktor;
+		    var multi = faktor/100;
+		    sumObj[persnr].monthValues[mesic] *= multi;
+		    sumObj[persnr].monthValues[mesic] = Math.round(sumObj[persnr].monthValues[mesic]);
+		}
+	    }
+	}
+	// aktualizuju celkovou sumu pres vsechny persnr
+	$scope.gesamtPersonalSumme = {};
+	for(persnr in sumObj){
+	    for(mi in sumObj[persnr].monthValues){
+		if(!$scope.gesamtPersonalSumme.hasOwnProperty(mi)){
+		    $scope.gesamtPersonalSumme[mi] = 0;
+		}
+		$scope.gesamtPersonalSumme[mi] += sumObj[persnr].monthValues[mi];
+	    }
+	}
+	console.log('gesamtPersonalSumme=');
+	console.log($scope.gesamtPersonalSumme);
 	return sumObj;
     }
     /**
@@ -256,6 +299,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
      * @returns {controllers_L9.$scope.getBewertungKriterium.kriteriumsArray}
      */
     $scope.getBewertungKriterium = function(v,kunde,bereich,interval,oe){
+	//console.log('getbewertung kriterium v='+v,'bereich='+bereich);
 	if(isNaN(v)){
 	    return null;
 	}
@@ -282,9 +326,11 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		});
 		// mam radek
 		var krit = kriteriumsArray[0];
-		//console.log(krit.oe);
+		//console.log('oe='+oe);
 		var re = new RegExp(krit.oe,"gi");
-		//console.log(re);
+		//console.log('re='+re);
+		var res = oe.match(re);
+		//console.log('match='+res);
 		if(oe.match(re)!==null){
 		    return kriteriumsArray[0];
 		}
@@ -394,6 +440,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;
+			$scope.zeilenraw = data.zeilenraw;
 			
 			var betragSummen = {};
 			
@@ -516,6 +563,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 					};
 			    $scope.zeilen.splice($scope.zeilen.length,0,zeileToInsert);
 			}
+			
 			
 			$scope.groups = data.groups;
 			$scope.monthsArray = data.monthsArray;

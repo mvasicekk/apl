@@ -44,8 +44,17 @@
 		<th style="width:4em;">PersNr</th>
 		<th style="width:8em;">Name</th>
 		<th ng-repeat="month in monthsArray" class="text-center">{{month}}</th>
-		<th class="text-right">Sum</th>
+		<th class="text-right">Jahr</th>
 		<!--<th class="text-right">CZK / Koef</th>-->
+	    </tr>
+	    <tr>
+		<th colspan="2">Gesamt Pers Praemien</th>
+		<th ng-repeat="month in monthsArray" class="text-right">
+		    {{gesamtPersonalSumme[month]}}
+		</th>
+		<th class="text-right">
+		    {{gesamtPersonalSumme['sum']}}
+		</th>
 	    </tr>
 	</thead>
 	<tbody ng-if="zeilen===null">
@@ -132,7 +141,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-12">
     <table class="table table-bordered table-condensed table-striped kriteriatable" ng-init="krsearch.bereich='x'">
 	<thead>
 	    <tr>
@@ -158,7 +167,7 @@
 	</tbody>
     </table> 
     </div>
-    <div class="col-md-5">
+<!--    <div class="col-md-5">
 	<table class="table table-bordered table-condensed table-striped">
 	    <thead>
 		<tr>
@@ -173,6 +182,6 @@
 		</tr>
 	    </tbody>
 	</table>
-    </div>
+    </div>-->
 </div>
 </div>
