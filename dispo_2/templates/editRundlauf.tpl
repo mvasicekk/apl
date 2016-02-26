@@ -15,6 +15,8 @@
 	{*	<link rel="stylesheet" href="../styl_common.css" type="text/css">*}
 
 	{*	Handsontable files*}
+	<script src="../libs/bower_components/numeral/numeral.js"></script>
+	<script src="../libs/bower_components/numeral/languages.js"></script>
 	<script src="../libs/moment/moment.js"></script>
 	<script src="../libs/pikaday/pikaday.js"></script>
 	<link rel="stylesheet" media="screen" href="../libs/pikaday/css/pikaday.css">

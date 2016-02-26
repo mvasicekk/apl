@@ -72,7 +72,7 @@ $(document).ready(function () {
 	    {data: 'fahrername'},
 	    {data: 'lkw_kz'},
 	    {data: 'naves_kz'},
-	    {data: 'preis', type: 'numeric', allowInvalid: false},
+	    {data: 'preis', type:'numeric',format:'0.00',language:'cs',allowInvalid: true},
 	    {data: 'rabatt', type: 'numeric', allowInvalid: false},
 	    {data: 'proforma'},
 	    {data: 'archiv', type: 'numeric', allowInvalid: false},
@@ -176,7 +176,24 @@ $(document).ready(function () {
 
 });
 
-
+numeral.language('cs', {
+    delimiters: {
+        thousands: ' ',
+        decimal: ','
+    },
+    abbreviations: {
+        thousand: 'tis',
+        million: 'mil',
+        billion: 'mld',
+        trillion: 'tri'
+    },
+    ordinal : function (number) {
+        return number === 1 ? 'ni' : 'ème';
+    },
+    currency: {
+        symbol: 'czk'
+    }
+});
 /**
  * 
  * @param {type} data

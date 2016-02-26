@@ -38,6 +38,8 @@
     <script src="./bower_components/qrcode/lib/qrcode.min.js"></script>
     <script src="./bower_components/angular-qr/angular-qr.min.js"></script>
     
+    <script src="../libs/bower_components/ng-csv/build/ng-csv.min.js"></script>
+    
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
     <script src="../js/filters.js"></script>

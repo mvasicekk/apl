@@ -45,8 +45,10 @@ function getKoefYears($mesicu){
 function getSumRow($a) {
     $sum = 0;
     if (is_array($a)) {
-	foreach ($a as $val) {
-	    $sum+=$val;
+	foreach ($a as $key=>$val) {
+	    if($key!='sum'){
+		$sum+=$val;
+	    }
 	}
     }
     return $sum;
@@ -118,6 +120,8 @@ $sql="select dpers.PersNr as persnr from dpers where (PersNr between '$persVon' 
 if((strlen($stammOE)>0) && ($stammOE!='%')){
     $sql.=" and dpers.regeloe like '%$stammOE%'";
 }
+$sql.=" order by dpers.persnr";
+
 $persnrArray = $a->getQueryRows($sql);
 if($persnrArray!==NULL){
 foreach ($persnrArray as $p) {
@@ -343,7 +347,8 @@ foreach ($persnrArray as $p) {
     $sql.= " dzeit.PersNr as persnr,";
     $sql.= " dzeit.tat,";
     $sql.= " dtattypen.oestatus,";
-    $sql.= " dzeit.Datum as datum";
+    $sql.= " dzeit.Datum as datum,";
+    $sql.=" sum(if(dtattypen.oestatus='a',dzeit.stunden,0)) as sum_stundena";
     $sql.= " from";
     $sql.= " dzeit";
     $sql.= " join dtattypen on dtattypen.tat=dzeit.tat";
@@ -364,11 +369,22 @@ foreach ($persnrArray as $p) {
 	    $yearMonth = date('y-m', strtotime($datum));
 	    $monthsArray[$yearMonth]+=1;
 	    
+	    $zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] += $pr['sum_stundena'];
+	    
 	    if($pr['tat']=='n' || $pr['tat']=='z'|| $pr['tat']=='d'|| $pr['tat']=='nw'|| $pr['tat']=='nv'){
 		// nacitat jen ty, ktere me zajimaji
 		$zeilen[$persnr]['dzeit'][$pr['tat']][$yearMonth]+=1;
 	    }
 	}
+    }
+    foreach ($monthsArrayAll as $yearMonth=>$dayCount){
+	$year = 2000 + intval(substr($yearMonth, 0, 2));
+	$month = intval(substr($yearMonth, 3));
+	$von = "$year-$month-01";
+	$bis = "$year-$month-$dayCount";
+	$arbTageProMonat = $a->getArbTageBetweenDatums($von, $bis);
+	$zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth] = $arbTageProMonat*8;
+	$zeilen[$persnr]['dzeit']['anw_prozent'][$yearMonth] = $zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth]!=0?$zeilen[$persnr]['dzeit']['anwstd'][$yearMonth]/$zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth]*100:0;
     }
     
     // leistung ----------------------------------------------------------------
@@ -597,6 +613,8 @@ foreach ($persnrArray as $p) {
 	}
     }
 
+    $zeilen[$persnr]['dzeit']['anw_prozent']['sum'] = $zeilen[$persnr]['dzeit']['astunden_fond']['sum']!=0?$zeilen[$persnr]['dzeit']['anwstd']['sum']/$zeilen[$persnr]['dzeit']['astunden_fond']['sum']*100:0;
+    $zeilen[$persnr]['dzeit']['astunden_fond']['sum'] = getSumRow($zeilen[$persnr]['dzeit']['astunden_fond']);
     
     
     // spocitat sumy pro mesice
@@ -647,6 +665,9 @@ foreach ($persnrArray as $p) {
     formatRowValues($zeilen[$persnr]['nacharbeit']['vzaby_65xx'],0,',',' ');
     formatRowValues($zeilen[$persnr]['nacharbeit']['vzkd'],0,',',' ');
     formatRowValues($zeilen[$persnr]['nacharbeit']['faktor'],2,',',' ',TRUE);
+    
+    
+    formatRowValues($zeilen[$persnr]['dzeit']['anw_prozent'],2,',',' ',TRUE);
     
     formatRowValues($zeilen[$persnr]['leistung']['vzaby_akkord'],0,',',' ');
     formatRowValues($zeilen[$persnr]['leistung']['vzaby_zeit'],0,',',' ');

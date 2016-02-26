@@ -38,6 +38,7 @@
 		    </div>
 		    </div>
 		    <button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
+		    <button class="btn btn-primary no-print" type="button" cvs-header="csvheader" ng-csv="getZeilenCsv()" csv-label="true" filename="persauswertung.csv">Ex CSV (zatim nefunguje)</button>
 		</th>
 	    </tr>
 	    <tr>
@@ -150,8 +151,9 @@
 		<th class="text-right">grenze</th>
 		<th class="text-right">interval monate</th>
 		<th class="text-right">bewertung <input  size="1" class="form-control text-right" ng-model="krsearch.bewertung" /></th>
-		<th>czk</th>
+		<th>czk / multiplikator</th>
 		<th class="text-center">stammOE</th>
+		<th class="text-center">bis/von/multi</th>
 	    </tr>
 	</thead>
 	<tbody>
@@ -163,6 +165,7 @@
 		<td class="text-right">{{kriterium.bewertung}}</td>
 		<td><input type="text" class="form-control text-right" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}"  ng-model="kriterium.betrag"  ng-change="kriteriaChanged(kriterium,kriterium.betrag,'betrag')"/></td>
 		<td><input type="text" class="form-control text-center" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}"  ng-model="kriterium.oe"  ng-change="kriteriaChanged(kriterium,kriterium.oe,'oe')"/></td>
+		<td class="text-left">{{kriterium.bis_von}}</td>
 	    </tr>
 	</tbody>
     </table> 

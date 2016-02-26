@@ -27,6 +27,26 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
     $scope.gesamtPersonalSumme = {};
     $scope.zeilenraw = {};
 
+    $scope.getZeilenCsv = function(){
+	var csvArray = $scope.zeilen.filter(function(v,index){
+	    if(v.section=='groupdetail'){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	}).map(function(item,ind){
+	    var retObj = {
+		persnr:item.persnr,
+		regeloe:item.regeloe,
+		name:item.name,
+		sumpremie:$scope.gesamtPersonalSumme[item.persnr].monthValues
+	    };
+	    return  retObj;
+	});
+	
+	return csvArray;
+    }
     /**
      * 
      * @param {type} zeilen
@@ -79,7 +99,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    var pocetZ = zetka[mesic];
 		    var inter = mesic=='sum'?12:1;
 		    var kriterium = $scope.getBewertungKriterium(pocetZ,100,'dzeit_z',inter,'abcd');
-		    console.log(kriterium);
+		    //console.log(kriterium);
 		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
 		    sumObj[persnr].monthValues[mesic] *= multi;
 		}
@@ -93,6 +113,19 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    sumObj[persnr].monthValues[mesic] *= multi;
 		    sumObj[persnr].monthValues[mesic] = Math.round(sumObj[persnr].monthValues[mesic]);
 		}
+		
+		//prozent anw
+		var anwp = $scope.zeilenraw[persnr].dzeit.anw_prozent;
+		for(mesic in anwp){
+		    v2 = anwp[mesic].toString().replace(',', '.');
+		    v3 = parseFloat(v2);
+		    var p = v3;
+		    var inter = mesic=='sum'?12:1;
+		    var kriterium = $scope.getBewertungKriterium(p,100,'dzeit_anw_prozent',inter,'abcd');
+		    //console.log(kriterium);
+		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
+		    sumObj[persnr].monthValues[mesic] *= multi;
+		}
 	    }
 	}
 	// aktualizuju celkovou sumu pres vsechny persnr
@@ -105,8 +138,8 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		$scope.gesamtPersonalSumme[mi] += sumObj[persnr].monthValues[mi];
 	    }
 	}
-	console.log('gesamtPersonalSumme=');
-	console.log($scope.gesamtPersonalSumme);
+	//'gesamtPersonalSumme=');
+	//console.log($scope.gesamtPersonalSumme);
 	return sumObj;
     }
     /**
@@ -290,6 +323,88 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 	    $scope.BewertungKriteria = response.data.bewertungKriteriaRows;});
     }
     
+    $scope.getBewertungKriterium = function(v,kunde,bereich,interval,oe){
+	//console.log('getbewertung kriterium v='+v,'bereich='+bereich);
+	if(isNaN(v)){
+	    return null;
+	}
+	var bVon = false;
+	if($scope.BewertungKriteria!==undefined){
+	    var kriteriumsArray = $scope.BewertungKriteria.filter(function(item){
+		//console.log(item);
+		if(item.kunde==kunde && item.bereich==bereich && item.interval_monate==interval){
+		     
+		     //je to bis nebo von
+		     if(item.bis_von.indexOf('von')>0){
+			 //von
+			 bVon = true;
+			 if(parseFloat(item.grenze)<=parseFloat(v)){
+			     return true;
+			 }
+		     }
+		     else{
+			 //bis
+			 bVon = false;
+			 if(parseFloat(item.grenze)>=parseFloat(v)){
+			     return true;
+			 }
+		     }
+		    return false;
+		}
+		else{
+		    return false;
+		}
+	    });
+//	    console.log('bVon=');
+//	    console.log(bVon);
+	    if(kriteriumsArray.length>0){
+//		console.log(kriteriumsArray);
+		//seradit vzestupne podle grenze
+		if(bVon===true){
+		    //seradit sestupne
+		    kriteriumsArray.sort(function(a,b){
+			if(a.grenze>b.grenze){
+			    return -1;
+			}
+			if(a.grenze<b.grenze){
+			    return 1;
+			}
+			return 0;
+		    });
+		}
+		else{
+		    //seradit vzestupne
+		    kriteriumsArray.sort(function(a,b){
+			if(a.grenze<b.grenze){
+			    return -1;
+			}
+			if(a.grenze>b.grenze){
+			    return 1;
+			}
+			return 0;
+		    });
+		}
+		
+		// mam radek
+		var krit = kriteriumsArray[0];
+		//console.log('oe='+oe);
+		var re = new RegExp(krit.oe,"gi");
+		//console.log('re='+re);
+		var res = oe.match(re);
+		//console.log('match='+res);
+		if(oe.match(re)!==null){
+		    return kriteriumsArray[0];
+		}
+		else{
+		    return null;
+		}
+		//return kriteriumsArray[0];
+	    }
+	    else{
+		return null;
+	    }
+	}
+    }
     /**
      * 
      * @param {type} v
@@ -298,7 +413,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
      * @param {type} interval
      * @returns {controllers_L9.$scope.getBewertungKriterium.kriteriumsArray}
      */
-    $scope.getBewertungKriterium = function(v,kunde,bereich,interval,oe){
+    $scope.getBewertungKriteriumOld = function(v,kunde,bereich,interval,oe){
 	//console.log('getbewertung kriterium v='+v,'bereich='+bereich);
 	if(isNaN(v)){
 	    return null;
@@ -458,19 +573,21 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 					// do $scope.zeilen pridam radek
 					betragSummen[currentValue.group] = {monthValues:[]};
 					var zeileToInsert = {
+					    section:currentValue.section,
+					    regeloe:currentValue.regeloe,
+					    persnr:currentValue.persnr,
+					    name:currentValue.name,
 					    group:currentValue.group,
 					    groupDetail:'bewertung_js',
-					    name:currentValue.name,
-					    persnr:currentValue.persnr,
-					    section:currentValue.section,
 					    monthValues:[]
 					}
 					var zeileToInsertBetrag = {
+					    section:currentValue.section,
+					    regeloe:currentValue.regeloe,
+					    persnr:currentValue.persnr,
+					    name:currentValue.name,
 					    group:currentValue.group,
 					    groupDetail:'bewertung_betrag',
-					    name:currentValue.name,
-					    persnr:currentValue.persnr,
-					    section:currentValue.section,
 					    monthValues:[]
 					}
 					//jednotlive mesice
@@ -540,7 +657,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 			
 			var persSummenObject = makePersonalSummen($scope.zeilen,'bewertung_betrag');
 			$scope.personalSumme = persSummenObject;
-			console.log(persSummenObject);
+			//console.log(persSummenObject);
 			//projit radky se zahlavim pro persnr a priradit hodnoty z persSummenObject
 			$scope.zeilen.filter(function(z1){
 			    if(z1.section=='persheader'){
@@ -552,7 +669,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 			}).forEach(function(z2){
 			    z2.monthValues = $scope.personalSumme[z2.persnr].monthValues;
 			});
-			console.log($scope.zeilen);
+			//console.log($scope.zeilen);
 			//a pridat radky na zacatek tabulky
 			for(gr in summenObject){
 			    var zeileToInsert = {

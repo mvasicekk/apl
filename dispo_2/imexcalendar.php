@@ -22,6 +22,8 @@ $smarty = new Smarty;
 	//
 	
 	
+	$pocetDnuPredAktualnimDnem = 1;
+	
 	$cislodnePred7dny = date('w',  time()-$pocetDnuPredAktualnimDnem*7*60*60);
 	if($cislodnePred7dny==1){
 	    // trefil jsem pondeli
@@ -38,7 +40,7 @@ $smarty = new Smarty;
 	    }
 	}
 	
-	$pocetDnuPredAktualnimDnem = 7;
+	
 	
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
