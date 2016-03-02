@@ -28,8 +28,9 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
     $scope.zeilenraw = {};
 
     $scope.getZeilenCsv = function(){
+	console.log($scope.personalSumme);
 	var csvArray = $scope.zeilen.filter(function(v,index){
-	    if(v.section=='groupdetail'){
+	    if(v.section=='persheader'){
 		return true;
 	    }
 	    else{
@@ -40,8 +41,11 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		persnr:item.persnr,
 		regeloe:item.regeloe,
 		name:item.name,
-		sumpremie:$scope.gesamtPersonalSumme[item.persnr].monthValues
+		//sumpremie:$scope.personalSumme[item.persnr].monthValues['sum']
 	    };
+	    for(prop in $scope.personalSumme[item.persnr].monthValues){
+		retObj[prop] = $scope.personalSumme[item.persnr].monthValues[prop];
+	    }
 	    return  retObj;
 	});
 	
@@ -98,7 +102,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		for(mesic in zetka){
 		    var pocetZ = zetka[mesic];
 		    var inter = mesic=='sum'?12:1;
-		    var kriterium = $scope.getBewertungKriterium(pocetZ,100,'dzeit_z',inter,'abcd');
+		    var kriterium = $scope.getBewertungKriterium(pocetZ,100,'ko_dzeit_z',inter,'abcd');
 		    //console.log(kriterium);
 		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
 		    sumObj[persnr].monthValues[mesic] *= multi;
@@ -121,7 +125,33 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    v3 = parseFloat(v2);
 		    var p = v3;
 		    var inter = mesic=='sum'?12:1;
-		    var kriterium = $scope.getBewertungKriterium(p,100,'dzeit_anw_prozent',inter,'abcd');
+		    var kriterium = $scope.getBewertungKriterium(p,100,'ko_dzeit_anw_prozent',inter,'abcd');
+		    //console.log(kriterium);
+		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
+		    sumObj[persnr].monthValues[mesic] *= multi;
+		}
+		
+		//ko_a50 >= 0.4
+		var a50p = $scope.zeilenraw[persnr].A6.a6_prozent;
+		for(mesic in a50p){
+		    v2 = a50p[mesic].toString().replace(',', '.');
+		    v3 = parseFloat(v2);
+		    var p = v3;
+		    var inter = mesic=='sum'?12:1;
+		    var kriterium = $scope.getBewertungKriterium(p,100,'ko_a50',inter,'abcd');
+		    //console.log(kriterium);
+		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
+		    sumObj[persnr].monthValues[mesic] *= multi;
+		}
+		
+		//ko_rekl_E >= 16
+		var a50p = $scope.zeilenraw[persnr].rekl.sum_bewertung_E;
+		for(mesic in a50p){
+		    v2 = a50p[mesic].toString().replace(',', '.');
+		    v3 = parseFloat(v2);
+		    var p = v3;
+		    var inter = mesic=='sum'?12:1;
+		    var kriterium = $scope.getBewertungKriterium(p,100,'ko_rekl_E',inter,'abcd');
 		    //console.log(kriterium);
 		    var multi = kriterium===null?0:parseFloat(kriterium.betrag);
 		    sumObj[persnr].monthValues[mesic] *= multi;

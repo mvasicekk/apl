@@ -6,6 +6,8 @@
     </div>
 <!--    <div>
 	{{showGroups|json}}
+//potvrdit pole
+// do pole
     </div>-->
 
 <div class="row">
@@ -38,7 +40,7 @@
 		    </div>
 		    </div>
 		    <button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
-		    <button class="btn btn-primary no-print" type="button" cvs-header="csvheader" ng-csv="getZeilenCsv()" csv-label="true" filename="persauswertung.csv">Ex CSV (zatim nefunguje)</button>
+		    <button class="btn btn-primary no-print" type="button" cvs-header="csvheader" field-separator=';' charset='utf-8' ng-csv="getZeilenCsv()" csv-label="true" filename="persauswertung.csv">Ex CSV sum PersPrem</button>
 		</th>
 	    </tr>
 	    <tr>
