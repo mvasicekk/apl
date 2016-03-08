@@ -78,7 +78,7 @@ $sql.=" $pt_S240.verb_M, $pt_S240.kd_celkem, $pt_S240.aby_celkem, $pt_S240.verb_
 $sql.=" $pt_S240_summe_lieferung.kd_summe_lieferung, $pt_S240_summe_lieferung.aby_summe_lieferung, ";
 $sql.=" $pt_S240_summe_lieferung.verb_summe_lieferung";
 $sql.=" FROM $pt_S240 INNER JOIN $pt_S240_summe_lieferung ON $pt_S240.auftragsnr = $pt_S240_summe_lieferung.auftragsnr";
-
+$sql.=" order by $pt_S240.pg, $pt_S240.kunde, $pt_S240.auftragsnr";
 //echo "sql=$sql"."<br>";
 
 
