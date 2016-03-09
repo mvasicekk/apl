@@ -51,6 +51,33 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 	
 	return csvArray;
     }
+    
+    $scope.getAllZeilenCsv = function(){
+	
+	var csvArray = $scope.zeilen.filter(function(v,index){
+	    if(v.section=='groupdetail' && (v.groupDetail=='leistGrad' || v.groupDetail=='a6_prozent' || v.groupDetail=='faktor' || v.group=='rekl')){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	}).map(function(item,ind){
+	    var retObj = {
+		persnr:item.persnr,
+		regeloe:item.regeloe,
+		name:item.name,
+		group:item.group,
+		groupDetail:item.groupDetail
+		//sumpremie:$scope.personalSumme[item.persnr].monthValues['sum']
+	    };
+	    for(prop in item.monthValues){
+		retObj[prop] = item.monthValues[prop];
+	    }
+	    return  retObj;
+	});
+	
+	return csvArray;
+    }
     /**
      * 
      * @param {type} zeilen

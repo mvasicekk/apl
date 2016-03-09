@@ -19,3 +19,16 @@ div.page-header{
 div.page-header h4{
     margin: 0px;
 }
+
+.valign_bottom {
+    float:none;
+    display: inline-block;
+    vertical-align: bottom;
+}
+.kzgut{
+    background-color: yellow !important;  
+}
+.tatnotactive{
+    text-decoration: line-through;
+    color: #777
+}

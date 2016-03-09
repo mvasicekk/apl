@@ -9,8 +9,8 @@
 
 <!--jQuery dependencies-->
 {*	<link rel="stylesheet" href="../js/jquery-ui-1.10.4/themes/base/jquery-ui.css" />*}
-{*    <script src="./bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
-    <script src="./bower_components/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="./bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+{*    <script src="./bower_components/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
     <link href="./bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
 
 {*	Bootstrap*}

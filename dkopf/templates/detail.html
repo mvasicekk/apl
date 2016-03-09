@@ -1,143 +1,343 @@
 <div class="container-fluid">
     <div class="page-header">
-	<h4>Arbeitsplan pflegen / sprava pracovniho planu {{teil}}
+	<h4>Arbeitsplan pflegen / sprava pracovniho planu {{teilaktual.Teil}}
 	</h4>
     </div>
 
-    <div>
-	<uib-accordion close-others="false">
-
-	    <uib-accordion-group>
-		<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-danger text-capitalize text-left">
-			    secinfo 1/2
+    <div class="row">
+	<div class="col-sm-12">
+	    <div class="form-group">
+		<label for="teil_search">Teil suchen / hledat dil</label>
+		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="teil_search" ng-keypress="setTeilAktual($event)" ng-change="getTeilMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="Teil suchen / hledat dil">
+		<!--<span id="helpBlock" class="help-block">hledá v čísle dílu, originál čísle, popisku dílu</span>-->
+	    </div>
+	</div>
+	<div ng-show="teile.length > 0" class="col-sm-12">
+	    <table class="table table-condensed table-striped table-hover table-responsive">
+		<thead>
+		    <tr>
+			<th>Kunde</th>
+			<th>Teil</th>
+			<th>Bezeichnung</th>
+			<th>Teil Original</th>
+			<th class="text-right">Gewicht</th>
+			<th>Status</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr ng-class="{warning:t.status.toString().indexOf('ALT')>-1}" ng-click="listRowClicked($index)" ng-repeat="t in teile">
+			<td>{{t.Kunde}} ({{t.status.toString().indexOf('ALT')}})</td>
+			<td>{{t.Teil}}</td>
+			<td>{{t.Teilbez}}</td>
+			<td>{{t.teillang}}</td>
+			<td class="text-right">{{t.Gew|number:3}}</td>
+			<td>{{t.status}}</td>
+		    </tr>
+		</tbody>
+	    </table>
+	</div>
+    </div>
+    <div ng-if="teilaktual.Teil.length>0" class="row">
+	<div class="col-md-12">
+	    <uib-accordion close-others="false">
+		<form ng-model-options="{ updateOn: 'blur', debounce: { 'default': 500, 'blur': 0 }}" >
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>{{teilaktual.Kunde}} | {{teilaktual.Teil}} | {{teilaktual.Teilbez}} | {{teilaktual.Gew|number:3}} kg | {{teilaktual.status}}</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				grundinfo
+			    </div>
 			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>secinfo 2/2</span>
+		    </uib-accordion-heading>
+		    <!---------------------------------------------------------------->
+		    <div class="row">
+			<div class="form-group col-md-1 form-group-sm ">
+			    <label class="control-label" for="kunde">Kunde:</label>
+			    <input readonly maxlength="3" ng-model="teilaktual.Kunde" type="text" class="form-control" id="kunde" placeholder="Kunde">
+			</div>
+			<div class="form-group col-md-3 form-group-sm ">
+			    <label class="control-label" for="teillang">Original TeilNr. / originální číslo</label>
+			    <input ng-change="teilaktualChanged('teillang')" maxlength="255" ng-model="teilaktual.teillang" type="text" class="form-control" id="teillang" placeholder="Original TeilNr">
+			</div>
+			<div class="form-group col-md-3 form-group-sm ">
+			    <label class="control-label" for="teilbez">Teilbez</label>
+			    <input ng-change="teilaktualChanged('Teilbez')" maxlength="255" ng-model="teilaktual.Teilbez" type="text" class="form-control" id="teilbez" placeholder="Teilbez">
+			</div>
+			<div class="form-group col-md-1 form-group-sm ">
+			    <label class="control-label" for="status">Status</label>
+			    <input ng-change="teilaktualChanged('status')" maxlength="255" ng-model="teilaktual.status" type="text" class="form-control" id="status" placeholder="status">
 			</div>
 		    </div>
-		</uib-accordion-heading>
-		<div class='col-md-2'>
-		    2 sloupce - placeholder
-		</div>
-		<pre>
+		    
+		    <!---------------------------------------------------------------->
+		    <div class="row">
+			<div class="form-group col-md-2 form-group-sm valign_bottom">
+			    <label class="control-label" for="kunde">Nettogewicht/netto vaha</label>
+			    <input ng-change="teilaktualChanged('Gew')" maxlength="10" ng-model="teilaktual.Gew" type="text" class="form-control text-right" id="kunde" placeholder="Kunde">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="teillang">Bruttogewicht/brutto vaha</label>
+			    <input ng-change="teilaktualChanged('BrGew')" maxlength="255" ng-model="teilaktual.BrGew" type="text" class="form-control text-right" id="teillang" placeholder="Original TeilNr">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="verpackungmenge">Verpackungsmenge / balící předpis</label>
+			    <input ng-change="teilaktualChanged('verpackungmenge')" maxlength="255" ng-model="teilaktual.verpackungmenge" type="text" class="form-control text-right" id="verpackungmenge" placeholder="verpackungmenge">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="stk_pro_gehaenge">Stk pro Gehänge</label>
+			    <input ng-change="teilaktualChanged('stk_pro_gehaenge')" maxlength="255" ng-model="teilaktual.stk_pro_gehaenge" type="text" class="form-control text-right" id="stk_pro_gehaenge" placeholder="stk_pro_gehaenge">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="restmengen_verw">Restmengenverw.</label>
+			    <input ng-change="teilaktualChanged('restmengen_verw')" maxlength="255" ng-model="teilaktual.restmengen_verw" type="text" class="form-control" id="restmengen_verw" placeholder="restmengen_verw">
+			</div>
+			<div class="form-group col-md-1 form-group-sm valign_bottom ">
+			    <label class="control-label" for="FA">FA</label>
+			    <input ng-change="teilaktualChanged('FA')" maxlength="255" ng-model="teilaktual.FA" type="text" class="form-control text-right" id="FA" placeholder="FA">
+			</div>
+		    </div>
+		    <!---------------------------------------------------------------->
+		    <div class="row">
+			<div class="form-group col-md-2 form-group-sm valign_bottom">
+			    <label class="control-label" for="kunde">Werkst. / material</label>
+			    <select ng-change="teilaktualChanged('Wst')" ng-options="option.beschreibung for option in werkstoffe track by option.id" 
+				    class="form-control" 
+				ng-model="teilaktual.Wst">
+			    </select>
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="Art_Guseisen">Art Gusseisen / druh litiny</label>
+			    <input ng-change="teilaktualChanged('Art Guseisen')" maxlength="255" ng-model="teilaktual['Art Guseisen']" type="text" class="form-control" id="Art_Guseisen" placeholder="Art_Guseisen">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="fremdauftr_dkopf">Fremdauftr</label>
+			    <input ng-change="teilaktualChanged('fremdauftr_dkopf')" maxlength="255" ng-model="teilaktual['fremdauftr_dkopf']" type="text" class="form-control" id="fremdauftr_dkopf" placeholder="fremdauftr_dkopf">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="preis_stk_gut">Zielpreis gut</label>
+			    <input ng-change="teilaktualChanged('preis_stk_gut')" maxlength="255" ng-model="teilaktual['preis_stk_gut']" type="text" class="form-control text-right" id="preis_stk_gut" placeholder="preis_stk_gut">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="preis_stk_auss">Zielpreis auss</label>
+			    <input ng-change="teilaktualChanged('preis_stk_auss')" maxlength="255" ng-model="teilaktual['preis_stk_auss']" type="text" class="form-control text-right" id="preis_stk_auss" placeholder="preis_stk_auss">
+			</div>
+			<div class="form-group col-md-1 form-group-sm valign_bottom ">
+			    <label class="control-label" for="kosten_stk_auss">Kosten Stk Auss</label>
+			    <input ng-change="teilaktualChanged('kosten_stk_auss')" maxlength="255" ng-model="teilaktual['kosten_stk_auss']" type="text" class="form-control text-right" id="kosten_stk_auss" placeholder="kosten_stk_auss">
+			</div>
+		    </div>
+		    <!---------------------------------------------------------------->
+		    <div class="row">
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="jb_lfd_2">Jahresbedarf {{aktualJahr-2}}</label>
+			    <input ng-change="teilaktualChanged('jb_lfd_2')" maxlength="255" ng-model="teilaktual['jb_lfd_2']" type="text" class="form-control text-right" id="jb_lfd_2" placeholder="jb_lfd_2">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="jb_lfd_1">Jahresbedarf {{aktualJahr-1}}</label>
+			    <input ng-change="teilaktualChanged('jb_lfd_1')" maxlength="255" ng-model="teilaktual['jb_lfd_1']" type="text" class="form-control text-right" id="jb_lfd_1" placeholder="jb_lfd_1">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="jb_lfd_j">Jahresbedarf {{aktualJahr-0}}</label>
+			    <input ng-change="teilaktualChanged('jb_lfd_f')" maxlength="255" ng-model="teilaktual['jb_lfd_j']" type="text" class="form-control text-right" id="jb_lfd_j" placeholder="jb_lfd_j">
+			</div>
+			<div class="form-group col-md-2 form-group-sm valign_bottom ">
+			    <label class="control-label" for="jb_lfd_plus_1">Jahresbedarf {{aktualJahr+1}}</label>
+			    <input ng-change="teilaktualChanged('jb_lfd_plus_1')" maxlength="255" ng-model="teilaktual['jb_lfd_plus_1']" type="text" class="form-control text-right" id="jb_lfd_plus_1" placeholder="jb_lfd_plus_1">
+			</div>
+		    </div>
+		    <!---------------------------------------------------------------->
+		    <div class="row">
+			<div class="form-group col-md-3 form-group-sm valign_bottom ">
+			    <label class="control-label" for="schwierigkeitsgrad_S11">Schwierigkeitsgrad S11 / obtížnost S11</label>
+			    <input ng-change="teilaktualChanged('schwierigkeitsgrad_S11')" maxlength="255" ng-model="teilaktual['schwierigkeitsgrad_S11']" type="text" class="form-control" id="schwierigkeitsgrad_S11" placeholder="../....../..">
+			</div>
+			<div class="form-group col-md-3 form-group-sm valign_bottom ">
+			    <label class="control-label" for="schwierigkeitsgrad_S51">Schwierigkeitsgrad S51 / obtížnost S51</label>
+			    <input ng-change="teilaktualChanged('schwierigkeitsgrad_S51')" maxlength="255" ng-model="teilaktual['schwierigkeitsgrad_S51']" type="text" class="form-control" id="schwierigkeitsgrad_S51" placeholder="../....../..">
+			</div>
+			<div class="form-group col-md-3 form-group-sm valign_bottom ">
+			    <label class="control-label" for="schwierigkeitsgrad_SO">Schwierigkeitsgrad SO / obtížnost SO</label>
+			    <input ng-change="teilaktualChanged('schwierigkeitsgrad_SO')" maxlength="255" ng-model="teilaktual['schwierigkeitsgrad_SO']" type="text" class="form-control" id="schwierigkeitsgrad_SO" placeholder="">
+			</div>
+		    </div>
+		    <!---------------------------------------------------------------->
+		    <div class="row">
+			<div class="form-group col-md-12 form-group-sm ">
+			    <label class="control-label" for="bemerk">Anderungen/Bemerkung / poznamka</label>
+			    <textarea ng-change="teilaktualChanged('bemerk')" maxlength="255" ng-model="teilaktual.bemerk" class="form-control" rows="1"></textarea>
+			</div>
+		    </div>
+		</uib-accordion-group>
+		</form>
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>{{dpos.length}}</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				Tatigkeiten
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    <table class="table table-condensed table-striped table-bordered table-hover">
+			<thead>
+			    <tr>
+				<th>druck</th>
+				<th class="text-right">taetnr</th>
+				<th>bezeichnung - D</th>
+				<th>bezeichnung - T</th>
+				<th>Mittel</th>
+				<th class="text-right">vzkd</th>
+				<th class="text-right">vzaby</th>
+				<th>G</th>
+				<th>Bedarf</th>
+				<th>l.von</th>
+				<th>l.nach</th>
+				<th></th>
+			    </tr>
+			</thead>
+			<tbody>
+			    <tr ng-class="{kzgut:p['KzGut'].toString().indexOf('G')>-1,'tatnotactive':p['kz-druck']=='0'}" ng-repeat="p in dpos">
+				<td ng-click="kzdruckClicked(p)" style='cursor: pointer;' ng-class="{'bg-danger':p['kz-druck']!='0'}" class="text-right">&nbsp;</td>
+				<td class="text-right">{{p['TaetNr-Aby']}}</td>
+				<td class="text-left">{{p['TaetBez-Aby-D']}}</td>
+				<td class="text-left">{{p['TaetBez-Aby-T']}}</td>
+				<td class="text-left">{{p['mittel']}}</td>
+				<td class="text-right">{{p['VZ-min-kunde']|number:4}}</td>
+				<td class="text-right">{{p['vz-min-aby']|number:4}}</td>
+				<td class="text-right">{{p['KzGut']}} {{p['KzGut'].toString().indexOf('G')}}</td>
+				<td class="text-left">{{p['bedarf_typ']}}</td>
+				<td class="text-left">{{p['lager_von']}}</td>
+				<td class="text-left">{{p['lager_nach']}}</td>
+			    </tr>
+			</tbody>
+		    </table>
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>GDat Anlagen</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				GDat Anlagen
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    content
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>Musterlager</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				Musterlager
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    content
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>Teildoku</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				Teildoku
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    content
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>VPM</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				VPM
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    content
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>IMA / EMA</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				IMA / EMA
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    content
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>AM / MM</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				AM / MM
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    content
+		</uib-accordion-group>
+		<!-------------------------------------------------------------------->
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>debug</span>
+			    </div>
+			    <div class="col-md-6 text-danger text-capitalize text-right">
+				debug
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    <pre>
+			<p>{{teilaktual|json}}</p>
+		    </pre>
+		</uib-accordion-group>
+		
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>secinfo 2/2</span>
+			    </div>
+			    <div class="col-md-6 text-danger text-capitalize text-right">
+				secinfo 1/2
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    <div class='col-md-2'>
+			2 sloupce - placeholder
+		    </div>
+		    <pre>
 		<h2>opravneni pro pole podle puvodniho dkopf</h2>
 		{{securityInfo|json}}
-		</pre>
-	    </uib-accordion-group>
-    
-	    <uib-accordion-group>
-		<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			    grundinfo 1/2
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>grundinfo 2/2</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     GDat Anlagen
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>GDat Anlagen</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     Musterlager
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>Musterlager</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     Teildoku
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>Teildoku</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     VPM
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>VPM</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     IMA / EMA
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>IMA / EMA</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     AM / MM
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>AM / MM</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	    
-	    <uib-accordion-group>
-				<uib-accordion-heading>
-		    <div class="row">
-			<div class="col-md-6 text-info text-uppercase text-left">
-			     Tatigkeiten
-			</div>
-			<div class="col-md-6 text-danger text-capitalize text-right">
-			    <span class='badge'>Tatigkeiten</span>
-			</div>
-		    </div>
-		</uib-accordion-heading>
-		content
-	    </uib-accordion-group>
-	</uib-accordion>
+		    </pre>
+		</uib-accordion-group>
+	    </uib-accordion>
+	</div>
     </div>
 </div>
