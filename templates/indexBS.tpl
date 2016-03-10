@@ -81,7 +81,8 @@
 		    <div class="panel-body ">
 			<div class="row">
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./auftrag/auftrag.php#/list'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" /></div>
+{*			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" /></div>*}
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/dkopfjs.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.umtermin};" type="button" value="Umterminieren" id="umtermin" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./dauftr/umterminieren/umterminieren.php'" /></div>
 {*			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.rundlauf};" type="button" value="Rundlauf" id="rundlauf"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=rundlauf&presenter=Dispo'" /></div>*}
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dispo};" type="button" value="Dispo" id="dispo"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./dispo_2/dispo.php'" /></div>

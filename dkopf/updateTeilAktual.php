@@ -44,7 +44,10 @@ if($field=='Wst'){
     $dbValue = $newValue->id;
 }
 
-$ar = 1;
+//$ar = 1;
+
+$ar = $a->updateDkopfField($field, $dbValue, $teil);
+
 //$sql = "select * from werkstoffe order by beschreibung";
 //$werkstoffe = $a->getQueryRows($sql);
 			

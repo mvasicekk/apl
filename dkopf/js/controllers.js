@@ -33,6 +33,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.teil = $routeParams.teil;
     $scope.werkstoffe = [];
     $scope.aktualJahr;
+    $scope.dposOriginalArray = [];
 
     /**
     * inicializuje staticke seznamy pro selecty atd., napr.seznam werkstoffu
@@ -69,6 +70,158 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	such.focus();
 	such.select();
     }
+
+
+    /**
+     * 
+     * @returns {Number}
+     */
+    $scope.dposActive = function(){
+	//console.log(m);
+	if($scope.dpos!==undefined){
+	    if($scope.dpos.length>0){
+		return $scope.dpos
+		.filter(function(v,i){
+		    if(v['kz-druck']!=='0'){
+			return true;
+		    }
+		    else{
+			return false;
+		    }
+		}).length;
+	    }
+	    else return 0;
+	}
+	else return 0;
+	}
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.getDposSumme = function(m){
+	//console.log(m);
+	if($scope.dpos!==undefined){
+	    if($scope.dpos.length>0){
+		return $scope.dpos
+		.filter(function(v,i){
+		    if(v['kz-druck']!=='0'){
+			return true;
+		    }
+		    else{
+			return false;
+		    }
+		})
+		.reduce(function(prev,v){
+		    return prev+parseFloat(v[m]);
+		},0);
+	    }
+	}
+    }
+    
+    /**
+     * 
+     * @param {type} r
+     * @returns {undefined}
+     */
+    $scope.cancelEditDposRow = function(r){
+	//r.edit=0;
+	original = undefined;
+	//najit polozku v dauftragOriginalArray,vratit puvodni stav a odstranit z pole
+	for(i=0;i<$scope.dposOriginalArray.length;i++){
+	    if(r.dpos_id==$scope.dposOriginalArray[i].dpos_id){
+		original = JSON.parse(JSON.stringify($scope.dposOriginalArray[i]));
+		//odstranit polozku z pole
+		$scope.dposOriginalArray.splice(i,1);
+		break;
+	    }
+	}
+	if(original!==undefined){
+	    for(i=0;i<$scope.dpos.length;i++){
+		if(original.dpos_id==$scope.dpos[i].dpos_id){
+		    for(p in original){
+			if(original.hasOwnProperty(p)){
+			    $scope.dpos[i][p] = original[p];
+			}
+		    }
+		    $scope.dpos[i].edit=0;
+		    break;
+		}
+	    }
+	}
+	//console.log($scope.dauftragOriginalArray);
+    }
+    /**
+     * 
+     * @param {type} r
+     * @returns {unresolved}
+     */
+    $scope.saveDposRow = function(r){
+	// pomoct http.post ulozit radek a pote nastevit edit=0
+	r.edit=0;
+	//odstranit polozku z dauftragOriginalArray
+	for(i=0;i<$scope.dposOriginalArray.length;i++){
+	    if(r.dpos_id==$scope.dposOriginalArray[i].dpos_id){
+		//odstranit polozku z pole
+		$scope.dposOriginalArray.splice(i,1);
+		break;
+	    }
+	}
+	//console.log($scope.dauftragOriginalArray);
+	// a vlastni ulozeni
+	var params = {r: r};
+	    return $http.post(
+		    './saveDposRow.php',
+		    {params: params}
+	    ).then(function (response) {
+		console.log(response.data);
+		$scope.dpos = response.data.dpos;
+		$scope.dpos.forEach(function(v){v.edit=0;});
+	    });
+    }
+    /**
+     * 
+     * @param {type} r
+     * @returns {unresolved}
+     */
+    $scope.deleteDposRow = function (r) {
+	var text = "Loeschen Position ? / smazat pozici ?";
+	var d = $window.confirm(text);
+	if (d) {
+	    // na klientovi
+	    for (i = 0; i < $scope.dpos.length; i++) {
+		if (r.dpos_id == $scope.dpos[i].dpos_id) {
+		    //odstranit polozku z pole
+		    $scope.dpos.splice(i, 1);
+		    break;
+		}
+	    }
+	    // a vlastni smazani na serveru
+	    var params = {r: r};
+	    return $http.post(
+		    './deleteDposRow.php',
+		    {params: params}
+	    ).then(function (response) {
+		//console.log(response.data);
+		$scope.dpos = response.data.dpos;
+		$scope.dpos.forEach(function (v) {
+		    v.edit = 0;
+		});
+	    });
+	}
+    }
+    /**
+     * 
+     * @param {type} r
+     * @returns {undefined}
+     */
+    $scope.makeEditable = function(r){
+	r.edit=1;
+	//console.log(r);
+	// schovam si puvodni hodnoty pro pripad cancelEditDposRow
+	$scope.dposOriginalArray.push(JSON.parse(JSON.stringify(r)));
+	//console.log($scope.dposOriginalArray);
+	//+ zmenit na tlacitko pro ulozeni radku
+    }
     
     /**
      * 
@@ -79,6 +232,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	return $http.post('./getDpos.php',{teil:teil}).then(
 		    function(response){
 			$scope.dpos = response.data.dpos;
+			$scope.dpos.forEach(function(v){v.edit=0;});
 		    }
 		);
     }

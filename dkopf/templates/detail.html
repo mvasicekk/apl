@@ -15,22 +15,24 @@
 	<div ng-show="teile.length > 0" class="col-sm-12">
 	    <table class="table table-condensed table-striped table-hover table-responsive">
 		<thead>
-		    <tr>
+		    <tr class="bg-primary">
 			<th>Kunde</th>
 			<th>Teil</th>
 			<th>Bezeichnung</th>
 			<th>Teil Original</th>
 			<th class="text-right">Gewicht</th>
+			<th class="text-right">Verpackungsmenge</th>
 			<th>Status</th>
 		    </tr>
 		</thead>
 		<tbody>
 		    <tr ng-class="{warning:t.status.toString().indexOf('ALT')>-1}" ng-click="listRowClicked($index)" ng-repeat="t in teile">
-			<td>{{t.Kunde}} ({{t.status.toString().indexOf('ALT')}})</td>
+			<td>{{t.Kunde}}</td>
 			<td>{{t.Teil}}</td>
 			<td>{{t.Teilbez}}</td>
 			<td>{{t.teillang}}</td>
 			<td class="text-right">{{t.Gew|number:3}}</td>
+			<td class="text-right">{{t.verpackungmenge|number}}</td>
 			<td>{{t.status}}</td>
 		    </tr>
 		</tbody>
@@ -40,7 +42,7 @@
     <div ng-if="teilaktual.Teil.length>0" class="row">
 	<div class="col-md-12">
 	    <uib-accordion close-others="false">
-		<form ng-model-options="{ updateOn: 'blur', debounce: { 'default': 500, 'blur': 0 }}" >
+		
 		<uib-accordion-group>
 		    <uib-accordion-heading>
 			<div class="row">
@@ -53,6 +55,7 @@
 			</div>
 		    </uib-accordion-heading>
 		    <!---------------------------------------------------------------->
+		    <form ng-model-options="{ updateOn: 'blur', debounce: { 'default': 500, 'blur': 0 }}" >
 		    <div class="row">
 			<div class="form-group col-md-1 form-group-sm ">
 			    <label class="control-label" for="kunde">Kunde:</label>
@@ -141,7 +144,7 @@
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="jb_lfd_j">Jahresbedarf {{aktualJahr-0}}</label>
-			    <input ng-change="teilaktualChanged('jb_lfd_f')" maxlength="255" ng-model="teilaktual['jb_lfd_j']" type="text" class="form-control text-right" id="jb_lfd_j" placeholder="jb_lfd_j">
+			    <input ng-change="teilaktualChanged('jb_lfd_j')" maxlength="255" ng-model="teilaktual['jb_lfd_j']" type="text" class="form-control text-right" id="jb_lfd_j" placeholder="jb_lfd_j">
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="jb_lfd_plus_1">Jahresbedarf {{aktualJahr+1}}</label>
@@ -170,13 +173,14 @@
 			    <textarea ng-change="teilaktualChanged('bemerk')" maxlength="255" ng-model="teilaktual.bemerk" class="form-control" rows="1"></textarea>
 			</div>
 		    </div>
+		    </form>
 		</uib-accordion-group>
-		</form>
+		
 		<uib-accordion-group>
 		    <uib-accordion-heading>
 			<div class="row">
-			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>{{dpos.length}}</span>
+			    <div class="col-md-6 text-danger text-left">
+				<span class='badge'>{{dposActive()}} von {{dpos.length}} Positionen | SumVzKd: {{getDposSumme('VZ-min-kunde')|number:4}} | SumVzAby: {{getDposSumme('vz-min-aby')|number:4}}</span>
 			    </div>
 			    <div class="col-md-6 text-info text-uppercase text-right">
 				Tatigkeiten
@@ -185,12 +189,11 @@
 		    </uib-accordion-heading>
 		    <table class="table table-condensed table-striped table-bordered table-hover">
 			<thead>
-			    <tr>
+			    <tr class="bg-primary">
 				<th>druck</th>
 				<th class="text-right">taetnr</th>
 				<th>bezeichnung - D</th>
 				<th>bezeichnung - T</th>
-				<th>Mittel</th>
 				<th class="text-right">vzkd</th>
 				<th class="text-right">vzaby</th>
 				<th>G</th>
@@ -202,19 +205,64 @@
 			</thead>
 			<tbody>
 			    <tr ng-class="{kzgut:p['KzGut'].toString().indexOf('G')>-1,'tatnotactive':p['kz-druck']=='0'}" ng-repeat="p in dpos">
-				<td ng-click="kzdruckClicked(p)" style='cursor: pointer;' ng-class="{'bg-danger':p['kz-druck']!='0'}" class="text-right">&nbsp;</td>
-				<td class="text-right">{{p['TaetNr-Aby']}}</td>
-				<td class="text-left">{{p['TaetBez-Aby-D']}}</td>
-				<td class="text-left">{{p['TaetBez-Aby-T']}}</td>
-				<td class="text-left">{{p['mittel']}}</td>
-				<td class="text-right">{{p['VZ-min-kunde']|number:4}}</td>
-				<td class="text-right">{{p['vz-min-aby']|number:4}}</td>
-				<td class="text-right">{{p['KzGut']}} {{p['KzGut'].toString().indexOf('G')}}</td>
-				<td class="text-left">{{p['bedarf_typ']}}</td>
-				<td class="text-left">{{p['lager_von']}}</td>
-				<td class="text-left">{{p['lager_nach']}}</td>
+				<td ng-click="kzdruckClicked(p)" style='cursor: pointer;' ng-class="{edited:p.edit===1,'tatactive':p['kz-druck']!='0'}" class="text-center">
+				    <span ng-if="p['kz-druck']!='0'" class="glyphicon glyphicon-check" aria-hidden="true"></span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">{{p['TaetNr-Aby']}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">
+				    <input maxlength="50" ng-if="p.edit==1" ng-model="p['TaetBez-Aby-D']" type="text" class="form-control input-sm text-left">
+				    <span ng-if="p.edit==0" >{{p['TaetBez-Aby-D']}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">
+				    <input maxlength="50" ng-if="p.edit==1" ng-model="p['TaetBez-Aby-T']" type="text" class="form-control input-sm text-leftt">
+				    <span ng-if="p.edit==0" >{{p['TaetBez-Aby-T']}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">{{p['VZ-min-kunde']|number:4}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">{{p['vz-min-aby']|number:4}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">
+				    <input maxlength="1" ng-if="p.edit==1" ng-model="p['KzGut']" type="text" class="form-control input-sm text-center">
+				    <span ng-if="p.edit==0" >{{p['KzGut']}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">
+				    <input maxlength="5" ng-if="p.edit==1" ng-model="p['bedarf_typ']" type="text" class="form-control input-sm text-left">
+				    <span ng-if="p.edit==0" >{{p['bedarf_typ']}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">{{p['lager_von']}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">{{p['lager_nach']}}</td>
+				<td ng-class="{edited:p.edit===1,'tatactive':p['kz-druck']!='0'}" style="width:4em;">
+				    <div class="no-print btn-group btn-group-xs btn-group-justified" role="group">
+					<div ng-if="p.edit==0" class="btn-group btn-group-xs" role="group">
+					    <button ng-click="makeEditable(p)" class="btn btn-sm">
+						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+					    </button>
+					</div>
+					<div ng-if="p.edit==0" class="btn-group btn-group-xs" role="group">
+					    <button ng-click="deleteDposRow(p)" class="btn btn-sm btn-danger">
+						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					    </button>
+					</div>
+					<div ng-if="p.edit==1" class="btn-group btn-group-xs" role="group">
+					    <button ng-click="saveDposRow(p)" class="btn btn-sm btn-success">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+					    </button>
+					</div>
+					<div ng-if="p.edit==1" class="btn-group btn-group-xs" role="group">
+					    <button ng-click="cancelEditDposRow(p)" class="btn btn-sm btn-warning">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					    </button>
+					</div>
+				    </div>
+				</td>
 			    </tr>
 			</tbody>
+			<tfoot>
+			    <tr class="bg-primary">
+				<th colspan="4" class="text-left">Summe aktive Tat</th>
+				<th class="text-right">{{getDposSumme('VZ-min-kunde')|number:4}}</th>
+				<th class="text-right">{{getDposSumme('vz-min-aby')|number:4}}</th>
+				<th colspan="5" class="text-right"></th>
+			    </tr>
+			</tfoot>
 		    </table>
 		</uib-accordion-group>
 

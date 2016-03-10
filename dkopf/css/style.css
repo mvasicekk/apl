@@ -8,6 +8,23 @@ and open the template in the editor.
     Author     : jr
 */
 
+@media print
+{    
+    * {
+	background: inherit;
+	color: inherit;
+    }
+    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+    
+    a[href]:after {
+	content: none;
+    }
+}
+
 div.page-header{
     background-color: lightyellow;
     text-align: center;
@@ -29,6 +46,16 @@ div.page-header h4{
     background-color: yellow !important;  
 }
 .tatnotactive{
-    text-decoration: line-through;
-    color: #777
+    /*text-decoration: line-through;*/
+    color: #777;
+    font-size: small;
+}
+
+.tatactive{
+    font-weight: bold;
+    background-color: #f55;
+}
+
+td.edited{
+	background-color: lightgreen;
 }
