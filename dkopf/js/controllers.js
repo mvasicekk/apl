@@ -32,6 +32,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.securityInfo = undefined;
     $scope.teil = $routeParams.teil;
     $scope.werkstoffe = [];
+    $scope.lager = [];
     $scope.aktualJahr;
     $scope.dposOriginalArray = [];
 
@@ -47,6 +48,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	return $http.post('./getLists.php',p).then(
 		    function(response){
 			$scope.werkstoffe = response.data.werkstoffe;
+			$scope.lager = response.data.lager;
 		    }
 		);
     }
@@ -78,7 +80,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
      */
     $scope.dposActive = function(){
 	//console.log(m);
-	if($scope.dpos!==undefined){
+	if($scope.dpos!==undefined && $scope.dpos!==null){
 	    if($scope.dpos.length>0){
 		return $scope.dpos
 		.filter(function(v,i){
@@ -100,7 +102,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
      */
     $scope.getDposSumme = function(m){
 	//console.log(m);
-	if($scope.dpos!==undefined){
+	if($scope.dpos!==undefined && $scope.dpos!==null){
 	    if($scope.dpos.length>0){
 		return $scope.dpos
 		.filter(function(v,i){
@@ -225,6 +227,24 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     
     /**
      * 
+     * @param {type} abgnr
+     * @returns {undefined}
+     */
+    $scope.getMittelForAbgNr = function(abgnr){
+	if($scope.mittel===null){
+	    $scope.mittel=[];
+	}
+	return $scope.mittel.filter(function(v){
+	    if(v.abgnr==abgnr){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	});
+    }
+    /**
+     * 
      * @param {type} teil
      * @returns {unresolved}
      */
@@ -232,7 +252,14 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	return $http.post('./getDpos.php',{teil:teil}).then(
 		    function(response){
 			$scope.dpos = response.data.dpos;
-			$scope.dpos.forEach(function(v){v.edit=0;});
+			$scope.mittel = response.data.mittel;
+			if($scope.dpos!==null){
+			    $scope.dpos.forEach(function(v){
+				v.edit=0;
+				v.lager_von = {lager:v.lager_von};
+				v.lager_nach = {lager:v.lager_nach};
+			    });
+			}
 		    }
 		);
     }
@@ -328,6 +355,8 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     // init
     $scope.initSecurity();
     $scope.initLists();
-    
-    
+    if($routeParams.teil_search!='0'){
+	$scope.teil_search = $routeParams.teil_search;
+	$scope.getTeilMatch();
+    }
 });

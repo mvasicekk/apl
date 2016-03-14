@@ -4,9 +4,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/dkopf/updateTeilAktual.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/dkopf/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/dkopf/templates/detail.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/dkopf/getDpos.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/dkopf/getArbMittel.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/auftrag/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/dkopf/css/style.css</file>
+            <file>file:/home/jr/NetBeansProjects/apl/auftrag/templates/detail.html</file>
         </group>
     </open-files>
 </project-private>

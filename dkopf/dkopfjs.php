@@ -19,6 +19,8 @@ if (isset($_SESSION['user']) && isset($_SESSION['level'])) {
 } else {
     header("Location: ../index.php");
 }
+
+$teil = $_GET['teil'];
 //nacteni roli podle prihlaseni
 //require_once '../assignsecurity.php';
-$smarty->display('dkopfjs.tpl');
+$smarty->display("dkopfjs.tpl");

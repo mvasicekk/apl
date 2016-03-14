@@ -9,7 +9,7 @@ var aplApp = angular.module('dkopfApp',['ui.bootstrap','ngRoute']);
 aplApp.config(['$routeProvider',
     function($routeProvider){
 	$routeProvider.
-		when('/det/:teil',{
+		when('/det/:teil_search',{
 		    templateUrl:'templates/detail.html',
 		    controller:'detailController'
 		}).

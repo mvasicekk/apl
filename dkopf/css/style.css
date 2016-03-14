@@ -51,6 +51,12 @@ div.page-header h4{
     font-size: small;
 }
 
+/* zobrazeni dilu ktery je ALT */
+#searchtable tr.altteil{
+    background-color: #f55;
+    color: #000;
+}
+
 .tatactive{
     font-weight: bold;
     background-color: #f55;

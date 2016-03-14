@@ -4,6 +4,7 @@
 	</h4>
     </div>
 
+    <!--sekce pro hledani dilu + tabulka-->
     <div class="row">
 	<div class="col-sm-12">
 	    <div class="form-group">
@@ -13,7 +14,7 @@
 	    </div>
 	</div>
 	<div ng-show="teile.length > 0" class="col-sm-12">
-	    <table class="table table-condensed table-striped table-hover table-responsive">
+	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
 		<thead>
 		    <tr class="bg-primary">
 			<th>Kunde</th>
@@ -26,7 +27,7 @@
 		    </tr>
 		</thead>
 		<tbody>
-		    <tr ng-class="{warning:t.status.toString().indexOf('ALT')>-1}" ng-click="listRowClicked($index)" ng-repeat="t in teile">
+		    <tr ng-class="{altteil:t.status.toString().indexOf('ALT')>-1}" ng-click="listRowClicked($index)" ng-repeat="t in teile">
 			<td>{{t.Kunde}}</td>
 			<td>{{t.Teil}}</td>
 			<td>{{t.Teilbez}}</td>
@@ -198,8 +199,9 @@
 				<th class="text-right">vzaby</th>
 				<th>G</th>
 				<th>Bedarf</th>
-				<th>l.von</th>
-				<th>l.nach</th>
+				<th style='width:5em;'>l.von</th>
+				<th style='width:5em;'>l.nach</th>
+				<th>mittel</th>
 				<th></th>
 			    </tr>
 			</thead>
@@ -217,8 +219,14 @@
 				    <input maxlength="50" ng-if="p.edit==1" ng-model="p['TaetBez-Aby-T']" type="text" class="form-control input-sm text-leftt">
 				    <span ng-if="p.edit==0" >{{p['TaetBez-Aby-T']}}</span>
 				</td>
-				<td ng-class="{edited:p.edit===1}" class="text-right">{{p['VZ-min-kunde']|number:4}}</td>
-				<td ng-class="{edited:p.edit===1}" class="text-right">{{p['vz-min-aby']|number:4}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">
+				    <input maxlength="50" ng-if="p.edit==1" ng-model="p['VZ-min-kunde']" type="text" class="form-control input-sm text-left">
+				    <span ng-if="p.edit==0" >{{p['VZ-min-kunde']|number:4}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">
+				    <input maxlength="50" ng-if="p.edit==1" ng-model="p['vz-min-aby']" type="text" class="form-control input-sm text-left">
+				    <span ng-if="p.edit==0" >{{p['vz-min-aby']|number:4}}</span>
+				</td>
 				<td ng-class="{edited:p.edit===1}" class="text-right">
 				    <input maxlength="1" ng-if="p.edit==1" ng-model="p['KzGut']" type="text" class="form-control input-sm text-center">
 				    <span ng-if="p.edit==0" >{{p['KzGut']}}</span>
@@ -227,8 +235,31 @@
 				    <input maxlength="5" ng-if="p.edit==1" ng-model="p['bedarf_typ']" type="text" class="form-control input-sm text-left">
 				    <span ng-if="p.edit==0" >{{p['bedarf_typ']}}</span>
 				</td>
-				<td ng-class="{edited:p.edit===1}" class="text-left">{{p['lager_von']}}</td>
-				<td ng-class="{edited:p.edit===1}" class="text-left">{{p['lager_nach']}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">
+				    <div ng-if="p.edit==1" class="form-group form-group-sm">
+					<select ng-options="option.lager for option in lager track by option.lager" 
+					    class="form-control" 
+					ng-model="p['lager_von']">
+					</select>
+				    </div>
+				    <span ng-if="p.edit==0" >{{p['lager_von'].lager}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">
+				    <div ng-if="p.edit==1" class="form-group form-group-sm">
+					<select ng-options="option.lager for option in lager track by option.lager" 
+					    class="form-control" 
+					ng-model="p['lager_nach']">
+					</select>
+				    </div>
+				    <span ng-if="p.edit==0" >{{p['lager_nach'].lager}}</span>
+				</td>
+				<td ng-class="{edited:p.edit===1}" class="text-left">
+				    <div ng-repeat="m in getMittelForAbgNr(p['TaetNr-Aby'])">
+					<a ng-if="m.urlpath.length>0" ng-href="{{m.urlpath}}"><span style="white-space: nowrap;">{{m.nazev}} ({{m.poznamka}})</span></a>
+					<span style="white-space: nowrap;" ng-if="m.urlpath.length==0">{{m.nazev}} ({{m.poznamka}})</span>
+				    </div>
+				    
+				</td>
 				<td ng-class="{edited:p.edit===1,'tatactive':p['kz-druck']!='0'}" style="width:4em;">
 				    <div class="no-print btn-group btn-group-xs btn-group-justified" role="group">
 					<div ng-if="p.edit==0" class="btn-group btn-group-xs" role="group">
@@ -260,7 +291,7 @@
 				<th colspan="4" class="text-left">Summe aktive Tat</th>
 				<th class="text-right">{{getDposSumme('VZ-min-kunde')|number:4}}</th>
 				<th class="text-right">{{getDposSumme('vz-min-aby')|number:4}}</th>
-				<th colspan="5" class="text-right"></th>
+				<th colspan="6" class="text-right"></th>
 			    </tr>
 			</tfoot>
 		    </table>
@@ -361,9 +392,19 @@
 			    </div>
 			</div>
 		    </uib-accordion-heading>
-		    <pre>
-			<p>{{teilaktual|json}}</p>
-		    </pre>
+		    <div class="row">
+			    <div class="col-md-6 text-danger text-left">
+				<pre>
+				    <p>{{teilaktual|json}}</p>
+				</pre>
+			    </div>
+			    <div class="col-md-6 text-danger text-left">
+				<pre>
+				    <p>{{dpos|json}}</p>
+				</pre>
+			    </div>
+			</div>
+		    
 		</uib-accordion-group>
 		
 		<uib-accordion-group>
