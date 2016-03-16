@@ -35,9 +35,11 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.lager = [];
     $scope.aktualJahr;
     $scope.dposOriginalArray = [];
+    $scope.mittelList = [];
+    $scope.selectedMittel = {};
 
     /**
-    * inicializuje staticke seznamy pro selecty atd., napr.seznam werkstoffu
+    * inicializuje staticke sez;namy pro selecty atd., napr.seznam werkstoffu
     * @returns {undefined}
     */
     $scope.initLists = function(){
@@ -49,6 +51,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    function(response){
 			$scope.werkstoffe = response.data.werkstoffe;
 			$scope.lager = response.data.lager;
+			$scope.mittelList = response.data.mittelList;
 		    }
 		);
     }
@@ -67,11 +70,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		);
     }
 
-    var such = $window.document.getElementById('teil_search');
-    if (such) {
-	such.focus();
-	such.select();
-    }
+    
 
 
     /**
@@ -176,8 +175,26 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    {params: params}
 	    ).then(function (response) {
 		console.log(response.data);
-		$scope.dpos = response.data.dpos;
-		$scope.dpos.forEach(function(v){v.edit=0;});
+		if(response.data.insertId>0){
+		    $scope.dpos = response.data.dpos;
+		    $scope.dpos.forEach(function(v){v.edit=0;});
+		}
+		if(response.data.ar>0){
+		    //vymenim upraveny radek
+		    //najit index podle dpos_id
+		    var i = $scope.dpos.findIndex(function(e){
+			if(e.dpos_id==response.data.dpos_id){
+			    return true;
+			}
+		    });
+		    console.log('nalezeny index = '+i);
+		    if(i>0){
+			$scope.dpos.splice(i,0,response.data.updatedRow);
+			$scope.dpos[i].lager_von = {lager:response.data.updatedRow.lager_von};
+			$scope.dpos[i].lager_nach = {lager:response.data.updatedRow.lager_nach};
+			$scope.dpos.splice(i+1,1);
+		    }
+		}
 	    });
     }
     /**
@@ -204,12 +221,63 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    {params: params}
 	    ).then(function (response) {
 		//console.log(response.data);
-		$scope.dpos = response.data.dpos;
-		$scope.dpos.forEach(function (v) {
-		    v.edit = 0;
-		});
+//		$scope.dpos = response.data.dpos;
+//		$scope.dpos.forEach(function (v) {
+//		    v.edit = 0;
+//		});
 	    });
 	}
+    }
+    /**
+     * 
+     * @param {type} m
+     * @returns {undefined}
+     */
+    $scope.delMittel = function (m) {
+	console.log(m);
+	var text = "smazat " + m.nazev + ' (' + m.poznamka + ') ?';
+	var d = $window.confirm(text);
+	if (d) {
+	    var params = {
+		teil: m.teil,
+		oper: 'del',
+		m: m
+	    };
+	    return $http.post(
+		    './updateMittel.php',
+		    {params: params}
+	    ).then(function (response) {
+		console.log(response.data);
+		if (response.data.ar > 0) {
+		    $scope.mittel = response.data.mittel;
+		}
+	    });
+	}
+    }
+    /**
+     * 
+     * @param {type} p
+     * @returns {undefined}
+     */
+    $scope.addMittel = function(p){
+	console.log(p);
+	console.log($scope.selectedMittel[p['dpos_id']]);
+	var params = {
+	    teil:p.Teil,
+	    oper: 'add',
+	    mittel_id: $scope.selectedMittel[p['dpos_id']].id,
+	    abgnr:p['TaetNr-Aby']
+	};
+	return $http.post(
+		'./updateMittel.php',
+		{params: params}
+	).then(function (response) {
+	    console.log(response.data);
+	    if(response.data.ar>0){
+		$scope.mittel = response.data.mittel;
+	    }
+	});
+
     }
     /**
      * 
@@ -227,15 +295,46 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     
     /**
      * 
+     * @param {type} p
+     * @returns {undefined}
+     */
+    $scope.newAbgnrChanged = function(p){
+	var params = {
+	    p:p,
+	    abgnr:p['TaetNr-Aby']
+	};
+	return $http.post(
+		'./getNewAbgnrInfo.php',
+		params
+	).then(function (response) {
+	    console.log(response.data);
+	    if(response.data.abgnrInfo!==null){
+			p['TaetBez-Aby-D'] = response.data.abgnrInfo[0]['oper_D'];
+			p['TaetBez-Aby-T'] = response.data.abgnrInfo[0]['oper_CZ'];
+			// pridat navrh casu podle puvodniho formulare
+			p['VZ-min-kunde'] = response.data.vzkd;
+			p['vz-min-aby'] = response.data.vzaby;
+	    }
+	    else{
+		p['TaetNr-Aby'] = '';
+		p['TaetBez-Aby-D'] = '';
+		p['TaetBez-Aby-T'] = '';
+		p['VZ-min-kunde'] = 0;
+		p['vz-min-aby'] = 0;
+	    }
+	});
+    }
+    /**
+     * 
      * @param {type} abgnr
      * @returns {undefined}
      */
-    $scope.getMittelForAbgNr = function(abgnr){
+    $scope.getMittelForAbgNr = function(p){
 	if($scope.mittel===null){
 	    $scope.mittel=[];
 	}
 	return $scope.mittel.filter(function(v){
-	    if(v.abgnr==abgnr){
+	    if(v.abgnr==p['TaetNr-Aby'] && p['dpos_id']!='0'){
 		return true;
 	    }
 	    else{
@@ -258,10 +357,36 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 				v.edit=0;
 				v.lager_von = {lager:v.lager_von};
 				v.lager_nach = {lager:v.lager_nach};
+				$scope.selectedMittel[v.dpos_id]={id:$scope.mittelList[0].id,abgnr:v['TaetNr-Aby']};
 			    });
 			}
 		    }
 		);
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.addDpos = function(){
+	var pos = 
+	    {
+		"dpos_id":"0",
+		"Teil":$scope.teilaktual.Teil,
+		"KzGut":"",
+		"TaetNr-Aby":"3",
+		"TaetBez-Aby-D":"Kommentar",
+		"TaetBez-Aby-T":"",
+		"VZ-min-kunde":"0",
+		"vz-min-aby":"0",
+		"kz-druck":"0",
+		"lager_von":{"lager":""},
+		"lager_nach":{"lager":""},
+		"bedarf_typ":"",
+		"edit":1
+	    };
+	    
+	    $scope.dpos.unshift(pos);
     }
     /**
      * 
@@ -358,5 +483,10 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     if($routeParams.teil_search!='0'){
 	$scope.teil_search = $routeParams.teil_search;
 	$scope.getTeilMatch();
+    }
+    var such = $window.document.getElementById('teil_search');
+    if (such) {
+	such.focus();
+	such.select();
     }
 });

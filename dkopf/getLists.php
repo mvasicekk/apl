@@ -12,9 +12,13 @@ $werkstoffe = $a->getQueryRows($sql);
 $sql = "select dlager.Lager as lager from dlager order by dlager.Lager";
 $lager = $a->getQueryRows($sql);
 
+$sql = "select dmittel.* from dmittel order by dmittel.nazev";
+$mittel = $a->getQueryRows($sql);
+
 $returnArray = array(
 	'werkstoffe'=>$werkstoffe,
 	'lager'=>$lager,
+	'mittelList'=>$mittel,
     );
     
 echo json_encode($returnArray);

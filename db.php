@@ -211,6 +211,109 @@ class AplDB {
 	return $recipients;
     }
 
+    /**
+     * vynasobi cas danym koeficientem v zavislosti na vaze, definovano v tabulce dgewabhang
+     * @param type $cas
+     * @param type $gewicht
+     * @param type $kunde
+     * @param type $gewabhang
+     * @return type
+     */
+public function getGewAbhangKorrektur($cas,$gewicht,$kunde,$gewabhang)
+{
+	$korrzeit=$cas;
+	if($gewabhang)
+	{
+		$sql = "select multi from dgewabhang where ((kunde='$kunde') and (gewvon<'$gewicht') and (gewbis>='$gewicht'))";
+		$rows = $this->getQueryRows($sql);
+		if($rows!==NULL)
+		{
+			$row = $rows[0];
+			$korrzeit = $row['multi']*$cas;
+		}
+	}
+	return $korrzeit;
+}
+
+public function getMinPreisVomKunde($kunde)
+{
+	$minpreis=0;
+	$sql = "select preismin from dksd where (kunde='$kunde')";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL)
+	{
+		$row = $rows[0];
+		$minpreis = $row['preismin'];
+	}
+	
+	return $minpreis;
+}
+
+public function getGewichtLautZeitVorschlag($bruttoflag,$teil)
+{
+	$gewicht=0;
+	$sql = "select gew,brgew from dkopf where (teil='$teil')";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL)
+	{
+		$row = $rows[0];
+		if(($bruttoflag)&&($row['brgew']>0))
+			$gewicht=$row['brgew'];
+		else
+			$gewicht=$row['gew'];
+	}
+	
+	return $gewicht;
+}
+
+public function getPreisVorschlagInfo($kunde,$tatnr,$typ)
+{
+	// zjistim si pro dany $tatnr statnr
+	$sql = "select stat_nr from `dtaetkz-abg` where (`abg-nr`='$tatnr')";
+	$rows  = $this->getQueryRows($sql);
+	$statnr=$rows[0]['stat_nr'];
+	
+	// zkusim info podle cisla operace
+	$sql = "select * from dzeitvorschlag where ((kunde='$kunde') and (abgnr='$tatnr') and (typ='$typ'))";	
+	$rows = $this->getQueryRows($sql);
+	
+	if($rows!==NULL)
+	{
+		return $rows[0];
+	}
+	else
+	{
+		// zkusim jeste info podle stat_nr
+		$sql = "select * from dzeitvorschlag where ((kunde='$kunde') and (statnr='$statnr') and (typ='$typ'))";
+		$rows = $this->getQueryRows($sql);
+		return $rows[0];
+	}
+}
+
+/**
+ * vrati navrhnutou hodnotu casu podle tabulek dzeitvorschlag a dgewabhang
+ * @param type $kunde
+ * @param type $teil
+ * @param type $tatnr
+ * @param type $typ
+ * @return type
+ */
+public function getZeitVorschlag($kunde,$teil,$tatnr,$typ)
+{
+	$zeitVorschlag = 0;
+	$vorschlagInfo = $this->getPreisVorschlagInfo($kunde,$tatnr,$typ);
+	// pokud mam neco v poli $vorschlagInfopokracuju dal
+	if(count($vorschlagInfo)>1)
+	{
+		$preisProKg = $vorschlagInfo['preisprokg'];
+		$gewicht = $this->getGewichtLautZeitVorschlag($vorschlagInfo['brutto'],$teil);
+		$minpreis = $this->getMinPreisVomKunde($kunde);
+		$zeitVorschlag = round(($preisProKg*$gewicht)/$minpreis,4);
+		// a jeste uprava podle zavislosti na hmotnosti
+		$zeitVorschlag = $this->getGewAbhangKorrektur($zeitVorschlag,$gewicht,$kunde,$vorschlagInfo['gewabhang']);
+	}
+	return $zeitVorschlag;
+}		
     
     /**
      * 

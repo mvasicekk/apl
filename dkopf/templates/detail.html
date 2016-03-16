@@ -188,6 +188,9 @@
 			    </div>
 			</div>
 		    </uib-accordion-heading>
+		    <button ng-click="addDpos()" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Taetigkeit / nova operace
+		    </button>
 		    <table class="table table-condensed table-striped table-bordered table-hover">
 			<thead>
 			    <tr class="bg-primary">
@@ -197,11 +200,11 @@
 				<th>bezeichnung - T</th>
 				<th class="text-right">vzkd</th>
 				<th class="text-right">vzaby</th>
-				<th>G</th>
+				<th style='width:3em;'>G</th>
 				<th>Bedarf</th>
 				<th style='width:5em;'>l.von</th>
 				<th style='width:5em;'>l.nach</th>
-				<th>mittel</th>
+				<th>AM / MM</th>
 				<th></th>
 			    </tr>
 			</thead>
@@ -210,7 +213,10 @@
 				<td ng-click="kzdruckClicked(p)" style='cursor: pointer;' ng-class="{edited:p.edit===1,'tatactive':p['kz-druck']!='0'}" class="text-center">
 				    <span ng-if="p['kz-druck']!='0'" class="glyphicon glyphicon-check" aria-hidden="true"></span>
 				</td>
-				<td ng-class="{edited:p.edit===1}" class="text-right">{{p['TaetNr-Aby']}}</td>
+				<td ng-class="{edited:p.edit===1}" class="text-right">
+				    <input ng-change="newAbgnrChanged(p)" ng-model-options="{ updateOn: 'blur', debounce: { 'default': 500, 'blur': 0 }}" maxlength="5" ng-if="p.edit==1 && p.dpos_id=='0'" ng-model="p['TaetNr-Aby']" type="text" class="form-control input-sm text-right">
+				    <span ng-if="p.edit==0" >{{p['TaetNr-Aby']}}</span>
+				</td>
 				<td ng-class="{edited:p.edit===1}" class="text-left">
 				    <input maxlength="50" ng-if="p.edit==1" ng-model="p['TaetBez-Aby-D']" type="text" class="form-control input-sm text-left">
 				    <span ng-if="p.edit==0" >{{p['TaetBez-Aby-D']}}</span>
@@ -254,11 +260,22 @@
 				    <span ng-if="p.edit==0" >{{p['lager_nach'].lager}}</span>
 				</td>
 				<td ng-class="{edited:p.edit===1}" class="text-left">
-				    <div ng-repeat="m in getMittelForAbgNr(p['TaetNr-Aby'])">
+				    <div ng-repeat="m in getMittelForAbgNr(p)">
 					<a ng-if="m.urlpath.length>0" ng-href="{{m.urlpath}}"><span style="white-space: nowrap;">{{m.nazev}} ({{m.poznamka}})</span></a>
-					<span style="white-space: nowrap;" ng-if="m.urlpath.length==0">{{m.nazev}} ({{m.poznamka}})</span>
+					<span style="white-space: nowrap;" ng-if="m.urlpath.length==0">{{m.nazev}} ({{m.poznamka}})</span>&nbsp;
+					<button ng-if="p.edit===1" ng-click="delMittel(m)" type="button" class="btn btn-xs btn-default" aria-label="Left Align">
+					    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					</button>
 				    </div>
-				    
+				    <div ng-if="p.edit===1 && p.dpos_id!='0'" class="form-group form-group-sm">
+					<select ng-options="option.nazev+' ('+option.poznamka+')' for option in mittelList track by option.id" 
+					    class="form-control" 
+					ng-model="selectedMittel[p['dpos_id']]">
+					</select>
+					<button ng-click="addMittel(p)" type="button" class="btn btn-xs btn-default" aria-label="Left Align">
+					    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					</button>
+				    </div>
 				</td>
 				<td ng-class="{edited:p.edit===1,'tatactive':p['kz-druck']!='0'}" style="width:4em;">
 				    <div class="no-print btn-group btn-group-xs btn-group-justified" role="group">
@@ -367,19 +384,6 @@
 		    content
 		</uib-accordion-group>
 
-		<uib-accordion-group>
-		    <uib-accordion-heading>
-			<div class="row">
-			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>AM / MM</span>
-			    </div>
-			    <div class="col-md-6 text-info text-uppercase text-right">
-				AM / MM
-			    </div>
-			</div>
-		    </uib-accordion-heading>
-		    content
-		</uib-accordion-group>
 		<!-------------------------------------------------------------------->
 		<uib-accordion-group>
 		    <uib-accordion-heading>
@@ -396,6 +400,7 @@
 			    <div class="col-md-6 text-danger text-left">
 				<pre>
 				    <p>{{teilaktual|json}}</p>
+				    <p>{{selectedMittel|json}}</p>
 				</pre>
 			    </div>
 			    <div class="col-md-6 text-danger text-left">

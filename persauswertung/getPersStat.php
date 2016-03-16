@@ -452,7 +452,9 @@ foreach ($persnrArray as $p) {
 	$zeilen[$persnr]['leistung']['vzaby_akkord'][$yearMonth] = $vzaby_akkord;
 	$zeilen[$persnr]['leistung']['vzaby_zeit'][$yearMonth] = $vzaby_zeit;
 //	$zeilen[$persnr]['leistung']['leistfaktor'][$yearMonth] = $leistFaktor;
-	$zeilen[$persnr]['leistung']['leistGrad'][$yearMonth] = $leistungsGrad;
+	//2016-03-15
+	$zeilen[$persnr]['leistung']['leistGrad'][$yearMonth] = $zeilen[$persnr]['dzeit']['anwstd'][$yearMonth]!=0?($vzaby_akkord+$vzaby_zeit)/($zeilen[$persnr]['dzeit']['anwstd'][$yearMonth]*60)*100:0;
+	$zeilen[$persnr]['leistung']['leistGrad1'][$yearMonth] = $leistungsGrad;
 	$zeilen[$persnr]['leistung']['leistGradGanzMonat'][$yearMonth] = $leistungsGradGanzMonat;
 //	$zeilen[$persnr]['leistung']['leistPrem'][$yearMonth] = $leistPraemieBerechnet;
     }
@@ -638,7 +640,8 @@ foreach ($persnrArray as $p) {
     $zeilen[$persnr]['leistung']['monatNormMinuten']['sum'] = getSumRow($zeilen[$persnr]['leistung']['monatNormMinuten']);
     $citatel = $zeilen[$persnr]['leistung']['vzaby_akkord']['sum'] + $zeilen[$persnr]['leistung']['vzaby_zeit']['sum'];
     
-    $zeilen[$persnr]['leistung']['leistGrad']['sum'] = $zeilen[$persnr]['leistung']['monatNormMinuten']['sum']!=0?$citatel/$zeilen[$persnr]['leistung']['monatNormMinuten']['sum']*100:0;
+    $zeilen[$persnr]['leistung']['leistGrad1']['sum'] = $zeilen[$persnr]['leistung']['monatNormMinuten']['sum']!=0?$citatel/$zeilen[$persnr]['leistung']['monatNormMinuten']['sum']*100:0;
+    $zeilen[$persnr]['leistung']['leistGrad']['sum'] = $zeilen[$persnr]['dzeit']['anwstd']['sum']!=0?$citatel/($zeilen[$persnr]['dzeit']['anwstd']['sum']*60)*100:0;
     $zeilen[$persnr]['leistung']['leistGradGanzMonat']['sum'] = $zeilen[$persnr]['leistung']['ganzMonatNormMinuten']['sum']!=0?$citatel/$zeilen[$persnr]['leistung']['ganzMonatNormMinuten']['sum']*100:0;
     
     $zeilen[$persnr]['HF_repkosten']['repkosten']['sum'] = getSumRow($zeilen[$persnr]['HF_repkosten']['repkosten']);
@@ -672,6 +675,7 @@ foreach ($persnrArray as $p) {
     formatRowValues($zeilen[$persnr]['leistung']['vzaby_akkord'],0,',',' ');
     formatRowValues($zeilen[$persnr]['leistung']['vzaby_zeit'],0,',',' ');
     formatRowValues($zeilen[$persnr]['leistung']['leistGrad'],0,',',' ');
+    formatRowValues($zeilen[$persnr]['leistung']['leistGrad1'],0,',',' ');
     formatRowValues($zeilen[$persnr]['leistung']['leistGradGanzMonat'],0,',',' ');
     formatRowValues($zeilen[$persnr]['leistung']['leistGradGanzMonat'],0,',',' ');
     formatRowValues($zeilen[$persnr]['leistung']['ganzMonatNormMinuten'],0,',',' ');
