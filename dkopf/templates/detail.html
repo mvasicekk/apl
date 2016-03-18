@@ -318,6 +318,74 @@
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<span class='badge'>{{teildokuarray.length}} Teildoku</span>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
+				Teildoku
+			    </div>
+			</div>
+		    </uib-accordion-heading>
+		    <button ng-click="addTeilDoku()" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neu / novy dokument
+		    </button>
+		    <table ng-if="teildokuarray.length>0" class="table table-condensed table-striped table-bordered table-hover">
+			<thead>
+			    <tr class="bg-primary">
+				<th>DokuTyp</th>
+				<th style="width:11em;">Einlag.Datum</th>
+				<th>MusterPlatz / Datei</th>
+				<th style="width:11em;">Freigabe am</th>
+				<th>Freigabe vom</th>
+				<th></th>
+			    </tr>
+			</thead>
+			<tbody>
+			    <tr ng-repeat="d in teildokuarray">
+				<td>
+				    <input ng-if="d.id==0" typeahead-min-length="0" type="text" ng-model="d.doku_nr" uib-typeahead="doc.doku_nr as doc.doku_nr+' '+doc.doku_beschreibung for doc in dokumenttyp | filter:$viewValue" class="form-control input-sm">
+				    <span ng-if="d.id!=0">{{d.doku_nr}} - {{getDokuBeschreibung(d.doku_nr)}}</span>
+				</td>
+				<td>
+				    <p class="input-group input-group-sm">
+					<input ng-change="teilDokuRowChanged(d,'einlag_datum')" readonly type="text" class="form-control input-sm" uib-datepicker-popup="{{datePickerFormat}}" ng-model="d.einlag_datum" is-open="d.einlag_datumPopup.opened" datepicker-options="dateOptions" close-text="Close"/>
+					<span class="input-group-btn">
+					    <button type="button" class="btn btn-default" ng-click="openEinlagPopup(d)"><i class="glyphicon glyphicon-calendar"></i></button>
+					</span>
+				    </p>
+				</td>
+				<td>
+				    <input ng-model-options="{ updateOn: 'blur'}" ng-change="teilDokuRowChanged(d,'musterplatz')" maxlength="255" ng-model="d.musterplatz" type="text" class="form-control input-sm text-left">
+				</td>
+				<td>
+				    <p class="input-group input-group-sm">
+					<input ng-change="teilDokuRowChanged(d,'freigabe_am')" readonly type="text" class="form-control input-sm" uib-datepicker-popup="{{datePickerFormat}}" ng-model="d.freigabe_am" is-open="d.freigabe_amPopup.opened" datepicker-options="dateOptions" close-text="Close"/>
+					<span class="input-group-btn">
+					    <button type="button" class="btn btn-default btn-sm" ng-click="openFreigabePopup(d)"><i class="glyphicon glyphicon-calendar"></i></button>
+					</span>
+				    </p>
+				</td>
+				<td>
+				    <input typeahead-editable="false" typeahead-on-select="selectedItem($item, $model, $label, $event,d,'freigabe_vom')" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" typeahead-min-length="0" type="text" ng-model="d.freigabe_vom" uib-typeahead="fr.name as fr.name for fr in getFreigabeVom($viewValue)" class="form-control input-sm">
+				</td>
+				<td>
+				    <div class="btn-group btn-group-xs" role="group">
+					<button ng-if="d.id==0" ng-click="saveTeilDoku(d)" class="btn btn-sm btn-success">
+					    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+					</button>
+					<button ng-click="deleteTeilDokuRow(d)" class="btn btn-sm btn-danger">
+					    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					 </button>
+				    </div>
+				</td>
+			    </tr>
+			</tbody>
+		    </table>
+		</uib-accordion-group>
+
+		<uib-accordion-group>
+		    <uib-accordion-heading>
+			<div class="row">
+			    <div class="col-md-6 text-danger text-capitalize text-left">
 				<span class='badge'>GDat Anlagen</span>
 			    </div>
 			    <div class="col-md-6 text-info text-uppercase text-right">
@@ -325,7 +393,35 @@
 			    </div>
 			</div>
 		    </uib-accordion-heading>
-		    content
+		    <div class="row">
+			<div class="col-sm-12">
+			    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+				<div ng-repeat="b in anlagenButtons" class="btn-group" role="group">
+				    <button ng-click="anlagenButtonClicked(b)" class="btn btn-success" ng-class="{'btn-warning':b.selected}">{{b.name}}</button>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row">
+			<div class="col-xs-12">
+			    <h4>{{selectedButtonName}}</h4>
+			    <p>{{anlagenDir}}</p>
+			</div>
+			<div class="row container-fluid">
+			    <div ng-repeat="a in anlagenArray" class="col-md-2">
+				<!--{{a|json}}-->
+				<!--<thumbnail ng-if="a.filetype.length>0" file-type="{{a.filetype}}" source="a.url" max-height="150" max-width="150"></thumbnail>-->
+				<a href="#" class="thumbnail">
+				    <img ng-if="a.filetype=='image'" ng-src="{{a.url}}">
+				    <span ng-if="a.filetype==''">{{a.filename}}</span>
+				</a>
+				
+				<p>{{a.filename}}</p>
+				<p>{{a.mtime/1000|date}}</p>
+				<p>{{a.size}}</p>
+			    </div>
+			</div>
+		    </div>
 		</uib-accordion-group>
 
 		<uib-accordion-group>
@@ -342,19 +438,6 @@
 		    content
 		</uib-accordion-group>
 
-		<uib-accordion-group>
-		    <uib-accordion-heading>
-			<div class="row">
-			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>Teildoku</span>
-			    </div>
-			    <div class="col-md-6 text-info text-uppercase text-right">
-				Teildoku
-			    </div>
-			</div>
-		    </uib-accordion-heading>
-		    content
-		</uib-accordion-group>
 
 		<uib-accordion-group>
 		    <uib-accordion-heading>

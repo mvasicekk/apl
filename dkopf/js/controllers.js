@@ -28,7 +28,43 @@ aplApp.directive("enterfocus", function () {
 });
 
 aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location) {
-    
+    $scope.datePickerFormat = 'dd.MM.yyyy';
+    $scope.dateOptions = {
+	startingDay:1
+    };
+    $scope.anlagenButtons = [
+	{
+	    name:'Muster',
+	    selected:false,
+	    att:'muster'
+	},
+	{
+	    name:'EMPB',
+	    selected:false,
+	    att:'empb'
+	},
+	{
+	    name:'PPA',
+	    selected:false,
+	    att:'ppa'
+	},
+	{
+	    name:'GPA',
+	    selected:false,
+	    att:'gpa'
+	},
+	{
+	    name:'VPA',
+	    selected:false,
+	    att:'vpa'
+	},
+	{
+	    name:'Q-Anforderungen',
+	    selected:false,
+	    att:'qanf'
+	},
+    ];
+    $scope.anlagenArray = [];
     $scope.securityInfo = undefined;
     $scope.teil = $routeParams.teil;
     $scope.werkstoffe = [];
@@ -36,8 +72,123 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.aktualJahr;
     $scope.dposOriginalArray = [];
     $scope.mittelList = [];
+    $scope.dokumenttyp = [];
     $scope.selectedMittel = {};
 
+    $scope.getDokuBeschreibung = function(dokunr){
+	//console.log(dokunr);
+	var i = $scope.dokumenttyp.findIndex(function(e){
+			//console.log('e.doku_nr='+e.doku_nr);
+			if(e.doku_nr==dokunr){
+			    return true;
+			}
+		    });
+	//console.log(i);
+	if(i>=0){
+	    return $scope.dokumenttyp[i].doku_beschreibung;
+	}
+	else{
+	    return '';
+	}
+    }
+
+/**
+ * 
+ * @param {type} $item
+ * @param {type} $model
+ * @param {type} $label
+ * @param {type} $event
+ * @returns {undefined}
+ */
+    $scope.selectedItem = function($item, $model, $label, $event,p,element){
+	$scope.teilDokuRowChanged(p,element);
+    }
+    
+    /**
+     * 
+     * @param {type} b
+     * @returns {undefined}
+     */
+    $scope.anlagenButtonClicked = function(b){
+	console.log(b);
+	//vymazat selected vsem buttonum
+	$scope.anlagenButtons.forEach(function(v){v.selected=false;});
+	b.selected = true;
+	$scope.selectedButtonName = b.name;
+	var params = {teil:$scope.teilaktual.Teil,att:b.att};
+	return $http.post(
+		'./getAnlagenArray.php',
+		params
+		).then(function (response) {
+		    $scope.anlagenArray = response.data.docsArray;
+		    if($scope.anlagenArray!==null){
+			$scope.anlagenArray.forEach(function(v){
+			    if(v.ext=="JPG"){
+				v.filetype='image';
+			    }
+			    else{
+				v.filetype='';
+			    }
+			});
+		    }
+		    $scope.anlagenDir = response.data.dir;
+		});
+	}
+    /**
+     * 
+     * @param {type} term
+     * @returns {undefined}
+     */
+    $scope.getFreigabeVom = function(term){
+	var p={
+	    term:term
+	};
+	return $http.get('./getFreigabeV.php?term='+term).then(
+		    function(response){
+			return response.data.freigabevom;
+		    }
+		);
+    }
+/**
+ * 
+ * @param {type} d
+ * @returns {undefined}
+ */
+    $scope.openEinlagPopup = function(d){
+	d.einlag_datumPopup.opened = true;
+    }
+    /**
+     * 
+     * @param {type} d
+     * @returns {undefined}
+     */
+    $scope.openFreigabePopup = function(d){
+	d.freigabe_amPopup.opened = true;
+    }
+    
+    /**
+     * 
+     * @param {type} d
+     * @param {type} element
+     * @returns {undefined}
+     */
+    $scope.teilDokuRowChanged = function(d,element){
+	console.log(d);
+	console.log(element);
+	// v db menim jen uz stavajiciho radku tj. id>0
+	if(parseInt(d.id)>0){
+	    console.log('update v DB');
+	    var params = {d: d,update:'update'};
+	    return $http.post(
+		'./saveTeilDoku.php',
+		params
+		).then(function (response) {
+		    if(response.data.ar>0){
+			getTeilDokuArray($scope.teilaktual.Teil);
+		    }
+		});
+	}
+    }
     /**
     * inicializuje staticke sez;namy pro selecty atd., napr.seznam werkstoffu
     * @returns {undefined}
@@ -52,6 +203,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			$scope.werkstoffe = response.data.werkstoffe;
 			$scope.lager = response.data.lager;
 			$scope.mittelList = response.data.mittelList;
+			$scope.dokumenttyp = response.data.dokumenttyp;
 		    }
 		);
     }
@@ -196,6 +348,38 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    }
 		}
 	    });
+    }
+    
+    /**
+     * 
+     * @param {type} d
+     * @returns {undefined}
+     */
+    $scope.deleteTeilDokuRow = function (r) {
+	var text = "Loeschen Position ? / smazat pozici ?";
+	var d = $window.confirm(text);
+	if (d) {
+	    // na klientovi
+	    for (i = 0; i < $scope.teildokuarray.length; i++) {
+		if (r.id == $scope.teildokuarray[i].id) {
+		    //odstranit polozku z pole
+		    $scope.teildokuarray.splice(i, 1);
+		    break;
+		}
+	    }
+
+	    // a pokud uz to byl radek ulozeny v DB (id>0), tak smazu i v db
+
+	    // a vlastni smazani na serveru
+	    if (r.id > 0) {
+		var params = {r: r};
+		return $http.post(
+			'./deleteTeilDokuRow.php',
+			{params: params}
+		).then(function (response) {
+		});
+	    }
+	}
     }
     /**
      * 
@@ -342,6 +526,30 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	    }
 	});
     }
+    
+    /**
+     * 
+     * @param {type} teil
+     * @returns {undefined}
+     */
+    function getTeilDokuArray(teil){
+	return $http.post('./getDpos.php',{teil:teil}).then(
+		    function(response){
+			$scope.teildokuarray = response.data.teildokuarray;
+			if($scope.teildokuarray!==null){
+			    $scope.teildokuarray.forEach(function(v){
+				var t = v.einlag_datum.split('.');
+				v.einlag_datum = t.length<3?null:new Date(t[2],t[1]-1,t[0]);
+				v.einlag_datumPopup = {opened:false};
+				var t = v.freigabe_am.split('.');
+				v.freigabe_am = t.length<3?null:new Date(t[2],t[1]-1,t[0]);
+				v.freigabe_amPopup = {opened:false};
+				v.edit=0;
+			    });
+			}
+		    }
+		);
+    }
     /**
      * 
      * @param {type} teil
@@ -352,6 +560,19 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    function(response){
 			$scope.dpos = response.data.dpos;
 			$scope.mittel = response.data.mittel;
+			
+			$scope.teildokuarray = response.data.teildokuarray;
+			if($scope.teildokuarray!==null){
+			    $scope.teildokuarray.forEach(function(v){
+				var t = v.einlag_datum.split('.');
+				v.einlag_datum = t.length<3?null:new Date(t[2],t[1]-1,t[0]);
+				v.einlag_datumPopup = {opened:false};
+				var t = v.freigabe_am.split('.');
+				v.freigabe_am = t.length<3?null:new Date(t[2],t[1]-1,t[0]);
+				v.freigabe_amPopup = {opened:false};
+				v.edit=0;
+			    });
+			}
 			if($scope.dpos!==null){
 			    $scope.dpos.forEach(function(v){
 				v.edit=0;
@@ -363,6 +584,32 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 		    }
 		);
     }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.addTeilDoku = function(){
+	
+	var pos = 
+	    {
+		"id":"0",
+		"doku_nr":"99",
+		"teil":$scope.teilaktual.Teil,
+		"einlag_datum":new Date(),
+		"freigabe_am":null,
+		"freigabe_vom":"",
+		"musterplatz":"",
+		einlag_datumPopup : {opened:false},
+		freigabe_amPopup : {opened:false}
+	    };
+	    
+	    if($scope.teildokuarray === null){
+		$scope.teildokuarray = [];
+	    }
+	    $scope.teildokuarray.unshift(pos);
+    }
+
     
     /**
      * 
@@ -453,9 +700,31 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	
 	$scope.teile=null;
 	$scope.teil_search=$scope.teilaktual.Teil;
+	$scope.anlagenButtons.forEach(function(v){v.selected=false;});
+	$scope.anlagenArray = [];
+	$scope.anlagenDir = '';
 	getDpos($scope.teilaktual.Teil);
     }
     
+    /**
+     * 
+     * @param {type} d
+     * @returns {undefined}
+     */
+    $scope.saveTeilDoku = function(d){
+	console.log(d);
+	var params = {d: d};
+	return $http.post(
+		'./saveTeilDoku.php',
+		params
+	).then(function (response) {
+	    getTeilDokuArray($scope.teilaktual.Teil);
+	});
+    }
+     
+    /**
+     * 
+     */
     $scope.getTeilMatch = function () {
 	var params = {a: $scope.teil_search};
 	return $http.post(

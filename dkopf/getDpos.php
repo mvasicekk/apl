@@ -2,6 +2,7 @@
 session_start();
 require_once '../db.php';
 
+// vztahne neje dpos ale i teildoku, mittel (AM/MM), prilohy atd ....
 $data = file_get_contents("php://input");
 $o = json_decode($data);
 
@@ -34,10 +35,14 @@ if($mittel!==NULL){
     }
 }
 
+//teildoku
+$teilDokuArray = $a->getTeilDokuArray($teil);
+
 $returnArray = array(
 	'teil'=>$teil,
 	'dpos'=>$dpos,
-	'mittel'=>$mittel
+	'mittel'=>$mittel,
+	'teildokuarray'=>$teilDokuArray,
     );
     
 echo json_encode($returnArray);
