@@ -7,7 +7,7 @@
 <!--    <div>
 	{{showGroups|json}}
     </div>-->
-<table ng-init="columns=15" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover table-responsive">
+<table ng-init="columns=14" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover table-responsive">
 	<thead>
 	    <tr class="no-print">
 		<th colspan="{{columns}}">
@@ -30,15 +30,11 @@
 			<input ng-model="wahrung" type="radio" name="wahrungRadioOptions" id="inlineRadio2" value="CZK"> CZK
 		    </label>
 		    </div>
-<!--		    <div>
-		    <div ng-repeat="group in groups" class="checkbox-inline">
-		    <label class="checkbox-inline">
-			<input ng-model="showGroups[group].show" type="checkbox">{{group}}
-		    </label>
-		    </div>
-		    </div>-->
 		    <div style="display:inline-block;">
 			<button class="btn btn-primary no-print" ng-click="showPrintDialog()">drucken</button>
+		    </div>
+		    <div style="display:inline-block;vertical-align: top;width:40em;">
+			<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" type="text" class="form-control" placeholder="global Suche / glob. hledani" ng-model="globalsearch"/>
 		    </div>
 		</th>
 	    </tr>
@@ -49,6 +45,12 @@
 		</th>
 		<th>Auftrag</th>
 		<th>
+		<div class="checkbox no-print">
+		<label>
+		    <input type="checkbox" ng-model="filter_nichterledigt">
+		    nicht erledigt
+		    </label>
+		</div>
 		    Erhalten am<hr>
 		    Erledigt am
 		</th>
@@ -59,22 +61,17 @@
 		    Teil<hr>
 		    Giesstag
 		</th>
-		<th class="text-right">Stk expediert</th>
-		<th class="text-right">Stk reklamiert</th>
-		<th class="text-right">Bewertung</th>
-		<th class="text-right">
-		    Stk<br>
-		    Ausschuss<hr>
-		    Nacharbeit<hr>
-		    Dif / falsch deklariert<hr>
-		    Verpackung<hr>
-		    Kreislauf<hr>
-		    Unklar<hr>
-		    nicht anerkannt
+		<th class="text-right">Stk exp.</th>
+		<th class="text-right">Stk rekl.</th>
+		<th class="text-right">Bew.</th>
+		<th style="width:8em;" class="text-right">
+		    <div class="row rowstk">
+			<div class="col-xs-6 text-left">Typ</div>
+			<div class="col-xs-6 text-right">Stk</div>
+		    </div>
 		</th>
 		<th class="text-right">Kosten[{{wahrung}}]</th>
 		<th class="text-right">Abmahn. Betrag [CZK]</th>
-		<th>erstellt</th>
 		<th>Bemerkung</th>
 	    </tr>
 	</thead>
@@ -86,10 +83,10 @@
 	    </tr>
 	</tbody>
 	<tbody>
-	    <tr class="{{r.section}}" ng-repeat="r in dZeilen" ng-init="zeilenIndex = $index">
+	    <tr class="{{r.section}}" ng-repeat="r in dZeilen|filter:globalsearch" ng-init="zeilenIndex = $index">
 		
 		<!--kundeheader------------------------------------------------> 
-		<td colspan="{{columns-6}}" class="{{r.section}}" ng-if="r.section=='kundeheader'">
+		<td colspan="{{columns-5}}" class="{{r.section}}" ng-if="r.section=='kundeheader'">
 		    {{r.kunde}}
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
@@ -119,65 +116,88 @@
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
 		    {{r.summen.abmahnungenbetrag}}
 		</td>
-		<td colspan="{{2}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
 		    
 		</td>
 		
 		<!--rekldetail---------------------------------------------- -->
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    <a target="_blank" href="../reklamation/reklamation.php#/detail/{{r.rekl.id}}">{{r.rekl.rekl_nr}}</a><hr>
 		    {{r.rekl.kd_rekl_nr}}
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.export}}
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    <div title="erhalten am">{{r.rekl.rekl_datum}}</div><hr>
 		    <div title="erledigt am" style="position:absolute;">{{r.rekl.rekl_erledigt_am}}</div>
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.beschr_abweichung}}
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.beschr_ursache}}
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.beschr_beseitigung}}
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    <a target="_blank" href="../dkopf/dkopf.php?teil={{r.rekl.teil}}">{{r.rekl.teil}}</a><hr>
 		    <div title="giesstag">{{r.rekl.giesstag}}</div>
 		</td>
 		
-		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.stk_expediert}}
 		</td>
 		
-		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.stk_reklammiert}}
 		</td>
 		
-		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.interne_bewertung}}
 		</td>
 		
-		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
-		    {{r.rekl.anerkannt_stk_ausschuss}}<hr>
-		    {{r.rekl.anerkannt_stk_nacharbeit}}<hr>
-		    {{r.rekl.dif_falsch_deklariert_stk}}<hr>
-		    {{r.rekl.verpackung_stk}}<hr>
-		    {{r.rekl.kreislauf_stk}}<hr>
-		    {{r.rekl.unklar_stk}}<hr>
-		    {{r.rekl.anerkannt_stk_nein}}
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    <div title="Ausschuss" ng-show="r.rekl.anerkannt_stk_ausschuss!=0" class="row rowstk">
+			<div class="col-xs-6 text-left">A</div>
+			<div class="col-xs-6 text-right">{{r.rekl.anerkannt_stk_ausschuss}}</div>
+		    </div>
+		    <div title="Nacharbeit" ng-show="r.rekl.anerkannt_stk_nacharbeit!=0" class="row rowstk">
+			<div class="col-xs-6 text-left">NA</div>
+			<div class="col-xs-6 text-right">{{r.rekl.anerkannt_stk_nacharbeit}}</div>
+		    </div>
+		    <div title="Dif / falsch deklariert" ng-show="r.rekl.dif_falsch_deklariert_stk!=0" class="row rowstk">
+			<div class="col-xs-6 text-left">Dif</div>
+			<div class="col-xs-6 text-right">{{r.rekl.dif_falsch_deklariert_stk}}</div>
+		    </div>
+		    <div title="Verpackung" ng-show="r.rekl.verpackung_stk!=0" class="row rowstk">
+			<div class="col-xs-6 text-left">VPA</div>
+			<div class="col-xs-6 text-right">{{r.rekl.verpackung_stk}}</div>
+		    </div>
+		    <div title="Kreislauf" ng-show="r.rekl.kreislauf_stk!=0" class="row rowstk">
+			<div class="col-xs-6 text-left">Mat</div>
+			<div class="col-xs-6 text-right">{{r.rekl.kreislauf_stk}}</div>
+		    </div>
+		    <div title="Unklar" ng-show="r.rekl.unklar_stk!=0" class="row rowstk">
+			<div class="col-xs-6 text-left">?</div>
+			<div class="col-xs-6 text-right">{{r.rekl.unklar_stk}}</div>
+		    </div>
+		    <div title="nicht anerkannt" ng-show="r.rekl.anerkannt_stk_nein!=0" class="row">
+			<div class="col-xs-6 text-left">
+			    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			</div>
+			<div class="col-xs-6 text-right">{{r.rekl.anerkannt_stk_nein}}</div>
+		    </div>
 		</td>
 		
-		<td class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
 		    <span ng-show="wahrung=='EUR'">{{
 			r.rekl.anerkannt_ausschuss_preis_eur
 			+r.rekl.anerkannt_nacharbeit_preis_eur
@@ -196,20 +216,16 @@
 			}}</span>
 		</td>
 		
-		<td class="{{r.section}}  text-right" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}  text-right" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.abmahnungenbetrag}}
 		</td>
 		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
-		    {{r.rekl.erstellt}}
-		</td>
-		
-		<td class="{{r.section}}" ng-if="r.section=='rekldetail'">
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.bemerkung}}
 		</td>
 		
 		<!--tableSummen------------------------------------------------> 
-		<td colspan="{{columns-6}}" class="{{r.section}}" ng-if="r.section=='tableSummen'">
+		<td colspan="{{columns-5}}" class="{{r.section}}" ng-if="r.section=='tableSummen'">
 		    Gesamtsumme
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
@@ -239,7 +255,7 @@
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
 		    {{r.summen.abmahnungenbetrag}}
 		</td>
-		<td colspan="{{2}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
 		    
 		</td>
 	    </tr>

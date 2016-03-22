@@ -404,23 +404,34 @@
 		    </div>
 		    <div class="row">
 			<div class="col-xs-12">
-			    <h4>{{selectedButtonName}}</h4>
-			    <p>{{anlagenDir}}</p>
+			    <h4>{{selectedButtonName}} <small>{{anlagenDir}}</small></h4>
+			    <button ng-if="selectedAtt!=undefined && selectedAtt.length>0" ngf-select="uploadFiles1($files,$invalidFiles,selectedButton)" multiple="multiple" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neu / novy dokument
+			    </button>
 			</div>
-			<div class="row container-fluid">
-			    <div ng-repeat="a in anlagenArray" class="col-md-2">
-				<!--{{a|json}}-->
-				<!--<thumbnail ng-if="a.filetype.length>0" file-type="{{a.filetype}}" source="a.url" max-height="150" max-width="150"></thumbnail>-->
-				<a href="#" class="thumbnail">
-				    <img ng-if="a.filetype=='image'" ng-src="{{a.url}}">
-				    <span ng-if="a.filetype==''">{{a.filename}}</span>
-				</a>
-				
-				<p>{{a.filename}}</p>
-				<p>{{a.mtime/1000|date}}</p>
-				<p>{{a.size}}</p>
+			<div ng-if="files.length>0">
+			<ul class="list-group">
+			    <li class="list-group-item" ng-repeat="f in files" style="font:smaller">{{f.name}}
+				<div class="progress">
+				    <div aria-valuenow="{{f.progress}}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-warning" role="progressbar" style="width: {{f.progress}}%">
+				    {{f.progress}} %
+				    </div>
+				</div>
+			    </li>
+			</ul>
+			</div>
+			    <div ng-show="showWaitWheel" class="col-xs-12">
+				<p>Vytvarim nahledy obrazku, to chvilku trva :(</p>
+				<img ng-src="../images/wait_wheel.gif">
 			    </div>
-			</div>
+			    <div ng-repeat="a in anlagenArray" class="col-sm-2">
+				<a target="_blank" href="{{a.url}}" class="thumbnail">
+				    <img class="img-responsive center-block" ng-src="{{a.thumburl}}">
+				</a>
+				<p>{{a.filename}}</p>
+				<p>{{a.mtime*1000|date:'dd.MM.yyyy'}}</p>
+				<!--<p>{{a.size}}</p>-->
+			    </div>
 		    </div>
 		</uib-accordion-group>
 

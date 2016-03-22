@@ -28,11 +28,26 @@ if ($kundeGdatPath !== NULL) {
     }
     if($docsArray!==NULL){
 	foreach ($docsArray as $index=>$doc){
-	    if(!file_exists($ppaDir."/.thumbs/".$doc['filename']) && $doc['ext']=='JPG'){
-		$img = new Imagick($ppaDir."/".$doc['filename']);
+	    $extPos = strrpos($doc['filename'], '.');
+	    $thumbsFilename = $ppaDir."/.thumbs/".substr($doc['filename'],0,$extPos).'.jpg';
+	    if(!file_exists($thumbsFilename) && ($doc['ext']=='JPG'||$doc['ext']=='PDF')){
+		$img = new Imagick($ppaDir."/".$doc['filename'].'[0]');
+		
+		if($doc['ext']=='PDF'){
+		    $img->setImageFormat('jpg');
+		    $img = $img->flattenImages();
+		}
 		$img->thumbnailimage(200, 200, TRUE);
-		$img->writeimage($ppaDir."/.thumbs/".$doc['filename']);
+		if($doc['ext']=='PDF'){
+		    $img->writeimage($thumbsFilename);
+		    $doc['ext']=='JPG';
+		}
+		else{
+		    $img->writeimage($thumbsFilename);
+		}
 	    }
+	    $separatorPos = strrpos($doc['url'], '/');
+	    $docsArray[$index]['thumburl'] = substr($doc['url'],0,$separatorPos)."/.thumbs/".substr($doc['filename'],0,$extPos).'.jpg';
 	}
     }
 }

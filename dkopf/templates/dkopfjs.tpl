@@ -19,6 +19,7 @@
     <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     
     <script src="../libs/bower_components/angular-thumbnails/dist/angular-thumbnails.min.js"></script>
+    <script src="../libs/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
     
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>

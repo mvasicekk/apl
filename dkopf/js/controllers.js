@@ -27,7 +27,7 @@ aplApp.directive("enterfocus", function () {
         }
 });
 
-aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location) {
+aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location,Upload) {
     $scope.datePickerFormat = 'dd.MM.yyyy';
     $scope.dateOptions = {
 	startingDay:1
@@ -74,7 +74,42 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     $scope.mittelList = [];
     $scope.dokumenttyp = [];
     $scope.selectedMittel = {};
+    $scope.showWaitWheel = false;
+    $scope.selectedButton;
 
+
+    $scope.uploadFiles1 = function(files, errFiles,b) {
+        $scope.files = files;
+        $scope.errFiles = errFiles;
+        angular.forEach(files, function(file) {
+            file.upload = Upload.upload({
+                url: './upload.php',
+		data: {file: file, att:$scope.selectedAtt,'teil':$scope.teilaktual.Teil}
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                    $scope.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 * 
+                                         evt.loaded / evt.total));
+		//pokud bude progress = 100, odstranim file ze seznamu files
+		if(file.progress==100){
+		    var ind = $scope.files.findIndex(function(v){v.name==file.name});
+		    $scope.files.splice(ind,1);
+		    //pokud bude pole nulove, obnovim prehled souboru
+		    if($scope.files.length==0){
+			$scope.anlagenButtonClicked(b);
+		    }
+		}
+            });
+        });
+    }
+    
     $scope.getDokuBeschreibung = function(dokunr){
 	//console.log(dokunr);
 	var i = $scope.dokumenttyp.findIndex(function(e){
@@ -115,7 +150,10 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	$scope.anlagenButtons.forEach(function(v){v.selected=false;});
 	b.selected = true;
 	$scope.selectedButtonName = b.name;
+	$scope.selectedButton = b;
+	$scope.selectedAtt = b.att;
 	var params = {teil:$scope.teilaktual.Teil,att:b.att};
+	$scope.showWaitWheel = true;
 	return $http.post(
 		'./getAnlagenArray.php',
 		params
@@ -132,6 +170,7 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			});
 		    }
 		    $scope.anlagenDir = response.data.dir;
+		    $scope.showWaitWheel = false;
 		});
 	}
     /**

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('dkopfApp',['angular-thumbnails','ui.bootstrap','ngRoute']);
+var aplApp = angular.module('dkopfApp',['ngFileUpload','angular-thumbnails','ui.bootstrap','ngRoute']);
 
 aplApp.config(['$routeProvider',
     function($routeProvider){
