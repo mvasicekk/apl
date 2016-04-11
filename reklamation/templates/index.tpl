@@ -32,6 +32,8 @@
 
     <script src="./bower_components/numeral/numeral.js"></script>
     
+    <script src="../libs/bower_components/angular-numeraljs/dist/angular-numeraljs.min.js"></script>
+    
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
     

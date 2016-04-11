@@ -27,7 +27,13 @@ aplApp.directive("enterfocus", function () {
         }
 });
 
-aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location,Upload) {
+aplApp.controller('detailController', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize,Upload) {
+    $scope.tinyMceOptions = {
+	inline:true,
+	menubar:false
+    };
+    $scope.tinymceModel = "tady se da psat pomoci zabudovaneho editoru, zkus to !";
+    $scope.showHelp = false;
     $scope.datePickerFormat = 'dd.MM.yyyy';
     $scope.dateOptions = {
 	startingDay:1
@@ -37,31 +43,37 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	    name:'Muster',
 	    selected:false,
 	    att:'muster'
+	    ,elementId:'show_att_muster'
 	},
 	{
 	    name:'EMPB',
 	    selected:false,
 	    att:'empb'
+	    ,elementId:'show_att_empb'
 	},
 	{
 	    name:'PPA',
 	    selected:false,
 	    att:'ppa'
+	    ,elementId:'show_att_ppa'
 	},
 	{
 	    name:'GPA',
 	    selected:false,
 	    att:'gpa'
+	    ,elementId:'show_att_gpa'
 	},
 	{
 	    name:'VPA',
 	    selected:false,
 	    att:'vpa'
+	    ,elementId:'show_att_vpa'
 	},
 	{
 	    name:'Q-Anforderungen',
 	    selected:false,
 	    att:'qanf'
+	    ,elementId:'show_att_qanf'
 	},
     ];
     $scope.anlagenArray = [];
@@ -262,6 +274,17 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     }
 
     
+    $scope.initHelp = function(){
+	var p={
+	    form_id:'dkopf'
+	};
+	return $http.post('./getHelpInfo.php',p).then(
+		    function(response){
+			$scope.helpText = response.data.help.helpText;
+			$scope.hIArray = response.data.help.hiArray;
+		    }
+		);
+    }
 
 
     /**
@@ -788,6 +811,8 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
     // init
     $scope.initSecurity();
     $scope.initLists();
+    $scope.initHelp();
+    
     if($routeParams.teil_search!='0'){
 	$scope.teil_search = $routeParams.teil_search;
 	$scope.getTeilMatch();

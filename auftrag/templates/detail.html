@@ -146,12 +146,9 @@
 	    <a ng-show="securityInfo.showArray.exportloeschen" href="../dauftr/export_fullen/export_loeschen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export loeschen</a>
 	    <a ng-show="securityInfo.showArray.exporttablo" href="../dauftr/exporttablo.php?export={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Exporttablo</a>
 	    <a ng-show="securityInfo.showArray.cmr" href="../cmr/cmr.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">CMR</a>
-	    
-	    <!--<a href="../get_parameters.php?popisky=Export;Termin,*DATE&promenne=export;termin&values={{auftragInfo.auftragsnr}};{{auftragInfo.ausliefer_datum}}&report=D710" class="btn btn-xs btn-block btn-info">D710 - Lieferungsuebersicht</a>-->
-	    <!--<a href="../get_parameters.php?popisky=Export (leer = Blanko );Teil;Termin;Text,*RA;Wassermarke,*RA;Format,*RA&promenne=export;teil;termin;popisek;watermark;format&values={{auftragInfo.auftragsnr}};*;{{auftragInfo.ausliefer_datum}};FREIGABE,ZWEIFLER;nein,ja;6x auf A4,2x auf A4&report=D64X" class="btn btn-xs btn-block btn-info">D6XX - Freigabezettel</a>-->
 	</div>
 	<div class="col-sm-3">
-	    <div class="btn-group btn-group-justified">
+	    <div style="margin-bottom: 4px;" class="btn-group btn-group-justified">
 		<div class="btn-group dropup">
     	    <button ng-show="securityInfo.showArray.ls" type="button" class="btn btn-xs btn-block btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		Liefer- und leist. uebersicht <span class="caret"></span>
@@ -164,9 +161,7 @@
 	    </ul>
 		    </div>
 	    </div>
-
-<!--	    <a disabled href="" class="btn btn-xs btn-block btn-info">Rechnung exportieren</a>
-	    <a disabled href="" class="btn btn-xs btn-block btn-info">Rechnung importiere</a>-->
+	    <a ng-show="securityInfo.showArray.d6xx" href="../dauftr/freigabezettel/fz_parameters.php" class="btn btn-xs btn-block btn-info">D6XX</a>
 	    <a href="../index.php" class="btn btn-xs btn-block btn-danger">Ende / konec</a>
 	</div>
     </div>

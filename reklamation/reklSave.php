@@ -127,6 +127,12 @@ $field2Value = array(
     "kreislauf_preis_eur" => floatval(strtr($rekl->kreislauf_preis_eur, ',', '.')),
     "pauschale_beleg" => trim($rekl->pauschale_beleg),
     "pauschale_preis_eur" => floatval(strtr($rekl->pauschale_preis_eur, ',', '.')),
+    'forecast_anerkannt_ausschuss_eur'  => floatval(strtr($rekl->forecast_anerkannt_ausschuss_eur, ',', '.')),
+    'forecast_anerkannt_nacharbeit_eur'  => floatval(strtr($rekl->forecast_anerkannt_nacharbeit_eur, ',', '.')),
+    'forecast_dif_falsch_deklariert_eur'  => floatval(strtr($rekl->forecast_dif_falsch_deklariert_eur, ',', '.')),
+    'forecast_verpackung_eur'  => floatval(strtr($rekl->forecast_verpackung_eur, ',', '.')),
+    'forecast_kreislauf_eur'  => floatval(strtr($rekl->forecast_kreislauf_eur, ',', '.')),
+    'forecast_pauschale_eur'  => floatval(strtr($rekl->forecast_pauschale_eur, ',', '.')),
 );
 
 // v pripade ze se ukoncuje reklamace

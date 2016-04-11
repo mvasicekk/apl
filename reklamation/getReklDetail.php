@@ -42,6 +42,13 @@ require_once '../db.php';
 	$rekl['verpackung_preis_czk'] = $kurs * $rekl['verpackung_preis_eur'];
 	$rekl['kreislauf_preis_czk'] = $kurs * $rekl['kreislauf_preis_eur'];
 	$rekl['pauschale_preis_czk'] = $kurs * $rekl['pauschale_preis_eur'];
+	
+//	$rekl['forecast_anerkannt_ausschuss_eur'] = 0;
+//	$rekl['forecast_anerkannt_nacharbeit_eur'] = 0;
+//	$rekl['forecast_dif_falsch_deklariert_eur'] = 0;
+//	$rekl['forecast_verpackung_eur'] = 0;
+//	$rekl['forecast_kreislauf_eur'] = 0;
+//	$rekl['forecast_pauschale_eur'] = 0;
     }
     
     $returnArray = array(

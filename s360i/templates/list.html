@@ -2,12 +2,20 @@
 
 <div class="container-fluid">
     <div class="page-header">
-	<h4>S360 (interaktiv)</h4>
+	<div class="row">
+	    <div class="col-sm-2 text-left">
+		<h4>S360 (interaktiv)</h4>
+	    </div>
+	    <div class="col-sm-10 text-right">
+		<h5>( Kunde: {{kundeVon}}-{{kundeBis}} / Datum: {{reklVon|date:'dd.MM.yyyy'}}-{{reklBis|date:'dd.MM.yyyy'}} / ReklNr: {{reklnr}} / TeilNr: {{teilnr}}) </h5>
+	    </div>
+	</div>
+	<!--<h4>S360 (interaktiv) ( Kunde: {{kundeVon}}-{{kundeBis}} / Datum: {{reklVon}}-{{reklBis}} / ReklNr: {{reklnr}} / TeilNr: {{teilnr}}) </h4>-->
     </div>
 <!--    <div>
 	{{showGroups|json}}
     </div>-->
-<table ng-init="columns=14" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover table-responsive">
+<table ng-init="columns=15" id='d550it' st-table="dZeilen" st-safe-src="zeilen" class="table table-bordered table-striped table-condensed table-hover table-responsive">
 	<thead>
 	    <tr class="no-print">
 		<th colspan="{{columns}}">
@@ -20,7 +28,8 @@
 			<input tabindex="4" ng-model="reklBis" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="Erhalten bis">
 		    </div>
 		    <div style="display:inline-block;">
-			<input tabindex="5" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="8" ng-model="reklnr" placeholder="ReklNr" type="text"/>
+			<input tabindex="5" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="10" ng-model="reklnr" placeholder="ReklNr" type="text"/>
+			<input tabindex="6" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="10" ng-model="teilnr" placeholder="TeilNr" type="text"/>
 		    </div>
 		    <div style="display:inline-block;vertical-align:top;">
 		    <label class="radio-inline">
@@ -62,7 +71,14 @@
 		    Giesstag
 		</th>
 		<th class="text-right">Stk exp.</th>
-		<th class="text-right">Stk rekl.</th>
+		<th class="text-right">
+		    <div class="checkbox no-print">
+			<label>
+			<input type="checkbox" ng-model="filter_ppm">
+			PPM</label>
+		    </div>
+		    Stk rekl.
+		</th>
 		<th class="text-right">Bew.</th>
 		<th style="width:8em;" class="text-right">
 		    <div class="row rowstk">
@@ -70,8 +86,9 @@
 			<div class="col-xs-6 text-right">Stk</div>
 		    </div>
 		</th>
-		<th class="text-right">Kosten[{{wahrung}}]</th>
-		<th class="text-right">Abmahn. Betrag [CZK]</th>
+		<th class="text-right">forecast<br>Kosten[{{wahrung}}]<br>Pauschale{{wahrung}}</th>
+		<th class="text-right">ist<br>Kosten[{{wahrung}}]<br>Pauschale{{wahrung}}</th>
+		<th class="text-right">Abmahn. Betrag [CZK]<br>Vorschl.<br>Ist</th>
 		<th>Bemerkung</th>
 	    </tr>
 	</thead>
@@ -83,10 +100,10 @@
 	    </tr>
 	</tbody>
 	<tbody>
-	    <tr class="{{r.section}}" ng-repeat="r in dZeilen|filter:globalsearch" ng-init="zeilenIndex = $index">
+	    <tr ng-show="(filter_ppm&&r.rekl.ppm!='0')||(!filter_ppm)" class="{{r.section}}" ng-repeat="r in dZeilen|filter:globalsearch" ng-init="zeilenIndex = $index">
 		
 		<!--kundeheader------------------------------------------------> 
-		<td colspan="{{columns-5}}" class="{{r.section}}" ng-if="r.section=='kundeheader'">
+		<td colspan="{{columns-6}}" class="{{r.section}}" ng-if="r.section=='kundeheader'">
 		    {{r.kunde}}
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
@@ -97,24 +114,43 @@
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
 		    <span ng-show="wahrung=='EUR'">{{
+			r.summen.forecast_anerkannt_ausschuss_eur
+			+r.summen.forecast_anerkannt_nacharbeit_eur
+			+r.summen.forecast_dif_falsch_deklariert_eur
+			+r.summen.forecast_verpackung_eur
+			+r.summen.forecast_kreislauf_eur|numeraljs:'0,000.00'}}<br>
+			{{r.summen.forecast_pauschale_eur|numeraljs:'0,000.00'
+			}}</span>
+		    <span ng-show="wahrung=='CZK'">{{
+			r.summen.forecast_anerkannt_ausschuss_czk
+			+r.summen.forecast_anerkannt_nacharbeit_czk
+			+r.summen.forecast_dif_falsch_deklariert_czk
+			+r.summen.forecast_verpackung_czk
+			+r.summen.forecast_kreislauf_czk|numeraljs:'0,000.00'}}<br>
+			{{r.summen.forecast_pauschale_czk|numeraljs:'0,000.00'
+			}}</span>
+		</td>
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
+		    <span ng-show="wahrung=='EUR'">{{
 			r.summen.anerkannt_ausschuss_preis_eur
 			+r.summen.anerkannt_nacharbeit_preis_eur
 			+r.summen.dif_falsch_deklariert_preis_eur
 			+r.summen.verpackung_preis_eur
-			+r.summen.kreislauf_preis_eur
-			+r.summen.pauschale_preis_eur|number:2
+			+r.summen.kreislauf_preis_eur|numeraljs:'0,000.00'}}<br>
+			{{r.summen.pauschale_preis_eur|numeraljs:'0,000.00'
 			}}</span>
 		    <span ng-show="wahrung=='CZK'">{{
 			r.summen.anerkannt_ausschuss_preis_czk
 			+r.summen.anerkannt_nacharbeit_preis_czk
 			+r.summen.dif_falsch_deklariert_preis_czk
 			+r.summen.verpackung_preis_czk
-			+r.summen.kreislauf_preis_czk
-			+r.summen.pauschale_preis_czk|number:2
+			+r.summen.kreislauf_preis_czk|numeraljs:'0,000.00'}}<br>
+			{{r.summen.pauschale_preis_czk|numeraljs:'0,000.00'
 			}}</span>
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
-		    {{r.summen.abmahnungenbetrag}}
+		    <span title="Vorschlag" style="white-space: nowrap;">{{r.summen.abmahnungenbetrag|numeraljs:'0,000.00'}}</span><br>
+		    <span title="Ist" style="white-space: nowrap;">{{r.summen.abmahnungenbetrag_ist|numeraljs:'0,000.00'}}</span>
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='kundeheader'">
 		    
@@ -128,11 +164,13 @@
 		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.export}}
+		    <!--{{r.rekl.export.toString().replace(/,/g, ', ')}}-->
 		</td>
 		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    <div title="erhalten am">{{r.rekl.rekl_datum}}</div><hr>
 		    <div title="erledigt am" style="position:absolute;">{{r.rekl.rekl_erledigt_am}}</div>
+		    <div title="erledigt am">{{r.rekl.rekl_erledigt_am}}</div>
 		</td>
 		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
@@ -156,8 +194,8 @@
 		    {{r.rekl.stk_expediert}}
 		</td>
 		
-		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
-		    {{r.rekl.stk_reklammiert}}
+		<td  title="{{r.rekl.ppm!='0'?'ist im PPM':''}}" ng-class="{hasppm:r.rekl.ppm!='0'}" ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    <span ng-show="(filter_ppm&&r.rekl.ppm!='0')||(!filter_ppm)">{{r.rekl.stk_reklammiert}}</span>
 		</td>
 		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
@@ -189,43 +227,62 @@
 			<div class="col-xs-6 text-left">?</div>
 			<div class="col-xs-6 text-right">{{r.rekl.unklar_stk}}</div>
 		    </div>
-		    <div title="nicht anerkannt" ng-show="r.rekl.anerkannt_stk_nein!=0" class="row">
+		    <div title="nicht anerkannt" ng-show="r.rekl.anerkannt_stk_nein!=0" class="row  rowstk">
 			<div class="col-xs-6 text-left">
 			    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 			</div>
 			<div class="col-xs-6 text-right">{{r.rekl.anerkannt_stk_nein}}</div>
 		    </div>
 		</td>
-		
+		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
+		    <span ng-show="wahrung=='EUR'">{{
+			r.rekl.forecast_anerkannt_ausschuss_eur
+			+r.rekl.forecast_anerkannt_nacharbeit_eur
+			+r.rekl.forecast_dif_falsch_deklariert_eur
+			+r.rekl.forecast_verpackung_eur
+			+r.rekl.forecast_kreislauf_eur|numeraljs:'0,000.00'}}<br>
+			{{r.rekl.forecast_pauschale_eur|numeraljs:'0,000.00'
+			}}</span>
+		    <span ng-show="wahrung=='CZK'">{{
+			r.rekl.forecast_anerkannt_ausschuss_czk
+			+r.rekl.forecast_anerkannt_nacharbeit_czk
+			+r.rekl.forecast_dif_falsch_deklariert_czk
+			+r.rekl.forecast_verpackung_czk
+			+r.rekl.forecast_kreislauf_czk|numeraljs:'0,000.00'}}<br>
+			{{r.rekl.forecast_pauschale_czk|numeraljs:'0,000.00'
+			}}</span>
+		</td>		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}} text-right" ng-if="r.section=='rekldetail'">
 		    <span ng-show="wahrung=='EUR'">{{
 			r.rekl.anerkannt_ausschuss_preis_eur
 			+r.rekl.anerkannt_nacharbeit_preis_eur
 			+r.rekl.dif_falsch_deklariert_preis_eur
 			+r.rekl.verpackung_preis_eur
-			+r.rekl.kreislauf_preis_eur
-			+r.rekl.pauschale_preis_eur|number:2
+			+r.rekl.kreislauf_preis_eur|numeraljs:'0,000.00'}}<br>
+			{{r.rekl.pauschale_preis_eur|numeraljs:'0,000.00'
 			}}</span>
 		    <span ng-show="wahrung=='CZK'">{{
 			r.rekl.anerkannt_ausschuss_preis_czk
 			+r.rekl.anerkannt_nacharbeit_preis_czk
 			+r.rekl.dif_falsch_deklariert_preis_czk
 			+r.rekl.verpackung_preis_czk
-			+r.rekl.kreislauf_preis_czk
-			+r.rekl.pauschale_preis_czk|number:2
+			+r.rekl.kreislauf_preis_czk|numeraljs:'0,000.00'}}<br>
+			{{r.rekl.pauschale_preis_czk|numeraljs:'0,000.00'
 			}}</span>
 		</td>
 		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}  text-right" ng-if="r.section=='rekldetail'">
-		    {{r.rekl.abmahnungenbetrag}}
+		    <span title="Vorschlag" style="white-space: nowrap;">{{r.rekl.abmahnungenbetrag|numeraljs:'0,000.00'}}</span><br>
+		    <span title="Ist" style="white-space: nowrap;">{{r.rekl.abmahnungenbetrag_ist|numeraljs:'0,000.00'}}</span>
 		</td>
 		
 		<td  ng-show="(filter_nichterledigt&&r.rekl.rekl_erledigt_am=='')||(!filter_nichterledigt)" class="{{r.section}}" ng-if="r.section=='rekldetail'">
 		    {{r.rekl.bemerkung}}
+		    <div ng-if="r.rekl.verursacherArray.length>0">(Verursacher: <span ng-repeat="v in r.rekl.verursacherArray">{{v.persnr}}<span ng-if="!$last">, </span></span>)</div>
 		</td>
 		
 		<!--tableSummen------------------------------------------------> 
-		<td colspan="{{columns-5}}" class="{{r.section}}" ng-if="r.section=='tableSummen'">
+		<td colspan="{{columns-6}}" class="{{r.section}}" ng-if="r.section=='tableSummen'">
 		    Gesamtsumme
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
@@ -236,24 +293,44 @@
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
 		    <span ng-show="wahrung=='EUR'">{{
+			r.summen.forecast_anerkannt_ausschuss_eur
+			+r.summen.forecast_anerkannt_nacharbeit_eur
+			+r.summen.forecast_dif_falsch_deklariert_eur
+			+r.summen.forecast_verpackung_eur
+			+r.summen.forecast_kreislauf_eur|numeraljs:'0,000.00'}}<br>
+			{{r.summen.forecast_pauschale_eur|numeraljs:'0,000.00'
+			}}</span>
+		    <span ng-show="wahrung=='CZK'">{{
+			r.summen.forecast_anerkannt_ausschuss_czk
+			+r.summen.forecast_anerkannt_nacharbeit_czk
+			+r.summen.forecast_dif_falsch_deklariert_czk
+			+r.summen.forecast_verpackung_czk
+			+r.summen.forecast_kreislauf_czk|numeraljs:'0,000.00'}}<br>
+			{{r.summen.forecast_pauschale_czk|numeraljs:'0,000.00'
+			}}</span>
+		</td>		
+
+		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
+		    <span ng-show="wahrung=='EUR'">{{
 			r.summen.anerkannt_ausschuss_preis_eur
 			+r.summen.anerkannt_nacharbeit_preis_eur
 			+r.summen.dif_falsch_deklariert_preis_eur
 			+r.summen.verpackung_preis_eur
-			+r.summen.kreislauf_preis_eur
-			+r.summen.pauschale_preis_eur|number:2
+			+r.summen.kreislauf_preis_eur|numeraljs:'0,000.00'}}<br>
+			{{r.summen.pauschale_preis_eur|numeraljs:'0,000.00'
 			}}</span>
 		    <span ng-show="wahrung=='CZK'">{{
 			r.summen.anerkannt_ausschuss_preis_czk
 			+r.summen.anerkannt_nacharbeit_preis_czk
 			+r.summen.dif_falsch_deklariert_preis_czk
 			+r.summen.verpackung_preis_czk
-			+r.summen.kreislauf_preis_czk
-			+r.summen.pauschale_preis_czk|number:2
+			+r.summen.kreislauf_preis_czk|numeraljs:'0,000.00'}}<br>
+			{{r.summen.pauschale_preis_czk|numeraljs:'0,000.00'
 			}}</span>
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
-		    {{r.summen.abmahnungenbetrag}}
+		    <span title="Vorschlag" style="white-space: nowrap;">{{r.summen.abmahnungenbetrag|numeraljs:'0,000.00'}}</span><br>
+		    <span title="Ist" style="white-space: nowrap;">{{r.summen.abmahnungenbetrag_ist|numeraljs:'0,000.00'}}</span>
 		</td>
 		<td colspan="{{1}}" class="{{r.section}} text-right" ng-if="r.section=='tableSummen'">
 		    

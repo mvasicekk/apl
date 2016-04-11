@@ -31,6 +31,61 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 
 /**
  * 
+ * @returns {unresolved}
+ */
+$scope.summeKostenEUR = function(){
+    if($scope.rekl!==undefined){
+	return parseFloat($scope.rekl.anerkannt_ausschuss_preis_eur)
+	    +parseFloat($scope.rekl.anerkannt_nacharbeit_preis_eur)
+	    +parseFloat($scope.rekl.dif_falsch_deklariert_preis_eur)
+	    +parseFloat($scope.rekl.verpackung_preis_eur)
+	    +parseFloat($scope.rekl.kreislauf_preis_eur)
+	    +parseFloat($scope.rekl.pauschale_preis_eur);
+    }
+    else{
+	return 0;
+    }
+    
+}
+
+/**
+ * 
+ * @returns {Number}
+ */
+$scope.summeForecastEUR = function(){
+    if($scope.rekl!==undefined){
+	return parseFloat($scope.rekl.forecast_anerkannt_ausschuss_eur)
+	    +parseFloat($scope.rekl.forecast_anerkannt_nacharbeit_eur)
+	    +parseFloat($scope.rekl.forecast_dif_falsch_deklariert_eur)
+	    +parseFloat($scope.rekl.forecast_verpackung_eur)
+	    +parseFloat($scope.rekl.forecast_kreislauf_eur)
+	    +parseFloat($scope.rekl.forecast_pauschale_eur);
+    }
+    else{
+	return 0;
+    }
+    
+}
+
+/**
+ * 
+ * @returns {unresolved}
+ */
+$scope.summeKostenCZK = function(){
+    if($scope.rekl!==undefined){
+	return parseFloat($scope.rekl.anerkannt_ausschuss_preis_czk)
+	    +parseFloat($scope.rekl.anerkannt_nacharbeit_preis_czk)
+	    +parseFloat($scope.rekl.dif_falsch_deklariert_preis_czk)
+	    +parseFloat($scope.rekl.verpackung_preis_czk)
+	    +parseFloat($scope.rekl.kreislauf_preis_czk)
+	    +parseFloat($scope.rekl.pauschale_preis_czk);
+    }
+    else{
+	return 0;
+    }
+}
+/**
+ * 
  * @returns {undefined}
  */
 	$scope.ausschussKostenVorschlag = function(){

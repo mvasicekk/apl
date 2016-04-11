@@ -12,6 +12,7 @@ aplApp.controller('s360iController', function ($scope, $http,$timeout) {
     $scope.reklVon;
     $scope.reklBis;
     $scope.reklnr='';
+    $scope.teilnr='';
     $scope.wahrung='EUR';
     $scope.showGroups = {};
     
@@ -61,7 +62,7 @@ aplApp.controller('s360iController', function ($scope, $http,$timeout) {
     };
     
     /**
-     * 
+     * stazeni dat z DB pomoci php skriptu.
      * @param {type} e
      * @returns {undefined}
      */
@@ -96,6 +97,7 @@ aplApp.controller('s360iController', function ($scope, $http,$timeout) {
 		    +'&von='+v
 		    +'&bis='+b
 		    +'&reklnr='+$scope.reklnr
+		    +'&teilnr='+$scope.teilnr
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;

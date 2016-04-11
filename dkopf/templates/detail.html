@@ -3,21 +3,30 @@
 	<h4>Arbeitsplan pflegen / sprava pracovniho planu {{teilaktual.Teil}}
 	</h4>
     </div>
-
+    <button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
+        ?
+    </button>
+    <button type="button" class="btn btn-info" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+        adminInfo
+    </button>
     <!--sekce pro hledani dilu + tabulka-->
     <div class="row">
 	<div class="col-sm-12">
 	    <div class="form-group">
 		<label for="teil_search">Teil suchen / hledat dil</label>
 		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="teil_search" ng-keypress="setTeilAktual($event)" ng-change="getTeilMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="Teil suchen / hledat dil">
-		<!--<span id="helpBlock" class="help-block">hledá v čísle dílu, originál čísle, popisku dílu</span>-->
+		<span ng-show="showHelp" class="help-block" ng-bind-html="helpText.suchefeld"></span>
+		<span ng-if="showhI" class="help-block" >Id:<span class='badge bg-warning'>{{hIArray['suchefeld'][0].id}}</span></span>
+		<apl-help element="hIArray['suchefeld']" showhelp="showHelp" showAdminInfo="showhI"></apl-help>
 	    </div>
 	</div>
 	<div ng-show="teile.length > 0" class="col-sm-12">
 	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
 		<thead>
 		    <tr class="bg-primary">
-			<th>Kunde</th>
+			<th>
+			    Kunde
+			</th>
 			<th>Teil</th>
 			<th>Bezeichnung</th>
 			<th>Teil Original</th>
@@ -28,7 +37,9 @@
 		</thead>
 		<tbody>
 		    <tr ng-class="{altteil:t.status.toString().indexOf('ALT')>-1}" ng-click="listRowClicked($index)" ng-repeat="t in teile">
-			<td>{{t.Kunde}}</td>
+			<td>
+			    {{t.Kunde}}
+			</td>
 			<td>{{t.Teil}}</td>
 			<td>{{t.Teilbez}}</td>
 			<td>{{t.teillang}}</td>
@@ -40,6 +51,7 @@
 	    </table>
 	</div>
     </div>
+    <!--help texty se vytahnou ze stejne tabulky jako resources-->
     <div ng-if="teilaktual.Teil.length>0" class="row">
 	<div class="col-md-12">
 	    <uib-accordion close-others="false">
@@ -47,11 +59,12 @@
 		<uib-accordion-group>
 		    <uib-accordion-heading>
 			<div class="row">
-			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>{{teilaktual.Kunde}} | {{teilaktual.Teil}} | {{teilaktual.Teilbez}} | {{teilaktual.Gew|number:3}} kg | {{teilaktual.status}}</span>
+			    <div class="col-sm-6 text-danger text-capitalize text-left">
+				<!--<span class='badge'>{{teilaktual.Kunde}} | {{teilaktual.Teil}} | {{teilaktual.Teilbez}} | {{teilaktual.Gew|number:3}} kg | {{teilaktual.status}}</span>-->
+				<h5>{{teilaktual.Kunde}} | {{teilaktual.Teil}} | {{teilaktual.Teilbez}} | {{teilaktual.Gew|number:3}} kg | {{teilaktual.status}}</h5>
 			    </div>
-			    <div class="col-md-6 text-info text-uppercase text-right">
-				grundinfo
+			    <div class="col-sm-6 text-right text-uppercase">
+				<span class="badge">grundinfo</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
@@ -61,18 +74,26 @@
 			<div class="form-group col-md-1 form-group-sm ">
 			    <label class="control-label" for="kunde">Kunde:</label>
 			    <input readonly maxlength="3" ng-model="teilaktual.Kunde" type="text" class="form-control" id="kunde" placeholder="Kunde">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.kunde_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['kunde_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-3 form-group-sm ">
 			    <label class="control-label" for="teillang">Original TeilNr. / originální číslo</label>
 			    <input ng-change="teilaktualChanged('teillang')" maxlength="255" ng-model="teilaktual.teillang" type="text" class="form-control" id="teillang" placeholder="Original TeilNr">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.teillang_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['teillang_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-3 form-group-sm ">
 			    <label class="control-label" for="teilbez">Teilbez</label>
 			    <input ng-change="teilaktualChanged('Teilbez')" maxlength="255" ng-model="teilaktual.Teilbez" type="text" class="form-control" id="teilbez" placeholder="Teilbez">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.teilbez"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['teilbez']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-1 form-group-sm ">
 			    <label class="control-label" for="status">Status</label>
 			    <input ng-change="teilaktualChanged('status')" maxlength="255" ng-model="teilaktual.status" type="text" class="form-control" id="status" placeholder="status">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.status_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['status_sec']|json}}</pre></span>
 			</div>
 		    </div>
 		    
@@ -81,26 +102,38 @@
 			<div class="form-group col-md-2 form-group-sm valign_bottom">
 			    <label class="control-label" for="kunde">Nettogewicht/netto vaha</label>
 			    <input ng-change="teilaktualChanged('Gew')" maxlength="10" ng-model="teilaktual.Gew" type="text" class="form-control text-right" id="kunde" placeholder="Kunde">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.gew_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['gew_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="teillang">Bruttogewicht/brutto vaha</label>
 			    <input ng-change="teilaktualChanged('BrGew')" maxlength="255" ng-model="teilaktual.BrGew" type="text" class="form-control text-right" id="teillang" placeholder="Original TeilNr">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.brgew_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['brgew_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="verpackungmenge">Verpackungsmenge / balící předpis</label>
 			    <input ng-change="teilaktualChanged('verpackungmenge')" maxlength="255" ng-model="teilaktual.verpackungmenge" type="text" class="form-control text-right" id="verpackungmenge" placeholder="verpackungmenge">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.vm_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['vm_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="stk_pro_gehaenge">Stk pro Gehänge</label>
 			    <input ng-change="teilaktualChanged('stk_pro_gehaenge')" maxlength="255" ng-model="teilaktual.stk_pro_gehaenge" type="text" class="form-control text-right" id="stk_pro_gehaenge" placeholder="stk_pro_gehaenge">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.spg_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['spg_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="restmengen_verw">Restmengenverw.</label>
 			    <input ng-change="teilaktualChanged('restmengen_verw')" maxlength="255" ng-model="teilaktual.restmengen_verw" type="text" class="form-control" id="restmengen_verw" placeholder="restmengen_verw">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.restmengen_verw_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['restmengen_verw_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-1 form-group-sm valign_bottom ">
 			    <label class="control-label" for="FA">FA</label>
 			    <input ng-change="teilaktualChanged('FA')" maxlength="255" ng-model="teilaktual.FA" type="text" class="form-control text-right" id="FA" placeholder="FA">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.fa_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['fa_sec']|json}}</pre></span>
 			</div>
 		    </div>
 		    <!---------------------------------------------------------------->
@@ -111,26 +144,38 @@
 				    class="form-control" 
 				ng-model="teilaktual.Wst">
 			    </select>
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.wst_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['wst_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="Art_Guseisen">Art Gusseisen / druh litiny</label>
 			    <input ng-change="teilaktualChanged('Art Guseisen')" maxlength="255" ng-model="teilaktual['Art Guseisen']" type="text" class="form-control" id="Art_Guseisen" placeholder="Art_Guseisen">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.art_guseisen_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['art_guseisen_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="fremdauftr_dkopf">Fremdauftr</label>
 			    <input ng-change="teilaktualChanged('fremdauftr_dkopf')" maxlength="255" ng-model="teilaktual['fremdauftr_dkopf']" type="text" class="form-control" id="fremdauftr_dkopf" placeholder="fremdauftr_dkopf">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.fremdauftr_dkopf_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['fremdauftr_dkopf_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="preis_stk_gut">Zielpreis gut</label>
 			    <input ng-change="teilaktualChanged('preis_stk_gut')" maxlength="255" ng-model="teilaktual['preis_stk_gut']" type="text" class="form-control text-right" id="preis_stk_gut" placeholder="preis_stk_gut">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.preis_stk_gut_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['preis_stk_gut_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="preis_stk_auss">Zielpreis auss</label>
 			    <input ng-change="teilaktualChanged('preis_stk_auss')" maxlength="255" ng-model="teilaktual['preis_stk_auss']" type="text" class="form-control text-right" id="preis_stk_auss" placeholder="preis_stk_auss">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.preis_stk_auss_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['preis_stk_auss_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-1 form-group-sm valign_bottom ">
 			    <label class="control-label" for="kosten_stk_auss">Kosten Stk Auss</label>
 			    <input ng-change="teilaktualChanged('kosten_stk_auss')" maxlength="255" ng-model="teilaktual['kosten_stk_auss']" type="text" class="form-control text-right" id="kosten_stk_auss" placeholder="kosten_stk_auss">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.kosten_stk_auss"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['kosten_stk_auss']|json}}</pre></span>
 			</div>
 		    </div>
 		    <!---------------------------------------------------------------->
@@ -138,18 +183,26 @@
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="jb_lfd_2">Jahresbedarf {{aktualJahr-2}}</label>
 			    <input ng-change="teilaktualChanged('jb_lfd_2')" maxlength="255" ng-model="teilaktual['jb_lfd_2']" type="text" class="form-control text-right" id="jb_lfd_2" placeholder="jb_lfd_2">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.jb_lfd_2"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['jb_lfd_2']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="jb_lfd_1">Jahresbedarf {{aktualJahr-1}}</label>
 			    <input ng-change="teilaktualChanged('jb_lfd_1')" maxlength="255" ng-model="teilaktual['jb_lfd_1']" type="text" class="form-control text-right" id="jb_lfd_1" placeholder="jb_lfd_1">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.jb_lfd_1"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['jb_lfd_1']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="jb_lfd_j">Jahresbedarf {{aktualJahr-0}}</label>
 			    <input ng-change="teilaktualChanged('jb_lfd_j')" maxlength="255" ng-model="teilaktual['jb_lfd_j']" type="text" class="form-control text-right" id="jb_lfd_j" placeholder="jb_lfd_j">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.jb_lfd_j"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['jb_lfd_j']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-2 form-group-sm valign_bottom ">
 			    <label class="control-label" for="jb_lfd_plus_1">Jahresbedarf {{aktualJahr+1}}</label>
 			    <input ng-change="teilaktualChanged('jb_lfd_plus_1')" maxlength="255" ng-model="teilaktual['jb_lfd_plus_1']" type="text" class="form-control text-right" id="jb_lfd_plus_1" placeholder="jb_lfd_plus_1">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.jb_lfd_plus_1"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['jb_lfd_plus_1']|json}}</pre></span>
 			</div>
 		    </div>
 		    <!---------------------------------------------------------------->
@@ -157,14 +210,20 @@
 			<div class="form-group col-md-3 form-group-sm valign_bottom ">
 			    <label class="control-label" for="schwierigkeitsgrad_S11">Schwierigkeitsgrad S11 / obtížnost S11</label>
 			    <input ng-change="teilaktualChanged('schwierigkeitsgrad_S11')" maxlength="255" ng-model="teilaktual['schwierigkeitsgrad_S11']" type="text" class="form-control" id="schwierigkeitsgrad_S11" placeholder="../....../..">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.schwierigkeitsgrad_S11_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['schwierigkeitsgrad_S11_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-3 form-group-sm valign_bottom ">
 			    <label class="control-label" for="schwierigkeitsgrad_S51">Schwierigkeitsgrad S51 / obtížnost S51</label>
 			    <input ng-change="teilaktualChanged('schwierigkeitsgrad_S51')" maxlength="255" ng-model="teilaktual['schwierigkeitsgrad_S51']" type="text" class="form-control" id="schwierigkeitsgrad_S51" placeholder="../....../..">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.schwierigkeitsgrad_S51_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['schwierigkeitsgrad_S51_sec']|json}}</pre></span>
 			</div>
 			<div class="form-group col-md-3 form-group-sm valign_bottom ">
 			    <label class="control-label" for="schwierigkeitsgrad_SO">Schwierigkeitsgrad SO / obtížnost SO</label>
 			    <input ng-change="teilaktualChanged('schwierigkeitsgrad_SO')" maxlength="255" ng-model="teilaktual['schwierigkeitsgrad_SO']" type="text" class="form-control" id="schwierigkeitsgrad_SO" placeholder="">
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.schwierigkeitsgrad_SO_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['schwierigkeitsgrad_SO_sec']|json}}</pre></span>
 			</div>
 		    </div>
 		    <!---------------------------------------------------------------->
@@ -172,6 +231,8 @@
 			<div class="form-group col-md-12 form-group-sm ">
 			    <label class="control-label" for="bemerk">Anderungen/Bemerkung / poznamka</label>
 			    <textarea ng-change="teilaktualChanged('bemerk')" maxlength="255" ng-model="teilaktual.bemerk" class="form-control" rows="1"></textarea>
+			    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.bemerk_sec"></span>
+			    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['bemerk_sec']|json}}</pre></span>
 			</div>
 		    </div>
 		    </form>
@@ -180,32 +241,81 @@
 		<uib-accordion-group>
 		    <uib-accordion-heading>
 			<div class="row">
-			    <div class="col-md-6 text-danger text-left">
-				<span class='badge'>{{dposActive()}} von {{dpos.length}} Positionen | SumVzKd: {{getDposSumme('VZ-min-kunde')|number:4}} | SumVzAby: {{getDposSumme('vz-min-aby')|number:4}}</span>
+			    <div class="col-sm-6 text-danger text-left">
+				<h5>{{dposActive()}} von {{dpos.length}} Positionen | SumVzKd: {{getDposSumme('VZ-min-kunde')|number:4}} | SumVzAby: {{getDposSumme('vz-min-aby')|number:4}}</h5>
 			    </div>
 			    <div class="col-md-6 text-info text-uppercase text-right">
-				Tatigkeiten
+				<span class="badge">Tatigkeiten</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
 		    <button ng-click="addDpos()" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neue Taetigkeit / nova operace
 		    </button>
+		    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.posneu_sec"></span>
+		    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['posneu_sec']|json}}</pre></span>
 		    <table class="table table-condensed table-striped table-bordered table-hover">
 			<thead>
 			    <tr class="bg-primary">
-				<th>druck</th>
-				<th class="text-right">taetnr</th>
-				<th>bezeichnung - D</th>
-				<th>bezeichnung - T</th>
-				<th class="text-right">vzkd</th>
-				<th class="text-right">vzaby</th>
-				<th style='width:3em;'>G</th>
-				<th>Bedarf</th>
-				<th style='width:5em;'>l.von</th>
-				<th style='width:5em;'>l.nach</th>
-				<th>AM / MM</th>
-				<th></th>
+				<th>
+				    druck
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.druck_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['druck_column']|json}}</pre></span>
+				</th>
+				<th class="text-right">
+				    taetnr
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.taetnr_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['taetnr_column']|json}}</pre></span>
+				</th>
+				<th>
+				    bezeichnung - D
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.bezD_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['bezD_column']|json}}</pre></span>
+				</th>
+				<th>
+				    bezeichnung - T
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.bezT_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['bezT_column']|json}}</pre></span>
+				</th>
+				<th class="text-right">
+				    vzkd
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.vzkd_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['vzkd_column']|json}}</pre></span>
+				</th>
+				<th class="text-right">
+				    vzaby
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.vzaby_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['vzaby_column']|json}}</pre></span>
+				</th>
+				<th style='width:3em;'>
+				    G
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.g_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['g_column']|json}}</pre></span>
+				</th>
+				<th>
+				    Bedarf
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.bedarf_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['bedarf_column']|json}}</pre></span>
+				</th>
+				<th style='width:5em;'>
+				    l.von
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.lvon_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['lvon_column']|json}}</pre></span>
+				</th>
+				<th style='width:5em;'>
+				    l.nach
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.lnach_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['lnach_column']|json}}</pre></span>
+				</th>
+				<th>
+				    AM / MM
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.ammm_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['ammm_column']|json}}</pre></span>
+				</th>
+				<th>
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.oper_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['oper_column']|json}}</pre></span>
+				</th>
 			    </tr>
 			</thead>
 			<tbody>
@@ -317,26 +427,51 @@
 		<uib-accordion-group>
 		    <uib-accordion-heading>
 			<div class="row">
-			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>{{teildokuarray.length}} Teildoku</span>
+			    <div class="col-sm-6 text-danger text-capitalize text-left">
+				<h5>{{teildokuarray.length}} Teildoku</h5>
 			    </div>
-			    <div class="col-md-6 text-info text-uppercase text-right">
-				Teildoku
+			    <div class="col-sm-6 text-info text-uppercase text-right">
+				<span class="badge">Teildoku</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
 		    <button ng-click="addTeilDoku()" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neu / novy dokument
 		    </button>
+		    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.teildoku_neu"></span>
+		    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['teildoku_neu']|json}}</pre></span>
 		    <table ng-if="teildokuarray.length>0" class="table table-condensed table-striped table-bordered table-hover">
 			<thead>
 			    <tr class="bg-primary">
-				<th>DokuTyp</th>
-				<th style="width:11em;">Einlag.Datum</th>
-				<th>MusterPlatz / Datei</th>
-				<th style="width:11em;">Freigabe am</th>
-				<th>Freigabe vom</th>
-				<th></th>
+				<th>
+				    DokuTyp
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.dokutyp_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['dokutyp_column']|json}}</pre></span>
+				</th>
+				<th style="width:11em;">
+				    Einlag.Datum
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.teildoku_einlagdatum_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['teildoku_einlagdatum_column']|json}}</pre></span>
+				</th>
+				<th>
+				    MusterPlatz / Datei
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.lagerplatz_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['lagerplatz_column']|json}}</pre></span>
+				</th>
+				<th style="width:11em;">
+				    Freigabe am
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.freigabe_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['freigabe_column']|json}}</pre></span>
+				</th>
+				<th>
+				    Freigabe vom
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.freigabevom_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['freigabevom_column']|json}}</pre></span>
+				</th>
+				<th>
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText.teildokuoper_column"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray['teildokuoper_column']|json}}</pre></span>
+				</th>
 			    </tr>
 			</thead>
 			<tbody>
@@ -386,18 +521,20 @@
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>GDat Anlagen</span>
+				<h5>GDat Anlagen</h5>
 			    </div>
 			    <div class="col-md-6 text-info text-uppercase text-right">
-				GDat Anlagen
+				<span class="badge">GDat Anlagen</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
 		    <div class="row">
 			<div class="col-sm-12">
-			    <div class="btn-group btn-group-justified" role="group" aria-label="...">
-				<div ng-repeat="b in anlagenButtons" class="btn-group" role="group">
+			    <div class="btn-group btn-group-justified" role="group" aria-label="..." style="vertical-align: top;">
+				<div ng-repeat="b in anlagenButtons" class="btn-group" role="group"  style="vertical-align: top;">
 				    <button ng-click="anlagenButtonClicked(b)" class="btn btn-success" ng-class="{'btn-warning':b.selected}">{{b.name}}</button>
+				    <span ng-show="showHelp" class="help-block" ng-bind-html="helpText[b.elementId]"></span>
+				    <span ng-if="showhI" class="help-block bg-warning" ><pre>{{hIArray[b.elementId]|json}}</pre></span>
 				</div>
 			    </div>
 			</div>
@@ -439,10 +576,10 @@
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>Musterlager</span>
+				<h5>Musterlager</h5>
 			    </div>
 			    <div class="col-md-6 text-info text-uppercase text-right">
-				Musterlager
+				<span class="badge">Musterlager</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
@@ -454,11 +591,11 @@
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
+				<h5>VPM</h5>
+			    </div>
+			    <div class="col-md-6 text-info text-uppercase text-right">
 				<span class='badge'>VPM</span>
 			    </div>
-			    <div class="col-md-6 text-info text-uppercase text-right">
-				VPM
-			    </div>
 			</div>
 		    </uib-accordion-heading>
 		    content
@@ -468,10 +605,10 @@
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>IMA / EMA</span>
+				<h5>IMA / EMA</h5>
 			    </div>
 			    <div class="col-md-6 text-info text-uppercase text-right">
-				IMA / EMA
+				<span class='badge'>IMA / EMA</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
@@ -479,14 +616,14 @@
 		</uib-accordion-group>
 
 		<!-------------------------------------------------------------------->
-		<uib-accordion-group>
+		<uib-accordion-group ng-show="securityInfo.showArray['admininfo_btn']">
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>debug</span>
+				<h5>debug</h5>
 			    </div>
 			    <div class="col-md-6 text-danger text-capitalize text-right">
-				debug
+				<span class='badge'>debug</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>
@@ -506,14 +643,14 @@
 		    
 		</uib-accordion-group>
 		
-		<uib-accordion-group>
+		<uib-accordion-group ng-show="securityInfo.showArray['admininfo_btn']">
 		    <uib-accordion-heading>
 			<div class="row">
 			    <div class="col-md-6 text-danger text-capitalize text-left">
-				<span class='badge'>secinfo 2/2</span>
+				<h5>secinfo 2/2</h5>
 			    </div>
 			    <div class="col-md-6 text-danger text-capitalize text-right">
-				secinfo 1/2
+				<span class='badge'>secinfo 2/2</span>
 			    </div>
 			</div>
 		    </uib-accordion-heading>

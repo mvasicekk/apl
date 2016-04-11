@@ -110,6 +110,7 @@ hr{
 #d550it td{
 	padding: 3px;
 	font-size: 0.8em;
+	word-wrap: break-word;
 }
 
 #d550it td.persheader{
@@ -275,4 +276,15 @@ div.popover{
 
 div.rowstk{
     /*border-bottom:1px black dotted;*/
+    margin:0px;
+}
+
+div.rowstk>div.col-xs-6{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.hasppm{
+    background-color: #fcc;
+    font-weight: bold;
 }

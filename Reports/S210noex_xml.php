@@ -96,6 +96,19 @@ function spocti_factor($record)
 		return 0;
 }
 
+function vypocti_fac1($record) {
+    global $vzkdZeigen;
+    if ($record['verb'] != 0) {
+	if ($vzkdZeigen === TRUE) {
+	    return $record['vzkd'] / $record['verb'];
+	} else {
+	    return $record['vzaby'] / $record['verb'];
+	}
+    } else {
+	return 0;
+    }
+}
+
 $options = array(
 		'rootTag'=>'S210noex',
 		'idColumn'=>'auftragsnr',
@@ -123,7 +136,7 @@ $options = array(
 							'vzaby',
 							'verb',
 							'preis',
-							'factor'=>'#spocti_factor();'
+							'factor'=>'#vypocti_fac1();'
 						),
 					),
 				),

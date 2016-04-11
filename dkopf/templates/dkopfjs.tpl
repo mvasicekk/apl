@@ -16,13 +16,18 @@
 
     <script src="./bower_components/angular/angular.min.js"></script>
     <script src="./bower_components/angular-route/angular-route.min.js"></script>
+    <script src="../libs/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     
     <script src="../libs/bower_components/angular-thumbnails/dist/angular-thumbnails.min.js"></script>
     <script src="../libs/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+
+    <script src="../libs/bower_components/tinymce-dist/tinymce.min.js"></script>
+    <script src="../libs/bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
     
     <script src="./js/app.js"></script>
     <script src="./js/controllers.js"></script>
+    <script src="./js/directives.js"></script>
     <script src="../js/filters.js"></script>
     
     <link href="./css/style.css" rel="stylesheet">

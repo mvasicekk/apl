@@ -471,6 +471,7 @@
 					<th></th>
 					<th class="text-right" >Stk</th>
 					<th class="text-right" >Gew ({{rekl.teilgew}} kg/Stk)</th>
+					<th>forecast Kosten[EUR]</th>
 					<th>Beleg Nr</th>
 					<th class="text-right" >Kosten [EUR]</th>
 					<th class="text-right" >Kosten [CZK] {{rekl.kurs_EUR_CZK}}CZK=1EUR</th>
@@ -493,6 +494,9 @@
 					    <input readonly value="{{rekl.anerkannt_stk_ausschuss*rekl.teilgew}}" type="text" class="form-control text-right" id="aussgew" placeholder="Gew">
 					</td>
 					<td>
+					    <input ng-model="rekl.forecast_anerkannt_ausschuss_eur" type="text" class="form-control text-right" placeholder="forecast">
+					</td>
+					<td>
 					    <input ng-model="rekl.anerkannt_ausschuss_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
@@ -510,6 +514,9 @@
 					<td>
 					    <input readonly value="{{rekl.anerkannt_stk_nacharbeit*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
+					<td>
+					    <input ng-model="rekl.forecast_anerkannt_nacharbeit_eur" type="text" class="form-control text-right" placeholder="forecast">
+					</td>					
 					<td>
 					    <input ng-model="rekl.anerkannt_nacharbeit_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
@@ -529,8 +536,12 @@
 					    <input readonly value="{{rekl.dif_falsch_deklariert_stk*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
+					    <input ng-model="rekl.forecast_dif_falsch_deklariert_eur" type="text" class="form-control text-right" placeholder="forecast">
+					</td>					
+					<td>
 					    <input ng-model="rekl.dif_falsch_deklariert_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
+					
 					<td>
 					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','dif_falsch_deklariert_preis_eur','dif_falsch_deklariert_preis_czk')" ng-model="rekl.dif_falsch_deklariert_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
@@ -547,8 +558,12 @@
 					    <input readonly value="0" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
+					    <input ng-model="rekl.forecast_verpackung_eur" type="text" class="form-control text-right" placeholder="forecast">
+					</td>					
+					<td>
 					    <input ng-model="rekl.verpackung_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
+					
 					<td>
 					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','verpackung_preis_eur','verpackung_preis_czk')" ng-model="rekl.verpackung_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
@@ -565,8 +580,12 @@
 					    <input readonly value="{{rekl.kreislauf_stk*rekl.teilgew}}" type="text" class="text-right form-control" placeholder="Gew">
 					</td>
 					<td>
+					    <input ng-model="rekl.forecast_kreislauf_eur" type="text" class="form-control text-right" placeholder="forecast">
+					</td>					
+					<td>
 					    <input ng-model="rekl.kreislauf_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
+					
 					<td>
 					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','kreislauf_preis_eur','kreislauf_preis_czk')" ng-model="rekl.kreislauf_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
@@ -585,6 +604,7 @@
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
 				    </tr>
 				    <tr>
 					<th>nicht anerkannt</th>
@@ -594,6 +614,7 @@
 					<td>
 					    <input readonly value="{{rekl.anerkannt_stk_nein*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -607,8 +628,12 @@
 					    
 					</td>
 					<td>
+					    <input ng-model="rekl.forecast_pauschale_eur" type="text" class="form-control text-right" placeholder="forecast">
+					</td>					
+					<td>
 					    <input ng-model="rekl.pauschale_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
+					
 					<td>
 					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','pauschale_preis_eur','pauschale_preis_czk')" ng-model="rekl.pauschale_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
@@ -617,6 +642,29 @@
 					</td>
 				    </tr>
 				</tbody>
+				<tfoot>
+				    <tr>
+					<th>Summe</th>
+					<td>
+					    
+					</td>
+					<td>
+					    
+					</td>
+					<td>
+					    <input readonly="readonly"  value="{{summeForecastEUR()|numeraljs:'0.0000'}}" type="text" class="form-control text-right" placeholder="Summe Kosten in EUR">
+					</td>
+					<td>
+					    
+					</td>
+					<td>
+					    <input readonly="readonly"  value="{{summeKostenEUR()|numeraljs:'0.0000'}}" type="text" class="form-control text-right" placeholder="Summe Kosten in EUR">
+					</td>
+					<td>
+					    <input readonly="readonly"  value="{{summeKostenCZK()|numeraljs:'0.00'}}" type="text" class="form-control text-right" placeholder="Summe Kosten in CZK">
+					</td>
+				    </tr>
+				</tfoot>
 			    </table>
 			</div>
 			<div class="col-md-2">

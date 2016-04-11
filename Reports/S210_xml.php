@@ -74,6 +74,19 @@ $query2xml = XML_Query2XML::factory($db);
 //echo $sql."<br>";
 // tady se budou tisknout parametry
 
+function vypocti_fac1($record) {
+    global $vzkdZeigen;
+    if ($record['verb'] != 0) {
+	if ($vzkdZeigen === TRUE) {
+	    return $record['vzkd'] / $record['verb'];
+	} else {
+	    return $record['vzaby'] / $record['verb'];
+	}
+    } else {
+	return 0;
+    }
+}
+
 function get_kurs($wahr,$ausliefer)
 {
 	//echo "wahr=$wahr,ausliefer=$ausliefer<br>";
@@ -119,7 +132,7 @@ $options = array(
 							'vzaby',
 							'verb',
 							'preis',
-							'factor'
+							'factor'=>'#vypocti_fac1();'
 						),
 					),
 				),
@@ -189,7 +202,7 @@ for($i=0;$i<sizeof($views);$i++)
 }
 
 
-$db->disconnect();
+//$db->disconnect();
 
 
 //============================================================+

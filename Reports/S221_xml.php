@@ -98,12 +98,17 @@ function get_kurs($wahr,$ausliefer)
 	}
 }
 
-function vypocti_fac1($record)
-{
-	if($record['verb']!=0)
-		return $record['vzkd']/$record['verb'];
-	else
-		return 0;
+function vypocti_fac1($record) {
+    global $vzkdZeigen;
+    if ($record['verb'] != 0) {
+	if ($vzkdZeigen === TRUE) {
+	    return $record['vzkd'] / $record['verb'];
+	} else {
+	    return $record['vzaby'] / $record['verb'];
+	}
+    } else {
+	return 0;
+    }
 }
 
 $options = array(

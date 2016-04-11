@@ -237,6 +237,11 @@ if($reklInfo!==NULL){
 	$pdf->Cell(20, $schulungHeaderHeight, "Auftrag: ", '0', 0, 'L', 0);
 	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = $rekl['export'];
+	$max = 20;
+	if(strlen($obsah)>$max){
+	    $obsah = substr($obsah, 0, $max)."...";
+	}
+
 	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 1, 'L', 0);
 	
 	//teil gewicht
@@ -264,7 +269,11 @@ if($reklInfo!==NULL){
 	$pdf->SetFont("FreeSans", "B", 7);
 	$pdf->Cell(20, $schulungHeaderHeight, "Charge / GT: ", '0', 0, 'L', 0);
 	$pdf->SetFont("FreeSans", "", 7);
+	$max = 17;
 	$obsah = $rekl['giesstag'];
+	if(strlen($obsah)>$max){
+	    $obsah = substr($obsah, 0, $max)."...";
+	}
 	$pdf->Cell(25, $schulungHeaderHeight, $obsah, '0', 0, 'L', 0);
 	
 	//stempel

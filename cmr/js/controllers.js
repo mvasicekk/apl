@@ -242,6 +242,9 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			$scope.spedArray = response.data.spedArray;
 			// palety + priam 5 volnych pozic
 			$scope.palArray = response.data.palArray;
+			if($scope.palArray===null){
+			    $scope.palArray = [];
+			}
 			for(i=0;i<5;i++){
 			    $scope.palArray.push({behaelternr:'',behname:'',zustand_id:'',zustand_text:'',sum_stk:'',editable:true});
 			}

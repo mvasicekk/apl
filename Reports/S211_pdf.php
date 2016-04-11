@@ -15,6 +15,13 @@ $export=$_GET['export'];
 $tatvon = $_GET['tatvon'];
 $tatbis = $_GET['tatbis'];
 
+$apl = AplDB::getInstance();
+
+
+$puser = $_SESSION['user'];
+$vzkdZeigen = $apl->getDisplaySec('S211', 'vzkd', $puser);
+$preisZeigen = $apl->getDisplaySec('S211', 'preis', $puser);
+
 require_once('S211_xml.php');
 
 
@@ -49,6 +56,10 @@ foreach ($parameters as $param)
 // poradi urcuje predevsim poradu nodu v XML !!!!!
 // nf = pokus pole obsahuje tento klic bude se cislo v teto bunce formatovat dle parametru v poli 0,1,2
 
+$vzkdPopis = $vzkdZeigen?"\nvzkd":"\n";
+$preisPopis = $preisZeigen?"\npreis":"\n";
+$fac1Popis = $vzkdZeigen?"VzKd/\nVerb":"VzAby/\nVerb";
+
 $cells = 
 array(
 "teil" 
@@ -73,7 +84,7 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"show"=>$vzkdZeigen,"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzaby" 
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
@@ -82,7 +93,7 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "preis" 
-=> array ("nf"=>array(4,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(4,',',' '),"show"=>$preisZeigen,"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "fac1" 
 => array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>0)
@@ -113,7 +124,7 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"\n(6)","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzkd" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>$vzkdPopis,"sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vzaby" 
 => array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -122,10 +133,10 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "preis" 
-=> array ("nf"=>array(4,',',' '),"popis"=>"\npreis","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(4,',',' '),"popis"=>$preisPopis,"sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "fac1" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"VzKd/\nVerb","sirka"=>0,"ram"=>'B',"align"=>"R","radek"=>1,"fill"=>0)
+=> array ("nf"=>array(2,',',' '),"popis"=>$fac1Popis,"sirka"=>0,"ram"=>'B',"align"=>"R","radek"=>1,"fill"=>0)
 );
 
 
@@ -207,6 +218,9 @@ function telo($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
 		{
 			$cellobsah=getValueForNode($nodelist,$nodename);
 		}
+		if(array_key_exists("show", $cell)){
+		    if($cell['show']===FALSE) $cellobsah = '';
+		}
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
@@ -229,13 +243,13 @@ function getValueForNode($nodelist,$nodename)
 	return $nodevalue;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function zahlavi_schicht($pdfobjekt,$vyskaradku,$rgb,$schicht,$schichtfuehrer,$cells)
-{
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	$fill=1;
-	$pdfobjekt->Cell(0,$vyskaradku,$schicht." ".$schichtfuehrer,'0',1,'L',$fill);
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
-}
+//function zahlavi_schicht($pdfobjekt,$vyskaradku,$rgb,$schicht,$schichtfuehrer,$cells)
+//{
+//	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
+//	$fill=1;
+//	$pdfobjekt->Cell(0,$vyskaradku,$schicht." ".$schichtfuehrer,'0',1,'L',$fill);
+//	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_auftrag($pdfobjekt,$vyskaradku,$rgb,$auftragsnr,$cells)
@@ -263,6 +277,11 @@ function zahlavi_teil($pdfobjekt,$vyskaradku,$rgb,$teilnr,$cells)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$fac1)
 {
+    
+        global $vzkdZeigen;
+	global $preisZeigen;
+
+    
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
@@ -296,6 +315,7 @@ function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$fac1)
 	
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if (!$vzkdZeigen) $obsah = '';
 	$pdfobjekt->Cell(15,$vyskaradku,$obsah,'B',0,'R',$fill);
 	
 	$obsah=$pole['vzaby'];
@@ -323,6 +343,9 @@ function zapati_teil($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$fac1)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_auftrag($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$fac1)
 {
+        global $vzkdZeigen;
+	global $preisZeigen;
+
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
@@ -352,6 +375,7 @@ function zapati_auftrag($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$fac1)
 
 	$obsah=$pole['vzkd'];
 	$obsah=number_format($obsah,0,',',' ');
+	if (!$vzkdZeigen) $obsah = '';
 	$pdfobjekt->Cell(15,$vyskaradku,$obsah,'B',0,'R',$fill);
 	
 	$obsah=$pole['vzaby'];
@@ -377,9 +401,11 @@ function zapati_auftrag($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$fac1)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zapati_drueck($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$minpreis,$betrag,$wahr)
 {
+    global $preisZeigen;
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 
+	if ($preisZeigen === TRUE) {
 	// dummy
 	$obsah="";
 	//$obsah=number_format($obsah,0,',',' ');
@@ -393,28 +419,32 @@ function zapati_drueck($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$minpreis,$betra
 	$obsah=$minpreis;
 	$obsah=number_format($obsah,2,',',' ');
 	$pdfobjekt->Cell(0,$vyskaradku,$wahr."/min ".$obsah,'0',1,'R',$fill);
+	    
+	}
 
 	
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function zapati_dauftr($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$betrag,$wahr)
-{
-	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
-	$fill=1;
+function zapati_dauftr($pdfobjekt, $node, $vyskaradku, $popis, $rgb, $betrag, $wahr) {
+    global $preisZeigen;
 
+    $pdfobjekt->SetFillColor($rgb[0], $rgb[1], $rgb[2], 1);
+    $fill = 1;
+    if ($preisZeigen === TRUE) {
 	// dummy
-	$obsah="";
+	$obsah = "";
 	//$obsah=number_format($obsah,0,',',' ');
 	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
 
-	$pdfobjekt->Cell(20+25+10+15,$vyskaradku,$popis,'LTB',0,'L',$fill);
+	$pdfobjekt->Cell(20 + 25 + 10 + 15, $vyskaradku, $popis, 'LTB', 0, 'L', $fill);
 
-	$betrag=number_format($betrag,2,',',' ');
-	$pdfobjekt->Cell(25,$vyskaradku,$betrag." ".$wahr,'RTB',1,'R',$fill);
+	$betrag = number_format($betrag, 2, ',', ' ');
+	$pdfobjekt->Cell(25, $vyskaradku, $betrag . " " . $wahr, 'RTB', 1, 'R', $fill);
+    }
 
-	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
+    $pdfobjekt->SetFillColor($prevFillColor[0], $prevFillColor[1], $prevFillColor[2]);
 }
 
 function test_pageoverflow($pdfobjekt,$vysradku,$cellhead)
@@ -511,11 +541,20 @@ foreach($teile as $teil)
 //			if(getValueForNode($taetigkeit_childs,'kzgut')=='G')
 //				$sum_zapati_auftrag_array['gutstk']+=getValueForNode($taetigkeit_childs,'stk');
 		}
-		
-		if($sum_zapati_auftrag_array['verb']!=0)
-			$fac1=$sum_zapati_auftrag_array['vzkd']/$sum_zapati_auftrag_array['verb'];
-		else
-			$fac1=0;
+
+		if ($sum_zapati_auftrag_array['verb'] != 0) {
+		    if ($vzkdZeigen === TRUE) {
+			$fac1 = $sum_zapati_auftrag_array['vzkd'] / $sum_zapati_auftrag_array['verb'];
+		    } else {
+		    $fac1 = $sum_zapati_auftrag_array['vzaby'] / $sum_zapati_auftrag_array['verb'];
+		}
+		} else
+		    $fac1 = 0;
+
+//		if($sum_zapati_auftrag_array['verb']!=0)
+//			$fac1=$sum_zapati_auftrag_array['vzkd']/$sum_zapati_auftrag_array['verb'];
+//		else
+//			$fac1=0;
 		
 		$ex = $export;
 		$im = getValueForNode($import_childs, 'auftragsnr');
@@ -533,11 +572,20 @@ foreach($teile as $teil)
 		}
 	
 	}
-	
-	if($sum_zapati_teil_array['verb']!=0)
-		$fac1=$sum_zapati_teil_array['vzkd']/$sum_zapati_teil_array['verb'];
-	else
-		$fac1=0;
+
+	if ($sum_zapati_teil_array['verb'] != 0) {
+	    if ($vzkdZeigen === TRUE) {
+		$fac1 = $sum_zapati_teil_array['vzkd'] / $sum_zapati_teil_array['verb'];
+	    } else {
+		$fac1 = $sum_zapati_teil_array['vzaby'] / $sum_zapati_teil_array['verb'];
+	    }
+	} else
+	    $fac1 = 0;
+
+//	if($sum_zapati_teil_array['verb']!=0)
+//		$fac1=$sum_zapati_teil_array['vzkd']/$sum_zapati_teil_array['verb'];
+//	else
+//		$fac1=0;
 
 	test_pageoverflow($pdf,15,$cells_header);
 	zapati_teil($pdf,$teilnode,5,"Summe Teil",array(255,255,200),$sum_zapati_teil_array,$fac1);
@@ -550,10 +598,19 @@ foreach($teile as $teil)
 	
 }
 
-if($sum_zapati_sestava_array['verb']!=0)
-	$fac1=$sum_zapati_sestava_array['vzkd']/$sum_zapati_sestava_array['verb'];
-else
-	$fac1=0;
+if ($sum_zapati_sestava_array['verb'] != 0) {
+    if ($vzkdZeigen === TRUE) {
+	$fac1 = $sum_zapati_sestava_array['vzkd'] / $sum_zapati_sestava_array['verb'];
+    } else {
+	$fac1 = $sum_zapati_sestava_array['vzaby'] / $sum_zapati_sestava_array['verb'];
+    }
+} else
+    $fac1 = 0;
+
+//if($sum_zapati_sestava_array['verb']!=0)
+//	$fac1=$sum_zapati_sestava_array['vzkd']/$sum_zapati_sestava_array['verb'];
+//else
+//	$fac1=0;
 
 test_pageoverflow($pdf,5,$cells_header);
 zapati_teil($pdf,$teilnode,5,"Summe Bericht",array(200,200,255),$sum_zapati_sestava_array,$fac1);

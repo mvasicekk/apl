@@ -599,6 +599,22 @@ public function getZeitVorschlag($kunde,$teil,$tatnr,$typ)
         }
     }
 
+    /**
+     * 
+     * @param type $reklId
+     */
+    public function getVerursacherForReklId($reklId){
+	$sql = "select dpersschulung.persnr from dpersschulung where dpersschulung.rekl_id='$reklId' and dpersschulung.rekl_verursacher<>0 order by dpersschulung.persnr";
+	return $this->getQueryRows($sql);
+    }
+    
+    /**
+     * 
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type
+     */
     public function getReklamationenMitVerursacherVonBis($persnr, $von, $bis) {
 	$sql = " select";
 	$sql.= " dreklamation.id,";
@@ -669,12 +685,24 @@ public function getZeitVorschlag($kunde,$teil,$tatnr,$typ)
 	return mysql_affected_rows();
     }
 
-    public function getBetragSumAbmahnungenForReklId($reklId){
-	$sql.=" select";
+    /**
+     * 
+     * @param type $reklId
+     * @param type $vorschlag true = betrag pro vorschlag, false pro skutecne strzene penize
+     * @return int
+     */
+    public function getBetragSumAbmahnungenForReklId($reklId,$vorschlag=TRUE){
+	if($vorschlag===TRUE){
+	    $sql.=" select";
 	$sql.=" sum(dabmahnung.vorschlag_betrag) as betrag";
 	$sql.=" from dabmahnung";
 	$sql.=" where";
 	$sql.=" dabmahnung.dreklamation_id='$reklId'";
+	}
+	else{
+	    $sql = "select sum(dabmahnung.betr) as betrag from dabmahnung where dabmahnung.dreklamation_id='$reklId' and vorschlag=0";
+	}
+	
 	$r = $this->getQueryRows($sql);
 	if($r!==NULL){
 	    return floatval($r[0]['betrag']);
@@ -711,6 +739,17 @@ public function getZeitVorschlag($kunde,$teil,$tatnr,$typ)
 	else{
 	    return FALSE;
 	}
+    }
+    
+    /**
+     * 
+     * @param type $form_id
+     * @param type $elementId
+     * @param type $user
+     */
+    public function getHelpInfo($form_id, $elementId, $user){
+	$sql = "select id,help_text,popis,element_id,form_id from resources where form_id='$form_id' and element_id='$elementId'";
+	return $this->getQueryRows($sql);
     }
     
     /**
