@@ -40,15 +40,16 @@ $smarty = new Smarty;
 	    }
 	}
 	
-	$pocetDnuPredAktualnimDnem = 17+7;
+	$pocetDnuPredAktualnimDnem = 14;
 	
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
 	// + 14 dnu
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	//mkti
-	$konecRokuTime = mktime(23, 59, 59, 4, 31,2016);
-	$datumBis = date('Y-m-d',  $konecRokuTime);
+	$bisCustom = mktime(23, 59, 59, 5, 31,2016);
+	//$konecRokuTime = mktime(23, 59, 59, 4, 31,2016);
+	$datumBis = date('Y-m-d',  $bisCustom);
 	$datetime1 = new DateTime($datumBis);
 	$datetime2 = new DateTime($datumVon);
 	$interval = $datetime1->diff($datetime2);

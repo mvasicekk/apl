@@ -62,7 +62,7 @@ if (
 	    
 	    $zeilen['kunden'][$rekl['kunde']]['reklamationen'][$rekl['rekl_nr']] = $rekl;
 	    $interne_bewertung = intval($rekl['interne_bewertung']);
-	    $zeilen['kunden'][$rekl['kunde']]['summen']['interne_bewertung'] += $interne_bewertung;
+	    $zeilen['kunden'][$rekl['kunde']]['summen']['interne_bewertung'] += $interne_bewertung*$interne_bewertung;
 	    //kosten
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['abmahnungenbetrag'] += floatval($rekl['abmahnungenbetrag']);
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['abmahnungenbetrag_ist'] += floatval($rekl['abmahnungenbetrag_ist']);

@@ -113,6 +113,7 @@
 			<input id="S360" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Erhalten am von,*DATE;Erhalten am bis,*DATE;ReklNr&promenne=kundevon!number;kundebis!number;erhvon;erhbis;reklnr&values=111;999;{$prvnidenroku};{$now};*&report=S360'" class='reportbutton' type="button"  name="S360" value="S360 - Übersicht Mängelrüge"/>
 			<input id="S362" onClick="location.href='../get_parameters.php?popisky=ReklNr&promenne=reklnr&values=&report=S362'" class='reportbutton' type="button"  name="S362" value="S362 - Reklamationsbericht"/>
 			<input id="S365" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Erhalten am von,*DATE;Erhalten am bis,*DATE;laut Im/Ex,*RA&promenne=kdvon;kdbis;von;bis;laut&values=111;999;{$prvnidenroku};{$now};Import,Export&report=S365'" class='reportbutton' type="button"  name="S365" value="S365 - PPM"/>
+			<input id="S367" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Datum von,*DATE;Datum bis,*DATE&promenne=kdvon;kdbis;von;bis&values=111;999;{$prvnidenroku};{$now}&report=S367'" class='reportbutton' type="button"  name="S367" value="S367 - Hodnoceni reklamací"/>
 		    </div>
 		    
 		    <div id='rs_S34XX' style="display:{$display_sec.rs_S34XX}">

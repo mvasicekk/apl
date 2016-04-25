@@ -1665,7 +1665,7 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
      * @param type $kunde
      * @param type $bereich
      * @param type $value
-     * @param type $yearMonth
+     * @param type $yearMonth (RR-MM)
      */
     public function getBewertungKriterium($kunde,$bereich,$value,$vonbis,$yearMonth,$interval=NULL){
 	// $yearMonth = 15-01
@@ -5120,7 +5120,7 @@ public function istExportiert($import, $impal){
     public function getLastEMANr($kunde=NULL){
 	$sql = "select emanr from dma order by emanr desc";
 	if($kunde!==NULL)
-	    $sql = "select emanr from dma where emanr like '%_".$kunde."_%'order by emanr desc";
+	    $sql = "select emanr from dma where emanr like 'EMA_".$kunde."_%'order by emanr desc";
 	$rows = $this->getQueryRows($sql);
 	if($rows===NULL) return 0;
 	$row = $rows[0];

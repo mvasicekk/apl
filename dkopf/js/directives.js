@@ -5,9 +5,18 @@
  */
 
 angular.module('dkopfApp')
-	.directive('aplHelp',function(){
+	.directive('aplHelp', function () {
+	    
 	    return {
-		restrict:'E',
-		templateUrl:'./templates/aplhelp.html'
+		scope:{
+		    el:'=',
+		    showhelp:'=',
+		    showadmininfo:'='
+		},
+		restrict: 'E',
+		templateUrl: './templates/aplhelp.html',
+		link: function (scope, element, attrs) {
+		}
 	    }
 	});
+

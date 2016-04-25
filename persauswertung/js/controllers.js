@@ -55,7 +55,21 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
     $scope.getAllZeilenCsv = function(){
 	
 	var csvArray = $scope.zeilen.filter(function(v,index){
-	    if(v.section=='groupdetail' && (v.groupDetail=='leistGrad' || v.groupDetail=='a6_prozent' || v.groupDetail=='faktor' || v.group=='rekl')){
+	    if( 
+		    (v.section=='groupdetail') 
+		    && 
+		    (
+			(v.groupDetail=='leistGrad') 
+			||(v.groupDetail=='a6_prozent')
+			||(v.groupDetail=='faktor')
+			||(v.group=='rekl')
+			||(v.groupDetail=='anw_prozent')
+			||(v.groupDetail=='vzaby_akkord')
+			||(v.groupDetail=='vzaby_zeit')
+			||(v.groupDetail=='z')
+			||(v.groupDetail=='eintritt' && v.group=='loajalita')
+		    )
+		){
 		return true;
 	    }
 	    else{
@@ -70,9 +84,27 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		groupDetail:item.groupDetail
 		//sumpremie:$scope.personalSumme[item.persnr].monthValues['sum']
 	    };
+	    
+	    //2016-04-25
+	    //projit pole monthsArray
+	    for(j=0;j<$scope.monthsArray.length;j++){
+		var mj = $scope.monthsArray[j];
+		if(item.monthValues.hasOwnProperty(mj)){
+		    retObj[mj] = item.monthValues[mj];
+		}
+		else{
+		    retObj[mj] = '';
+		}
+	    }
+	    // e jeste sum
+	    retObj['sum'] = item.monthValues['sum'];
+	    
+	    /*
 	    for(prop in item.monthValues){
 		retObj[prop] = item.monthValues[prop];
 	    }
+	    */
+	    
 	    return  retObj;
 	});
 	

@@ -34,8 +34,8 @@
 	    <tr ng-repeat="r in dReklamationen">
 		<td ng-class="{'bg-success': r.rekl_erledigt_am1!=null}"><a href="#/det/{{r.id}}">{{r.kunde}}</a></td>
 		<td ng-class="{'bg-success': r.rekl_erledigt_am1!=null}">
-		    <a href="#/detail/{{r.id}}">{{r.rekl_nr}}</a>
-		    <a target="_blank" href="../Reports/S362_pdf.php?report=S362&reklnr={{r.rekl_nr}}&reklnr_label=ReklNr&tl_tisk=pdf" class="btn btn-primary">S362</a>
+		    <a class="btn btn-info btn-sm" href="#/detail/{{r.id}}">{{r.rekl_nr}}</a>
+		    <a target="_blank" href="../Reports/S362_pdf.php?report=S362&reklnr={{r.rekl_nr}}&reklnr_label=ReklNr&tl_tisk=pdf" class="btn btn-primary  btn-xs">S362</a>
 		</td>
 		<td>
 		    {{r.kd_rekl_nr}}
