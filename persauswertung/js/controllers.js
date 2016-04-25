@@ -85,7 +85,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		//sumpremie:$scope.personalSumme[item.persnr].monthValues['sum']
 	    };
 	    
-	    //2016-04-25
+	    //2016-04-25 
 	    //projit pole monthsArray
 	    for(j=0;j<$scope.monthsArray.length;j++){
 		var mj = $scope.monthsArray[j];
