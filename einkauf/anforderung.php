@@ -2,9 +2,11 @@
 require_once '../security.php';
 require("../libs/Smarty.class.php");
 require_once '../db.php';
+require_once '../sqldb.php';
 
 $smarty = new Smarty;
 $a = AplDB::getInstance();
+$s = sqldb::getInstance();
 
 if (isset($_SESSION['user']) && isset($_SESSION['level'])) {
     $smarty->assign("user", $_SESSION['user']);
@@ -27,6 +29,7 @@ if (isset($_POST['eingeben'])) {
 	$user = $a->get_user_pc();
 	$abdatDB = $a->make_DB_datum($a->validateDatum($_POST['abdatum']));
 	if ($ks > 0) {
+	    $s->insertEinkaufAnforderung($artikel,$ks,$bemerk,$abdatDB,$user,$anftyp,$prio);
 	    $insert_id = $a->insertEinkaufAnforderung($artikel,$ks,$bemerk,$abdatDB,$user,$anftyp,$prio);
 	    // poslat email
 	    
