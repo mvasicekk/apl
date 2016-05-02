@@ -254,6 +254,44 @@ foreach ($calArray['jahre'] as $jahr=>$m){
     }
 }
 
+function pageReportHeader($pdf,$s,$kwWidth,$stkWidth,$rowHeight,$kundenNrArray,$kw="KW") {
+    $fontSize = $s;
+    $a = AplDB::getInstance();
+    $pdf->SetFillColor(255, 255, 230);
+    $pdf->SetFont("FreeSans", "B", $s);
+    $pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
+    foreach ($kundenNrArray as $kd => $v) {
+	$pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
+	$pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
+	$pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
+    }
+    $pdf->Ln();
+    
+    //2.radek
+    $pdf->Cell($kwWidth, $rowHeight, '', 'LR', 0, 'R', 1);
+    foreach ($kundenNrArray as $kd => $v) {
+	$maxPPMInfo = $a->getBewertungKriteriumInfo($kd, 'ppm_max', date('y-m'));
+	if($maxPPMInfo!==NULL){
+	    $maxPPM = $maxPPMInfo[0]['grenze']."/".$maxPPMInfo[0]['interval_monate']." Mnt";
+	}
+	else{
+	    $maxPPM = '?';
+	}
+	
+	$pdf->Cell(1*$stkWidth, $rowHeight, 'Max PPM :', 'LBT', 0, 'L', 1);
+	$pdf->Cell(2*$stkWidth, $rowHeight, $maxPPM, 'BRT', 0, 'R', 1);
+//	$pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
+    }
+    $pdf->Ln();
+    //3.radek
+    $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRB', 0, 'R', 1);
+    foreach ($kundenNrArray as $kd => $v) {
+	$pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
+	$pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
+	$pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
+    }
+}
+
 //AplDB::varDump($anzeigeArray);
 
 //require_once('../tcpdf/config/lang/eng.php');
@@ -304,22 +342,25 @@ for($s=12;$s>1;$s-=0.5){
     if($strWidth<=$stkWidth)	break;
 }
 
+
 $fontSize = $s;
 
-$pdf->SetFont("FreeSans", "B", $s);
-$pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
-foreach ($kundenNrArray as $kd=>$v){
-    $pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
-    $pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
-    $pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
-}
-$pdf->Ln();
-$pdf->Cell($kwWidth, $rowHeight, 'KW', 'LRB', 0, 'R', 1);
-foreach ($kundenNrArray as $kd=>$v){
-    $pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
-    $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
-    $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
-}
+pageReportHeader($pdf, $s, $kwWidth, $stkWidth, $rowHeight, $kundenNrArray);
+
+//$pdf->SetFont("FreeSans", "B", $s);
+//$pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
+//foreach ($kundenNrArray as $kd=>$v){
+//    $pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
+//    $pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
+//    $pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
+//}
+//$pdf->Ln();
+//$pdf->Cell($kwWidth, $rowHeight, 'KW', 'LRB', 0, 'R', 1);
+//foreach ($kundenNrArray as $kd=>$v){
+//    $pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
+//    $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
+//    $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
+//}
 $pdf->Ln();
 
 $pdf->SetFont("FreeSans", "", $s);
@@ -360,6 +401,8 @@ $pdf->SetFillColor(210, 248, 91);
 $pdf->SetFont("FreeSans", "B", 10);
 $pdf->Cell(0, 6, 'Monat - Summen', '', 1, 'L', 1);
 
+pageReportHeader($pdf, $fontSize, $kwWidth, $stkWidth, $rowHeight, $kundenNrArray,"Mnt");
+/*
 $pdf->SetFillColor(255, 255, 230);
 $pdf->SetFont("FreeSans", "B", $fontSize);
 $pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
@@ -375,6 +418,8 @@ foreach ($kundenNrArray as $kd=>$v){
     $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
     $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
 }
+ */
+ 
 $pdf->Ln();
 $pdf->SetFont("FreeSans", "", $fontSize);
 foreach ($monatAnzeigeArray as $jahr=>$m){
@@ -404,87 +449,6 @@ foreach ($kundenNrArray as $kd => $v) {
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
 }
 
-/*
-include("../Classes/pChart/class/pData.class.php");
-include("../Classes/pChart/class/pDraw.class.php");
-include("../Classes/pChart/class/pImage.class.php");
-
-//AplDB::varDump($kundenNrArray);
-
-foreach ($kundenNrArray as $kd=>$v) {
-    $myData = new pData();
-    $myData->addPoints($monatGraphArray[$kd]['stk'], "stk");
-    $myData->setSerieDescription("stk", "Stk");
-    $myData->setSerieOnAxis("stk", 0);
-
-    $myData->addPoints($monatGraphArray[$kd]['stk_rekl'], "stk_rekl");
-    $myData->setSerieDescription("stk_rekl", "Stk rekl");
-    $myData->setSerieOnAxis("stk_rekl", 1);
-
-    $myData->addPoints($monatGraphArray[$kd]['ppm'], "ppm");
-    $myData->setSerieDescription("ppm", "ppm");
-    $myData->setSerieOnAxis("ppm", 2);
-
-//    $myData->addPoints(array("led", "uno", "brez", "dub"), "Absissa");
-//    $myData->setAbscissa("Absissa");
-
-    $myData->setAxisPosition(0, AXIS_POSITION_LEFT);
-    $myData->setAxisName(0, "Stk lt.".$laut);
-    $myData->setAxisUnit(0, "");
-
-    $myData->setAxisPosition(1, AXIS_POSITION_RIGHT);
-    $myData->setAxisName(1, "Stk rekl");
-    $myData->setAxisUnit(1, "");
-
-    $myData->setAxisPosition(2, AXIS_POSITION_RIGHT);
-    $myData->setAxisName(2, "ppm");
-    $myData->setAxisUnit(2, "");
-
-    $imgWidth = 1500;
-    $imgHeight = 1000;
-    $myPicture = new pImage($imgWidth, $imgHeight, $myData);
-    $Settings = array("StartR" => 231, "StartG" => 231, "StartB" => 97, "EndR" => 1, "EndG" => 138, "EndB" => 68, "Alpha" => 50);
-    //$myPicture->drawGradientArea(0,0,700,400,DIRECTION_VERTICAL,$Settings);
-
-    //$myPicture->drawRectangle(0, 0, 699, 699, array("R" => 0, "G" => 0, "B" => 0));
-
-    $myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Medium.ttf", "FontSize" => 20));
-    $TextSettings = array("Align" => TEXT_ALIGN_MIDDLEMIDDLE
-	, "R" => 42, "G" => 18, "B" => 255);
-    $myPicture->drawText($imgWidth/2, 25, "Stk lt.".$laut." / Stk reklamiert / PPM - $kd", $TextSettings);
-
-    $myPicture->setGraphArea(100, 50, $imgWidth-200, $imgHeight-50);
-    $myPicture->setFontProperties(array("R" => 0, "G" => 0, "B" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14));
-
-    $Settings = array("Pos" => SCALE_POS_LEFTRIGHT
-	, "Mode" => SCALE_MODE_START0
-	, "LabelingMethod" => LABELING_ALL
-	, "GridR" => 255, "GridG" => 255, "GridB" => 255, "GridAlpha" => 50, "TickR" => 0, "TickG" => 0, "TickB" => 0, "TickAlpha" => 50, "LabelRotation" => 0, "CycleBackground" => 1, "DrawXLines" => 0,"DrawYLines" => 0, "DrawSubTicks" => 0, "SubTickR" => 255, "SubTickG" => 0, "SubTickB" => 0, "SubTickAlpha" => 50);
-    $myPicture->drawScale($Settings);
-
-    $Config = array(
-	"AroundZero" => 0,
-	"DisplayPos"=>LABEL_POS_INSIDE,
-	"DisplayValues"=>FALSE,
-	    );
-    $myPicture->drawBarChart($Config);
-    
-//    $myPicture->drawLineChart(array('Weight'=>10,'Width'=>10));
-//    $myPicture->drawPlotChart(array('Weight'=>10,'Width'=>10));
-
-    $Config = array("FontR" => 0, "FontG" => 0, "FontB" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14, "Margin" => 6, "Alpha" => 30, "BoxSize" => 10, "Style" => LEGEND_BOX
-	, "Mode" => LEGEND_HORIZONTAL
-    );
-    $myPicture->drawLegend($imgWidth-200, 16, $Config);
-
-//$myPicture->stroke();
-//toto taky funguje
-    $myPicture->Render("S365_graf_".$kd.".png");
-    $pdf->AddPage();
-    $y = $pdf->GetY();
-    $pdf->Image("S365_graf_".$kd.".png", PDF_MARGIN_LEFT, $y + 10, 260, 160, 'PNG');
-}
-*/
 //Close and output PDF document
 $pdf->Output();
 

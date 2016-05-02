@@ -1706,6 +1706,105 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return $bewertung;
     }
     
+    /**
+     * 
+     * @param type $kunde
+     * @param type $bereich
+     * @param type $value
+     * @param type $vonbis
+     * @param type $yearMonth
+     * @param type $interval
+     * @return int
+     */
+    public function getBewertungKriteriumArray($kunde,$bereich,$value,$vonbis,$yearMonth,$interval=NULL,$oe=NULL){
+	// $yearMonth = 15-01
+	$year = 2000+intval(substr($yearMonth, 0, 2));
+	$month = substr($yearMonth,3,2);
+	$day = 1;
+	$dateTime = date('Y-m-d',strtotime("$year-$month-$day"));
+	$sql="";
+	$bewertung = 0;
+	
+	if($vonbis=='bis'){
+	    $sql.=" select";
+	    $sql.=" bewertung_kriteria.bewertung,";
+	    $sql.=" bewertung_kriteria.grenze";
+	    $sql.=" ,bewertung_kriteria.betrag";
+	    $sql.=" ,oe";
+	    $sql.=" from bewertung_kriteria";
+	    $sql.=" where";
+	    $sql.=" grenze>='$value'";
+	    $sql.=" and";
+	    $sql.=" bereich='$bereich'";
+	    $sql.=" and";
+	    $sql.=" kunde='$kunde'";
+	    $sql.=" and";
+	    $sql.=" gilt_ab<='$dateTime'";
+	    $sql.=" and";
+	    $sql.=" interval_monate='$interval'";
+	    $sql.=" order by";
+	    $sql.=" gilt_ab desc,";
+	    $sql.=" grenze asc";
+	    $rows = $this->getQueryRows($sql);
+	    if($rows!==NULL){
+		$bewertung = $rows[0];
+	    }
+	    else{
+		$bewertung = NULL;
+	    }
+	}
+	
+	if(strstr($vonbis, 'von')){
+	    $sql.=" select";
+	    $sql.=" bewertung_kriteria.bewertung,";
+	    $sql.=" bewertung_kriteria.grenze";
+	    $sql.=" ,bewertung_kriteria.betrag";
+	    $sql.=" ,oe";
+	    $sql.=" from bewertung_kriteria";
+	    $sql.=" where";
+	    $sql.=" grenze<='$value'";
+	    $sql.=" and";
+	    $sql.=" bereich='$bereich'";
+	    $sql.=" and";
+	    $sql.=" kunde='$kunde'";
+	    $sql.=" and";
+	    $sql.=" gilt_ab<='$dateTime'";
+	    $sql.=" and";
+	    $sql.=" interval_monate='$interval'";
+	    $sql.=" order by";
+	    $sql.=" gilt_ab desc,";
+	    $sql.=" grenze desc";
+	    $rows = $this->getQueryRows($sql);
+	    if($rows!==NULL){
+		$bewertung = $rows[0];
+	    }
+	    else{
+		$bewertung = NULL;
+	    }
+	}
+	
+	//test zavislosti na OE pomoci regex
+	if($bewertung!==NULL){
+	    $pattern = "/".$bewertung['oe']."/i";
+	    $subject = $oe;
+	    if(preg_match_all($pattern, $subject,$out)){
+		
+	    }
+	    else{
+		$bewertung = NULL;
+	    }
+	}
+	
+	return $bewertung;
+    }
+
+    /**
+     * 
+     * @param type $kunde
+     * @param type $bereich
+     * @param type $yearMonth
+     * @return type
+     */
     public function getBewertungKriteriumInfo($kunde,$bereich,$yearMonth){
 	// $yearMonth = 15-01
 	$year = 2000+intval(substr($yearMonth, 0, 2));

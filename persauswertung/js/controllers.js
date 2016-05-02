@@ -7,7 +7,9 @@
 var aplApp = angular.module('persstatApp');
 
 aplApp.controller('persstatController', function ($scope, $http,$timeout) {
+    $scope.persflagarray = [];
     $scope.persVon = "";
+    
     $scope.persBis = "";
     $scope.stammOE = "*";
     $scope.datumVon;
@@ -150,8 +152,12 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 	    }
 	});
 	
+	
 	//budou nasledovat multiplikatory pro z, 60% anwesenheit, leistungsgrad
+	console.log('sumObj:');
+	console.log(sumObj);
 	for(persnr in sumObj){
+	    var apremieFlagMulti = $scope.persflagarray[persnr]==""?0:1;
 	    // z, pro vybrane persnr vyfiltruju radek s hodnotami, pouzilo zeilenraw pro jednodussi pristup
 	    if($scope.zeilenraw.hasOwnProperty(persnr)){
 		// zetka
@@ -216,6 +222,12 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    sumObj[persnr].monthValues[mesic] *= multi;
 		}
 	    }
+	    
+	    //nulovani podle priznaku ******************************************
+	    for(mesic in sumObj[persnr].monthValues){
+		    sumObj[persnr].monthValues[mesic] *= apremieFlagMulti;
+	    }
+	    //******************************************************************
 	}
 	// aktualizuju celkovou sumu pres vsechny persnr
 	$scope.gesamtPersonalSumme = {};
@@ -645,7 +657,7 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;
 			$scope.zeilenraw = data.zeilenraw;
-			
+			$scope.persflagarray = data.persflagarray;
 			var betragSummen = {};
 			
 			//projdu vsechny zeilen a pridam bewertung pomoci javascriptu

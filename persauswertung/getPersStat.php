@@ -124,9 +124,9 @@ $sql.=" order by dpers.persnr";
 
 $persnrArray = $a->getQueryRows($sql);
 if($persnrArray!==NULL){
-foreach ($persnrArray as $p) {
+foreach ($persnrArray as $iii=>$p) {
     $persnr = $p['persnr'];
-    
+    //$zeilen[$persnr]['apremie_flag'] = $persInfoA[0]['a_praemie']!=0?$persInfoA[0]['a_praemie_st']!=0?'!':'V':'';
     //loajalita ----------------------------------------------------------------
     //loajalita, hodnoty jen do sloupce sum
     $eintritt = $a->getEintrittsDatumDB($persnr);
@@ -413,7 +413,8 @@ foreach ($persnrArray as $p) {
 	if($leistungArray!==NULL){
 	    $vzaby = $leistungArray['vzaby'];
 	    $vzaby_akkord = $leistungArray['vzaby_akkord'];
-	    $vzaby_zeit = ($vzaby-$vzaby_akkord)*$leistFaktor;
+	    //$vzaby_zeit = ($vzaby-$vzaby_akkord)*$leistFaktor;
+	    $vzaby_zeit = ($vzaby-$vzaby_akkord);
 	}
 	else{
 	    $vzaby = 0;
@@ -695,8 +696,9 @@ foreach ($persnrArray as $p) {
 
 $groups = array();
 $groupDetails = array();
+$persFlagArray = array();
 
-foreach ($persnrArray as $p) {
+foreach ($persnrArray as $iii=>$p) {
     $persnr = $p['persnr'];
     $rowsArray = $zeilen[$persnr];
     
@@ -707,13 +709,16 @@ foreach ($persnrArray as $p) {
     }
     $persInfoA = $a->getPersInfoArray($persnr);
     $regelOE = $persInfoA[0]['regeloe'];
-    array_push($zeilenArray, array('section' => 'persheader','regeloe'=>$regelOE, 'persnr' => $persnr, 'name' => $name,'sumPremieCZK'=>  number_format($sumPremieCZK[$persnr],0,',',' ')));
+    $aPremieFlag = $persInfoA[0]['a_praemie']!=0?$persInfoA[0]['a_praemie_st']!=0?'!':'V':'';
+    $persFlagArray[$persnr] = $aPremieFlag;
+
+    array_push($zeilenArray, array('section' => 'persheader','apremieflag'=>$aPremieFlag,'regeloe'=>$regelOE, 'persnr' => $persnr, 'name' => $name,'sumPremieCZK'=>  number_format($sumPremieCZK[$persnr],0,',',' ')));
     if (is_array($rowsArray)) {
 	foreach ($rowsArray as $group => $groupArray) {
 	    foreach ($groupArray as $groupDetail => $monthArray) {
 		$groups[$group]+=1;
 		$groupDetails[$groupDetail]+=1;
-		array_push($zeilenArray, array('section' => 'groupdetail', 'regeloe'=>$regelOE,'persnr' => $persnr, 'name' => $name, 'group' => $group, 'groupDetail' => $groupDetail, 'monthValues' => $monthArray));
+		array_push($zeilenArray, array('section' => 'groupdetail','apremieflag'=>$aPremieFlag, 'regeloe'=>$regelOE,'persnr' => $persnr, 'name' => $name, 'group' => $group, 'groupDetail' => $groupDetail, 'monthValues' => $monthArray));
 	    }
 	}
     }
@@ -757,6 +762,7 @@ $groupsInfoArray = array(
 
 
 $returnArray = array(
+    "persflagarray"=>$persFlagArray,
     "groupDetails"=>$GroupDetails,
     "groups"=>$Groups,
     'persNrArray'=>$persnrArray,

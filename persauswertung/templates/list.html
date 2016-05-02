@@ -74,7 +74,8 @@
 		
 		<!--persheader---------------------------------------------- -->
 		<td class="{{r.section}}" ng-init="qrText=r.persnr+'\n'+r.name;" ng-if="r.section=='persheader'">
-		    {{r.persnr}}
+		    <span style="display: inline-block;" class="text-left">{{r.persnr}}</span>
+		    <span style="display: inline-block;float:right;" class="text-right">{{r.apremieflag}}</span>
 		    <qr text="r.persnr+' '+'nejaky jmeno'" size='100' ng-if='showQR'></qr>
 		</td>
 		<td class="{{r.section}}" ng-if="r.section=='persheader'" colspan="1">
