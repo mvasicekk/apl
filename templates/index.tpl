@@ -177,6 +177,27 @@
 				<span id="sock_status" class="badge">not connected</span>
 			    </div>
 			</div>*}
+			 <div class="row">
+				<div class="col-md-4 text-center">
+				    <input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
+				    <button title="načte aktuální obraz z kamer" class="btn btn-block" onclick="window.location.reload();" id="branaRefreshButton">Camera refresh</button>
+				</div>
+				<div class="col-md-4 text-center">
+{*				    <button class="btn btn-block" id="brana1Button">horní brana</button>*}
+				    <button title="horní brána" class="btn btn-block" id="brana1Button">
+				    <img id='brana1img' width="100%" src="http://a:a@172.16.1.102/Streaming/channels/801/picture" title="horní brána">
+{*				    <hr>horní brána*}
+				    </button>
+				</div>
+				<div class="col-md-4 text-center">
+{*				    <button class="btn btn-block" id="brana2Button">dolní brana</button>*}
+				    <button title="dolní brána" class="btn btn-block" id="brana2Button">
+				    <img id='brana2img' width="100%" src="http://a:a@172.16.1.102/Streaming/channels/401/picture" title="dolní brána">
+{*				    <hr>dolní brána*}
+				    </button>
+				</div>
+			</div>
+			<!--	    
 			<div class="row">
 			    <div class="col-md-4 text-center">
 				<input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
@@ -188,6 +209,7 @@
 				<button class="btn btn-block btn-default" id="brana2Button">dolní brana</button>
 			    </div>
 			</div>
+			-->
 		    </div>
 		</div>
 <!--		<a title="kundenminuten aktuell" href="graph/leistung_akt_monat_gross.php" ><img border=0 src="graph/leistung_akt_monat.php"></a>-->

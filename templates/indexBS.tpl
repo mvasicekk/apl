@@ -36,6 +36,7 @@
         <link rel="stylesheet" href="./stylBS.css" type="text/css">
 
 {*custom js	*}
+{*	<script src="./brany/js/digest-ajax.min.js"></script>*}
 	<script src="./brany/js/brany.js"></script>
 	<script type="text/javascript" src="./apl.js"></script>
     </head>
@@ -200,12 +201,22 @@
 			    <div class="row">
 				<div class="col-md-4 text-center">
 				    <input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
+				    <button class="btn btn-block" onclick="refreshWebcam('brana1img');refreshWebcam('brana2img');" id="brrefrbt">Camera refresh</button>
+{*				    <button class="btn btn-block" onclick="window.location.reload();" id="brrefrbt">Camera refresh</button>*}
 				</div>
 				<div class="col-md-4 text-center">
-				    <button class="btn btn-block" id="brana1Button">horní brana</button>
+{*				    <button class="btn btn-block" id="brana1Button">horní brana</button>*}
+				    <button title='horní brána' class="btn btn-block" id="brana1Button">
+				    <img id='brana1img' width="100%" src="http://a:a@172.16.1.102/Streaming/channels/801/picture" title='horní brána' >
+{*				    <hr>horní brána*}
+				    </button>
 				</div>
 				<div class="col-md-4 text-center">
-				    <button class="btn btn-block" id="brana2Button">dolní brana</button>
+{*				    <button class="btn btn-block" id="brana2Button">dolní brana</button>*}
+				    <button title='dolní brána' class="btn btn-block" id="brana2Button">
+				    <img id='brana2img' width="100%" src="http://a:a@172.16.1.102/Streaming/channels/401/picture" title='dolní brána' >
+{*				    <hr>dolní brána*}
+				    </button>
 				</div>
 			    </div>
 			</div>

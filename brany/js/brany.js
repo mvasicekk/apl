@@ -42,7 +42,7 @@ function openBrana(e){
 		    if((data.pinOk===true) && (sock)){
 			var messageToSend = JSON.stringify({msg:"branaButtonClicked",id:iD,loginfo:u});
 			sock.send(messageToSend);
-			console.log('pin was ok sending message to nodered');
+			//console.log('pin was ok sending message to nodered');
 		    }
             },
             'json'
@@ -66,7 +66,7 @@ function startSock(){
                   };
         
     sock.onerror = function(){
-	    console.log("Websocket error");
+	    //console.log("Websocket error");
 	};
 	
     
@@ -83,7 +83,14 @@ function startSock(){
 		    });
 		}
 		else{
+		    //console.log('zmena stavu pinu');
+		    //console.log(branaInfo.stav);
 		    stavyPinu[branaInfo.brana] = branaInfo.stav;
+		    if(branaInfo.stav!==undefined){
+			//window.location.reload();
+			refreshWebcam('brana1img');
+			refreshWebcam('brana2img');
+		    }
 		    //setOnOff(branaInfo.brana,branaInfo.stav);
 		}
 		updateBranyClasses();
@@ -91,7 +98,7 @@ function startSock(){
     };
     
     sock.onclose = function(evt){
-	console.log('connection closed');
+	//console.log('connection closed');
 	$('#sock_status').html('closed');
 	$('#sock_status').css({"background-color":"red"});
 	//reconnect
@@ -100,21 +107,58 @@ function startSock(){
 }
 
 
-function updateBranyClasses(){
-    console.log(stavyPinu);
+var refreshWebcam = function (imgid) {
+	console.log('refreshWebcam:'+imgid);
+	var proxyUrl = './proxy.php';
+            // webcam link is appended with a timestamp to prevent caching
+	    if(imgid=='brana1img'){
+		var webcamImg = 'http://a:a@172.16.1.102/Streaming/channels/801/picture' + '?' + (new Date()).getTime();
+	    }
+	    if(imgid=='brana2img'){
+		var webcamImg = 'http://a:a@172.16.1.102/Streaming/channels/401/picture' + '?' + (new Date()).getTime();
+	    }
 
-    //brana2
+/*
+	    $.ajaxDigest(webcamImg, {
+		//csurl:webcamImg,
+		username: 'admin',
+		password: '12345'
+	    }).done(function(data, textStatus, jqXHR) {
+		alert('Retrieved data!');
+	    }).fail(function(jqXHR, textStatus, errorThrown) {
+		alert('Request failed :(');
+	    });
+*/	    
+	    
+	    $.ajax({
+                url: proxyUrl,
+                type: 'GET',
+		data:{csurl:webcamImg},
+                success: function () {
+                    $('#'+imgid).attr('src', webcamImg);
+                    console.log('successfully loaded ' + webcamImg);
+                }
+            });
+	    
+        };
+	
+function updateBranyClasses(){
+    
     if(stavyPinu.pi_32=='off' && stavyPinu.pi_36=='off'){
 	bId = 'brana2Button';
 	$('#' + bId).addClass('closed');
 	$('#' + bId).removeClass('opening');
 	$('#' + bId).removeClass('open');
+	//refreshWebcam('brana2img');
+	//window.location.reload();
     }
     else if (stavyPinu.pi_32=='on' && stavyPinu.pi_36=='on'){
 	bId = 'brana2Button';
 	$('#' + bId).addClass('open');
 	$('#' + bId).removeClass('opening');
 	$('#' + bId).removeClass('closed');
+	//refreshWebcam('brana2img');
+	//window.location.reload();
     }
     else
     {
@@ -122,6 +166,8 @@ function updateBranyClasses(){
 	$('#' + bId).addClass('opening');
 	$('#' + bId).removeClass('open');
 	$('#' + bId).removeClass('closed');
+	//refreshWebcam('brana2img');
+	//window.location.reload();
     }
     
 
@@ -131,12 +177,16 @@ function updateBranyClasses(){
 	$('#' + bId).addClass('closed');
 	$('#' + bId).removeClass('opening');
 	$('#' + bId).removeClass('open');
+	//refreshWebcam('brana1img');
+	//window.location.reload();
     }
     else if (stavyPinu.pi_38=='on' && stavyPinu.pi_40=='on'){
 	bId = 'brana1Button';
 	$('#' + bId).addClass('open');
 	$('#' + bId).removeClass('opening');
 	$('#' + bId).removeClass('closed');
+	//refreshWebcam('brana1img');
+	//window.location.reload();
     }
     else
     {
@@ -144,6 +194,8 @@ function updateBranyClasses(){
 	$('#' + bId).addClass('opening');
 	$('#' + bId).removeClass('open');
 	$('#' + bId).removeClass('closed');
+	//refreshWebcam('brana1img');
+	//window.location.reload();
     }
     
     // pokud jsou zabezpeceny schovam div s tlacitkama

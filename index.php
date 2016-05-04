@@ -31,8 +31,6 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	session_destroy();
 	$smarty->assign("prihlasen", 0);
     }
-
-
     $apl->insertAccessLog($_POST['username'], $_POST[password], $prihlasen, $apl->get_pc_ip());
 }
 
@@ -122,6 +120,14 @@ $smarty->assign("tvFiles", $files);
 //zjistit seznam roli pro uzivatele
 require_once './assignsecurity.php';
 
+//unset($_POST);
+$URI = $_SERVER['REQUEST_URI'];
+//unset($_POST);
+if($_POST){
+    header("Location: $URI");
+}
+
 $smarty->display('indexBS.tpl');
+//$smarty->display('index.tpl');
 ?>
 
