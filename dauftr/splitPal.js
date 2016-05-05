@@ -99,9 +99,10 @@ function showSplitGo(){
     var persnr = parseInt($('#persnr').val());
     var isExVisible = $('#exInfo').is(':visible');
     var isPal2ExistsVisible = $('#pal2ExistsInfo').is(':visible');
+    var isPal2ExVisible = $('#pal2ExInfo').is(':visible');
     
     //if(pal2>0 && pal2stk>0 && persnr>0 && !isExVisible && !isPal2ExistsVisible){
-    if(pal2>0 && pal2stk>0 && persnr>0 && !isExVisible){
+    if(pal2>0 && pal2stk>0 && persnr>0 && !isExVisible && !isPal2ExVisible){
 	$('#gosplit').show();
     }
     else{
@@ -199,6 +200,12 @@ function updateTestPalExists(data){
     }
     else{
 	$('#pal2ExistsInfo').hide();
+    }
+    if(data.hatRechnung===true){
+	$('#pal2ExInfo').show();
+    }
+    else{
+	$('#pal2ExInfo').hide();
     }
     showSplitGo();
 }

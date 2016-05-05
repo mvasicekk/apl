@@ -59,6 +59,7 @@
 	    <label for="pal2">Pal nach</label>
 	    <input type="number" accesskey="p" id="pal2" value="" />
 	    <span id="pal2ExistsInfo">pal existiert !!!</span>
+	    <span id="pal2ExInfo">pal expediert !!!</span>
 	    <label for="pal2stk">Stk</label>
 	    <input type="number" id="pal2stk" value="0" />
 	    <label for="persnr">Persnr</label>

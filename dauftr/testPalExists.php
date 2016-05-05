@@ -11,13 +11,15 @@ $exists = FALSE;
 $dauftrArray = $a->getDauftrRowsForImportPal($import, $impal);
 if($dauftrArray!=NULL){
     $exists = TRUE;
+    $hatRechnung = strlen(trim($dauftrArray[0]['ex']))>0?TRUE:FALSE;
 }
     
 
 $retArray = array(
     'import'=>$import,
     'impal'=>$impal,
-    'exists'=>$exists
+    'exists'=>$exists,
+    'hatRechnung'=>$hatRechnung,
 );
 
 
