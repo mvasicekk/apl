@@ -201,7 +201,7 @@
 			    <div class="row">
 				<div class="col-md-4 text-center">
 				    <input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
-				    <button class="btn btn-block" onclick="refreshWebcam('brana1img');refreshWebcam('brana2img');" id="brrefrbt">Camera refresh</button>
+				    <button title="obnovit obraz z kamer" class="btn btn-block" onclick="refreshWebcam('brana1img');refreshWebcam('brana2img');" id="brrefrbt">Camera refresh</button>
 {*				    <button class="btn btn-block" onclick="window.location.reload();" id="brrefrbt">Camera refresh</button>*}
 				</div>
 				<div class="col-md-4 text-center">
