@@ -4973,6 +4973,433 @@ public function istExportiert($import, $impal){
             return TRUE;
     }
 
+    
+    /**
+     * 
+     * @param type $monat
+     * @param type $jahr
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $stammOE  - bere i vzorek napr. G*11
+     * @return array asoc. pole array("persnr"=>array("apremie"=>hodnota,"apremie_flag"=>"[V!]"))
+     */
+    public function getPersnrApremieArray($monat,$jahr,$persvon,$persbis,$stammOE,$calculateIfFlagNotTrue=TRUE) {
+// vytahnu paramety z _GET ( z getparameters.php )
+	$stammOE = strtoupper(strtr(trim($stammOE), '*', '%'));
+	$persVon = $persvon;
+	$persBis = $persbis;
+
+	$a = $this;
+
+	$von = $jahr . "-" . $monat . "-01";
+	$pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
+	$bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
+	$datumVon = $von;
+	$datumBis = $bis;
+
+	$monthsArrayAll = array();
+// vytvorim si pole mesico podle zadaneho rozsahu von a bis
+	$start = strtotime($datumVon);
+	$end = strtotime($datumBis);
+	$increment = 60 * 60 * 24; // 1 den v sekundach
+	while ($start <= $end) {
+	    $year = date('y', $start);
+	    $month = date('m', $start);
+	    $yearMonth = "$year-$month";
+	    $monthsArrayAll[$yearMonth]+=1;
+	    $start+=$increment;
+	}
+
+	$monthsArray = array_keys($monthsArrayAll);
+	sort($monthsArray);
+	$mj = $monthsArray[0];
+
+	$sql = "select dpers.PersNr as persnr from dpers";
+	$sql.=" where (PersNr between '$persVon' and '$persBis') and (austritt is null or austritt<eintritt or datediff(now(),austritt)<=60) and (dpersstatus='MA' or dpersstatus='BEENDET')";
+	$sql.=" and (kor=0)";
+
+	if ((strlen($stammOE) > 0) && ($stammOE != '%')) {
+	    $sql.=" and dpers.regeloe like '%$stammOE%'";
+	}
+	$sql.=" order by dpers.persnr";
+	$persnrArray = $a->getQueryRows($sql);
+
+	if ($persnrArray !== NULL) {
+	    foreach ($persnrArray as $p) {
+		$persnr = $p['persnr'];
+
+		//loajalita ----------------------------------------------------------------
+		$persInfoA = $a->getPersInfoArray($persnr);
+		$zeilen[$persnr]['name'] = $persInfoA[0]['Name'] . ' ' . $persInfoA[0]['Vorname'];
+
+
+		$zeilen[$persnr]['apremie_flag'] = $persInfoA[0]['a_praemie'] != 0 ? $persInfoA[0]['a_praemie_st'] != 0 ? '!' : 'V' : '';
+		if($calculateIfFlagNotTrue===FALSE && $zeilen[$persnr]['apremie_flag']==''){
+		    continue;
+		}
+		$regeloe = $persInfoA[0]['regeloe'];
+		$zeilen[$persnr]['regeloe'] = $persInfoA[0]['regeloe'];
+
+		$eintritt = $a->getEintrittsDatumDB($persnr);
+		$zeilen[$persnr]['loajalita']['eintritt']['sum'] = date('y-m-d', strtotime($eintritt));
+		$zeilen[$persnr]['loajalita']['austritt']['sum'] = strlen(trim($persInfoA[0]['austritt'])) == 0 ? '' : date('y-m-d', strtotime($persInfoA[0]['austritt']));
+		$aTageFond = $a->getArbTageBetweenDatums($datumVon, $datumBis);
+		$zeilen[$persnr]['loajalita']['von_bis_fond_days'] = $aTageFond;
+		$zeilen[$persnr]['loajalita']['von_bis_fond_hours'] = $aTageFond * 8;
+
+
+		// nacharbeit ---------------------------------------------------------------
+
+		$sql = " select";
+		$sql.=" drueck.PersNr as persnr";
+		$sql.=" ,drueck.Datum as datum";
+		$sql.=" ,sum(if(TaetNr>=6500 and TaetNr<=6599,if(auss_typ=4,abs(drueck.`Stück`+`Auss-Stück`)*`VZ-IST`,abs(drueck.`Stück`)*`VZ-IST`),0)) as vzaby_65xx";
+		$sql.=" ,sum(if(auss_typ=4,(drueck.`Stück`+`Auss-Stück`)*`VZ-SOLL`,(drueck.`Stück`)*`VZ-SOLL`)) as vzkd";
+		$sql.=" from";
+		$sql.=" drueck";
+		$sql.=" where";
+		$sql.=" PersNr='$persnr'";
+		$sql.=" and Datum between '$datumVon' and '$datumBis'";
+		$sql.=" group by";
+		$sql.=" PersNr,";
+		$sql.=" drueck.Datum";
+
+
+		$persRows = $a->getQueryRows($sql);
+
+
+		$monthsArray = array();
+		if ($persRows !== NULL) {
+		    foreach ($persRows as $pr) {
+			//$persnr = $pr['persnr'];
+			$datum = $pr['datum'];
+			$month = date('m', strtotime($datum));
+			$yearMonth = date('y-m', strtotime($datum));
+			$monthsArray[$yearMonth]+=1;
+			$vzaby_65xx = floatval($pr['vzaby_65xx']);
+			$vzkd = floatval($pr['vzkd']);
+			$zeilen[$persnr]['nacharbeit']['vzaby_65xx'][$yearMonth]+=$vzaby_65xx;
+			$zeilen[$persnr]['nacharbeit']['vzkd'][$yearMonth]+=$vzkd;
+		    }
+
+		    $monthsArray = array_keys($monthsArray);
+		    sort($monthsArray);
+		    foreach ($monthsArray as $yearMonth) {
+			$vzaby_65xx = floatval($zeilen[$persnr]['nacharbeit']['vzaby_65xx'][$yearMonth]);
+			$vzkd = floatval($zeilen[$persnr]['nacharbeit']['vzkd'][$yearMonth]);
+
+			if (($vzkd != 0)) {
+			    $zeilen[$persnr]['nacharbeit']['faktor'][$yearMonth] = ($vzaby_65xx / $vzkd) * 100;
+			} else {
+			    $zeilen[$persnr]['nacharbeit']['faktor'][$yearMonth] = '';
+			}
+		    }
+
+		    //bewertung czk
+		    $value = $zeilen[$persnr]['nacharbeit']['faktor'][$mj];
+		    //echo "value: $value<br>";
+		    $bew = $a->getBewertungKriteriumArray(100, 'q_nacharbeit', $value, 'bis', $mj, 1, $regeloe);
+		    //AplDB::varDump($bew);
+		    if ($bew == NULL) {
+			$zeilen[$persnr]['nacharbeit']['faktor']['czk'] = '';
+		    } else {
+			$zeilen[$persnr]['nacharbeit']['faktor']['czk'] = $bew['betrag'];
+		    }
+		}
+		//--------------------------------------------------------------------------
+		// Ausschuss ---------------------------------------------------------------
+		$sql = " select";
+		$sql.="     drueck.PersNr as persnr,";
+		$sql.="     drueck.Teil,";
+		$sql.="     drueck.insert_stamp,";
+		$sql.="     drueck.`Stück` as stk,";
+		$sql.="     drueck.Datum as datum,";
+		$sql.="     dkopf.Gew as teil_gew,";
+		$sql.="     count(TaetNr) as tat_count,";
+		$sql.="     sum(`Auss-Stück`) as stk_auss_sum";
+		$sql.=" from";
+		$sql.="     drueck";
+		$sql.=" join dkopf on dkopf.Teil=drueck.Teil";
+		$sql.=" where";
+		$sql.="     PersNr='$persnr'";
+		$sql.="     and Datum between '$datumVon' and '$datumBis'";
+		$sql.="     and (DATE_FORMAT(`verb-von`,'%H:%i:%s')!='00:00:00')";
+		$sql.=" group by";
+		$sql.="     PersNr,";
+		$sql.="     drueck.Teil,";
+		$sql.="     drueck.insert_stamp,";
+		$sql.="     drueck.`Stück`";
+
+		$persRows = $a->getQueryRows($sql);
+
+		$monthsArray = array();
+		if ($persRows !== NULL) {
+		    foreach ($persRows as $pr) {
+			//$persnr = $pr['persnr'];
+			$datum = $pr['datum'];
+			$month = date('m', strtotime($datum));
+			$yearMonth = date('y-m', strtotime($datum));
+			$monthsArray[$yearMonth]+=1;
+			$stkGut = intval($pr['stk']);
+			$stkAuss = intval($pr['stk_auss_sum']);
+			$gew = floatval($pr['teil_gew']);
+			$zeilen[$persnr]['A6']['sum_gew'][$yearMonth]+=($stkGut + $stkAuss) * $gew;
+		    }
+
+		    $monthsArray = array_keys($monthsArray);
+		    sort($monthsArray);
+		    foreach ($monthsArray as $yearMonth) {
+			$year = 2000 + intval(substr($yearMonth, 0, 2));
+			$month = intval(substr($yearMonth, 3));
+			$a6Gew = $a->getGewAussTypYearMonthPersnr(6, $year, $month, $persnr);
+			$sumGew = floatval($zeilen[$persnr]['A6']['sum_gew'][$yearMonth]);
+			$zeilen[$persnr]['A6']['a6_gew'][$yearMonth] = $a6Gew;
+
+			if (($sumGew != 0)) {
+			    $zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = ($a6Gew / $sumGew) * 100;
+			} else {
+			    $zeilen[$persnr]['A6']['a6_prozent'][$yearMonth] = '';
+			}
+
+			//vyhodnoceni pomoci kriterii
+			//$value = $zeilen[$persnr]['A6']['a6_prozent'][$yearMonth];
+			//$bew = $a->getBewertungKriterium(100,'q_auss',$value,'bis',$yearMonth,1);
+		    }
+		    //bewertung czk
+		    $value = $zeilen[$persnr]['A6']['a6_prozent'][$mj];
+		    //echo "value: $value<br>";
+		    $bew = $a->getBewertungKriteriumArray(100, 'q_auss', $value, 'bis', $mj, 1, $regeloe);
+		    //AplDB::varDump($bew);
+		    if ($bew == NULL) {
+			$zeilen[$persnr]['A6']['a6_prozent']['czk'] = '';
+		    } else {
+			$zeilen[$persnr]['A6']['a6_prozent']['czk'] = $bew['betrag'];
+		    }
+		}
+		//--------------------------------------------------------------------------
+		// reklamace ---------------------------------------------------------------
+		$sql = " select";
+		$sql.= " dpersschulung.persnr,";
+		$sql.= " dreklamation.rekl_nr,";
+		$sql.= "     dreklamation.rekl_datum,";
+		$sql.= " dreklamation.interne_bewertung";
+		$sql.= " from";
+		$sql.= " dreklamation";
+		$sql.= " join dpersschulung on dpersschulung.rekl_id=dreklamation.id";
+		$sql.= " where";
+		$sql.= " dreklamation.rekl_datum between '$datumVon' and '$datumBis'";
+		$sql.= " and dpersschulung.persnr='$persnr'";
+		$sql.= " and dpersschulung.rekl_verursacher<>0";
+		$sql.= " group by";
+		$sql.= " dpersschulung.persnr,";
+		$sql.= " dreklamation.rekl_nr";
+
+		$monthsArray = array();
+		$persRows = $a->getQueryRows($sql);
+		if ($persRows !== NULL) {
+		    foreach ($persRows as $pr) {
+			$datum = $pr['rekl_datum'];
+			$month = date('m', strtotime($datum));
+			$yearMonth = date('y-m', strtotime($datum));
+			$monthsArray[$yearMonth]+=1;
+
+			$ie = strtoupper(substr($pr['rekl_nr'], 0, 1));
+			if ($ie == 'I') {
+			    $zeilen[$persnr]['rekl']['sum_bewertung_I'][$yearMonth]+=$pr['interne_bewertung'];
+			    //$zeilen[$persnr]['rekl']['bewertung_I'][$yearMonth] = 0;
+			}
+			if ($ie == 'E') {
+			    $zeilen[$persnr]['rekl']['sum_bewertung_E'][$yearMonth]+=$pr['interne_bewertung'];
+			    //$zeilen[$persnr]['rekl']['bewertung_E'][$yearMonth] = 0;
+			}
+		    }
+		    //projit vsechny mesice pro vyhodnoceni kriterii
+		    $monthsArray = array_keys($monthsArrayAll);
+		    sort($monthsArray);
+		    foreach ($monthsArray as $yearMonth) {
+			//vyhodnoceni pomoci kriterii I
+			$value = $zeilen[$persnr]['rekl']['sum_bewertung_I'][$yearMonth];
+			if (intval($value) == 0) {
+			    $zeilen[$persnr]['rekl']['sum_bewertung_I'][$yearMonth] = 0;
+			}
+			//$bew = $a->getBewertungKriterium(100, 'q_reklamationen', $value, 'bis', $yearMonth, 1);
+			//$zeilen[$persnr]['rekl']['bewertung_I'][$yearMonth] = $bew;
+			//vyhodnoceni pomoci kriterii E
+			$value = $zeilen[$persnr]['rekl']['sum_bewertung_E'][$yearMonth];
+			if (intval($value) == 0) {
+			    $zeilen[$persnr]['rekl']['sum_bewertung_E'][$yearMonth] = 0;
+			}
+			//$bew = $a->getBewertungKriterium(100, 'q_reklamationen', $value, 'bis', $yearMonth, 1);
+			//$zeilen[$persnr]['rekl']['bewertung_E'][$yearMonth] = $bew;
+		    }
+		}
+
+		//bewertung czk
+		$value = $zeilen[$persnr]['rekl']['sum_bewertung_I'][$mj];
+		$bew = $a->getBewertungKriteriumArray(100, 'q_reklamationen_I', $value, 'bis', $mj, 1, $regeloe);
+		//AplDB::varDump($bew);
+		if ($bew == NULL) {
+		    $zeilen[$persnr]['rekl']['sum_bewertung_I']['czk'] = '';
+		} else {
+		    $zeilen[$persnr]['rekl']['sum_bewertung_I']['czk'] = $bew['betrag'];
+		}
+
+		$value = $zeilen[$persnr]['rekl']['sum_bewertung_E'][$mj];
+		$bew = $a->getBewertungKriteriumArray(100, 'q_reklamationen_E', $value, 'bis', $mj, 1, $regeloe);
+		if ($bew == NULL) {
+		    $zeilen[$persnr]['rekl']['sum_bewertung_E']['czk'] = '';
+		} else {
+		    $zeilen[$persnr]['rekl']['sum_bewertung_E']['czk'] = $bew['betrag'];
+		}
+
+		//dochazka -----------------------------------------------------------------
+		$sql = " select";
+		$sql.= " dzeit.PersNr as persnr,";
+		$sql.= " dzeit.tat,";
+		$sql.= " dtattypen.oestatus,";
+		$sql.= " dzeit.Datum as datum,";
+		$sql.=" sum(if(dtattypen.oestatus='a',dzeit.stunden,0)) as sum_stundena";
+		$sql.= " from";
+		$sql.= " dzeit";
+		$sql.= " join dtattypen on dtattypen.tat=dzeit.tat";
+		$sql.= " where";
+		$sql.= " dzeit.persnr='$persnr'";
+		$sql.= " and dzeit.datum between '$datumVon' and '$datumBis'";
+		$sql.= " group by";
+		$sql.= " dzeit.persnr,";
+		$sql.= " dzeit.tat,";
+		$sql.= " dzeit.Datum";
+
+		$monthsArray = array();
+		$persRows = $a->getQueryRows($sql);
+		if ($persRows !== NULL) {
+		    foreach ($persRows as $pr) {
+			$datum = $pr['datum'];
+			$month = date('m', strtotime($datum));
+			$yearMonth = date('y-m', strtotime($datum));
+			$monthsArray[$yearMonth]+=1;
+
+			$zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] += $pr['sum_stundena'];
+
+			if ($pr['tat'] == 'd' || $pr['tat'] == 'n' || $pr['tat'] == 'np' || $pr['tat'] == 'nu' || $pr['tat'] == 'nv' || $pr['tat'] == 'nw' || $pr['tat'] == 'p' || $pr['tat'] == 'u' || $pr['tat'] == 'z' || $pr['tat'] == '?') {
+			    // nacitat jen ty, ktere me zajimaji
+			    $zeilen[$persnr]['dzeit'][$pr['tat']][$yearMonth]+=1;
+			}
+		    }
+		}
+		foreach ($monthsArrayAll as $yearMonth => $dayCount) {
+		    $year = 2000 + intval(substr($yearMonth, 0, 2));
+		    $month = intval(substr($yearMonth, 3));
+		    $von = "$year-$month-01";
+		    $bis = "$year-$month-$dayCount";
+		    $arbTageProMonat = $a->getArbTageBetweenDatums($von, $bis);
+		    $zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth] = $arbTageProMonat * 8;
+		    $zeilen[$persnr]['dzeit']['anw_prozent'][$yearMonth] = $zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth] != 0 ? $zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] / $zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth] * 100 : 0;
+		}
+
+		// leistung ----------------------------------------------------------------
+		foreach ($monthsArrayAll as $yearMonth => $dayCount) {
+		    $year = 2000 + intval(substr($yearMonth, 0, 2));
+		    $month = intval(substr($yearMonth, 3));
+		    $von = "$year-$month-01";
+		    $bis = "$year-$month-$dayCount";
+		    $arbTageProMonat = $a->getArbTageBetweenDatums($von, $bis);
+		    $eintritt = $a->getEintrittsDatumDB($persnr);
+		    if (strtotime($eintritt) > strtotime($von)) {
+			$vonPers = $eintritt;
+		    } else {
+			$vonPers = $von;
+		    }
+		    $arbTagePersMonat = $a->getArbTageBetweenDatums($vonPers, $bis);
+		    $dTage = $a->getTatTageBetweenDatums('d', $vonPers, $bis, $persnr);
+		    $nwTage = $a->getTatTageBetweenDatums('nw', $vonPers, $bis, $persnr);
+		    $monatNormMinuten = ($arbTagePersMonat - $dTage - $nwTage) * 8 * 60;
+		    $ganzMonatNormMinuten = $arbTageProMonat * 8 * 60;
+		    $leistungArray = $a->getPersLeistungArray($persnr, $von, $bis);
+		    $persInfoA = $a->getPersInfoArray($persnr);
+		    $leistFaktor = $persInfoA[0]['leistfaktor'];
+
+		    if ($leistungArray !== NULL) {
+			$vzaby = $leistungArray['vzaby'];
+			$vzaby_akkord = $leistungArray['vzaby_akkord'];
+			$vzaby_zeit = ($vzaby - $vzaby_akkord);
+			//$vzaby_zeit = ($vzaby-$vzaby_akkord)*$leistFaktor;
+		    } else {
+			$vzaby = 0;
+			$vzaby_akkord = 0;
+			$vzaby_zeit = 0;
+		    }
+		    $zeilen[$persnr]['leistung']['leistGrad'][$yearMonth] = $zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] != 0 ? ($vzaby_akkord + $vzaby_zeit) / ($zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] * 60) * 100 : 0;
+		}
+
+		//ko_kriteria
+		$koKriteriaArray[$persnr] = array();
+		$value = $zeilen[$persnr]['dzeit']['z'][$mj];
+		$bew = $a->getBewertungKriteriumArray(100, 'ko_dzeit_z', $value, 'bis', $mj, 1, 'abcd');
+		if ($bew === NULL) {
+		    $koKriteriaArray[$persnr]['ko_dzeit_z']['multi'] = 0;
+		} else {
+		    $koKriteriaArray[$persnr]['ko_dzeit_z']['multi'] = $bew['betrag'];
+		}
+
+		$value = $zeilen[$persnr]['dzeit']['anw_prozent'][$mj];
+		//AplDB::varDump($value);
+		$bew = $a->getBewertungKriteriumArray(100, 'ko_dzeit_anw_prozent', $value, 'von', $mj, 1, 'abcd');
+		if ($bew === NULL) {
+		    $koKriteriaArray[$persnr]['ko_dzeit_anw_prozent']['multi'] = 0;
+		} else {
+		    $koKriteriaArray[$persnr]['ko_dzeit_anw_prozent']['multi'] = $bew['betrag'];
+		}
+
+		//ko_a50
+		$value = $zeilen[$persnr]['A6']['a6_prozent'][$mj];
+		//AplDB::varDump($value);
+		$bew = $a->getBewertungKriteriumArray(100, 'ko_a50', $value, 'bis', $mj, 1, 'abcd');
+		if ($bew === NULL) {
+		    $koKriteriaArray[$persnr]['ko_a50']['multi'] = 0;
+		} else {
+		    $koKriteriaArray[$persnr]['ko_a50']['multi'] = $bew['betrag'];
+		}
+
+		//sum_bewertung_E
+		$value = $zeilen[$persnr]['rekl']['sum_bewertung_E'][$mj];
+		//AplDB::varDump($value);
+		$bew = $a->getBewertungKriteriumArray(100, 'ko_rekl_E', $value, 'bis', $mj, 1, 'abcd');
+		if ($bew === NULL) {
+		    $koKriteriaArray[$persnr]['ko_rekl_E']['multi'] = 0;
+		} else {
+		    $koKriteriaArray[$persnr]['ko_rekl_E']['multi'] = $bew['betrag'];
+		}
+	    }
+	}
+
+//AplDB::varDump($zeilen);
+//exit();
+
+	$gesammtSummePremie = 0;
+	$persApremieArray = array();
+	foreach ($zeilen as $persnr => $persZeile) {
+	    $sumPremie = 0;
+	    $sumPremie += floatval($persZeile['A6']['a6_prozent']['czk']);
+	    $sumPremie += floatval($persZeile['nacharbeit']['faktor']['czk']);
+	    $sumPremie += floatval($persZeile['rekl']['sum_bewertung_I']['czk']);
+	    $sumPremie += floatval($persZeile['rekl']['sum_bewertung_E']['czk']);
+	    $sumPremie = round(floatval($persZeile['leistung']['leistGrad'][$mj] / 100), 2) * $sumPremie;
+	    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_dzeit_z']['multi']);
+	    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_dzeit_anw_prozent']['multi']);
+	    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_a50']['multi']);
+	    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_rekl_E']['multi']);
+
+	    if ($persZeile['apremie_flag'] == '') {
+		$sumPremie = 0;
+	    }
+	    $gesammtSummePremie += $sumPremie;
+	    $persApremieArray[$persnr]['apremie'] = $sumPremie;
+	    $persApremieArray[$persnr]['apremie_flag'] = $persZeile['apremie_flag'];
+	}
+	return $persApremieArray;
+    }
+
     /**
      * 
      * @param type $persnr

@@ -293,7 +293,7 @@ $headerCells = array(
     ),
     'sonstpremie'=>array(
         'width'=>8,
-        'text'=>'Sonst\nCZK',
+        'text'=>'APrem.\nCZK',
         'align'=>'',
 
     ),
@@ -1184,7 +1184,7 @@ function pageheader($pdfobjekt,$rgb,$vyskaradku,$monat,$jahr) {
         $pdfobjekt->Cell(
                             $headerCells['sonstpremie']['width']
                             ,$vyskaradku
-                            ,'Sonst'
+                            ,'APrem.'
                             ,'LR'
                             ,0
                             ,'R'
@@ -2139,6 +2139,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     global $summenZapati;
     global $stundenDecimals;
     global $reporttyp;
+    global $aPremienArray;
 
     $fill = 0;
 
@@ -2378,6 +2379,12 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
         }
     }
 
+    if(array_key_exists(intval($person->persnr), $aPremienArray)){
+	    $aPremieFlag = $aPremienArray[intval($person->persnr)]['apremie_flag'];
+	}
+	else{
+	    $aPremieFlag = '';
+	}
     //popisek do hlavicky
     $headerCells['mehrarbeit']['text'] = $maStundenDatumAb;
     //prescas. hodiny pocitam vztazene ke startStd, napr. k 31.12.2013
@@ -2387,6 +2394,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     
     //2016-02-05 spravne by melo byt
     //$mehrarb-=$endOfVorYearStd;
+    
     
     $mehrarb-=$startStd;
     $mehrarbVor-=$startStd;
@@ -2507,7 +2515,24 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
         $fill = 0;
         $pdf->Cell($headerCells['leistungpraemie']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
         $pdf->Cell($headerCells['quartalpraemie']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
-        $pdf->Cell($headerCells['sonstpremie']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
+	
+//	if(array_key_exists(intval($person->persnr), $aPremienArray)){
+//	    $sonstpremie = $aPremienArray[intval($person->persnr)]['apremie_flag'];
+//	}
+//	else{
+//	    $sonstpremie = '';
+//	}
+	if($aPremieFlag=='!'){
+	    $pdf->SetFillColor(255,255,230);
+	    $fill = 1;
+	}
+	else{
+	    $pdf->SetFillColor(255,255,255);
+	    $fill = 0;
+	}
+        $pdf->Cell($headerCells['sonstpremie']['width'], $vyskaradku, $aPremieFlag, 'LR', 0, 'C', $fill);
+	$fill = 0;
+	
         $pdf->Cell($headerCells['erschwerniss']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
         $pdf->Cell($headerCells['lohn']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
         $pdf->Cell($headerCells['transport']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
@@ -2577,7 +2602,26 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
         $fill = 0;
         $pdf->Cell($headerCells['leistungpraemie']['width'], $vyskaradku, number_format($leistPraemie, 0, ',', ' '), 'LRB', 0, 'R', $fill);
         $pdf->Cell($headerCells['quartalpraemie']['width'], $vyskaradku, number_format($qtlPraemie, 0, ',', ' '), 'LRB', 0, 'R', $fill);
+	
+	//AplDB::varDump(intval($person->persnr));
+	if(array_key_exists(intval($person->persnr), $aPremienArray)){
+	    $sonstpremie = $aPremienArray[intval($person->persnr)]['apremie'];
+	}
+	else{
+	    $sonstpremie = 0;
+	}
+	
+	if($aPremieFlag=='!'){
+	    $pdf->SetFillColor(255,255,230);
+	    $fill = 1;
+	}
+	else{
+	    $pdf->SetFillColor(255,255,255);
+	    $fill = 0;
+	}
         $pdf->Cell($headerCells['sonstpremie']['width'], $vyskaradku, number_format($sonstpremie, 0, ',', ' '), 'LRB', 0, 'R', $fill);
+	$fill = 0;
+	
         $pdf->Cell($headerCells['erschwerniss']['width'], $vyskaradku, number_format($erschwerniss, 0, ',', ' '), 'LRB', 0, 'R', $fill);
         $pdf->Cell($headerCells['lohn']['width'], $vyskaradku, number_format($gesamtLohn, 0, ',', ' '), 'LRB', 0, 'R', $fill);
         $pdf->Cell($headerCells['transport']['width'], $vyskaradku, $transport, 'LRB', 0, 'R', $fill);
@@ -2675,6 +2719,7 @@ $personen = simplexml_import_dom($domxml);
 
 $apl = new AplDB();
 $aTageProMonat = $apl->getArbTageBetweenDatums($von, $bis);
+$aPremienArray = $apl->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',FALSE);
 
 foreach ($personen as $klic => $person) {
     if ($klic == 'person') {

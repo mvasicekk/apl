@@ -387,43 +387,7 @@ foreach ($persnrArray as $p) {
 	    $vzaby_akkord = 0;
 	    $vzaby_zeit = 0;
 	}
-	
-	$anwTageArbeitsTage = $a->getATageProPersnrBetweenDatums($persnr, $vonPers, $bis, 1);
-	
-	$leistungsGradGanzMonatR = $ganzMonatNormMinuten!=0?(($vzaby_akkord+$vzaby_zeit) /  $ganzMonatNormMinuten):0;
-	$leistungsGradR = $monatNormMinuten!=0?(($vzaby_akkord+$vzaby_zeit) / $monatNormMinuten):0;
-	
-	$leistungsGradGanzMonat = $leistungsGradGanzMonatR*100;
-	$leistungsGrad = $leistungsGradR*100;
-	
-	
-	$leistPraemieBerechnet1 = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonatR) * $arbTageProMonat;
-	
-        if ($a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonatR) == 200)
-            $leistPraemieBerechnet = $leistPraemieBerechnet1;
-        else {
-            if ($a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradR) > $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonatR))
-                $leistPraemieBerechnet = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradR) * $anwTageArbeitsTage;
-            else
-                $leistPraemieBerechnet = $leistPraemieBerechnet1;
-        }
-	
-//	$zeilen[$persnr]['leistung']['daycount'][$yearMonth] = $dayCount;
-//	$zeilen[$persnr]['leistung']['arbTageProMonat'][$yearMonth] = $arbTageProMonat;
-	$zeilen[$persnr]['leistung']['ganzMonatNormMinuten'][$yearMonth] = $ganzMonatNormMinuten;
-//	$zeilen[$persnr]['leistung']['arbTagePersMonat'][$yearMonth] = $arbTagePersMonat;
-//	$zeilen[$persnr]['leistung']['dTage'][$yearMonth] = $dTage;
-//	$zeilen[$persnr]['leistung']['nwTage'][$yearMonth] = $nwTage;
-	$zeilen[$persnr]['leistung']['monatNormMinuten'][$yearMonth] = $monatNormMinuten;
-//	$zeilen[$persnr]['leistung']['vzaby'][$yearMonth] = number_format($vzaby,0,',',' ');
-	$zeilen[$persnr]['leistung']['vzaby_akkord'][$yearMonth] = $vzaby_akkord;
-	$zeilen[$persnr]['leistung']['vzaby_zeit'][$yearMonth] = $vzaby_zeit;
-//	$zeilen[$persnr]['leistung']['leistfaktor'][$yearMonth] = $leistFaktor;
-	//2016-03-15
 	$zeilen[$persnr]['leistung']['leistGrad'][$yearMonth] = $zeilen[$persnr]['dzeit']['anwstd'][$yearMonth]!=0?($vzaby_akkord+$vzaby_zeit)/($zeilen[$persnr]['dzeit']['anwstd'][$yearMonth]*60)*100:0;
-	$zeilen[$persnr]['leistung']['leistGrad1'][$yearMonth] = $leistungsGrad;
-	$zeilen[$persnr]['leistung']['leistGradGanzMonat'][$yearMonth] = $leistungsGradGanzMonat;
-//	$zeilen[$persnr]['leistung']['leistPrem'][$yearMonth] = $leistPraemieBerechnet;
     }
 
     //ko_kriteria
@@ -828,141 +792,24 @@ foreach ($zeilen as $persnr=>$persZeile){
     }
 }
 
-/*
-    $pdf->MultiCell($persnrWidth, $persHeight, $persnr, 'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
 
-    $name = $persZeile['name'];
-    $pdf->MultiCell($nameWidth, $persHeight, $name, 'LRBT', 'L', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    
-    $pdf->MultiCell($apremieFlagWidth, $persHeight, $persZeile['apremie_flag'], 'LRBT', 'C', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    
-    $pdf->MultiCell($regelOEWidth, $persHeight, $persZeile['regeloe'], 'LRBT', 'L', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    
-    $austr = $persZeile['loajalita']['austritt']['sum']==''?' ':$persZeile['loajalita']['austritt']['sum'];
-    $pdf->MultiCell($eintrittWidth, $persHeight, 
-	    $persZeile['loajalita']['eintritt']['sum']."\n".$austr, 
-	    'LRBT', 'L', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-
-    // anw_prozent
-    if($koKriteriaArray[$persnr]['ko_dzeit_anw_prozent']['multi']==0){
-	$fill = 1;
-	$pdf->SetFillColor(255,230,230);
-    }
-    $pdf->MultiCell($anwWidth, $persHeight, number_format(floatval($persZeile['dzeit']['anw_prozent'][$mj]),2,',',' '), 'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    $fill = 0;
-    $pdf->SetFillColor(255,255,230);
-	
-
-    if($persZeile['apremie_flag']=='!'){
-	$fill = TRUE;
-	$pdf->SetFillColor(255,255,230);
-    }
-    else{
-	$fill = FALSE;
-    }
-    // tatigkeiten
-    foreach ($tatArray as $tat){
-	$t = $persZeile['dzeit'][$tat][$mj]!=0?$persZeile['dzeit'][$tat][$mj]:'';
-	if($tat=='z'){
-	    //test na ko_kriterium
-	    if($koKriteriaArray[$persnr]['ko_dzeit_z']['multi'] == 0){
-		$fill = 1;
-		$pdf->SetFillColor(255,230,230);
-	    }
-	}
-	$pdf->MultiCell($tatWidth, $persHeight, $t, 'LRBT', 'C', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-	$fill = 0;
-	$pdf->SetFillColor(255,255,230);
-	if($persZeile['apremie_flag']=='!'){
-	    $fill = TRUE;
-	    $pdf->SetFillColor(255,255,230);
-	}
-	else{
-	    $fill = FALSE;
-	}
-    }
-    
-    if($persZeile['apremie_flag']=='!'){
-	$fill = TRUE;
-	$pdf->SetFillColor(255,255,230);
-    }
-    else{
-	$fill = FALSE;
-    }
-    
-    //leistgrad
-    $pdf->MultiCell($leistgradWidth, $persHeight, 
-	    //number_format(floatval($persZeile['leistung']['vzaby_akkord'][$mj])+floatval($persZeile['leistung']['vzaby_zeit'][$mj]),0,',',' ')."\n"
-	    //.number_format(floatval($persZeile['dzeit']['anwstd'][$mj])*60,0,',',' ')."\n"
-	    number_format(floatval($persZeile['leistung']['leistGrad'][$mj]/100),2,',',' ')
-	    ,'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-
-    //a6
-    if($koKriteriaArray[$persnr]['ko_a50']['multi']==0){
-	$fill = 1;
-	$pdf->SetFillColor(255,230,230);
-    }
-    $pdf->MultiCell($leistgradWidth, $persHeight, 
-	    number_format(floatval($persZeile['A6']['a6_prozent'][$mj]),2,',',' ')."\n"
-	    .number_format(floatval($persZeile['A6']['a6_prozent']['czk']),0,',',' '), 
-	    'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    $sumPremie += floatval($persZeile['A6']['a6_prozent']['czk']);
-    $fill = 0;
-    $pdf->SetFillColor(255,255,230);
-
-    if($persZeile['apremie_flag']=='!'){
-	$fill = TRUE;
-	$pdf->SetFillColor(255,255,230);
-    }
-    else{
-	$fill = FALSE;
-    }
-    $pdf->MultiCell($naWidth, $persHeight, 
-	    number_format(floatval($persZeile['nacharbeit']['faktor'][$mj]),2,',',' ')."\n"
-	    .number_format(floatval($persZeile['nacharbeit']['faktor']['czk']),0,',',' '), 
-	    'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    $sumPremie += floatval($persZeile['nacharbeit']['faktor']['czk']);
+    $pdf->SetFillColor(230,255,230);
+    $fill=TRUE;
+    $pdf->MultiCell($persnrWidth, $persHeight, "Summe", 'LBT', 'L', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
+    $pdf->MultiCell(
+	$nameWidth+$apremieFlagWidth+$regelOEWidth
+	+$eintrittWidth+$anwWidth+($tatWidth*count($tatArray))
+	+$leistgradWidth*2
+	+$naWidth
+	+$reklWidth*2
+	, $persHeight
+	, ''
+	, 'BT', 'L', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
 
     
-    $pdf->MultiCell($reklWidth, $persHeight, 
-	    number_format(floatval($persZeile['rekl']['sum_bewertung_I'][$mj]),0,',',' ')."\n"
-	    .number_format(floatval($persZeile['rekl']['sum_bewertung_I']['czk']),0,',',' ') 
-	    ,'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    $sumPremie += floatval($persZeile['rekl']['sum_bewertung_I']['czk']);
-
-    //rekl_E
-    if($koKriteriaArray[$persnr]['ko_rekl_E']['multi']==0){
-	$fill = 1;
-	$pdf->SetFillColor(255,230,230);
-    }
-    $pdf->MultiCell($reklWidth, $persHeight, 
-	    number_format(floatval($persZeile['rekl']['sum_bewertung_E'][$mj]),0,',',' ')."\n"
-	    .number_format(floatval($persZeile['rekl']['sum_bewertung_E']['czk']),0,',',' ') 
-	    ,'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-    $sumPremie += floatval($persZeile['rekl']['sum_bewertung_E']['czk']);
-    $fill = 0;
-    $pdf->SetFillColor(255,255,230);
-
-    if($persZeile['apremie_flag']=='!'){
-	$fill = TRUE;
-	$pdf->SetFillColor(255,255,230);
-    }
-    else{
-	$fill = FALSE;
-    }
-    $sumPremie = round(floatval($persZeile['leistung']['leistGrad'][$mj]/100),2) * $sumPremie;
-    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_dzeit_z']['multi']);
-    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_dzeit_anw_prozent']['multi']);
-    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_a50']['multi']);
-    $sumPremie *= floatval($koKriteriaArray[$persnr]['ko_rekl_E']['multi']);
-    
-    if($persZeile['apremie_flag']==''){
-	$sumPremie = 0;
-    }
-    
-    $obsah = number_format(floatval($sumPremie),0,',',' ');
+    $obsah = number_format(floatval($gesammtSummePremie),0,',',' ');
     $pdf->MultiCell($apremieCZKWidth, $persHeight, $obsah, 'LRBT', 'R', $fill, FALSE, '','',TRUE,0,FALSE,FALSE,$persHeight,'M');
-*/
+
     
 //Close and output PDF document
 $pdf->Output();
