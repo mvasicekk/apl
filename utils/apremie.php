@@ -15,4 +15,4 @@ $persBis = $persbis;
 $a = AplDB::getInstance();
 
 $persPremieArray = $a->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, $stammOE);
-AplDB::varDump($persPremieArray);
+echo json_encode($persPremieArray);
