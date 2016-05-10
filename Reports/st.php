@@ -3,7 +3,8 @@ require_once './reportsSetup.php';
 
 // vytisk tabulky
 
-$qArray = $apl->getSchlTabellenArray();
+$qArray = $apl->getSchlTabellenArray(NULL,'%');
+//AplDB::varDump($qArray);
 $querys = array();
 if($qArray!==NULL){
     foreach ($qArray as $q){

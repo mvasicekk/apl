@@ -2219,12 +2219,12 @@ public function istExportiert($import, $impal){
     /**
      * 
      */
-    public function getSchlTabellenArray($tabid=NULL){
+    public function getSchlTabellenArray($tabid=NULL,$formtyp='schltabelle'){
 	if($tabid===NULL){
-	    $sql = "select dschltabellen.* from dschltabellen order by buttonName";
+	    $sql = "select dschltabellen.* from dschltabellen where form_typ like '$formtyp' order by buttonName";
 	}
 	else{
-	    $sql = "select dschltabellen.* from dschltabellen where tabid='$tabid'";
+	    $sql = "select dschltabellen.* from dschltabellen where tabid='$tabid' and form_typ like '$formtyp' ";
 	}
 	return $this->getQueryRows($sql);
     }

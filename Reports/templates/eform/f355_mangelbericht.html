@@ -1,0 +1,64 @@
+<div class="container-fluid" ng-controller="f355Controller">
+    <div class="page-header">
+	<h4>F355 - Māngelbericht
+	</h4>
+    </div>
+    <!--<div class="text-right" data-spy="affix" data-offset-top="5" style="z-index: 99999;">-->
+	<button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    <!--</div>-->
+    <!--sekce pro hledani dilu + tabulka-->
+    <div class="row">
+	<div class="col-sm-12">
+	    <div class="form-group">
+		<label for="teil_search">Platten-Nr</label>
+		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="teil_search" ng-keypress="setTeilAktual($event)" ng-change="getTeilMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="Platten-Nr. / TeilNr ..">
+		<apl-help el="hIArray['suchefeld']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+	<div ng-show="teile.length > 0" class="col-sm-12">
+	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
+		<thead>
+		    <tr class="bg-primary">
+			<th>
+			    Kunde
+			</th>
+			<th>Teil</th>
+			<th>Bezeichnung</th>
+			<th>Teil Original (Platten-Nr.</th>
+			<th class="text-right">Gewicht</th>
+			<th>Importe (ohne Rech)</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr ng-class="{altteil:t.status.toString().indexOf('ALT')>-1}" ng-repeat="t in teile">
+			<td>
+			    {{t.Kunde}}
+			</td>
+			<td>{{t.Teil}}</td>
+			<td>{{t.Teilbez}}</td>
+			<td>{{t.teillang}}</td>
+			<td class="text-right">{{t.Gew|number:3}}</td>
+			<td><span>import1...</span></td>
+		    </tr>
+		</tbody>
+	    </table>
+	</div>
+    </div>
+    <!--help texty se vytahnou ze stejne tabulky jako resources-->
+    <div class="row">
+	<div class="col-xs-4">Aufgetretene Fehler<br>Druh vady</div>
+	<div class="col-xs-6">Fehlerbeschreibung<br>Popis chyby</div>
+	<div class="col-xs-2">Stuckzahl<br>počet kusů</div>
+    </div>
+    <div class="row" ng-repeat="f in fehlerArray">
+	<div class="col-xs-4">{{f.druh}}</div>
+	<div class="col-xs-6"><input class="form-control" ng-model="f.popis"></div>
+	<div class="col-xs-2"><input class="form-control text-right" ng-model="f.ks"></div>
+    </div>
+    <button class="btn btn-info" ng-click="addFehler()">+ Fehler / další chyba</button>
+</div>
