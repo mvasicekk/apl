@@ -20,6 +20,62 @@
 		<apl-help el="hIArray['suchefeld']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	</div>
+	<div ng-show="teilAktual!==null && importAktual!==null" class="col-sm-12">
+	    <table class="table table-condensed table-bordered">
+		<tbody>
+		    <tr>
+			<td><strong>Platten-Nr:</strong></td>
+			<td>{{teilAktual.teillang}}</td>
+			<td><strong>TeilNr:</strong></td>
+			<td>{{teilAktual.Teil}}</td>
+		    </tr>
+		    <tr>
+			<td></td>
+			<td></td>
+			<td><strong>Bezeichnung:</strong></td>
+			<td>{{teilAktual.Teilbez}}</td>
+		    </tr>
+		    <tr>
+			<td><strong>Auftrag (IM):</strong></td>
+			<td>{{importAktual.auftragsnr}}</td>
+			<td><strong>Fremd Auftrag:</strong></td>
+			<td>{{importAktual.fremdauftr}}</td>
+		    </tr>
+		</tbody>
+	    </table>
+<!--	    <p>{{teilAktual|json}}</p>
+	    <p>{{importAktual|json}}</p>-->
+	</div>
+	<div ng-show="importe.length > 0" class="col-sm-12">
+	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
+		<thead>
+		    <tr class="bg-primary">
+			<th>
+			    Import
+			</th>
+			<th>Import Datum</th>
+			<th>Fremd Auftrag</th>
+			<th>Export</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr ng-click="listImportRowClicked($index)" ng-repeat="imp in importe">
+			<td>
+			    {{imp.auftragsnr}}
+			</td>
+			<td>
+			    {{imp.Aufdat}}
+			</td>
+			<td>
+			    {{imp.fremdauftr}}
+			</td>
+			<td>
+			    {{imp.ex}}
+			</td>
+		    </tr>
+		</tbody>
+	    </table>
+	</div>
 	<div ng-show="teile.length > 0" class="col-sm-12">
 	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
 		<thead>
@@ -31,11 +87,10 @@
 			<th>Bezeichnung</th>
 			<th>Teil Original (Platten-Nr.</th>
 			<th class="text-right">Gewicht</th>
-			<th>Importe (ohne Rech)</th>
 		    </tr>
 		</thead>
 		<tbody>
-		    <tr ng-class="{altteil:t.status.toString().indexOf('ALT')>-1}" ng-repeat="t in teile">
+		    <tr ng-class="{altteil:t.status.toString().indexOf('ALT')>-1}" ng-click="listRowClicked($index)" ng-repeat="t in teile">
 			<td>
 			    {{t.Kunde}}
 			</td>
@@ -43,22 +98,40 @@
 			<td>{{t.Teilbez}}</td>
 			<td>{{t.teillang}}</td>
 			<td class="text-right">{{t.Gew|number:3}}</td>
-			<td><span>import1...</span></td>
 		    </tr>
 		</tbody>
 	    </table>
 	</div>
     </div>
     <!--help texty se vytahnou ze stejne tabulky jako resources-->
-    <div class="row">
+    <div class="row text-info">
 	<div class="col-xs-4">Aufgetretene Fehler<br>Druh vady</div>
 	<div class="col-xs-6">Fehlerbeschreibung<br>Popis chyby</div>
-	<div class="col-xs-2">Stuckzahl<br>počet kusů</div>
+	<div class="col-xs-2 text-right">Stuckzahl<br>počet kusů</div>
     </div>
     <div class="row" ng-repeat="f in fehlerArray">
 	<div class="col-xs-4">{{f.druh}}</div>
 	<div class="col-xs-6"><input class="form-control" ng-model="f.popis"></div>
 	<div class="col-xs-2"><input class="form-control text-right" ng-model="f.ks"></div>
     </div>
-    <button class="btn btn-info" ng-click="addFehler()">+ Fehler / další chyba</button>
+    <!--suma-->
+    <div class="row text-info" style="background-color: #ccffcc;">
+	<div class="col-xs-4">Summe<br>součet</div>
+	<div class="col-xs-6"></div>
+	<div class="col-xs-2 text-right"><input readonly="readonly" class="form-control text-right" value="{{getStkSumme();}}"></div>
+    </div>
+    <div class="row">
+	<div class="col-sm-3">
+	    <button class="btn btn-info btn-block" ng-click="addFehler()">+ Fehler / další chyba</button>
+	</div>
+	<div class="col-sm-6">
+	</div>
+	<div class="col-sm-3">
+	    <button class="btn btn-info btn-block" ng-click="openPdf()">
+		<span ng-if="importAktual!==null">PDF (vyplnene)</span>
+		<span ng-if="importAktual===null">PDF (prazdne)</span>
+	    </button>
+	</div>
+    </div>
+    
 </div>

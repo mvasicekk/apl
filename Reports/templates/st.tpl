@@ -41,6 +41,7 @@
 
 	{if $prihlasen}
 	    <div class='container-fluid' id="formular_telo" >
+		{if $typcountarray.schltabelle>0}
 		<div class='panel panel-primary' id='buttoncontainer'>
 		    <div class='panel-heading'>
 			<h3 class="panel-title">
@@ -64,7 +65,8 @@
 			</div>
 		    </div>
 		</div>
-			    
+		{/if}	    
+		{if $typcountarray.eform>0}
 		<div class='panel panel-success' id='buttoncontainer'>
 		    <div class='panel-heading'>
 			<h3 class="panel-title">
@@ -77,11 +79,9 @@
 				<div class="col-sm-3">
 				    {foreach from=$querys item=q key=k}
 				    {if $q.showButton && $q.form_typ=='eform'}
-					<div class='col-md-3 col-sm-4'>
 					    <a style='text-align:left;' class='btn btn-lg btn-default btn-block' id="{$k}" href="#/{$q.form_typ}/{$q.tabid}">
 						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {$q.buttonName}
 					    </a>
-					</div>
 				    {/if}
 				{/foreach}
 				</div>
@@ -93,6 +93,7 @@
 			</div>
 		    </div>
 		</div>
+		{/if}
 	    </div>
 			    
 {*        {literal}

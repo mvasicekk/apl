@@ -2,8 +2,10 @@
 require_once './reportsSetup.php';
 
 // vytisk tabulky
-
-$qArray = $apl->getSchlTabellenArray(NULL,'%');
+$form_typ = '%';
+$form_typ = $_GET['form_typ'];
+$qArray = $apl->getSchlTabellenArray(NULL,$form_typ);
+$typCountArray = array();
 //AplDB::varDump($qArray);
 $querys = array();
 if($qArray!==NULL){
@@ -50,8 +52,12 @@ if($qArray!==NULL){
 foreach ($querys as $key=>$a){
     $querys[$key]['sql'] = base64_encode($a['sql']);
     $querys[$key]['icon'] = strlen(trim($a['popisky']))>0?'glyphicon-modal-window':'glyphicon-th-list';
+    if($querys[$key]['showButton']==TRUE){
+	$typCountArray[$a['form_typ']] += 1;
+    }
 }
-
+//AplDB::varDump($typCountArray);
 //AplDB::varDump($querys);
 $smarty->assign("querys",$querys);
+$smarty->assign("typcountarray",$typCountArray);
 $smarty->display('st.tpl');

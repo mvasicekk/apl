@@ -88,7 +88,83 @@ aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeou
 	    ks:''
 	}
     ];
+    
+    $scope.teilAktual = null;
+    $scope.importAktual = null;
 
+
+/**
+ * 
+ * @param {type} teil
+ * @returns {unresolved}
+ */
+    function getImporte(teil){
+	return $http.post('./getImporte.php',{teil:teil}).then(
+		    function(response){
+			console.log(response.data);
+			$scope.importe = response.data.importe;
+		    }
+		);
+    }
+    /**
+     * 
+     * @param {type} i
+     * @returns {undefined}
+     */
+    $scope.listRowClicked = function(i){
+	console.log(i);
+	$scope.teilAktual = $scope.teile[i];
+	console.log($scope.teilAktual);
+	$scope.teile=null;
+	$scope.teil_search=$scope.teilAktual.teillang;
+	
+	//stahnout importy k vybranemu dilu
+	getImporte($scope.teilAktual.Teil);
+    }
+    
+    /**
+     * 
+     * @param {type} i
+     * @returns {undefined}
+     */
+        $scope.listImportRowClicked = function(i){
+	console.log(i);
+	$scope.importAktual = $scope.importe[i];
+	$scope.importe=null;
+    }
+
+
+/**
+ * 
+ * @returns {undefined}
+ */
+$scope.getStkSumme = function(){
+    //console.log('getStkSumme');
+    var suma = 0;
+    $scope.fehlerArray.forEach(function(v){
+	var cislaArray = v.ks.split(/\s*[,\/]/gi);
+	//console.log(cislaArray);
+	cislaArray.forEach(function(c){
+	    var cislo = parseFloat(c);
+	    if(!isNaN(cislo)){
+		suma+=cislo;
+	    }
+	});
+    });
+    return suma;
+}
+/**
+ * 
+ * @returns {undefined}
+ */
+    $scope.addFehler = function(){
+	var newFehler = {
+	    druh:'sonstige Fehler/ ostatní chyby',
+	    popis:'',
+	    ks:''
+	};
+	$scope.fehlerArray.push(newFehler);
+    }
     /**
      * 
      * @returns {unresolved}
@@ -120,29 +196,12 @@ aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeou
 
     /**
      * 
-     * @param {type} e
-     * @returns {undefined}
-     */
-    $scope.teilaktualChanged = function(field){
-	return $http.post('./updateTeilAktual.php',{field:field,teilaktual:$scope.teilaktual}).then(
-		    function(response){
-			field = response.data.field;
-			newValue = response.data.newValue;
-			console.log('ar='+response.data.ar);
-			console.log('field='+field);
-			console.log('newValue='+newValue);
-			if(response.data.ar>0){
-			    $scope.teilaktual[response.data.field] = response.data.newValue;
-			}
-			
-		    }
-		);
-    }
-    /**
-     * 
      */
     $scope.getTeilMatch = function () {
 	var params = {a: $scope.teil_search};
+	$scope.importe = null;
+	$scope.teilAktual = null;
+	$scope.importAktual = null;
 	return $http.post(
 		'../dkopf/getTeilMatch.php',
 		{params: params}
