@@ -4,12 +4,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/js/app.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/st.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/eform/f355_mangelbericht.html</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/st.tpl</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/utils/gauges/css/style.css</file>
+            <file>file:/home/jr/NetBeansProjects/apl/utils/gauges/vzkdprog.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/utils/gauges/js/directives.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/utils/gauges/js/controllers.js</file>
         </group>
     </open-files>
 </project-private>

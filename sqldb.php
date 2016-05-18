@@ -4,8 +4,8 @@ class sqldb {
     /*     * * Declare instance ** */
 
     private static $host = '172.16.1.101';
-    private static $dbname = 'apl';
-    private static $user = 'root';
+    private static $dbname = 'FA1';
+    private static $user = 'apl';
     private static $pass = 'nuredv';
     private static $port = 1433;
     private static $con;

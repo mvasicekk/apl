@@ -193,6 +193,27 @@ $scope.getStkSumme = function(){
 		);
     }
 
+/**
+ * 
+ * @returns {undefined}
+ */
+    $scope.createPdf = function(){
+    	    console.log('createPdf');
+	    var params = {
+		importAktual:$scope.importAktual,
+		teilAktual: $scope.teilAktual,
+		fehlerArray:$scope.fehlerArray,
+		sumaKs: $scope.getStkSumme()
+	    };
+	    $http.post('../Reports/F355_pdf.php', params).then(function (response) {
+		console.log('pdf generiert ' + response.data);
+		$scope.filename = response.data.filename;
+		$scope.pdfPath = response.data.pdfPath;
+		$scope.pdfReady = true;
+	    });
+	
+    }
+
 
     /**
      * 

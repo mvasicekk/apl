@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html manifest="demo.manifest"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Canvas Steel</title>
+</head>
+<body onload="init()" style="background-color:#84a5ed">
+                <select id="comboLcdColor" onchange="setLcdColor(this)">
+                    <option selected="selected" value="">LCD color</option>
+                    <option value="BEIGE">Beige</option>
+                    <option value="BLUE">Blue</option>
+                    <option value="ORANGE">Orange</option>
+                    <option value="RED">Red</option>
+                    <option value="YELLOW">Yellow</option>
+                    <option value="WHITE">White</option>
+                    <option value="GRAY">Gray</option>
+                    <option value="BLACK">Black</option>
+                    <option value="GREEN">Green</option>
+                    <option value="BLUE2">Blue2</option>
+                    <option value="BLUE_BLACK">BlueBlack</option>
+                    <option value="BLUE_DARKBLUE">BlueDarkBlue</option>
+                    <option value="BLUE_GRAY">BlueGray</option>
+                    <option value="STANDARD">Standard</option>
+                    <option value="STANDARD_GREEN">StandardGreen</option>
+                    <option value="BLUE_BLUE">BlueBlue</option>
+                    <option value="RED_DARKRED">RedDarkRed</option>
+                    <option value="DARKBLUE">DarkBlue</option>
+                    <option value="LILA">Lila</option>
+                    <option value="BLACKRED">BlackRed</option>
+                    <option value="DARKGREEN">DarkGreen</option>
+                    <option value="AMBER">Amber</option>
+                    <option value="LIGHTBLUE">LightBlue</option>
+                    <option value="SECTIONS">Sections</option>
+                </select>
+    <hr>
+    <div style="width:50%;" id="tmp">
+	<canvas id="canvasSingle1"></canvas>
+    </div>
+		
+                <canvas id="canvasSingle2" width="200" height="50"></canvas>
+		<canvas id="canvasSingle3" width="200" height="50"></canvas>
+                <canvas id="canvasMulti1" width="100" height="80"></canvas>
+    
+
+
+<script>
+    var scroll = false;
+    var single1;
+    var single2;
+    var single3;
+    var multi1;
+    var n = 999997.7;
+
+    function init() {
+        // Initialzing gauge
+
+        single1 = new steelseries.DisplaySingle('canvasSingle1', {
+                            width: document.getElementById('tmp').offsetWidth,
+                            height: 50
+                            });
+
+        single2 = new steelseries.DisplaySingle('canvasSingle2', {
+                            width: 200,
+                            height: 50,
+                            value: "<Auto-scrolling: true>",
+                            autoScroll: true,
+                            valuesNumeric: false
+                            });
+
+        single3 = new steelseries.DisplaySingle('canvasSingle3', {
+                            width: 100,
+                            height: 50,
+                            unitString: "unit",
+                            unitStringVisible: true,
+                            headerString: "header",
+                            headerStringVisible: true
+                            });
+
+
+        multi1 = new steelseries.DisplayMulti('canvasMulti1', {
+                            width: 150,
+                            height: 80
+                            });
+
+        setInterval(function(){ setRandomValue2(single1, 100); }, 1500);
+        setInterval(function(){ setRandomValue3(single2, 100); }, 8000);
+        setInterval(function(){ setRandomValue2(single3, 100); }, 1500);
+        setInterval(function(){ setRandomValue2(multi1, 100); }, 2000);
+   }
+
+    function setRandomValue2(gauge, range) {
+        gauge.setValue(Math.random() * range);
+    }
+
+    function setRandomValue3(gauge, range) {
+        if (scroll)
+            gauge.setValue("<Autoscrolling text>");
+        else
+            gauge.setValue("<Autoscroll>");
+        scroll = !scroll;
+    }
+
+    function setLcdColor(sel) {
+        switch(sel.options[sel.selectedIndex].value) {
+            case "BEIGE":
+                single1.setLcdColor(steelseries.LcdColor.BEIGE);
+                single2.setLcdColor(steelseries.LcdColor.BEIGE);
+                multi1.setLcdColor(steelseries.LcdColor.BEIGE);
+                break;
+            case "BLUE":
+                single1.setLcdColor(steelseries.LcdColor.BLUE);
+                single2.setLcdColor(steelseries.LcdColor.BLUE);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE);
+                break;
+            case "ORANGE":
+                single1.setLcdColor(steelseries.LcdColor.ORANGE);
+                single2.setLcdColor(steelseries.LcdColor.ORANGE);
+                multi1.setLcdColor(steelseries.LcdColor.ORANGE);
+                break;
+            case "RED":
+                single1.setLcdColor(steelseries.LcdColor.RED);
+                single2.setLcdColor(steelseries.LcdColor.RED);
+                multi1.setLcdColor(steelseries.LcdColor.RED);
+                break;
+            case "YELLOW":
+                single1.setLcdColor(steelseries.LcdColor.YELLOW);
+                single2.setLcdColor(steelseries.LcdColor.YELLOW);
+                multi1.setLcdColor(steelseries.LcdColor.YELLOW);
+                break;
+            case "WHITE":
+                single1.setLcdColor(steelseries.LcdColor.WHITE);
+                single2.setLcdColor(steelseries.LcdColor.WHITE);
+                multi1.setLcdColor(steelseries.LcdColor.WHITE);
+                break;
+            case "GRAY":
+                single1.setLcdColor(steelseries.LcdColor.GRAY);
+                single2.setLcdColor(steelseries.LcdColor.GRAY);
+                multi1.setLcdColor(steelseries.LcdColor.GRAY);
+                break;
+            case "BLACK":
+                single1.setLcdColor(steelseries.LcdColor.BLACK);
+                single2.setLcdColor(steelseries.LcdColor.BLACK);
+                multi1.setLcdColor(steelseries.LcdColor.BLACK);
+                break;
+            case "GREEN":
+                single1.setLcdColor(steelseries.LcdColor.GREEN);
+                single2.setLcdColor(steelseries.LcdColor.GREEN);
+                multi1.setLcdColor(steelseries.LcdColor.GREEN);
+                break;
+            case "BLUE2":
+                single1.setLcdColor(steelseries.LcdColor.BLUE2);
+                single2.setLcdColor(steelseries.LcdColor.BLUE2);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE2);
+                break;
+            case "BLUE_BLACK":
+                single1.setLcdColor(steelseries.LcdColor.BLUE_BLACK);
+                single2.setLcdColor(steelseries.LcdColor.BLUE_BLACK);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE_BLACK);
+                break;
+            case "BLUE_DARKBLUE":
+                single1.setLcdColor(steelseries.LcdColor.BLUE_DARKBLUE);
+                single2.setLcdColor(steelseries.LcdColor.BLUE_DARKBLUE);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE_DARKBLUE);
+                break;
+            case "BLUE_GRAY":
+                single1.setLcdColor(steelseries.LcdColor.BLUE_GRAY);
+                single2.setLcdColor(steelseries.LcdColor.BLUE_GRAY);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE_GRAY);
+                 break;
+            case "STANDARD":
+                single1.setLcdColor(steelseries.LcdColor.STANDARD);
+                single2.setLcdColor(steelseries.LcdColor.STANDARD);
+                multi1.setLcdColor(steelseries.LcdColor.STANDARD);
+                break;
+            case "STANDARD_GREEN":
+                windDir1.setLcdColor(steelseries.LcdColor.STANDARD_GREEN);
+                windDir2.setLcdColor(steelseries.LcdColor.STANDARD_GREEN);
+                single1.setLcdColor(steelseries.LcdColor.STANDARD_GREEN);
+                single2.setLcdColor(steelseries.LcdColor.STANDARD_GREEN);
+                multi1.setLcdColor(steelseries.LcdColor.STANDARD_GREEN);
+                altimeter1.setLcdColor(steelseries.LcdColor.STANDARD_GREEN);
+                break;
+            case "BLUE_BLUE":
+                windDir1.setLcdColor(steelseries.LcdColor.BLUE_BLUE);
+                windDir2.setLcdColor(steelseries.LcdColor.BLUE_BLUE);
+                single1.setLcdColor(steelseries.LcdColor.BLUE_BLUE);
+                single2.setLcdColor(steelseries.LcdColor.BLUE_BLUE);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE_BLUE);
+                multi1.setLcdColor(steelseries.LcdColor.BLUE_BLUE);
+                break;
+            case "RED_DARKRED":
+                single1.setLcdColor(steelseries.LcdColor.RED_DARKRED);
+                single2.setLcdColor(steelseries.LcdColor.RED_DARKRED);
+                multi1.setLcdColor(steelseries.LcdColor.RED_DARKRED);
+                break;
+            case "DARKBLUE":
+                single1.setLcdColor(steelseries.LcdColor.DARKBLUE);
+                single2.setLcdColor(steelseries.LcdColor.DARKBLUE);
+                multi1.setLcdColor(steelseries.LcdColor.DARKBLUE);
+                break;
+            case "LILA":
+                single1.setLcdColor(steelseries.LcdColor.LILA);
+                single2.setLcdColor(steelseries.LcdColor.LILA);
+                multi1.setLcdColor(steelseries.LcdColor.LILA);
+                break;
+            case "BLACKRED":
+                single1.setLcdColor(steelseries.LcdColor.BLACKRED);
+                single2.setLcdColor(steelseries.LcdColor.BLACKRED);
+                multi1.setLcdColor(steelseries.LcdColor.BLACKRED);
+                break;
+            case "DARKGREEN":
+                single1.setLcdColor(steelseries.LcdColor.DARKGREEN);
+                single2.setLcdColor(steelseries.LcdColor.DARKGREEN);
+                multi1.setLcdColor(steelseries.LcdColor.DARKGREEN);
+                break;
+            case "AMBER":
+                single1.setLcdColor(steelseries.LcdColor.AMBER);
+                single2.setLcdColor(steelseries.LcdColor.AMBER);
+                multi1.setLcdColor(steelseries.LcdColor.AMBER);
+                break;
+            case "LIGHTBLUE":
+                single1.setLcdColor(steelseries.LcdColor.LIGHTBLUE);
+                single2.setLcdColor(steelseries.LcdColor.LIGHTBLUE);
+                multi1.setLcdColor(steelseries.LcdColor.LIGHTBLUE);
+                break;
+            case "SECTIONS":
+	            single1.setLcdColor(steelseries.LcdColor.SECTIONS);
+	            single2.setLcdColor(steelseries.LcdColor.SECTIONS);
+	            multi1.setLcdColor(steelseries.LcdColor.SECTIONS);
+	            break;
+        }
+    }
+
+    
+</script>
+<script src="tween-min.js"></script>
+<script src="steelseries-min.js"></script>
+</body></html>

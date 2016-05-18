@@ -1,0 +1,79 @@
+<div class="container-fluid" ng-controller="dambewController">
+    <div class="page-header">
+	<h4>Arbeitsmittel Ausgabe / výdej materiálu
+	</h4>
+    </div>
+    <!--<div class="text-right" data-spy="affix" data-offset-top="5" style="z-index: 99999;">-->
+	<button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    <form ng-submit="submitForm()">
+	<div class="row">
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<label class="control-label" for="persnr">PersNr:</label>
+		    <input enterfocus maxlength="5" ng-model="persnr" type="text" class="form-control" id="persnr" placeholder="PersNr">
+		    <span>{{persinfo.name}}</span>
+		    <apl-help el="hIArray['persnr']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		    <label class="control-label" for="">OE:</label>
+		    <select enterfocus ng-change="" ng-options="option.beschreibung for option in werkstoffe track by option.id" 
+			    class="form-control" 
+			ng-model="oe">
+		    </select>
+		    <apl-help el="hIArray['wst_sec']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<label class="control-label" for="">Datum:</label>
+		<input enterfocus ng-model="datum" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="datum">
+	    </div>
+	    
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		    <label class="control-label" for="">Lager / sklad:</label>
+		    <select enterfocus ng-change="" ng-options="option.beschreibung for option in werkstoffe track by option.id" 
+			    class="form-control" 
+			ng-model="sklad">
+		    </select>
+		    <apl-help el="hIArray['wst_sec']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	    
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<label class="control-label" for="">AMNr:</label>
+		<input enterfocus maxlength="8" ng-model="amnr" type="text" class="form-control" id="amnr" placeholder="AMNr">
+		<span>{{amnrinfo.text}}</span>
+	    </div>
+	    
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<label class="control-label" for="">Invnummer:</label>
+		<input enterfocus maxlength="8" ng-model="invnummer" type="text" class="form-control" id="invnummer" placeholder="InvNummer">
+		<span>{{amnrinfo.text}}</span>
+	    </div>
+	    
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<label class="control-label" for="">Ausgabe:</label>
+		<input enterfocus maxlength="8" ng-model="ausgabe" type="text" class="form-control" id="ausgabe" placeholder="ausgabe">
+		<span>{{amnrinfo.text}}</span>
+	    </div>
+	    
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<label class="control-label" for="">Ruckgabe:</label>
+		<input enterfocus maxlength="8" ng-model="ruckgabe" type="text" class="form-control" id="ruckgabe" placeholder="ruckgabe">
+		<span>{{amnrinfo.text}}</span>
+	    </div>
+	    
+	    <div class="form-group col-sm-4 form-group-sm valign_bottom">
+		<label class="control-label" for="">Bemerkung:</label>
+		<input enterfocus maxlength="255" ng-model="bemerkung" type="text" class="form-control" id="bemerkung" placeholder="bemerkung">
+		<span>{{amnrinfo.text}}</span>
+	    </div>
+	    
+	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
+		<button type="submit" class="btn btn-primary" >erfassen / vložit</button>
+		<button type="reset" class="btn" >reset</button>
+	    </div>
+	</div>
+    </form>
+</div>
