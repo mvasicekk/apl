@@ -40,6 +40,13 @@ text.vzkdHodnota{
     
 }
 
+text.vzkdPlan{
+    font-size: 70px;
+    fill:#000;
+    font-weight:bold;
+    
+}
+
 text.dt{
     font-size: 70px;
     fill:#555;
