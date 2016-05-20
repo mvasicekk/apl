@@ -88,8 +88,8 @@ function startSock(){
 		    stavyPinu[branaInfo.brana] = branaInfo.stav;
 		    if(branaInfo.stav!==undefined){
 			//window.location.reload();
-			refreshWebcam('brana1img');
-			refreshWebcam('brana2img');
+			//refreshWebcam('brana1img');
+			//refreshWebcam('brana2img');
 		    }
 		    //setOnOff(branaInfo.brana,branaInfo.stav);
 		}
