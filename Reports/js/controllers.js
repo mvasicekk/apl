@@ -41,51 +41,71 @@ aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeou
 	    druh:'Sandstellen / písek',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Schlackestellen / okuje',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Versatz / přesazení',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Blattripen / špony',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'angebrannt / spálené',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Kaltlauf / studený vtok',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Lufteinschlūsse / bubliny',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Kernbruch / prasklé jádro',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'Lunker / díra',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	},
 	{
 	    druh:'sonstige Fehler/ ostatní chyby',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	}
     ];
     
@@ -162,6 +182,8 @@ $scope.getStkSumme = function(){
 	    druh:'sonstige Fehler/ ostatní chyby',
 	    popis:'',
 	    ks:''
+	    ,ks_kemper:''
+	    ,ks_nacharbeit:''
 	};
 	$scope.fehlerArray.push(newFehler);
     }

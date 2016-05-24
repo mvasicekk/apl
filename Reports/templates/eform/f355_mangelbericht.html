@@ -66,6 +66,7 @@
 			<td>
 			    {{imp.Aufdat}}
 			</td>
+			 <!--cislo ciziho auftrgu-->
 			<td>
 			    {{imp.fremdauftr}}
 			</td>
@@ -105,20 +106,26 @@
     </div>
     <!--help texty se vytahnou ze stejne tabulky jako resources-->
     <div class="row text-info">
-	<div class="col-xs-4">Aufgetretene Fehler<br>Druh vady</div>
-	<div class="col-xs-6">Fehlerbeschreibung<br>Popis chyby</div>
-	<div class="col-xs-2 text-right">Stuckzahl<br>počet kusů</div>
+	<div class="col-xs-3">Aufgetretene Fehler<br>Druh vady</div>
+	<div class="col-xs-3">Fehlerbeschreibung<br>Popis chyby</div>
+	<div class="col-xs-2 text-right">Stuckzahl<br>Abydos</div>
+	<div class="col-xs-2 text-right">Stuckzahl<br>Kemper</div>
+	<div class="col-xs-2 text-right">Nacharbeit<br>Kemper</div>
     </div>
     <div class="row" ng-repeat="f in fehlerArray">
-	<div class="col-xs-4">{{f.druh}}</div>
-	<div class="col-xs-6"><input class="form-control" ng-model="f.popis"></div>
+	<div class="col-xs-3">{{f.druh}}</div>
+	<div class="col-xs-3"><input class="form-control" ng-model="f.popis"></div>
 	<div class="col-xs-2"><input class="form-control text-right" ng-model="f.ks"></div>
+	<div class="col-xs-2"><input disabled tabindex="-1" class="form-control text-right" ng-model="f.ks_kemper"></div>
+	<div class="col-xs-2"><input disabled tabindex="-1" class="form-control text-right" ng-model="f.ks_nacharbeit"></div>
     </div>
     <!--suma-->
     <div class="row text-info" style="background-color: #ccffcc;">
-	<div class="col-xs-4">Summe<br>součet</div>
-	<div class="col-xs-6"></div>
+	<div class="col-xs-3">Summe<br>součet</div>
+	<div class="col-xs-3"></div>
 	<div class="col-xs-2 text-right"><input readonly="readonly" class="form-control text-right" value="{{getStkSumme();}}"></div>
+<!--	<div class="col-xs-1 text-right"><input readonly="readonly" class="form-control text-right" value="{{getStkSumme();}}"></div>
+	<div class="col-xs-1 text-right"><input readonly="readonly" class="form-control text-right" value="{{getStkSumme();}}"></div>-->
     </div>
     <div class="row">
 	<div class="col-sm-3">

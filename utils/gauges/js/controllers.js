@@ -106,7 +106,7 @@ aplApp.controller('vzkdController', function ($scope, $http,$timeout,$window,$lo
     $scope.getStatArray();
     $scope.getVzkdArray();
     
-    $interval($scope.getVzkdArray,15000);
+    $interval($scope.getVzkdArray,60000);
     $interval($scope.getStatArray,60000);
     
     $interval(function(){

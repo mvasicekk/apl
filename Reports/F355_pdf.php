@@ -180,18 +180,24 @@ $pdf->Ln(5);
 //tabulka
 
 //zahlavi
-$druhW = 50;
-$popisW = 85;
-$dummyW = 15;
-$ksW = 0;
+$druhW = 45;
+$popisW = 60;
+$dummyW = 2;
+$ksW = 23;
+$ks_kemperW = 23;
+$ks_nacharbeitW = 0;
 $mezeraRows = 3;
-$povolenyProstor = 180;
+$povolenyProstor = 175;
 
 $pdf->SetFont("FreeSans", "B", 9);
 $pdf->MultiCell($druhW, 2*5, "Aufgetretene Fehler\nDruh vady", 'B', 'L', FALSE, FALSE);
 $pdf->MultiCell($popisW, 2*5, "Fehlerbeschreibung\nPopis chyby", 'B', 'L', FALSE, FALSE);
 $pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
-$pdf->MultiCell($ksW, 2*5, "Stūckzahl\npočet kusů", 'B', 'R', FALSE, FALSE);
+$pdf->MultiCell($ksW, 2*5, "Stūckzahl\nAbydos", 'B', 'R', FALSE, FALSE);
+$pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
+$pdf->MultiCell($ks_kemperW, 2*5, "Stūckzahl\nKemper", 'B', 'R', FALSE, FALSE);
+$pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
+$pdf->MultiCell($ks_nacharbeitW, 2*5, "Nacharbeit\nKemper", 'B', 'R', FALSE, FALSE);
 $pdf->Ln();
 
 //kousek posun dolu
@@ -220,6 +226,12 @@ foreach ($fehlerArray as $f){
     $pdf->MultiCell($dummyW, $rowHeight, "\n", '0', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,$rowHeight,'M',TRUE);
     $obsah = $bLeer?'':trim($f->ks);
     $pdf->MultiCell($ksW, $rowHeight ,$obsah , '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,$rowHeight,'M',TRUE);
+    $pdf->MultiCell($dummyW, $rowHeight, "\n", '0', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,$rowHeight,'M',TRUE);
+    $obsah = $bLeer?'':trim($f->ks_kemper);
+    $pdf->MultiCell($ks_kemperW, $rowHeight ,$obsah , '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,$rowHeight,'M',TRUE);
+    $pdf->MultiCell($dummyW, $rowHeight, "\n", '0', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,$rowHeight,'M',TRUE);
+    $obsah = $bLeer?'':trim($f->ks_nacharbeit);
+    $pdf->MultiCell($ks_nacharbeitW, $rowHeight ,$obsah , '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,$rowHeight,'M',TRUE);
     $pdf->Ln();
 
     //kousek posun dolu
@@ -237,17 +249,32 @@ $pdf->MultiCell($popisW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
 $pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
 $obsah = $bLeer?'':number_format($sumaKs,0,',',' ');
 $pdf->MultiCell($ksW, 2*5 , $obsah, '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*5,'M',TRUE);
+$pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
+$obsah = '';
+$pdf->MultiCell($ks_kemperW, 2*5 , $obsah, '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*5,'M',TRUE);
+$pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
+$obsah = '';
+$pdf->MultiCell($ks_nacharbeitW, 2*5 , $obsah, '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*5,'M',TRUE);
 
 
 // pole pro datum a podpis
 $pdf->SetFont("FreeSans", "", 9);
+
+$pdf->SetY($pdf->getPageHeight()- PDF_MARGIN_BOTTOM - 35);
+$pdf->MultiCell(50, 2*10 , 'Datum:', 'B', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
+//dummy
+$pdf->MultiCell(20, 2*10 , '', '0', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
+$pdf->MultiCell(0, 2*10 , 'Unterschrift / podpis:', 'B', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
+$pdf->Text(PDF_MARGIN_LEFT, $pdf->GetY()+2*10, "Abydos");
+$pdf->Text(PDF_MARGIN_LEFT+50+20, $pdf->GetY(), "Abydos");
 
 $pdf->SetY($pdf->getPageHeight()- PDF_MARGIN_BOTTOM - 15);
 $pdf->MultiCell(50, 2*10 , 'Datum:', 'B', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
 //dummy
 $pdf->MultiCell(20, 2*10 , '', '0', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
 $pdf->MultiCell(0, 2*10 , 'Unterschrift / podpis:', 'B', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
-
+$pdf->Text(PDF_MARGIN_LEFT, $pdf->GetY()+2*10, "Kemper");
+$pdf->Text(PDF_MARGIN_LEFT+50+20, $pdf->GetY(), "Kemper");
 // pokud mam vyplneny i import, pridam dalsi stranku
 if(!$bLeer){
     $pdf->setPrintHeader(FALSE);

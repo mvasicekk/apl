@@ -53,7 +53,7 @@ function renderDonutView($scope, $elements, $attrs) {
 
     var colorsVzKd = [d3.rgb('#fcc'), d3.rgb('#fff')];
 
-    //var radius = Math.min(svgWidth, svgHeight) / 2;
+    //var radius = Math.min(svgWidth, svgHeight) / 3;
 
     var radius = svgWidth / 2;
 
@@ -147,6 +147,7 @@ function renderDonutView($scope, $elements, $attrs) {
 		"text-anchor": 'middle',
 		stroke: '#fff',
 		'stroke-width': '2px'
+		//size:70,
 	    })
 	    .text(function (d) {
 		return vzkdData.vzkdAktual;
