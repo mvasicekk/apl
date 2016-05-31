@@ -18,6 +18,9 @@ $sql.=" join dksd on dksd.Kunde=dispostatnrvzkd.kunde";
 $sql.=" where";
 $sql.="     dksd.Kunden_Stat_Nr=1";
 $sql.="     and datum=DATE_FORMAT(NOW(),'%Y-%m-%d')";
+$sql.="     and";
+$sql.="     dispostatnrvzkd.statnr<>'S0081'";
+
 $sql.=" group by";
 $sql.="     statnr";
     

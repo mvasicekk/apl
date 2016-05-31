@@ -48,12 +48,12 @@ aplApp.controller('vzkdController', function ($scope, $http,$timeout,$window,$lo
 	    schatzung:0,
 	    aktual:0
 	},
-	{
-	    statnr:'S0081',
-	    plan:0,
-	    schatzung:0,
-	    aktual:0
-	}
+//	{
+//	    statnr:'S0081',
+//	    plan:0,
+//	    schatzung:0,
+//	    aktual:0
+//	}
     ];
     
     // funkce ==================================================================
@@ -82,16 +82,21 @@ aplApp.controller('vzkdController', function ($scope, $http,$timeout,$window,$lo
 		});
     }
     
-    $scope.getVzkdArray = function(){
-	return $http.post('../getVzKdAktual.php',{kdvon:111,kdbis:195})
+    $scope.getVzkdArray = function () {
+	return $http.post('../getVzKdAktual.php', {kdvon: 111, kdbis: 195})
 		.then(function (response) {
 		    $scope.vzkdArray = response.data.vzkdArray;
 		    var vzkdSum = 0;
-		    if($scope.vzkdArray!==null){
-			$scope.vzkdArray.forEach(function(v){
-			    if(v.statnr!='X'){
+		    if ($scope.vzkdArray !== null) {
+			$scope.vzkdArray.forEach(function (v) {
+			    if (v.statnr != 'X') {
 				vzkdAktual[v.statnr] = parseFloat(v.vzkd);
 				vzkdSum += parseFloat(v.vzkd);
+				$scope.statArray.forEach(function (v1) {
+				    if (v1.statnr == v.statnr) {
+					v1.aktual = parseFloat(v.vzkd);
+				    }
+				});
 			    }
 			});
 			$scope.vzkd.vzkdAktual = vzkdSum;
@@ -106,11 +111,15 @@ aplApp.controller('vzkdController', function ($scope, $http,$timeout,$window,$lo
     $scope.getStatArray();
     $scope.getVzkdArray();
     
-    $interval($scope.getVzkdArray,60000);
+    $interval($scope.getVzkdArray,15000);
     $interval($scope.getStatArray,60000);
     
     $interval(function(){
 	$scope.dt = new Date();
-    },1000);
+	var f = d3.time.format('%d.%m.%Y %H:%M:%S');
+	$scope.dtformat = f($scope.dt);
+    },200);
+    
+    //$window.location.reload();
     
 });

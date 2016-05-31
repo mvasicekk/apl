@@ -22,6 +22,11 @@ $sql.=" where";
 $sql.="     dksd.Kunden_Stat_Nr=1";
 $sql.="     and";
 $sql.="     drueck.Datum=DATE_FORMAT(NOW(),'%Y-%m-%d')";
+$sql.="     and";
+$sql.="     `dtaetkz-abg`.Stat_Nr<>'S0091'";
+$sql.="     and";
+$sql.="     `dtaetkz-abg`.Stat_Nr<>'S0081'";
+
 $sql.=" group by";
 $sql.="     `dtaetkz-abg`.Stat_Nr";
 	    

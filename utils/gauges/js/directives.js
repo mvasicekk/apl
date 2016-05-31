@@ -14,24 +14,40 @@ var gApp = angular.module('gaugesApp')
 	    }
 	});
 
-gApp.directive('halfdonutView', function () {
+gApp.directive('halfdonutView', function ($window) {
 	    
 	    return {
 		restrict: 'E',
 		scope:{data:'=',vzkd:'=',dt:'='},
-		link: renderDonutView
+		link: function preRenderDonutView($scope, $elements, $attrs) {
+		    angular.element($window).bind('resize',function(){
+		    renderDonutView($scope, $elements, $attrs);
+		});
+		renderDonutView($scope, $elements, $attrs);
+		}
 	    }
 	});
+
+//function preRenderDonutView($scope, $elements, $attrs) {
+//    angular.element($window).bind('resize',function(){
+//	renderDonutView($scope, $elements, $attrs);
+//    });
+//    renderDonutView($scope, $elements, $attrs);
+//}
 
 function renderDonutView($scope, $elements, $attrs) {
 
     var width = $attrs.width;
     var height = $attrs.height;
-    var svg = d3.select($elements[0]).append("svg");
+    
     var data = $scope.data;
     var vzkdData = $scope.vzkd;
     var dt = $scope.dt;
 
+    // pokud uz jsem nejaky svg mel, tak ho smazu
+    var svg = d3.select('svg').remove();
+    var svg = d3.select($elements[0]).append("svg");
+    //console.log(data);
     // nastavit sirku svg elementu
     svg.attr(
 	    {
@@ -41,11 +57,24 @@ function renderDonutView($scope, $elements, $attrs) {
 
     // zjistim sirku vysku svg elementu v pixelech
     var svgWidth = parseInt(svg.style('width'));
+    
+    height = svgWidth/2;
+    
+    svg.attr(
+	    {
+		width: width,
+		height: height
+	    });
+
     var svgHeight = parseInt(svg.style('height'));
 
-
-    var graph = svg.append('g')
-	    .attr('transform', 'translate(' + svgWidth / 2 + ',' + svgHeight + ')');
+    //1/5 vysky si zaberu pro legendu
+    var legendHeight = (1/5)*svgHeight;
+    var radiusMax = Math.min(svgWidth/2, svgHeight-legendHeight);
+    
+    var legendMargin = (svgWidth-2*radiusMax)/2;
+    var legendWidth = 2*radiusMax;
+    
 
     var colors = d3.scale.ordinal()
 	    .domain([0, 1, 2, 3, 4, 5])
@@ -53,24 +82,85 @@ function renderDonutView($scope, $elements, $attrs) {
 
     var colorsVzKd = [d3.rgb('#fcc'), d3.rgb('#fff')];
 
-    //var radius = Math.min(svgWidth, svgHeight) / 3;
+    
+    
 
-    var radius = svgWidth / 2;
+    //var radiusMax = svgWidth / 2;
+    var donutWidthProzent = 10;
+    var donutInnerRadius = radiusMax-donutWidthProzent/100*radiusMax;
+    var donutVzkdPadding = 20;
+    
+    // obdelniky pro jednotlive statnr
+    console.log('data');
+    console.log(data);
+    var sirkaStatnrRect = legendWidth/data.length;
+    
+    posunLegendy = svgHeight-legendHeight;
+    var legenda = svg.append('g')
+	    .attr('transform', 'translate(' + 0 + ',' + posunLegendy + ')');
+    
+    legenda.selectAll('rect.statLegendBox')
+	    .data(data)
+	    .enter()
+	    .append('rect')
+	    .attr('class','statLegendBox')
+	    .attr('x',function(d,i){ return legendMargin+i*sirkaStatnrRect})
+	    .attr('y',0)
+	    .attr('width',sirkaStatnrRect)
+	    .attr('height',legendHeight)
+	    .attr('fill',function(d,i){ return colors(i)})
+	    .attr('stroke','#F00')
+	    .attr('stroke-width','1')
+	    .attr('opacity','1');
+    legenda.selectAll('text.statLegendText')
+    	    .data(data)
+	    .enter()
+	    .append('text')
+	    .attr('class','statLegendText')
+    	    .attr('x',function(d,i){ return legendMargin+i*sirkaStatnrRect+sirkaStatnrRect/2})
+	    .attr('y',legendHeight/4)
+	    .attr('dy',0)
+    	    .attr('text-anchor', 'middle')
+	    .attr('fill','#000')
+	    .text(function(d){
+		var cas = d.statnr;
+		return cas;
+	    });
+	    var fontSize = sirkaStatnrRect / 8;
+    legenda.selectAll('text.statVzkdText')
+    	    .data(data)
+	    .enter()
+	    .append('text')
+	    .attr('class','statVzkdText')
+    	    .attr('x',function(d,i){ return legendMargin+i*sirkaStatnrRect+sirkaStatnrRect/2})
+	    .attr('y',legendHeight/2)
+	    .attr('dy','1em')
+    	    .attr('text-anchor', 'middle')
+	    .attr('font-size', fontSize)
+	    .attr('fill','#000');    	    
 
+
+    
+    var graph = svg.append('g')
+	    .attr('transform', 'translate(' + svgWidth / 2 + ',' + posunLegendy + ')');
+
+    
+    // ramecek s legendou
+    
     // oblouk pro donut pro plan jednotlivych statnr
     var arc = d3.svg.arc()
-	    .outerRadius(radius)
-	    .innerRadius(3 * radius / 4);
+	    .outerRadius(radiusMax)
+	    .innerRadius(donutInnerRadius);
 
     // oblouk pro donut pro skutecne vzkd jednotlivych statnr
-    var inPadding = 20;
+    var inPadding = 3;
     var arcStatAktual = d3.svg.arc()
-	    .outerRadius(radius - inPadding)
-	    .innerRadius(3 * radius / 4 + inPadding);
+	    .outerRadius(radiusMax - inPadding)
+	    .innerRadius(donutInnerRadius + inPadding);
 
     // oblouk pro skutecne vzkd v sume
     var arcVzKd = d3.svg.arc()
-	    .outerRadius(3 * radius / 4 - 10)
+	    .outerRadius(donutInnerRadius - donutVzkdPadding)
 	    .innerRadius(50);
 
     // useky pro planovane vzkd pro jednotlive statnr
@@ -101,7 +191,6 @@ function renderDonutView($scope, $elements, $attrs) {
 	    .attr('d', arc)
 	    .attr('stroke', '#ccc')
 	    .attr('stroke-width', '3')
-
 	    .attr('fill', function (d, i) {
 		return '#EEEEEE';
 		//return d3.rgb(colors(i)).brighter(0.65);
@@ -128,24 +217,108 @@ function renderDonutView($scope, $elements, $attrs) {
 		return colors(i);
 	    });
 
+// podklad pro budik s aktualnim vzkd, planovanou hodnotu rozdelim na 16 casti ( rozplanovat na 16 hodin ) a zobrazim	    
+//    var vzkd16hoursData = d3.range(16).map(function(v,i){
+//	return {plan:1,hodina:i+1}
+//    });
+    var vzkd16hoursData = [
+	{
+	    plan:0,
+	    hodina:'05:30'
+	},
+	{
+	    plan:10-5.5,
+	    hodina:'10:00'
+	},
+	{
+	    plan:14-10,
+	    hodina:'14:00'
+	},
+	{
+	    plan:18-14,
+	    hodina:'18:00'
+	},
+	{
+	    plan:22.5-18,
+	    hodina:'22:30'
+	}
+    ];
+    
+    var vzkd16hoursPieData = pie(vzkd16hoursData);
+    console.log(vzkd16hoursPieData);
+    //console.log(vzkd16hoursData);
+    var pathVzKd16Hours = graph.selectAll('path .vzkd16hour')
+	    .data(vzkd16hoursPieData)
+	    .enter()
+	    .append('path')
+	    .attr('class', 'vzkd16hour')
+	    .attr('d', arcVzKd)
+	    .attr('stroke','#faa')
+	    .attr('stroke-width','2')
+	    .attr('fill','none');
+//	    .attr('fill', function (d, i) {
+//		var c = ['#ddd', '#eee'];
+//		return c[1];
+//	    });
+
+    graph.append('line')
+	    .attr('class','minuteLine')
+	    .attr('stroke','#F00')
+	    .attr('stroke-width','10')
+	    .attr('opacity','0.8');
+    
+    graph.append('line')
+	    .attr('class','secondLine')
+	    .attr('stroke','#FC0')
+	    .attr('stroke-width','20')
+	    .attr('opacity','0.8');
+    
+    var pathVzKd16HoursLabels = graph.selectAll('text.vzkd16hour')
+	    .data(vzkd16hoursPieData)
+	    .enter()
+	    .append('text')
+	    .attr('x',function(d){
+		return (donutInnerRadius - 50)*Math.sin(d.endAngle);
+	    })
+	    .attr('y',function(d){
+		return -(donutInnerRadius - 50)*Math.cos(d.endAngle);
+	    })
+	    .attr('text-anchor', 'middle')
+	    .attr('font-size',(radiusMax) / 15)
+	    .attr('class', 'vzkd16hour')
+	    .attr('fill','#000')
+	    .text(function(d){
+		var cas = d.data.hodina;
+		return cas;
+	    });
+    
+    var pieVzkdData = pieVzKd([vzkdData.vzkdAktual, vzkdData.vzkdPlan - vzkdData.vzkdAktual]);
+    console.log('create pieVzkdData');
+    console.log(pieVzkdData);
     var pathVzKd = graph.selectAll('path .vzkd')
-	    .data(pieVzKd([vzkdData.vzkdAktual, vzkdData.vzkdPlan - vzkdData.vzkdAktual]))
+	    .data(pieVzkdData)
 	    .enter()
 	    .append('path')
 	    .attr('class', 'vzkd')
 	    .attr('d', arcVzKd)
-	    .attr('fill', function (d, i) {
-		var c = ['#000', '#ccc'];
-		return c[i];
-	    });
+	    .attr('fill', 'none');
+//	    .attr('fill', function (d, i) {
+//		var c = ['#000', '#ccc'];
+//		return c[i];
+//	    });
 
+
+    
     graph.append('text')
 	    .attr({
 		class: 'vzkdHodnota',
 		x: 0,
-		y: -(3 * radius / 4 - 5) / 2,
+		y: -(radiusMax / 2),
+		"font-size":(2*radiusMax) / 6,
+		dy:'0.5em',
 		"text-anchor": 'middle',
 		stroke: '#fff',
+		
 		'stroke-width': '2px'
 		//size:70,
 	    })
@@ -157,7 +330,9 @@ function renderDonutView($scope, $elements, $attrs) {
 	    .attr({
 		class: 'vzkdPlan',
 		x: 0,
-		y: -(3 * radius / 4 - 5) / 3,
+		y: -(radiusMax / 2),
+		"font-size":(2*radiusMax) / 10,
+		dy:'2em',
 		"text-anchor": 'middle',
 		stroke: '#fff',
 		'stroke-width': '2px'
@@ -171,20 +346,34 @@ function renderDonutView($scope, $elements, $attrs) {
 		class: 'dt',
 		//fill: '#00ff00',
 		x: 0,
-		y: -80,
+		y: -(radiusMax / 2),
+		dy:'3em',
 		"text-anchor": 'middle',
 		stroke: '#fff',
 		'stroke-width': '2px'
 	    });
 
 
+    
+    
     // updatovani pri zmenach dat ----------------------------------------------
     // sledovani zmen vzkd
     $scope.$watch("vzkd", function () {
 
+	//console.log('watch vzkd');
+	//console.log(vzkdData);
+	
+	svg.selectAll('text.statVzkdText')
+    	    .data(data)
+	    .text(function(d){
+		var cas = parseFloat(d.aktual);
+		var plan = parseFloat(d.plan);
+		var procent = plan!=0?numeral(cas/plan*100).format('0'):'';
+		return numeral(cas).format('0,0') + ' (' + procent + '%)';
+	    });    	    
+	
 	graph.select('text.vzkdPlan')
 	    .text(function (d) {
-		//var procenta = parseFloat(vzkdData.vzkdPlan)!==0:numeral(parseFloat(vzkdData.vzkdAktual)/parseFloat(vzkdData.vzkdPlan)*100).format('0.00'):'';
 		return 'Plan: '+numeral(vzkdData.vzkdPlan).format('0,0');
 	    });
 	    
@@ -202,13 +391,17 @@ function renderDonutView($scope, $elements, $attrs) {
 	else {
 	    fill = '#c00';
 	}
+	var vzkdArcDataAll = pieVzKd([vzkdData.vzkdAktual, rest]);
+	var vzkdArcDataVzkdAktual = [vzkdArcDataAll[0]];
+	
 	graph.selectAll('path.vzkd')
-		.data(pieVzKd([vzkdData.vzkdAktual, rest]))
+		.data(vzkdArcDataVzkdAktual)
+		.attr('d', arcVzKd)
+		.attr('opacity',0.2)
 		.attr('fill', function (d, i) {
 		    var c = [fill, '#eee'];
 		    return c[i];
-		})
-		.attr('d', arcVzKd);
+		});
 
 	dataStatAktual = pie(data).map(function (v) {
 	    var scale = d3.scale.linear().domain([0, v.value]).range([v.startAngle, v.endAngle]);
@@ -239,13 +432,50 @@ function renderDonutView($scope, $elements, $attrs) {
 
     //sleduju zmenu datetime
     $scope.$watch("dt", function () {
-	var timeFormat = d3.time.format('%d.%m.%Y %H:%M:%S');
-	graph.select('text.dt')
-		.text(function (d) {
-		    return timeFormat($scope.dt);
-		});
+	startTimeMinutes = 5.5 * 60;
+	endTimeMinutes = 22.5 * 60;
+	minutesScale = d3.scale.linear().domain([startTimeMinutes, endTimeMinutes]).range([-Math.PI/2, Math.PI/2]);
+	secondScale = d3.scale.linear().domain([0, 60]).range([-Math.PI/2, Math.PI/2]);
+	
+	timeAktualMinutes = $scope.dt.getHours()*60+$scope.dt.getMinutes()+$scope.dt.getSeconds()/60;
+	timeAktualSeconds = $scope.dt.getSeconds();
+	
+	uhelAktual = minutesScale(timeAktualMinutes);
+	uhelAktualSecond = secondScale(timeAktualSeconds);
+	
+	x1 = (50)*Math.sin(uhelAktual);
+	y1 = -(50)*Math.cos(uhelAktual);
+	x2 = (donutInnerRadius - donutVzkdPadding)*Math.sin(uhelAktual);
+	y2 = -(donutInnerRadius - donutVzkdPadding)*Math.cos(uhelAktual);
+	
+	sx1 = (donutInnerRadius - donutVzkdPadding)*Math.sin(uhelAktualSecond);
+	sy1 = -(donutInnerRadius - donutVzkdPadding)*Math.cos(uhelAktualSecond);
+	sx2 = (donutInnerRadius)*Math.sin(uhelAktualSecond);
+	sy2 = -(donutInnerRadius)*Math.cos(uhelAktualSecond);
+	
+	
+	minuteLine = graph.select('line.minuteLine')
+	    .attr('x1',x1)
+	    .attr('y1',y1)
+	    .attr('x2',x2)
+	    .attr('y2',y2);
+    
+	secondLine = graph.select('line.secondLine')
+//		.transition()
+//		.delay(200)
+		.attr('x1',sx1)
+		.attr('y1',sy1)
+		.attr('x2',sx2)
+		.attr('y2',sy2);
+	    
+//	var timeFormat = d3.time.format('%d.%m.%Y');
+//	graph.select('text.dt')
+//		.text(function (d) {
+//		    return timeFormat($scope.dt);
+//		});
     }, true);
 }
+
 
 
 

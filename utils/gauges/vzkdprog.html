@@ -3,6 +3,9 @@
     <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
 	<title>
 	    VzKd Progress
 	</title>
@@ -30,47 +33,70 @@
     <body ng-app="gaugesApp" ng-controller="vzkdController">
 	<div class="container-fluid">
 	    <div class="row">
-		<div class="col-sm-12 jumbotron">
+		<div class="aheader">
 		    <h1 class="text-center">Plán / plnění VzKd [min]</h1>
 		</div>
 	    </div>
 	    <div class="row" >
 		<div class="col-sm-12" >
-		    <halfdonut-view width="100%" height="700" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
 		</div>
-<!--		<div class="col-sm-6" >
-		    <video loop width="100%" autoplay="" src="http://aplserver/gdat/Aby 18 Mitarbeiter -/05 Projekte - Projekty/Projekt TV Abydos/Aktual video/Slide_nastenka_TV_6.5..mp4">neni podpora pro prehravani videa</video>
+<!--		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
 		</div>-->
-		
-<!--		<div class="col-sm-1">
-		    <div class="form-group">
-			<label>VzkdAktual</label>
-			<input type="number" class="form-control text-right" ng-model="vzkd.vzkdAktual" placeholder="vzkd aktual">
-		    </div>
-    		    <div class="form-group">
-			<label>S0011 plan</label>
-			<input type="number" class="form-control text-right" ng-model="statArray[0].plan" placeholder="S0011 plan">
-		    </div>
-		    <div class="form-group">
-			<label>S0041 plan</label>
-			<input type="number" class="form-control text-right" ng-model="statArray[1].plan" placeholder="S0041 plan">
-		    </div>
-		    <div class="form-group">
-			<label>S0051 plan</label>
-			<input type="number" class="form-control text-right" ng-model="statArray[2].plan" placeholder="S0051 plan">
-		    </div>
-		    <div class="form-group">
-			<label>S0061 plan</label>
-			<input type="number" class="form-control text-right" ng-model="statArray[3].plan" placeholder="S0061 plan">
-		    </div>
-		    <div class="form-group">
-			<label>S0081 plan</label>
-			<input type="number" class="form-control text-right" ng-model="statArray[4].plan" placeholder="S0081 plan">
-		    </div>
-		    <bars-view width="100%" height="600" data="statArray"></bars-view>
-		</div>-->
-		
-		
+	    </div>
+<!--	    <div class="row" >
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+	    </div>
+	    <div class="row" >
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+	    </div>
+	    <div class="row" >
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+		<div class="col-sm-3" >
+		    <halfdonut-view width="100%" height="" data="statArray" vzkd="vzkd" dt="dt"></halfdonut-view>
+		</div>
+	    </div>-->
+	    <div class="row" style="position:absolute;bottom:0;width:100%;">
+		<div class="afooter">
+		    <h1 class="text-center">{{dtformat}}</h1>
+		</div>
 	    </div>
 	</div>
     </body>

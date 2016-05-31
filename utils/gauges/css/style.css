@@ -29,26 +29,60 @@ body{
     /*border: 2px solid blue;*/
 }
 
+div.aheader,div.afooter{
+    width: 100%;
+    background-color: #ddd;
+    margin: 0;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-top: 1em;
+}
+
+div.aheader{
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+h1{
+    font-weight: bold;
+}
+
 svg{
     border: 0px solid blue;
 }
 
 text.vzkdHodnota{
-    font-size: 150px;
+    //font-size: 10em;
     fill:#000;
     font-weight:bold;
     
 }
 
+text.statVzkdText{
+    //font-size: 2em;
+    fill:#000;
+    font-weight:bold;
+    
+}
+
+text.vzkd16hour{
+    //font-size: 2em;
+    fill:#000;
+    font-weight:normal;
+    stroke:#F00;
+    stroke-width:0;
+    
+}
+
 text.vzkdPlan{
-    font-size: 70px;
+    //font-size: 5em;
     fill:#000;
     font-weight:bold;
     
 }
 
 text.dt{
-    font-size: 70px;
+    font-size: 5em;
     fill:#555;
     font-weight:bold;
     
