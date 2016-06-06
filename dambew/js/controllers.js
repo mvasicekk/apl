@@ -40,153 +40,73 @@ aplApp.controller('dambewController', function ($scope, $routeParams,$http,$time
     $scope.showHelp = false;
     $scope.datePickerFormat = 'dd.MM.yyyy';
     $scope.securityInfo = undefined;
-    $scope.fehlerArray = [
-	{
-	    druh:'Sandstellen / písek',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Schlackestellen / okuje',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Versatz / přesazení',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Blattripen / špony',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'angebrannt / spálené',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Kaltlauf / studený vtok',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Lufteinschlūsse / bubliny',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Kernbruch / prasklé jádro',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'Lunker / díra',
-	    popis:'',
-	    ks:''
-	},
-	{
-	    druh:'sonstige Fehler/ ostatní chyby',
-	    popis:'',
-	    ks:''
-	}
-    ];
     
-    $scope.teilAktual = null;
-    $scope.importAktual = null;
-
+    $scope.oe = {};
+    $scope.amnr = '';
+    $scope.ausgabe = 1;
+    $scope.ruckgabe = 0;
+    $scope.persSklady = [];
+    $scope.amnrSklady = [];
+    $scope.sklad = {};
     $scope.datum = new Date();
+    $scope.insertedRows = [];
 
 $scope.submitForm = function(){
     console.log('formsubmit');
-}
-/**
- * 
- * @param {type} teil
- * @returns {unresolved}
- */
-    function getImporte(teil){
-	return $http.post('./getImporte.php',{teil:teil}).then(
-		    function(response){
-			console.log(response.data);
-			$scope.importe = response.data.importe;
-		    }
-		);
-    }
-    /**
-     * 
-     * @param {type} i
-     * @returns {undefined}
-     */
-    $scope.listRowClicked = function(i){
-	console.log(i);
-	$scope.teilAktual = $scope.teile[i];
-	console.log($scope.teilAktual);
-	$scope.teile=null;
-	$scope.teil_search=$scope.teilAktual.teillang;
-	
-	//stahnout importy k vybranemu dilu
-	getImporte($scope.teilAktual.Teil);
-    }
-    
-    /**
-     * 
-     * @param {type} i
-     * @returns {undefined}
-     */
-        $scope.listImportRowClicked = function(i){
-	console.log(i);
-	$scope.importAktual = $scope.importe[i];
-	$scope.importe=null;
-    }
-
-
-/**
- * 
- * @returns {undefined}
- */
-$scope.getStkSumme = function(){
-    //console.log('getStkSumme');
-    var suma = 0;
-    $scope.fehlerArray.forEach(function(v){
-	var cislaArray = v.ks.split(/\s*[,\/]/gi);
-	//console.log(cislaArray);
-	cislaArray.forEach(function(c){
-	    var cislo = parseFloat(c);
-	    if(!isNaN(cislo)){
-		suma+=cislo;
+    	return $http.post(
+		'./saveDambew.php',
+		{
+		    datum:$scope.datum,
+		    persnr:$scope.persnr,
+		    oe:$scope.oe,
+		    amnr:$scope.amnr,
+		    sklad:$scope.sklad,
+		    ausgabe:$scope.ausgabe,
+		    ruckgabe:$scope.ruckgabe,
+		    bemerkung:$scope.bemerkung
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    if(response.data.insertId>0){
+		//rozsirim pole vlozenych zaznamu
+		var insertItem = {
+		    datum : response.data.datum,
+		    persnr : response.data.persnr,
+		    oe : response.data.oe,
+		    amnr : response.data.amnr,
+		    sklad : response.data.sklad,
+		    ausgabe : response.data.ausgabe,
+		    ruckgabe : response.data.ruckgabe,
+		    bemerkung : response.data.bemerkung,
+		    u : response.data.u
+		};
+		
+		
+		$scope.insertedRows.unshift(insertItem);
 	    }
+	    
+    		// pripravit na dalsi zadani
+		$scope.persinfo = {};
+		$scope.persnr = '';
+		$scope.oe.tat='';
+		$scope.amnr = '';
+		$scope.amnrinfo = {};
+		$scope.amnrSklady = [];
+		$scope.skladyArray = $scope.skladyArrayAll;
+		$scope.sklad.cislo = $scope.skladyArray[0].cislo;
+		$scope.ausgabe = 1;
+		$scope.ruckgabe = 0;
+		$scope.bemerkung = '';
+		// a focus na osobni cislo
+		var such = $window.document.getElementById('persnr');
+		if (such) {
+		    such.focus();
+		    such.select();
+		}
+
+
 	});
-    });
-    return suma;
 }
-/**
- * 
- * @returns {undefined}
- */
-    $scope.addFehler = function(){
-	var newFehler = {
-	    druh:'sonstige Fehler/ ostatní chyby',
-	    popis:'',
-	    ks:''
-	};
-	$scope.fehlerArray.push(newFehler);
-    }
-    /**
-     * 
-     * @returns {unresolved}
-     */
-    $scope.initSecurity = function(){
-	var p={
-	    form_id:'f355_mangelbericht'
-	};
-	return $http.post('./getSecurityInfo.php',p).then(
-		    function(response){
-			$scope.securityInfo = response.data.securityInfo;
-		    }
-		);
-    }
 
     
     $scope.initHelp = function(){
@@ -201,25 +121,6 @@ $scope.getStkSumme = function(){
 		);
     }
 
-/**
- * 
- * @returns {undefined}
- */
-    $scope.createPdf = function(){
-    	    console.log('createPdf');
-	    var params = {
-		importAktual:$scope.importAktual,
-		teilAktual: $scope.teilAktual,
-		fehlerArray:$scope.fehlerArray
-	    };
-	    $http.post('../Reports/F355_pdf.php', params).then(function (response) {
-		console.log('pdf generiert ' + response.data);
-		$scope.filename = response.data.filename;
-		$scope.pdfPath = response.data.pdfPath;
-		$scope.pdfReady = true;
-	    });
-	
-    }
 
 
     /**
@@ -249,10 +150,28 @@ $scope.getStkSumme = function(){
 	    }
 	});
     }
+    
+    /**
+     * 
+     */
+    $scope.initLists = function(){
+	return $http.post(
+		'./getLists.php',
+		{}
+	).then(function (response) {
+	    //console.log(response.data);
+	    $scope.oeArray = response.data.oeArray;
+	    $scope.skladyArrayAll = response.data.skladyArray;
+	    $scope.skladyArray = response.data.skladyArray;
+	    $scope.sklad.cislo = $scope.skladyArray[0].cislo;
+	});
+    }
     // init
     /*
     $scope.initSecurity();
+    */
     $scope.initLists();
+    /*
     $scope.initHelp();
     */
     var such = $window.document.getElementById('persnr');
@@ -260,4 +179,81 @@ $scope.getStkSumme = function(){
 	such.focus();
 	such.select();
     }
+
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.isFormValid = function(){
+	var valid = ($scope.persnr>0)
+		&&($scope.amnr.length>0)
+		&&($scope.sklad.cislo.length>0)
+		&&($scope.ausgabe!==null)
+		&&($scope.ruckgabe!==null)
+		&&(toString($scope.ausgabe).length>0)
+		&&(toString($scope.ruckgabe).length>0);
+	//console.log(valid);
+	return valid;
+	
+    }
+    
+    /**
+     * 
+     * @returns {unresolved}
+     */
+    $scope.persnrChanged = function(){
+	console.log('persnrChanged');
+	return $http.post(
+		'./getPersInfo.php',
+		{persnr:$scope.persnr}
+	).then(function (response) {
+	    $scope.persinfo = response.data.persinfo;
+	    $scope.persSklady = response.data.persSklady;
+    
+	    if($scope.persinfo===null){
+		$scope.persnr = '';
+	    }
+	    else{
+//		nastavim oe
+		$scope.oe.tat=$scope.persinfo.regeloe;
+	    }
+	});
+    }
+    
+    $scope.amnrChanged = function () {
+	console.log('amnrChanged');
+	return $http.post(
+		'./getAmnrInfo.php',
+		{amnr: $scope.amnr}
+	).then(function (response) {
+	    $scope.amnrinfo = response.data.amnrinfo;
+	    $scope.amnrSklady = response.data.amnrSklady;
+	    if ($scope.amnrinfo === null) {
+		$scope.amnr = '';
+		$scope.skladyArray = $scope.skladyArrayAll;
+	    }
+	    else {
+//		upravit seznam skladu $scope.skladyArray, aby obsahoval jen sklady, ktere jsou obsazeny i v $scope.amnrSklady
+		$scope.skladyArray = $scope.skladyArrayAll.filter(function (v) {
+		    var sklad = v.cislo;
+		    if ($scope.amnrSklady !== null) {
+			for (i = 0; i < $scope.amnrSklady.length; i++) {
+			    if ($scope.amnrSklady[i].sklad == sklad) {
+				return true;
+			    }
+			}
+		    }
+		    return false;
+		});
+		if($scope.skladyArray.length==0){
+		    $scope.sklad.cislo='';
+		}
+		else{
+		    $scope.sklad.cislo = $scope.skladyArray[0].cislo;
+		}
+		//$scope.oe.tat=$scope.persinfo.regeloe;
+	    }
+	});
+    }
+    
 });

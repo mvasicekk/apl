@@ -2,6 +2,7 @@
 session_start();
 require "../fns_dotazy.php";
 require_once '../db.php';
+require_once '../sqldb.php';
 dbConnect();
 
 $a = AplDB::getInstance();
@@ -451,6 +452,14 @@ $a = AplDB::getInstance();
                         $insert = "insert into dambew (persnr,oe,datum,amnr,ausgabestk,rueckgabestk,drueckid,comp_user_accessuser)";
                         $insert.=" values($persnr,'$oe','".make_DB_datum($datum)."','$amnr',$ausstk,$rueckstk,$drueckid,'$ident')";
                         mysql_query($insert);
+			
+			// vlozim i do premiera s pevnym cislem skladu 11 ( vydeje pasu kemper
+			$p = sqldb::getInstance();
+			//$bemerk1250 = iconv('UTF-8', 'windows-1250', $bemerkung);
+			$sqlPremier = "INSERT INTO apl_am_pohyb ( cislo,sklad,pocet_vydane,oscislo,datum,poznamka,insert_stamp )";
+			$sqlPremier.= " values ( '$amnr','11','$ausstk','$persnr','".make_DB_datum($datum)."','drueckid_".$drueckid."','" . date('Y-m-d H:i:s') . "')";
+			$p->exec($sqlPremier);
+			
                     }
                 }
                 $mysqlerror=mysql_error();

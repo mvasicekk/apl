@@ -42,6 +42,13 @@ div.page-header h4{
     display: inline-block;
     vertical-align: bottom;
 }
+
+.valign_top {
+    float:none;
+    display: inline-block;
+    vertical-align: top;
+}
+
 .kzgut{
     background-color: yellow !important;  
 }
