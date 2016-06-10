@@ -87,250 +87,251 @@ $columnsArray = array(
     "transport"=>array("colname"=>"mzd_51"),
     "vorschuss"=>array("colname"=>"mzd_46"),
     "essen"=>array("colname"=>"mzd_48"),
+    "prem_a"=>array("colname"=>"mzd_30"),
 );
-
-$headerCells = array(
-    'persnr'=>array(
-        'width'=>7.5,
-        'text'=>'PersNr',
-        'align'=>'',
-    ),
-    'name'=>array(
-        'width'=>25,
-        'text'=>'Name Vorname',
-        'align'=>'',
-     ),
-    'stdlohn'=>array(
-        'width'=>9,
-        'text'=>'Std.Lohn\nL.Faktor\nOE',
-        'align'=>'',
-    ),
-    'eintrittAustritt'=>array(
-        'width'=>10,
-        'text'=>'eintritt\naustritt',
-        'align'=>'',
-    ),
-    'befristetProbezeit'=>array(
-        'width'=>10,
-        'text'=>'befristet\nProbezeit',
-        'align'=>'',
-
-    ),
-    'a'=>array(
-        'width'=>6,
-        'text'=>'a',
-        'align'=>'',
-
-    ),
-//    'aNAT'=>array(
-//        'width'=>5,
-//        'text'=>'a n AT',
+//
+//$headerCells = array(
+//    'persnr'=>array(
+//        'width'=>7.5,
+//        'text'=>'PersNr',
+//        'align'=>'',
+//    ),
+//    'name'=>array(
+//        'width'=>25,
+//        'text'=>'Name Vorname',
+//        'align'=>'',
+//     ),
+//    'stdlohn'=>array(
+//        'width'=>9,
+//        'text'=>'Std.Lohn\nL.Faktor\nOE',
+//        'align'=>'',
+//    ),
+//    'eintrittAustritt'=>array(
+//        'width'=>10,
+//        'text'=>'eintritt\naustritt',
+//        'align'=>'',
+//    ),
+//    'befristetProbezeit'=>array(
+//        'width'=>10,
+//        'text'=>'befristet\nProbezeit',
 //        'align'=>'',
 //
 //    ),
-    'd'=>array(
-        'width'=>5,
-        'text'=>'d',
-        'align'=>'',
-
-    ),
-    'n'=>array(
-        'width'=>5,
-        'text'=>'n',
-        'align'=>'',
-
-    ),
-    'np'=>array(
-        'width'=>4,
-        'text'=>'np',
-        'align'=>'',
-
-    ),
-    'nv'=>array(
-        'width'=>4,
-        'text'=>'nv',
-        'align'=>'',
-
-    ),
-    'nw'=>array(
-        'width'=>4,
-        'text'=>'nw',
-        'align'=>'',
-
-    ),
-    'nu'=>array(
-        'width'=>4,
-        'text'=>'nu',
-        'align'=>'',
-
-    ),
-    'p'=>array(
-        'width'=>4,
-        'text'=>'p',
-        'align'=>'',
-
-    ),
-    'u'=>array(
-        'width'=>4,
-        'text'=>'u',
-        'align'=>'',
-
-    ),
-    'z'=>array(
-        'width'=>4,
-        'text'=>'z',
-        'align'=>'',
-
-    ),
-    'frage'=>array(
-        'width'=>4,
-        'text'=>'?',
-        'align'=>'',
-
-    ),
-    'mehrarbeit'=>array(
-        'width'=>8,
-        'text'=>'+-Std',
-        'align'=>'',
-     ),
-    'nachtstd'=>array(
-        'width'=>7,
-        'text'=>'Nacht',
-        'align'=>'',
-    ),
-    'sonestd'=>array(
-        'width'=>7,
-        'text'=>'Nacht',
-        'align'=>'',
-    ),
-    'vjRst'=>array(
-        'width'=>6,
-        'text'=>'VJrst',
-        'align'=>'',
-
-    ),
-    'jAnsp'=>array(
-        'width'=>6.5,
-        'text'=>'JAns',
-        'align'=>'',
-
-    ),
-    'kor'=>array(
-        'width'=>6,
-        'text'=>'kor',
-        'align'=>'',
-
-    ),
-
-    'genommen'=>array(
-        'width'=>6,
-        'text'=>'gen',
-        'align'=>'',
-
-    ),
-    'offen'=>array(
-        'width'=>6.5,
-        'text'=>'offen',
-        'align'=>'',
-
-    ),
-    'transport'=>array(
-        'width'=>6,
-        'text'=>'Trans\nCZK',
-    ),
-    'vorschuss'=>array(
-        'width'=>7,
-        'text'=>'Vorsch\nCZK',
-        'align'=>'',
-
-    ),
-    'abmahnung'=>array(
-        'width'=>7,
-        'text'=>'Vorsch\nCZK',
-        'align'=>'',
-
-    ),
-    'essen'=>array(
-        'width'=>7,
-        'text'=>'Essen\nCZK',
-        'align'=>'',
-
-    ),
-
-    'exekution'=>array(
-        'width'=>0,
-        'text'=>'',
-        'align'=>'',
-
-    ),
-
-    'dummy1'=>array(
-        'width'=>8,
-        'text'=>'',
-        'align'=>'',
-
-    ),
-    'factoren'=>array(
-        'width'=>7,
-        'text'=>'',
-        'align'=>'',
-
-    ),
-    'anwesenheit'=>array(
-        'width'=>9,
-        'text'=>'Anw\nStd',
-        'align'=>'',
-
-    ),
-    'leistungmin'=>array(
-        'width'=>10,
-        'text'=>'Leistung\nmin',
-        'align'=>'',
-
-    ),
-    'leistungkc'=>array(
-        'width'=>10,
-        'text'=>'Leistung\nCZK',
-        'align'=>'',
-
-    ),
-    'qpraemie'=>array(
-        'width'=>8,
-        'text'=>'Qualitaet\nCZK',
-        'align'=>'',
-
-    ),
-    'leistungpraemie'=>array(
-        'width'=>8,
-        'text'=>'Leistung\nCZK',
-        'align'=>'',
-
-    ),
-    'quartalpraemie'=>array(
-        'width'=>8,
-        'text'=>'Quartal\nCZK',
-        'align'=>'',
-
-    ),
-    'sonstpremie'=>array(
-        'width'=>8,
-        'text'=>'Sonst\nCZK',
-        'align'=>'',
-
-    ),
-    'erschwerniss'=>array(
-        'width'=>8,
-        'text'=>'Erschw.\nCZK',
-        'align'=>'',
-
-    ),
-    'lohn'=>array(
-        'width'=>10,
-        'text'=>'Lohn\nCZK',
-        'align'=>'',
-
-    ),
-);
+//    'a'=>array(
+//        'width'=>6,
+//        'text'=>'a',
+//        'align'=>'',
+//
+//    ),
+////    'aNAT'=>array(
+////        'width'=>5,
+////        'text'=>'a n AT',
+////        'align'=>'',
+////
+////    ),
+//    'd'=>array(
+//        'width'=>5,
+//        'text'=>'d',
+//        'align'=>'',
+//
+//    ),
+//    'n'=>array(
+//        'width'=>5,
+//        'text'=>'n',
+//        'align'=>'',
+//
+//    ),
+//    'np'=>array(
+//        'width'=>4,
+//        'text'=>'np',
+//        'align'=>'',
+//
+//    ),
+//    'nv'=>array(
+//        'width'=>4,
+//        'text'=>'nv',
+//        'align'=>'',
+//
+//    ),
+//    'nw'=>array(
+//        'width'=>4,
+//        'text'=>'nw',
+//        'align'=>'',
+//
+//    ),
+//    'nu'=>array(
+//        'width'=>4,
+//        'text'=>'nu',
+//        'align'=>'',
+//
+//    ),
+//    'p'=>array(
+//        'width'=>4,
+//        'text'=>'p',
+//        'align'=>'',
+//
+//    ),
+//    'u'=>array(
+//        'width'=>4,
+//        'text'=>'u',
+//        'align'=>'',
+//
+//    ),
+//    'z'=>array(
+//        'width'=>4,
+//        'text'=>'z',
+//        'align'=>'',
+//
+//    ),
+//    'frage'=>array(
+//        'width'=>4,
+//        'text'=>'?',
+//        'align'=>'',
+//
+//    ),
+//    'mehrarbeit'=>array(
+//        'width'=>8,
+//        'text'=>'+-Std',
+//        'align'=>'',
+//     ),
+//    'nachtstd'=>array(
+//        'width'=>7,
+//        'text'=>'Nacht',
+//        'align'=>'',
+//    ),
+//    'sonestd'=>array(
+//        'width'=>7,
+//        'text'=>'Nacht',
+//        'align'=>'',
+//    ),
+//    'vjRst'=>array(
+//        'width'=>6,
+//        'text'=>'VJrst',
+//        'align'=>'',
+//
+//    ),
+//    'jAnsp'=>array(
+//        'width'=>6.5,
+//        'text'=>'JAns',
+//        'align'=>'',
+//
+//    ),
+//    'kor'=>array(
+//        'width'=>6,
+//        'text'=>'kor',
+//        'align'=>'',
+//
+//    ),
+//
+//    'genommen'=>array(
+//        'width'=>6,
+//        'text'=>'gen',
+//        'align'=>'',
+//
+//    ),
+//    'offen'=>array(
+//        'width'=>6.5,
+//        'text'=>'offen',
+//        'align'=>'',
+//
+//    ),
+//    'transport'=>array(
+//        'width'=>6,
+//        'text'=>'Trans\nCZK',
+//    ),
+//    'vorschuss'=>array(
+//        'width'=>7,
+//        'text'=>'Vorsch\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'abmahnung'=>array(
+//        'width'=>7,
+//        'text'=>'Vorsch\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'essen'=>array(
+//        'width'=>7,
+//        'text'=>'Essen\nCZK',
+//        'align'=>'',
+//
+//    ),
+//
+//    'exekution'=>array(
+//        'width'=>0,
+//        'text'=>'',
+//        'align'=>'',
+//
+//    ),
+//
+//    'dummy1'=>array(
+//        'width'=>8,
+//        'text'=>'',
+//        'align'=>'',
+//
+//    ),
+//    'factoren'=>array(
+//        'width'=>7,
+//        'text'=>'',
+//        'align'=>'',
+//
+//    ),
+//    'anwesenheit'=>array(
+//        'width'=>9,
+//        'text'=>'Anw\nStd',
+//        'align'=>'',
+//
+//    ),
+//    'leistungmin'=>array(
+//        'width'=>10,
+//        'text'=>'Leistung\nmin',
+//        'align'=>'',
+//
+//    ),
+//    'leistungkc'=>array(
+//        'width'=>10,
+//        'text'=>'Leistung\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'qpraemie'=>array(
+//        'width'=>8,
+//        'text'=>'Qualitaet\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'leistungpraemie'=>array(
+//        'width'=>8,
+//        'text'=>'Leistung\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'quartalpraemie'=>array(
+//        'width'=>8,
+//        'text'=>'Quartal\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'sonstpremie'=>array(
+//        'width'=>8,
+//        'text'=>'Sonst\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'erschwerniss'=>array(
+//        'width'=>8,
+//        'text'=>'Erschw.\nCZK',
+//        'align'=>'',
+//
+//    ),
+//    'lohn'=>array(
+//        'width'=>10,
+//        'text'=>'Lohn\nCZK',
+//        'align'=>'',
+//
+//    ),
+//);
 
 $aTageProMonat = 0;
 $stundenDecimals = 1;
@@ -396,6 +397,7 @@ function radek_personE($objPHPExcel, $vyskaradku, $rgb, $person, $monat, $jahr) 
     global $reporttyp;
     global $radek,$sloupec;
     global $columnsArray;
+    global $aPremienArray;
 
     $fill = 0;
 
@@ -705,6 +707,16 @@ function radek_personE($objPHPExcel, $vyskaradku, $rgb, $person, $monat, $jahr) 
     $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $popis);
     $sloupec++;
 
+    if (array_key_exists(intval($person->persnr), $aPremienArray)) {
+	$sonstpremie = $aPremienArray[intval($person->persnr)]['apremie'];
+    } else {
+	$sonstpremie = 0;
+    }
+    
+    //mzd_30
+    $popis = $sonstpremie;
+    $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $popis);
+    $sloupec++;
     
 }
 
@@ -730,6 +742,7 @@ $personen = simplexml_import_dom($domxml);
 
 $apl = new AplDB();
 $aTageProMonat = $apl->getArbTageBetweenDatums($von, $bis);
+$aPremienArray = $apl->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',FALSE);
 
 // popisky sloupcu
 $radek = 1;

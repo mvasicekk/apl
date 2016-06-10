@@ -31,7 +31,7 @@
 
     <table width="800px" id="fz_teile" style="padding: 5px;" border="1">
     <tr>
-        <td colspan="3">Export: <input type="text" id="export" size="6" acturl="validateExport.php"/></td>
+        <td colspan="3">Export: <input type="text" id="export" size="8" acturl="validateExport.php"/></td>
         <td colspan="3">Am: <input type="text" id="export_datum" size="10"/></td>
         <td>&nbsp;</td>
     </tr>

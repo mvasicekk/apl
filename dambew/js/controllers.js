@@ -111,9 +111,9 @@ $scope.submitForm = function(){
     
     $scope.initHelp = function(){
 	var p={
-	    form_id:'f355_mangelbericht'
+	    form_id:'dambew'
 	};
-	return $http.post('./getHelpInfo.php',p).then(
+	return $http.post('../dkopf/getHelpInfo.php',p).then(
 		    function(response){
 			$scope.helpText = response.data.help.helpText;
 			$scope.hIArray = response.data.help.hiArray;
@@ -121,6 +121,7 @@ $scope.submitForm = function(){
 		);
     }
 
+    
 
 
     /**
@@ -171,9 +172,34 @@ $scope.submitForm = function(){
     $scope.initSecurity();
     */
     $scope.initLists();
-    /*
+    
     $scope.initHelp();
-    */
+    
+    $scope.$watch('hIArray',function(newValue,oldValue){
+	if(oldValue!==undefined){
+	    console.log('hiarray changed');
+	    console.log(newValue);
+	    console.log(oldValue);
+	    // projdu vsechny atributy a zjistim, kde se zmenil help text
+	    for(p in newValue){
+		//console.log(p);
+		if(newValue[p][0].help_text!=oldValue[p][0].help_text){
+		    //zde byla zmena v help textu
+		    console.log(newValue[p][0].id);
+		    console.log(newValue[p][0].help_text);
+		    // a updatnout v DB
+		    $http.post(
+			'./updateHelpText.php',
+			{id:newValue[p][0].id,helptext:newValue[p][0].help_text}
+		    ).then(function (response) {
+			console.log(response.data);
+		    });
+		}
+	    }
+	}
+    },
+    true);
+    
     var such = $window.document.getElementById('persnr');
     if (such) {
 	such.focus();

@@ -51,7 +51,7 @@ foreach ($cislaSklady as $cislo=>$sklady){
 	    }
 	}
 	else{
-	    echo "$amnr - vynechavam z importu\n";
+	    //echo "$amnr - vynechavam z importu\n";
 	}
 }
 

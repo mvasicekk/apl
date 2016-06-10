@@ -124,15 +124,19 @@ $sql.=" name2,strasse,ico,dic,land,plz,";
 $sql.=" ort,waehrung,rechanschr,zahlenbis,fertig,ausliefer_datum,auftragsnr,bestellnr,";
 //$sql.=" fremdauftr,fremdpos,teil,pal,teilbez,text1,tatkz,sum(preis) as preis,stk,sum(preis*(stk+auss)) as betrag,";
 $sql.=" fremdauftr,fremdpos,teil,teilbez,text1,tatkz,sum(preis) as preis,stk,sum(preis*(stk+auss)) as betrag,";
-$sql.=" auss";
-$sql.=" FROM $D742_rechnung join $tat_reihenfolge on $tat_reihenfolge.dtaetkz=$D742_rechnung.tatkz";
+//$sql.=" fremdauftr,fremdpos,teil,teilbez,text1,tatkz,preis,stk,sum(preis*(stk+auss)) as betrag,";
+$sql.=" auss,CONCAT(tatkz,'-',preis) as tatid";
+$sql.=" FROM $D742_rechnung";
+$sql.=" join $tat_reihenfolge on $tat_reihenfolge.dtaetkz=$D742_rechnung.tatkz";
 $sql.=" group by";
-$sql.=" kunde,konto,textkonto,textverwzweck,name1,";
-$sql.=" name2,strasse,land,plz,";
-$sql.=" ort,waehrung,rechanschr,zahlenbis,fertig,ausliefer_datum,auftragsnr,bestellnr,";
-$sql.=" fremdauftr,fremdpos,teil,teilbez,text1,tatkz,stk,auss";
+//$sql.=" kunde,konto,textkonto,textverwzweck,name1,";
+//$sql.=" name2,strasse,land,plz,";
+//$sql.=" ort,waehrung,rechanschr,zahlenbis,fertig,ausliefer_datum,auftragsnr,bestellnr,";
+$sql.=" fremdauftr,fremdpos,teil,teilbez,text1,tatkz,preis";
+//$sql.=" fremdauftr,fremdpos,teil,teilbez,text1,tatkz,stk,auss";
 //$sql.=" fremdauftr,fremdpos,teil,pal,teilbez,text1,tatkz,stk,auss";
 $sql.=" order by teil,minofabgnr";
+//$sql.=" order by teil";
 //$sql.=" order by teil,pal,minofabgnr";
 
 //echo "sql=$sql"."<br>";
@@ -201,7 +205,7 @@ $options = array(
 														'taetigkeiten'=>array(
 															'rootTag'=>'taetigkeiten',
 															'rowTag'=>'taetigkeit',
-															'idColumn'=>'tatkz',
+															'idColumn'=>'tatid',
 															'elements'=>array(
 																'teilnr'=>'teil',
 //																'palnr'=>'pal',
@@ -283,7 +287,7 @@ for($i=0;$i<sizeof($views);$i++)
 	
 	$viewname=$pcip.$views[$i];
 	$sql="drop view ". $viewname;
-	$db->query($sql);
+	//$db->query($sql);
 	//echo $sql."<br>";
 }
 

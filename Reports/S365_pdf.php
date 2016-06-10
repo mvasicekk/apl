@@ -194,10 +194,12 @@ $sql.=" jahr,monat,kw";
 $ppmRows = $a->getQueryRows($sql);
 
 $calArray = array();
+$jmArray = array();
 
 if($ppmRows!==NULL){
     foreach ($ppmRows as $ppm){
 	$calArray['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['letzt_datum_kw'] = $ppm['letzt_datum_kw'];
+	$jmArray[$ppm['jahr']."-".$ppm['monat']]++;
     }
 }
 
@@ -225,6 +227,8 @@ $anzeigeArray = array();
 $monatAnzeigeArray = array();
 $berichtAnzeigeArray = array();
 $monatGraphArray = array();
+$kdMonatAnzeigeArray = array();
+
 foreach ($calArray['jahre'] as $jahr=>$m){
     foreach ($m['monate'] as $monat=>$k){
 	foreach ($k['kw'] as $kw=>$cal){
@@ -241,6 +245,8 @@ foreach ($calArray['jahre'] as $jahr=>$m){
 		$monatAnzeigeArray[$jahr][$monat][$kd]['stk'] += $stk;
 		$monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] += $stk_rekl;
 		$monatAnzeigeArray[$jahr][$monat][$kd]['ppm'] = $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] != 0 ? 1e6 / $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] * $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] : 0;
+		
+		$kdMonatAnzeigeArray[$kd][$jahr."-".$monat]['ppm'] = $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] != 0 ? 1e6 / $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] * $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] : 0;
 		
 		$monatGraphArray[$kd]['stk'][$monat] += $stk;
 		$monatGraphArray[$kd]['stk_rekl'][$monat] += $stk_rekl;
@@ -447,6 +453,41 @@ foreach ($kundenNrArray as $kd => $v) {
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
     $obsah = number_format($berichtAnzeigeArray[$kd]['ppm'], 0, ',', ' ');
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+}
+
+
+// mesice ve sloupcich
+
+$pdf->AddPage();
+
+//AplDB::varDump($kdMonatAnzeigeArray);
+//AplDB::varDump($jmArray);
+$pocetMesicu = count($jmArray);
+$kundeWidth = 20;
+$ppmWidthMax = 20;
+$ppmWidthBerechnet = ($pdf->getPageWidth()-PDF_MARGIN_LEFT-PDF_MARGIN_RIGHT-$kundeWidth)/($pocetMesicu+1); // +1 pro prumer na zakaznika
+$ppmWidth = $ppmWidthBerechnet>$ppmWidthMax?$ppmWidthMax:$ppmWidthBerechnet;
+$rowHeight = 4;
+//hlavicka
+$pdf->SetFont("FreeSans", "B", $fontSize);
+$pdf->Cell($kundeWidth, $rowHeight, 'Kunde', 'LRTB', 0, 'R', 1);
+foreach ($jmArray as $jm=>$v){
+    $obsah = $jm;
+    $pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'C', 1);
+}
+$obsah = 'AVG';
+$pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'C', 1);
+$pdf->Ln();
+
+$pdf->SetFont("FreeSans", "", $fontSize);
+// bunky s daty
+foreach ($kdMonatAnzeigeArray as $kd=>$monatArray){
+    $pdf->Cell($kundeWidth, $rowHeight, $kd, 'LRTB', 0, 'R', 0);
+    foreach ($jmArray as $jm=>$v){
+	$obsah = number_format($kdMonatAnzeigeArray[$kd][$jm]["ppm"],0,',',' ');
+	$pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+    }
+    $pdf->Ln();
 }
 
 //Close and output PDF document

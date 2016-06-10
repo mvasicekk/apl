@@ -33,7 +33,8 @@ $(document).ready(function(){
         $.post(acturl,
         {
             id:id,
-            value:$(this).val()
+            value:$(this).val(),
+	    export:$('#export').val()
         },
         function(data){
             updateValidateTeil(data);

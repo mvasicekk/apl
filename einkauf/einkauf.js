@@ -34,6 +34,16 @@ $(document).ready(function(){
         }
     });
     
+    var mitFertigen = $('#mitfertigen').is(':checked')?'mit':'ohne';
+    
+    $('#mitfertigen').bind('click',function(e){
+	console.log($('#mitfertigen').is(':checked'));
+	mitFertigen = $('#mitfertigen').is(':checked')?'mit':'ohne';
+	$('#grid_array').pqGrid( "refreshDataAndView" );
+    });
+    
+    
+    
     var editable = $('#showalllist').val()=='block'?true:false;
     
     var colM = [
@@ -57,7 +67,7 @@ $(document).ready(function(){
 		dataType: "JSON",
 		method: "GET",
 		getUrl : function () {                
-		    return { url: 'getanforderungen.php?import='+$('#import').val()+'&user='+$('#user').val()+'&showalllist='+$('#showalllist').val()};
+		    return { url: 'getanforderungen.php?mitfertigen='+mitFertigen+'&import='+$('#import').val()+'&user='+$('#user').val()+'&showalllist='+$('#showalllist').val()};
 		},
 		getData: function ( response ) {                
 		    return { data: response };                

@@ -136,6 +136,13 @@ $pdf->SetFont("FreeSans", "B", 9);
 $pdf->Cell(30, 5, 'TeilNr:', '0', FALSE, 'L', 0);
 $pdf->SetFont("FreeSans", "", 9);
 $obsah = $bLeer?'':$teilAktual->Teil;
+$pdf->Cell(20, 5, $obsah, '0', FALSE, 'L', 0);
+
+//teilnr
+$pdf->SetFont("FreeSans", "B", 9);
+$pdf->Cell(20, 5, 'Artikelcode:', '0', FALSE, 'L', 0);
+$pdf->SetFont("FreeSans", "", 9);
+$obsah = $bLeer?'':$teilAktual->artikelCode;
 $pdf->Cell(0, 5, $obsah, '0', FALSE, 'L', 0);
 
 $pdf->Ln();
@@ -255,7 +262,9 @@ $pdf->MultiCell($ks_kemperW, 2*5 , $obsah, '1', 'R', FALSE, FALSE,'','',TRUE,FAL
 $pdf->MultiCell($dummyW, 2*5, "\n", 'B', 'L', FALSE, FALSE);
 $obsah = '';
 $pdf->MultiCell($ks_nacharbeitW, 2*5 , $obsah, '1', 'R', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*5,'M',TRUE);
-
+$pdf->Ln(15);
+$pdf->SetFont("FreeSans", "I", 9);
+$pdf->Cell(0, 5, "Bemerkung:");
 
 // pole pro datum a podpis
 $pdf->SetFont("FreeSans", "", 9);
@@ -275,20 +284,25 @@ $pdf->MultiCell(20, 2*10 , '', '0', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FAL
 $pdf->MultiCell(0, 2*10 , 'Unterschrift / podpis:', 'B', 'L', FALSE, FALSE,'','',TRUE,FALSE,FALSE,FALSE,2*10,'B',TRUE);
 $pdf->Text(PDF_MARGIN_LEFT, $pdf->GetY()+2*10, "Kemper");
 $pdf->Text(PDF_MARGIN_LEFT+50+20, $pdf->GetY(), "Kemper");
+
+$pdf->Text(PDF_MARGIN_LEFT, $pdf->GetY()+10, "QMF G 19/3");
 // pokud mam vyplneny i import, pridam dalsi stranku
 if(!$bLeer){
     $pdf->setPrintHeader(FALSE);
     $pdf->setPrintFooter(FALSE);
-    //$pdf->SetHeaderData('', 0,"", '');
+//    //$pdf->SetHeaderData('', 0,"", '');
     $pdf->AddPage();
     
     $pdf->Image('./images/abydos_logo1.png', 20, 20, 45, 0);
     $pdf->SetFont("FreeSans", "B", 90);
-    $pdf->Cell(0, 100, 'Ausschuss', '0',FALSE,'L');
-    $pdf->Ln(70);
+    $pdf->Cell(0, 70, 'Ausschuss', '0',FALSE,'L');
+    $pdf->Ln(50);
+    $pdf->SetFont("FreeSans", "B", 45);
+    $pdf->Cell(0, 50, 'Fremd Auftrag: '.$importAktual->fremdauftr, '0',FALSE,'L');
+    $pdf->Ln(30);
     $pdf->SetFont("FreeSans", "B", 45);
     $obsah = $bLeer?'':$teilAktual->teillang;
-    $pdf->Cell(0, 50, 'Platten-Nr:'.$obsah, '0',FALSE,'L');
+    $pdf->Cell(0, 50, 'Platten-Nr: '.$obsah, '0',FALSE,'L');
     
     $pdf->StartTransform();
     $pdf->SetY($pdf->getPageHeight()/2);
@@ -298,11 +312,15 @@ if(!$bLeer){
     //$pdf->MirrorV();
     $pdf->Image('./images/abydos_logo1.png', 20, '', 45, 0);
     $pdf->SetFont("FreeSans", "B", 90);
-    $pdf->Cell(0, 100, 'Ausschuss', '0',FALSE,'L');
-    $pdf->Ln(70);
+    $pdf->Cell(0, 70, 'Ausschuss', '0',FALSE,'L');
+    $pdf->Ln(50);
+    $pdf->SetFont("FreeSans", "B", 45);
+    $pdf->Cell(0, 50, 'Fremd Auftrag: '.$importAktual->fremdauftr, '0',FALSE,'L');
+    $pdf->Ln(30);
     $pdf->SetFont("FreeSans", "B", 45);
     $obsah = $bLeer?'':$teilAktual->teillang;
-    $pdf->Cell(0, 50, 'Platten-Nr:'.$obsah, '0',FALSE,'L');
+    $pdf->Cell(0, 50, 'Platten-Nr: '.$obsah, '0',FALSE,'L');
+    
     $pdf->StopTransform();
     
 }

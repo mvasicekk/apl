@@ -59,7 +59,7 @@ aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeou
 	    ,ks_nacharbeit:''
 	},
 	{
-	    druh:'Blattripen / špony',
+	    druh:'Blattrippen / špony',
 	    popis:'',
 	    ks:''
 	    ,ks_kemper:''

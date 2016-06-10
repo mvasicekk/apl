@@ -71,8 +71,9 @@
 {*	    <option value='c' >c - chci to, ale vlastně nepotřebuju</option>*}
 	</select>
 	</span>
-	<input type="submit" value='eingeben / vložit' id='eingeben' name='eingeben' class='entermove submit abyStartButton'/>
+	<input type="submit" value='eingeben / vložit' id='eingeben' name='eingeben' class='entermove submit abyStartButton'/><br>
 	<input style="display:{$display_sec.E195};" type='button' value='Anforderungen->Excel' onclick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE&promenne=datvon;datbis&values={$prvnidenroku};{$now}'+'&report=E195'" id='E195'/>
+	<br>mit erledigten Anforderungen: <input type="checkbox" name="mitfertigen" id="mitfertigen"/>
     </form>
 </div>
 	

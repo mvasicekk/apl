@@ -5524,6 +5524,15 @@ public function istExportiert($import, $impal){
     }
 
     /**
+     * 
+     * @param type $reparaturID
+     */
+    public function getReparaturKopfArrayFromID($reparaturID){
+	$sql = "select * from dreparaturkopf where id='$reparaturID'";
+	$rows = $this->getQueryRows($sql); 
+	return $rows[0];
+    }
+    /**
      *
      * @param <type> $invnummer
      * @param <type> $datumDB
@@ -5539,12 +5548,17 @@ public function istExportiert($import, $impal){
     /**
      * 
      */
-    public function getEinkaufAnforderungenArray($u,$all=TRUE){
+    public function getEinkaufAnforderungenArray($u,$all=TRUE,$mitFertigen=TRUE){
 	$sql = "select";
 	$sql.=" id,stamp,SUBSTRING(user,LOCATE('/',user)+1) as login,anftyp,artikel,anzahl,user,bemerkung,abdatum,prio,status,lieferdatum,erledigt";
 	$sql.=" from einkauf_anforderungen";
+	$sql.=" where (1)";
+	
 	if($all!==TRUE){
-	    $sql.=" where user like '%$u'";
+	    $sql.=" and (user like '%$u')";
+	}
+	if($mitFertigen===FALSE){
+	    $sql.=" and (status not like 'z%' or status is null)";
 	}
 	$sql.=" order by id desc";
 	return $this->getQueryRows($sql);

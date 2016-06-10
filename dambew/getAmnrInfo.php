@@ -9,8 +9,9 @@ $amnr = $o->amnr;
 $amnrinfo = NULL;
 
 $a = AplDB::getInstance();
-			
-$sql="select `eink-artikel`.`art-nr` as amnr,`eink-artikel`.`art-name1` as text from `eink-artikel` where AM_Ausgabe<>0 and `art-nr`='$amnr'";
+		
+$artikelTabelle = "eink-artikel_test";
+$sql="select `$artikelTabelle`.`art-nr` as amnr,`$artikelTabelle`.`art-name1` as text from `$artikelTabelle` where AM_Ausgabe<>0 and `art-nr`='$amnr'";
 $amnrinfo = $a->getQueryRows($sql);
 if($amnrinfo!=NULL){
     $amnrinfo = $amnrinfo[0];
