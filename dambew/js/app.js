@@ -6,8 +6,9 @@
 
 var aplApp = angular.module('dambewApp',['ui.date','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
 
-aplApp.config(['$routeProvider',
-    function($routeProvider){
+aplApp.config(['$routeProvider','$sceProvider',
+    function($routeProvider,$sceProvider){
+	$sceProvider.enabled(false);
 	$routeProvider.
 		when('/bew/',{
 		    templateUrl:function(p){

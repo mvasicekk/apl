@@ -28,6 +28,7 @@ aplApp.directive("enterfocus", function () {
 });
 
 aplApp.controller('dambewController', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
+    $scope.isEditor = false;	//urcuje zda muze uzivatel editovat helptext
     $scope.tinyMceOptions = {
 	inline:true,
 	menubar:false
@@ -109,11 +110,29 @@ $scope.submitForm = function(){
 }
 
     
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'dambew'
+	};
+	return $http.post('../getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+			//zkusim najit roli helptexteditor
+			$scope.securityInfo.roles.forEach(function(v){
+			    if(v.rolename=='helptexteditor'){
+				$scope.isEditor = true;
+				console.log('is helptexteditor');
+			    }
+			});
+		    }
+		);
+    }
+    
     $scope.initHelp = function(){
 	var p={
 	    form_id:'dambew'
 	};
-	return $http.post('../dkopf/getHelpInfo.php',p).then(
+	return $http.post('../getHelpInfo.php',p).then(
 		    function(response){
 			$scope.helpText = response.data.help.helpText;
 			$scope.hIArray = response.data.help.hiArray;
@@ -127,30 +146,32 @@ $scope.submitForm = function(){
     /**
      * 
      */
-    $scope.getTeilMatch = function () {
-	var params = {a: $scope.teil_search};
-	$scope.importe = null;
-	$scope.teilAktual = null;
-	$scope.importAktual = null;
-	return $http.post(
-		'../dkopf/getTeilMatch.php',
-		{params: params}
-	).then(function (response) {
-	    //console.log(response.data);
-	    $scope.teile = response.data.teile;
-	    
-	    if(($scope.teile===null) && ($scope.teil_search.length===10)){
-		$scope.createNew = true;
-	    }
-	    else{
-		$scope.createNew = false;
-		if(($scope.teile!==null) && ($scope.teile.length===1)){
-		    // pokud mi vyhovuje jen jeden dil, tak ho rovnou nastavim jako aktualni
-		    $scope.listRowClicked(0);
-		}
-	    }
-	});
-    }
+//    $scope.getTeilMatch = function () {
+//	var params = {a: $scope.teil_search};
+//	$scope.importe = null;
+//	$scope.teilAktual = null;
+//	$scope.importAktual = null;
+//	return $http.post(
+//		'../dkopf/getTeilMatch.php',
+//		{params: params}
+//	).then(function (response) {
+//	    //console.log(response.data);
+//	    $scope.teile = response.data.teile;
+//	    
+//	    if(($scope.teile===null) && ($scope.teil_search.length===10)){
+//		$scope.createNew = true;
+//	    }
+//	    else{
+//		$scope.createNew = false;
+//		if(($scope.teile!==null) && ($scope.teile.length===1)){
+//		    // pokud mi vyhovuje jen jeden dil, tak ho rovnou nastavim jako aktualni
+//		    $scope.listRowClicked(0);
+//		}
+//	    }
+//	});
+//    }
+    
+    
     
     /**
      * 
@@ -164,41 +185,45 @@ $scope.submitForm = function(){
 	    $scope.oeArray = response.data.oeArray;
 	    $scope.skladyArrayAll = response.data.skladyArray;
 	    $scope.skladyArray = response.data.skladyArray;
-	    $scope.sklad.cislo = $scope.skladyArray[0].cislo;
+	    if($scope.skladyArray.length>0){
+		$scope.sklad.cislo = $scope.skladyArray[0].cislo;
+	    }
 	});
     }
     // init
-    /*
+    
     $scope.initSecurity();
-    */
+    
     $scope.initLists();
     
     $scope.initHelp();
     
+    /*
     $scope.$watch('hIArray',function(newValue,oldValue){
 	if(oldValue!==undefined){
-	    console.log('hiarray changed');
-	    console.log(newValue);
-	    console.log(oldValue);
+//	    console.log('hiarray changed');
+//	    console.log(newValue);
+//	    console.log(oldValue);
 	    // projdu vsechny atributy a zjistim, kde se zmenil help text
 	    for(p in newValue){
 		//console.log(p);
 		if(newValue[p][0].help_text!=oldValue[p][0].help_text){
 		    //zde byla zmena v help textu
-		    console.log(newValue[p][0].id);
-		    console.log(newValue[p][0].help_text);
+//		    console.log(newValue[p][0].id);
+//		    console.log(newValue[p][0].help_text);
 		    // a updatnout v DB
 		    $http.post(
 			'./updateHelpText.php',
 			{id:newValue[p][0].id,helptext:newValue[p][0].help_text}
 		    ).then(function (response) {
-			console.log(response.data);
+//			console.log(response.data);
 		    });
 		}
 	    }
 	}
     },
     true);
+    */
     
     var such = $window.document.getElementById('persnr');
     if (such) {
@@ -211,9 +236,16 @@ $scope.submitForm = function(){
      * @returns {undefined}
      */
     $scope.isFormValid = function(){
+	if($scope.sklad.cislo!=undefined){
+	    var cisloSkladu = $scope.sklad.cislo.length;
+	}
+	else{
+	    var cisloSkladu = 0;
+	}
+	
 	var valid = ($scope.persnr>0)
 		&&($scope.amnr.length>0)
-		&&($scope.sklad.cislo.length>0)
+		&&(cisloSkladu>0)
 		&&($scope.ausgabe!==null)
 		&&($scope.ruckgabe!==null)
 		&&(toString($scope.ausgabe).length>0)
