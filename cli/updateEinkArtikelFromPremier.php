@@ -12,16 +12,23 @@ $sqlDB = sqldb::getInstance();
 // 
 //$sqlDB = sqldb::getInstance();
 $cislaSklady = array();
-$res = $sqlDB->getResult("select cislo,sklad from fl_SKLAD_APL_view order by cislo,sklad");
+$cislaCeny = array();
+
+$res = $sqlDB->getResult("select cislo,sklad,cena_mj from fl_SKLAD_APL_view order by cislo,sklad");
 
 if ($res !== NULL) {
     foreach ($res as $r) {
 	$cislo = (trim($r['cislo']));
 	$sklad = intval(trim($r['sklad']));
+	$cena = floatval(trim($r['cena_mj']));
 	if (!array_key_exists($cislo,$cislaSklady)) {
 	    $cislaSklady[$cislo] = array();
 	}
 	array_push($cislaSklady[$cislo], $sklad);
+	if($sklad!=999){
+	    // v matricnim skladu nemam cenu
+	    $cislaCeny[$cislo] = $cena;
+	}
     }
 }
 
@@ -92,7 +99,8 @@ foreach ($res as $r) {
     $mj = iconv('windows-1250', 'UTF-8', trim($r['mj']));
     $sortiment = trim($r['sortiment']);
     $am_ausgabe = strlen(trim($r['iden5']) > 0) ? 1 : 0;
-    $cenaMj = floatval(trim($r['cena_mj']));
+//    $cenaMj = floatval(trim($r['cena_mj']));
+    $cenaMj = $cislaCeny[$amnr];
 
     // budu provadet jen pro cisla, ktera jsou "cisla", napr. nebudu updatovat polozky 350665-1 ...
     if ("$amnr" == "$amnrInt") {

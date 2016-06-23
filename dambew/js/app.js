@@ -4,7 +4,30 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('dambewApp',['ui.date','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
+var aplApp = angular.module('dambewApp',['ngNumeraljs','ui.date','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
+
+aplApp.config(['$numeraljsConfigProvider', function ($numeraljsConfigProvider) {
+    var language = {
+        delimiters: {
+            thousands: ' ',
+            decimal: ','
+        },
+        abbreviations: {
+            thousand: 'k',
+            million: 'm',
+            billion: 'b',
+            trillion: 't'
+        },
+        ordinal: function (number) {
+            return '.';
+        },
+        currency: {
+            symbol: '€'
+        }
+    };
+    $numeraljsConfigProvider.setLanguage('de', language);
+    $numeraljsConfigProvider.setCurrentLanguage('de');
+}]);
 
 aplApp.config(['$routeProvider','$sceProvider',
     function($routeProvider,$sceProvider){
@@ -14,6 +37,13 @@ aplApp.config(['$routeProvider','$sceProvider',
 		    templateUrl:function(p){
 			console.log(p);
 			return 'templates/dambew.html';
+		    }
+		    //controller:'eformController'
+		})
+		.when('/karty/',{
+		    templateUrl:function(p){
+			console.log(p);
+			return 'templates/karty.html';
 		    }
 		    //controller:'eformController'
 		})

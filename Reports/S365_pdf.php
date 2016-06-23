@@ -29,24 +29,24 @@ $params="";
 // klic je shodny se jmenem nodeName v XML souboru
 // poradi urcuje predevsim poradu nodu v XML !!!!!
 // nf = pokus pole obsahuje tento klic bude se cislo v teto bunce formatovat dle parametru v poli 0,1,2
-				
+
 
 function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 {
-	// pokud bych prelezl s nasledujicim vystupem vysku stranky
-	// tak vytvorim novou stranku i se zahlavim
-	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
-	{
-		$pdfobjekt->AddPage();
-		return TRUE;
-	}
-	return FALSE;
+    // pokud bych prelezl s nasledujicim vystupem vysku stranky
+    // tak vytvorim novou stranku i se zahlavim
+    if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
+    {
+        $pdfobjekt->AddPage();
+        return TRUE;
+    }
+    return FALSE;
 }
 
 
 
 /**
- * 
+ *
  * @param TCPDF $pdf
  * @param type $datumWidth
  * @param type $headerHeight
@@ -59,9 +59,9 @@ function pageHeader($pdf,$datumWidth,$headerHeight,$kundeNrArray){
     $pdf->Cell($datumWidth, $headerHeight, 'Datum', 'LRBT', 0, 'L', 1);
     $pocetZakazniku = count($kundeNrArray);
     $kundeWidth = ($pdf->getPageWidth()-PDF_MARGIN_LEFT-PDF_MARGIN_RIGHT-$datumWidth)/$pocetZakazniku;
-    
+
     foreach ($kundeNrArray as $kunde=>$count){
-	$pdf->Cell($kundeWidth, $headerHeight, $kunde, 'LRBT', 0, 'C', 1);
+        $pdf->Cell($kundeWidth, $headerHeight, $kunde, 'LRBT', 0, 'C', 1);
     }
     $pdf->Ln($headerHeight);
 }
@@ -98,9 +98,9 @@ $ppmArray = array();
 
 if($ppmRows!==NULL){
     foreach ($ppmRows as $ppm){
-	$ppmArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_all'] = $ppm['stk_all'];
-	$ppmArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ppm'] = $ppm['stk_ppm'];
-	$kundenNrArray[$ppm['kunde']]+=1;
+        $ppmArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_all'] = $ppm['stk_all'];
+        $ppmArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ppm'] = $ppm['stk_ppm'];
+        $kundenNrArray[$ppm['kunde']]+=1;
     }
 }
 
@@ -131,8 +131,8 @@ $importArray = array();
 
 if($ppmRows!==NULL){
     foreach ($ppmRows as $ppm){
-	$importArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_import'] = $ppm['stk_import'];
-	$kundenNrArray[$ppm['kunde']]+=1;
+        $importArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_import'] = $ppm['stk_import'];
+        $kundenNrArray[$ppm['kunde']]+=1;
     }
 }
 
@@ -166,11 +166,11 @@ $exportArray = array();
 
 if($ppmRows!==NULL){
     foreach ($ppmRows as $ppm){
-	$exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_gut'] = $ppm['stk_ex_gut'];
-	$exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_auss2'] = $ppm['stk_ex_auss2'];
-	$exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_auss4'] = $ppm['stk_ex_auss4'];
-	$exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_auss6'] = $ppm['stk_ex_auss6'];
-	$kundenNrArray[$ppm['kunde']]+=1;
+        $exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_gut'] = $ppm['stk_ex_gut'];
+        $exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_auss2'] = $ppm['stk_ex_auss2'];
+        $exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_auss4'] = $ppm['stk_ex_auss4'];
+        $exportArray[$ppm['kunde']]['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['stk_ex_auss6'] = $ppm['stk_ex_auss6'];
+        $kundenNrArray[$ppm['kunde']]+=1;
     }
 }
 
@@ -198,8 +198,8 @@ $jmArray = array();
 
 if($ppmRows!==NULL){
     foreach ($ppmRows as $ppm){
-	$calArray['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['letzt_datum_kw'] = $ppm['letzt_datum_kw'];
-	$jmArray[$ppm['jahr']."-".$ppm['monat']]++;
+        $calArray['jahre'][$ppm['jahr']]['monate'][$ppm['monat']]['kw'][$ppm['kw']]['letzt_datum_kw'] = $ppm['letzt_datum_kw'];
+        $jmArray[$ppm['jahr']."-".$ppm['monat']]++;
     }
 }
 
@@ -215,7 +215,7 @@ ksort($kundenNrArray);
 //AplDB::varDump($kundenNrArray);
 $pocetZakazniku = count($kundenNrArray);
 
-//zakaznik ma vzdy 3 sloupce, 
+//zakaznik ma vzdy 3 sloupce,
 //Stk[Im nebo Ex] - odpovida stk_import[pro Import] z importArray nebo stk_ex_gut+stk_ex_auss2+stk_ex_auss4+stk_ex_auss6[pro Export] z exportArray
 //Stk reklamiert - odpovida stk_ppm ppmArray
 //PPM - stk_ppm s ppmArray
@@ -231,32 +231,32 @@ $kdMonatAnzeigeArray = array();
 
 foreach ($calArray['jahre'] as $jahr=>$m){
     foreach ($m['monate'] as $monat=>$k){
-	foreach ($k['kw'] as $kw=>$cal){
+        foreach ($k['kw'] as $kw=>$cal){
 //	    echo "$jahr - $monat - $kw<br>";
-	    //projedu seznam zakazniku
-	    foreach ($kundenNrArray as $kd=>$v){
-		$stk = $laut=='Import'?$importArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_import']:$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_gut']+$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_auss2']+$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_auss4']+$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_auss6'];
-		$stk_rekl = $ppmArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ppm'];
-		$ppm = $stk != 0 ? 1e6 / $stk * $stk_rekl : 0;
-		$anzeigeArray[$jahr][$monat][$kw][$kd]['stk'] = $stk;
-		$anzeigeArray[$jahr][$monat][$kw][$kd]['stk_rekl'] = $stk_rekl;
-		$anzeigeArray[$jahr][$monat][$kw][$kd]['ppm'] = $ppm;
-		
-		$monatAnzeigeArray[$jahr][$monat][$kd]['stk'] += $stk;
-		$monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] += $stk_rekl;
-		$monatAnzeigeArray[$jahr][$monat][$kd]['ppm'] = $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] != 0 ? 1e6 / $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] * $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] : 0;
-		
-		$kdMonatAnzeigeArray[$kd][$jahr."-".$monat]['ppm'] = $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] != 0 ? 1e6 / $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] * $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] : 0;
-		
-		$monatGraphArray[$kd]['stk'][$monat] += $stk;
-		$monatGraphArray[$kd]['stk_rekl'][$monat] += $stk_rekl;
-		$monatGraphArray[$kd]['ppm'][$monat] = $monatAnzeigeArray[$jahr][$monat][$kd]['ppm'];
-		
-		$berichtAnzeigeArray[$kd]['stk'] += $stk;
-		$berichtAnzeigeArray[$kd]['stk_rekl'] += $stk_rekl;
-		$berichtAnzeigeArray[$kd]['ppm'] = $berichtAnzeigeArray[$kd]['stk'] != 0 ? 1e6 / $berichtAnzeigeArray[$kd]['stk'] * $berichtAnzeigeArray[$kd]['stk_rekl'] : 0;
-	    }
-	}
+            //projedu seznam zakazniku
+            foreach ($kundenNrArray as $kd=>$v){
+                $stk = $laut=='Import'?$importArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_import']:$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_gut']+$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_auss2']+$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_auss4']+$exportArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ex_auss6'];
+                $stk_rekl = $ppmArray[$kd]['jahre'][$jahr]['monate'][$monat]['kw'][$kw]['stk_ppm'];
+                $ppm = $stk != 0 ? 1e6 / $stk * $stk_rekl : 0;
+                $anzeigeArray[$jahr][$monat][$kw][$kd]['stk'] = $stk;
+                $anzeigeArray[$jahr][$monat][$kw][$kd]['stk_rekl'] = $stk_rekl;
+                $anzeigeArray[$jahr][$monat][$kw][$kd]['ppm'] = $ppm;
+
+                $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] += $stk;
+                $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] += $stk_rekl;
+                $monatAnzeigeArray[$jahr][$monat][$kd]['ppm'] = $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] != 0 ? 1e6 / $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] * $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] : 0;
+
+                $kdMonatAnzeigeArray[$kd][$jahr."-".$monat]['ppm'] = $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] != 0 ? 1e6 / $monatAnzeigeArray[$jahr][$monat][$kd]['stk'] * $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'] : 0;
+
+                $monatGraphArray[$kd]['stk'][$monat] += $stk;
+                $monatGraphArray[$kd]['stk_rekl'][$monat] += $stk_rekl;
+                $monatGraphArray[$kd]['ppm'][$monat] = $monatAnzeigeArray[$jahr][$monat][$kd]['ppm'];
+
+                $berichtAnzeigeArray[$kd]['stk'] += $stk;
+                $berichtAnzeigeArray[$kd]['stk_rekl'] += $stk_rekl;
+                $berichtAnzeigeArray[$kd]['ppm'] = $berichtAnzeigeArray[$kd]['stk'] != 0 ? 1e6 / $berichtAnzeigeArray[$kd]['stk'] * $berichtAnzeigeArray[$kd]['stk_rekl'] : 0;
+            }
+        }
     }
 }
 
@@ -267,34 +267,34 @@ function pageReportHeader($pdf,$s,$kwWidth,$stkWidth,$rowHeight,$kundenNrArray,$
     $pdf->SetFont("FreeSans", "B", $s);
     $pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
     foreach ($kundenNrArray as $kd => $v) {
-	$pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
-	$pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
-	$pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
+        $pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
+        $pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
+        $pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
     }
     $pdf->Ln();
-    
+
     //2.radek
     $pdf->Cell($kwWidth, $rowHeight, '', 'LR', 0, 'R', 1);
     foreach ($kundenNrArray as $kd => $v) {
-	$maxPPMInfo = $a->getBewertungKriteriumInfo($kd, 'ppm_max', date('y-m'));
-	if($maxPPMInfo!==NULL){
-	    $maxPPM = $maxPPMInfo[0]['grenze']."/".$maxPPMInfo[0]['interval_monate']." Mnt";
-	}
-	else{
-	    $maxPPM = '?';
-	}
-	
-	$pdf->Cell(1*$stkWidth, $rowHeight, 'Max PPM :', 'LBT', 0, 'L', 1);
-	$pdf->Cell(2*$stkWidth, $rowHeight, $maxPPM, 'BRT', 0, 'R', 1);
+        $maxPPMInfo = $a->getBewertungKriteriumInfo($kd, 'ppm_max', date('y-m'));
+        if($maxPPMInfo!==NULL){
+            $maxPPM = $maxPPMInfo[0]['grenze']."/".$maxPPMInfo[0]['interval_monate']." Mnt";
+        }
+        else{
+            $maxPPM = '?';
+        }
+
+        $pdf->Cell(1*$stkWidth, $rowHeight, 'Max PPM :', 'LBT', 0, 'L', 1);
+        $pdf->Cell(2*$stkWidth, $rowHeight, $maxPPM, 'BRT', 0, 'R', 1);
 //	$pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
     }
     $pdf->Ln();
     //3.radek
     $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRB', 0, 'R', 1);
     foreach ($kundenNrArray as $kd => $v) {
-	$pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
-	$pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
-	$pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
+        $pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
+        $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
+        $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
     }
 }
 
@@ -373,19 +373,19 @@ $pdf->SetFont("FreeSans", "", $s);
 
 foreach ($anzeigeArray as $jahr=>$m){
     foreach ($m as $monat=>$k){
-	foreach ($k as $kw=>$cal){
-	    $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRBT', 0, 'R', 0);
-	    //projedu seznam zakazniku
-	    foreach ($kundenNrArray as $kd=>$v){
-		$obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['stk'],0,',',' ');
-		$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
-		$obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['stk_rekl'],0,',',' ');
-		$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
-		$obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['ppm'],0,',',' ');
-		$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
-	    }
-	    $pdf->Ln();
-	}
+        foreach ($k as $kw=>$cal){
+            $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRBT', 0, 'R', 0);
+            //projedu seznam zakazniku
+            foreach ($kundenNrArray as $kd=>$v){
+                $obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['stk'],0,',',' ');
+                $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+                $obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['stk_rekl'],0,',',' ');
+                $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+                $obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['ppm'],0,',',' ');
+                $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+            }
+            $pdf->Ln();
+        }
     }
 }
 
@@ -425,23 +425,23 @@ foreach ($kundenNrArray as $kd=>$v){
     $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
 }
  */
- 
+
 $pdf->Ln();
 $pdf->SetFont("FreeSans", "", $fontSize);
 foreach ($monatAnzeigeArray as $jahr=>$m){
     foreach ($m as $monat=>$k){
-	    $pdf->Cell($kwWidth, $rowHeight, $monat, 'LRBT', 0, 'R', 0);
-	    //projedu seznam zakazniku
-	    foreach ($kundenNrArray as $kd=>$v){
-		$obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['stk'],0,',',' ');
-		$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
-		$obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'],0,',',' ');
-		$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
-		$obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['ppm'],0,',',' ');
-		$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
-	    }
-	    $pdf->Ln();
-	}
+        $pdf->Cell($kwWidth, $rowHeight, $monat, 'LRBT', 0, 'R', 0);
+        //projedu seznam zakazniku
+        foreach ($kundenNrArray as $kd=>$v){
+            $obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['stk'],0,',',' ');
+            $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+            $obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'],0,',',' ');
+            $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+            $obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['ppm'],0,',',' ');
+            $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+        }
+        $pdf->Ln();
+    }
 }
 //sumy pro bericht
 $pdf->SetFont("FreeSans", "B", $fontSize);
@@ -454,11 +454,9 @@ foreach ($kundenNrArray as $kd => $v) {
     $obsah = number_format($berichtAnzeigeArray[$kd]['ppm'], 0, ',', ' ');
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
 }
-
-
-// mesice ve sloupcich
-
 $pdf->AddPage();
+// mesice ve sloupcich
+$fontSize = $s;
 
 //AplDB::varDump($kdMonatAnzeigeArray);
 //AplDB::varDump($jmArray);
@@ -471,30 +469,72 @@ $rowHeight = 4;
 //hlavicka
 $pdf->SetFont("FreeSans", "B", $fontSize);
 $pdf->Cell($kundeWidth, $rowHeight, 'Kunde', 'LRTB', 0, 'R', 1);
-foreach ($jmArray as $jm=>$v){
-    $obsah = $jm;
-    $pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'C', 1);
+
+$monatArr = array('0' => 'Januar','1' => 'Februar', '2' => 'März', '3' => 'April', '4' => 'Mai', '5' => 'Juni', '6' => 'Juli', '7' => 'August', '8' => 'September', '9' => 'Oktober', '10' => 'November', '11' => 'December');
+
+$monatArr = array_merge($monatArr, $monatArr);
+for($x =0;$x<$pocetMesicu;$x++){
+    $pdf->Cell($ppmWidth, $rowHeight, $monatArr[$x], 'LRBT', 0, 'C', 1);
 }
+
+
+
 $obsah = 'AVG';
 $pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'C', 1);
 $pdf->Ln();
 
 $pdf->SetFont("FreeSans", "", $fontSize);
 // bunky s daty
+$obs = 0;
 foreach ($kdMonatAnzeigeArray as $kd=>$monatArray){
     $pdf->Cell($kundeWidth, $rowHeight, $kd, 'LRTB', 0, 'R', 0);
     foreach ($jmArray as $jm=>$v){
-	$obsah = number_format($kdMonatAnzeigeArray[$kd][$jm]["ppm"],0,',',' ');
-	$pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+
+        $obsah = number_format($kdMonatAnzeigeArray[$kd][$jm]["ppm"],0,',',' ');
+        $pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+        $obs += $kdMonatAnzeigeArray[$kd][$jm]["ppm"];
+        //AplDB::varDump($obs);
+        $cnt = ($obs / $pocetMesicu);
+        $cntVysl = number_format($cnt,0,',',' ');
+        //AplDB::varDump($cntVysl);
     }
+    $obs = 0;
+    $pdf->Cell($ppmWidth, $rowHeight, $cntVysl, 'LRBT', 0, 'R', 1);
     $pdf->Ln();
+
 }
+
+
+// ******************************************************** \\
+
+//AVG za mesic
+$obs = 0;
+$pdf->Cell($kundeWidth, $rowHeight, 'AVG', 'LRBT', 0, 'R', 1);
+
+
+
+foreach ($jmArray as $jm=>$v){
+foreach ($kdMonatAnzeigeArray as $kd=>$monatArray){
+    $obs += $kdMonatAnzeigeArray[$kd][$jm]["ppm"];
+    //AplDB::varDump($obs);
+    $cnt = ($obs / $pocetZakazniku);
+    $cntVysl = number_format($cnt,0,',',' ');
+    //AplDB::varDump($cntVysl);
+}
+    $obs = 0;
+    $pdf->Cell($ppmWidth, $rowHeight, $cntVysl, 'LRBT', 0, 'R', 1);
+}
+
+
+$pdf->Cell($ppmWidth, $rowHeight, '', 'LRBT', 0, 'R', 1);
+$pdf->Ln();
+
 
 //Close and output PDF document
 $pdf->Output();
 
 //============================================================+
-// END OF FILE                                                 
+// END OF FILE
 //============================================================+
 
 ?>

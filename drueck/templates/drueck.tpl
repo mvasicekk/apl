@@ -473,7 +473,7 @@ Rückmeldungen / zadání výkonu
 
 		<td colspan='2'>
 		{if !$stornoid}
-			<input type="button" id="arbeitsmittelausgabe" onclick="window.location.href='../dambew/dambew.php';" name="arbeitsmittelausgabe" value="Arbeitsmittelausgabe"/>
+			<input type="button" id="arbeitsmittelausgabe" onclick="window.location.href='../dambew/dambewjs.php#/bew';" name="arbeitsmittelausgabe" value="Arbeitsmittelausgabe"/>
 		{/if}
 		</td>
 

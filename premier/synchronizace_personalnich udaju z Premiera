@@ -1,0 +1,25 @@
+udaje predavane z Premiera do APL (navrh):
+(hodnoty těchto udaju budou pravidelne aktualizovany = pokud bude jina hodnota v APL, prevezmu hodnotu z Premiera)
+------------------------------------------------------------------------------------------------------------------
+
+cislo zamestnance ( v APL slouzi jako primarni klic = musi byt jedinecne )
+prijmeni
+jmeno
+datum narozeni
+místo narozeni
+cislo mobilniho telefonu
+email
+město ( korespond )
+ulice + cp ( korespond )
+psc ( korespond )
+město ( trval. )
+ulice + cp ( trval. )
+psc ( trval. )
+statni prislusnost
+dovolena (pocet dnu) – narok aktual. rok zákon.
+dovolena (pocet dnu)– zustatek minuly rok.
+datum zalozeni osoby v Premieru = bewerbedatum v APL ?
+datum zacatku (posledniho/aktualiho) prac. Pomeru – ulozit do eintritt v APL ( pokud nemá = v APL nastavim status BEWERBER )
+datum konce (posledniho/aktualiho) prac. Pomeru – ulozit do austritt ( zaroven nastavim status BEENDET v APL )
+
+

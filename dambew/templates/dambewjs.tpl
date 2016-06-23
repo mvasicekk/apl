@@ -33,7 +33,9 @@
 	<script src="../libs/bower_components/angular-ui-date/dist/date.js"></script>
 	<script src="../libs/bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="../libs/bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
-    
+
+	<script src="../libs/bower_components/numeral/min/numeral.min.js"></script>
+	<script src="../libs/bower_components/angular-numeraljs/dist/angular-numeraljs.min.js"></script>
 	<script src="./js/app.js"></script>
 	<script src="./js/controllers.js"></script>
 	<script src="./js/directives.js"></script>

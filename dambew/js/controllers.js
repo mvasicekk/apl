@@ -10,7 +10,19 @@ aplApp.directive("enterfocus", function () {
         return {
             restrict: "A",
             link: function ($scope, elem, attrs) {
-                var focusables = $(":focusable");
+                var focusables = $(":tabbable");
+		//jeste musim nektere objekty vyradit, napr. odkazy
+		//console.log(focusables);
+		//vyradim ty, ktere maji tabindex = -1
+//		focusables = focusables.filter(function(v){
+//		    console.log(v);
+//		    if(v.tabIndex=='-1'){
+//			return false;
+//		    }
+//		    else{
+//			return true;
+//		    }
+//		});
                 elem.bind("keydown", function (e) {
                     var code = e.keyCode || e.which;
                     if (code === 13) {
@@ -25,6 +37,67 @@ aplApp.directive("enterfocus", function () {
                 });
             }
         }
+});
+
+
+aplApp.controller('kartyController', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
+    $scope.isEditor = false;	//urcuje zda muze uzivatel editovat helptext
+    $scope.tinyMceOptions = {
+	inline:true,
+	menubar:false
+    };
+    $scope.tinymceModel = "tady se da psat pomoci zabudovaneho editoru, zkus to !";
+    $scope.dateOptions = {
+		dateFormat: 'dd.mm.yy',
+		firstDay: 1
+    };
+    $scope.showHelp = false;
+    $scope.datePickerFormat = 'dd.MM.yyyy';
+    $scope.securityInfo = undefined;
+    
+    $scope.amnrChanged = function(){
+	console.log($scope.karta);
+	return $http.post(
+		'./getAmnrMatch.php',
+		{suchen: $scope.karta}
+	).then(function (response) {
+	    //console.log(response.data);
+	    $scope.kartyRows = response.data.karty;
+	});
+    }
+    
+    $scope.initHelp = function(){
+	var p={
+	    form_id:'dambew_karty'
+	};
+	return $http.post('../getHelpInfo.php',p).then(
+		    function(response){
+			$scope.helpText = response.data.help.helpText;
+			$scope.hIArray = response.data.help.hiArray;
+		    }
+		);
+    }
+    
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'dambew_karty'
+	};
+	return $http.post('../getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+			//zkusim najit roli helptexteditor
+			$scope.securityInfo.roles.forEach(function(v){
+			    if(v.rolename=='helptexteditor'){
+				$scope.isEditor = true;
+				console.log('is helptexteditor');
+			    }
+			});
+		    }
+		);
+    }
+    
+    $scope.initSecurity();
+    $scope.initHelp();
 });
 
 aplApp.controller('dambewController', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
