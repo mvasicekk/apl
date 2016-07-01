@@ -1,8 +1,5 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//globalni nastaveni pro aplikaci s360i
+
 
 var aplApp = angular.module('s360iApp',['ngNumeraljs','ngSanitize','ui.select','ui.date','ngRoute','smart-table','aplFilters','ui.bootstrap']);
 

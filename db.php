@@ -1801,6 +1801,19 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     /**
      * 
      * @param type $kunde
+     */
+    public function getKundeBAAnteilStk($kunde){
+	$stk = 'kg'; // vychozi budou vzdy kg
+	$sql = "select dksd.S370_ba_anteil_stk as ba from dksd where kunde='$kunde'";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $stk = $rows[0]['ba'];
+	}
+	return $stk;
+    }
+    /**
+     * 
+     * @param type $kunde
      * @param type $bereich
      * @param type $yearMonth
      * @return type
