@@ -158,6 +158,8 @@ foreach ($persnrArray as $iii=>$p) {
     $sql.="     drueck.PersNr as persnr,";
     $sql.="     drueck.Datum as datum,";
     $sql.="     sum(if(TaetNr>=6500 and TaetNr<=6599,if(auss_typ=4,abs(drueck.`Stück`+`Auss-Stück`)*`VZ-IST`,abs(drueck.`Stück`)*`VZ-IST`),0)) as vzaby_65xx,";
+//    $sql.="     sum(if(TaetNr>=6500 and TaetNr<=6599,if(auss_typ=4,abs(drueck.`Stück`+`Auss-Stück`)*`VZ-IST`,abs(drueck.`Stück`)*`VZ-IST`),0)) as vzaby_65xx,";
+    $sql.="     sum(if(TaetNr>=6500 and TaetNr<=6599,if(auss_typ=4,(drueck.`Stück`+`Auss-Stück`)*`VZ-IST`,(drueck.`Stück`)*`VZ-IST`),0)) as vzaby_65xx,";
     $sql.="     sum(if(auss_typ=4,(drueck.`Stück`+`Auss-Stück`)*`VZ-SOLL`,(drueck.`Stück`)*`VZ-SOLL`)) as vzkd";
     $sql.=" from";
     $sql.="     drueck";
@@ -177,7 +179,7 @@ foreach ($persnrArray as $iii=>$p) {
 	    $month = date('m', strtotime($datum));
 	    $yearMonth = date('y-m', strtotime($datum));
 	    $monthsArray[$yearMonth]+=1;
-	    $vzaby_65xx = floatval($pr['vzaby_65xx']);
+	    $vzaby_65xx = abs(floatval($pr['vzaby_65xx']));
 	    $vzkd = floatval($pr['vzkd']);
 	    $zeilen[$persnr]['nacharbeit']['vzaby_65xx'][$yearMonth]+=$vzaby_65xx;
 	    $zeilen[$persnr]['nacharbeit']['vzkd'][$yearMonth]+=$vzkd;
