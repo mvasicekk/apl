@@ -35,6 +35,7 @@ $pt .= "create view $viewname as ";
 $pt .= "select dpers.`PersNr`,dpers.`Name`,dpers.`Vorname`,dpers.austritt,dpers.eintritt,dpers.regeloe from dpers";
 $pt .= " where ((persnr between '$persvon' and '$persbis')";
 $pt .= " and (dpers.austritt is null or dpers.austritt<dpers.eintritt or dpers.austritt between '$von' and '$bis'))";
+$pt .= " and (dpers.dpersstatus='MA')";
 $pt .= " order by dpers.`PersNr`";
 //echo "pt=".$pt."<br>";
 $db->query($pt);

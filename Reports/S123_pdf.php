@@ -1076,8 +1076,8 @@ foreach ($sollIstArray as $sollist) {
         // anwesenheit ist
         $sum4 = testSummePersNrStunden($persnr, 'dzeitanwesenheit', 'stundenanwesenheit');
 
-        if ($sum1 == 0 && $sum3 == 0)
-        continue;
+//        if ($sum1 == 0 && $sum3 == 0)
+//        continue;
 
         $persChilds = $person->childNodes;
         $persnr = getValueForNode($persChilds, "PersNr");
@@ -1085,6 +1085,7 @@ foreach ($sollIstArray as $sollist) {
         foreach ($oes as $oe) {
             $oechilds = $oe->childNodes;
             $oekz = getValueForNode($oechilds, 'oekz');
+	    //echo "oekz:$oekz<br>";
             $og = getValueForNode($oechilds, 'og');
             $oestatus = getValueForNode($oechilds, 'oestatus');
             for ($den = 1; $den <= 31; $den++) {
@@ -1093,6 +1094,7 @@ foreach ($sollIstArray as $sollist) {
                 foreach ($datumy as $datum) {
                     $datumChilds = $datum->childNodes;
                     $dat = getValueForNode($datumChilds, "datum");
+		    //echo "dat:$dat<br>";
                     $tag = intval(substr($dat, 8, 2));
                     $stunden = getValueForNode($datumChilds, "sumstunden");
                     $stundenSoll = getValueForNode($datumChilds, "sumstundensoll");
@@ -1174,7 +1176,7 @@ foreach($reportArray as $persnr=>$person) {
     // anwesenheit ist
     $sum4 = testSummePersNrStunden($persnr, 'dzeitanwesenheit', 'stundenanwesenheit');
 
-    if($sum1==0 && $sum3==0)        continue;
+    //if($sum1==0 && $sum3==0)        continue;
 
 // do oes si ted dam pole vsech cinnost
     $oes = $person;
@@ -1211,22 +1213,25 @@ foreach($reportArray as $persnr=>$person) {
         }
         $faktory = array();
         $sumAnw=0;$sumvzkd=0;$sumAnwesenheit=0;$sumSoll=0;
-        foreach($sum_zapati_sestava_array['leistung'] as $tag=>$leistung) {
-            $vzkd = $sum_zapati_persnr_array['leistung'][$persnr][$tag]['vzkd'];
-            $anw = $sum_zapati_persnr_array['dzeit'][$persnr][$tag]['stunden'];
-            $anwesenheit = $sum_zapati_persnr_array['dzeitanwesenheit'][$persnr][$tag]['stundenanwesenheit'];
-            $soll = $sum_zapati_persnr_array['dzeit'][$persnr][$tag]['stundensoll'];
-            $sumvzkd+=$vzkd;
-            $sumAnw+=$anw;
-            $sumAnwesenheit+=$anwesenheit;
-            $sumSoll+=$soll;
-            $faktory['vzkd_zu_vzkdsoll'][$tag] = $anw!=0?$vzkd/$anw:FALSE;
-            $faktory['vzkd_zu_anwesenheit'][$tag] = $anwesenheit!=0?$vzkd/$anwesenheit:FALSE;
-            $faktory['vzkd_zu_anwesenheitsoll'][$tag] = $soll!=0?$vzkd/$soll:FALSE;
-            $faktory['vzkdsoll_zu_anwesenheitsoll'][$tag] = $soll!=0?$anw/$soll:FALSE;
-        }
+	if (is_array($sum_zapati_sestava_array['leistung'])) {
+	    foreach ($sum_zapati_sestava_array['leistung'] as $tag => $leistung) {
+		$vzkd = $sum_zapati_persnr_array['leistung'][$persnr][$tag]['vzkd'];
+		$anw = $sum_zapati_persnr_array['dzeit'][$persnr][$tag]['stunden'];
+		$anwesenheit = $sum_zapati_persnr_array['dzeitanwesenheit'][$persnr][$tag]['stundenanwesenheit'];
+		$soll = $sum_zapati_persnr_array['dzeit'][$persnr][$tag]['stundensoll'];
+		$sumvzkd+=$vzkd;
+		$sumAnw+=$anw;
+		$sumAnwesenheit+=$anwesenheit;
+		$sumSoll+=$soll;
+		$faktory['vzkd_zu_vzkdsoll'][$tag] = $anw != 0 ? $vzkd / $anw : FALSE;
+		$faktory['vzkd_zu_anwesenheit'][$tag] = $anwesenheit != 0 ? $vzkd / $anwesenheit : FALSE;
+		$faktory['vzkd_zu_anwesenheitsoll'][$tag] = $soll != 0 ? $vzkd / $soll : FALSE;
+		$faktory['vzkdsoll_zu_anwesenheitsoll'][$tag] = $soll != 0 ? $anw / $soll : FALSE;
+	    }
+	}
 
-        $faktory['vzkd_zu_vzkdsoll']['sum'] = $sumAnw!=0?$sumvzkd/$sumAnw:FALSE;
+
+	$faktory['vzkd_zu_vzkdsoll']['sum'] = $sumAnw!=0?$sumvzkd/$sumAnw:FALSE;
         $faktory['vzkd_zu_anwesenheit']['sum'] = $sumAnwesenheit!=0?$sumvzkd/$sumAnwesenheit:FALSE;
         $faktory['vzkd_zu_anwesenheitsoll']['sum'] = $sumSoll!=0?$sumvzkd/$sumSoll:FALSE;
         $faktory['vzkdsoll_zu_anwesenheitsoll']['sum'] = $sumSoll!=0?$sumAnw/$sumSoll:FALSE;
@@ -1262,14 +1267,17 @@ $pdf->AddPage();
 pageheader($pdf,$cells_header,5,$jahr,$monat,$svatkyArray,$pracDobaA);
 
 $ogs = $sum_oe_array['leistung'];
-foreach($ogs as $og=>$oeArray) {
-    foreach($oeArray as $oestatus=>$summenarray){
-        if($oestatus=='a'){
-            test_pageoverflow($pdf, 5, $cellhead,$jahr,$monat,$svatkyArray,$pracDobaA);
-            zapati_oes($oeFarbenArray,$pdf,4,array(255,245,245),$summenarray,"L",$monat,$jahr,$svatkyArray,$tagvon,$tagbis);
-        }
+if (is_array($ogs)) {
+    foreach ($ogs as $og => $oeArray) {
+	foreach ($oeArray as $oestatus => $summenarray) {
+	    if ($oestatus == 'a') {
+		test_pageoverflow($pdf, 5, $cellhead, $jahr, $monat, $svatkyArray, $pracDobaA);
+		zapati_oes($oeFarbenArray, $pdf, 4, array(255, 245, 245), $summenarray, "L", $monat, $jahr, $svatkyArray, $tagvon, $tagbis);
+	    }
+	}
     }
 }
+
 
 $ogs = $sum_oe_array['dzeit'];
 foreach($ogs as $og=>$oeArray) {
@@ -1282,14 +1290,17 @@ foreach($ogs as $og=>$oeArray) {
 }
 
 $ogs = $sum_oe_array['dzeitanwesenheit'];
-foreach($ogs as $og=>$oeArray) {
-    foreach($oeArray as $oestatus=>$summenarray){
-        if($oestatus=='a'){
-            test_pageoverflow($pdf, 5, $cellhead,$jahr,$monat,$svatkyArray,$pracDobaA);
-            zapati_oes($oeFarbenArray,$pdf,4,array(255,245,245),$summenarray,"W",$monat,$jahr,$svatkyArray,$tagvon,$tagbis);
-        }
+if (is_array($ogs)) {
+    foreach ($ogs as $og => $oeArray) {
+	foreach ($oeArray as $oestatus => $summenarray) {
+	    if ($oestatus == 'a') {
+		test_pageoverflow($pdf, 5, $cellhead, $jahr, $monat, $svatkyArray, $pracDobaA);
+		zapati_oes($oeFarbenArray, $pdf, 4, array(255, 245, 245), $summenarray, "W", $monat, $jahr, $svatkyArray, $tagvon, $tagbis);
+	    }
+	}
     }
 }
+
 
 $ogs = $sum_oe_array['dzeit'];
 foreach($ogs as $og=>$oeArray) {
@@ -1316,20 +1327,23 @@ test_pageoverflow($pdf, 5, $cellhead,$jahr,$monat,$svatkyArray,$pracDobaA);
 zapati_sestava($pdf,5,array(255,245,245),$sum_zapati_sestava_array['dzeit'],"S",$monat,$jahr,$svatkyArray,$tagvon,$tagbis);
 
 $faktorySestava = array();$sumvzkd=0;$sumAnw=0;$sumAnwesenheit=0;$sumSoll=0;
-foreach($sum_zapati_sestava_array['leistung'] as $tag=>$leistung) {
-    $vzkd = $leistung['vzkd'];
-    $anw = $sum_zapati_sestava_array['dzeit'][$tag]['stunden'];
-    $anwesenheit = $sum_zapati_sestava_array['dzeitanwesenheit'][$tag]['stundenanwesenheit'];
-    $soll = $sum_zapati_sestava_array['dzeit'][$tag]['stundensoll'];
-    $sumvzkd+=$vzkd;
-    $sumAnw+=$anw;
-    $sumAnwesenheit+=$anwesenheit;
-    $sumSoll+=$soll;
-    $faktorySestava['vzkd_zu_vzkdsoll'][$tag] = $anw!=0?$vzkd/$anw:0;
-    $faktorySestava['vzkd_zu_anwesenheit'][$tag] = $anwesenheit!=0?$vzkd/$anwesenheit:0;
-    $faktorySestava['vzkd_zu_anwesenheitsoll'][$tag] = $soll!=0?$vzkd/$soll:0;
-    $faktorySestava['vzkdsoll_zu_anwesenheitsoll'][$tag] = $soll!=0?$anw/$soll:0;
+if (is_array($sum_zapati_sestava_array['leistung'])) {
+    foreach ($sum_zapati_sestava_array['leistung'] as $tag => $leistung) {
+	$vzkd = $leistung['vzkd'];
+	$anw = $sum_zapati_sestava_array['dzeit'][$tag]['stunden'];
+	$anwesenheit = $sum_zapati_sestava_array['dzeitanwesenheit'][$tag]['stundenanwesenheit'];
+	$soll = $sum_zapati_sestava_array['dzeit'][$tag]['stundensoll'];
+	$sumvzkd+=$vzkd;
+	$sumAnw+=$anw;
+	$sumAnwesenheit+=$anwesenheit;
+	$sumSoll+=$soll;
+	$faktorySestava['vzkd_zu_vzkdsoll'][$tag] = $anw != 0 ? $vzkd / $anw : 0;
+	$faktorySestava['vzkd_zu_anwesenheit'][$tag] = $anwesenheit != 0 ? $vzkd / $anwesenheit : 0;
+	$faktorySestava['vzkd_zu_anwesenheitsoll'][$tag] = $soll != 0 ? $vzkd / $soll : 0;
+	$faktorySestava['vzkdsoll_zu_anwesenheitsoll'][$tag] = $soll != 0 ? $anw / $soll : 0;
+    }
 }
+
 $faktorySestava['vzkd_zu_vzkdsoll']['sum'] = $sumAnw!=0?$sumvzkd/$sumAnw:0;
 $faktorySestava['vzkd_zu_anwesenheit']['sum'] = $sumAnwesenheit!=0?$sumvzkd/$sumAnwesenheit:0;
 $faktorySestava['vzkd_zu_anwesenheitsoll']['sum'] = $sumSoll!=0?$sumvzkd/$sumSoll:0;

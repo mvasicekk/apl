@@ -5408,8 +5408,8 @@ public function istExportiert($import, $impal){
 	    if ($persZeile['apremie_flag'] == '') {
 		$sumPremie = 0;
 	    }
-	    $gesammtSummePremie += $sumPremie;
-	    $persApremieArray[$persnr]['apremie'] = $sumPremie;
+	    $gesammtSummePremie += round($sumPremie);
+	    $persApremieArray[$persnr]['apremie'] = round($sumPremie);
 	    $persApremieArray[$persnr]['apremie_flag'] = $persZeile['apremie_flag'];
 	}
 	return $persApremieArray;
