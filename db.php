@@ -72,6 +72,10 @@ class AplDB {
 	return $gdatPath;
     }
     
+    public function getDat99Path(){
+	return "Aby 99 Nezarazene";
+    }
+    
     public function getArbMittelAnlagenPath(){
 	return "Aby 20 Technik, Produktivitat/Arbeitsmittel - Messmittel";
     }
