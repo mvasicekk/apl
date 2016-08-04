@@ -33,6 +33,7 @@ if($bTestOE) {
     $sql.= " join dpers on dpers.persnr=dzeitsoll.persnr";
     $sql.=" where ((calendar.datum between '$von' and '$bis')";
     $sql.=" and (dzeitsoll.persnr between '$persvon' and '$persbis')";
+    $sql.=" and (dpers.dpersstatus='MA')";
     $sql.=" and (dzeitsoll.oe <>'-') and (dzeitsoll.oe like '$oe'))";
     $sql.=" group by dzeitsoll.persnr,oe,calendar.datum";
 }else {
@@ -43,6 +44,7 @@ if($bTestOE) {
     $sql.= " join dpers on dpers.persnr=dzeitsoll.persnr";
     $sql.=" where ((calendar.datum between '$von' and '$bis')";
     $sql.=" and (dzeitsoll.persnr between '$persvon' and '$persbis')";
+    $sql.=" and (dpers.dpersstatus='MA')";
     $sql.=" and (dzeitsoll.oe <>'-'))";
     $sql.=" group by dzeitsoll.persnr,oe,calendar.datum";
 }
@@ -57,6 +59,7 @@ if($bTestOE) {
     $sql_ist.= " join dpers on dpers.persnr=dzeit.persnr";
     $sql_ist.=" where ((calendar.datum between '$von' and '$bis')";
     $sql_ist.=" and (dzeit.persnr between '$persvon' and '$persbis')";
+    $sql_ist.=" and (dpers.dpersstatus='MA')";
     $sql_ist.=" and (dzeit.tat <>'-') and (dzeit.tat like '$oe'))";
     $sql_ist.=" group by dzeit.persnr,tat,calendar.datum";
 }
@@ -68,6 +71,7 @@ else {
     $sql_ist.= " join dpers on dpers.persnr=dzeit.persnr";
     $sql_ist.=" where ((calendar.datum between '$von' and '$bis')";
     $sql_ist.=" and (dzeit.persnr between '$persvon' and '$persbis')";
+    $sql_ist.=" and (dpers.dpersstatus='MA')";
     $sql_ist.=" and (dzeit.tat <>'-'))";
     $sql_ist.=" group by dzeit.persnr,tat,calendar.datum";
 }
@@ -76,7 +80,7 @@ else {
 $sql_persnr = "select dpersdetail1.dobaurcita,dpers.persnr,dpers.komm_ort,dpers.regelarbzeit,";
 $sql_persnr.= " dpers.stdsoll_datum from dpers";
 $sql_persnr.= " left join dpersdetail1 on dpers.`PersNr`=dpersdetail1.persnr ";
-$sql_persnr.= " where dpers.persnr between '$persvon' and '$persbis' and dpers.austritt is null order by dpers.persnr";
+$sql_persnr.= " where dpers.persnr between '$persvon' and '$persbis' and dpers.austritt is null and dpers.dpersstatus='MA' order by dpers.persnr";
 
 
 $query2xml = XML_Query2XML::factory($db);
