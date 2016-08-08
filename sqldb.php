@@ -11,9 +11,9 @@ class sqldb {
     private static $con;
     private static $instance = NULL;
 
-    public static function getInstance() {
+    public static function getInstance($dbname='FA1') {
 	if (!self::$instance instanceof self) {
-	    self::$instance = new self;
+	    self::$instance = new self($dbname);
 	}
 	return self::$instance;
     }
@@ -26,7 +26,8 @@ class sqldb {
 	trigger_error('Deserialisation is not allowed', E_USER_ERROR);
     }
 
-    public function __construct() {
+    public function __construct($dbname='FA1') {
+	self::$dbname = $dbname;
 	$this->con = new PDO("dblib:host=" . self::$host . ":" . self::$port . ";dbname=" . self::$dbname . "", self::$user, self::$pass);
 	$this->con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }

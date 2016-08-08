@@ -2,6 +2,39 @@
 session_start();
 require_once '../db.php';
 
+function getMsRow($rok
+		, $mesic
+		, $stredisko
+		, $pracovnik
+		, $kod
+		, $korunyCelkem
+		, $dny
+		, $hodiny
+		, $zakazka
+		, $da1
+		, $da2
+		, $da3
+		, $dat_od
+		, $dat_do){
+    $exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
+		, $rok
+		, $mesic
+		, $stredisko
+		, $pracovnik
+		, $kod
+		, $korunyCelkem
+		, $dny
+		, $hodiny
+		, $zakazka
+		, $da1
+		, $da2
+		, $da3
+		, $dat_od
+		, $dat_do
+	);
+    return $exportRow;
+}
+
 $parameters=$_GET;
 $monat = $_GET['monat'];
 $jahr = $_GET['jahr'];
@@ -31,7 +64,7 @@ printf("persvon: %05d\n",$persvon);
 printf("persbis: %05d\n",$persbis);
 echo "<hr>";
 
-$pA = array(4815,2440,5887,276,567,5557,2310,1490);
+$pA = array(2411,4815,2440,5887,276,567,5557,2310,1490);
 
 // a-premie
 // v E143 je toto
@@ -144,6 +177,32 @@ if($rows!=NULL){
     }
 }
 
+//risiko
+$pt="";
+$pt.=" select";
+$pt.="    drueck.PersNr as persnr,";
+$pt.="     sum(oe_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
+$pt.=" from";
+$pt.="     drueck";
+$pt.=" join dpers on dpers.PersNr=drueck.PersNr";
+$pt.=" join oe_risiko_zuschlag on oe_risiko_zuschlag.oe=drueck.oe";
+$pt.=" left join risikozuschlag on risikozuschlag.id=oe_risiko_zuschlag.risiko_zuschlag_id";
+$pt.=" where";
+$pt.="     drueck.Datum between '$von' and '$bis'";
+$pt.="     and drueck.persnr between $persvon and $persbis";
+$pt.=" group by";
+$pt.="     drueck.PersNr";
+
+$rows = $a->getQueryRows($pt);
+$persRisikoRows = array();
+
+if($rows!=NULL){
+    foreach ($rows as $r){
+	$persnr = $r['persnr'];
+	$persRisikoRows[$persnr] = $r;
+    }
+}
+
 //essen
 
 $pt="";
@@ -207,6 +266,55 @@ if($rows!=NULL){
 	$persNachtSoNeRows[$persnr] = $r;
     }
 }
+
+//premie za kvalitu
+$pt="";
+$pt.=" select";
+$pt.="    drueck.persnr,";
+// qpraemie
+$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
+$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
+$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
+$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
+$pt.=" from drueck";
+$pt.=" join dtattypen on drueck.oe=dtattypen.tat";
+$pt.=" join dpers on dpers.persnr=drueck.persnr";
+$pt.=" left join dpersstempel on dpersstempel.persnr=drueck.persnr and dpersstempel.oe=drueck.oe";
+$pt.=" where";
+$pt.=" (";
+$pt.="    (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
+$pt.="    and (drueck.`Datum` between '$von' and '$bis')";
+$pt.="    and (drueck.persnr between '$persvon' and '$persbis')";
+$pt.=" )";
+$pt.=" group by drueck.persnr";
+
+
+$rows = $a->getQueryRows($pt);
+$persQPremieRows = array();
+
+if($rows!=NULL){
+    foreach ($rows as $r){
+	$persnr = $r['persnr'];
+	$persQPremieRows[$persnr] = $r;
+    }
+}
+
+//abmahnung, mozna bude jako mzdova slozka, aktualne se odecte od premie za kvalitu
+$pt = "";
+$pt.=" select";
+$pt.=" dabmahnung.persnr,sum(dabmahnung.betr) as abmahnung from dabmahnung where dabmahnung.betrdat between '$von' and '$bis' and dabmahnung.persnr between '$persvon' and '$persbis' group by dabmahnung.persnr";
+$rows = $a->getQueryRows($pt);
+$persAbmahnungRows = array();
+
+if($rows!=NULL){
+    foreach ($rows as $r){
+	$persnr = $r['persnr'];
+	$persAbmahnungRows[$persnr] = $r;
+    }
+}
+
+
+//AplDB::varDump($persQPremieRows);
 
 //AplDB::varDump($persNachtSoNeRows);
 //------------------------------------------------------------------------------
@@ -278,23 +386,7 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	
 	$korunyCelkem = 0;
 	$dny = 0;
-	
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
 	
 	// So , 006  
@@ -308,23 +400,8 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	
 	$korunyCelkem = 0;
 	$dny = 0;
-	
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
 	
 	// Ne , 007  
@@ -339,22 +416,7 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	$korunyCelkem = 0;
 	$dny = 0;
 	
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
     
 	
@@ -369,22 +431,7 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	
 	$dny = 0;
 	$hodiny = 0;
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
     
     
@@ -399,22 +446,7 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	
 	$dny = 0;
 	$hodiny = 0;
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
 	
 	
@@ -429,22 +461,7 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	
 	$dny = 0;
 	$hodiny = 0;
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
 	
     // ukolova mzda, slozka c.117 ---------------------------------------
@@ -452,22 +469,7 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	$korunyCelkem = number_format(floatval($pers['vzaby_akkord_kc']), 0, ',', '');
 	$dny = 0;
 	$hodiny = 0;
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
     
     // casova mzda, slozka c.116 -----------------------------------------------
@@ -476,24 +478,11 @@ foreach ($persLeistRows as $persnr=>$pers) {
 	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
 	$dny = 0;
 	$hodiny = 0;
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
 }
+
+$sumyDni = array();
 
 // dochazka, dovolena nemoci = mzdove slozky po dnech, zakladni udaje o persnr
 foreach ($persRows as $pers){
@@ -514,6 +503,10 @@ foreach ($persRows as $pers){
 	    continue;
 	}
 	else{
+	    //sumy dni d, nw , za mesic, potrebuju u vypoctu vykonnostni premie
+	    $sumyDni[$pracovnik]['d']+= intval($datumRow['tage_d']);
+	    $sumyDni[$pracovnik]['nw']+= intval($datumRow['tage_nw']);
+	    
 	    $zakazka = 0;
 	    $da1 = '';
 	    $da2 = '';
@@ -528,22 +521,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = $datumRow['tage_d'];
 		$hodiny = 0;
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    //------------------------------------------------------------------
@@ -554,22 +532,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = $datumRow['tage_n'];
 		$hodiny = 0;
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    
@@ -579,22 +542,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = $datumRow['tage_z'];
 		$hodiny = 0;
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    //------------------------------------------------------------------
@@ -605,22 +553,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = $datumRow['tage_nv'];
 		$hodiny = 0;
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    
@@ -630,22 +563,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = $datumRow['tage_p'];
 		$hodiny = 0;
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    //------------------------------------------------------------------
@@ -656,22 +574,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = 0;
 		$hodiny = number_format(floatval($datumRow['sumstundena'])-floatval($datumRow['sumstundena_akkord']),2,',','');
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    //------------------------------------------------------------------
@@ -682,22 +585,7 @@ foreach ($persRows as $pers){
 		$korunyCelkem = number_format(0,0,',','');
 		$dny = 0;
 		$hodiny = number_format(floatval($datumRow['sumstundena_akkord']),2,',','');
-		$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		    ,$rok
-		    ,$mesic
-		    ,$stredisko
-		    ,$pracovnik
-		    ,$kod
-		    ,$korunyCelkem
-		    ,$dny
-		    ,$hodiny
-		    ,$zakazka
-		    ,$da1
-		    ,$da2
-		    ,$da3
-		    ,$dat_od
-		    ,$dat_do
-		);
+		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 		array_push($msRows, $exportRow);
 	    }
 	    //------------------------------------------------------------------
@@ -715,6 +603,19 @@ foreach ($persRows as $pers) {
     $stredisko = sprintf("%d", 0);
     $pracovnik = sprintf("%d", $pers['grundinfo']['persnr']);
     $persLohnFaktor = floatval($pers['grundinfo']['perslohnfaktor']);
+    $leistFaktor = floatval($pers['grundinfo']['leistfaktor']);
+    $bQPremie_zeit = $pers['grundinfo']['qpremie_zeit']==0?FALSE:TRUE;
+    $bQPremie_akkord = $pers['grundinfo']['qpremie_akkord']==0?FALSE:TRUE;
+    $bLeistPremie = $pers['grundinfo']['premie_za_vykon']==0?FALSE:TRUE;
+    $bErschwerniss = $pers['grundinfo']['premie_za_prasnost']==0?FALSE:TRUE;
+    $bQTLPremie = $pers['grundinfo']['premie_za_3_mesice']==0?FALSE:TRUE;
+    
+//    AplDB::varDump($bQPremie_akkord);
+//    AplDB::varDump($bQPremie_zeit);
+//    AplDB::varDump($persLohnFaktor);
+    	    
+    
+    
     $zakazka = 0;
     $da1 = '';
     $da2 = '';
@@ -726,28 +627,132 @@ foreach ($persRows as $pers) {
 	continue;
     }
 
+    //leistungspremie, slozka 322
+    if(array_key_exists($pracovnik, $persLeistRows)){
+	$kod = sprintf("%d", 322);
+	$vzaby = $persLeistRows[$pracovnik]['vzaby'];
+	$vzaby_akkord = $persLeistRows[$pracovnik]['vzaby_akkord'];
+	$vzaby_zeit = $vzaby - $vzaby_akkord;
+	$gesamtVzabyAkkord = $vzaby_akkord;
+	$gesamtLeistungZeit = $vzaby_zeit * $leistFaktor;
+	$citatel = $gesamtLeistungZeit + $gesamtVzabyAkkord;
+	$aTageProMonat = $a->getArbTageBetweenDatums($von, $bis);
+	$anwTageArbeitsTage = $a->getATageProPersnrBetweenDatums($pracovnik, $von, $bis, 1);
+	$ganzMonatNormMinuten = $aTageProMonat * 8 * 60;
+	$d = 0;
+	$nw = 0;
+	if(array_key_exists($pracovnik, $sumyDni)){
+	    $d = $sumyDni[$pracovnik]['d'];
+	    $nw = $sumyDni[$pracovnik]['nw'];
+	}
+
+	$vonTimestamp = strtotime($von);
+	$eintrittTimestamp = strtotime($pers['grundinfo']['eintritt']);
+	if ($eintrittTimestamp > $vonTimestamp)
+	    $arbTage = $a->getArbTageBetweenDatums($eintritt, $bis);
+	else
+	    $arbTage = $a->getArbTageBetweenDatums($von, $bis);
+	
+	$monatNormStunden = 8* ($arbTage-$d-$nw);
+	$monatNormMinuten = $monatNormStunden * 60;
+	
+	if ($monatNormMinuten != 0)
+	    $leistungsGrad = round(($citatel) / $monatNormMinuten, 2);
+	else
+	    $leistungsGrad = 0;
+
+	
+	if ($ganzMonatNormMinuten != 0)
+	    $leistungsGradGanzMonat = round(($citatel) / $ganzMonatNormMinuten, 2);
+	else
+	    $leistungsGradGanzMonat = 0;
+	
+	$leistPraemieBerechnet1 = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) * $aTageProMonat;
+        if ($a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) == 200)
+	    $leistPraemieBerechnet = $leistPraemieBerechnet1;
+	else {
+	    if ($a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGrad) > $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat))
+		$leistPraemieBerechnet = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGrad) * $anwTageArbeitsTage;
+	    else
+		$leistPraemieBerechnet = $leistPraemieBerechnet1;
+	}
+	
+	$kc = $bLeistPremie?$leistPraemieBerechnet:0;
+	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
+	$dny = 0;
+	$hodiny = 0;
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+	array_push($msRows, $exportRow);
+    }
+    
+    
+    // risiko, erschwerniss, slozka 324 ----------------------------------------
+    if(array_key_exists($pracovnik, $persRisikoRows)) {
+//	AplDB::varDump($persQPremieRows[$pracovnik]);
+	$kod = sprintf("%d", 324);
+	$kc = $bErschwerniss?floatval($persRisikoRows[$pracovnik]['risiko_zuschlag']):0;
+	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
+	$dny = 0;
+	$hodiny = 0;
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+	array_push($msRows, $exportRow);
+    }
+    
+    // q premie, slozka 321 ----------------------------------------------------
+    if(array_key_exists($pracovnik, $persQPremieRows)) {
+//	AplDB::varDump($persQPremieRows[$pracovnik]);
+	$kod = sprintf("%d", 321);
+	$qPremieZeit = $bQPremie_zeit?$persQPremieRows[$pracovnik]['qpraemie_zeit_min']*$persLohnFaktor:0;
+	$qPremieAkkord = $bQPremie_akkord?$persQPremieRows[$pracovnik]['qpraemie_akkord_kc']:0;
+	//odecist abmahnung
+//	AplDB::varDump($persAbmahnungRows);
+	$abmahnung = 0;
+	if(array_key_exists($pracovnik, $persAbmahnungRows)){
+	    $abmahnung = floatval($persAbmahnungRows[$pracovnik]['abmahnung']);
+	}
+	$kc = $qPremieAkkord + $qPremieZeit - $abmahnung;
+	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
+	$dny = 0;
+	$hodiny = 0;
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+	array_push($msRows, $exportRow);
+    }
+
+        // qtl premie, slozka 323 ----------------------------------------------------
+    if($bQTLPremie) {
+//	AplDB::varDump($persQPremieRows[$pracovnik]);
+	$kod = sprintf("%d", 323);
+	// QTL Praemie
+	$leistungArray = array('leistung_min' => 0, 'leistung_kc' => 0);
+	if ($monat % 3 == 0) {
+	    $qtl = ceil($monat / 3);
+	    $qtlTageSoll = $a->sollTageQTLProPersNr($jahr, $qtl, $pracovnik);
+	    $leistungArray = $a->getQTLLeistungProPersNr($jahr, $qtl, $pracovnik);
+	}
+
+        $qtlLeistungIst = $leistungArray['leistung_min'];
+        $qtlLeistungIstKc = $leistungArray['leistung_kc'];
+        $qtlLeistungSoll = isset($qtlTageSoll) ? $qtlTageSoll * 480 : 0;
+        $qtlPraemie = $bQTLPremie == true ? round(0.1 * $qtlLeistungIstKc) : 0;
+	if ($qtlLeistungIst < $qtlLeistungSoll){
+	    $qtlPraemie = 0;
+	}
+
+	$kc = $qtlPraemie;
+	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
+	$dny = 0;
+	$hodiny = 0;
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+	array_push($msRows, $exportRow);
+    }
+
     // a-premie, slozka 330 ----------------------------------------------------
     if(array_key_exists($pracovnik, $aPremienArray)) {
 	$kod = sprintf("%d", 330);
 	$korunyCelkem = number_format(floatval($aPremienArray[$pracovnik]['apremie']), 0, ',', '');
 	$dny = 0;
 	$hodiny = 0;
-	$exportRow = sprintf("%04d;%02d;%d;%d;%d;%s;%d;%s;%d;%d;%d;%d;%s;%s\n"
-		, $rok
-		, $mesic
-		, $stredisko
-		, $pracovnik
-		, $kod
-		, $korunyCelkem
-		, $dny
-		, $hodiny
-		, $zakazka
-		, $da1
-		, $da2
-		, $da3
-		, $dat_od
-		, $dat_do
-	);
+	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	array_push($msRows, $exportRow);
     }
 }
