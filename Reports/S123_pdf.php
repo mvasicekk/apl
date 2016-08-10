@@ -263,10 +263,10 @@ function zapati_oes($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ,$m
 
                     switch ($typ) {
                     case 'A':
-                        $stunden = $sArray[$i]['stunden'];
+                        $stunden = $sArray[$i]['stunden']*60;
                         break;
                     case 'L':
-                        $stunden = $sArray[$i]['vzkd'];
+                        $stunden = $sArray[$i]['vzkd']*60;
                         break;
                     case 'W':
                         $stunden = $sArray[$i]['stundenanwesenheit'];
@@ -286,7 +286,9 @@ function zapati_oes($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ,$m
 
                 $sumaCelkem += $stunden;
                 if($typ=='A')
-                    $stunden = number_format($stunden, 2,',',' ');
+                    $stunden = number_format($stunden, 0,',',' ');
+		else if($typ=='L')
+                    $stunden = number_format($stunden, 0,',',' ');
                 else
                     $stunden = number_format($stunden, 2,',',' ');
 
@@ -309,7 +311,9 @@ function zapati_oes($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ,$m
         }
 
         if($typ=='A')
-            $sumaCelkem = number_format($sumaCelkem, 2,',',' ');
+            $sumaCelkem = number_format($sumaCelkem, 0,',',' ');
+	else if($typ=='L')
+            $sumaCelkem = number_format($sumaCelkem, 0,',',' ');
         else
             $sumaCelkem = number_format($sumaCelkem, 2,',',' ');
         $pdfobjekt->Cell(0,$vyskaradku,$sumaCelkem,'1',1,'R',$fill);
@@ -379,10 +383,10 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ, $monat, $jah
 
                 switch ($typ) {
                 case 'A':
-                    $stunden = $sumArray[$i]['stunden'];
+                    $stunden = $sumArray[$i]['stunden']*60;
                     break;
                 case 'L':
-                    $stunden = $sumArray[$i]['vzkd'];
+                    $stunden = $sumArray[$i]['vzkd']*60;
                     break;
                 case 'W':
                     $stunden = $sumArray[$i]['stundenanwesenheit'];
@@ -402,7 +406,9 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ, $monat, $jah
 
             $sumaCelkem += $stunden;
             if($typ=='A')
-                $stunden = number_format($stunden, 2,',',' ');
+                $stunden = number_format($stunden, 0,',',' ');
+	    else if($typ=='L')
+                    $stunden = number_format($stunden, 0,',',' ');
             else
                 $stunden = number_format($stunden, 2,',',' ');
 
@@ -424,7 +430,9 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ, $monat, $jah
     }
 
     if($typ=='A')
-        $sumaCelkem = number_format($sumaCelkem, 2,',',' ');
+        $sumaCelkem = number_format($sumaCelkem, 0,',',' ');
+    else if($typ=='L')
+        $sumaCelkem = number_format($sumaCelkem, 0,',',' ');
     else
         $sumaCelkem = number_format($sumaCelkem, 2,',',' ');
     $pdfobjekt->Cell(0,$vyskaradku,$sumaCelkem,'1',1,'R',$fill);
@@ -558,10 +566,10 @@ function zapati_personA($pdfobjekt,$vyskaradku,$rgb,$persnr,$typ,$sumArray,$mona
 
                 switch ($typ) {
                 case 'A':
-                    $stunden = $sumArray[$i]['stunden'];
+                    $stunden = $sumArray[$i]['stunden']*60;
                     break;
                 case 'L':
-                    $stunden = $sumArray[$i]['vzkd'];
+                    $stunden = $sumArray[$i]['vzkd']*60;
                     break;
                 case 'W':
                     $stunden = $sumArray[$i]['stundenanwesenheit'];
@@ -585,7 +593,9 @@ function zapati_personA($pdfobjekt,$vyskaradku,$rgb,$persnr,$typ,$sumArray,$mona
             if($stunden==0)
                 $bLeer = TRUE;
             if($typ=='A')
-                $stunden = number_format($stunden, 2,',',' ');
+                $stunden = number_format($stunden, 0,',',' ');
+	    else if($typ=='L')
+                $stunden = number_format($stunden, 0,',',' ');
             else
                 $stunden = number_format($stunden, 2,',',' ');
 
@@ -607,7 +617,9 @@ function zapati_personA($pdfobjekt,$vyskaradku,$rgb,$persnr,$typ,$sumArray,$mona
     }
 
     if($typ=='A')
-        $sumaCelkem = number_format($sumaCelkem, 2,',',' ');
+        $sumaCelkem = number_format($sumaCelkem, 0,',',' ');
+    else if($typ=='L')
+        $sumaCelkem = number_format($sumaCelkem, 0,',',' ');
     else
         $sumaCelkem = number_format($sumaCelkem, 2,',',' ');
 
@@ -790,10 +802,10 @@ function oe_radekA($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$datumy,$oekz,$typ
                     $tag = intval(substr($dat, 8));
                    switch ($typ) {
                         case 'A':
-                            $stunden = $stundenA['stunden'];
+                            $stunden = $stundenA['stunden']*60;
                             break;
                         case 'L':
-                            $stunden = $stundenA['vzkd'];
+                            $stunden = $stundenA['vzkd']*60;
                             break;
                         case 'W':
                             $stunden = $stundenA['stundenanwesenheit'];
@@ -816,16 +828,21 @@ function oe_radekA($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$datumy,$oekz,$typ
                             $pdfobjekt->SetFillColor($oeRGBArray[0],$oeRGBArray[1],$oeRGBArray[2],1);
                             //                            $pdfobjekt->Cell($sirkabunky,$vyskaradku,$oekz,'1',0,'R',$fill);
                             if($typ=='A')
-                                $stunden = number_format($stunden, 2,',',' ');
+                                $stunden = number_format($stunden, 0,',',' ');
+			    else if($typ=='L')
+                                $stunden = number_format($stunden, 0,',',' ');
                             else
                                 $stunden = number_format($stunden, 2,',',' ');
+			    
                             $pdfobjekt->Cell($sirkabunky,$vyskaradku,$stunden,'1',0,'R',$fill);
                             $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
                         }
                         else {
                             $sumaHodin += $stunden;
                             if($typ=='A')
-                                $stunden = number_format($stunden, 2,',',' ');
+                                $stunden = number_format($stunden, 0,',',' ');
+			    else if($typ=='L')
+                                $stunden = number_format($stunden, 0,',',' ');
                             else
                                 $stunden = number_format($stunden, 2,',',' ');
 
@@ -861,7 +878,9 @@ function oe_radekA($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$datumy,$oekz,$typ
     }
     // suma hodin pro danou cinnost
     if($typ=='A')
-        $sumaHodin = number_format($sumaHodin, 2,',',' ');
+        $sumaHodin = number_format($sumaHodin, 0,',',' ');
+    else if($typ=='L')
+        $sumaHodin = number_format($sumaHodin, 0,',',' ');
     else
         $sumaHodin = number_format($sumaHodin, 2,',',' ');
     $pdfobjekt->SetFillColor($oeRGBArray[0],$oeRGBArray[1],$oeRGBArray[2],1);

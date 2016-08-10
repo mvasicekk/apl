@@ -7,7 +7,15 @@ require '/var/www/workspace/apl/sqldb.php';
 echo "----- START updateDpersFromPremier on :".date('Y-m-d H:i:s')." ----- \n";
 $sqlDB = sqldb::getInstance('FA4');
 
-
+function updateAplPersnr($zCislo,$field,$value,$oldValue){
+    global $a;
+    $table = 'dpers_isp';
+    $sql = "update `$table` set `$field`='$value' where isp_cislo='$zCislo'";
+    
+    $ar = $a->query($sql);
+    
+    echo "\nUPDATEFIELD $field = $value (from $oldValue) for isp_cislo=$zCislo (ar=$ar)";
+}
 // vybrat vsechny lidi
 
 $res = $sqlDB->getResult("select * from fl_PERSONAL_APL_view order by Z_CISLO,PP_CISLO");
@@ -85,7 +93,7 @@ if ($res !== NULL) {
 }
 
 //seznam lidi z apl ============================================================
-$sql = "select persnr,isp_cislo from dpers_isp";
+$sql = "select persnr,isp_cislo,name,vorname,geboren,gebort,email from dpers_isp";
 $a = AplDB::getInstance();
 $aplPersDBRows = $a->getQueryRows($sql);
 $aplPersArray = array();
@@ -96,6 +104,11 @@ if ($aplPersDBRows !== NULL) {
 	    $aplPersArray[$zCislo]['pp'] = array();
 	}
 	$aplPersArray[$zCislo]['persnr'] = $r['persnr'];
+	$aplPersArray[$zCislo]['name'] = $r['name'];
+	$aplPersArray[$zCislo]['vorname'] = $r['vorname'];
+	$aplPersArray[$zCislo]['geboren'] = $r['geboren'];
+	$aplPersArray[$zCislo]['gebort'] = $r['gebort'];
+	$aplPersArray[$zCislo]['email'] = $r['email'];
     }
 }
 
@@ -125,7 +138,33 @@ foreach ($persArray as $zCislo=>$persRow){
     // mam cloveka s timto isp cislem v apl ?
     if(array_key_exists($zCislo, $aplPersArray)){
 	// cloveka s timto cislem mam apl, zkontroluju zmeny v hodnotach poli
-	echo " UPDATEFIELDS - mam v APL, kontroluji zmeny v hodnotach";
+	//echo " UPDATEFIELDS - mam v APL, kontroluji zmeny v hodnotach";
+//	$sql = "select persnr,isp_cislo,name,vorname,geboren,gebort,email from dpers_isp";
+//	$persArray[$zCislo]['zPrijmeni'] = iconv('windows-1250', 'UTF-8', trim($r['Z_PRIJMENI']));
+//	$persArray[$zCislo]['zJmeno'] = iconv('windows-1250', 'UTF-8', trim($r['Z_JMENO']));
+//	$persArray[$zCislo]['zDatNar'] = strtotime($r['Z_DAT_NAR'])===FALSE?'':date('Y-m-d',  strtotime($r['Z_DAT_NAR']));
+//	$persArray[$zCislo]['zMistoNar'] = iconv('windows-1250', 'UTF-8', trim($r['Z_MISTO_NAR']));
+//	$persArray[$zCislo]['zStObc'] = iconv('windows-1250', 'UTF-8', trim($r['Z_ST_OBC']));
+//	$persArray[$zCislo]['zMobil'] = iconv('windows-1250', 'UTF-8', trim($r['Z_MOBIL']));
+//	$persArray[$zCislo]['zEmail'] = iconv('windows-1250', 'UTF-8', trim($r['Z_EMAIL']));
+//	$persArray[$zCislo]['zPsTime'] = strtotime($r['Z_PS_TIME'])===FALSE?'':date('Y-m-d H:i:s',  strtotime($r['Z_PS_TIME']));
+//	$persArray[$zCislo]['kUlice'] = iconv('windows-1250', 'UTF-8', trim($r['K_ULICE']));
+//	$persArray[$zCislo]['kMisto'] = iconv('windows-1250', 'UTF-8', trim($r['K_MISTO']));
+//	$persArray[$zCislo]['kPsc'] = iconv('windows-1250', 'UTF-8', trim($r['K_PSC']));
+//	$persArray[$zCislo]['kStat'] = iconv('windows-1250', 'UTF-8', trim($r['K_STAT']));
+//	$persArray[$zCislo]['tUlice'] = iconv('windows-1250', 'UTF-8', trim($r['T_ULICE']));
+//	$persArray[$zCislo]['tMisto'] = iconv('windows-1250', 'UTF-8', trim($r['T_MISTO']));
+//	$persArray[$zCislo]['tPsc'] = iconv('windows-1250', 'UTF-8', trim($r['T_PSC']));
+//	$persArray[$zCislo]['tStat'] = iconv('windows-1250', 'UTF-8', trim($r['T_STAT']));
+	//name
+//	echo "aplPersArray - name =".$aplPersArray[$zCislo]['name'];
+//	echo "persArray - zPrijmeni =".$persArray[$zCislo]['zPrijmeni'];
+	if($aplPersArray[$zCislo]['name']!=$persArray[$zCislo]['zPrijmeni']){
+	    updateAplPersnr($zCislo,'name',$persArray[$zCislo]['zPrijmeni'],$aplPersArray[$zCislo]['name']);
+	}
+	if($aplPersArray[$zCislo]['vorname']!=$persArray[$zCislo]['zJmeno']){
+	    updateAplPersnr($zCislo,'vorname',$persArray[$zCislo]['zJmeno'],$aplPersArray[$zCislo]['vorname']);
+	}
     }
     else{
 	// cloveka s timto cislem nemam apl, pokud je jasne i persnr, zkusim ho zalozit v apl
@@ -161,7 +200,7 @@ foreach ($persArray as $zCislo=>$persRow){
 		$sql_insert.=" '".$persRow['zJmeno']."',";
 		$sql_insert.=" '".$persRow['zDatNar']."',";
 		$sql_insert.=" '".$persRow['zMistoNar']."',";
-		$sql_insert.=" 'MA'";
+		$sql_insert.=" 'BEWERBER'";
 		$sql_insert.=" )";
 		$iid = $a->insert($sql_insert);
 		echo " ($iid)";

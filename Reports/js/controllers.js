@@ -27,7 +27,7 @@ aplApp.directive("enterfocus", function () {
         }
 });
 
-aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize,Upload) {
+aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
     $scope.tinyMceOptions = {
 	inline:true,
 	menubar:false
@@ -276,3 +276,110 @@ $scope.getStkSumme = function(){
 	such.select();
     }
 });
+
+
+
+
+aplApp.controller('f450Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
+    $scope.tinyMceOptions = {
+	inline:true,
+	menubar:false
+    };
+    $scope.tinymceModel = "tady se da psat pomoci zabudovaneho editoru, zkus to !";
+    $scope.showHelp = false;
+    $scope.datePickerFormat = 'dd.MM.yyyy';
+    $scope.securityInfo = undefined;
+    $scope.isEditor = false;
+    $scope.teile = [];
+    $scope.teilAktual = null;
+    $scope.ab = null;
+    $scope.now = new Date();
+    
+    
+
+    $scope.initHelp = function(){
+	var p={
+	    form_id:'f450_sklkarta'
+	};
+	return $http.post('../getHelpInfo.php',p).then(
+		    function(response){
+			$scope.helpText = response.data.help.helpText;
+			$scope.hIArray = response.data.help.hiArray;
+		    }
+		);
+    }
+    
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'f450_sklkarta'
+	};
+	return $http.post('../getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+			//zkusim najit roli helptexteditor
+			$scope.securityInfo.roles.forEach(function(v){
+			    if(v.rolename=='helptexteditor'){
+				$scope.isEditor = true;
+				console.log('is helptexteditor');
+			    }
+			});
+		    }
+		);
+    }
+
+    /**
+     * 
+     * @param {type} i
+     * @returns {undefined}
+     */
+        $scope.listRowClicked = function(i){
+	console.log(i);
+	$scope.teil_search = $scope.teile[i].amnr;
+	$scope.getPolMatch();
+    }
+    
+    /**
+     * 
+     */
+    $scope.getPolMatch = function () {
+	$scope.teilAktual = null;
+	
+	if($scope.teil_search.length>0){
+	    return $http.post(
+		'../dambew/getAmnrMatch.php',
+		{suchen: $scope.teil_search}
+	).then(function (response) {
+	    $scope.teile = response.data.karty;
+	});
+	}
+	else{
+	    $scope.teile = [];
+	}
+	
+    }
+    
+    $scope.createPdf = function(){
+    	    console.log('createPdf');
+	    var params = {
+		teile:$scope.teile,ab:$scope.ab
+	    };
+	    $http.post('../Reports/F450_pdf.php', params).then(function (response) {
+		console.log('pdf generiert ' + response.data);
+		$scope.filename = response.data.filename;
+		$scope.pdfPath = response.data.pdfPath;
+		$scope.pdfReady = true;
+	    });
+	
+    }
+    // init
+
+    $scope.initSecurity();
+    $scope.initHelp();
+
+    var such = $window.document.getElementById('ab');
+    if (such) {
+	such.focus();
+	such.select();
+    }
+});
+

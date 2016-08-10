@@ -1,0 +1,75 @@
+<div class="container-fluid" ng-controller="f450Controller">
+
+    <div class="page-header">
+	<h4>F450 - Skladová karta
+	</h4>
+	<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+    </div>
+	<button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	
+    <!--sekce pro hledani dilu + tabulka-->
+
+
+    <div class="row">
+	<div class="col-sm-4">
+	    <div class="form-group">
+		<label for="ab">počáteční stav</label>
+		<div class="input-group">
+		    <input ng-model="ab" type="number" maxlength="10" class="form-control input-lg text-right" id="ab" placeholder="poč. stav">
+		    <span class="input-group-addon" id="basic-addon2">k {{now|date:'dd.MM.yyyy'}}</span>
+		</div>
+		
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['ab']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+	<div class="col-sm-12">
+	    <div class="form-group">
+		<label for="teil_search">objednací číslo, popis</label>
+		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="teil_search" ng-change="getPolMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="objednací číslo, popis ...">
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['search_field']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+    
+    
+    <!--seznam polozek-->
+    <div ng-show="teile.length > 0" class="col-sm-12">
+	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
+		<thead>
+		    <tr class="bg-primary">
+			<th>
+			    AMNR
+			</th>
+			<th>Popis</th>
+			<th class="text-right">Cena</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr ng-repeat="t in teile" ng-click="listRowClicked($index)">
+			<td>
+			    {{t.amnr}}
+			</td>
+			<td>{{t.text}} ( {{t.text1}} )</td>
+			<td class="text-right">{{t.preis|number:3}}</td>
+		    </tr>
+		</tbody>
+	    </table>
+	</div>
+    
+    <!--help texty se vytahnou ze stejne tabulky jako resources-->
+    <div class="row">
+	<div class="col-sm-6">
+	    <a class="btn btn-info" ng-if="pdfReady && filename.length>0" ng-href="{{pdfPath}}">PDF ({{filename}})</a>
+	</div>
+	<div class="col-sm-6">
+	    <!--<button ng-if="!(isNaN(ab)||ab===null||ab===undefined)&&(ab>=0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
+	    <button ng-show="(ab>=0)&&(ab.toString().length>0)" class="btn btn-info btn-block" ng-click="createPdf()">
+		<span ng-if="(teile.length>0)">PDF generieren (vyplnene)</span>
+		<span ng-if="teile.length==0">PDF generieren (prazdne)</span>
+	    </button>
+	</div>
+    </div>
+    
+</div>
