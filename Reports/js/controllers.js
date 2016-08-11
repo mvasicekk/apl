@@ -360,15 +360,33 @@ aplApp.controller('f450Controller', function ($scope, $routeParams,$http,$timeou
     
     $scope.createPdf = function(){
     	    console.log('createPdf');
+	    //pred odeslanim prefiltruju pole teile poslu jen polozky s vyplnenym ab>=0
+	    teileFiltered = $scope.teile.filter(function(item){
+		if(parseInt(item.ab)>=0){
+		    return true;
+		}
+		else{
+		    return false;
+		}
+	    });
+	    
 	    var params = {
-		teile:$scope.teile,ab:$scope.ab
+		teile:teileFiltered,ab:$scope.ab
 	    };
-	    $http.post('../Reports/F450_pdf.php', params).then(function (response) {
+	    if(teileFiltered.length>0||$scope.teile.length==0){
+		$scope.noFilteredTeile = false;
+		$http.post('../Reports/F450_pdf.php', params).then(function (response) {
 		console.log('pdf generiert ' + response.data);
 		$scope.filename = response.data.filename;
 		$scope.pdfPath = response.data.pdfPath;
 		$scope.pdfReady = true;
+		
 	    });
+	    }
+	    else{
+		$scope.noFilteredTeile = true;
+	    }
+	    
 	
     }
     // init

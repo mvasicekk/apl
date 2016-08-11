@@ -15,7 +15,7 @@ $data = file_get_contents("php://input");
 $o = json_decode($data);
 
 $teile = $o->teile;
-$ab = $o->ab;
+
 
 $bLeer = $importAktual==NULL?TRUE:FALSE;
 
@@ -46,9 +46,7 @@ $pdf->SetAutoPageBreak(TRUE,15);
 
 $pdf->setPrintHeader(TRUE);
 $pdf->setPrintFooter(TRUE);
-//$pdf->setCellPaddings($left, $top, $right, $bottom)
-$pdf->setCellPaddings(0, 1, 3, 1);
-
+$pdf->setCellPaddings(3, 1, 3, 1);
 //$pdf->setPrintHeader(false);
 //$pdf->setPrintFooter(false);
 
@@ -124,74 +122,10 @@ $pdf->AddPage();
 
 
 foreach ($teile as $t){
-    $pdf->SetFont("FreeSans", "B", 20);
-    //$pdf->Cell(40, 15, $t->amnr, 'LRTB',0,'C', 0,'R');
-    
-      $pdf->MultiCell(
-            60,
-            15,
-            $t->amnr,
-            $border = '0',
-            $align = 'R',
-            $fill = false,
-            $ln = 0,
-            $x = 135,
-            $y = '',
-            $reseth = true,
-            $stretch = 0,
-            $ishtml = false,
-            $autopadding = true,
-            $maxh = 15,
-            $valign = 'M',
-            $fitcell = false
-        );
-    
-    
-    
-
-    
-    
-       $pdf->Ln();
-    $pdf->SetFont("FreeSans", "", 9);
-    $pdf->Cell(0, 5, $t->text.' '.'('.$t->text1.')', '','L', 1);
+    $pdf->Cell(30, 5, $t->amnr, 'LRBT', 0);
+    $pdf->Cell(0, 5, $t->text.' '.$t->text1, 'LRBT', 1);
 }
-$pdf->Ln();
 $stamp = date('YmdHis');
-//$timestamp = mktime( 0,0,0);
-//            $rok = date("Y",$timestamp);
-//            $mesic = date("m",$timestamp);
-//            $den = date("d",$timestamp);
-//            
-$time = date('d.m.Y');
-$pdf->Cell(45, 5, "Poč. zůstatek ".'('.$time.'): ', '0',0,'L', 0);
-$pdf->SetFont("FreeSans", "B", 10);
-$pdf->Cell(0, 5, $ab, '0', 0, 'L', 0);
-//$pdf->Cell(0, 5, $ab, '1','L', 0);
-$pdf->Ln();
-$pdf->SetFillColor(193, 209, 213);
-$pdf->SetFont("FreeSans", "B", 10);
-$pdf->Cell(60, 9, "příjem", 'LRTB','','C',1, 0);
-$pdf->Cell(60, 9, "výdej", 'LRTB','','C',1, 0);
-$pdf->Cell(60, 9, "inventura", 'LRTB',1,'C',1, 0);
-$pdf->SetFont("FreeSans", "", 9);
-
-for($i = 0;$i < 3;$i++){
-    $pdf->Cell(19, 11, "datum", 'LRTB','','C', 1);
-    $pdf->Cell(19, 11, "počet", 'LRTB','','C', 1);
-    $pdf->Cell(22, 11, "podpis", 'LRTB','','C', 1);
-}
-$pdf->Ln();
-for($a = 0;$a < 20;$a++){
-for($i = 0;$i < 3;$i++){
-    $pdf->Cell(19, 9, "", 'LRTB','','C', 0);
-    $pdf->Cell(19, 9, "", 'LRTB','','C', 0);
-    $pdf->Cell(22, 9, "", 'LRTB','','C', 0);
-}
-$pdf->Ln();
-}
-$pdf->Cell(22, 11, "Pozn.:", '','','L', 0);
-
-
 //Close and output PDF document
 
 $savePath =$apl->getGdatPath()."Aby 99 Nezarazene/eforms/$doc_title";

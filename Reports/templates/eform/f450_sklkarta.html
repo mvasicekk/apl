@@ -13,7 +13,7 @@
 
 
     <div class="row">
-	<div class="col-sm-4">
+<!--	<div class="col-sm-4">
 	    <div class="form-group">
 		<label for="ab">počáteční stav</label>
 		<div class="input-group">
@@ -23,7 +23,7 @@
 		
 		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['ab']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
-	</div>
+	</div>-->
 	<div class="col-sm-12">
 	    <div class="form-group">
 		<label for="teil_search">objednací číslo, popis</label>
@@ -44,15 +44,17 @@
 			</th>
 			<th>Popis</th>
 			<th class="text-right">Cena</th>
+			<th class="text-right">poč. zůstatek</th>
 		    </tr>
 		</thead>
 		<tbody>
-		    <tr ng-repeat="t in teile" ng-click="listRowClicked($index)">
-			<td>
+		    <tr ng-repeat="t in teile">
+			<td ng-click="listRowClicked($index)">
 			    {{t.amnr}}
 			</td>
-			<td>{{t.text}} ( {{t.text1}} )</td>
-			<td class="text-right">{{t.preis|number:3}}</td>
+			<td ng-click="listRowClicked($index)">{{t.text}} ( {{t.text1}} )</td>
+			<td ng-click="listRowClicked($index)"class="text-right">{{t.preis|number:3}}</td>
+			<td class="text-right"><input class="form-control text-right" ng-model="t.ab"/></td>
 		    </tr>
 		</tbody>
 	    </table>
@@ -61,11 +63,13 @@
     <!--help texty se vytahnou ze stejne tabulky jako resources-->
     <div class="row">
 	<div class="col-sm-6">
-	    <a class="btn btn-info" ng-if="pdfReady && filename.length>0" ng-href="{{pdfPath}}">PDF ({{filename}})</a>
+	    <a class="btn btn-info" ng-show="noFilteredTeile===false" ng-if="pdfReady && filename.length>0" ng-href="{{pdfPath}}">PDF ({{filename}})</a>
+	    <span class="text-warning" ng-show="noFilteredTeile===true">nic k vytištění, máte nastavené počáteční zůstatky ?</span>
 	</div>
 	<div class="col-sm-6">
 	    <!--<button ng-if="!(isNaN(ab)||ab===null||ab===undefined)&&(ab>=0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
-	    <button ng-show="(ab>=0)&&(ab.toString().length>0)" class="btn btn-info btn-block" ng-click="createPdf()">
+	    <!--<button ng-show="(ab>=0)&&(ab.toString().length>0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
+	    <button class="btn btn-info btn-block" ng-click="createPdf()">
 		<span ng-if="(teile.length>0)">PDF generieren (vyplnene)</span>
 		<span ng-if="teile.length==0">PDF generieren (prazdne)</span>
 	    </button>
