@@ -944,7 +944,7 @@ $aplDB = AplDB::getInstance();
 $arbTage = $aplDB->getArbTageBetweenDatums($von,$bis);
 $arbStunden = 8*$arbTage;
 $arbtageText = "Arbeitstage: $arbTage ($arbStunden Std.)  ";
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S123 VzKd / VzKdSoll", $arbtageText.$params);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S123 VzKd / VzKdSoll", $arbtageText.$params.", nur mit status='MA'");
 
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT-5, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT-10);
