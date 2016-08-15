@@ -223,10 +223,10 @@ function zapati_oes($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ,$m
 
     switch ($typ) {
         case 'A':
-            $typAppendix = "vzkd_s[Std]";
+            $typAppendix = "vzkd_soll";
             break;
         case 'L':
-            $typAppendix = "vzkd[Std]";
+            $typAppendix = "vzkd";
             break;
         case 'W':
             $typAppendix = "Anw[Std]";
@@ -342,10 +342,10 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$sumArray,$typ, $monat, $jah
     $pdfobjekt->Cell(10,$vyskaradku,"Sum",'1',0,'L',$fill);
     switch ($typ) {
         case 'A':
-            $typAppendix = "vzkd_s[Std]";
+            $typAppendix = "vzkd_soll";
             break;
         case 'L':
-            $typAppendix = "vzkd[Std]";
+            $typAppendix = "vzkd";
             break;
         case 'W':
             $typAppendix = "Anw[Std]";
@@ -528,10 +528,10 @@ function zapati_personA($pdfobjekt,$vyskaradku,$rgb,$persnr,$typ,$sumArray,$mona
 
     switch ($typ) {
         case 'A':
-            $typAppendix = "vzkd_s[Std]";
+            $typAppendix = "vzkd_soll";
             break;
         case 'L':
-            $typAppendix = "vzkd[Std]";
+            $typAppendix = "vzkd";
             break;
         case 'W':
             $typAppendix = "Anw[Std]";
@@ -750,10 +750,10 @@ function oe_radekA($oefarbenArray,$pdfobjekt,$vyskaradku,$rgb,$datumy,$oekz,$typ
 
     switch ($typ) {
         case 'A':
-            $typAppendix = "vzkd_s[Std]";
+            $typAppendix = "vzkd_soll";
             break;
         case 'L':
-            $typAppendix = "vzkd[Std]";
+            $typAppendix = "vzkd";
             break;
         case 'W':
             $typAppendix = "Anw[Std]";
@@ -1195,7 +1195,7 @@ foreach($reportArray as $persnr=>$person) {
     // anwesenheit ist
     $sum4 = testSummePersNrStunden($persnr, 'dzeitanwesenheit', 'stundenanwesenheit');
 
-    //if($sum1==0 && $sum3==0)        continue;
+    if($sum1==0 && $sum3==0)        continue;
 
 // do oes si ted dam pole vsech cinnost
     $oes = $person;

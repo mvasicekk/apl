@@ -220,6 +220,13 @@ foreach ($persArray as $zCislo=>$persRow){
 	if($aplPersArray[$zCislo]['tstat']!=$persArray[$zCislo]['tStat']){
 	    updateAplPersnr($zCislo,'stat_op',$persArray[$zCislo]['tStat'],$aplPersArray[$zCislo]['tstat'],'dpersdetail1_isp');
 	}
+	if(
+		date('Y-m-d',  strtotime($aplPersArray[$zCislo]['geboren']))
+		!=
+		date('Y-m-d',  strtotime($persArray[$zCislo]['zDatNar']))
+	){
+	    updateAplPersnr($zCislo,'geboren',$persArray[$zCislo]['zDatNar'],$aplPersArray[$zCislo]['geboren']);
+	}
     }
     else{
 	// cloveka s timto cislem nemam apl, pokud je jasne i persnr, zkusim ho zalozit v apl
