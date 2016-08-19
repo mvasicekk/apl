@@ -54,7 +54,7 @@ $pdf->setCellPaddings(0, 1, 3, 1);
 
 
 // prvni stranka
-$pdf->AddPage();
+
 
 //MultiCell  This method allows printing text with line breaks. They can be automatic (as soon as the text reaches the right border of the cell) or explicit (via the \n character). As many cells as necessary are output, one below the other. Text can be aligned, centered or justified. The cell block can be framed and the background painted. 
 //Parameters:
@@ -124,6 +124,7 @@ $pdf->AddPage();
 
 
 foreach ($teile as $t){
+    $pdf->AddPage();
     $pdf->SetFont("FreeSans", "B", 20);
     //$pdf->Cell(40, 15, $t->amnr, 'LRTB',0,'C', 0,'R');
     
@@ -154,7 +155,7 @@ foreach ($teile as $t){
        $pdf->Ln();
     $pdf->SetFont("FreeSans", "", 9);
     $pdf->Cell(0, 5, $t->text.' '.'('.$t->text1.')', '','L', 1);
-}
+
 $pdf->Ln();
 $stamp = date('YmdHis');
 //$timestamp = mktime( 0,0,0);
@@ -165,7 +166,7 @@ $stamp = date('YmdHis');
 $time = date('d.m.Y');
 $pdf->Cell(45, 5, "Poč. zůstatek ".'('.$time.'): ', '0',0,'L', 0);
 $pdf->SetFont("FreeSans", "B", 10);
-$pdf->Cell(0, 5, $ab, '0', 0, 'L', 0);
+$pdf->Cell(0, 5, $t->ab, '0', 0, 'L', 0);
 //$pdf->Cell(0, 5, $ab, '1','L', 0);
 $pdf->Ln();
 $pdf->SetFillColor(193, 209, 213);
@@ -191,7 +192,7 @@ $pdf->Ln();
 }
 $pdf->Cell(22, 11, "Pozn.:", '','','L', 0);
 
-
+}
 //Close and output PDF document
 
 $savePath =$apl->getGdatPath()."Aby 99 Nezarazene/eforms/$doc_title";

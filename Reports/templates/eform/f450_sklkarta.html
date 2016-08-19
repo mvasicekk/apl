@@ -43,7 +43,7 @@
 			    AMNR
 			</th>
 			<th>Popis</th>
-			<th class="text-right">Cena</th>
+			<!--<th class="text-right">Cena</th>-->
 			<th class="text-right">poč. zůstatek</th>
 		    </tr>
 		</thead>
@@ -53,7 +53,7 @@
 			    {{t.amnr}}
 			</td>
 			<td ng-click="listRowClicked($index)">{{t.text}} ( {{t.text1}} )</td>
-			<td ng-click="listRowClicked($index)"class="text-right">{{t.preis|number:3}}</td>
+			<!--<td ng-click="listRowClicked($index)"class="text-right">{{t.preis|number:3}}</td>-->
 			<td class="text-right"><input class="form-control text-right" ng-model="t.ab"/></td>
 		    </tr>
 		</tbody>

@@ -1,0 +1,184 @@
+<?
+session_start();
+require "../fns_dotazy.php";
+require '../db.php';
+
+dbConnect();
+$aplDB = AplDB::getInstance();
+
+	$controlid = $_GET['controlid'];
+	$value = $_GET['value'];
+	$auftragsnr=$_GET['auftragsnr_value'];
+	$pal=$_GET['pal_value'];
+	$teil=$_GET['teil_value'];
+	$mehr_value=$_GET['mehr_value'];
+
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Pragma: nocache');
+	header('Content-Type: text/xml');
+	$output = '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>';
+	$output .= '<response>';
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+	
+	mysql_query('set names utf8');
+        $pg = $aplDB->getPGFromAuftragsnr($auftragsnr);
+	if($mehr_value>0)
+	{
+		// budu kontrolovat jen interni operace
+		// zkusim nejdriv najit operaci v pracovnim planu u dilu	
+		$sql="select `TaetBez-Aby-D` as bezd,`TaetBez-Aby-T` as bezt,`TaetNr-Aby` as abgnr,`VZ-min-kunde` as vzkd,`vz-min-aby` as vzaby from dpos join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dpos.`TaetNr-Aby` where ((dpos.`Teil`='".$teil."') and (dtaetkz='I')  and (`TaetNr-Aby`<>'3') and (`TaetNr-Aby`='".$value."')) order by abgnr";
+		$result = mysql_query($sql);
+		if(mysql_affected_rows()>0)
+		{
+			// operaci jsem nasel u dilu
+			while ($row = mysql_fetch_array($result))
+			{
+                                // vytahnu si seznam oe pro dane abgnr
+                                $oesString = $aplDB->getOEForAbgnr($row['abgnr']);
+
+				$output.="<taetigkeit>";
+				$output .= '<abgnr>' . $row['abgnr'] . '</abgnr>';
+				$output .= '<vzkd>' . $row['vzkd'] . '</vzkd>';
+				$output .= '<vzaby>' . $row['vzaby'] . '</vzaby>';
+				$output .= '<bezd>' . $row['bezd'] . '</bezd>';
+				$output .= '<bezt>' . $row['bezt'] . '</bezt>';
+                                $output .= "<oes>" . $oesString . "</oes>";
+				$output.="</taetigkeit>";
+			}
+		}
+		else
+		{
+			// dil nema tuhle operaci v pracovnim planu, vytahnu info o operaci ze seznamu operaci a vzaby,vzkd nastavim na 0
+			// a jeste musim rozlisit zdanejde o zakazku 999999		
+			if($auftragsnr<999999)
+				$sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`<7000) and (`abg-nr`='$value')) order by abgnr";
+			else
+				$sql="select `abg-nr` as abgnr,oper_CZ as bezt,oper_D as bezd from `dtaetkz-abg` where ((dtaetkz='I') and (`abg-nr`<>'3') and (`abg-nr`>6999) and (`abg-nr`='$value')) order by abgnr";
+			
+			$result = mysql_query($sql);
+			if(mysql_affected_rows()>0)
+			{
+				// operaci jsem nasel v katalogu operaci
+				$row = mysql_fetch_array($result);
+                                // vytahnu si seznam oe pro dane abgnr
+                                $oesString = $aplDB->getOEForAbgnr($row['abgnr']);
+
+				$output.="<taetigkeit>";
+				$output .= '<abgnr>' . $row['abgnr'] . '</abgnr>';
+				$output .= '<vzkd>0</vzkd>';
+				$output .= '<vzaby>0</vzaby>';
+				$output .= '<bezd>' . $row['bezd'] . '</bezd>';
+				$output .= '<bezt>' . $row['bezt'] . '</bezt>';
+                                $output .= "<oes>" . $oesString . "</oes>";
+				$output.="</taetigkeit>";
+			}
+			else
+			{
+				// operaci jsem vubec nikde nenasel
+				$output.="<taetigkeit>";
+				// jeste zkusim jestli tam nezadal nulu
+				if($value==0)
+				{
+					$output .= '<abgnr>0</abgnr>';
+					$output .= '<vzkd>0</vzkd>';
+					$output .= '<vzaby>0</vzaby>';
+					$output .= '<bezd> </bezd>';
+					$output .= '<bezt> </bezt>';
+				}
+				else
+				{
+					// tak to je fakt konecna a hlasim chybu				
+					$output .= '<abgnr>' . "ERROR-NOABGNR" . '</abgnr>';
+                                        $output .= "<oes>" . "NOOES" . "</oes>";
+					//$output .= '<sql>' . $sql . '</sql>';
+				}
+
+				$output.="</taetigkeit>";
+			}
+			
+		}
+	}
+	else
+	{
+		// neni to viceprace, ale normalni operace z dauftr
+		$sql="select `Name` as bezd,`Name` as bezt,abgnr,vzkd,vzaby from dauftr join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=dauftr.`abgnr` where ((`abgnr`='".$value."') and (`teil`='".$teil."') and (`pos-pal-nr`='".$pal."') and (auftragsnr='".$auftragsnr."') and (`auftragsnr-exp` is null) and (`pal-nr-exp` is null) and (dauftr.abgnr<>3)) order by abgnr";
+		$result=mysql_query($sql);
+		// pokud mi dotaz vrati nejake zaznamy, tak je projdu
+		if(mysql_affected_rows()>0)
+		{
+			while ($row = mysql_fetch_array($result))
+			{
+                                $oesString = $aplDB->getOEForAbgnr($row['abgnr']);
+				$output.="<taetigkeit>";
+				$output .= '<abgnr>' . $row['abgnr'] . '</abgnr>';
+				$output .= '<vzkd>' . $row['vzkd'] . '</vzkd>';
+				$output .= '<vzaby>' . $row['vzaby'] . '</vzaby>';
+				$output .= '<bezd>' . $row['bezd'] . '</bezd>';
+				$output .= '<bezt>' . $row['bezt'] . '</bezt>';
+                                $output .= "<oes>" . $oesString . "</oes>";
+				$output.="</taetigkeit>";
+			}
+		}
+		else
+		{
+			$output.="<taetigkeit>";
+			if($value==0)
+			{
+				$output .= '<abgnr>0</abgnr>';
+				$output .= '<vzkd>0</vzkd>';
+				$output .= '<vzaby>0</vzaby>';
+				$output .= '<bezd> </bezd>';
+				$output .= '<bezt> </bezt>';
+                                $output .= "<oes>" . $oesString . "</oes>";
+			}
+			else
+			{
+				$output .= '<abgnr>' . "ERROR-NOABGNR" . '</abgnr>';
+                                $output .= "<oes>" . "NOOES" . "</oes>";
+			//	$output .= '<sql>' . $sql . '</sql>';
+			}
+			$output.="</taetigkeit>";
+		}
+	}	
+	
+	$output.="<controlid>";
+	$output .= $controlid;
+	$output.="</controlid>";
+        $oeArray = split(';', $oesString);
+        $reducedOEArray = array();
+
+        if(count($oeArray)>1){
+            // mam vice nez jedno oe, zkusim omezit jejih pocet podle pg zakaznika
+            // vytahnu si oe podle pg
+            $oeArrayPG = $aplDB->getOESForPG($pg);
+            // ocistim si pole od mezer
+            $oeArrayClean = array();
+            foreach ($oeArray as $oe){
+                $oeClean = trim($oe);
+                array_push($oeArrayClean,$oeClean);
+                if(in_array($oeClean, $oeArrayPG)){
+                    array_push($reducedOEArray, $oeClean);
+                }
+            }
+        }
+        else{
+            $oeArrayClean = array(trim($oesString));
+        }
+
+        if(count($reducedOEArray)>0){
+            $output .= "<reducedoe>".join(';', $reducedOEArray)."</reducedoe>";
+        }
+        else{
+            $output .= "<reducedoe>".join(';', $oeArrayClean)."</reducedoe>";
+        }
+        
+        $output .= "<pg>$pg</pg>";
+	$output .= '</response>';
+	
+	echo $output;
+?>
+

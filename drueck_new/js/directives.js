@@ -32,7 +32,6 @@ angular.module('dambewApp')
 				    
 				    $http.post(
 					//'./updateHelpText.php',
-					//ulozeni noveho helptextu
 					attrs.helptextupdater,
 					{id:newVal[0].id,helptext:newVal[0].help_text}
 				    ).then(function (response) {

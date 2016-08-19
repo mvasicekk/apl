@@ -1,0 +1,113 @@
+<?
+session_start();
+require "../fns_dotazy.php";
+require '../db.php';
+dbConnect();
+
+
+	$controlid = $_GET['controlid'];
+	$value = $_GET['value'];
+	$bis = $_GET['bis'];
+	$datum = $_GET['datum'];
+	$persnr = $_GET['persnr'];
+        $oeArray = split(';', $_GET['oe']);
+        if(!is_array($oeArray)) $oeArray = array($_GET['oe']);
+        $pg = $_GET['pg'];
+
+
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Pragma: nocache');
+	header('Content-Type: text/xml');
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+      	mysql_query('set names utf8');
+
+        $aplDB = AplDB::getInstance();
+
+	//$datum = '30.12.1899';
+	$db_bis=make_DB_datetime($bis,$datum);
+	$db_datum=make_DB_datum($datum);
+	$db_von=make_DB_datetime($value,$datum);
+	
+	$output = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+	$output .= '<response>';
+	
+	
+	// pokud je hodnota von ruzna od 00:00:00 otestuju, zda nespada do jiz zadaneho intervalu casu von a bis
+
+	// puvodni	
+	//$sql = "select `verb-von` as von,`verb-bis` as bis from drueck where ((persnr='".$persnr."') and (datum='".$db_datum."') and (`verb-von`<='".$db_von."') and (`verb-bis`>'".$db_von."'))";
+	// novy
+	$sql = "select `verb-von` as von,`verb-bis` as bis from drueck where ((persnr='".$persnr."') and (datum='".$db_datum."') and (`verb-von`<='".$db_von."') and (`verb-bis`>'".$db_von."'))";
+
+	//$output.='<sql>'.$sql.'</sql>';
+
+	// pokud mi dotaz vrati nejake zaznamy, znamena to, ze polozka vonspadla do jiz zadaneho intervalu a to je chyba
+	$result=mysql_query($sql);
+	if(mysql_affected_rows()>0)
+	{
+		// pro novy von zeit jsem nalezl odpovidajici bis zeit
+		while ($row = mysql_fetch_array($result))
+		{
+			$output.="<vonzeit>";
+			$output.= '<von>ERROR-DUPLIKAT</von>';
+			$output.= '<errordescription>Casy se prekryvaji</errordescription>';
+			$output.="</vonzeit>";
+			$output.="<lastvonbis>";
+			$output.= '<lbis>' . $row['bis'] . '</lbis>';
+			$output.= '<lvon>' . $row['von'] . '</lvon>';
+			$output.= '<strlenlvon>' . strlen($row['von']) . '</strlenlvon>';
+			$output.="</lastvonbis>";
+		}
+	}
+	else
+	{
+		// v poradkunenasel jsem zadne prekryvajici se casy
+			$output.="<vonzeit>";
+			$output.= '<von>OK</von>';
+			$output.="</vonzeit>";
+
+                        // rozhodnu co vyberu z pole oeArray podle zadaneho casu
+                        // von , fruhschicht = od 02:01 do 14:00
+                        $od = mktime(2, 1);
+                        $do = mktime(14,0);
+                        $vonHod = substr($value,0,2); // roz�e�eme p��chod na �daje
+                        $vonMin = substr($value,3,2); // roz�e�eme p��chod na �daje
+                        $testovanyCas = mktime(intval($vonHod), intval($vonMin));
+                        $output .= "<od>".$od."</od>";
+                        $output .= "<do>".$do."</do>";
+                        $output .= "<testvalue>".$testovanyCas."</testvalue>";
+                        
+                        if($testovanyCas>=$od && $testovanyCas<$do)
+                            $schicht = 'F';
+                        else
+                            $schicht = 'S';
+
+                        $output .= "<schicht>".$schicht."</schicht>";
+
+                        // mam vice nez jeden oe ?
+                        if(count($oeArray)>1){
+                            // z dtattypen vyberu jen smeny ktere odpovidaji hodnote schicht
+                            $OEEntsprechendSchicht = $aplDB->getOEForFrSp($schicht);
+                            $prunikArrayOE = array_intersect($oeArray,$OEEntsprechendSchicht);
+                            $reducedArray = $prunikArrayOE;
+                        }
+                        else{
+                            $reducedArray = $oeArray;
+                        }
+                        $output .= "<reducedoe>".join(';', $reducedArray)."</reducedoe>";
+	}
+	
+	$output.="<controlid>";
+	$output .= $controlid;
+	$output.="</controlid>";
+	
+	$output .= '</response>';
+	
+	echo $output;
+?>
+

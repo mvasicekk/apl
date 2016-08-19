@@ -36,6 +36,7 @@ aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeou
     $scope.showHelp = false;
     $scope.datePickerFormat = 'dd.MM.yyyy';
     $scope.securityInfo = undefined;
+    $scope.isEditor = false;
     $scope.fehlerArray = [
 	{
 	    druh:'Sandstellen / písek',
@@ -191,15 +192,27 @@ $scope.getStkSumme = function(){
      * 
      * @returns {unresolved}
      */
-    $scope.initSecurity = function(){
-	var p={
-	    form_id:'f355_mangelbericht'
+    $scope.initSecurity = function () {
+	var p = {
+	    form_id: 'f355_mangelbericht'
 	};
-	return $http.post('./getSecurityInfo.php',p).then(
-		    function(response){
-			$scope.securityInfo = response.data.securityInfo;
-		    }
-		);
+//	return $http.post('./getSecurityInfo.php',p).then(
+//		    function(response){
+//			$scope.securityInfo = response.data.securityInfo;
+//		    }
+//		);
+	return $http.post('../getSecurityInfo.php', p).then(
+		function (response) {
+		    $scope.securityInfo = response.data.securityInfo;
+		    //zkusim najit roli helptexteditor
+		    $scope.securityInfo.roles.forEach(function (v) {
+			if (v.rolename == 'helptexteditor') {
+			    $scope.isEditor = true;
+			    console.log('is helptexteditor');
+			}
+		    });
+		}
+	);
     }
 
     
@@ -207,7 +220,7 @@ $scope.getStkSumme = function(){
 	var p={
 	    form_id:'f355_mangelbericht'
 	};
-	return $http.post('./getHelpInfo.php',p).then(
+	return $http.post('../getHelpInfo.php',p).then(
 		    function(response){
 			$scope.helpText = response.data.help.helpText;
 			$scope.hIArray = response.data.help.hiArray;
@@ -265,11 +278,13 @@ $scope.getStkSumme = function(){
 	});
     }
     // init
-    /*
+    
     $scope.initSecurity();
+    /*
     $scope.initLists();
-    $scope.initHelp();
     */
+    $scope.initHelp();
+    
     var such = $window.document.getElementById('teil_search');
     if (such) {
 	such.focus();

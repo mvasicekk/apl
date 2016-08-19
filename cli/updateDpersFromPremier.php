@@ -25,6 +25,7 @@ function updateAplPersnr($zCislo,$field,$value,$oldValue,$table='dpers_isp'){
 	}
     }
     
+    // pocet ovlivnenych radku
     $ar = $a->query($sql);
     
     echo "\nUPDATEFIELD $field = $value (from $oldValue) for isp_cislo=$zCislo (ar=$ar),table = $table, persnr = $persnr";
@@ -155,7 +156,7 @@ foreach ($persArray as $zCislo=>$persRow){
     $import = TRUE;
     //interni cislo zamestnance
     echo "$zCislo:".$persRow['zPrijmeni'].' '.$persRow['zJmeno'].' '.$persRow['zDatNar'].' - ';
-    //cisla pracovnich pomeru
+    // cisla pracovnich pomeru -------------------------------------------------
     $persNr = 0;
     foreach ($persRow['pp'] as $poradi=>$ppRow){
 	$ppCislo = intval($ppRow['ppCislo']);
@@ -165,7 +166,8 @@ foreach ($persArray as $zCislo=>$persRow){
 	}
 	else{
 	    if($poradi==0){
-		//nejnizsi cislo prac. pomeru ( to ze bude prvni je zajisteno sort by v dotazu ) bude zaroven persnr
+		// nejnizsi cislo prac. pomeru ( to ze bude prvni je zajisteno -
+		// sort by v dotazu ) bude zaroven persnr ----------------------
 		$persNr = $ppCislo;
 	    }
 	    echo "$ppCislo ,";
@@ -179,54 +181,98 @@ foreach ($persArray as $zCislo=>$persRow){
 //	$persArray[$zCislo]['zDatNar'] = strtotime($r['Z_DAT_NAR'])===FALSE?'':date('Y-m-d',  strtotime($r['Z_DAT_NAR']));
 //	$persArray[$zCislo]['zStObc'] = iconv('windows-1250', 'UTF-8', trim($r['Z_ST_OBC']));
 
+	// prijmrni ------------------------------------------------------------
 	if($aplPersArray[$zCislo]['name']!=$persArray[$zCislo]['zPrijmeni']){
 	    updateAplPersnr($zCislo,'name',$persArray[$zCislo]['zPrijmeni'],$aplPersArray[$zCislo]['name']);
 	}
+	//----------------------------------------------------------------------
+	//
+	// jmeno ---------------------------------------------------------------
 	if($aplPersArray[$zCislo]['vorname']!=$persArray[$zCislo]['zJmeno']){
 	    updateAplPersnr($zCislo,'vorname',$persArray[$zCislo]['zJmeno'],$aplPersArray[$zCislo]['vorname']);
 	}
+	//----------------------------------------------------------------------
+	//
+	// misto narozeni ------------------------------------------------------
 	if($aplPersArray[$zCislo]['gebort']!=$persArray[$zCislo]['zMistoNar']){
 	    updateAplPersnr($zCislo,'gebort',$persArray[$zCislo]['zMistoNar'],$aplPersArray[$zCislo]['gebort']);
 	}
+	//----------------------------------------------------------------------
+	//
+	// email ---------------------------------------------------------------
 	if($aplPersArray[$zCislo]['email']!=$persArray[$zCislo]['zEmail']){
 	    updateAplPersnr($zCislo,'email',$persArray[$zCislo]['zEmail'],$aplPersArray[$zCislo]['email']);
 	}
+	//----------------------------------------------------------------------
+	//
+	// mobil ---------------------------------------------------------------
 	if($aplPersArray[$zCislo]['mobil']!=$persArray[$zCislo]['zMobil']){
 	    updateAplPersnr($zCislo,'kom7',$persArray[$zCislo]['zMobil'],$aplPersArray[$zCislo]['mobil'],'dpersdetail1_isp');
 	}
-	//korespondencni
+	//----------------------------------------------------------------------
+	//
+	// korespondencni adresa, ulice ----------------------------------------
 	if($aplPersArray[$zCislo]['kulice']!=$persArray[$zCislo]['kUlice']){
 	    updateAplPersnr($zCislo,'strasse',$persArray[$zCislo]['kUlice'],$aplPersArray[$zCislo]['kulice'],'dpersdetail1_isp');
 	}
+	//----------------------------------------------------------------------
+	//
+	// korespondencni adresa, mesto ----------------------------------------
 	if($aplPersArray[$zCislo]['kmisto']!=$persArray[$zCislo]['kMisto']){
 	    updateAplPersnr($zCislo,'komm_ort',$persArray[$zCislo]['kMisto'],$aplPersArray[$zCislo]['kmisto'],'dpers_isp');
 	}
+	//----------------------------------------------------------------------
+	//
+	// korespondencni adresa, psc ------------------------------------------
 	if($aplPersArray[$zCislo]['kpsc']!=$persArray[$zCislo]['kPsc']){
 	    updateAplPersnr($zCislo,'plz',$persArray[$zCislo]['kPsc'],$aplPersArray[$zCislo]['kpsc'],'dpersdetail1_isp');
 	}
-	if($aplPersArray[$zCislo]['kstat']!=$persArray[$zCislo]['kStat']){
+	//----------------------------------------------------------------------
+	//
+	// korespondencni adresa, stat -----------------------------------------
+ 	if($aplPersArray[$zCislo]['kstat']!=$persArray[$zCislo]['kStat']){
 	    updateAplPersnr($zCislo,'stat',$persArray[$zCislo]['kStat'],$aplPersArray[$zCislo]['kstat'],'dpersdetail1_isp');
 	}
-	//trvala
+	//----------------------------------------------------------------------
+	//
+	// trvala adresa, ulice ------------------------------------------------
 	if($aplPersArray[$zCislo]['tulice']!=$persArray[$zCislo]['tUlice']){
 	    updateAplPersnr($zCislo,'strasse_op',$persArray[$zCislo]['tUlice'],$aplPersArray[$zCislo]['tulice'],'dpersdetail1_isp');
 	}
+	//----------------------------------------------------------------------
+	//
+	// trvala adresa, mesto ------------------------------------------------
 	if($aplPersArray[$zCislo]['tmisto']!=$persArray[$zCislo]['tMisto']){
 	    updateAplPersnr($zCislo,'ort_op',$persArray[$zCislo]['tMisto'],$aplPersArray[$zCislo]['tmisto'],'dpersdetail1_isp');
 	}
+	//----------------------------------------------------------------------
+	//
+	// trvala adresa, psc --------------------------------------------------
 	if($aplPersArray[$zCislo]['tpsc']!=$persArray[$zCislo]['tPsc']){
 	    updateAplPersnr($zCislo,'plz_op',$persArray[$zCislo]['tPsc'],$aplPersArray[$zCislo]['tpsc'],'dpersdetail1_isp');
 	}
+	//----------------------------------------------------------------------
+	//
+	// trvala adresa, stat -------------------------------------------------
 	if($aplPersArray[$zCislo]['tstat']!=$persArray[$zCislo]['tStat']){
 	    updateAplPersnr($zCislo,'stat_op',$persArray[$zCislo]['tStat'],$aplPersArray[$zCislo]['tstat'],'dpersdetail1_isp');
 	}
-	if(
-		date('Y-m-d',  strtotime($aplPersArray[$zCislo]['geboren']))
-		!=
-		date('Y-m-d',  strtotime($persArray[$zCislo]['zDatNar']))
-	){
-	    updateAplPersnr($zCislo,'geboren',$persArray[$zCislo]['zDatNar'],$aplPersArray[$zCislo]['geboren']);
+	//----------------------------------------------------------------------
+	//
+	// datum narozeni ------------------------------------------------------
+	// prevedu jen Y-m-d pomoci date
+	// pro test
+//	$d = date('Y-m-d',  strtotime('2016-08-20'));
+	
+	$geboren = $aplPersArray[$zCislo]['geboren']=='0000-00-00 00:00:00'?NULL:$aplPersArray[$zCislo]['geboren'];
+	$zDatNar = $persArray[$zCislo]['zDatNar']=='0000-00-00 00:00:00'?NULL:$persArray[$zCislo]['zDatNar'];
+	
+	echo "\nDatumu geboren=".$geboren.", date('Y-m-d',geboren=".date('Y-m-d',  strtotime($geboren));
+	echo "\nDatumu zDatNar=".$zDatNar.", date('Y-m-d',zDatNar=".date('Y-m-d',  strtotime($zDatNar));
+	if(date('Y-m-d',  strtotime($geboren))!=date('Y-m-d',  strtotime($zDatNar))){
+	    updateAplPersnr($zCislo,'geboren',$zDatNar,$geboren);
 	}
+	//----------------------------------------------------------------------
     }
     else{
 	// cloveka s timto cislem nemam apl, pokud je jasne i persnr, zkusim ho zalozit v apl

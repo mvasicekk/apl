@@ -2,6 +2,7 @@
     <div class="page-header">
 	<h4>F355 - Māngelbericht
 	</h4>
+	<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
     </div>
     <!--<div class="text-right" data-spy="affix" data-offset-top="5" style="z-index: 99999;">-->
 	<button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
@@ -17,7 +18,8 @@
 	    <div class="form-group">
 		<label for="teil_search">Platten-Nr</label>
 		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="teil_search" ng-keypress="setTeilAktual($event)" ng-change="getTeilMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="Platten-Nr. / TeilNr ..">
-		<apl-help el="hIArray['suchefeld']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		<!--<apl-help el="hIArray['suchefeld']" showhelp="showHelp" showadmininfo="showhI"></apl-help>-->
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['suchefeld']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	</div>
 	<div ng-show="teilAktual!==null && importAktual!==null" class="col-sm-12">

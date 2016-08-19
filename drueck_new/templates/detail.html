@@ -1,0 +1,252 @@
+<div id="main_div" class="container-fluid" ng-controller="rc" >
+    <div class="page-header">
+        <button id="info" class="btn btn-info" ng-click="toggleAPLinfo()">INFO</button>
+        <h4>
+            Rückmeldungen / zadání výkonu
+        </h4>
+        
+    </div>
+  
+    <form  class="ng-valid ng-valid-maxlength ng-dirty" ng-submit="submitForm()" name="ruckForm" ng-model-options="{ updateOn: 'blur'}">
+        <div class="col-xs-12 col-sm-12 col-md-12 body_form" >
+            <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                <label for="auftragsnr">Auftragsnr</label>
+                <input enterfocus ng-change="auftrCheck()" type="text" class="form-control input-sm form-small"  maxlength="8" id="auftragsnr" ng-model="auftragsnr" autofocus>
+                 
+
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                <label for="pal">Palette / paleta</label>
+                <input enterfocus ng-change="palCheck()" type="text" class="form-control input-sm form-small" id="pal" ng-model="palette">
+            </div>
+
+
+
+            <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                <label for="datum">Datum</label>
+                <input enterfocus ng-change="dateCheck()" type="text" class="form-control input-sm form-small" id="datum" ng-model="datum">
+            </div>
+
+            <div class="form-group col-xs-12 col-sm-12 col-md-6">
+                <label for="tatnrarray">Mögliche Tätigkeiten</label>
+                <input type="text" class="form-control input-sm" id="tatnrarray" style="width: 100%;" ng-model="tatnrarray" disabled>          
+            </div>
+              
+           
+            
+        </div>
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 body_form" >
+             <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                <label for="teilnr">Teil / díl</label>
+                <input type="text" class="form-control input-sm form-small" id="teilnr" ng-model="teilnr" disabled>
+            </div>
+            
+             <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                <label for="mehr">Mehr</label>
+                <input enterfocus type="text" ng-change="mehrCheck()" class="form-control input-sm form-small" id="mehr" ng-model="mehr" VALUE="0">
+            </div>
+            
+            <div class="form-group col-xs-12 col-sm-12 col-md-2">
+            </div>
+            
+             <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <label for="tat1">Tat / operace</label>
+                <input enterfocus ng-change="tatX()" type="text" class="form-control input-sm" id="tat1" ng-model="tat1">
+            </div>
+            
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <label for="tat2">2</label>
+                <input enterfocus  ng-change="tatX()" type="text" class="form-control input-sm" id="tat2" ng-model="tat2">
+            </div>
+            
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <label for="tat3">3</label>
+                <input enterfocus ng-change="tatX()" type="text" class="form-control input-sm" id="tat3" ng-model="tat3">
+            </div>
+            
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <label for="tat4">4</label>
+                <input enterfocus ng-change="tatX()" type="text" class="form-control input-sm" id="tat4" ng-model="tat4">
+            </div>
+            
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <label for="tat5">5</label>
+                <input enterfocus ng-change="tatX()" type="text" class="form-control input-sm" id="tat5" ng-model="tat5">
+            </div>
+            
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <label for="tat6">6</label>
+                <input enterfocus ng-change="tatX()" type="text" class="form-control input-sm" id="tat6" ng-model="tat6">
+            </div>
+          
+            
+        </div>
+        
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 body_form" >
+            <div class="form-group col-xs-12 col-sm-12 col-md-4">
+                <input type="text" class="form-control input-sm" id="teilB" ng-model="teilB" disabled>
+            </div>
+             <div class="form-group col-xs-12 col-sm-12 col-md-2">
+            </div>
+            
+             <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="tat1_abymin" disabled>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="tat2_abymin" disabled>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="tat3_abymin" disabled>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="tat4_abymin" disabled>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="tat5_abymin" disabled>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="text" class="form-control input-sm" ng-model="tat6_abymin" disabled>
+            </div>
+            
+            
+            
+        </div>        
+        
+         <div class="col-xs-12 col-sm-12 col-md-12 body_form" >
+             <div class="form-group col-xs-12 col-sm-12 col-md-1">
+                <input type="button" class="btn btn-default" ng-model="ppa" value="PPA" disabled>
+            </div>
+             
+             <div class="form-group col-xs-12 col-sm-12 col-md-5">
+            </div>
+             
+             
+            <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                <input type="text" class="form-control input-sm" ng-model="tatbez" disabled>
+            </div>
+             
+             
+              <div class="form-group col-xs-12 col-sm-12 col-md-1 vz">    
+                  <label for="sumvzaby" class="vzA">VaAby</label>
+                  <input enterfocus  type="text" class="form-control input-sm vzB" id="sumvzaby" ng-model="sumvzaby" disabled>
+            </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-1 vz">
+                  <label for="sumverb" class="vzA">VerbZ</label>
+                <input enterfocus  type="text" class="form-control input-sm vzB" id="sumverb" ng-model="sumverb" disabled>
+            </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-1 vz">
+                  <label for="leist_procent" class="vzA">Leistung</label>
+                <input enterfocus  type="text" class="form-control input-sm vzB" id="leist_procent" ng-model="leist_procent" disabled>
+            </div>
+             
+          
+             
+             
+          </div> 
+        
+            <div class="col-xs-12 col-sm-12 col-md-12 body_form" >
+                   
+                <div class="form-group col-xs-12 col-sm-12 col-md-1"> 
+                    <label for="persnr">PersNr</label>
+                    <input enterfocus type="text" class="form-control input-sm" id="persnr" ng-model="persnr">             
+                </div>
+                
+                 <div class="form-group col-xs-12 col-sm-12 col-md-1"> 
+                     <input enterfocus type="text" class="form-control input-sm" id="persnr" ng-model="persnr" style="margin-top: 21px; margin-left: -24px;" disabled>             
+                </div>
+                
+                
+            </div> 
+    </form>
+
+
+ 
+ 
+
+ <div id="APLinfo" ng-show="myVar"> 
+     
+     <button id="info" class="btn btn-danger" ng-click="toggleAPLinfo()">Close INFO</button>
+     
+     
+     <table class="table table-hover table-bordered scroll" id="Apltable" >
+         <thead id="APLinfo_thead"> 
+         <tr>
+             <th>ABGNR</th>
+             <th>DTAETKZ</th>
+             <th>NAME</th>
+             <th>OPER CZ</th>
+             <th>OPER D</th>
+        </tr>
+         </thead>
+         <tbody ng-init="get_data()">
+             <tr ng-repeat="field in fields">
+            <td>{{ field.abgnr }}</td>
+            <td>{{ field.dtaetkz }}</td>
+            <td>{{ field.name }}</td>
+            <td>{{ field.oper_cz }}</td>
+            <td>{{ field.oper_d }}</td>
+        </tr>
+         </tbody>
+         
+     </table>
+     
+     
+ </div>
+ 
+ 
+ 
+<!--- Tabulka poslednich 5 zaznamu -->
+<table class="footer table table-hover table-bordered table-sm">
+    <thead id="theadLast">
+        <tr>
+        <th>Auftragsnr</th>
+        <th>Teil</th>
+        <th>Pal</th>
+        <th>TaetNr</th>
+        <th>Stk</th>
+        <th>Auss</th>
+        <th>AArt</th>
+        <th>ATyp</th>
+        <th>VzKd</th>
+        <th>VzAby</th>
+        <th>Datum</th>
+        <th>PersNr</th>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Verb</th>
+        <th>Pause</th>
+        <th>OE</th>
+        <th>Auft</th>
+        <th>User</th>
+        </tr>
+    </thead>
+    
+    <tbody ng-init="get_last_records()">
+        <tr ng-repeat="field in fiel">
+        <td>{{field.auftragsnr}}</td>
+        <td>{{field.teil}}</td>
+        <td>{{field.pal}}</td>
+        <td>{{field.taetnr}}</td>
+        <td>{{field.stk}}</td>
+        <td>{{field.aussstk}}</td>
+        <td>{{field.aart}}</td>
+        <td>{{field.atyp}}</td>
+        <td>{{field.vzkd}}</td>
+        <td>{{field.vzaby}}</td>
+        <td>{{field.datum}}</td>
+        <td>{{field.persnr}}</td>
+        <td>{{field.von}}</td>
+        <td>{{field.bis}}</td>
+        <td>{{field.verb}}</td>
+        <td>{{field.pause}}</td>
+        <td>{{field.oe}}</td>
+        <td>{{field.aufteilung}}</td>
+        <td>{{field.user}}</td>
+        </tr>
+    </tbody>
+</table>
+ 
+    
+</div>
