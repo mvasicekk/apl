@@ -1186,6 +1186,7 @@ pageheader($pdf,$cells_header,5,$jahr,$monat,$svatkyArray,$pracDobaA);
 
 foreach($reportArray as $persnr=>$person) {
 
+    //AplDB::varDump($sum_zapati_persnr_array);
     // vzkd soll
     $sum1 = testSummePersNrStunden($persnr, 'dzeit', 'stunden');
     // anwesenheit soll

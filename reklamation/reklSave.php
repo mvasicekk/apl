@@ -133,6 +133,9 @@ $field2Value = array(
     'forecast_verpackung_eur'  => floatval(strtr($rekl->forecast_verpackung_eur, ',', '.')),
     'forecast_kreislauf_eur'  => floatval(strtr($rekl->forecast_kreislauf_eur, ',', '.')),
     'forecast_pauschale_eur'  => floatval(strtr($rekl->forecast_pauschale_eur, ',', '.')),
+    'klaren_bis' => toDBDate($rekl->klaren_bis1), //*
+    'wider_am' => toDBDate($rekl->wider_am1), //*
+    "wider_per" => trim($rekl->wider_per),
 );
 
 // v pripade ze se ukoncuje reklamace

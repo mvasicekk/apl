@@ -2191,6 +2191,11 @@ public function istExportiert($import, $impal){
 	    $sql.=" ,DATE_FORMAT(analyse_erhalten_am,'%Y-%m-%d') as analyse_erhalten_am1";
 	    $sql.=" ,DATE_FORMAT(analyse_erledigt_am,'%Y-%m-%d') as analyse_erledigt_am1";
 	    $sql.=" ,DATE_FORMAT(rekl_datum,'%d.%m.%Y') as rekl_erhalten_am_abmahnung";
+	    
+	    // 2016-08-23, pridano, ve formulari nefunkovali pole wider_am,klaren_am,wider_per
+	    // wider_per je v dotazu zahrnut pomoci *
+	    $sql.=" ,DATE_FORMAT(klaren_bis,'%Y-%m-%d') as klaren_bis1";
+	    $sql.=" ,DATE_FORMAT(wider_am,'%Y-%m-%d') as wider_am1";
 	    $sql.=" from dreklamation where id='$reklid'";
 	}
 

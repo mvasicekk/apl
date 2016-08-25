@@ -3,9 +3,22 @@
 require_once '/var/www/workspace/apl/db.php';
 require '/var/www/workspace/apl/sqldb.php';
 
+$ucetniJednotka = "";
+if($argc>1){
+    $ucetniJednotka = trim($argv[1]);
+}
 
-echo "----- START updateDpersFromPremier on :".date('Y-m-d H:i:s')." ----- \n";
-$sqlDB = sqldb::getInstance('FA4');
+//$ucetniJednotka = 'FA5';
+if($ucetniJednotka==""){
+    echo "----- START updateDpersFromPremier ($ucetniJednotka) on :".date('Y-m-d H:i:s')." ----- \n";
+    echo "neni zadana ucetni jednotka, koncim\n";
+    exit();
+}
+
+echo "----- START updateDpersFromPremier ($ucetniJednotka) on :".date('Y-m-d H:i:s')." ----- \n";
+$sqlDB = sqldb::getInstance($ucetniJednotka);
+
+//var_dump($sqlDB);
 
 function updateAplPersnr($zCislo,$field,$value,$oldValue,$table='dpers_isp'){
     global $a;
@@ -67,7 +80,7 @@ column:UVA_PLAT_OD - value:Aug 10 2015 12:00:00:000AM
 $persArray = array();
 if ($res !== NULL) {
     foreach($res as $r){
-	$zCislo = intval($r['Z_CISLO']);
+	$zCislo = $ucetniJednotka.'_'.intval($r['Z_CISLO']);
 //	echo "zcislo:$zCislo\n";
 	if(!array_key_exists($zCislo,$persArray)){
 	    $persArray[$zCislo]['pp'] = array();
@@ -129,7 +142,7 @@ $aplPersDBRows = $a->getQueryRows($sql);
 $aplPersArray = array();
 if ($aplPersDBRows !== NULL) {
     foreach ($aplPersDBRows as $r) {
-	$zCislo = intval($r['isp_cislo']);
+	$zCislo = trim($r['isp_cislo']);
 	if (!array_key_exists($zCislo, $aplPersArray)) {
 	    $aplPersArray[$zCislo]['pp'] = array();
 	}
@@ -267,12 +280,21 @@ foreach ($persArray as $zCislo=>$persRow){
 	$geboren = $aplPersArray[$zCislo]['geboren']=='0000-00-00 00:00:00'?NULL:$aplPersArray[$zCislo]['geboren'];
 	$zDatNar = $persArray[$zCislo]['zDatNar']=='0000-00-00 00:00:00'?NULL:$persArray[$zCislo]['zDatNar'];
 	
-	echo "\nDatumu geboren=".$geboren.", date('Y-m-d',geboren=".date('Y-m-d',  strtotime($geboren));
-	echo "\nDatumu zDatNar=".$zDatNar.", date('Y-m-d',zDatNar=".date('Y-m-d',  strtotime($zDatNar));
+	//echo "\nDatumu geboren=".$geboren.", date('Y-m-d',geboren=".date('Y-m-d',  strtotime($geboren));
+	//echo "\nDatumu zDatNar=".$zDatNar.", date('Y-m-d',zDatNar=".date('Y-m-d',  strtotime($zDatNar));
 	if(date('Y-m-d',  strtotime($geboren))!=date('Y-m-d',  strtotime($zDatNar))){
 	    updateAplPersnr($zCislo,'geboren',$zDatNar,$geboren);
 	}
 	//----------------------------------------------------------------------
+	// pri update se podivam i na pracovni pomery
+	echo "\n START pracovni pomery =========================================";
+	foreach ($persArray[$zCislo]['pp'] as $ind=>$ppRow){
+	    echo "\n $ind";
+	    var_dump($ppRow);
+	    echo "\n-----------------------------------------------------------\n";
+	}
+	echo "\n END pracovni pomery ===========================================";
+	
     }
     else{
 	// cloveka s timto cislem nemam apl, pokud je jasne i persnr, zkusim ho zalozit v apl
