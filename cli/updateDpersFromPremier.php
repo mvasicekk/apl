@@ -287,10 +287,86 @@ foreach ($persArray as $zCislo=>$persRow){
 	}
 	//----------------------------------------------------------------------
 	// pri update se podivam i na pracovni pomery
+	$aplVertragRows = $a->getPersVertragArray($aplPersArray[$zCislo]['persnr']);
 	echo "\n START pracovni pomery =========================================";
 	foreach ($persArray[$zCislo]['pp'] as $ind=>$ppRow){
-	    echo "\n $ind";
-	    var_dump($ppRow);
+	    // hledam v dpersvertrag polozku s isp_pp_cislo
+	    $isp_pp_cislo = $ppRow['ppCislo'];
+	    if($aplVertragRows!==NULL){
+		// mam nejake prac pomery v apl
+		$naselPPvDPersVertrag = FALSE;
+		foreach ($aplVertragRows as $vr){
+		    //hledam cislo prac.pomeru
+		    if($vr['isp_pp_cislo']==$isp_pp_cislo){
+			$naselPPvDPersVertrag = TRUE;
+			break;
+		    }
+		}
+		//podle toho, jestli najdu prac pomer v dpersvertrag bud updatuju hodnoty nebo vlozim novy radek
+		if($naselPPvDPersVertrag===TRUE){
+		    echo "\n vertrag $isp_pp_cislo v dpersvertrag existuje, provedu DPERSVERTRAGUPDATE";
+		}
+		else{
+		    echo "\n vertrag $isp_pp_cislo v dpersvertrag neexistuje, provedu DPERSVERTRAGINSERT";
+		}
+	    }
+	    else{
+		// nemam prac pomery v apl, vlozim do tabulky dpersvertrag
+		echo "\n zadne zaznamy v dpersvertrag, provedu DPERSVERTRAGINSERT";
+		$sql = "insert into dpersvertrag_isp (";
+		$sql.=" persnr";
+		$sql.=" ,eintritt";
+		$sql.=" ,austritt";
+		$sql.=" ,befristet";
+		$sql.=" ,probezeit";
+		$sql.=" ,giltab";
+		$sql.=" ,regelarbzeit";
+		$sql.=" ,urlaub_jansp";
+		$sql.=" ,urlaub_vjrest";
+		$sql.=" ,urlaub_kor";
+		$sql.=" ,vertrag_anfang";
+		$sql.=" ,verlang";	
+		$sql.=" ,vertragtyp_id";
+		$sql.=" ,isp_pp_cislo";
+		$sql.=" ,isp_pp_kate";
+		$sql.=" ,isp_pp_vstup";
+		$sql.=" ,isp_pp_vystup";
+		$sql.=" ,isp_dov_narok";
+		$sql.=" ,isp_dov_narok_s";
+		$sql.=" ,isp_div_zust_min_rok";
+		$sql.=" ,isp_uva_doba";
+		$sql.=" ,isp_uva_typ_mzdy";
+		$sql.=" ,isp_uva_plat_od";
+		$sql.=")";
+		$sql.=" values(";
+		$sql.=" '".$aplPersArray[$zCislo]['persnr']."'";
+		$sql.=" ,'".$ppRow['ppVstup']."'";
+		$sql.=" ,'".$ppRow['ppVystup']."'";
+		$sql.=" ,null";
+		$sql.=" ,null";
+		$sql.=" ,null";
+		$sql.=" ,8";
+		$sql.=" ,'".$ppRow['dovNarok']."'";
+		$sql.=" ,'".$ppRow['dovZusMinr']."'";
+		$sql.=" ,0";
+		$sql.=" ,0";
+		$sql.=" ,0";	
+		$sql.=" ,1";
+		$sql.=" ,'".$ppRow['ppCislo']."'";
+		$sql.=" ,'".$ppRow['ppKate']."'";
+		$sql.=" ,'".$ppRow['ppVstup']."'";
+		$sql.=" ,'".$ppRow['ppVystup']."'";
+		$sql.=" ,'".$ppRow['dovNarok']."'";
+		$sql.=" ,'".$ppRow['dovNarokS']."'";
+		$sql.=" ,'".$ppRow['dovZusMinr']."'";
+		$sql.=" ,'".$ppRow['uvaDoba']."'";
+		$sql.=" ,'".$ppRow['uvaTypMzdy']."'";
+		$sql.=" ,'".$ppRow['uvaPlatOd']."'";
+		$sql.=" )";
+		//echo "\n $sql";
+		$ins = $a->insert($sql);
+		echo " ($ins)";
+	    }
 	    echo "\n-----------------------------------------------------------\n";
 	}
 	echo "\n END pracovni pomery ===========================================";

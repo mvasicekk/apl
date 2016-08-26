@@ -113,6 +113,15 @@ class AplDB {
     }
 
     
+    /**
+     * 
+     * @param type $persnr
+     */
+    public function getPersVertragArray($persnr){
+	$sql = "select * from dpersvertrag_isp where persnr='$persnr' order by isp_pp_cislo";
+	return $this->getQueryRows($sql);
+	//return $sql;
+    }
 // ------------------------------------------------------------------------
 // public methods
 
