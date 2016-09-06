@@ -38,7 +38,7 @@ foreach ($parameters as $param)
 		}
 		$params .= $label.": ".$value."  ";
 	}
-}
+ }
 
 // pole s sirkama bunek v mm, poradi v poli urcuje i poradi sloupcu
 // v tabulce
@@ -48,70 +48,70 @@ foreach ($parameters as $param)
 // nf = pokus pole obsahuje tento klic bude se cislo v teto bunce formatovat dle parametru v poli 0,1,2
 
 
-$cells = 
+$cells =
 array(
 
-"Teil" 
+"Teil"
 => array ("popis"=>"","sirka"=>25,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
 
-"import" 
+"import"
 => array ("popis"=>"","sirka"=>25,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
 
-"text" 
+"text"
 => array ("popis"=>"","sirka"=>33,"ram"=>'0',"align"=>"L","radek"=>0,"fill"=>0),
 
-"expstk" 
+"expstk"
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
-"auss2_stk_exp" 
+"auss2_stk_exp"
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
-"auss4_stk_exp" 
+"auss4_stk_exp"
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
-"auss6_stk_exp" 
+"auss6_stk_exp"
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
-"vypln" 
+"vypln"
 => array ("popis"=>"","sirka"=>0,"ram"=>'0',"align"=>"R","radek"=>1,"fill"=>0)
 
 );
 
 
-$cells_header = 
+$cells_header =
 array(
 
-"Teil" 
+"Teil"
 => array ("popis"=>"Teil","sirka"=>25,"ram"=>'TB',"align"=>"L","radek"=>0,"fill"=>1),
 
-"Import" 
+"Import"
 => array ("popis"=>"Import","sirka"=>25,"ram"=>'TB',"align"=>"L","radek"=>0,"fill"=>1),
 
-"Leistung" 
+"Leistung"
 => array ("popis"=>"Leistung","sirka"=>33,"ram"=>'TB',"align"=>"L","radek"=>0,"fill"=>1),
 
-"gutstk" 
+"gutstk"
 => array ("popis"=>"gute Stk","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>1),
 
-"auss2" 
+"auss2"
 => array ("popis"=>"auss2","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>1),
 
-"auss4" 
+"auss4"
 => array ("popis"=>"auss4","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>1),
-	
-"auss6" 
+
+"auss6"
 => array ("popis"=>"auss6","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>1),
-	
-"bestellt" 
+
+"bestellt"
 => array ("popis"=>"Bestellt","sirka"=>15,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>1),
 
-"gew" 
+"gew"
 => array ("popis"=>"Gew","sirka"=>0,"ram"=>'TB',"align"=>"R","radek"=>1,"fill"=>1)
 
 );
 
 
-$sum_zapati_import_array = array(	
+$sum_zapati_import_array = array(
 								"auss2_stk_exp"=>0,
 								"auss4_stk_exp"=>0,
 								"auss6_stk_exp"=>0,
@@ -120,7 +120,7 @@ $sum_zapati_import_array = array(
 								);
 global $sum_zapati_import_array;
 
-$sum_zapati_sestava_array = array(	
+$sum_zapati_sestava_array = array(
 								"auss2_stk_exp"=>0,
 								"auss4_stk_exp"=>0,
 								"auss6_stk_exp"=>0,
@@ -141,7 +141,7 @@ function nuluj_sumy_pole(&$pole)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
- 
+
 
 // funkce pro vykresleni hlavicky na kazde strance
 function pageheader($pdfobjekt,$pole,$headervyskaradku)
@@ -169,7 +169,7 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist)
 	{
 		if(array_key_exists("nf",$cell))
 		{
-			$cellobsah = 
+			$cellobsah =
 			number_format(getValueForNode($nodelist,$nodename), $cell["nf"][0],$cell["nf"][1],$cell["nf"][2]);
 		}
 		else
@@ -215,8 +215,8 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
             $komentare = array_merge($komentare,$k2);
         if(is_array($k3))
             $komentare = array_merge($komentare,$k3);
-	
-		
+
+
 	$x_pocatek=125;
 	$y_pocatek=23+$yOffset;
 	$pdfobjekt->SetFont("FreeSans", "B", 7);
@@ -230,7 +230,7 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 	$pdfobjekt->SetX($x_pocatek);
 
 	$pdfobjekt->SetFont("FreeSans", "", 7);
-	
+
 	// vypisu komentare
 	if(is_array($komentare))
 	{
@@ -250,7 +250,7 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
 			$pdfobjekt->SetX($x_pocatek);
 		}
 	}
-	
+
 	foreach($taetigkeiten as $taetigkeit)
 	{
 		$taetigkeitChildNodes = $taetigkeit->childNodes;
@@ -276,13 +276,13 @@ function zobraz_cinnosti($pdfobjekt,$taetigkeiten,$teil,$yOffset=0)
  * @param TCPDF $pdf
  * @param type $xOffset
  * @param type $yOffset
- * @param type $height 
+ * @param type $height
  */
 function show_DokuLegend($pdf,$teil,$xOffset,$yOffset,$height){
     // prepare legend array
     $a = AplDB::getInstance();
     $pdf->SetFont("FreeSans", "", 6);
-    
+
     // *************************************************************************
     // second param = TRUE, use druck_arbpapier flag in dokumenttyp ************
     $dokLegendArray = $a->getTeilDokuDistinctDokuArray($teil,TRUE);
@@ -324,14 +324,14 @@ function show_DokuLegend($pdf,$teil,$xOffset,$yOffset,$height){
             $pdf->SetXY($xOffset, $yOffset+$rowHeight*11-2);
             $pdf->Write($rowHeight, "50 - ?");
         }
-    }    
+    }
 }
 /**
  *
  * @param TCPDF $pdf
  * @param type $x_pocatek
  * @param type $yTemp
- * @param type $height 
+ * @param type $height
  */
 function show_AussLegend($pdf,$xOffset,$yOffset,$height){
     // prepare legend array
@@ -356,7 +356,7 @@ function show_AussLegend($pdf,$xOffset,$yOffset,$height){
  *
  * @param type $pdf
  * @param type $teil
- * @param type $offset 
+ * @param type $offset
  */
 function zobraz_schwierigkeit($pdf,$teil,$yOffset=0){
         // vytahnu seznam reklamaci pro zadany dil
@@ -364,12 +364,12 @@ function zobraz_schwierigkeit($pdf,$teil,$yOffset=0){
     $sArray = $a->getTeilSchwierigkeiten($teil);
     if ($sArray === NULL)
 	return 0;
-    
+
     $wholeWidth = 150+7;
     $schWidth = $wholeWidth/3;
     $schLabel = $schWidth*(1/4);
     $schValue = $schWidth*(3/4);
-    
+
     $x_pocatek = 125;
     $y_pocatek = 23+$yOffset;
     $pdf->SetFont("FreeSans", "B", 7);
@@ -391,7 +391,7 @@ function zobraz_schwierigkeit($pdf,$teil,$yOffset=0){
 /**
  *
  * @param TCPDF $pdfobjekt
- * @param type $teil 
+ * @param type $teil
  * @return pocet zobrazenych reklamaci
  */
 function zobraz_reklamace($pdfobjekt, $teil) {
@@ -403,7 +403,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 	return 0;
     $restAnzahl = 0;
     if(count($reklArray)>5) $restAnzahl = count ($reklArray)-5;
-    
+
     $x_pocatek = 125;
     $y_pocatek = 23;
     $pdfobjekt->SetFont("FreeSans", "B", 7);
@@ -430,7 +430,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
 	$citac++;
 	if($citac>4) break;
     }
-    
+
     if($restAnzahl>0)
 	$pdfobjekt->Cell(12+15+95+17+10, 3, "+ weitere $restAnzahl Reklamationen", 0, 0, 'L');
     // cerveny ramecek okolo
@@ -451,7 +451,7 @@ function zobraz_reklamace($pdfobjekt, $teil) {
  *
  * @param TCPDF $pdfobjekt
  * @param type $paletteChildNodes
- * @param type $importChildNodes 
+ * @param type $importChildNodes
  */
 function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 {
@@ -476,7 +476,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Write(8,substr(getValueForNode($importChildNodes,"name2"),0,25));$pdfobjekt->Ln(1);
 	$pdfobjekt->SetFont("FreeSans", "", 10);
 	$pdfobjekt->Write(8,substr(getValueForNode($paletteChildNodes,"restmengen_verw"),0,25));$pdfobjekt->Ln();
-	
+
 
 	// pole pro auftrag
 	$pdfobjekt->Rect($x_pocatek+52+3,$y_pocatek-10,52,30);
@@ -528,7 +528,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->Write(10,getValueForNode($paletteChildNodes,"brgew")." kg");
 	$pdfobjekt->Ln(10);
-	
+
 	$pdfobjekt->SetX($x_pocatek+52+5);
 	$pdfobjekt->SetFont("FreeSans", "", 7);
 	$pdfobjekt->Write(5,"Druh litiny:".getValueForNode($paletteChildNodes,"artguseisen"));
@@ -553,13 +553,13 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Write(5,$musterText);
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
 	$pdfobjekt->Write(5,"      Teil (original): ".getValueForNode($paletteChildNodes,"teillang"));
-	
+
 	$pdfobjekt->SetFont("FreeSans", "", 9);
-	$pdfobjekt->SetXY($x_pocatek,$y_pocatek-10+30+3+24+3);	
+	$pdfobjekt->SetXY($x_pocatek,$y_pocatek-10+30+3+24+3);
 
 	// tabulka pro zapis vykonu
 	// hlavicka
-	
+
 	$pdfobjekt->MyMultiCell(25,8,"Datum",1,'L',0);
 //	$pdfobjekt->MyMultiCell(15,4,"Schicht\nsmena",1,'L',0);
 	$pdfobjekt->MyMultiCell(20,4,"PersNr\nosobni cislo",1,'L',0);
@@ -589,7 +589,7 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	    array(25,'1',9),
 	    array(0,'1',9),
 	);
-	
+
 	$yProCarky = 0;
 	for ($i = 0; $i < 8; $i++) {
 	    if($i==0) $yProCarky=$pdfobjekt->GetY();
@@ -603,9 +603,9 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	for($i=0;$i<8;$i++){
 	    for($j=0;$j<4;$j++){
 		$pdfobjekt->Line(
-			$x_pocatek+25+20+$table[2][0]*($j+1), 
-			$yProCarky+8+$i*9, 
-			$x_pocatek+25+20+$table[2][0]*($j+1), 
+			$x_pocatek+25+20+$table[2][0]*($j+1),
+			$yProCarky+8+$i*9,
+			$x_pocatek+25+20+$table[2][0]*($j+1),
 			$yProCarky+9+$i*9
 			);
 	    }
@@ -617,21 +617,21 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 		    +$table[2][0]*5
 		    +$table[7][0]
 		    +$table[8][0]
-		    +$table[9][0]/2, 
-		    $yProCarky+7+$i*9, 
+		    +$table[9][0]/2,
+		    $yProCarky+7+$i*9,
 		    $x_pocatek
 		    +$table[0][0]
 		    +$table[1][0]
 		    +$table[2][0]*5
 		    +$table[7][0]
 		    +$table[8][0]
-		    +$table[9][0]/2, 
+		    +$table[9][0]/2,
 		    $yProCarky+9+$i*9);
 	}
 
 	// spodni ramecek s poznamkou
 	$xHranice = $pdfobjekt->getPageWidth()-PDF_MARGIN_RIGHT;
-	
+
 	// aussLegend
 	$pdfobjekt->SetFont("FreeSans", "", 8);
 	$yTemp = $pdfobjekt->GetY();
@@ -642,15 +642,15 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	// dokumente
 	$pdfobjekt->Rect($x_pocatek+45, $yTemp, 5*13+28+15+25,15+21 );
 	show_DokuLegend($pdfobjekt,$teilnr,$x_pocatek+45+0,$yTemp+1,15+21-2);
-	
-	
+
+
 	// vpa + verpackung
 	$pdfobjekt->Rect($x_pocatek+45, $yTemp, $xHranice-($x_pocatek+45),15+21 );
         $verpackungen;
         foreach($paletteChildNodes as $paletteChildNode)
             if ($paletteChildNode->nodeName == "taetigkeiten")
                 $verpackungen = $paletteChildNode->firstChild->lastChild->childNodes;
-        
+
         $x = 193;
         $y = $yTemp + 1;
         foreach($verpackungen as $verpackung)
@@ -658,14 +658,14 @@ function zobraz_paletu($pdfobjekt,$paletteChildNodes,$importChildNodes)
             $verp_id = $verpackung->firstChild->nodeValue;
             $verp_name = $verpackung->lastChild->nodeValue;
             $verp_stk = $verpackung->childNodes->item(1)->nodeValue;
-            
+
             $pdfobjekt->SetXY($x, $y);
             $pdfobjekt->Cell(45, 2.5, $verp_stk . "x  " . $verp_id . " - " . $verp_name, "", 0 , "L");
             //echo $verpackung->firstChild->nodeValue . "<br>";
-            
+
             $y += 2.5;
         }
-        
+
         $pdfobjekt->SetXY(152, $yTemp + 1);
         $verpackungsmenge = getValueForNode($paletteChildNodes, "verpackungmenge");
 	$pdfobjekt->SetFillColor(255,255,255);
@@ -685,7 +685,7 @@ function test_pageoverflow($pdfobjekt,$vysradku,$cellhead)
 		$pdfobjekt->Ln();
 	}
 }
-				
+
 
 function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 {
@@ -728,7 +728,7 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
         $pdfobjekt->TranslateY($pdfobjekt->getPageHeight()-PDF_MARGIN_BOTTOM-25);
         $pdfobjekt->Rotate(90);
         $pdfobjekt->ScaleX(90);
-        
+
 	$pdfobjekt->SetFont("FreeSans", "", 20);
 	$pdfobjekt->Text(10,15+$y_offset,"Auftrag / zakazka");
 	$pdfobjekt->Text(100,15+$y_offset,"Stck / kusu :");
@@ -736,29 +736,29 @@ function zobraz_paletu_back($pdfobjekt,$paletteChildNodes,$importChildNodes)
 	$pdfobjekt->Text(150,15+$y_offset,getValueForNode($paletteChildNodes,"stk"));
 
 	$pdfobjekt->SetFont("FreeSans", "B", $auftragsnr_vyska);
-	
-	
-	
+
+
+
 	$pdfobjekt->Text(10,50+$y_offset,getValueForNode($paletteChildNodes,"auftragsnr")."/");
 
 	$pdfobjekt->SetFont("FreeSans", "", 70);
-	
-	
+
+
 	$pdfobjekt->Text($paletaPoziceX,50+$y_offset,getValueForNode($paletteChildNodes,"pal"));
 	$pdfobjekt->SetFont("FreeSans", "", 15);
 	$pdfobjekt->Text($paletaPoziceX+5,28+$y_offset,"Palette / paleta");
 	$pdfobjekt->SetFont("FreeSans", "B", 35);
 	$pdfobjekt->SetX($paletaPoziceX+5);
 	$pdfobjekt->SetY(28+$y_offset+25);
-	
+
 	$a = AplDB::getInstance();
 	$im = getValueForNode($paletteChildNodes,"auftragsnr");
 	$pal = getValueForNode($paletteChildNodes,"pal");
 	$gt = $a->getGiesstagImportPalette($im,$pal);
-	
+
 	$pdfobjekt->Cell(189, 20, $gt, "0", 0 , "R");
-	
-	
+
+
 	$pdfobjekt->SetFont("FreeSans", "", 20);
 	//$pdfobjekt->SetXY(10,10);
 	$pdfobjekt->Text(10,70+$y_offset,"Teil / dil");
@@ -880,15 +880,15 @@ foreach($importe as $import)
 
 		// letzte Reklamationen zeigen
 		$reklRadku = zobraz_reklamace($pdf,$teil);
-		
+
 		// add schwierigkeitsinfo
 		if($reklRadku>0) $reklRadku+=1;
-		$schwRadku = zobraz_schwierigkeit($pdf,$teil,($reklRadku)*3);  
-		
+		$schwRadku = zobraz_schwierigkeit($pdf,$teil,($reklRadku)*3);
+
 		// block cinnost should be moved to bottom $reklRadku + 1 free row + 1 heading row + 1 schwierigkeitsinfo
 		if($reklRadku>0) $reklRadku+=1;
-		zobraz_cinnosti($pdf,$taetigkeiten,$teil,($reklRadku+$schwRadku)*3);  
-		
+		zobraz_cinnosti($pdf,$taetigkeiten,$teil,($reklRadku+$schwRadku)*3);
+
                 $pdf->SetHeaderData('', 0, "", '');
                 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
                 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -904,7 +904,7 @@ foreach($importe as $import)
 $pdf->Output();
 
 //============================================================+
-// END OF FILE                                                 
+// END OF FILE
 //============================================================+
 
 ?>

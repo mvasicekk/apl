@@ -184,7 +184,7 @@ class AplDB {
      * @param array $emailsArray - pole emailovych adres, ktere budou pridany do seznamu
      * @param array $noSendEmailsArray - pole emalovych adres, ktere budou nakonec ze seznamu odebrany
      */
-    public function getRecipientsArray($rolesArray, $emailsArray = NULL, $noSendEmailsArray = NULL) {
+    public function getRecipientsArray($rolesArray, $emailsArray = NULL, $noSendEmailsArray = NULL,$mitLevel0=TRUE) {
 	$recipients = array();
 	if($emailsArray!==NULL){
 	    if(is_array($emailsArray)){
@@ -195,7 +195,7 @@ class AplDB {
 	}
 	$rolesIdArray = array(2, 3, 16);
 	foreach ($rolesIdArray as $roleId) {
-	    $usersarray = $this->getUsersForRoleId($roleId);
+	    $usersarray = $this->getUsersForRoleId($roleId,$mitLevel0);
 	    if ($usersarray !== NULL) {
 		foreach ($usersarray as $userrow) {
 		    $userinfo = $this->getUserInfoArray($userrow['benutzername']);
@@ -3892,8 +3892,13 @@ public function istExportiert($import, $impal){
 	    return NULL;
     }
     
-    public function getUsersForRoleId($roleId){
-	$sql = "select benutzername from dbenutzerroles where role_id=$roleId";
+    public function getUsersForRoleId($roleId,$mitLevel0=TRUE){
+	if($mitLevel0===TRUE){
+	    $sql = "select benutzername from dbenutzerroles where role_id=$roleId";
+	}
+	else{
+	    $sql = "select dbenutzerroles.benutzername from dbenutzerroles join dbenutzer on dbenutzer.`name`=dbenutzerroles.benutzername where role_id=$roleId and dbenutzer.`level`>0";
+	}
 	return $this->getQueryRows($sql);
     }
     /**

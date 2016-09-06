@@ -64,8 +64,23 @@ printf("persvon: %05d\n",$persvon);
 printf("persbis: %05d\n",$persbis);
 echo "<hr>";
 
-$pA = array(2411,4815,2440,5887,276,567,5557,2310,1490);
+//$pA = array(2411,4815,2440,5887,276,567,5557,2310,1490);
+$sql = "select dpers_isp.PersNr as persnr from dpers_isp where PersNr between '$persvon' and '$persbis' order by PersNr";
+$pRs = $a->getQueryRows($sql);
+$pA = array();
+if($pRs!==NULL){
+    foreach ($pRs as $pR){
+	array_push($pA, $pR['persnr']);
+    }
+}
 
+
+AplDB::varDump($pA);
+
+//exit();
+if(count($pA)==0){
+    exit();
+}
 // a-premie
 // v E143 je toto
 $aPremienArray = $a->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',FALSE);
@@ -74,6 +89,7 @@ $aPremienArray = $a->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*
 //AplDB::varDump($aPremienArray);
 // dochazka, dovolena nemoci, zakladni udaje o persnr
 
+$joinDpersISP = "dpers_isp";
 $sql="";
 $sql.=" select";
 $sql.="     dpers.persnr,";
@@ -133,6 +149,7 @@ $sql.="     dpers.`PersNr`,";
 $sql.="     dzeit.datum";
 
 $rows = $a->getQueryRows($sql);
+
 $persRows = array();
 
 if($rows!=NULL){

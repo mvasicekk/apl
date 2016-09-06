@@ -473,7 +473,7 @@ Rückmeldungen / zadání výkonu
 
 		<td colspan='2'>
 		{if !$stornoid}
-			<input type="button" id="arbeitsmittelausgabe" onclick="window.location.href='../dambew/dambewjs.php#/bew';" name="arbeitsmittelausgabe" value="Arbeitsmittelausgabe"/>
+			<input type="button" id="arbeitsmittelausgabe" onclick="window.location.href='../dambew/dambew.php';" name="arbeitsmittelausgabe" value="Arbeitsmittelausgabe"/>
 		{/if}
 		</td>
 
@@ -527,7 +527,7 @@ oiwjfofwij
 		</tr>
 		{foreach from=$stornorows item=polozka}
 		<tr id='tr{$polozka.drueck_id}' class='{cycle values="lichy,sudy"}'>
-			<td>{$polozka.auftragsnr}</td>
+			<td title="drueck_id:{$polozka.drueck_id}">{$polozka.auftragsnr}</td>
 			<td>{$polozka.teil}</td>
 			<td>{$polozka.pal}</td>
 			<td align='right'>{$polozka.taetnr}</td>

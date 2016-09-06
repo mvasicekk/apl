@@ -43,6 +43,7 @@ require_once '../db.php';
 	    "rb@abydos.cz",
 	    "ok@abydos.cz",
 	    "ne@abydos.cz")
+		,FALSE		//nebrat uzivatele s level=0,2016-09-06
 	);
 	
 	$recipientsStr = join(',', $recipients);
