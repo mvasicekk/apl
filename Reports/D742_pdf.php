@@ -502,8 +502,9 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
     $zeile2='Die erbrachte Dienstleistung unterliegt gemäß Artikel 196 der EU Richtlinie dem Reverse-Charge Verfahren.';
     $zeile3='Die Steuerschuld geht auf den Leistungsempfänger über.';
 
+    $eu = getValueForNode($childNodes,"eu");
     // pridani odstavce pro DPH
-    if($vom==100)
+    if($vom==100 && $eu>0)
 	{
         $pdfobjekt->SetFont("FreeSans", "", 8);
 		$pdfobjekt->Cell(0,$vyskaradku,$zeile1,'0',1,'1',0);

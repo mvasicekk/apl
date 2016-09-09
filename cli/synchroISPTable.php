@@ -16,7 +16,9 @@ if ($argc > 1) {
 $tables = array(
     "STREDISK"=>array(
 	"aplTable"=>"strediska_isp",
+	"ispSelect"=>"*",   //ktera pole vybiram z tabulky
 	"ispKey"=>"STREDISKO",
+	"bIspKeyGUID"=>FALSE, // pro prevod guid binary na string
 	"aplKey"=>"stredisko",
 	"fieldsForSync"=>array(
 	    "STREDISKO"=>"stredisko",
@@ -26,8 +28,65 @@ $tables = array(
 	    "NAD_NOD"=>"str_parent"
 	)
     ),
+    "MZDY_POL"=>array(
+	"aplTable"=>"mzdpol_isp",
+	"ispSelect"=>"*",   //ktera pole vybiram z tabulky
+	"ispKey"=>"KOD",
+	"bIspKeyGUID"=>FALSE,
+	"aplKey"=>"kod",
+	"fieldsForSync"=>array(
+	    "KOD"=>"kod",
+	    "POPIS"=>"popis",
+	    "KOD_NAD"=>"kod_nad",
+	    "SAZBA"=>"sazba",
+	    "KOD_BAZE"=>"kod_baze"
+	)
+    ),
+    "PERS_HYS"=>array(
+	"aplTable" => "pers_uvazky_isp",
+	"ispSelect"=>"*,IIF(ISNULL(PLATNY_OD,'19000101')>'19000101',CONVERT(DATE,PLATNY_OD,120),NULL) as PLAT_OD",   //ktera pole vybiram z tabulky
+	"ispKey" => "ID",
+	"bIspKeyGUID"=>TRUE,
+	"aplKey" => "id_isp",
+	"fieldsForSync" => array(
+	    "ROK" => "rok",
+	    "MESIC" => "mesic",
+	    "INTER" => "inter",
+	    "FUNKCE" => "funkce",
+	    //"PLATNY_OD" => "platny_od",
+	    "PLAT_OD" => "platny_od",
+	    "UVA_DOBA" => "uva_doba",
+	    "UVA_DNY" => "uva_dny",
+	    "UVA_HOD" => "uva_hod",
+	    "TYP_UVA" => "typ_uva",
+	    "TYP_MZDY" => "typ_mzdy",
+	    "DOV_RNAR" => "dov_rnar",
+	    "DOV_PNAR" => "dov_pnar",
+	    "DOVD_RNA" => "dovd_rna",
+	    "ID" => "id_isp",
+	)
+    ),
 );
 
+
+/**
+ * 
+ * @global type $a
+ * @param type $keyName
+ * @param type $keyValue
+ * @param type $field
+ * @param type $value
+ * @param type $table
+ */
+function updateAplTableField($keyName,$keyValue, $field, $value, $table = '') {
+    global $a;
+    $sql = "update `$table` set `$field`='$value' where `$keyName`='$keyValue' limit 1";
+    //echo "\n $sql";
+    $ar = $a->query($sql);
+    if ($ar > 0) {
+	echo "\nUPDATEFIELD $field = $value for $keyName=$keyValue (ar=$ar),table = $table";
+    }
+}
 
 //$ucetniJednotka = 'FA5';
 if ($ucetniJednotka == "") {
@@ -44,21 +103,49 @@ foreach ($tables as $tISP=>$tAPLArray){
   echo "\n ISP Table : $tISP";
   $tAPL = $tAPLArray['aplTable'];
   echo "\n APL Table : $tAPL";
-  $resISP = $sqlDB->getResult("select * from $tISP");
+  $ispSelect =$tAPLArray['ispSelect'];
+  //echo "\nselect $ispSelect from $tISP";
+  $ispSql = "select $ispSelect from $tISP";
+  echo "\n$ispSql";
+  //$resISP = $sqlDB->getResult("select * from $tISP");
+  $resISP = $sqlDB->getResult($ispSql);
   if($resISP!==NULL){
       foreach ($resISP as $rISP){
 	  $allFieldsISP = array_keys($rISP);
 	  $ispKey = $tAPLArray['ispKey'];
-	  $ispKeyValue = trim($rISP[$ispKey]);
+	  $bIspKeyGUID = $tAPLArray['bIspKeyGUID'];
+	  if($bIspKeyGUID===TRUE){
+	      $ispKeyValue = mssql_guid_string($rISP[$ispKey]);
+	  }
+	  else{
+	      $ispKeyValue = trim($rISP[$ispKey]);
+	  }
+	  
+	  //echo "\nispKeyValue = $ispKeyValue";
+	  
 	  $aplKey = $tAPLArray['aplKey'];
 	  //var_dump($ispKey);
 	  // zkusim najit klic v tabulce z apl
-	  $sql = "select `".$tAPLArray['aplKey']."` from `".$tAPLArray['aplTable']."` where `".$tAPLArray['aplKey']."`='".$ispKeyValue."'";
+	  $sql = "select * from `".$tAPLArray['aplTable']."` where `".$tAPLArray['aplKey']."`='".$ispKeyValue."'";
 	  //var_dump($sql);
 	  $rApl = $a->getQueryRows($sql);
 	  if($rApl!==NULL){
 	      //klic mam, porovnam obsahy poli
-	      echo "\nKEY $ispKeyValue found in $tAPL, fields -> update";
+	      //echo "\nKEY $ispKeyValue found in $tAPL, fields -> update";
+	      //projdu jednotliva pole
+	      foreach ($tAPLArray['fieldsForSync'] as $ispField=>$aplField){
+		  if($ispField!=$ispKey){
+		      $ispValue = iconv('windows-1250', 'UTF-8', trim($rISP[$ispField]));
+		  }
+		  else{
+		      $ispValue = $ispKeyValue;
+		  }
+		  $aplValue = $rApl[0][$aplField];
+		  if ($ispValue != $aplValue) {
+		      updateAplTableField($aplKey, $ispKeyValue, $aplField, $ispValue, $tAPL);
+		  }
+		  //echo "\n ($ispField/$aplField) ispValue = $ispValue, aplValue = $aplValue";
+	      }
 	  }
 	  else{
 	      //klic nemam, vlozim novy radek
@@ -87,7 +174,16 @@ foreach ($tables as $tISP=>$tAPLArray){
 		  else{
 		      $comma = '';
 		  }
-		  $value = iconv('windows-1250', 'UTF-8', trim($rISP[$ispField]));
+		  if($ispField!=$ispKey){
+		      $value = iconv('windows-1250', 'UTF-8', trim($rISP[$ispField]));
+		      //echo "\n neklicklic $ispField";
+		  }
+		  else{
+		      // klic nebudu prekodovavat
+		      //$value = trim($rISP[$ispField]);
+		      $value = $ispKeyValue;
+		      //echo "\n klic $ispField";
+		  }
 		  $sql_insert.=" $comma '".$value."'";
 		  $counter++;
 	      }

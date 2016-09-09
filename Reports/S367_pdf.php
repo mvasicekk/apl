@@ -538,6 +538,7 @@ $myData->setAxisName(0, "Bewertung");
 $myData->setAxisUnit(0, "");
 
 
+
 $imgWidth = 1500;
 $imgHeight = 1000;
 $myPicture = new pImage($imgWidth, $imgHeight, $myData);
@@ -549,7 +550,7 @@ $Settings = array("StartR" => 231, "StartG" => 231, "StartB" => 97, "EndR" => 1,
 $myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Medium.ttf", "FontSize" => 20));
 $TextSettings = array("Align" => TEXT_ALIGN_MIDDLEMIDDLE
 , "R" => 42, "G" => 18, "B" => 255);
-$myPicture->drawText($imgWidth/2, 25, "Externí reklamace od zakazniku $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
+$myPicture->drawText($imgWidth/2, 25, "Externí reklamace - zakaznik $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
 
 $myPicture->setGraphArea(100, 50, $imgWidth-200, $imgHeight-50);
 $myPicture->setFontProperties(array("R" => 0, "G" => 0, "B" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14));
@@ -571,7 +572,7 @@ $Palette = array("0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>100),
 
 $Config = array(
     "AroundZero" => 0,
-    "DisplayPos"=>LABEL_POS_INSIDE,
+    "DisplayPos"=>LABEL_POS_OUTSIDE,
     "DisplayValues"=>TRUE,
     "Gradient"=>TRUE,
     "OverrideColors"=>$Palette,
@@ -663,7 +664,7 @@ $Settings = array("StartR" => 231, "StartG" => 231, "StartB" => 97, "EndR" => 1,
 $myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Medium.ttf", "FontSize" => 20));
 $TextSettings = array("Align" => TEXT_ALIGN_MIDDLEMIDDLE
 , "R" => 42, "G" => 18, "B" => 255);
-$myPicture->drawText($imgWidth/2, 25, "Interní reklamace od zakazniku $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
+$myPicture->drawText($imgWidth/2, 25, "Interní reklamace - zakaznik $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
 
 $myPicture->setGraphArea(100, 50, $imgWidth-200, $imgHeight-50);
 $myPicture->setFontProperties(array("R" => 0, "G" => 0, "B" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14));
@@ -685,11 +686,14 @@ $Palette = array("0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>100),
 
 $Config = array(
     "AroundZero" => 0,
-    "DisplayPos"=>LABEL_POS_INSIDE,
+    "DisplayPos"=>LABEL_POS_OUTSIDE,
     "DisplayValues"=>TRUE,
     "Gradient"=>TRUE,
     "OverrideColors"=>$Palette,
 );
+// paleta = custom
+// zacinam na 189*
+
 $myPicture->drawBarChart($Config);
 
 //    $myPicture->drawLineChart(array('Weight'=>10,'Width'=>10));

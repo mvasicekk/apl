@@ -102,6 +102,7 @@ $sql.=",dksd.plz as anplz";
 $sql.=",dksd.ort as anort";
 $sql.=",dksd.land as anland";
 $sql.=",dksd.dic as andic";
+$sql.=",dksd.eu";
 $sql.=", '100' as vom";
 $sql.=", fremdauftr";
 $sql.=", fremdpos";
@@ -242,6 +243,7 @@ $options = array(
         'anort',
         'anland',
         'andic',
+	'eu',
         'fremdauftr' => array(
             'rootTag' => 'fremdauftraege',
             'idColumn' => 'fremdauftr',
