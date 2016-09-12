@@ -14,45 +14,51 @@ if ($argc > 1) {
  * key = isptable,value = apl table
  */
 $tables = array(
-    "STREDISK"=>array(
-	"aplTable"=>"strediska_isp",
-	"ispSelect"=>"*",   //ktera pole vybiram z tabulky
-	"ispKey"=>"STREDISKO",
-	"bIspKeyGUID"=>FALSE, // pro prevod guid binary na string
-	"aplKey"=>"stredisko",
-	"fieldsForSync"=>array(
-	    "STREDISKO"=>"stredisko",
-	    "STRE_NAZEV"=>"str_nazev",
-	    "TEXT_1"=>"text1",
-	    "TEXT_2"=>"text2",
+    "STREDISK"=>array(				    //jmeno tabulky v Premieru
+	"aplTable"=>"strediska_isp",		    // jmeno tabulky v apl databazi
+	"ispSelect"=>"*,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky v Premieru
+	"ispKey"=>"STREDISKO",			    //sloupec v Premieru podle ktereho porovnavam, zda mam radek v apl
+	"bFilterUj"=>TRUE,			    // do vyberu z apl pridat i ucetni jednotku, napr. cisla zamestnancu jsou pres vice uc. jednotek duplicitni
+	"bIspKeyGUID"=>FALSE,			    // pro prevod guid binary na string, guid z mssql musim prevest na string
+	"aplKey"=>"stredisko",			    //sloupec v apl podle ktereho porovnavam, zda mam radek v premieru
+	"fieldsForSync"=>array(			    //seznam poli, ktera synchronizuji "sloupec v Premier"=>"sloupec v apl"
+	    "STREDISKO"=>"stredisko",		    //synchronizuju samozrejme i klic
+	    "STRE_NAZEV"=>"str_nazev",		    //ostatni
+	    "TEXT_1"=>"text1",			    //ostatni	
+	    "TEXT_2"=>"text2",			    //ostatni
+	    "UJ"=>"uj",				    //ucetni jednotka je dulezita kvuli duplicitam
 	    "NAD_NOD"=>"str_parent"
 	)
     ),
     "MZDY_POL"=>array(
 	"aplTable"=>"mzdpol_isp",
-	"ispSelect"=>"*",   //ktera pole vybiram z tabulky
+	"ispSelect"=>"*,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky
 	"ispKey"=>"KOD",
 	"bIspKeyGUID"=>FALSE,
 	"aplKey"=>"kod",
+	"bFilterUj"=>TRUE,  // omezit vyber z apl podle ucetni jednotky
 	"fieldsForSync"=>array(
 	    "KOD"=>"kod",
 	    "POPIS"=>"popis",
 	    "KOD_NAD"=>"kod_nad",
 	    "SAZBA"=>"sazba",
+	    "UJ"=>"uj",
 	    "KOD_BAZE"=>"kod_baze"
 	)
     ),
     "PERS_HYS"=>array(
 	"aplTable" => "pers_uvazky_isp",
-	"ispSelect"=>"*,IIF(ISNULL(PLATNY_OD,'19000101')>'19000101',CONVERT(DATE,PLATNY_OD,120),NULL) as PLAT_OD",   //ktera pole vybiram z tabulky
+	"ispSelect"=>"*,IIF(ISNULL(PLATNY_OD,'19000101')>'19000101',CONVERT(DATE,PLATNY_OD,120),NULL) as PLAT_OD,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky
 	"ispKey" => "ID",
 	"bIspKeyGUID"=>TRUE,
 	"aplKey" => "id_isp",
+	"bFilterUj"=>TRUE,  // omezit vyber z apl podle ucetni jednotky
 	"fieldsForSync" => array(
 	    "ROK" => "rok",
 	    "MESIC" => "mesic",
 	    "INTER" => "inter",
 	    "FUNKCE" => "funkce",
+	    "UJ"=>"uj",
 	    //"PLATNY_OD" => "platny_od",
 	    "PLAT_OD" => "platny_od",
 	    "UVA_DOBA" => "uva_doba",
@@ -127,6 +133,12 @@ foreach ($tables as $tISP=>$tAPLArray){
 	  //var_dump($ispKey);
 	  // zkusim najit klic v tabulce z apl
 	  $sql = "select * from `".$tAPLArray['aplTable']."` where `".$tAPLArray['aplKey']."`='".$ispKeyValue."'";
+	  if(array_key_exists('bFilterUj', $tAPLArray)){
+	      if($tAPLArray['bFilterUj']===TRUE){
+		  //filtrovat i podle ucetni jednotky
+		  $sql.=" and uj='$ucetniJednotka'";
+	      }
+	  }
 	  //var_dump($sql);
 	  $rApl = $a->getQueryRows($sql);
 	  if($rApl!==NULL){
@@ -204,6 +216,12 @@ foreach ($tables as $tISP=>$tAPLArray){
   $ispKey = $tAPLArray['ispKey'];
   $aplKey = $tAPLArray['aplKey'];
   $sql = "select `".$tAPLArray['aplKey']."` from `".$tAPLArray['aplTable']."`";
+  if(array_key_exists('bFilterUj', $tAPLArray)){
+	      if($tAPLArray['bFilterUj']===TRUE){
+		  //filtrovat i podle ucetni jednotky
+		  $sql.=" and uj='$ucetniJednotka'";
+	      }
+    }
 //  $sql = "select `".$tAPLArray['aplKey']."` from `".$tAPLArray['aplTable']."` where `".$tAPLArray['aplKey']."`='".$ispKeyValue."'";
   $resAPL = $a->getQueryRows($sql);
 //  var_dump($resAPL);
