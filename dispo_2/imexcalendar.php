@@ -22,7 +22,8 @@ $smarty = new Smarty;
 	//
 	
 	
-	$pocetDnuPredAktualnimDnem = 7;
+	// od kdy chci videt kalendar
+	$pocetDnuPredAktualnimDnem = 14;
 	
 	$cislodnePred7dny = date('w',  time()-$pocetDnuPredAktualnimDnem*7*60*60);
 	if($cislodnePred7dny==1){

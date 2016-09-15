@@ -11,7 +11,7 @@ if ($argc > 1) {
 }
 
 /**
- * key = isptable,value = apl table
+ * key = isptable (jmeno tabulky case-sensitive ,value = apl table name + params
  */
 $tables = array(
     "STREDISK"=>array(				    //jmeno tabulky v Premieru
@@ -104,7 +104,7 @@ if ($ucetniJednotka == "") {
 echo "\n----- START synchroISPTable ($ucetniJednotka) on :" . date('Y-m-d H:i:s') . " ----- \n";
 $sqlDB = sqldb::getInstance($ucetniJednotka);
 
-// budu prochazet definovane tabulky z Premiera
+// budu prochazet definovane tabulky z Premiera, cela konfigurace pro synchro je ulozena v poli $tables
 foreach ($tables as $tISP=>$tAPLArray){
   echo "\n ISP Table : $tISP";
   $tAPL = $tAPLArray['aplTable'];
@@ -131,11 +131,14 @@ foreach ($tables as $tISP=>$tAPLArray){
 	  
 	  $aplKey = $tAPLArray['aplKey'];
 	  //var_dump($ispKey);
-	  // zkusim najit klic v tabulce z apl
+	  // zkusim najit klic v tabulce z apl - mam radek v APL ?
 	  $sql = "select * from `".$tAPLArray['aplTable']."` where `".$tAPLArray['aplKey']."`='".$ispKeyValue."'";
 	  if(array_key_exists('bFilterUj', $tAPLArray)){
 	      if($tAPLArray['bFilterUj']===TRUE){
+		  // ----------------------------------------------------------------------
 		  //filtrovat i podle ucetni jednotky
+		  // v pripade, ze by samotny klic podle Premiera mohl byt v apl duplicitni
+		  // ----------------------------------------------------------------------
 		  $sql.=" and uj='$ucetniJednotka'";
 	      }
 	  }
