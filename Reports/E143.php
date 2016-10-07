@@ -161,6 +161,7 @@ if($rows!=NULL){
     }
 }
 
+//AplDB::varDump($persRows);
 // transport
 //transport
 $pt="";
@@ -277,6 +278,9 @@ $pt.="     dzeit.PersNr";
 $rows = $a->getQueryRows($pt);
 $persNachtSoNeRows = array();
 
+//echo "<br>$pt";
+//AplDB::varDump($rows);
+
 if($rows!=NULL){
     foreach ($rows as $r){
 	$persnr = $r['persnr'];
@@ -392,19 +396,6 @@ foreach ($persLeistRows as $persnr=>$pers) {
     $dat_od = date("d.m.Y", strtotime($von));
     $dat_do = date("d.m.Y", strtotime($bis));
 
-	// nacht , 008  
-    	$kod = sprintf("%d", 8);
-	if(array_key_exists($persnr, $persNachtSoNeRows)){
-	    $hodiny = number_format(floatval($persNachtSoNeRows[$persnr]['nacht']), 2, ',', '');
-	}
-	else{
-	    $hodiny = 0;
-	}
-	
-	$korunyCelkem = 0;
-	$dny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
 	
 	// So , 006  
     	$kod = sprintf("%d", 6);
@@ -523,6 +514,7 @@ foreach ($persRows as $pers){
 	    //sumy dni d, nw , za mesic, potrebuju u vypoctu vykonnostni premie
 	    $sumyDni[$pracovnik]['d']+= intval($datumRow['tage_d']);
 	    $sumyDni[$pracovnik]['nw']+= intval($datumRow['tage_nw']);
+	    $sumyDni[$pracovnik]['nachtstd']+= floatval($datumRow['nachtstd']);
 	    
 	    $zakazka = 0;
 	    $da1 = '';
@@ -609,6 +601,21 @@ foreach ($persRows as $pers){
 	    
 	}
     }
+    
+    // nacht , 008  
+    $kod = sprintf("%d", 8);
+    if(array_key_exists($persnr, $sumyDni)){
+	    $hodiny = number_format(floatval($sumyDni[$persnr]['nachtstd']), 2, ',', '');
+    }
+    else{
+	    $hodiny = 0;
+    }
+	
+    $korunyCelkem = 0;
+    $dny = 0;
+    $exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+    array_push($msRows, $exportRow);
+
 }
 
 

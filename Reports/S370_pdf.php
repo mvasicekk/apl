@@ -379,7 +379,7 @@ $pdf->Ln();
 
 $pdf->Cell(10,$rowHeight,'KW','LR',0,'C',1);
 $pdf->Cell($stkWidth*$pocetZakazniku,$rowHeight,'Max BA-Anteil Aby : 0,25','LTB',0,'C',1);
-$pdf->Cell(10,$rowHeight,'AVG','LR',0,'C',1);
+$pdf->Cell(10,$rowHeight,'Ø','LR',0,'C',1);
 $pdf->Ln();
 
 //IST / STK & IST / KG
@@ -419,7 +419,7 @@ foreach($jahrMonatKwArray as $jmk=>$v){
 // AVG celkově
 // *************************************************************************************************** \\
 
-$pdf->Cell(10,$rowHeight,'AVG','LRBT',0,'C',1);
+$pdf->Cell(10,$rowHeight,'Ø','LRBT',0,'C',1);
 
 foreach ($kundenNrArray as $kd => $v1){
     $podilPctSum = 0;
@@ -513,7 +513,7 @@ foreach ($kundenNrArray as $kd=>$v){
 
 
 }
-$pdf->Cell($stkWidth/2,$rowHeight,'AVG','LB',0,'C',1);
+$pdf->Cell($stkWidth/2,$rowHeight,'Ø','LB',0,'C',1);
 $pdf->Cell($stkWidth/2,$rowHeight,"Ext.Stk",'RB',0,'C',1);
 $pdf->Ln();
 
@@ -551,7 +551,10 @@ foreach($jahrMonatArray as $jm=>$v){
     $pdf->Cell($stkWidth/2,$rowHeight,$avg,'LRBT',0,'C',0);
     $pdf->Ln();
 }
-$pdf->Cell(10,$rowHeight,'AVG','LRBT',0,'C',1);
+
+
+//$pdf->Cell(10,$rowHeight,'AVG','LRBT',0,'C',1);
+$pdf->Cell(10,$rowHeight,'Ø','LRBT',0,'C',1);
 
 foreach ($kundenNrArray as $kd => $v1){
     $podilPctSum = 0;

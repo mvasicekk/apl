@@ -338,7 +338,7 @@ if(test_pageoverflow_noheader($pdf, $rowHeight)){
 }
 $fill = 1;
 $pdf->SetFillColor(230, 255, 230);
-$pdf->Cell($mntWidth+$bewWidth,$rowHeight,  'AVG Bew.','LRTB',0,'L',$fill);
+$pdf->Cell($mntWidth+$bewWidth,$rowHeight,  'Ø Bew.','LRTB',0,'L',$fill);
 //suma pro vsechny zakazniky
 $e = count($jahrMonatArray)!=0?$gesamtSummenKunden['E']['bewertung']/count($jahrMonatArray):0;
 $e = number_format($e,0,',',' ');
@@ -365,7 +365,7 @@ if(test_pageoverflow_noheader($pdf, $rowHeight)){
 }
 $fill = 1;
 $pdf->SetFillColor(230, 255, 230);
-$pdf->Cell($mntWidth+$bewWidth,$rowHeight,  'AVG Punktebew.','LRTB',0,'L',$fill);
+$pdf->Cell($mntWidth+$bewWidth,$rowHeight,  'Ø Punktebew.','LRTB',0,'L',$fill);
 //suma pro vsechny zakazniky
 $e = count($jahrMonatArray)!=0?$gesamtSummenKunden['E']['punkte']/count($jahrMonatArray):0;
 $e = number_format($e,0,',',' ');
@@ -529,7 +529,7 @@ $myData->addPoints($monatGraphArray, "bew");
 $myData->setSerieOnAxis("bew", 0);
 
 $xSour = array_keys($jahrMonatArray);
-array_push($xSour, "AVG");
+array_push($xSour, "Ø");
 $myData->addPoints($xSour, "Absissa");
 $myData->setAbscissa("Absissa");
 
@@ -644,7 +644,7 @@ $myData->addPoints($monatGraphArray, "bew");
 $myData->setSerieOnAxis("bew", 0);
 
 $xSour = array_keys($jahrMonatArray);
-array_push($xSour, "AVG");
+array_push($xSour, "Ø");
 $myData->addPoints($xSour, "Absissa");
 $myData->setAbscissa("Absissa");
 

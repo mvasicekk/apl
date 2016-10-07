@@ -116,6 +116,7 @@
 			<input id="S365" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Erhalten am von,*DATE;Erhalten am bis,*DATE;laut Im/Ex,*RA&promenne=kdvon;kdbis;von;bis;laut&values=111;999;{$prvnidenroku};{$now};Import,Export&report=S365'" class='reportbutton' type="button"  name="S365" value="S365 - PPM"/>
 			<input id="S367" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Datum von,*DATE;Datum bis,*DATE&promenne=kdvon;kdbis;von;bis&values=111;999;{$prvnidenroku};{$now}&report=S367'" class='reportbutton' type="button"  name="S367" value="S367 - Hodnoceni reklamací"/>
 			<input id="S370" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Datum von,*DATE;Datum bis,*DATE;mit Detail,*CH&promenne=kdvon;kdbis;von;bis;mitdetail&values=111;999;{$prvnidenroku};{$now};a&report=S370'" class='reportbutton' type="button"  name="S370" value="S370 - 50 Ausschuss"/>
+			<input id="S375" onClick="location.href='../get_parameters.php?popisky=Kunde von;Kunde bis;Datum von,*DATE;Datum bis,*DATE&promenne=kdvon;kdbis;von;bis&values=111;999;{$prvnidenroku};{$now}&report=S375'" class='reportbutton' type="button"  name="S375" value="S375 - opravy"/>
 		    </div>
 		    
 		    <div id='rs_S34XX' style="display:{$display_sec.rs_S34XX}">
