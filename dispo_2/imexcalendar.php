@@ -45,7 +45,7 @@ $smarty = new Smarty;
 	
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
-	$datumVon = date('Y-m-d',  mktime(01, 01, 01, 9, 3,2016));
+	$datumVon = date('Y-m-d',  mktime(01, 01, 01, 9, 26,2016));
 	// + 14 dnu
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	//mkti

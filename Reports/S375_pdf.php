@@ -572,6 +572,18 @@ foreach ($kundenNrArray as $kd){
     $graphVzAbyKd['vzaby_64xx'][$kd] = round($kdSumOESumMonatArray[$kd]['vzaby_64xx']);
     $graphVzAbyKd['vzaby_65xx'][$kd] = round($kdSumOESumMonatArray[$kd]['vzaby_65xx']);
 }
+
+$graphVzAbyOeJm = array();
+$graphVzAbyPodilOeJm = array();
+
+foreach ($oeArray as $oe){
+    foreach ($jmArray as $jm){
+	$graphVzAbyOeJm[$oe][$jm] = round($OESumMonatArray[$oe][$jm]['vzaby_64xx']);
+	$graphVzAbyPodilOeJm[$oe][$jm] = $OESumMonatArray[$oe][$jm]['podil_64xx'];
+    }
+}
+//AplDB::varDump($graphVzAbyPodilOeJm);
+
 //$graphVzAbyKd['celkem'] = array('64XX'=>$sumOE['vzaby_64xx'],'65XX'=>$sumOE['vzaby_65xx']);
 
 //$graphVzAbyKd['vzaby_64xx']['celkem'] = round($sumOE['vzaby_64xx']);
@@ -585,7 +597,32 @@ include("../Classes/pChart/class/pImage.class.php");
 $myData = new pData();
 $myData->addPoints($graphVzAbyKd['vzaby_64xx'], "64xx");
 $myData->addPoints($graphVzAbyKd['vzaby_65xx'], "65xx");
-//$myData->setPalette("65xx",array("Alpha"=>50));
+
+$Palette = array(
+    "0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>100),
+    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>100),
+    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>100),
+    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>100),
+    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>100),
+    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>100),
+    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>100),
+    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>100)
+    );
+
+$Palette1 = array(
+    "0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>10),
+    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>10),
+    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>10),
+    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>10),
+    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>10),
+    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>10),
+    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>10),
+    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>10)
+    );
+
+//$myData->setPalette("65xx",$Palette);
+//$myData->setPalette("64xx",$Palette1);
+
 $abscissaArray = $kundenNrArray;
 //array_push($abscissaArray,"celkem");
 
@@ -611,7 +648,7 @@ $myPicture->setShadow(FALSE);
 $myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Medium.ttf", "FontSize" => 20,"Alpha"=>100));
 $TextSettings = array("Align" => TEXT_ALIGN_MIDDLEMIDDLE
 , "R" => 0, "G" => 0, "B" => 0,"Alpha"=>100); //ocelova modr
-$myPicture->drawText($imgWidth/2, 25, "VzAby na interní reklamace (opravy 64xx) - zakaznik $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
+$myPicture->drawText($imgWidth/2, 25, "VzAby na interní reklamace (opravy 64xx,65xx) - zakaznik $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
 
 $myPicture->setGraphArea(100, 50, $imgWidth-20, $imgHeight-200);
 //zvyraznit prostor pro graf
@@ -621,7 +658,6 @@ $myPicture->setFontProperties(array("R" => 0, "G" => 0, "B" => 0, "FontName" => 
 $Settings = array(
       "Pos" => SCALE_POS_LEFTRIGHT
     , "Mode" => SCALE_MODE_START0
-    //, "XMargin" => 150
     , "LabelingMethod" => LABELING_ALL
     ,"CycleBackground"=>TRUE
     , "GridR" => 5
@@ -645,27 +681,40 @@ $Settings = array(
 $myPicture->drawScale($Settings);
 //$myPicture->drawScale();
 
-$Palette = array("0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>100),
-    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>100),
-    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>100),
-    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>100),
-    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>100),
-    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>100),
-    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>100),
-    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>100));
-
 $Config = array(
     "AroundZero" => 0,
     "DisplayPos"=>LABEL_POS_OUTSIDE,
     "DisplayValues"=>TRUE,
     "Gradient"=>TRUE,
+    "Interleave"=>0.5,
+    //"DisplayOrientation"=>ORIENTATION_HORIZONTAL,
+    //"Threshold"=>$Threshold
     //"OverrideColors"=>$Palette,
 );
 
+$myPicture->drawThresholdArea(0, 2000, array("R"=>226,"G"=>194,"B"=>54,"Alpha"=>40));
+$myPicture->drawThresholdArea(2000, 10000, array("R"=>194,"G"=>226,"B"=>54,"Alpha"=>40));
+$myPicture->drawThresholdArea(10000, 20000, array("R"=>194,"G"=>250,"B"=>54,"Alpha"=>40));
+$myPicture->drawThresholdArea(20000, 200000, array("R"=>130,"G"=>255,"B"=>54,"Alpha"=>40));
 //$myData->setPalette("64xx",$Palette);
 //
 // vykreslit chart
 $myPicture->drawBarChart($Config);
+//$myPicture->drawStackedBarChart($Config);
+//$myPicture->drawFilledStepChart();
+$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>20)); 
+$myPicture->drawRoundedFilledRectangle(1300-10, 840, $imgWidth-100, $imgHeight-90, 10,array("R"=>240,"G"=>240,"B"=>240,"Alpha"=>100,"Surrounding"=>-200));
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Bold.ttf","FontSize"=>15,"R"=>0,"G"=>0,"B"=>0));
+
+$myPicture->drawText(1300,840+25,"Celkem:",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$myPicture->drawText(1300+100,840+30,"VzAby 64XX [min]",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$vzAby64xxCelkem = number_format(round($sumOE['vzaby_64xx']),0,',',' ');
+$myPicture->drawText($imgWidth-110,840+25,$vzAby64xxCelkem,array("Align"=>TEXT_ALIGN_BOTTOMRIGHT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+
+$myPicture->drawText(1300+100,840+60,"VzAby 65XX [min]",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$vzAby65xxCelkem = number_format(round($sumOE['vzaby_65xx']),0,',',' ');
+$myPicture->drawText($imgWidth-110,840+55,$vzAby65xxCelkem,array("Align"=>TEXT_ALIGN_BOTTOMRIGHT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+
 
 $Config = array("FontR" => 0, "FontG" => 0, "FontB" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14, "Margin" => 6, "Alpha" => 100, "BoxWidth" => 20,"BoxHeight" => 20, "Style" => LEGEND_NOBORDER
 , "Mode" => LEGEND_VERTICAL
@@ -706,6 +755,296 @@ $myPicture->Render("S375_graf.png");
 //$pdf->AddPage();
 $y = $pdf->GetY();
 $pdf->Image("S375_graf.png", PDF_MARGIN_LEFT, $y + 10, 260, 160, 'PNG');
+
+
+
+$pdf->AddPage('L');
+
+$myData = new pData();
+foreach ($oeArray as $oe){
+    if($oe=='S') continue;
+    $myData->addPoints($graphVzAbyOeJm[$oe], "$oe");
+    $myData->setSerieDescription($oe, "$oe");
+}
+
+
+$Palette = array(
+    "0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>100),
+    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>100),
+    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>100),
+    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>100),
+    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>100),
+    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>100),
+    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>100),
+    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>100)
+    );
+
+$Palette1 = array(
+    "0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>10),
+    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>10),
+    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>10),
+    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>10),
+    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>10),
+    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>10),
+    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>10),
+    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>10)
+    );
+
+//$myData->setPalette("65xx",$Palette);
+//$myData->setPalette("64xx",$Palette1);
+
+$abscissaArray = $jmArray;
+//AplDB::varDump($jmArray);
+
+//array_push($abscissaArray,"celkem");
+
+$myData->addPoints($abscissaArray, "jm");
+$myData->setSerieDescription("jm","Monate");
+$myData->setAbscissa("jm");
+
+$myData->setAxisName(0,"VzAby [min]");
+
+$imgWidth = 1800;
+$imgHeight = 1000;
+$myPicture = new pImage($imgWidth, $imgHeight, $myData);
+$Settings = array("StartR" => 231, "StartG" => 231, "StartB" => 97, "EndR" => 1, "EndG" => 138, "EndB" => 68, "Alpha" => 100);
+//oramovat a vyplnit prostor pro obrazek
+$myPicture->drawGradientArea(0,0,$imgWidth,$imgHeight,DIRECTION_VERTICAL,array("StartR"=>220,"StartG"=>220,"StartB"=>220,"EndR"=>255,"EndG"=>255,"EndB"=>255,"Alpha"=>100));
+//$myPicture->setShadow(TRUE,array("X"=>4,"Y"=>4,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>40));
+$myPicture->drawRectangle(0,0,$imgWidth-1,$imgHeight-1,array("R"=>0,"G"=>0,"B"=>0));
+$myPicture->setShadow(FALSE);
+
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Medium.ttf", "FontSize" => 20,"Alpha"=>100));
+$TextSettings = array("Align" => TEXT_ALIGN_MIDDLEMIDDLE
+, "R" => 0, "G" => 0, "B" => 0,"Alpha"=>100); //ocelova modr
+$myPicture->drawText($imgWidth/2, 25, "VzAby na interní reklamace (opravy 64xx) - zakaznik $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
+
+$myPicture->setGraphArea(100, 50, $imgWidth-20, $imgHeight-200);
+//zvyraznit prostor pro graf
+$myPicture->drawFilledRectangle(100,50,$imgWidth-20,$imgHeight-50,array("R"=>255,"G"=>255,"B"=>255,"Surrounding"=>-200,"Alpha"=>50));
+$myPicture->setFontProperties(array("R" => 0, "G" => 0, "B" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14));
+
+$Settings = array(
+      "Pos" => SCALE_POS_LEFTRIGHT
+    , "Mode" => SCALE_MODE_START0
+    , "LabelingMethod" => LABELING_ALL
+    ,"CycleBackground"=>TRUE
+    , "GridR" => 5
+    , "GridG" => 5
+    , "GridB" => 5
+    , "GridAlpha" => 50
+    , "TickR" => 0
+    , "TickG" => 0
+    , "TickB" => 0
+    , "TickAlpha" => 50
+    , "LabelRotation" => 0
+    , "CycleBackground" => 1
+    , "DrawXLines" => TRUE
+    , "DrawYLines" => TRUE
+    , "DrawSubTicks" => 0
+    , "SubTickR" => 255
+    , "SubTickG" => 0
+    , "SubTickB" => 0
+    , "SubTickAlpha" => 50
+);
+$myPicture->drawScale($Settings);
+//$myPicture->drawScale();
+
+$Config = array(
+    "AroundZero" => 0,
+    "DisplayPos"=>LABEL_POS_OUTSIDE,
+    "DisplayValues"=>FALSE,
+    "Gradient"=>TRUE,
+    "Interleave"=>1,
+    //"DisplayOrientation"=>ORIENTATION_HORIZONTAL,
+    //"Threshold"=>$Threshold
+    //"OverrideColors"=>$Palette,
+);
+
+
+//$myData->setPalette("64xx",$Palette);
+//
+// vykreslit chart
+$myPicture->drawBarChart($Config);
+//$myPicture->drawStackedBarChart($Config);
+//$myPicture->drawFilledStepChart();
+
+/*
+$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>20)); 
+$myPicture->drawRoundedFilledRectangle(1300-10, 840, $imgWidth-100, $imgHeight-90, 10,array("R"=>240,"G"=>240,"B"=>240,"Alpha"=>100,"Surrounding"=>-200));
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Bold.ttf","FontSize"=>15,"R"=>0,"G"=>0,"B"=>0));
+
+$myPicture->drawText(1300,840+25,"Celkem:",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$myPicture->drawText(1300+100,840+30,"VzAby 64XX [min]",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$vzAby64xxCelkem = number_format(round($sumOE['vzaby_64xx']),0,',',' ');
+$myPicture->drawText($imgWidth-110,840+25,$vzAby64xxCelkem,array("Align"=>TEXT_ALIGN_BOTTOMRIGHT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+
+$myPicture->drawText(1300+100,840+60,"VzAby 65XX [min]",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$vzAby65xxCelkem = number_format(round($sumOE['vzaby_65xx']),0,',',' ');
+$myPicture->drawText($imgWidth-110,840+55,$vzAby65xxCelkem,array("Align"=>TEXT_ALIGN_BOTTOMRIGHT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+
+*/
+
+$Config = array("FontR" => 0, "FontG" => 0, "FontB" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14, "Margin" => 6, "Alpha" => 100, "BoxWidth" => 20,"BoxHeight" => 20, "Style" => LEGEND_NOBORDER
+, "Mode" => LEGEND_HORIZONTAL
+);
+
+$myPicture->setShadow(TRUE,array("X"=>2,"Y"=>2,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>40));
+$myPicture->drawLegend(110, 850, $Config);
+
+
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Bold.ttf","FontSize"=>15,"R"=>0,"G"=>0,"B"=>0));
+
+$myPicture->Render("S375_graf1.png");
+//$pdf->AddPage();
+$y = $pdf->GetY();
+$pdf->Image("S375_graf1.png", PDF_MARGIN_LEFT, $y + 10, 260, 160, 'PNG');
+
+
+$pdf->AddPage('L');
+
+$myData = new pData();
+foreach ($oeArray as $oe){
+    if($oe=='S') continue;
+    $myData->addPoints($graphVzAbyPodilOeJm[$oe], "$oe");
+    $myData->setSerieDescription($oe, "$oe");
+}
+
+
+$Palette = array(
+    "0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>100),
+    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>100),
+    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>100),
+    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>100),
+    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>100),
+    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>100),
+    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>100),
+    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>100)
+    );
+
+$Palette1 = array(
+    "0"=>array("R"=>188,"G"=>224,"B"=>46,"Alpha"=>10),
+    "1"=>array("R"=>224,"G"=>100,"B"=>46,"Alpha"=>10),
+    "2"=>array("R"=>224,"G"=>214,"B"=>46,"Alpha"=>10),
+    "3"=>array("R"=>46,"G"=>151,"B"=>224,"Alpha"=>10),
+    "4"=>array("R"=>176,"G"=>46,"B"=>224,"Alpha"=>10),
+    "5"=>array("R"=>224,"G"=>46,"B"=>117,"Alpha"=>10),
+    "6"=>array("R"=>92,"G"=>224,"B"=>46,"Alpha"=>10),
+    "7"=>array("R"=>224,"G"=>176,"B"=>46,"Alpha"=>10)
+    );
+
+//$myData->setPalette("65xx",$Palette);
+//$myData->setPalette("64xx",$Palette1);
+
+$abscissaArray = $jmArray;
+//AplDB::varDump($jmArray);
+
+//array_push($abscissaArray,"celkem");
+
+$myData->addPoints($abscissaArray, "jm");
+$myData->setSerieDescription("jm","Monate");
+$myData->setAbscissa("jm");
+
+$myData->setAxisName(0,"[%]");
+
+$imgWidth = 1800;
+$imgHeight = 1000;
+$myPicture = new pImage($imgWidth, $imgHeight, $myData);
+$Settings = array("StartR" => 231, "StartG" => 231, "StartB" => 97, "EndR" => 1, "EndG" => 138, "EndB" => 68, "Alpha" => 100);
+//oramovat a vyplnit prostor pro obrazek
+$myPicture->drawGradientArea(0,0,$imgWidth,$imgHeight,DIRECTION_VERTICAL,array("StartR"=>220,"StartG"=>220,"StartB"=>220,"EndR"=>255,"EndG"=>255,"EndB"=>255,"Alpha"=>100));
+//$myPicture->setShadow(TRUE,array("X"=>4,"Y"=>4,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>40));
+$myPicture->drawRectangle(0,0,$imgWidth-1,$imgHeight-1,array("R"=>0,"G"=>0,"B"=>0));
+$myPicture->setShadow(FALSE);
+
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Medium.ttf", "FontSize" => 20,"Alpha"=>100));
+$TextSettings = array("Align" => TEXT_ALIGN_MIDDLEMIDDLE
+, "R" => 0, "G" => 0, "B" => 0,"Alpha"=>100); //ocelova modr
+$myPicture->drawText($imgWidth/2, 25, "Podíl interní reklamací (opravy 64xx) na celk. výrobě (VzKd) - zakaznik $kdvon - $kdbis, obdobi $von - $bis", $TextSettings);
+
+$myPicture->setGraphArea(100, 50, $imgWidth-20, $imgHeight-200);
+//zvyraznit prostor pro graf
+$myPicture->drawFilledRectangle(100,50,$imgWidth-20,$imgHeight-50,array("R"=>255,"G"=>255,"B"=>255,"Surrounding"=>-200,"Alpha"=>50));
+$myPicture->setFontProperties(array("R" => 0, "G" => 0, "B" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14));
+
+$Settings = array(
+      "Pos" => SCALE_POS_LEFTRIGHT
+    , "Mode" => SCALE_MODE_START0
+    , "LabelingMethod" => LABELING_ALL
+    ,"CycleBackground"=>TRUE
+    , "GridR" => 5
+    , "GridG" => 5
+    , "GridB" => 5
+    , "GridAlpha" => 50
+    , "TickR" => 0
+    , "TickG" => 0
+    , "TickB" => 0
+    , "TickAlpha" => 50
+    , "LabelRotation" => 0
+    , "CycleBackground" => 1
+    , "DrawXLines" => TRUE
+    , "DrawYLines" => TRUE
+    , "DrawSubTicks" => 0
+    , "SubTickR" => 255
+    , "SubTickG" => 0
+    , "SubTickB" => 0
+    , "SubTickAlpha" => 50
+);
+$myPicture->drawScale($Settings);
+//$myPicture->drawScale();
+
+$Config = array(
+    "AroundZero" => 0,
+    "DisplayPos"=>LABEL_POS_OUTSIDE,
+    "DisplayValues"=>FALSE,
+    "Gradient"=>TRUE,
+    "Interleave"=>1,
+    //"DisplayOrientation"=>ORIENTATION_HORIZONTAL,
+    //"Threshold"=>$Threshold
+    //"OverrideColors"=>$Palette,
+);
+
+$myPicture->drawThresholdArea(0, 0.0, array("R"=>0,"G"=>255,"B"=>0,"Alpha"=>30));
+$myPicture->drawThresholdArea(0.0, 0.6, array("R"=>180,"G"=>255,"B"=>180,"Alpha"=>30));
+$myPicture->drawThresholdArea(0.6, 0.8, array("R"=>255,"G"=>255,"B"=>150,"Alpha"=>30));
+$myPicture->drawThresholdArea(0.8, 100, array("R"=>255,"G"=>100,"B"=>100,"Alpha"=>30));
+//$myData->setPalette("64xx",$Palette);
+//
+// vykreslit chart
+$myPicture->drawBarChart($Config);
+//$myPicture->drawStackedBarChart($Config);
+//$myPicture->drawFilledStepChart();
+
+/*
+$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>20)); 
+$myPicture->drawRoundedFilledRectangle(1300-10, 840, $imgWidth-100, $imgHeight-90, 10,array("R"=>240,"G"=>240,"B"=>240,"Alpha"=>100,"Surrounding"=>-200));
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Bold.ttf","FontSize"=>15,"R"=>0,"G"=>0,"B"=>0));
+
+$myPicture->drawText(1300,840+25,"Celkem:",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$myPicture->drawText(1300+100,840+30,"VzAby 64XX [min]",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$vzAby64xxCelkem = number_format(round($sumOE['vzaby_64xx']),0,',',' ');
+$myPicture->drawText($imgWidth-110,840+25,$vzAby64xxCelkem,array("Align"=>TEXT_ALIGN_BOTTOMRIGHT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+
+$myPicture->drawText(1300+100,840+60,"VzAby 65XX [min]",array("Align"=>TEXT_ALIGN_BOTTOMLEFT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+$vzAby65xxCelkem = number_format(round($sumOE['vzaby_65xx']),0,',',' ');
+$myPicture->drawText($imgWidth-110,840+55,$vzAby65xxCelkem,array("Align"=>TEXT_ALIGN_BOTTOMRIGHT,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>100));
+
+*/
+
+$Config = array("FontR" => 0, "FontG" => 0, "FontB" => 0, "FontName" => "../Classes/pChart/fonts/Roboto-Light.ttf", "FontSize" => 14, "Margin" => 6, "Alpha" => 100, "BoxWidth" => 20,"BoxHeight" => 20, "Style" => LEGEND_NOBORDER
+, "Mode" => LEGEND_HORIZONTAL
+);
+
+$myPicture->setShadow(TRUE,array("X"=>2,"Y"=>2,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>40));
+$myPicture->drawLegend(110, 850, $Config);
+
+
+$myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Bold.ttf","FontSize"=>15,"R"=>0,"G"=>0,"B"=>0));
+
+$myPicture->Render("S375_graf2.png");
+//$pdf->AddPage();
+$y = $pdf->GetY();
+$pdf->Image("S375_graf2.png", PDF_MARGIN_LEFT, $y + 10, 260, 160, 'PNG');
 
 //AplDB::varDump($myData);
 

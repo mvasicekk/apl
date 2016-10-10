@@ -51,13 +51,13 @@ if($rows!==NULL){
     }
 }
 
-echo "<br>Vynechane dily<hr>";
+echo "<br>'Vynechane' dily (pracuji si nimi jako by mely 11xx)<hr>";
 //vypisu dily s vice operacema 11 a 12
 foreach ($teileA as $kunde=>$t){
     foreach ($t as $teilenr=>$tatA){
 	$tatKeys = array_keys($tatA);
 	if(count($tatA)>1){
-	    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '."vynechavam : ( ma 11xx i 12xx )<br>";
+	    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '."' -> 11xx' : ( ma 11xx i 12xx )<br>";
 	}
     }
 }
@@ -67,9 +67,9 @@ foreach ($teileA as $kunde=>$t){
     foreach ($t as $teilenr=>$tatA){
 	$tatKeys = array_keys($tatA);
 	if(count($tatA)>1){
-	    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '."vynechavam : ( ma 11xx i 12xx )<br>";
+	    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '." -> 11xx: ( ma 11xx i 12xx )<br>";
 	}
-	else{
+	//else{
 	    //zmenit dpos
 	    foreach ($convertTat as $originalAbgNr=>$newAbgnrArray){
 		//najit original
@@ -78,12 +78,16 @@ foreach ($teileA as $kunde=>$t){
 		if($rows!==NULL){
 		    // nasel jsem original
 		    $convertIndex = $tatKeys[0]==11?0:1;
+		    if(count($tatA)>1){
+			$convertIndex = 0;
+		    }
 		    $newAbgnr = $newAbgnrArray[$convertIndex];
 		    $sql = "update dpos set `TaetNr-Aby`='$newAbgnr' where Teil='$teilenr' and `TaetNr-Aby`='$originalAbgNr' limit 1";
-		    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr."<br>";
+		    //$ar = $a->query($sql);
+		    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr." ($ar)<br>";
 		}
 	    }
-	}
+	//}
     }
 }
 
@@ -92,9 +96,9 @@ foreach ($teileA as $kunde=>$t){
     foreach ($t as $teilenr=>$tatA){
 	$tatKeys = array_keys($tatA);
 	if(count($tatA)>1){
-	    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '."vynechavam : ( ma 11xx i 12xx )<br>";
+	    echo $kunde.' - '.$teilenr.'('.$tatKeys[0].') - '."-> 11xx : ( ma 11xx i 12xx )<br>";
 	}
-	else{
+	//else{
 	    //zmenit tabulky
 	    foreach ($convertTat as $originalAbgNr=>$newAbgnrArray){
 		//dauftr
@@ -104,9 +108,13 @@ foreach ($teileA as $kunde=>$t){
 		    // nasel jsem original
 		    $rowsCount = count($rows);
 		    $convertIndex = $tatKeys[0]==11?0:1;
+		    if(count($tatA)>1){
+			$convertIndex = 0;
+		    }
 		    $newAbgnr = $newAbgnrArray[$convertIndex];
 		    $sql = "update dauftr set abgnr='$newAbgnr' where Teil='$teilenr' and abgnr='$originalAbgNr'";
-		    echo "dauftr - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr."<br>";
+		    //$ar = $a->query($sql);
+		    echo "dauftr - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr." ($ar)<br>";
 		}
 		
 		//drech
@@ -116,9 +124,13 @@ foreach ($teileA as $kunde=>$t){
 		    // nasel jsem original
 		    $rowsCount = count($rows);
 		    $convertIndex = $tatKeys[0]==11?0:1;
+		    if(count($tatA)>1){
+			$convertIndex = 0;
+		    }
 		    $newAbgnr = $newAbgnrArray[$convertIndex];
 		    $sql = "update drech set abgnr='$newAbgnr' where Teil='$teilenr' and abgnr='$originalAbgNr'";
-		    echo "drech - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr."<br>";
+		    //$ar = $a->query($sql);
+		    echo "drech - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr." ($ar)<br>";
 		}
 		
 		//dlagerbew
@@ -128,9 +140,13 @@ foreach ($teileA as $kunde=>$t){
 		    // nasel jsem original
 		    $rowsCount = count($rows);
 		    $convertIndex = $tatKeys[0]==11?0:1;
+		    if(count($tatA)>1){
+			$convertIndex = 0;
+		    }
 		    $newAbgnr = $newAbgnrArray[$convertIndex];
 		    $sql = "update dlagerbew set abgnr='$newAbgnr' where teil='$teilenr' and abgnr='$originalAbgNr'";
-		    echo "dlagerbew - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr."<br>";
+		    //$ar = $a->query($sql);
+		    echo "dlagerbew - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr." ($ar)<br>";
 		}
 		
 		//drueck
@@ -140,12 +156,16 @@ foreach ($teileA as $kunde=>$t){
 		    // nasel jsem original
 		    $rowsCount = count($rows);
 		    $convertIndex = $tatKeys[0]==11?0:1;
+		    if(count($tatA)>1){
+			$convertIndex = 0;
+		    }
 		    $newAbgnr = $newAbgnrArray[$convertIndex];
 		    $sql = "update drueck set TaetNr='$newAbgnr' where teil='$teilenr' and TaetNr='$originalAbgNr'";
-		    echo "drueck - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr."<br>";
+		    //$ar = $a->query($sql);
+		    echo "drueck - (poc. radku:$rowsCount)".' - '.$teilenr.'('.$tatKeys[0].') - '.$originalAbgNr." -> ".$newAbgnr." ($ar)<br>";
 		}
 	    }
-	}
+	//}
     }
 }
 
