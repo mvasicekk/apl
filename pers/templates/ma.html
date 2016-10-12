@@ -1,0 +1,56 @@
+<div class="container-fluid" ng-controller="persController">
+    <div>
+    	<button type="button" class="btn btn-warning btn-xs" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    </div>
+    <div class="page-header">
+	<h4>Personal
+	</h4>
+	<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+    </div>
+
+    <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}">
+    <div class="row">
+	    <div class="col-sm-10">
+	    <div class="form-group form-group-sm">
+		<label class="control-label" for="osoba">os. číslo / jméno</label>
+		<input ng-change="osobaChanged()" ng-model="osoba" type="text" class="form-control" id="osoba" placeholder="hledání pracovníka, zadejte osobní, číslo, jméno ..">
+		<apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['osoba_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	    </div>
+	    <div class="col-sm-2">
+	    <div class="form-group form-group-sm">
+		<label class="control-label" for="jenma">pouze MA</label>
+		<input ng-change="jenMAChanged()" ng-model="jenma" type="checkbox" class="form-control" id="jenma">
+		<apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['jenma']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	    </div>
+	    <div class='col-sm-12'>
+		<table ng-if="osoby.length>0" class="table table-condensed table-striped">
+		    <thead>
+			<tr>
+			    <th>persnr</th>
+			    <th>jmeno</th>
+			    <th>nastup. datum</th>
+			    <th>RegelOE</th>
+			    <th>status</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<tr ng-repeat="r in osoby">
+			    <td>{{r.persnr}}</td>
+			    <td>{{r.name}} {{r.vorname}}</td>
+			    <td>{{r.eintritt}}</td>
+			    <td>{{r.regeloe}}</td>
+			    <td>{{r.dpersstatus}}</td>
+			</tr>
+		    </tbody>
+		</table>
+	    </div>
+	</div>
+    </form>
+</div>

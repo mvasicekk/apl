@@ -28,12 +28,18 @@ $pt.=" sum(if(stat_nr='S0011',`verb-zeit`,0)) as verb_S0011,";
 $pt.=" sum(if(stat_nr='S0041',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as kd_S0041,";
 $pt.=" sum(if(stat_nr='S0041',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as aby_S0041,";
 $pt.=" sum(if(stat_nr='S0041',`verb-zeit`,0)) as verb_S0041,";
+$pt.=" sum(if(stat_nr='S0043',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as kd_S0043,";
+$pt.=" sum(if(stat_nr='S0043',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as aby_S0043,";
+$pt.=" sum(if(stat_nr='S0043',`verb-zeit`,0)) as verb_S0043,";
 $pt.=" sum(if(stat_nr='S0051',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as kd_S0051,";
 $pt.=" sum(if(stat_nr='S0051',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as aby_S0051,";
 $pt.=" sum(if(stat_nr='S0051',`verb-zeit`,0)) as verb_S0051,";
 $pt.=" sum(if(stat_nr='S0061',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as kd_S0061,";
 $pt.=" sum(if(stat_nr='S0061',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as aby_S0061,";
 $pt.=" sum(if(stat_nr='S0061',`verb-zeit`,0)) as verb_S0061,";
+$pt.=" sum(if(stat_nr='S0062',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as kd_S0062,";
+$pt.=" sum(if(stat_nr='S0062',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as aby_S0062,";
+$pt.=" sum(if(stat_nr='S0062',`verb-zeit`,0)) as verb_S0062,";
 $pt.=" sum(if(stat_nr='S0081',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as kd_S0081,";
 $pt.=" sum(if(stat_nr='S0081',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as aby_S0081,";
 $pt.=" sum(if(stat_nr='S0081',`verb-zeit`,0)) as verb_S0081,";
@@ -70,8 +76,13 @@ $pt_S240=$pcip.$views[0];
 $pt_S240_summe_lieferung=$pcip.$views[1];
 
 $sql=" SELECT $pt_S240.pg, $pt_S240.kunde, $pt_S240.auftragsnr, $pt_S240.kd_S0011, $pt_S240.aby_S0011, ";
-$sql.=" $pt_S240.verb_S0011, $pt_S240.kd_S0041, $pt_S240.aby_S0041, $pt_S240.verb_S0041, $pt_S240.kd_S0051, ";
-$sql.=" $pt_S240.aby_S0051, $pt_S240.verb_S0051, $pt_S240.kd_S0061, $pt_S240.aby_S0061, $pt_S240.verb_S0061, ";
+$sql.=" $pt_S240.verb_S0011,";
+$sql.=" $pt_S240.kd_S0041, $pt_S240.aby_S0041, $pt_S240.verb_S0041,";
+$sql.=" $pt_S240.kd_S0043, $pt_S240.aby_S0043, $pt_S240.verb_S0043,";
+$sql.=" $pt_S240.kd_S0051, ";
+$sql.=" $pt_S240.aby_S0051, $pt_S240.verb_S0051,";
+$sql.=" $pt_S240.kd_S0061, $pt_S240.aby_S0061, $pt_S240.verb_S0061, ";
+$sql.=" $pt_S240.kd_S0062, $pt_S240.aby_S0062, $pt_S240.verb_S0062, ";
 $sql.=" $pt_S240.kd_S0081, $pt_S240.aby_S0081, $pt_S240.verb_S0081, $pt_S240.kd_S0091, $pt_S240.aby_S0091, ";
 $sql.=" $pt_S240.verb_S0091, $pt_S240.kd_X, $pt_S240.aby_X, $pt_S240.verb_X, $pt_S240.kd_M, $pt_S240.aby_M, ";
 $sql.=" $pt_S240.verb_M, $pt_S240.kd_celkem, $pt_S240.aby_celkem, $pt_S240.verb_celkem, ";
@@ -210,8 +221,10 @@ $options = array(
 												'auftragsnr',
 												'kd_S0011',
 												'kd_S0041',
+												'kd_S0043',
 												'kd_S0051',
 												'kd_S0061',
+												'kd_S0062',
 												'kd_S0081',
 												'kd_S0091',
 												'kd_X',
@@ -228,8 +241,10 @@ $options = array(
 											'elements'=>array(
 												'aby_S0011',
 												'aby_S0041',
+												'aby_S0043',
 												'aby_S0051',
 												'aby_S0061',
+												'aby_S0062',
 												'aby_S0081',
 												'aby_S0091',
 												'aby_X',
@@ -246,8 +261,10 @@ $options = array(
 											'elements'=>array(
 												'verb_S0011',
 												'verb_S0041',
+												'verb_S0043',
 												'verb_S0051',
 												'verb_S0061',
+												'verb_S0062',
 												'verb_S0081',
 												'verb_S0091',
 												'verb_X',

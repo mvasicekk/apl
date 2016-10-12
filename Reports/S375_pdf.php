@@ -259,7 +259,7 @@ $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
 $params = "Kunde $kdvon - $kdbis, Datum ".$_GET['von']."-".$_GET['bis'];
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S3750 - opravy", $params);
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S375 - opravy", $params);
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP-10, PDF_MARGIN_RIGHT);
 //set auto page breaks
@@ -499,7 +499,8 @@ foreach ($kundenNrArray as $kd){
 //celkem
 $pdf->SetFont("FreeSans", "B", 6.5);
 $pdf->SetFillColor(176,196,222);
-$pdf->Cell($headerWidth, $rowHeight, "Celkem", 'LRBT', 0, 'L', 1, '', 0, TRUE);
+$pdf->MultiCell($headerWidth, $rowHeight, "Celkem VzAby", 'LRBT', 'L', TRUE, FALSE, '', '', TRUE, TRUE, FALSE, FALSE, $rowHeight, 'M', TRUE);
+//$pdf->Cell($headerWidth, $rowHeight, "Celkem", 'LRBT', 0, 'L', 1, '', 0, TRUE);
 foreach ($jmArray as $jm) {
     $value = "vzaby_64xx";
     $popisA = $popisArray[$value];
@@ -541,7 +542,8 @@ $pdf->Ln();
 //procenta
 $pdf->SetFont("FreeSans", "B", 6.5);
 $pdf->SetFillColor(176,196,222);
-$pdf->Cell($headerWidth, $rowHeight, "%", 'LRBT', 0, 'L', 1, '', 0, TRUE);
+$pdf->MultiCell($headerWidth, $rowHeight, "VzAby\n / VzKd [%]", 'LRBT', 'L', TRUE, FALSE, '', '', TRUE, TRUE, FALSE, FALSE, $rowHeight, 'M', TRUE);
+//$pdf->Cell($headerWidth, $rowHeight, "%", 'LRBT', 0, 'L', 1, '', 0, TRUE);
 foreach ($jmArray as $jm) {
     $value = "podil_64xx";
     $popisA = $popisArray[$value];
@@ -691,17 +693,8 @@ $Config = array(
     //"Threshold"=>$Threshold
     //"OverrideColors"=>$Palette,
 );
-
-$myPicture->drawThresholdArea(0, 2000, array("R"=>226,"G"=>194,"B"=>54,"Alpha"=>40));
-$myPicture->drawThresholdArea(2000, 10000, array("R"=>194,"G"=>226,"B"=>54,"Alpha"=>40));
-$myPicture->drawThresholdArea(10000, 20000, array("R"=>194,"G"=>250,"B"=>54,"Alpha"=>40));
-$myPicture->drawThresholdArea(20000, 200000, array("R"=>130,"G"=>255,"B"=>54,"Alpha"=>40));
-//$myData->setPalette("64xx",$Palette);
-//
 // vykreslit chart
 $myPicture->drawBarChart($Config);
-//$myPicture->drawStackedBarChart($Config);
-//$myPicture->drawFilledStepChart();
 $myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>20)); 
 $myPicture->drawRoundedFilledRectangle(1300-10, 840, $imgWidth-100, $imgHeight-90, 10,array("R"=>240,"G"=>240,"B"=>240,"Alpha"=>100,"Surrounding"=>-200));
 $myPicture->setFontProperties(array("FontName" => "../Classes/pChart/fonts/Roboto-Bold.ttf","FontSize"=>15,"R"=>0,"G"=>0,"B"=>0));
@@ -946,6 +939,11 @@ $myData->setSerieDescription("jm","Monate");
 $myData->setAbscissa("jm");
 
 $myData->setAxisName(0,"[%]");
+$myData->setAxisDisplay(0,AXIS_FORMAT_CUSTOM,"procFormat");
+
+function procFormat($v){
+    return number_format($v, 1, ',', ' ');
+}
 
 $imgWidth = 1800;
 $imgHeight = 1000;

@@ -13,8 +13,10 @@ $query2xml = XML_Query2XML::factory($db);
 	$sql="select dksd.kunden_stat_nr as pg,dkopf.kunde,auftragsnr,";
 	$sql.=" sum(if(stat_nr='S0011',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0011,";
 	$sql.=" sum(if(stat_nr='S0041',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0041,";
+	$sql.=" sum(if(stat_nr='S0043',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0043,";
 	$sql.=" sum(if(stat_nr='S0051',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0051,";
 	$sql.=" sum(if(stat_nr='S0061',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0061,";
+	$sql.=" sum(if(stat_nr='S0062',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0062,";
 	$sql.=" sum(if(stat_nr='S0081',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0081,";
 	$sql.=" sum(if(stat_nr='S0091',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_S0091,";
 	$sql.=" sum(if(stat_nr='X',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as T_X,";
@@ -48,8 +50,10 @@ $options = array(
 								'auftragsnr',
 								'T_S0011',
 								'T_S0041',
+								'T_S0043',
 								'T_S0051',
 								'T_S0061',
+								'T_S0062',
 								'T_S0081',
 								'T_S0091',
 								'T_X',

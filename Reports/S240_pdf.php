@@ -54,37 +54,43 @@ array(
 => array ("popis"=>"","sirka"=>20,"ram"=>'LT',"align"=>"L","radek"=>0,"fill"=>0),
 
 "kd_S0011" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_S0041" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
+"kd_S0043" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+    
 "kd_S0051" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_S0061" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
-"kd_S0081" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+"kd_S0062" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+
+    "kd_S0081" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_S0091" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_X" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_M" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_celkem1" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_celkem2" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kd_summe_lieferung" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "delta_kd" 
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>0,"ram"=>'1',"align"=>"R","radek"=>1,"fill"=>0)
@@ -98,37 +104,43 @@ array(
 => array ("popis"=>"","sirka"=>20,"ram"=>'L',"align"=>"L","radek"=>0,"fill"=>0),
 
 "aby_S0011" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_S0041" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
-"aby_S0051" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+"aby_S0043" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+
+    "aby_S0051" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_S0061" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
-"aby_S0081" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+"aby_S0062" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+
+    "aby_S0081" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_S0091" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_X" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_M" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_celkem1" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_celkem2" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "aby_summe_lieferung" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "delta_aby" 
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>0,"ram"=>'1',"align"=>"R","radek"=>1,"fill"=>0)
@@ -142,37 +154,43 @@ array(
 => array ("popis"=>"","sirka"=>20,"ram"=>'LB',"align"=>"L","radek"=>0,"fill"=>0),
 
 "verb_S0011" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_S0041" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
-"verb_S0051" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+"verb_S0043" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+
+    "verb_S0051" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_S0061" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
-"verb_S0081" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+"verb_S0062" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+
+    "verb_S0081" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_S0091" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_X" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_M" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_celkem1" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_celkem2" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "verb_summe_lieferung" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>0),
 
 "delta_verb" 
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>0,"ram"=>'1',"align"=>"R","radek"=>1,"fill"=>0)
@@ -186,37 +204,43 @@ array(
 => array ("popis"=>"\nAuftragsnr","sirka"=>20,"ram"=>'1',"align"=>"L","radek"=>0,"fill"=>1),
 
 "kd_S0011" 
-=> array ("popis"=>"S0011\nTren,Putz","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"S0011\nTren,Putz","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_S0041" 
-=> array ("popis"=>"S0041\nStrahlen","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"S0041\nStrahlen","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
-"kd_S0051" 
-=> array ("popis"=>"S0051\nEndkontrolle","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+"kd_S0043" 
+=> array ("popis"=>"S0043\nStrahlen","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+
+    "kd_S0051" 
+=> array ("popis"=>"S0051\nEndkontrolle","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_S0061" 
-=> array ("popis"=>"S0061\nFarbe","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"S0061\nFarbe","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+
+"kd_S0062" 
+=> array ("popis"=>"S0062\nFarbe","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_S0081" 
-=> array ("popis"=>"S0081\nSonstige","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"S0081\nSonstige","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_S0091" 
-=> array ("popis"=>"S0091\nRE o. VzKd","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"S0091\nRE o. VzKd","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_X" 
-=> array ("popis"=>"X\nIntern","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"X\nIntern","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_M" 
-=> array ("popis"=>"M\n9X Mehrarb","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"M\n9X Mehrarb","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_celkem1" 
-=> array ("popis"=>"\nres1","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"\nres1","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_celkem2" 
-=> array ("popis"=>"\nres2","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"\nres2","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kd_summe_lieferung" 
-=> array ("popis"=>"Summe\nLieferung","sirka"=>20,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("popis"=>"Summe\nLieferung","sirka"=>17,"ram"=>'1',"align"=>"R","radek"=>0,"fill"=>1),
 
 "delta_kd" 
 => array ("popis"=>"nicht in DStat\nenth. VzKd","sirka"=>0,"ram"=>'1',"align"=>"R","radek"=>1,"fill"=>1)
@@ -229,8 +253,10 @@ array(
 $sum_zapati_kunde_kd_array = array(	
 								"kd_S0011"=>0,
 								"kd_S0041"=>0,
+    "kd_S0043"=>0,
 								"kd_S0051"=>0,
 								"kd_S0061"=>0,
+    "kd_S0062"=>0,
 								"kd_S0081"=>0,
 								"kd_S0091"=>0,
 								"kd_X"=>0,
@@ -245,8 +271,10 @@ global $sum_zapati_kunde_kd_array;
 $sum_zapati_kunde_aby_array = array(	
 								"aby_S0011"=>0,
 								"aby_S0041"=>0,
+    "aby_S0043"=>0,
 								"aby_S0051"=>0,
 								"aby_S0061"=>0,
+    "aby_S0062"=>0,
 								"aby_S0081"=>0,
 								"aby_S0091"=>0,
 								"aby_X"=>0,
@@ -261,8 +289,10 @@ global $sum_zapati_kunde_aby_array;
 $sum_zapati_kunde_verb_array = array(	
 								"verb_S0011"=>0,
 								"verb_S0041"=>0,
+    "verb_S0043"=>0,
 								"verb_S0051"=>0,
 								"verb_S0061"=>0,
+    "verb_S0062"=>0,
 								"verb_S0081"=>0,
 								"verb_S0091"=>0,
 								"verb_X"=>0,
@@ -277,8 +307,10 @@ global $sum_zapati_kunde_verb_array;
 $sum_zapati_pg_kd_array = array(	
 								"kd_S0011"=>0,
 								"kd_S0041"=>0,
+    "kd_S0043"=>0,
 								"kd_S0051"=>0,
 								"kd_S0061"=>0,
+    "kd_S0062"=>0,
 								"kd_S0081"=>0,
 								"kd_S0091"=>0,
 								"kd_X"=>0,
@@ -293,8 +325,10 @@ global $sum_zapati_pg_kd_array;
 $sum_zapati_pg_aby_array = array(	
 								"aby_S0011"=>0,
 								"aby_S0041"=>0,
+    "aby_S0043"=>0,
 								"aby_S0051"=>0,
 								"aby_S0061"=>0,
+    "aby_S0062"=>0,
 								"aby_S0081"=>0,
 								"aby_S0091"=>0,
 								"aby_X"=>0,
@@ -309,8 +343,10 @@ global $sum_zapati_pg_aby_array;
 $sum_zapati_pg_verb_array = array(	
 								"verb_S0011"=>0,
 								"verb_S0041"=>0,
+    "verb_S0043"=>0,
 								"verb_S0051"=>0,
 								"verb_S0061"=>0,
+    "verb_S0062"=>0,
 								"verb_S0081"=>0,
 								"verb_S0091"=>0,
 								"verb_X"=>0,
@@ -325,8 +361,10 @@ global $sum_zapati_pg_verb_array;
 $sum_zapati_sestava_kd_array = array(	
 								"kd_S0011"=>0,
 								"kd_S0041"=>0,
+    "kd_S0043"=>0,
 								"kd_S0051"=>0,
 								"kd_S0061"=>0,
+    "kd_S0062"=>0,
 								"kd_S0081"=>0,
 								"kd_S0091"=>0,
 								"kd_X"=>0,
@@ -341,8 +379,10 @@ global $sum_zapati_sestava_kd_array;
 $sum_zapati_sestava_aby_array = array(	
 								"aby_S0011"=>0,
 								"aby_S0041"=>0,
+    "aby_S0043"=>0,
 								"aby_S0051"=>0,
 								"aby_S0061"=>0,
+    "aby_S0062"=>0,
 								"aby_S0081"=>0,
 								"aby_S0091"=>0,
 								"aby_X"=>0,
@@ -357,8 +397,10 @@ global $sum_zapati_sestava_aby_array;
 $sum_zapati_sestava_verb_array = array(	
 								"verb_S0011"=>0,
 								"verb_S0041"=>0,
+    "verb_S0043"=>0,
 								"verb_S0051"=>0,
 								"verb_S0061"=>0,
+    "verb_S0062"=>0,
 								"verb_S0081"=>0,
 								"verb_S0091"=>0,
 								"verb_X"=>0,
@@ -464,47 +506,55 @@ function zapati_kunde($pdfobjekt,$node,$vyskaradku,$popis,$rgb,$pole,$kundenr,$t
 	$pdfobjekt->SetFont("FreeSans", "", 9);
 	$obsah=$pole[$typmin."_S0011"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_S0041"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
+	
+	$obsah=$pole[$typmin."_S0043"];;
+	$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 	
 	$obsah=$pole[$typmin."_S0051"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_S0061"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
+
+	$obsah=$pole[$typmin."_S0062"];;
+	$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_S0081"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_S0091"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_X"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_M"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_celkem1"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_celkem2"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole[$typmin."_summe_lieferung"];;
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'1',0,'R',$fill);
+	$pdfobjekt->Cell(17,$vyskaradku,$obsah,'1',0,'R',$fill);
 
 	$obsah=$pole["delta_".$typmin];
 	$obsah=number_format($obsah,0,',',' ');
@@ -524,8 +574,8 @@ function test_pageoverflow($pdfobjekt,$testvysradku,$cellhead,$vysradku)
 	{
 		$pdfobjekt->AddPage();
 		pageheader($pdfobjekt,$cellhead,$vysradku);
-		$pdfobjekt->Ln();
-		$pdfobjekt->Ln();
+//		$pdfobjekt->Ln();
+//		$pdfobjekt->Ln();
 		return 1;
 	}
 	else

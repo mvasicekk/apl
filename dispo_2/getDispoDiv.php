@@ -9,7 +9,7 @@ require_once '../db.php';
     $nurMitMinutenCheck = $_POST['nurMitMin'];
 
     
-    $statnrArray = array("S0011","S0041","S0051","S0061","S0081");
+    //$statnrArray = array("S0011","S0041","S0051","S0061","S0081");
     
     if($nurMitMinutenCheck==1)
 	$nurMitMinutenFlag = TRUE;
@@ -18,7 +18,10 @@ require_once '../db.php';
     // zjistim zda mam hodnotu value ulozenou v databazi artiklu
 
     $apl = AplDB::getInstance();
-
+    
+    $statnrArray = $apl->getStatNrArray(TRUE);
+    //AplDB::varDump($statnrArray);
+    
     $rmZeit = $apl->validateZeit($rm_bis);
     if($rmZeit=="00:00"){
 	$rmZeit = date("H:i");
@@ -171,8 +174,10 @@ require_once '../db.php';
 			"termin"=>$kunde."NOEX",
 			"sum_vzkd_S0011"=>0,
 			"sum_vzkd_S0041"=>0,
+			"sum_vzkd_S0043"=>0,
 			"sum_vzkd_S0051"=>0,
 			"sum_vzkd_S0061"=>0,
+			"sum_vzkd_S0062"=>0,
 			"sum_vzkd_S0081"=>0,
 			"sum_vzkd"=>0,
 			);
@@ -188,8 +193,10 @@ require_once '../db.php';
 			"termin"=>$kunde."NOEX",
 			"sum_vzkd_S0011"=>0,
 			"sum_vzkd_S0041"=>0,
+			"sum_vzkd_S0043"=>0,
 			"sum_vzkd_S0051"=>0,
 			"sum_vzkd_S0061"=>0,
+			"sum_vzkd_S0062"=>0,
 			"sum_vzkd_S0081"=>0,
 			"sum_vzkd"=>0,
 			);

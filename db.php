@@ -125,6 +125,20 @@ class AplDB {
 // ------------------------------------------------------------------------
 // public methods
 
+    public function getStatNrArray($nurDispo = TRUE){
+	$pole = array();
+	$sql = "select dstat.Stat_Nr as statnr from dstat where zeige_in_dispo>0 order by Stat_Nr";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    foreach ($rows as $r){
+		array_push($pole, $r['statnr']);
+	    }
+	    return $pole;
+	}
+	else {
+	    return $pole;
+	}
+    }
     /**
      * vrati pole osobnich cisel s nastupem od zadaneho datumu
      * @param string $dbEintrittVom - datum ve formatu YYYY-MM-DD
@@ -8050,8 +8064,10 @@ public function istExportiert($import, $impal){
 	    $sql.=" dauftr.termin,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0043,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0062,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
 	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
 	    $sql.=" from ";
@@ -8081,8 +8097,10 @@ public function istExportiert($import, $impal){
 	    $sql.=" daufkopf.kunde,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0043,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0062,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
 	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
 	    $sql.=" from ";
@@ -8120,8 +8138,10 @@ public function istExportiert($import, $impal){
 	    $sql.=" daufkopf.kunde,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0043,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0062,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
 	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
 	    $sql.=" from ";
@@ -8158,8 +8178,10 @@ public function istExportiert($import, $impal){
 	    $sql.=" dauftr.termin,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0043,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0062,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
 	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
 	    $sql.=" from ";
@@ -8184,8 +8206,10 @@ public function istExportiert($import, $impal){
 	    $sql.=" '$kunde"."NOEX' as termin,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0011,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0041,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0043,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0051,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0061,";
+	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0062,";
 	    $sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`),0)) as sum_vzkd_S0081,";
 	    $sql.=" sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,(drueck.`Stück`)*drueck.`VZ-SOLL`)) as sum_vzkd";
 	    $sql.=" from ";
@@ -8218,8 +8242,10 @@ public function istExportiert($import, $impal){
 	$sql.=" '$kunde"."NOEX' as termin,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0041,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0043,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0051,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0061,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0062,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0081,";
 	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as sum_vzkd";
 	$sql.=" from ";
@@ -8248,8 +8274,10 @@ public function istExportiert($import, $impal){
 	$sql.=" dauftr.termin,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0041,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0043,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0051,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0061,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0062,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0081,";
 	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as sum_vzkd";
 	$sql.=" from ";
@@ -8268,8 +8296,10 @@ public function istExportiert($import, $impal){
 	$sql.=" dauftr.termin,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0011',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0011,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0041',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0041,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0043',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0043,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0051',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0051,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0061',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0061,";
+	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0062',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0062,";
 	$sql.=" sum(if(`dtaetkz-abg`.Stat_Nr='S0081',dauftr.`stück`*dauftr.VzKd,0)) as sum_vzkd_S0081,";
 	$sql.=" sum(dauftr.`stück`*dauftr.VzKd) as sum_vzkd";
 	$sql.=" from ";
@@ -8291,7 +8321,8 @@ public function istExportiert($import, $impal){
      * @param timestamp $time 
      */
     public function getPlanSollProTagArray($von,$bis,$time=NULL,$getsql=FALSE){
-	$statnrArray = array("S0011","S0041","S0051","S0061","S0081");
+	//$statnrArray = array("S0011","S0041","S0051","S0061","S0081");
+	$statnrArray = $this->getStatNrArray(TRUE);
 	if($time===NULL){
 	    $sql.=" select ";
 	    $sql.=" dstat.stat_nr as statnr, ";
@@ -8470,16 +8501,20 @@ public function istExportiert($import, $impal){
 	    $r = $vzkdPlanArray[0];
 	    $pIA["S0011"][$columnIndex] = $r['sum_vzkd_S0011'];
 	    $pIA["S0041"][$columnIndex] = $r['sum_vzkd_S0041'];
+	    $pIA["S0043"][$columnIndex] = $r['sum_vzkd_S0043'];
 	    $pIA["S0051"][$columnIndex] = $r['sum_vzkd_S0051'];
 	    $pIA["S0061"][$columnIndex] = $r['sum_vzkd_S0061'];
+	    $pIA["S0062"][$columnIndex] = $r['sum_vzkd_S0062'];
 	    $pIA["S0081"][$columnIndex] = $r['sum_vzkd_S0081'];
 	    $pIA["sum"][$columnIndex] = $r['sum_vzkd'];
 	}
 	else{
 	    $pIA["S0011"][$columnIndex] = NULL;
 	    $pIA["S0041"][$columnIndex] = NULL;
+	    $pIA["S0043"][$columnIndex] = NULL;
 	    $pIA["S0051"][$columnIndex] = NULL;
 	    $pIA["S0061"][$columnIndex] = NULL;
+	    $pIA["S0062"][$columnIndex] = NULL;
 	    $pIA["S0081"][$columnIndex] = NULL;
 	    $pIA["sum"][$columnIndex] = NULL;
 	}
@@ -8490,16 +8525,20 @@ public function istExportiert($import, $impal){
 	    $r = $fertigPlanArray[0];
 	    $pIA["S0011"][$columnIndex] = $r['sum_vzkd_S0011'];
 	    $pIA["S0041"][$columnIndex] = $r['sum_vzkd_S0041'];
+	    $pIA["S0043"][$columnIndex] = $r['sum_vzkd_S0043'];
 	    $pIA["S0051"][$columnIndex] = $r['sum_vzkd_S0051'];
 	    $pIA["S0061"][$columnIndex] = $r['sum_vzkd_S0061'];
+	    $pIA["S0062"][$columnIndex] = $r['sum_vzkd_S0062'];
 	    $pIA["S0081"][$columnIndex] = $r['sum_vzkd_S0081'];
 	    $pIA["sum"][$columnIndex] = $r['sum_vzkd'];
 	}
 	else{
 	    $pIA["S0011"][$columnIndex] = NULL;
 	    $pIA["S0041"][$columnIndex] = NULL;
+	    $pIA["S0043"][$columnIndex] = NULL;
 	    $pIA["S0051"][$columnIndex] = NULL;
 	    $pIA["S0061"][$columnIndex] = NULL;
+	    $pIA["S0062"][$columnIndex] = NULL;
 	    $pIA["S0081"][$columnIndex] = NULL;
 	    $pIA["sum"][$columnIndex] = NULL;
 	}
@@ -8508,8 +8547,10 @@ public function istExportiert($import, $impal){
 	$plan = substr($terminAktual,1);
 	$pIA["S0011"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0011", date('Y-m-d',$time)));
 	$pIA["S0041"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0041", date('Y-m-d',$time)));
+	$pIA["S0043"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0043", date('Y-m-d',$time)));
 	$pIA["S0051"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0051", date('Y-m-d',$time)));
 	$pIA["S0061"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0061", date('Y-m-d',$time)));
+	$pIA["S0062"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0062", date('Y-m-d',$time)));
 	$pIA["S0081"][$columnIndex] = intval($this->getPlanSollTagMinuten($plan, "S0081", date('Y-m-d',$time)));
 	$pIA["sum"][$columnIndex] = intval($this->getPlanSollTagSumme($plan, date('Y-m-d',$time)));
 	
@@ -8521,16 +8562,20 @@ public function istExportiert($import, $impal){
 	    $r = $istArray[0];
 	    $pIA["S0011"][$columnIndex] = $r['sum_vzkd_S0011'];
 	    $pIA["S0041"][$columnIndex] = $r['sum_vzkd_S0041'];
+	    $pIA["S0043"][$columnIndex] = $r['sum_vzkd_S0043'];
 	    $pIA["S0051"][$columnIndex] = $r['sum_vzkd_S0051'];
 	    $pIA["S0061"][$columnIndex] = $r['sum_vzkd_S0061'];
+	    $pIA["S0062"][$columnIndex] = $r['sum_vzkd_S0062'];
 	    $pIA["S0081"][$columnIndex] = $r['sum_vzkd_S0081'];
 	    $pIA["sum"][$columnIndex] = $r['sum_vzkd'];
 	}
 	else{
 	    $pIA["S0011"][$columnIndex] = NULL;
 	    $pIA["S0041"][$columnIndex] = NULL;
+	    $pIA["S0043"][$columnIndex] = NULL;
 	    $pIA["S0051"][$columnIndex] = NULL;
 	    $pIA["S0061"][$columnIndex] = NULL;
+	    $pIA["S0062"][$columnIndex] = NULL;
 	    $pIA["S0081"][$columnIndex] = NULL;
 	    $pIA["sum"][$columnIndex] = NULL;
 	}

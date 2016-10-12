@@ -100,10 +100,14 @@ array(
 => array ("nf"=>array(0,',',' '),"popis"=>"S0011","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
 "T_S0041" 
 => array ("nf"=>array(0,',',' '),"popis"=>"S0041","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
+"T_S0043" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"S0043","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
 "T_S0051" 
 => array ("nf"=>array(0,',',' '),"popis"=>"S0051","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
 "T_S0061" 
 => array ("nf"=>array(0,',',' '),"popis"=>"S0061","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
+"T_S0062" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"S0062","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
 "T_S0081" 
 => array ("nf"=>array(0,',',' '),"popis"=>"S0081","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>0),
 "T_S0091" 
@@ -125,10 +129,14 @@ array(
 => array ("popis"=>"S0011","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
 "T_S0041" 
 => array ("popis"=>"S0041","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
+    "T_S0043" 
+=> array ("popis"=>"S0043","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
 "T_S0051" 
 => array ("popis"=>"S0051","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
 "T_S0061" 
 => array ("popis"=>"S0061","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
+    "T_S0062" 
+=> array ("popis"=>"S0062","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
 "T_S0081" 
 => array ("popis"=>"S0081","sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
 "T_S0091" 
@@ -144,64 +152,76 @@ array(
 );
 
 $zapati_kunde = array("T_S0011"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0041"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0051"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0061"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0081"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0091"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_X"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_M"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"celkem"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>0,"ram"=>1,"align"=>"R","radek"=>1,"fill"=>1)
-				);
-							
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0041"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0043"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0051"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0061"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0062"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0081"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0091"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_X"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_M"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "celkem"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 0, "ram" => 1, "align" => "R", "radek" => 1, "fill" => 1)
+);
+
 $zapati_pg = array("T_S0011"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0041"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0051"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0061"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0081"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0091"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_X"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_M"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"celkem"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>0,"ram"=>1,"align"=>"R","radek"=>1,"fill"=>1)
-				);
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0041"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0043"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0051"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0061"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0062"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0081"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0091"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_X"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_M"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "celkem"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 0, "ram" => 1, "align" => "R", "radek" => 1, "fill" => 1)
+);
 
 $zapati_report = array("T_S0011"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0041"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0051"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0061"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0081"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_S0091"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_X"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"T_M"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>20,"ram"=>1,"align"=>"R","radek"=>0,"fill"=>1),
-					"celkem"
-					=>array("nf"=>array(0,',',' '),"summe"=>0,"sirka"=>0,"ram"=>1,"align"=>"R","radek"=>1,"fill"=>1)
-				);
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0041"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0043"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0051"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0061"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0062"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0081"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_S0091"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_X"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "T_M"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 20, "ram" => 1, "align" => "R", "radek" => 0, "fill" => 1),
+    "celkem"
+    => array("nf" => array(0, ',', ' '), "summe" => 0, "sirka" => 0, "ram" => 1, "align" => "R", "radek" => 1, "fill" => 1)
+);
 
 // funkce pro vykresleni hlavicky na kazde strance
 function pageheader($pdfobjekt,$pole,$headervyskaradku)

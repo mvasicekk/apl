@@ -31,7 +31,8 @@ $rm_bis = $_GET['rm_bis'];
 $timeVon = strtotime($von);
 $timeBis = strtotime($bis);
 
-$statnrArray = array("S0011","S0041","S0051","S0061","S0081");
+//$statnrArray = array("S0011","S0041","S0051","S0061","S0081");
+$statnrArray = $a->getStatNrArray(TRUE);
 
 $rmZeit = $apl->validateZeit($rm_bis);
 if($rmZeit=="00:00"){
@@ -67,8 +68,10 @@ if($planyArray!==NULL){
 			"termin"=>$kunde."NOEX",
 			"sum_vzkd_S0011"=>0,
 			"sum_vzkd_S0041"=>0,
+			"sum_vzkd_S0043"=>0,
 			"sum_vzkd_S0051"=>0,
 			"sum_vzkd_S0061"=>0,
+			"sum_vzkd_S0062"=>0,
 			"sum_vzkd_S0081"=>0,
 			"sum_vzkd"=>0,
 			);
@@ -87,8 +90,10 @@ if($planyArray!==NULL){
 			"termin"=>$kunde."NOEX",
 			"sum_vzkd_S0011"=>0,
 			"sum_vzkd_S0041"=>0,
+			"sum_vzkd_S0043"=>0,
 			"sum_vzkd_S0051"=>0,
 			"sum_vzkd_S0061"=>0,
+			"sum_vzkd_S0062"=>0,
 			"sum_vzkd_S0081"=>0,
 			"sum_vzkd"=>0,
 			);
@@ -104,8 +109,10 @@ if($planyArray!==NULL){
 			"termin"=>$kunde."NOEX",
 			"sum_vzkd_S0011"=>0,
 			"sum_vzkd_S0041"=>0,
+			"sum_vzkd_S0043"=>0,
 			"sum_vzkd_S0051"=>0,
 			"sum_vzkd_S0061"=>0,
+			"sum_vzkd_S0062"=>0,
 			"sum_vzkd_S0081"=>0,
 			"sum_vzkd"=>0,
 			);
@@ -160,8 +167,10 @@ if($planyArray!==NULL){
 $statnrA = array(
     "S0011"=>array("width"=>0),
     "S0041"=>array("width"=>0),
+    "S0043"=>array("width"=>0),
     "S0051"=>array("width"=>0),
     "S0061"=>array("width"=>0),
+    "S0062"=>array("width"=>0),
     "S0081"=>array("width"=>0),
     "sum"=>array("width"=>0),
     );
