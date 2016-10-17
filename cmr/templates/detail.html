@@ -80,7 +80,9 @@ CZ 35132 Hazlov
 		<tr>
 		    <th>Počet / Anzahl</th>
 		    <th>Druh obalu / Art der Verpackung</th>
-		    <th>Označení zboží / Bezeichnung des Gutes</th>
+		    <th>Označení zboží / Bezeichnung des Gutes <button ng-click="addPalToArray()" class="btn btn-primary btn-xs" type="button">
+	+ Palette
+	</button></th>
 		</tr>
 	    </thead>
 	    <tbody>
@@ -100,6 +102,7 @@ CZ 35132 Hazlov
 	    </tr>
 	    </tbody>
 	</table>
+	
 	<label for="bruttogew">hr. hmotnost [kg] / Bruttogewicht [kg]</label>
 	<input type="text" class="form-control text-right" ng-model="rundlaufInfo.bruttogewicht"/>
 	

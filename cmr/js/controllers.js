@@ -245,12 +245,15 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 			if($scope.palArray===null){
 			    $scope.palArray = [];
 			}
-			for(i=0;i<5;i++){
+			for(i=0;i<2;i++){
 			    $scope.palArray.push({behaelternr:'',behname:'',zustand_id:'',zustand_text:'',sum_stk:'',editable:true});
 			}
 		    });
     };
     
+    $scope.addPalToArray = function(){
+	$scope.palArray.push({behaelternr:'',behname:'',zustand_id:'',zustand_text:'',sum_stk:'',editable:true});
+    }
     $scope.initSecurity = function(){
 	var p={
 	    form_id:'auftrag'

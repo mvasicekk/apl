@@ -120,8 +120,21 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.osoby = [];
     $scope.datum = new Date();
     $scope.jenma = true;
+    $scope.ma = {
+	selectedIndex:-1,
+	maInfo:null,
+    };
 
-
+    $scope.listRowClicked = function(i){
+	console.log('listRowClicked '+i);
+	$scope.ma.selectedIndex = i;
+	return $http.post(
+		'./getMAInfo.php',
+		{persnr: $scope.osoby[i].persnr}
+	).then(function (response) {
+	    $scope.ma.maInfo = response.data.ma[0];
+	});
+    }
     /**
      * 
      * @returns {undefined}
@@ -135,6 +148,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      */
     $scope.osobaChanged = function () {
 	console.log('osobaChanged');
+	$scope.ma.selectedIndex = -1;
 	return $http.post(
 		'./getPersInfo.php',
 		{osoba: $scope.osoba,jenma:$scope.jenma}

@@ -29,8 +29,8 @@
 		<apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['jenma']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	    </div>
-	    <div class='col-sm-12'>
-		<table ng-if="osoby.length>0" class="table table-condensed table-striped">
+	    <div ng-if="osoby.length>0 && ma.selectedIndex==-1" class='col-sm-12'>
+		<table class="table table-condensed table-striped" >
 		    <thead>
 			<tr>
 			    <th>persnr</th>
@@ -41,7 +41,7 @@
 			</tr>
 		    </thead>
 		    <tbody>
-			<tr ng-repeat="r in osoby">
+			<tr ng-repeat="r in osoby" ng-click="listRowClicked($index)">
 			    <td>{{r.persnr}}</td>
 			    <td>{{r.name}} {{r.vorname}}</td>
 			    <td>{{r.eintritt}}</td>
@@ -50,6 +50,31 @@
 			</tr>
 		    </tbody>
 		</table>
+	    </div>
+	</div>
+	<div class='row' ng-show="ma.selectedIndex>=0">
+	    <div class="col-sm-10">
+		<h1>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} {{ma.maInfo.dpersstatus}}</h1>
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-sm-12" role="tablist">
+		<button class="btn btn-primary" role="tab" type="button" data-toggle="collapse" data-target="#zaklad" aria-expanded="false" aria-controls="zaklad">
+		zaklad
+		</button>
+		<button class="btn btn-primary" role="tab"  type="button" data-toggle="collapse" data-target="#inventar" aria-expanded="false" aria-controls="inventar">
+		inventar
+		</button>
+		<div class="collapse in" id="zaklad" role="tabpanel">
+		    <div class="well">
+		    základ
+		    </div>
+		</div>
+		<div class="collapse" id="inventar" role="tabpanel">
+		    <div class="well">
+		    inventar
+		    </div>
+		</div>
 	    </div>
 	</div>
     </form>

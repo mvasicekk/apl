@@ -2,6 +2,203 @@
 session_start();
 require_once '../db.php';
 
+$exPol = array(
+    "102"=>array(
+	"popis"=>"smluvní hodinová mzda (odpracované dny-v hodinové mzdě)",
+	"stunden"=>1,
+	"stundenDB"=>"stundenZeit",
+	"tage"=>1,
+	"tageDB"=>"tageZeit",
+	"betrag"=>1,
+	"betragDB"=>"betragZeit",
+	"aktiv"=>1
+    ),
+    "103"=>array(
+	"popis"=>"smluvní úkolová mzda (odpracované dny v úkolové mzdě)",
+	"stunden"=>1,
+	"stundenDB"=>"stundenAkkord",
+	"tage"=>1,
+	"tageDB"=>"tageAkkord",
+	"betrag"=>1,
+	"betragDB"=>"betragAkkord",
+	"aktiv"=>1
+    ),
+    "500"=>array(
+	"popis"=>"počet dnů dovolene",
+	"stunden"=>1,
+	"stundenDB"=>"dStunden",
+	"tage"=>1,
+	"tageDB"=>"dTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    //TODO
+    "202"=>array(
+	"popis"=>"příplatek za práci ve svátek",
+	"stunden"=>1,
+	"tage"=>1,
+	"betrag"=>0,
+	"aktiv"=>0
+    ),
+    "206"=>array(
+	"popis"=>"příplatek za práci v sobotu",
+	"stunden"=>1,
+	"stundenDB"=>"soStunden",
+	"tage"=>0,
+	"tageDB"=>"soTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "207"=>array(
+	"popis"=>"příplatek za práci v neděli",
+	"stunden"=>1,
+	"stundenDB"=>"neStunden",
+	"tage"=>0,
+	"tageDB"=>"neTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "203"=>array(
+	"popis"=>"příplatek za práci v noci",
+	"stunden"=>1,
+	"stundenDB"=>"nachtStunden",
+	"tage"=>0,
+	"tageDB"=>"nachtTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "321"=>array(
+	"popis"=>"kvalifikační prémie",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"qPremieBetrag",
+	"aktiv"=>1
+    ),
+    "322"=>array(
+	"popis"=>"prémie za výkon",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"leistPremieBetrag",
+	"aktiv"=>1
+    ),
+    "323"=>array(
+	"popis"=>"prémie čtvrtletní",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"qtlPremieBetrag",
+	"aktiv"=>1
+    ),
+    "303"=>array(
+	"popis"=>"osobní ohodnocení",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "324"=>array(
+	"popis"=>"příplatek k normě",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"erschwernissBetrag",
+	"aktiv"=>1
+    ),
+    "330"=>array(
+	"popis"=>"A-prémie",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"aPremieBetrag",
+	"aktiv"=>1
+    ),
+    "332"=>array(
+	"popis"=>"vánoční prémie",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "551"=>array(
+	"popis"=>"neomluvená absence",
+	"stunden"=>0,
+	"stundenDB"=>"zStunden",
+	"tage"=>1,
+	"tageDB"=>"zTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "333"=>array(
+	"popis"=>"prémie prach",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "334"=>array(
+	"popis"=>"prémie rucni naradi",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "737"=>array(
+	"popis"=>"doprava zahranici",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "751"=>array(
+	"popis"=>"srážka za dopravu",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"transportBetrag",
+	"aktiv"=>1
+    ),
+    "760"=>array(
+	"popis"=>"srážka za ubytování",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "770"=>array(
+	"popis"=>"pohledávky za zaměstnance",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "746"=>array(
+	"popis"=>"záloha na mzdu",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"vorschussBetrag",
+	"aktiv"=>1
+    ),
+    "748"=>array(
+	"popis"=>"srážka za obědy",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"essenBetrag",
+	"aktiv"=>1
+    ),
+    "750"=>array(
+	"popis"=>"pohl. zál 2",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+);
+
+
 function getMsRow($rok
 		, $mesic
 		, $stredisko
@@ -50,14 +247,6 @@ $bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
 $user = $_SESSION['user'];
 $password = $_GET['password'];
 
-//$fullAccess = testReportPassword("S142",$password,$user,0);
-//
-//if((!$fullAccess) && ($reporttyp=='lohn'))
-//{
-//    echo "Nemate povoleno zobrazeni teto sestavy / Sie sind nicht berechtigt dieses Report zu starten.";
-//    exit;
-//}
-
 printf("monat: %02d\n",$monat);
 printf("jahr: %04d\n",$jahr);
 printf("persvon: %05d\n",$persvon);
@@ -74,21 +263,20 @@ if($pRs!==NULL){
     }
 }
 
-
-AplDB::varDump($pA);
+//AplDB::varDump($pA);
 
 //exit();
-if(count($pA)==0){
-    exit();
-}
+//if(count($pA)==0){
+//    exit();
+//}
+
 // a-premie
 // v E143 je toto
 $aPremienArray = $a->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',FALSE);
-// na zkousku
-//$aPremienArray = $a->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',TRUE);
 //AplDB::varDump($aPremienArray);
-// dochazka, dovolena nemoci, zakladni udaje o persnr
 
+
+// dochazka, dovolena nemoci, zakladni udaje o persnr
 $joinDpersISP = "dpers_isp";
 $sql="";
 $sql.=" select";
@@ -113,21 +301,24 @@ $sql.="     DATE_FORMAT(dpers.austritt,'%y-%m-%d') as austritt,";
 $sql.="     DATE_FORMAT(dpers.geboren,'%Y-%m-%d') as geboren,";
 $sql.="     DATE_FORMAT(dpersdetail1.dobaurcita,'%y-%m-%d') as dobaurcita,";
 $sql.="     DATE_FORMAT(dpersdetail1.zkusebni_doba_dobaurcita,'%y-%m-%d') as zkusebni_doba_dobaurcita,";
-$sql.="     dzeit.Datum as datum,";
+//$sql.="     dzeit.Datum as datum,";
 $sql.="     sum(dzeit.`Stunden`) as sumstunden,";
 $sql.="     sum(if(dtattypen.oestatus='a',dzeit.`Stunden`,0)) as sumstundena,";
 $sql.="     sum(if(dtattypen.oestatus='a' and dtattypen.akkord<>0,dzeit.`Stunden`,0)) as sumstundena_akkord,";
 $sql.="     sum(if(dtattypen.erschwerniss<>0,dzeit.`Stunden`*6,0)) as erschwerniss,";
 $sql.="     sum(if(dzeit.tat='z',1,0)) as tage_z,";
+$sql.="     sum(if(dzeit.tat='z',dzeit.Stunden,0)) as stunden_z,";
 $sql.="     sum(if(dzeit.tat='nv',1,0)) as tage_nv,";
 $sql.="     sum(if(dzeit.tat='nw',1,0)) as tage_nw,";
 $sql.="     sum(if(dzeit.tat='d',1,0)) as tage_d,";
+$sql.="     sum(if(dzeit.tat='d',dzeit.Stunden,0)) as stunden_d,";
 $sql.="     sum(if(dzeit.tat='np',1,0)) as tage_np,";
 $sql.="     sum(if(dzeit.tat='n',1,0)) as tage_n,";
 $sql.="     sum(if(dzeit.tat='nu',1,0)) as tage_nu,";
 $sql.="     sum(if(dzeit.tat='p',1,0)) as tage_p,";
 $sql.="     sum(if(dzeit.tat='u',1,0)) as tage_u,";
 $sql.="     sum(if(dzeit.tat='?',1,0)) as tage_frage";
+$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,1,0)) as tage_svatek";
 $sql.="     ,sum(if(dtattypen.fr_sp='N',dzeit.stunden,0)) as nachtstd";
 $sql.="     ,durlaub1.jahranspruch";
 $sql.="     ,durlaub1.rest";
@@ -135,6 +326,7 @@ $sql.="     ,durlaub1.gekrzt";
 $sql.=" from dpers";
 $sql.=" join dzeit on dzeit.PersNr=dpers.PersNr";
 $sql.=" join dtattypen on dzeit.tat=dtattypen.tat";
+$sql.=" join calendar on calendar.datum=dzeit.Datum";
 $sql.=" left join dpersdetail1 on dpersdetail1.persnr=dpers.`PersNr`";
 $sql.=" left join dpersbewerber on dpersbewerber.persnr=dpers.`PersNr`";
 $sql.=" left join durlaub1 on durlaub1.`PersNr`=dpers.`PersNr`";
@@ -145,24 +337,22 @@ $sql.="     and (dzeit.`Datum` between '$von' and '$bis')";
 $sql.="     and (dpers.persnr between '$persvon' and '$persbis')";
 $sql.=" )";
 $sql.=" group by ";
-$sql.="     dpers.`PersNr`,";
-$sql.="     dzeit.datum";
+$sql.="     dpers.`PersNr`";
+//$sql.="     dzeit.datum";
 
 $rows = $a->getQueryRows($sql);
-
 $persRows = array();
 
 if($rows!=NULL){
     foreach ($rows as $r){
 	$persnr = $r['persnr'];
-	$datum = $r['datum'];
+	//$datum = $r['datum'];
 	$persRows[$persnr]['grundinfo'] = $r;
-	$persRows[$persnr][$datum] = $r;
+	//$persRows[$persnr][$datum] = $r;
     }
 }
-
 //AplDB::varDump($persRows);
-// transport
+
 //transport
 $pt="";
 $pt.=" select dperstransport.persnr,sum(dperstransport.preis) as transport";
@@ -374,286 +564,83 @@ if($rows!=NULL){
 $fieldSeparator = ';';
 $msRows = array();
 
-// vytvoreni pole mzdovych slozek z jednotlivych podpoli
-
-// casova a vykonova mzda, sumy za cely mesic za cely mesic
-foreach ($persLeistRows as $persnr=>$pers) {
-    
-    if(!in_array($persnr, $pA)){
-	continue;
-    }
-    
-    $rok = sprintf("%04d", $jahr);
-    $mesic = sprintf("%02d", $monat);
-    $stredisko = sprintf("%d", 0);
+//AplDB::varDump($persRows);
+$slozkyDB = array();
+//jednovelke pole s hodnotama z db, vytvarim osobni cisla podle pole persRows
+foreach ($persRows as $persnr=>$persnrA){
     $pracovnik = $persnr;
-    $persLohnFaktor = floatval($persRows[$persnr]['grundinfo']['perslohnfaktor']);
+    //vychozi nastaveni promennych
     
-    $zakazka = 0;
-    $da1 = '';
-    $da2 = '';
-    $da3 = '';
-    $dat_od = date("d.m.Y", strtotime($von));
-    $dat_do = date("d.m.Y", strtotime($bis));
-
-	
-	// So , 006  
-    	$kod = sprintf("%d", 6);
-	if(array_key_exists($persnr, $persNachtSoNeRows)){
-	    $hodiny = number_format(floatval($persNachtSoNeRows[$persnr]['sostd']), 2, ',', '');
-	}
-	else{
-	    $hodiny = 0;
-	}
-	
-	$korunyCelkem = 0;
-	$dny = 0;
-
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-	
-	// Ne , 007  
-    	$kod = sprintf("%d", 7);
-	if(array_key_exists($persnr, $persNachtSoNeRows)){
-	    $hodiny = number_format(floatval($persNachtSoNeRows[$persnr]['nestd']), 2, ',', '');
-	}
-	else{
-	    $hodiny = 0;
-	}
-	
-	$korunyCelkem = 0;
-	$dny = 0;
-	
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-    
-	
-    // essen,slozka c.748
-    	$kod = sprintf("%d", 748);
-	if(array_key_exists($persnr, $persEssenRows)){
-	    $korunyCelkem = number_format(floatval($persEssenRows[$persnr]['essen']), 0, ',', '');
-	}
-	else{
-	    $korunyCelkem = 0;
-	}
-	
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
+    $stundenZeit = 0;
+    $tageZeit = 0;
+    $betragZeit = 0;
+    $stundenAkkord = 0;
+    $tageAkkord = 0;
+    $betragAkkord = 0;
+    $dStunden = 0;
+    $dTage = 0;
+    $soStunden = 0;
+    $soTage = 0;
+    $neStunden = 0;
+    $neTage = 0;
+    $nachtStunden = 0;
+    $nachtTage = 0;
+    $qPremieBetrag = 0;
+    $leistPremieBetrag = 0;
+    $qtlPremieBetrag = 0;
+    $erschwernissBetrag = 0;
+    $aPremieBetrag = 0;
+    $zStunden = 0;
+    $zTage = 0;
+    $transportBetrag = 0;
+    $vorschussBetrag = 0;
+    $essenBetrag = 0;
     
     
-    // vorschuss,slozka c.746
-    	$kod = sprintf("%d", 746);
-	if(array_key_exists($persnr, $persVorschussRows)){
-	    $korunyCelkem = number_format(floatval($persVorschussRows[$persnr]['sumvorschuss']), 0, ',', '');
-	}
-	else{
-	    $korunyCelkem = 0;
-	}
+    if(array_key_exists($persnr, $persRows)){
+	//echo "<br>$persnr v persRows existuje";
+	$eintrittTimestamp = strtotime($persRows[$persnr]['grundinfo']['eintritt']);
 	
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
+	$persLohnFaktor = floatval($persRows[$persnr]['grundinfo']['perslohnfaktor']);
+	$leistFaktor = floatval($persRows[$persnr]['grundinfo']['leistfaktor']);
+	$bQPremie_zeit = $persRows[$persnr]['grundinfo']['qpremie_zeit']==0?FALSE:TRUE;
+	$bQPremie_akkord = $persRows[$persnr]['grundinfo']['qpremie_akkord']==0?FALSE:TRUE;
+	$bLeistPremie = $persRows[$persnr]['grundinfo']['premie_za_vykon']==0?FALSE:TRUE;
+	$bErschwerniss = $persRows[$persnr]['grundinfo']['premie_za_prasnost']==0?FALSE:TRUE;
+	$bQTLPremie = $persRows[$persnr]['grundinfo']['premie_za_3_mesice']==0?FALSE:TRUE;
 	
-	
-    // transport,slozka c.751
-    	$kod = sprintf("%d", 751);
-	if(array_key_exists($persnr, $persTransportRows)){
-	    $korunyCelkem = number_format(floatval($persTransportRows[$persnr]['transport']), 0, ',', '');
-	}
-	else{
-	    $korunyCelkem = 0;
-	}
-	
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-	
-    // ukolova mzda, slozka c.117 ---------------------------------------
-	$kod = sprintf("%d", 117);
-	$korunyCelkem = number_format(floatval($pers['vzaby_akkord_kc']), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-    
-    // casova mzda, slozka c.116 -----------------------------------------------
-	$kod = sprintf("%d", 116);
-	$kc = ($pers['vzaby'] - $pers['vzaby_akkord'])*$persLohnFaktor;
-	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-}
-
-$sumyDni = array();
-
-// dochazka, dovolena nemoci = mzdove slozky po dnech, zakladni udaje o persnr
-foreach ($persRows as $pers){
-    
-    $rok = sprintf("%04d",$jahr);
-    $mesic = sprintf("%02d",$monat);
-    $stredisko = sprintf("%d",0);
-    $pracovnik = sprintf("%d",$pers['grundinfo']['persnr']);
-    $persLohnFaktor = floatval($pers['grundinfo']['perslohnfaktor']);
-    
-    if(!in_array($pracovnik, $pA)){
-	continue;
+	$stundenZeit = $persRows[$persnr]['grundinfo']['sumstundena']-$persRows[$persnr]['grundinfo']['sumstundena_akkord'];
+	$stundenAkkord = $persRows[$persnr]['grundinfo']['sumstundena_akkord'];
+	$dStunden = $persRows[$persnr]['grundinfo']['stunden_d'];
+	$dTage = $persRows[$persnr]['grundinfo']['tage_d'];
+	$zStunden = $persRows[$persnr]['grundinfo']['stunden_z'];
+	$zTage = $persRows[$persnr]['grundinfo']['tage_z'];
+	$d = $dTage;
+	$nw = $persRows[$persnr]['grundinfo']['tage_nw'];
+	$nachtStunden = $persRows[$persnr]['grundinfo']['nachtstd'];
+    }
+    if(array_key_exists($persnr, $persLeistRows)){
+	$betragZeit = $persLeistRows[$persnr]['vzaby_kc']-$persLeistRows[$persnr]['vzaby_akkord_kc'];
+	$betragAkkord = $persLeistRows[$persnr]['vzaby_akkord_kc'];
+    }
+    if(array_key_exists($persnr, $persNachtSoNeRows)){
+	$soStunden = $persNachtSoNeRows[$persnr]['sostd'];
+	$neStunden = $persNachtSoNeRows[$persnr]['nestd'];
     }
     
-    // projit datumy
-    foreach ($pers as $datum=>$datumRow){
-	if($datum=='grundinfo'){
-	    continue;
+    if(array_key_exists($persnr, $persQPremieRows)) {
+	$qPremieZeit = $bQPremie_zeit?$persQPremieRows[$persnr]['qpraemie_zeit_min']*$persLohnFaktor:0;
+	$qPremieAkkord = $bQPremie_akkord?$persQPremieRows[$persnr]['qpraemie_akkord_kc']:0;
+	//odecist abmahnung
+	$abmahnung = 0;
+	if(array_key_exists($persnr, $persAbmahnungRows)){
+	    $abmahnung = floatval($persAbmahnungRows[$persnr]['abmahnung']);
 	}
-	else{
-	    //sumy dni d, nw , za mesic, potrebuju u vypoctu vykonnostni premie
-	    $sumyDni[$pracovnik]['d']+= intval($datumRow['tage_d']);
-	    $sumyDni[$pracovnik]['nw']+= intval($datumRow['tage_nw']);
-	    $sumyDni[$pracovnik]['nachtstd']+= floatval($datumRow['nachtstd']);
-	    
-	    $zakazka = 0;
-	    $da1 = '';
-	    $da2 = '';
-	    $da3 = '';
-	    $dat_od = date("d.m.Y",  strtotime($datum));
-	    $dat_do = date("d.m.Y",  strtotime($datum));
-	    
-	    
-	    // dny dvolene, slozka c.009 ---------------------------------------
-	    if(intval($datumRow['tage_d'])!=0){
-		$kod = sprintf("%d",9);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = $datumRow['tage_d'];
-		$hodiny = 0;
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    //------------------------------------------------------------------
-	    
-	    // dny nemoci, slozka c.012 ---------------------------------------
-	    if(intval($datumRow['tage_n'])!=0){
-		$kod = sprintf("%d",12);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = $datumRow['tage_n'];
-		$hodiny = 0;
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    
-	    // dny neomluvena absence, slozka c.013 ---------------------------------------
-	    if(intval($datumRow['tage_z'])!=0){
-		$kod = sprintf("%d",13);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = $datumRow['tage_z'];
-		$hodiny = 0;
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    //------------------------------------------------------------------
-	    
-	    // dny neplaceneho volna, slozka c.014 ---------------------------------------
-	    if(intval($datumRow['tage_nv'])!=0){
-		$kod = sprintf("%d",14);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = $datumRow['tage_nv'];
-		$hodiny = 0;
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    
-	    // dny paragrafu, slozka c.010 ---------------------------------------
-	    if(intval($datumRow['tage_p'])!=0){
-		$kod = sprintf("%d",10);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = $datumRow['tage_p'];
-		$hodiny = 0;
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    //------------------------------------------------------------------
-
-	    // hodiny casove, slozka c.002 ---------------------------------------
-	    if(floatval($datumRow['sumstundena'])-floatval($datumRow['sumstundena_akkord'])!=0){
-		$kod = sprintf("%d",2);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = 0;
-		$hodiny = number_format(floatval($datumRow['sumstundena'])-floatval($datumRow['sumstundena_akkord']),2,',','');
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    //------------------------------------------------------------------
-	    
-	    // hodiny ukolove, slozka c.004 ---------------------------------------
-	    if(floatval($datumRow['sumstundena_akkord'])!=0){
-		$kod = sprintf("%d",4);
-		$korunyCelkem = number_format(0,0,',','');
-		$dny = 0;
-		$hodiny = number_format(floatval($datumRow['sumstundena_akkord']),2,',','');
-		$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-		array_push($msRows, $exportRow);
-	    }
-	    //------------------------------------------------------------------
-	    
-	}
+	$qPremieBetrag = $qPremieAkkord + $qPremieZeit - $abmahnung;
     }
     
-    // nacht , 008  
-    $kod = sprintf("%d", 8);
-    if(array_key_exists($persnr, $sumyDni)){
-	    $hodiny = number_format(floatval($sumyDni[$persnr]['nachtstd']), 2, ',', '');
-    }
-    else{
-	    $hodiny = 0;
-    }
-	
-    $korunyCelkem = 0;
-    $dny = 0;
-    $exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-    array_push($msRows, $exportRow);
-
-}
-
-
-// premie nakonec, sumy pro cely mesic
-foreach ($persRows as $pers) {
-
-    $rok = sprintf("%04d", $jahr);
-    $mesic = sprintf("%02d", $monat);
-    $stredisko = sprintf("%d", 0);
-    $pracovnik = sprintf("%d", $pers['grundinfo']['persnr']);
-    $persLohnFaktor = floatval($pers['grundinfo']['perslohnfaktor']);
-    $leistFaktor = floatval($pers['grundinfo']['leistfaktor']);
-    $bQPremie_zeit = $pers['grundinfo']['qpremie_zeit']==0?FALSE:TRUE;
-    $bQPremie_akkord = $pers['grundinfo']['qpremie_akkord']==0?FALSE:TRUE;
-    $bLeistPremie = $pers['grundinfo']['premie_za_vykon']==0?FALSE:TRUE;
-    $bErschwerniss = $pers['grundinfo']['premie_za_prasnost']==0?FALSE:TRUE;
-    $bQTLPremie = $pers['grundinfo']['premie_za_3_mesice']==0?FALSE:TRUE;
-    
-//    AplDB::varDump($bQPremie_akkord);
-//    AplDB::varDump($bQPremie_zeit);
-//    AplDB::varDump($persLohnFaktor);
-    	    
-    
-    
-    $zakazka = 0;
-    $da1 = '';
-    $da2 = '';
-    $da3 = '';
-    $dat_od = date("d.m.Y", strtotime($von));
-    $dat_do = date("d.m.Y", strtotime($bis));
-
-    if (!in_array($pracovnik, $pA)) {
-	continue;
-    }
-
-    //leistungspremie, slozka 322
-    if(array_key_exists($pracovnik, $persLeistRows)){
-	$kod = sprintf("%d", 322);
+    if(array_key_exists($persnr, $persLeistRows)){
+	$pracovnik = $persnr;
 	$vzaby = $persLeistRows[$pracovnik]['vzaby'];
 	$vzaby_akkord = $persLeistRows[$pracovnik]['vzaby_akkord'];
 	$vzaby_zeit = $vzaby - $vzaby_akkord;
@@ -665,13 +652,9 @@ foreach ($persRows as $pers) {
 	$ganzMonatNormMinuten = $aTageProMonat * 8 * 60;
 	$d = 0;
 	$nw = 0;
-	if(array_key_exists($pracovnik, $sumyDni)){
-	    $d = $sumyDni[$pracovnik]['d'];
-	    $nw = $sumyDni[$pracovnik]['nw'];
-	}
 
 	$vonTimestamp = strtotime($von);
-	$eintrittTimestamp = strtotime($pers['grundinfo']['eintritt']);
+	
 	if ($eintrittTimestamp > $vonTimestamp)
 	    $arbTage = $a->getArbTageBetweenDatums($eintritt, $bis);
 	else
@@ -701,52 +684,12 @@ foreach ($persRows as $pers) {
 		$leistPraemieBerechnet = $leistPraemieBerechnet1;
 	}
 	
-	$kc = $bLeistPremie?$leistPraemieBerechnet:0;
-	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
+	$leistPremieBetrag = $bLeistPremie?$leistPraemieBerechnet:0;
     }
     
-    
-    // risiko, erschwerniss, slozka 324 ----------------------------------------
-    if(array_key_exists($pracovnik, $persRisikoRows)) {
-//	AplDB::varDump($persQPremieRows[$pracovnik]);
-	$kod = sprintf("%d", 324);
-	$kc = $bErschwerniss?floatval($persRisikoRows[$pracovnik]['risiko_zuschlag']):0;
-	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-    }
-    
-    // q premie, slozka 321 ----------------------------------------------------
-    if(array_key_exists($pracovnik, $persQPremieRows)) {
-//	AplDB::varDump($persQPremieRows[$pracovnik]);
-	$kod = sprintf("%d", 321);
-	$qPremieZeit = $bQPremie_zeit?$persQPremieRows[$pracovnik]['qpraemie_zeit_min']*$persLohnFaktor:0;
-	$qPremieAkkord = $bQPremie_akkord?$persQPremieRows[$pracovnik]['qpraemie_akkord_kc']:0;
-	//odecist abmahnung
-//	AplDB::varDump($persAbmahnungRows);
-	$abmahnung = 0;
-	if(array_key_exists($pracovnik, $persAbmahnungRows)){
-	    $abmahnung = floatval($persAbmahnungRows[$pracovnik]['abmahnung']);
-	}
-	$kc = $qPremieAkkord + $qPremieZeit - $abmahnung;
-	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
-    }
-
-        // qtl premie, slozka 323 ----------------------------------------------------
+    // qtl
     if($bQTLPremie) {
-//	AplDB::varDump($persQPremieRows[$pracovnik]);
-	$kod = sprintf("%d", 323);
-	// QTL Praemie
+	$pracovnik = $persnr;
 	$leistungArray = array('leistung_min' => 0, 'leistung_kc' => 0);
 	if ($monat % 3 == 0) {
 	    $qtl = ceil($monat / 3);
@@ -762,24 +705,89 @@ foreach ($persRows as $pers) {
 	    $qtlPraemie = 0;
 	}
 
-	$kc = $qtlPraemie;
-	$korunyCelkem = number_format(floatval($kc), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
+	$qtlPremieBetrag = $qtlPraemie;
+    }
+    
+    if(array_key_exists($persnr, $persRisikoRows)) {
+	$pracovnik = $persnr;
+	$erschwernissBetrag = $bErschwerniss?floatval($persRisikoRows[$pracovnik]['risiko_zuschlag']):0;
+    }
+    
+    if(array_key_exists($persnr, $aPremienArray)) {
+	$aPremieBetrag = floatval($aPremienArray[$pracovnik]['apremie']);
+    }
+    
+    if(array_key_exists($persnr, $persTransportRows)){
+	$transportBetrag = floatval($persTransportRows[$persnr]['transport']);
     }
 
-    // a-premie, slozka 330 ----------------------------------------------------
-    if(array_key_exists($pracovnik, $aPremienArray)) {
-	$kod = sprintf("%d", 330);
-	$korunyCelkem = number_format(floatval($aPremienArray[$pracovnik]['apremie']), 0, ',', '');
-	$dny = 0;
-	$hodiny = 0;
-	$exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	array_push($msRows, $exportRow);
+    if(array_key_exists($persnr, $persVorschussRows)){
+	    $vorschussBetrag = floatval($persVorschussRows[$persnr]['sumvorschuss']);
+    }
+    
+    if(array_key_exists($persnr, $persEssenRows)){
+	$essenBetrag = floatval($persEssenRows[$persnr]['essen']);
+    }
+
+    $slozkyDB[$persnr] = array(
+	"stundenZeit"=>$stundenZeit,
+	"tageZeit"=>$tageZeit,
+	"betragZeit"=>$betragZeit,
+	"stundenAkkord"=>$stundenAkkord,
+	"tageAkkord"=>$tageAkkord,
+	"betragAkkord"=>$betragAkkord,
+	"dStunden"=>$dStunden,
+	"dTage"=>$dTage,
+	"soStunden"=>$soStunden,
+	"soTage"=>$soTage,
+	"neStunden"=>$neStunden,
+	"neTage"=>$neTage,
+	"nachtStunden"=>$nachtStunden,
+	"nachtTage"=>$nachtTage,
+	"qPremieBetrag"=>$qPremieBetrag,
+	"leistPremieBetrag"=>$leistPremieBetrag,
+	"qtlPremieBetrag"=>$qtlPremieBetrag,
+	"erschwernissBetrag"=>$erschwernissBetrag,
+	"aPremieBetrag"=>$aPremieBetrag,
+	"zStunden"=>$zStunden,
+	"zTage"=>$zTage,
+	"transportBetrag"=>$transportBetrag,
+	"vorschussBetrag"=>$vorschussBetrag,
+	"essenBetrag"=>$essenBetrag,
+    );
+}
+
+//AplDB::varDump($slozkyDB);
+
+
+$rok = sprintf("%04d", $jahr);
+$mesic = sprintf("%02d", $monat);
+$stredisko = sprintf("%d", 0);
+$zakazka = 0;
+$da1 = '';
+$da2 = '';
+$da3 = '';
+$dat_od = date("d.m.Y", strtotime($von));
+$dat_do = date("d.m.Y", strtotime($bis));
+
+foreach ($slozkyDB as $persnr=>$slA){
+    $pracovnik = $persnr;
+    //projdu aktivni slozky
+    foreach ($exPol as $cisloSlozky=>$slozkaInfo){
+	if(intval($slozkaInfo['aktiv'])>0){
+	    //AplDB::varDump($slozkaInfo);
+	    $kod = $cisloSlozky;
+	    $korunyCelkem = intval($slozkaInfo['betrag'])>0?number_format($slA[$slozkaInfo['betragDB']],0,',',''):0;
+	    $dny = intval($slozkaInfo['tage'])>0?number_format($slA[$slozkaInfo['tageDB']],2,',',''):0;
+	    $hodiny = intval($slozkaInfo['stunden'])>0?number_format($slA[$slozkaInfo['stundenDB']],2,',',''):0;
+	    
+	    $exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+	    array_push($msRows, $exportRow);
+	}
     }
 }
+
+AplDB::varDump($msRows);
 
 // ulozit do souboru
 $timestamp = date('His');
@@ -787,7 +795,9 @@ $path = sprintf("%s%s/%04d%02d_%s.TXT",$a->getGdatPath(),$a->getDat99Path(),$jah
 
 file_put_contents($path, $msRows);
 
+/*
 foreach ($msRows as $msRow){
     echo $msRow."<br>";
 }
+ * */
 //AplDB::varDump($msRows);
