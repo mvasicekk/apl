@@ -1,3 +1,4 @@
+<meta charset="UTF-8"> 
 <?php
 session_start();
 require_once '../db.php';
@@ -32,13 +33,24 @@ $exPol = array(
 	"betrag"=>0,
 	"aktiv"=>1
     ),
+    "511"=>array(
+	"popis"=>"osobní překážky v práci na straně zaměstnance",
+	"stunden"=>1,
+	"stundenDB"=>"pStunden",
+	"tage"=>1,
+	"tageDB"=>"pTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
     //TODO
     "202"=>array(
 	"popis"=>"příplatek za práci ve svátek",
 	"stunden"=>1,
+	"stundenDB"=>"svatekStunden",
 	"tage"=>1,
+	"tageDB"=>"svatekTage",
 	"betrag"=>0,
-	"aktiv"=>0
+	"aktiv"=>1
     ),
     "206"=>array(
 	"popis"=>"příplatek za práci v sobotu",
@@ -130,11 +142,29 @@ $exPol = array(
 	"betrag"=>0,
 	"aktiv"=>1
     ),
+    "552"=>array(
+	"popis"=>"neplacené volno bez nároku dle ZP",
+	"stunden"=>1,
+	"stundenDB"=>"nvStunden",
+	"tage"=>1,
+	"tageDB"=>"nvTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
     "333"=>array(
 	"popis"=>"prémie prach",
 	"stunden"=>0,
 	"tage"=>0,
 	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "610"=>array(
+	"popis"=>"dny nemoci",
+	"stunden"=>1,
+	"stundenDB"=>"nStunden",
+	"tage"=>1,
+	"tageDB"=>"nTage",
+	"betrag"=>0,
 	"aktiv"=>0
     ),
     "334"=>array(
@@ -309,16 +339,20 @@ $sql.="     sum(if(dtattypen.erschwerniss<>0,dzeit.`Stunden`*6,0)) as erschwerni
 $sql.="     sum(if(dzeit.tat='z',1,0)) as tage_z,";
 $sql.="     sum(if(dzeit.tat='z',dzeit.Stunden,0)) as stunden_z,";
 $sql.="     sum(if(dzeit.tat='nv',1,0)) as tage_nv,";
+$sql.="     sum(if(dzeit.tat='nv',dzeit.Stunden,0)) as stunden_nv,";
 $sql.="     sum(if(dzeit.tat='nw',1,0)) as tage_nw,";
 $sql.="     sum(if(dzeit.tat='d',1,0)) as tage_d,";
 $sql.="     sum(if(dzeit.tat='d',dzeit.Stunden,0)) as stunden_d,";
 $sql.="     sum(if(dzeit.tat='np',1,0)) as tage_np,";
 $sql.="     sum(if(dzeit.tat='n',1,0)) as tage_n,";
+$sql.="     sum(if(dzeit.tat='n',dzeit.Stunden,0)) as stunden_n,";
 $sql.="     sum(if(dzeit.tat='nu',1,0)) as tage_nu,";
 $sql.="     sum(if(dzeit.tat='p',1,0)) as tage_p,";
+$sql.="     sum(if(dzeit.tat='p',dzeit.Stunden,0)) as stunden_p,";
 $sql.="     sum(if(dzeit.tat='u',1,0)) as tage_u,";
 $sql.="     sum(if(dzeit.tat='?',1,0)) as tage_frage";
-$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,1,0)) as tage_svatek";
+$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,dzeit.Stunden/8,0)) as tage_svatek";
+$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,dzeit.Stunden,0)) as stunden_svatek";
 $sql.="     ,sum(if(dtattypen.fr_sp='N',dzeit.stunden,0)) as nachtstd";
 $sql.="     ,durlaub1.jahranspruch";
 $sql.="     ,durlaub1.rest";
@@ -595,6 +629,14 @@ foreach ($persRows as $persnr=>$persnrA){
     $transportBetrag = 0;
     $vorschussBetrag = 0;
     $essenBetrag = 0;
+    $nStunden = 0;
+    $nTage = 0;
+    $pStunden = 0;
+    $pTage = 0;
+    $nvStunden = 0;
+    $nvTage = 0;
+    $svatekStunden = 0;
+    $svatekTage = 0;
     
     
     if(array_key_exists($persnr, $persRows)){
@@ -615,9 +657,20 @@ foreach ($persRows as $persnr=>$persnrA){
 	$dTage = $persRows[$persnr]['grundinfo']['tage_d'];
 	$zStunden = $persRows[$persnr]['grundinfo']['stunden_z'];
 	$zTage = $persRows[$persnr]['grundinfo']['tage_z'];
+	$nStunden = $persRows[$persnr]['grundinfo']['stunden_n'];
+	$nTage = $persRows[$persnr]['grundinfo']['tage_n'];
+	$pStunden = $persRows[$persnr]['grundinfo']['stunden_p'];
+	$pTage = $persRows[$persnr]['grundinfo']['tage_p'];
+	$nvStunden = $persRows[$persnr]['grundinfo']['stunden_nv'];
+	$nvTage = $persRows[$persnr]['grundinfo']['tage_nv'];
+	$svatekStunden = $persRows[$persnr]['grundinfo']['stunden_svatek'];
+	$svatekTage = $persRows[$persnr]['grundinfo']['tage_svatek'];
 	$d = $dTage;
 	$nw = $persRows[$persnr]['grundinfo']['tage_nw'];
 	$nachtStunden = $persRows[$persnr]['grundinfo']['nachtstd'];
+	$atage = $a->getATageProPersnrBetweenDatums($persnr, $von, $bis,0);
+	$tageAkkord = round($atage * ($stundenAkkord/($stundenAkkord+$stundenZeit)));
+	$tageZeit = $atage - $tageAkkord;
     }
     if(array_key_exists($persnr, $persLeistRows)){
 	$betragZeit = $persLeistRows[$persnr]['vzaby_kc']-$persLeistRows[$persnr]['vzaby_akkord_kc'];
@@ -754,6 +807,14 @@ foreach ($persRows as $persnr=>$persnrA){
 	"transportBetrag"=>$transportBetrag,
 	"vorschussBetrag"=>$vorschussBetrag,
 	"essenBetrag"=>$essenBetrag,
+	"pStunden"=>$pStunden,
+	"pTage"=>$pTage,
+	"nvStunden"=>$nvStunden,
+	"nvTage"=>$nvTage,
+	"nStunden"=>$nStunden,
+	"nTage"=>$nTage,
+	"svatekStunden"=>$svatekStunden,
+	"svatekTage"=>$svatekTage,
     );
 }
 
@@ -782,18 +843,25 @@ foreach ($slozkyDB as $persnr=>$slA){
 	    $hodiny = intval($slozkaInfo['stunden'])>0?number_format($slA[$slozkaInfo['stundenDB']],2,',',''):0;
 	    
 	    $exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
-	    array_push($msRows, $exportRow);
+	    array_push($msRows, array("exrow"=>$exportRow,"comment"=>$slozkaInfo['popis']));
 	}
     }
 }
 
-AplDB::varDump($msRows);
+//AplDB::varDump($msRows);
+foreach ($msRows as $row){
+    echo $row['exrow'].' - '.$row['comment']."<br>";
+}
 
 // ulozit do souboru
 $timestamp = date('His');
 $path = sprintf("%s%s/%04d%02d_%s.TXT",$a->getGdatPath(),$a->getDat99Path(),$jahr,$monat,$timestamp);
 
-file_put_contents($path, $msRows);
+$fileRows = array();
+foreach ($msRows as $r){
+    array_push($fileRows, $r['exrow']);
+}
+file_put_contents($path, $fileRows);
 
 /*
 foreach ($msRows as $msRow){
