@@ -668,6 +668,8 @@ foreach ($persRows as $persnr=>$persnrA){
 	$d = $dTage;
 	$nw = $persRows[$persnr]['grundinfo']['tage_nw'];
 	$nachtStunden = $persRows[$persnr]['grundinfo']['nachtstd'];
+	
+	//rozdeleni pracovnich dnu v pomeru hodin Akkord a Zeit
 	$atage = $a->getATageProPersnrBetweenDatums($persnr, $von, $bis,0);
 	$tageAkkord = round($atage * ($stundenAkkord/($stundenAkkord+$stundenZeit)));
 	$tageZeit = $atage - $tageAkkord;

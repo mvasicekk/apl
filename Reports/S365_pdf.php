@@ -298,11 +298,6 @@ function pageReportHeader($pdf,$s,$kwWidth,$stkWidth,$rowHeight,$kundenNrArray,$
     }
 }
 
-//AplDB::varDump($anzeigeArray);
-
-//require_once('../tcpdf/config/lang/eng.php');
-//require_once('../tcpdf/tcpdf.php');
-
 require_once('../tcpdf_new/tcpdf.php');
 
 $pdf = new TCPDF('L','mm','A4',1);
@@ -352,21 +347,6 @@ for($s=12;$s>1;$s-=0.5){
 $fontSize = $s;
 
 pageReportHeader($pdf, $s, $kwWidth, $stkWidth, $rowHeight, $kundenNrArray);
-
-//$pdf->SetFont("FreeSans", "B", $s);
-//$pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
-//foreach ($kundenNrArray as $kd=>$v){
-//    $pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
-//    $pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
-//    $pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
-//}
-//$pdf->Ln();
-//$pdf->Cell($kwWidth, $rowHeight, 'KW', 'LRB', 0, 'R', 1);
-//foreach ($kundenNrArray as $kd=>$v){
-//    $pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
-//    $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
-//    $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
-//}
 $pdf->Ln();
 
 $pdf->SetFont("FreeSans", "", $s);
@@ -374,6 +354,10 @@ $pdf->SetFont("FreeSans", "", $s);
 foreach ($anzeigeArray as $jahr=>$m){
     foreach ($m as $monat=>$k){
         foreach ($k as $kw=>$cal){
+	    if(test_pageoverflow_noheader($pdf, $rowHeight)){
+		pageReportHeader($pdf, $s, $kwWidth, $stkWidth, $rowHeight, $kundenNrArray);
+		$pdf->Ln();
+	    }
             $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRBT', 0, 'R', 0);
             //projedu seznam zakazniku
             foreach ($kundenNrArray as $kd=>$v){

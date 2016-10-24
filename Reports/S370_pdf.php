@@ -295,6 +295,59 @@ if($mitdetail===TRUE){
 //AplDB::varDump($jahrMonatKwArray);
 //AplDB::varDump($kundenNrArray);
 
+function pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku) {
+    global $a;
+    $pdf->SetFillColor(255, 255, 230);
+    $pdf->Cell(10, $rowHeight, '', 'LRT', 0, 'R', 1);
+
+//zakaznici
+// *************************************************************************************************** \\
+    foreach ($kundenNrArray as $kd => $v1) {
+	$pdf->Cell($stkWidth, $rowHeight, $kd, 'LRTB', 0, 'C', 1);
+	//AplDB::varDump($kd);
+    }
+    $pdf->Cell(10, $rowHeight, '', 'LRT', 0, 'C', 1);
+    $pdf->Ln();
+// *************************************************************************************************** \\
+    $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'R', 1);
+
+
+// Max BA-Anteil Kd:
+// *************************************************************************************************** \\
+
+    $pdf->SetFont("FreeSans", "", 5.5);
+    foreach ($kundenNrArray as $kd => $v2) {
+
+	$maxBAInfo = $a->getBewertungKriteriumInfo($kd, 'ba_anteil_max', date('y-m'));
+	if ($maxBAInfo !== NULL) {
+	    $maxBA = $maxBAInfo[0]['grenze'] . "/" . $maxBAInfo[0]['interval_monate'];
+	} else {
+	    $maxBA = '?';
+	}
+	$ba = $a->getKundeBAAnteilStk($kd);
+	$pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Kd: ' . $maxBA, 'LRTB', 0, 'L', 1);
+    }
+    $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
+    $pdf->Ln();
+
+// Max BA-Anteil Aby : 0,25
+// *************************************************************************************************** \\
+
+    $pdf->Cell(10, $rowHeight, 'KW', 'LR', 0, 'C', 1);
+    $pdf->Cell($stkWidth * $pocetZakazniku, $rowHeight, 'Max BA-Anteil Aby : 0,25', 'LTB', 0, 'C', 1);
+    $pdf->Cell(10, $rowHeight, 'Ø', 'LR', 0, 'C', 1);
+    $pdf->Ln();
+
+//IST / STK & IST / KG
+// *************************************************************************************************** \\
+    $pdf->Cell(10, $rowHeight, '', 'LRB', 0, 'C', 1);
+
+    foreach ($kundenNrArray as $kd => $v) {
+	$ba = $a->getKundeBAAnteilStk($kd);
+	$pdf->Cell($stkWidth, $rowHeight, 'Ist / ' . $ba, 'LRBT', 0, 'C', 1);
+    }
+    $pdf->Cell(10, $rowHeight, '', 'LRB', 0, 'C', 1);
+}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -340,6 +393,9 @@ $stkWidth = 26;
 $rowHeight = 4;
 //***************************************************************************************************************************\\
 $pdf->AddPage();
+pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku);
+
+/*
 $pdf->SetFillColor(255,255,230);
 $pdf->Cell(10,$rowHeight,'','LRT',0,'R',1);
 
@@ -391,11 +447,16 @@ foreach ($kundenNrArray as $kd=>$v){
     $pdf->Cell($stkWidth,$rowHeight,'Ist / '.$ba,'LRBT',0,'C',1);
 }
 $pdf->Cell(10,$rowHeight,'','LRB',0,'C',1);
-
+*/
 $pdf->Ln();
+
 // Tabulka
 // *************************************************************************************************** \\
 foreach($jahrMonatKwArray as $jmk=>$v){
+    if(test_pageoverflow_noheader($pdf, $rowHeight)){
+	pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku);
+	$pdf->Ln();
+    }
     $pdf->Cell(10,$rowHeight,substr($jmk, 8),'LRTB',0,'C',0);
     $podilPctSum = 0;
     foreach ($kundenNrArray as $kd=>$v1){
