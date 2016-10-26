@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-controller="persController">
     <div>
-    	<button type="button" class="btn btn-warning btn-xs" ng-model="showHelp" uib-btn-checkbox>
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
 	    ?
 	</button>
 	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
@@ -14,23 +14,33 @@
     </div>
 
     <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}">
-    <div class="row">
-	    <div class="col-sm-10">
-	    <div class="form-group form-group-sm">
-		<label class="control-label" for="osoba">os. číslo / jméno</label>
-		<input ng-change="osobaChanged()" ng-model="osoba" type="text" class="form-control" id="osoba" placeholder="hledání pracovníka, zadejte osobní, číslo, jméno ..">
-		<apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['osoba_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-	    </div>
-	    </div>
+	<div class="row no-print">
 	    <div class="col-sm-2">
-	    <div class="form-group form-group-sm">
-		<label class="control-label" for="jenma">pouze MA</label>
-		<input ng-change="jenMAChanged()" ng-model="jenma" type="checkbox" class="form-control" id="jenma">
-		<apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['jenma']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="osoba">os. číslo / jméno</label>
+		    <input ng-change="osobaChanged()" ng-model="osoba" type="text" class="form-control" id="osoba" placeholder="hledání pracovníka, zadejte osobní, číslo, jméno ..">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['osoba_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
 	    </div>
+	    <div class="col-sm-1">
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="jenma">pouze MA</label>
+		    <input ng-change="jenMAChanged()" ng-model="jenma" type="checkbox" class="form-control" id="jenma">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['jenma']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
 	    </div>
-	    <div ng-if="osoby.length>0 && ma.selectedIndex==-1" class='col-sm-12'>
-		<table class="table table-condensed table-striped" >
+
+	    <div class="col-sm-1">
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="oe">OE</label>
+		    <select class="form-control" id="oe" name="oe" ng-model="oes.oeSelected" ng-change="osobaChanged()">
+			<option ng-selected="oe.oe=='*'" ng-repeat="oe in oes.oeArray" value="{{oe.oe}}">{{oe.oe}} - {{oe.beschreibung_cz}}</option>
+		    </select>
+		</div>
+	    </div>
+
+	    <div ng-if="osoby.length > 0 && ma.selectedIndex == -1" class='col-sm-12'>
+		<table class="table table-condensed table-striped table-hover" >
 		    <thead>
 			<tr>
 			    <th>persnr</th>
@@ -52,27 +62,168 @@
 		</table>
 	    </div>
 	</div>
-	<div class='row' ng-show="ma.selectedIndex>=0">
-	    <div class="col-sm-10">
-		<h1>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} {{ma.maInfo.dpersstatus}}</h1>
+
+	<div class='row' ng-show="ma.selectedIndex >= 0">
+	    <div class="col-sm-12">
+
+		<!--tlacitka pro posun na dalsi/predchozi MA-->
+		<div class="row">
+		    <div class="col-sm-2 no-print">
+			<div class="btn-group btn-group-justified btn-small" role="group" aria-label="...">
+			    <div class="btn-group" role="group">
+				<button ng-click="moveMA(-1)" type="button" class="btn btn-default btn-info">
+				    <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+				</button>
+			    </div>
+			    <div class="btn-group" role="group">
+				<button ng-click="moveMA(1)" type="button" class="btn btn-default btn-info btn-small">
+				    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+				</button>
+			    </div>
+
+			</div>
+		    </div>
+		</div>
+
+		<!--stale viditelna informace o vybranem MA-->
+		<div class="row">
+		    <div class="col-sm-10">
+			<h1>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <small><span class="label label-info">{{ma.maInfo.regeloe}}</span><span class="label label-success">{{ma.maInfo.dpersstatus}}</span></small></h1>
+		    </div>
+		</div>
 	    </div>
 	</div>
+
+
 	<div class="row">
 	    <div class="col-sm-12" role="tablist">
-		<button class="btn btn-primary" role="tab" type="button" data-toggle="collapse" data-target="#zaklad" aria-expanded="false" aria-controls="zaklad">
-		zaklad
+		<button class="btn btn-primary no-print" role="tab" type="button" data-toggle="collapse" data-target="#zaklad" aria-expanded="false" aria-controls="zaklad">
+		    zaklad
 		</button>
-		<button class="btn btn-primary" role="tab"  type="button" data-toggle="collapse" data-target="#inventar" aria-expanded="false" aria-controls="inventar">
-		inventar
+		<button class="btn btn-primary no-print" role="tab"  type="button" data-toggle="collapse" data-target="#inventar" aria-expanded="false" aria-controls="inventar">
+		    inventar
 		</button>
-		<div class="collapse in" id="zaklad" role="tabpanel">
-		    <div class="well">
-		    základ
+		<button class="btn btn-primary no-print" role="tab"  type="button" data-toggle="collapse" data-target="#hfpremie" aria-expanded="false" aria-controls="hfpremie">
+		    HF Premie
+		</button>
+
+		<div class="collapse" id="zaklad" role="tabpanel">
+		    <div class="panel panel-success">
+			<div class="panel-heading">
+			    Základní informace
+			</div>
+			<div class="panel-body">
+			    obsah
+			</div>
 		    </div>
 		</div>
 		<div class="collapse" id="inventar" role="tabpanel">
-		    <div class="well">
-		    inventar
+		    <div class="panel panel-default">
+			<div class="panel-heading">
+			    Inventář
+			</div>
+			<div class="panel-body">
+			    obsah
+			</div>
+		    </div>
+		</div>
+		<div class="collapse" id="hfpremie" role="tabpanel">
+		    <div class="panel panel-primary">
+			<div class="panel-heading">
+			    HF Premie
+			</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="form-group col-md-2 form-group-sm">
+				    <label class="control-label"  for="hfpremievon">Von:</label>
+				    <div class="input-group">
+					<input ng-change="premieDatumChanged('von')" ng-model="hfPremieVon" ui-date="dateOptions" type="text" class="form-control" id="hfpremievon" placeholder="von">
+				    </div>
+				</div>
+				<div class="form-group col-md-2 form-group-sm">
+				    <label class="control-label"  for="hfpremiebis">Bis:</label>
+				    <div class="input-group">
+					<input ng-change="premieDatumChanged('bis')" ng-model="hfPremieBis" ui-date="dateOptions" type="text" class="form-control" id="hfpremiebis" placeholder="bis">
+				    </div>
+				</div>
+			    </div>
+			    <div ng-show="hfPremieArray!==null" class="row">
+				<div class="col-sm-12">
+				    <table class="table table-condensed table-bordered table-responsive table-striped table-hover">
+					<thead>
+					    <th class="bg-info">&nbsp;</th>
+					    <th class="bg-info" ng-repeat="(jm,pocet) in hfPremieArray.jahrmonatArray">{{jm}}</th>
+					</thead>
+					<tbody>
+					    <tr>
+						<th>
+						    vzaby
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.vzaby}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    vzkd S0011
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.vzkdS0011}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    vzkd S0051
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.vzkdS0051}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    Sum vzkd
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.vzkd}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    repkosten
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.repkosten}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    repkosten/vzkd
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.faktor}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    premie - vypoc.
+						</th>
+						<td class="text-right" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    {{p.premie}}
+						</td>
+					    </tr>
+					    <tr>
+						<th>
+						    premie - skut.
+						</th>
+						<td class="text-right" ng-repeat="(m,p) in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    <input ng-change="skutPremieChanged(p,m)" type="text" ng-model="p.skutBetrag" class="form-control input-xs text-right" id="hfprem_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" />
+						</td>
+					    </tr>
+					</tbody>
+				    </table>
+				</div>
+			    </div>
+			</div>
 		    </div>
 		</div>
 	    </div>

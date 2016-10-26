@@ -2314,6 +2314,257 @@ public function istExportiert($import, $impal){
     }
 
     /**
+     * 
+     * @param type $von
+     * @param type $bis
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $faktorup
+     * @param type $faktordown
+     * @param type $premiepct
+     */
+    public function getHFPremieArray($von, $bis, $persvon, $persbis, $faktorup, $faktordown, $premiepct) {
+	
+	$von = $this->make_DB_datum($von);
+	$bis = $this->make_DB_datum($bis);
+	$grenzeup = $faktorup;
+	$grenzedown = $faktordown;
+	$premiePct = $premiepct;
+
+
+	//vytvorit pole mesicu podle zadanych datumu
+	$jahrMonatArray = array();
+	$start = strtotime($von);
+	$end = strtotime($bis);
+	$step = 24 * 60 * 60;
+	for ($t = $start; $t <= $end; $t+=$step) {
+	    $jm = date('Y-m', $t);
+	    $jahrMonatArray[$jm] += 1;
+	}
+
+	// minuty pro persnr a mesice
+	$sql = "";
+	$sql.=" select";
+	$sql.="     drueck.PersNr as persnr,";
+	$sql.="     year(drueck.Datum) as jahr,";
+	$sql.="     month(drueck.Datum) as monat,";
+	$sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,drueck.`Stück`*drueck.`VZ-IST`)) as sum_vzaby,";
+	$sql.="     sum(if(dabg.Stat_Nr='S0011',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,drueck.`Stück`*drueck.`VZ-SOLL`),0)) as vzkd_S0011,";
+	$sql.="     sum(if(dabg.Stat_Nr='S0051',if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-SOLL`,drueck.`Stück`*drueck.`VZ-SOLL`),0)) as vzkd_S0051";
+	$sql.=" from drueck";
+	$sql.=" join `dtaetkz-abg` dabg on dabg.`abg-nr`=drueck.TaetNr";
+	$sql.=" where";
+	$sql.="     drueck.Datum between '$von' and '$bis'";
+	$sql.="     and drueck.PersNr between '$persvon' and '$persbis'";
+	$sql.=" group by";
+	$sql.="     drueck.PersNr,";
+	$sql.="     year(drueck.Datum),";
+	$sql.="     month(drueck.Datum)";
+	$sql.=" having (vzkd_S0011<>0 or vzkd_S0051<>0)";
+
+	$persMinutenArray = array();
+	$persMinutenRows = $this->getQueryRows($sql);
+
+	if ($persMinutenRows !== NULL) {
+	    foreach ($persMinutenRows as $pmr) {
+		$persnr = $pmr['persnr'];
+		$jahr = $pmr['jahr'];
+		$monat = $pmr['monat'];
+		$jm = sprintf("%04d-%02d", $jahr, $monat);
+		$vzaby = round(intval($pmr['sum_vzaby']));
+		$kdS0011 = round(intval($pmr['vzkd_S0011']));
+		$kdS0051 = round(intval($pmr['vzkd_S0051']));
+		$kd = $kdS0011 + $kdS0051;
+		$persMinutenArray[$persnr][$jm]['vzaby'] = $vzaby;
+		$persMinutenArray[$persnr][$jm]['kdS0011'] = $kdS0011;
+		$persMinutenArray[$persnr][$jm]['kdS0051'] = $kdS0051;
+		$persMinutenArray[$persnr][$jm]['kd'] = $kd;
+	    }
+	}
+
+// pole osobnich cisel, bud je to MA = aktivni nebo mel vy vybranem obdobi vystup
+	$sql = "";
+	$sql.=" select";
+	$sql.="     dpers.PersNr as persnr,";
+	$sql.="     dpers.eintritt,";
+	$sql.="     dpers.austritt,";
+	$sql.="     dpers.dpersstatus";
+	$sql.=" from dpers";
+	$sql.=" where";
+	$sql.="     (dpers.dpersstatus='MA'";
+	$sql.="     or";
+	$sql.="     dpers.austritt between '$von' and '$bis')";
+	$sql.="     and (dpers.persnr between '$persvon' and '$persbis')";
+	$sql.="     and (dpers.kor=0)";
+	$sql.=" order by";
+	$sql.="     dpers.PersNr";
+
+
+	$persnrArray = array();
+	$pr = $this->getQueryRows($sql);
+	if ($pr !== NULL) {
+	    foreach ($pr as $r) {
+		array_push($persnrArray, $r);
+	    }
+	}
+
+
+//opravy pro persnr a mesice
+	$sql = "";
+	$sql.=" select";
+	$sql.="     dreparaturkopf.persnr_ma as persnr";
+	$sql.="     ,YEAR(dreparaturkopf.datum) as jahr";
+	$sql.="     ,MONTH(dreparaturkopf.datum) as monat";
+	$sql.="     ,sum(dreparaturkopf.repzeit*5) as rep_kosten";
+	$sql.="     ,sum(dreparaturpos.anzahl*if(dreparaturpos.et_alt<>0,0.4*`eink-artikel`.`art-vr-preis`,`eink-artikel`.`art-vr-preis`)) as rep_preis";
+	$sql.=" from dreparaturkopf";
+	$sql.="     join dpers on dpers.persnr=dreparaturkopf.persnr_ma";
+	$sql.="     join dreparatur_geraete on dreparatur_geraete.invnummer=dreparaturkopf.invnummer";
+	$sql.="     join dreparatur_anlagen on dreparatur_anlagen.anlage_id=dreparatur_geraete.anlage_id";
+	$sql.="     left join dreparaturpos on dreparaturpos.reparatur_id=dreparaturkopf.id";
+	$sql.="     left join `eink-artikel` on CONVERT(`eink-artikel`.`art-nr`,char)=convert(dreparaturpos.artnr,char)";
+	$sql.=" where";
+	$sql.="     dreparaturkopf.datum between '$von' and '$bis'";
+	$sql.="     and dreparaturkopf.persnr_ma between '$persvon' and '$persbis'";
+	$sql.=" group by";
+	$sql.="     dreparaturkopf.persnr_ma";
+	$sql.="     ,YEAR(dreparaturkopf.datum)";
+	$sql.="     ,MONTH(dreparaturkopf.datum)";
+
+	$persRepArray = array();
+	$persRepRows = $this->getQueryRows($sql);
+
+	
+	if ($persRepRows !== NULL) {
+	    foreach ($persRepRows as $pmr) {
+		$persnr = $pmr['persnr'];
+		$jahr = $pmr['jahr'];
+		$monat = $pmr['monat'];
+		$jm = sprintf("%04d-%02d", $jahr, $monat);
+		$repkosten = round(intval($pmr['rep_kosten']));
+		$reppreis = round(intval($pmr['rep_preis']));
+		$sumrep = ($repkosten + $reppreis) * 1.1; // pridat 10% zuschlag, viz S520
+
+		$persRepArray[$persnr][$jm]['repkosten'] = $repkosten;
+		$persRepArray[$persnr][$jm]['reppreis'] = $reppreis;
+		$persRepArray[$persnr][$jm]['sumrep'] = $sumrep;
+	    }
+	}
+
+	//skutecne premie pro persnr a mesic
+	$sql="";
+	$sql.=" select";
+	$sql.=" dperspremie.persnr,";
+	$sql.=" YEAR(dperspremie.datum) as jahr,";
+	$sql.=" MONTH(dperspremie.datum) as monat,";
+	$sql.=" dperspremie.id,";
+	$sql.=" dperspremie.betrag";
+	$sql.=" from dperspremie";
+	$sql.=" join dpremietypen on dpremietypen.id=dperspremie.id_premie";
+	$sql.=" where";
+	$sql.=" dperspremie.persnr between '$persvon' and '$persbis'";
+	$sql.=" and";
+	$sql.=" dpremietypen.premiebeschreibung='hf_reparaturen_premie'";
+	$sql.=" and dperspremie.datum between '$von' and '$bis'";
+	$sql.=" order by";
+	$sql.=" dperspremie.persnr,";
+	$sql.=" YEAR(dperspremie.datum),";
+	$sql.=" MONTH(dperspremie.datum)";
+
+	$persSkutArray = array();
+	$persSkutRows = $this->getQueryRows($sql);
+
+	
+	if ($persSkutRows !== NULL) {
+	    foreach ($persSkutRows as $pmr) {
+		$persnr = $pmr['persnr'];
+		$jahr = $pmr['jahr'];
+		$monat = $pmr['monat'];
+		$jm = sprintf("%04d-%02d", $jahr, $monat);
+		$betrag = round(intval($pmr['betrag']));
+		$id = $pmr['id'];
+		$persSkutArray[$persnr][$jm]['betrag'] = $betrag;
+		$persSkutArray[$persnr][$jm]['id'] = $id;
+	    }
+	}
+	
+//ted cele dohromady minuty, opravy, koeficienty,premie pro persnr a mesice
+
+	$pA = array();
+	if (count($persnrArray) > 0) {
+
+	    foreach ($persnrArray as $p) {
+		$persnr = $p['persnr'];
+		$persstatus = $p['dpersstatus'];
+		$austritt = $p['austritt'];
+		$pA[$persnr]['persinfo']['persnr'] = $persnr;
+		$pA[$persnr]['persinfo']['dpersstatus'] = $persstatus;
+		$pA[$persnr]['persinfo']['austritt'] = $austritt;
+		$pA[$persnr]['persinfo']['eintritt'] = $p['eintritt'];
+		//roky mesice
+		foreach ($jahrMonatArray as $jm => $p) {
+		    $vzaby = 0;
+		    $vzkd = 0;
+		    $sumrep = 0;
+		    $faktor = 0;
+		    $premie = 0;
+		    $vzkdS0011 = 0;
+		    $vzkdS0051 = 0;
+		    $skutBetrag = 0;
+		    $skutId = 0;
+		    //test zda existuji vzkony pro osobu a mesic
+		    if (array_key_exists($persnr, $persMinutenArray)) {
+			if (array_key_exists($jm, $persMinutenArray[$persnr])) {
+			    $vzaby = $persMinutenArray[$persnr][$jm]['vzaby'];
+			    $vzkd = $persMinutenArray[$persnr][$jm]['kd'];
+			    $vzkdS0011 = $persMinutenArray[$persnr][$jm]['kdS0011'];
+			    $vzkdS0051 = $persMinutenArray[$persnr][$jm]['kdS0051'];
+			}
+		    }
+
+		    //test zda existuji opravy pro osobu a mesic
+		    if (array_key_exists($persnr, $persRepArray)) {
+			if (array_key_exists($jm, $persRepArray[$persnr])) {
+			    $sumrep = $persRepArray[$persnr][$jm]['sumrep'];
+			}
+		    }
+		    
+		    //test zda existuji opravy pro osobu a mesic
+		    if (array_key_exists($persnr, $persSkutArray)) {
+			if (array_key_exists($jm, $persSkutArray[$persnr])) {
+			    $skutBetrag = $persSkutArray[$persnr][$jm]['betrag'];
+			    $skutId = $persSkutArray[$persnr][$jm]['id'];
+			}
+		    }
+
+		    $pA[$persnr]['monate'][$jm]['vzaby'] = $vzaby;
+		    $pA[$persnr]['monate'][$jm]['vzkd'] = $vzkd;
+		    $pA[$persnr]['monate'][$jm]['vzkdS0011'] = $vzkdS0011;
+		    $pA[$persnr]['monate'][$jm]['vzkdS0051'] = $vzkdS0051;
+		    $pA[$persnr]['monate'][$jm]['repkosten'] = $sumrep;
+		    $pA[$persnr]['monate'][$jm]['skutBetrag'] = $skutBetrag;
+		    $pA[$persnr]['monate'][$jm]['skutId'] = $skutId;
+		    
+		    $faktor = $vzkd != 0 ? round($sumrep / $vzkd, 2) : 0;
+		    $pA[$persnr]['monate'][$jm]['faktor'] = $faktor;
+		    if ($faktor <= $grenzedown) {
+			$premie = round($vzkd * $premiePct / 100);
+		    }
+		    if ($faktor >= $grenzeup) {
+			$premie = -round($vzkd * $premiePct / 100);
+		    }
+		    $pA[$persnr]['monate'][$jm]['premie'] = $premie;
+		    $pA[$persnr]['persinfo']['jahrpremie'] += $premie;
+		}
+	    }
+	}
+	
+	$pA['jahrmonatArray'] = $jahrMonatArray;
+	$pA['persnrArray'] = $persnrArray;
+	return $pA;
+    }
+
+    /**
      *
      * @param type $model
      * @return array|null 
