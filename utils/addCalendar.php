@@ -14,7 +14,7 @@ $apl = AplDB::getInstance();
 //
 $startDatum = '2013-01-04';
 
-$stampStart = mktime(2,2,2, 12, 6, 2014);
+$stampStart = mktime(2,2,2, 1, 1, 2017);
 $stampAktual = $stampStart;
 
 for($den=0;$den<=700;$den++){

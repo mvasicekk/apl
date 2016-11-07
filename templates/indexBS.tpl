@@ -59,6 +59,8 @@
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.dzeit};" type="button" value="Anwesenheitserfassung" id="dzeit" onClick="location.href='./dzeit/dzeit.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung" id="anwesenheitplan"  onClick="location.href='./personal/doc_root/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.vorschuss} ;" type="button" value="Vorschuss" id="vorschuss"  onClick="location.href='./dpers/vorschuss.php'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_firemni} ;" type="button" value="Hodnocení firemní" id="hodnoceni_firemni"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_firemni'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_firemni} ;" type="button" value="Hodnocení faktory OE" id="hodnoceni_faktory_oe"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_faktory_oe'" /></div>
 			</div>
 		    </div>
 		</div>

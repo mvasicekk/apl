@@ -1,0 +1,58 @@
+<div class="container-fluid" ng-controller="kartyController">
+    <div class="page-header">
+	<h4>skladové karty - přehled
+	</h4>
+	<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+    </div>
+	<button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    <form ng-submit="submitForm()" name="kartyForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}">
+	<div class="row">
+	    <div class="col-sm-12">
+	    <div class="form-group form-group-sm">
+		<label class="control-label" for="karta">Amnr</label>
+		<input ng-change="amnrChanged()" ng-model="karta" type="text" class="form-control" id="karta" placeholder="hledani prac prostredku, text ...">
+		<apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['amnr_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	    </div>
+	    <div class='col-sm-12'>
+		<table ng-if="kartyRows.length>0" class="table table-condensed table-striped">
+		    <thead>
+			<tr>
+			    <th>amnr</th>
+			    <th>text</th>
+			    <th class="text-right">preis</th>
+			    <th class="text-center">
+				AM Ausgabe
+				<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['amausgabe_column']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			    </th>
+			    <th>
+				sklady
+				<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['sklady_column']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			    </th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<tr ng-repeat="r in kartyRows">
+			    <td>{{r.amnr}}</td>
+			    <td>{{r.text}} / {{r.text1}}</td>
+			    <td class="text-right">{{r.preis|numeraljs:'0,000.00'}}</td>
+			    <td class="text-center">
+				<span ng-if="r.ausgabe!='0'" class="glyphicon glyphicon-check"></span>
+			    </td>
+			    <td>{{r.sklady}}</td>
+			</tr>
+		    </tbody>
+		</table>
+	    </div>
+	</div>
+    </form>
+</div>
+
+<!--formatovani cisel pomoci ngNumeraljs-->
+<!--zobrazeni jednotlivych skladovych karet, vyhledanych podle filtru
+hledam v : cisle polozky, textu1 a textu2-->

@@ -2313,6 +2313,179 @@ public function istExportiert($import, $impal){
             return NULL;
     }
 
+    
+    public function getOsobniHodnoceniFaktoryProPersNr($persnr){
+	
+	$vystup = NULL;
+	
+	$sql=" select";
+	$sql.=" dpers.PersNr,";
+	$sql.=" dtattypen.oe,";
+	$sql.=" hodnoceni_faktory_oe.id_faktor,";
+	$sql.=" hodnoceni_osobni_faktory.id_firma_faktor,";
+	$sql.=" hodnoceni_osobni_faktory.vaha,";
+	$sql.=" hodnoceni_osobni_faktory.popis";
+	$sql.=" from dpers";
+	$sql.=" join dtattypen on dtattypen.tat=dpers.regeloe";
+	$sql.=" join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
+	$sql.=" join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+	$sql.=" where";
+	$sql.="     dpers.PersNr='$persnr'";
+	$sql.=" order by";
+	$sql.=" hodnoceni_osobni_faktory.sort";
+	
+	$faktory = $this->getQueryRows($sql);
+	return $faktory;
+    }
+    /**
+     * 
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type
+     */
+    public function getOsobniHodnoceniProPersNr($persnr,$von,$bis){
+	
+	$vystup = NULL;
+	
+	$sql=" select";
+	$sql.=" dpers.PersNr,";
+	$sql.=" dtattypen.oe,";
+	$sql.=" hodnoceni_faktory_oe.id_faktor,";
+	$sql.=" hodnoceni_osobni_faktory.id_firma_faktor,";
+	$sql.=" hodnoceni_osobni_faktory.vaha,";
+	$sql.=" hodnoceni_osobni_faktory.popis";
+	$sql.=" from dpers";
+	$sql.=" join dtattypen on dtattypen.tat=dpers.regeloe";
+	$sql.=" join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
+	$sql.=" join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+	$sql.=" where";
+	$sql.="     dpers.PersNr='$persnr'";
+	$sql.=" order by";
+	$sql.=" hodnoceni_osobni_faktory.sort";
+	
+	$faktory = $this->getQueryRows($sql);
+	
+	if($faktory!==NULL){
+	    $vystup = array();
+	    $vystup['osobniFaktory'] = $faktory;
+
+	    //vytvorim si pole roku mesicu
+	    $start = strtotime($von);
+	    $end = strtotime($bis);
+	    $step = 24 * 60 * 60;
+	    for ($t = $start; $t <= $end; $t+=$step) {
+		$jm = date('Y-m', $t);
+		$jahrMonatArray[$jm] += 1;
+	    }
+
+	    //jedu po faktorech
+	    foreach ($faktory as $f){
+		$id_firma_faktor = $f['id_firma_faktor'];
+		$id_osobni_faktor = $f['id_faktor'];
+		// a jedu jednotlive jm
+		foreach ($jahrMonatArray as $jm=>$pocet){
+		    $datum = $jm.'-01';	//prvni den mesice o ktery se zajimam
+		    // zjistim firemni hodnoceni pokud me u osobniho faktoru zajima
+		    $hodnoceniFirma = NULL;
+		    if($id_firma_faktor>0){
+			$hodnoceniFirma = $this->getHodnoceniFirmaFaktorDatum($id_firma_faktor,$datum);
+		    }
+		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_firma'] = $hodnoceniFirma;
+		    //zjistim osobni hodnoceni pro famtor a mesic
+		    $hodnoceniOsobni = $this->getHodnoceniOsobniFaktorDatum($persnr,$id_osobni_faktor,$datum);
+		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_osobni'] = $hodnoceniOsobni;
+		}
+	    }
+	}
+	return $vystup;
+    }
+    
+    /**
+     * 
+     * @param type $id
+     */
+    public function getVahaFromFaktor($id){
+	$sql="select hodnoceni_osobni_faktory.vaha from hodnoceni_osobni_faktory where id='$id'";
+	$rr = $this->getQueryRows($sql);
+	$vaha = 0;
+	if($rr!==NULL){
+	return floatval($rr[0]['vaha']);
+	}
+    }
+    /**
+     * 
+     * @param type $id_osobni_faktor
+     * @param type $datum
+     */
+    public function getHodnoceniOsobniFaktorDatum($persnr,$id_osobni_faktor,$datum){
+	$sql.=" select hodnoceni_osobni.*";
+	$sql.=" from hodnoceni_osobni";
+	$sql.=" where";
+	$sql.=" persnr='$persnr'";
+	$sql.=" and";
+	$sql.=" datum='$datum'";
+	$sql.=" and";
+	$sql.=" id_faktor='$id_osobni_faktor'";
+
+	$rr = $this->getQueryRows($sql);
+	if($rr!==NULL){
+	    //radek uz mam, jen ho vratim
+	    //upravim true/false
+	    if(intval($rr[0]['locked'])==0){
+		$rr[0]['locked'] = FALSE;
+	    }
+	    else{
+		$rr[0]['locked'] = TRUE;
+	    }
+	    return $rr[0];
+	}
+	else{
+	    // nemam, vytvorim, vratim
+	    $insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
+	    $this->insert($insert);
+	    return $this->getHodnoceniOsobniFaktorDatum($persnr,$id_osobni_faktor,$datum);
+	}
+    }
+    
+    /**
+ * 
+ * @param type $vaha
+ * @param type $hodnoceni
+ * @return type
+ */
+public static function hodnoceni2Penize($vaha,$hodnoceni){
+    $v = 0;
+    if($hodnoceni<=6){
+	$v = 0;
+    }
+    elseif($hodnoceni>6 && $hodnoceni<8){
+	$v = ($hodnoceni-6)*25;
+    }
+    else{
+	$v = ($hodnoceni-7)*50;
+    }
+    return intval($v*$vaha);
+}
+    /**
+     * 
+     * @param type $id_firma_faktor
+     * @param type $datum
+     */
+    public function getHodnoceniFirmaFaktorDatum($id_firma_faktor,$datum){
+    	$hodnoceni = NULL;
+	$sql=" select hodnoceni_firemni.hodnoceni";
+	$sql.=" from hodnoceni_firemni";
+	$sql.=" where";
+	$sql.=" id_faktor='$id_firma_faktor'";
+	$sql.=" and";
+	$sql.=" datum='$datum'";
+	$rr = $this->getQueryRows($sql);
+	if($rr!==NULL){
+	    $hodnoceni = $rr[0]['hodnoceni'];
+	}
+	return $hodnoceni;
+    }
     /**
      * 
      * @param type $von
@@ -2323,8 +2496,32 @@ public function istExportiert($import, $impal){
      * @param type $faktordown
      * @param type $premiepct
      */
-    public function getHFPremieArray($von, $bis, $persvon, $persbis, $faktorup, $faktordown, $premiepct) {
-	
+    public function getHFPremieArray($von, $bis, $persvon, $persbis, $faktorup, $faktordown, $premiepct,$kriterienArray=NULL) {
+
+	if ($kriterienArray == NULL) {
+	    $kriterienArray = array(
+		array(
+		    'oe' => 'G11',
+		    'grenzedown' => 0.2,
+		    'grenzeup' => 0.31,
+		    'grenze_reparatur' => 1,
+		    'pct_plus' => 10,
+		    'pct_minus' => 10,
+		    'pct_reparatur' => 25
+		),
+		array(
+		    'oe' => 'G51',
+		    'grenzedown' => 0.05,
+		    'grenzeup' => 0.15,
+		    'grenze_reparatur' => 1,
+		    'pct_plus' => 10,
+		    'pct_minus' => 10,
+		    'pct_reparatur' => 25
+		),
+	    );
+	}
+
+
 	$von = $this->make_DB_datum($von);
 	$bis = $this->make_DB_datum($bis);
 	$grenzeup = $faktorup;
@@ -2459,6 +2656,8 @@ public function istExportiert($import, $impal){
 	$sql.=" MONTH(dperspremie.datum) as monat,";
 	$sql.=" dperspremie.id,";
 	$sql.=" dperspremie.betrag";
+	$sql.=" ,dperspremie.locked";
+	$sql.=" ,dperspremie.last_edit";
 	$sql.=" from dperspremie";
 	$sql.=" join dpremietypen on dpremietypen.id=dperspremie.id_premie";
 	$sql.=" where";
@@ -2485,6 +2684,8 @@ public function istExportiert($import, $impal){
 		$id = $pmr['id'];
 		$persSkutArray[$persnr][$jm]['betrag'] = $betrag;
 		$persSkutArray[$persnr][$jm]['id'] = $id;
+		$persSkutArray[$persnr][$jm]['locked'] = $pmr['locked'];
+		$persSkutArray[$persnr][$jm]['last_edit'] = $pmr['last_edit'];
 	    }
 	}
 	
@@ -2501,6 +2702,9 @@ public function istExportiert($import, $impal){
 		$pA[$persnr]['persinfo']['dpersstatus'] = $persstatus;
 		$pA[$persnr]['persinfo']['austritt'] = $austritt;
 		$pA[$persnr]['persinfo']['eintritt'] = $p['eintritt'];
+		// 1. pod jake oe patri osobni cislo
+		$persOEInfo = $this->getPersOEInfo($persnr);
+		$pA[$persnr]['persinfo']['oeinfo'] = $persOEInfo;
 		//roky mesice
 		foreach ($jahrMonatArray as $jm => $p) {
 		    $vzaby = 0;
@@ -2512,6 +2716,8 @@ public function istExportiert($import, $impal){
 		    $vzkdS0051 = 0;
 		    $skutBetrag = 0;
 		    $skutId = 0;
+		    $locked = FALSE;
+		    $last_edit = 'apl';
 		    //test zda existuji vzkony pro osobu a mesic
 		    if (array_key_exists($persnr, $persMinutenArray)) {
 			if (array_key_exists($jm, $persMinutenArray[$persnr])) {
@@ -2534,6 +2740,8 @@ public function istExportiert($import, $impal){
 			if (array_key_exists($jm, $persSkutArray[$persnr])) {
 			    $skutBetrag = $persSkutArray[$persnr][$jm]['betrag'];
 			    $skutId = $persSkutArray[$persnr][$jm]['id'];
+			    $locked = $persSkutArray[$persnr][$jm]['locked']==0?FALSE:TRUE;
+			    $last_edit = $persSkutArray[$persnr][$jm]['last_edit'];
 			}
 		    }
 
@@ -2544,16 +2752,75 @@ public function istExportiert($import, $impal){
 		    $pA[$persnr]['monate'][$jm]['repkosten'] = $sumrep;
 		    $pA[$persnr]['monate'][$jm]['skutBetrag'] = $skutBetrag;
 		    $pA[$persnr]['monate'][$jm]['skutId'] = $skutId;
+		    $pA[$persnr]['monate'][$jm]['locked'] = $locked;
+		    $pA[$persnr]['monate'][$jm]['last_edit'] = $last_edit;
 		    
 		    $faktor = $vzkd != 0 ? round($sumrep / $vzkd, 2) : 0;
 		    $pA[$persnr]['monate'][$jm]['faktor'] = $faktor;
-		    if ($faktor <= $grenzedown) {
-			$premie = round($vzkd * $premiePct / 100);
+		    
+		    // vypocet premie
+		    		    
+		    if($kriterienArray!==NULL){
+			if($persOEInfo!==NULL){
+			    $oe = $persOEInfo['oe'];
+			    // zkusim dane oe najit v poli kriterii
+			    $found = FALSE;
+			    foreach ($kriterienArray as $kr){
+				if($oe==$kr['oe']){
+				    // nasel jsem, nastavim si hranice podle obsahu kriterii
+				    $found = TRUE;
+				    $grenzedown = $kr['grenzedown'];
+				    $grenzeup = $kr['grenzeup'];
+				    $grenze_reparatur = $kr['grenze_reparatur'];
+				    $pct_plus = $kr['pct_plus'];
+				    $pct_minus = $kr['pct_minus']; 
+				    $pct_reparatur = $kr['pct_reparatur'];
+				    $pA[$persnr]['persinfo']['hfkriteria'] = $kr;
+				    break;
+				}
+			    }
+			    $prClass='';
+			    if($found==TRUE){
+				
+				// spocitam premii
+				if($faktor<=$grenzedown){
+				    $premie = round($vzkd * $pct_plus / 100);
+				    $prClass='success';
+				}
+				else if($faktor>=$grenzeup){
+				    if($faktor>=$grenze_reparatur){
+					$premie = -round($sumrep * $pct_reparatur / 100);
+					$prClass='danger';
+				    }
+				    else{
+					$premie = -round($vzkd * $pct_minus / 100);
+					$prClass='warning';
+				    }
+				}
+				else{
+				    $premie = 0;
+				}
+			    }
+			    else{
+				// MA nepatri do OE, kterym se pocita premie => premie bude 0
+				$premie = 0;
+				$pA[$persnr]['persinfo']['hfkriteria'] = NULL;
+			    }
+			}
+			else{
+			    // nemam info o OE, nastavim premii na 0
+			    $premie = 0;
+			    $pA[$persnr]['persinfo']['hfkriteria'] = NULL;
+			}
 		    }
-		    if ($faktor >= $grenzeup) {
-			$premie = -round($vzkd * $premiePct / 100);
+		    else{
+			// po starem zpusobu uz premie pocitat nebudu
+			$premie = 0;
+			$pA[$persnr]['persinfo']['hfkriteria'] = NULL;
 		    }
+
 		    $pA[$persnr]['monate'][$jm]['premie'] = $premie;
+		    $pA[$persnr]['monate'][$jm]['prclass'] = $prClass;
 		    $pA[$persnr]['persinfo']['jahrpremie'] += $premie;
 		}
 	    }
@@ -2562,6 +2829,33 @@ public function istExportiert($import, $impal){
 	$pA['jahrmonatArray'] = $jahrMonatArray;
 	$pA['persnrArray'] = $persnrArray;
 	return $pA;
+    }
+
+    /**
+     * 
+     * @param type $persnr
+     */
+    public function getPersOEInfo($persnr) {
+	$sq.=" select";
+	$sq.=" dpers.PersNr as persnr,";
+	$sq.=" dpers.regeloe,";
+	$sq.=" dtattypen.oe,";
+	$sq.=" dtattypen.isp_stredisko";
+	$sq.=" from dpers";
+	$sq.=" join dtattypen on dtattypen.tat=dpers.regeloe";
+	$sq.=" where";
+	$sq.=" dpers.PersNr='$persnr'";
+	
+	
+	$rs = $this->getQueryRows($sq);
+	
+	if($rs!==NULL){
+	    return $rs[0];
+	}
+	else{
+	    return $rs;
+	}
+	
     }
 
     /**
@@ -5681,7 +5975,8 @@ public function istExportiert($import, $impal){
 
 	$gesammtSummePremie = 0;
 	$persApremieArray = array();
-	foreach ($zeilen as $persnr => $persZeile) {
+	if(is_array($zeilen)){
+	    foreach ($zeilen as $persnr => $persZeile) {
 	    $sumPremie = 0;
 	    $sumPremie += floatval($persZeile['A6']['a6_prozent']['czk']);
 	    $sumPremie += floatval($persZeile['nacharbeit']['faktor']['czk']);
@@ -5700,6 +5995,8 @@ public function istExportiert($import, $impal){
 	    $persApremieArray[$persnr]['apremie'] = round($sumPremie);
 	    $persApremieArray[$persnr]['apremie_flag'] = $persZeile['apremie_flag'];
 	}
+	}
+	
 	return $persApremieArray;
     }
 

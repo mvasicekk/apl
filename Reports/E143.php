@@ -673,9 +673,14 @@ foreach ($persRows as $persnr=>$persnrA){
 	$atage = $a->getATageProPersnrBetweenDatums($persnr, $von, $bis,0);
 	$tageAkkord = round($atage * ($stundenAkkord/($stundenAkkord+$stundenZeit)));
 	$tageZeit = $atage - $tageAkkord;
+	
+	if(intval($zTage>0)){
+	    $bQPremie_zeit = FALSE;
+	    $bQPremie_akkord = FALSE;
+	}
     }
     if(array_key_exists($persnr, $persLeistRows)){
-	$betragZeit = $persLeistRows[$persnr]['vzaby_kc']-$persLeistRows[$persnr]['vzaby_akkord_kc'];
+	$betragZeit = ($persLeistRows[$persnr]['vzaby']-$persLeistRows[$persnr]['vzaby_akkord'])*$persLohnFaktor;
 	$betragAkkord = $persLeistRows[$persnr]['vzaby_akkord_kc'];
     }
     if(array_key_exists($persnr, $persNachtSoNeRows)){
@@ -701,12 +706,21 @@ foreach ($persRows as $persnr=>$persnrA){
 	$vzaby_zeit = $vzaby - $vzaby_akkord;
 	$gesamtVzabyAkkord = $vzaby_akkord;
 	$gesamtLeistungZeit = $vzaby_zeit * $leistFaktor;
+	
+//	echo "<br>vzaby:$vzaby<br>";
+//	echo "<br>vzaby_zeit:$vzaby_zeit<br>";
+//	echo "<br>gesamtLeistungZeit:$gesamtLeistungZeit<br>";
+//	
+	
 	$citatel = $gesamtLeistungZeit + $gesamtVzabyAkkord;
+	
+//	echo "<br>citatel:$citatel<br>";
+	
 	$aTageProMonat = $a->getArbTageBetweenDatums($von, $bis);
 	$anwTageArbeitsTage = $a->getATageProPersnrBetweenDatums($pracovnik, $von, $bis, 1);
 	$ganzMonatNormMinuten = $aTageProMonat * 8 * 60;
-	$d = 0;
-	$nw = 0;
+	//$d = 0;
+	//$nw = 0;
 
 	$vonTimestamp = strtotime($von);
 	
@@ -715,7 +729,12 @@ foreach ($persRows as $persnr=>$persnrA){
 	else
 	    $arbTage = $a->getArbTageBetweenDatums($von, $bis);
 	
-	$monatNormStunden = 8* ($arbTage-$d-$nw);
+	$monatNormStunden = 8 * ($arbTage-$d-$nw);
+	
+//	echo "<br>arbTage:$arbTage<br>";
+//	echo "<br>d:$d<br>";
+//	echo "<br>nw:$nw<br>";
+	
 	$monatNormMinuten = $monatNormStunden * 60;
 	
 	if ($monatNormMinuten != 0)
@@ -729,6 +748,9 @@ foreach ($persRows as $persnr=>$persnrA){
 	else
 	    $leistungsGradGanzMonat = 0;
 	
+//	echo "<br>leistungsGrad:$leistungsGrad<br>";
+//	echo "<br>leistungsGradGanzMonat:$leistungsGradGanzMonat<br>";
+	
 	$leistPraemieBerechnet1 = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) * $aTageProMonat;
         if ($a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) == 200)
 	    $leistPraemieBerechnet = $leistPraemieBerechnet1;
@@ -740,6 +762,7 @@ foreach ($persRows as $persnr=>$persnrA){
 	}
 	
 	$leistPremieBetrag = $bLeistPremie?$leistPraemieBerechnet:0;
+//	echo "<br>leistPremieBetrag:$leistPremieBetrag<br>";
     }
     
     // qtl
@@ -838,11 +861,18 @@ foreach ($slozkyDB as $persnr=>$slA){
     //projdu aktivni slozky
     foreach ($exPol as $cisloSlozky=>$slozkaInfo){
 	if(intval($slozkaInfo['aktiv'])>0){
+	    //dalsi filtr - nebudu posilat polozky, ktere maji vsechny hodnoty dny,hodinym,korunyCelkem nulove
 	    //AplDB::varDump($slozkaInfo);
+	    $korunyCelkem1 = intval($slozkaInfo['betrag'])>0?$slA[$slozkaInfo['betragDB']]:0;
+	    $dny1 = intval($slozkaInfo['tage'])>0?$slA[$slozkaInfo['tageDB']]:0;
+	    $hodiny1 = intval($slozkaInfo['stunden'])>0?$slA[$slozkaInfo['stundenDB']]:0;
+	    if($korunyCelkem1==0 && $dny1==0 && $hodiny1==0){
+		continue;
+	    }
 	    $kod = $cisloSlozky;
-	    $korunyCelkem = intval($slozkaInfo['betrag'])>0?number_format($slA[$slozkaInfo['betragDB']],0,',',''):0;
-	    $dny = intval($slozkaInfo['tage'])>0?number_format($slA[$slozkaInfo['tageDB']],2,',',''):0;
-	    $hodiny = intval($slozkaInfo['stunden'])>0?number_format($slA[$slozkaInfo['stundenDB']],2,',',''):0;
+	    $korunyCelkem = number_format($korunyCelkem1,0,',','');
+	    $dny = number_format($dny1,2,',','');
+	    $hodiny = number_format($hodiny1,2,',','');
 	    
 	    $exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
 	    array_push($msRows, array("exrow"=>$exportRow,"comment"=>$slozkaInfo['popis']));

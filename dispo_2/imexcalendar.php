@@ -45,11 +45,11 @@ $smarty = new Smarty;
 	
 	//$pocetDnuPredAktualnimDnem = 7;
 	$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
-	$datumVon = date('Y-m-d',  mktime(01, 01, 01, 9, 26,2016));
+	$datumVon = date('Y-m-d',  mktime(01, 01, 01, 10, 22,2016));
 	// + 14 dnu
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	//mkti
-	$bisCustom = mktime(23, 59, 59, 12, 31,2016);
+	$bisCustom = mktime(23, 59, 59, 1, 31,2017);
 	//$konecRokuTime = mktime(23, 59, 59, 4, 31,2016);
 	$datumBis = date('Y-m-d',  $bisCustom);
 	$datetime1 = new DateTime($datumBis);

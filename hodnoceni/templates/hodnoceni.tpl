@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>
-	    Personal 
+	    Hodnocení
 	</title>
 {*	Bootstrap*}
 	<link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@
 	<link href="./css/style.css" rel="stylesheet">
     </head>
 	
-    <body ng-app="persApp">
+    <body ng-app="hodnoceniApp">
 	{include file='../../templates/headingBS.tpl'}
 
 	{literal}

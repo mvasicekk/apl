@@ -1,0 +1,62 @@
+<div class="container-fluid" ng-controller="hodnocenifaktoryoeController">
+    <div>
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    </div>
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-12">
+		<h4>Hodnocení - zadání matice osobních faktorů k OE</h4>
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}">
+	<div class="row">
+	    <div class='col-sm-12'>
+		<table class="table table-condensed table-striped table-responsive table-hover">
+		    <thead>
+			<tr>
+			    <th class="bg-info">
+				osobní Faktor
+				<input ng-model="faktorfilter.popis" type="text" class="form-control input-sm" id="faktorfilter" placeholder="filtr pro faktory">
+				<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['faktorfilter']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			    </th>
+			    <th class="bg-info">
+				firemni faktor
+				<input ng-model="oefilter.oe" type="text" class="form-control input-sm" id="oefilter" placeholder="filtr OE">
+				<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['oefilter']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			    </th>
+			    <th ng-repeat="oe in oeArray|filter:oefilter:strict" class="bg-info" title="{{oe.beschreibung_cz}}">{{oe.oe}}</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<tr ng-repeat="f in osobniFaktory|filter:faktorfilter:strict">
+			    <th>
+				{{f.popis}}
+			    </th>
+			    <td class="text-right">
+				<select ng-change="updateFiremniFaktor(f)" class="form-control input-xs" ng-model="f.id_firma_faktor">
+				    <option ng-selected="f.id_firma_faktor==ff.id" ng-repeat="ff in firemniFaktory" value="{{ff.id}}">{{ff.popis}}</option>
+				</select>
+			    </td>
+			    <td ng-repeat="oe in oeArray|filter:oefilter:strict" title="{{oe.oe}} - {{oe.beschreibung_cz}}">
+				<button ng-click="updateFaktoryOE(faktoryOE[f.id][oe.oe],f.id,oe.oe)" class="btn btn-block btn-small">
+				    <span ng-show="faktoryOE[f.id][oe.oe].id_hodnoceni_faktory_oe==0">-</span>
+				    <span ng-show="faktoryOE[f.id][oe.oe].id_hodnoceni_faktory_oe>0" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+				</button>
+			    </td>
+			</tr>
+		    </tbody>
+		</table>
+	    </div>
+	</div>
+	
+	
+    </form>
+</div>
