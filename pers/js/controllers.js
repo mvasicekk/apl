@@ -59,10 +59,10 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     var curdate = new Date();
 
-    $scope.hfPremieVon = new Date(curdate.getFullYear(), curdate.getMonth(), 1);
+    $scope.hfPremieVon = new Date(curdate.getFullYear(), curdate.getMonth()-2, 1);
     $scope.hfPremieBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
     
-    $scope.osobniHodnoceniVon = new Date(curdate.getFullYear(), curdate.getMonth(), 1);
+    $scope.osobniHodnoceniVon = new Date(curdate.getFullYear(), curdate.getMonth()-2, 1);
     $scope.osobniHodnoceniBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
     
     $scope.hfPremieArray = null;
@@ -82,6 +82,53 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.lockOHButtonDisabled=false;
     
     
+    $scope.inventar = {};
+    $scope.inventarArray = [];
+    
+    $scope.persInventarArray = [];
+    $scope.addparents = false;
+    
+    /**
+     * 
+     * @param {type} pa
+     * @param {type} field
+     * @returns {undefined}
+     */
+    $scope.dpersinventarChanged = function(pa,field){
+	console.log(field);
+	console.log(pa);
+	return	$http.post(
+			'./updateDpersInventar.php',
+			{
+			    pi:pa,
+			    field:field
+			}
+		).then(function (response) {
+		});
+    }
+    /**
+     * 
+     * @param {type} i
+     * @returns {undefined}
+     */
+    $scope.addInventar = function(i){
+	console.log(i);
+	return	$http.post(
+			'./addInventar.php',
+			{
+			    i:i,
+			    persnr:$scope.ma.maInfo.PersNr,
+			    addparents:$scope.addparents
+			}
+		).then(function (response) {
+		    if(response.data.insertId>0){
+			//neco vlozeno , aktualizuju pole
+			getPersInventar();
+			$scope.addparents = false;
+		    }
+		    
+		});
+    }
     /**
      * 
      * @returns {unresolved}
@@ -389,6 +436,18 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 		});
     }
     
+    
+    function getPersInventar(){
+	return	$http.post(
+			'./getPersInventar.php',
+			{
+			    persnr: $scope.ma.maInfo.PersNr
+			}
+		).then(function (response) {
+		    $scope.persInventarArray = response.data.persInventarArray;
+		});
+    }
+    
     /**
      * 
      */
@@ -431,6 +490,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 		// dodatecne informace
 		getHFPremie();
 		getOsobniHodnoceni();
+		getPersInventar();
 	    }
 	});
 
@@ -498,6 +558,16 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	});
     }
 
+    $scope.refreshInventar = function (e) {
+	    var params = {e: e};
+	    return $http.get(
+		    './getInventar.php',
+		    {params: params}
+	    ).then(function (response) {
+		$scope.inventarArray = response.data.inventarArray;
+	    });
+	};
+	
     $scope.initSecurity = function () {
 	var p = {
 	    form_id: 'persjs'

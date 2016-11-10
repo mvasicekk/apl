@@ -36,6 +36,12 @@
 
 	<script src="../libs/bower_components/numeral/min/numeral.min.js"></script>
 	<script src="../libs/bower_components/angular-numeraljs/dist/angular-numeraljs.min.js"></script>
+	
+	<script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
+	<link href="./bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
+
+
+	
 	<script src="./js/app.js"></script>
 	<script src="./js/controllers.js"></script>
 	<script src="./js/directives.js"></script>

@@ -50,7 +50,8 @@ $exPol = array(
 	"tage"=>1,
 	"tageDB"=>"svatekTage",
 	"betrag"=>0,
-	"aktiv"=>1
+	"aktiv"=>1,
+	"nodpp"=>TRUE,
     ),
     "206"=>array(
 	"popis"=>"příplatek za práci v sobotu",
@@ -59,7 +60,8 @@ $exPol = array(
 	"tage"=>0,
 	"tageDB"=>"soTage",
 	"betrag"=>0,
-	"aktiv"=>1
+	"aktiv"=>1,
+	"nodpp"=>TRUE,
     ),
     "207"=>array(
 	"popis"=>"příplatek za práci v neděli",
@@ -68,6 +70,7 @@ $exPol = array(
 	"tage"=>0,
 	"tageDB"=>"neTage",
 	"betrag"=>0,
+	"nodpp"=>TRUE,
 	"aktiv"=>1
     ),
     "203"=>array(
@@ -325,6 +328,7 @@ $sql.="     dpers.qpremie_zeit,";
 $sql.="     dpers.premie_za_prasnost,";
 $sql.="     dpers.premie_za_3_mesice,";
 $sql.="     dpers.MAStunden,";
+$sql.="     dpers.dpersstatus,";
 $sql.="     if(dpersbewerber.exekution is null,0,dpersbewerber.exekution) as exekution,";
 $sql.="     DATE_FORMAT(dpers.eintritt,'%y-%m-%d') as eintritt,";
 $sql.="     DATE_FORMAT(dpers.austritt,'%y-%m-%d') as austritt,";
@@ -875,6 +879,11 @@ foreach ($slozkyDB as $persnr=>$slA){
 	    $hodiny = number_format($hodiny1,2,',','');
 	    
 	    $exportRow = getMsRow($rok, $mesic, $stredisko, $pracovnik, $kod, $korunyCelkem, $dny, $hodiny, $zakazka, $da1, $da2, $da3, $dat_od, $dat_do);
+	    $dpersstatus = $persRows[$persnr]['grundinfo']['dpersstatus'];
+	    if(($dpersstatus=='DOHODA') && ($slozkaInfo['nodpp']==TRUE)){
+//		preskocit dohody pro vybrane slozky, neplati se svatky, soboty nedele
+		continue;
+	    }
 	    array_push($msRows, array("exrow"=>$exportRow,"comment"=>$slozkaInfo['popis']));
 	}
     }

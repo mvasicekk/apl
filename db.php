@@ -2612,7 +2612,7 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	$sql.="     dreparaturkopf.persnr_ma as persnr";
 	$sql.="     ,YEAR(dreparaturkopf.datum) as jahr";
 	$sql.="     ,MONTH(dreparaturkopf.datum) as monat";
-	$sql.="     ,sum(dreparaturkopf.repzeit*5) as rep_kosten";
+	//$sql.="     ,sum(dreparaturkopf.repzeit*5) as rep_kosten";
 	$sql.="     ,sum(dreparaturpos.anzahl*if(dreparaturpos.et_alt<>0,0.4*`eink-artikel`.`art-vr-preis`,`eink-artikel`.`art-vr-preis`)) as rep_preis";
 	$sql.=" from dreparaturkopf";
 	$sql.="     join dpers on dpers.persnr=dreparaturkopf.persnr_ma";
@@ -2631,6 +2631,46 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	$persRepArray = array();
 	$persRepRows = $this->getQueryRows($sql);
 
+	//AplDB::varDump($persRepRows);
+	
+	if ($persRepRows !== NULL) {
+	    foreach ($persRepRows as $pmr) {
+		$persnr = $pmr['persnr'];
+		$jahr = $pmr['jahr'];
+		$monat = $pmr['monat'];
+		$jm = sprintf("%04d-%02d", $jahr, $monat);
+		//$repkosten = round(intval($pmr['rep_kosten']));
+		$reppreis = round(intval($pmr['rep_preis']));
+		//$zuschlag = 0.1*($repkosten+$reppreis);
+		//$sumrep = ($repkosten + $reppreis + $zuschlag); // pridat 10% zuschlag, viz S520
+		//$persRepArray[$persnr][$jm]['repkosten'] = $repkosten;
+		$persRepArray[$persnr][$jm]['reppreis'] = $reppreis;
+		//$persRepArray[$persnr][$jm]['sumrep'] = $sumrep;
+	    }
+	}
+
+	//a jeste zvlast repkosten a celkova suma za opravu
+	$sql = "";
+	$sql.=" select";
+	$sql.="     dreparaturkopf.persnr_ma as persnr";
+	$sql.="     ,YEAR(dreparaturkopf.datum) as jahr";
+	$sql.="     ,MONTH(dreparaturkopf.datum) as monat";
+	$sql.="     ,sum(dreparaturkopf.repzeit*5) as rep_kosten";
+	$sql.=" from dreparaturkopf";
+	$sql.="     join dpers on dpers.persnr=dreparaturkopf.persnr_ma";
+	$sql.="     join dreparatur_geraete on dreparatur_geraete.invnummer=dreparaturkopf.invnummer";
+	$sql.=" where";
+	$sql.="     dreparaturkopf.datum between '$von' and '$bis'";
+	$sql.="     and dreparaturkopf.persnr_ma between '$persvon' and '$persbis'";
+	$sql.=" group by";
+	$sql.="     dreparaturkopf.persnr_ma";
+	$sql.="     ,YEAR(dreparaturkopf.datum)";
+	$sql.="     ,MONTH(dreparaturkopf.datum)";
+
+	//$persRepArray = array();
+	$persRepRows = $this->getQueryRows($sql);
+
+	//AplDB::varDump($persRepRows);
 	
 	if ($persRepRows !== NULL) {
 	    foreach ($persRepRows as $pmr) {
@@ -2639,16 +2679,16 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 		$monat = $pmr['monat'];
 		$jm = sprintf("%04d-%02d", $jahr, $monat);
 		$repkosten = round(intval($pmr['rep_kosten']));
-		$reppreis = round(intval($pmr['rep_preis']));
-		$sumrep = ($repkosten + $reppreis) * 1.1; // pridat 10% zuschlag, viz S520
-
+		$reppreis = $persRepArray[$persnr][$jm]['reppreis'];
+		$zuschlag = 0.1*($repkosten+$reppreis);
+		$sumrep = ($repkosten + $reppreis + $zuschlag); // pridat 10% zuschlag, viz S520
 		$persRepArray[$persnr][$jm]['repkosten'] = $repkosten;
 		$persRepArray[$persnr][$jm]['reppreis'] = $reppreis;
 		$persRepArray[$persnr][$jm]['sumrep'] = $sumrep;
 	    }
 	}
-
-	//skutecne premie pro persnr a mesic
+	
+	//skutecne premie pro persnr a mesic -----------------------------------
 	$sql="";
 	$sql.=" select";
 	$sql.=" dperspremie.persnr,";

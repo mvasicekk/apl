@@ -18,8 +18,29 @@ $oeArray = $a->getQueryRows($sql);
 array_unshift($oeArray, array('oe'=>'*','beschreibung_cz'=>'vše'));
 $oeSelected = '*';
 
+//inventar
+$sql = "";
+$sql.=" select ";
+$sql.="     inventartyp.typ inventartyp,";
+$sql.="     inventartyp.popis as inventartyp_popis,";
+$sql.="     inventar.*,";
+$sql.="     mistnosti.mistnost,";
+$sql.="     mistnosti.popis";
+$sql.=" from";
+$sql.="     inventar";
+$sql.=" left join inventartyp on inventartyp.id=inventar.typinventare_id";
+$sql.=" left join mistnosti on mistnosti.id=inventar.mistnost_id";
+$sql.=" where";
+$sql.="     inventar.popis like '%a%'";
+$sql.=" order by";
+$sql.="     inventartyp.typ,";
+$sql.="     inventar.cislo";
+
+$inventarArray = $a->getQueryRows($sql);
+
 
 $returnArray = array(
+	'inventarArray'=>$inventarArray,
 	'oeArray'=>$oeArray,
 	'oeSelected'=>$oeSelected,
 	'u'=>$u
