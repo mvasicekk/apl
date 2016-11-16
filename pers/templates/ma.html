@@ -22,7 +22,7 @@
 	</div>
     </div>
 
-    <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}">
+    <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
 	<div class="row no-print">
 	    <div class="col-sm-2">
 		<div class="form-group form-group-sm">
@@ -69,11 +69,11 @@
 			    <input ng-model="hfPremieMonat" ng-min="1" ng-max="12" min="1" max="12" type="number" class="form-control text-right" id="monat">
 			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['hrmonat']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 			</div>
-			<button ng-disabled="fillHFButtonDisabled" class="btn btn-warning btn-block" ng-click="fillHFPremie()">převzít vypočtené</button>
+			<button type="button" ng-disabled="fillHFButtonDisabled" class="btn btn-warning btn-block" ng-click="fillHFPremie()">převzít vypočtené</button>
 			<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['btn_fillhf']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-			<button ng-disabled="lockHFButtonDisabled" class="btn btn-danger btn-block" ng-click="lockHFPremie(1)">zamknout hotnoty</button>
+			<button type="button" ng-disabled="lockHFButtonDisabled" class="btn btn-danger btn-block" ng-click="lockHFPremie(1)">zamknout hotnoty</button>
 			<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['btn_lockhf']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-			<button ng-disabled="lockHFButtonDisabled" ng-if="isAdmin" class="btn btn-success btn-block" ng-click="lockHFPremie(0)">odemknout hodnoty</button>
+			<button type="button" ng-disabled="lockHFButtonDisabled" ng-if="isAdmin" class="btn btn-success btn-block" ng-click="lockHFPremie(0)">odemknout hodnoty</button>
 			<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['btn_unlockhf']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 			<div class="alert alert-warning" ng-show="lockHFButtonDisabled" role="alert"> aktualizuji zaznamy pro HF premie</div>
 		    </div>
@@ -99,11 +99,11 @@
 			    <input ng-model="osobniHodnoceniMonat" ng-min="1" ng-max="12" min="1" max="12" type="number" class="form-control text-right" id="monat">
 			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['hrmonat_osobnihodnoceni']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 			</div>
-			<button ng-disabled="fillOHButtonDisabled" class="btn btn-warning btn-block" ng-click="fillOsobniHodnoceni()">převzí firemní hodnoceni</button>
+			<button type="button" ng-disabled="fillOHButtonDisabled" class="btn btn-warning btn-block" ng-click="fillOsobniHodnoceni()">převzí firemní hodnoceni</button>
 			<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['btn_fill_osobnihodnoceni']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-			<button ng-disabled="lockOHButtonDisabled" class="btn btn-danger btn-block" ng-click="lockOsobniHodnoceniAll(1)">zamknout hotnoty</button>
+			<button type="button" ng-disabled="lockOHButtonDisabled" class="btn btn-danger btn-block" ng-click="lockOsobniHodnoceniAll(1)">zamknout hotnoty</button>
 			<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['btn_lock_osobnihodnoceni']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-			<button ng-disabled="lockOHButtonDisabled" ng-if="isAdmin" class="btn btn-success btn-block" ng-click="lockOsobniHodnoceniAll(0)">odemknout hodnoty</button>
+			<button type="button" ng-disabled="lockOHButtonDisabled" ng-if="isAdmin" class="btn btn-success btn-block" ng-click="lockOsobniHodnoceniAll(0)">odemknout hodnoty</button>
 			<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['btn_unlock_osobnihodnoceni']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 			<div class="alert alert-warning" ng-show="lockOHButtonDisabled" role="alert"> aktualizuji zaznamy pro osobní hodnocení</div>
 		    </div>
@@ -209,7 +209,7 @@
 					<ui-select
 					    ng-model="inventar.selected" 
 					    ng-disabled="disabled" 
-					    reset-search-input="false" 
+					    reset-search-input="true" 
 					    theme="bootstrap"
 					    ><ui-select-match placeholder="vyhledani inventare (podle typu, cisla, popisu, mistnosti)">{{$select.selected.inventartyp}} - {{$select.selected.cislo}} {{$select.selected.popis}}</ui-select-match>
 					    <ui-select-choices group-by="'inventartyp'" repeat="p in inventarArray track by $index"
@@ -229,7 +229,7 @@
 						</label>
 					    </div>
 					    
-					    <button ng-click="addInventar(inventar.selected)" id='add_inventar' type="button" class="btn btn-sm btn-primary btn-block">+</button>
+					    <button ng-click="addInventar(inventar.selected,null)" id='add_inventar' type="button" class="btn btn-sm btn-primary btn-block">+</button>
 					</th>
 					</tr>
 					<tr class="bg-info">
@@ -244,17 +244,27 @@
 					</tr>
 					</thead>
 					<tbody>
-					    <tr ng-repeat="pa in persInventarArray">
-						<td class="">{{pa.inventar_typ}}</td>
+					    <tr ng-repeat="pa in persInventarArray" ng-class="{'text-muted':pa.vydej_datum1!==null}">
+						<td >{{pa.inventar_typ}}</td>
 						<td class="">{{pa.inventar_cislo}}</td>
 						<td class="">{{pa.inventar_popis}}</td>
 						<td class="">
 						    <input ng-change="dpersinventarChanged(pa,'pozn')" type="text" ng-model="pa.pozn" class="form-control input-sm">
 						</td>
-						<td class="">{{pa.vydej_datum}}</td>
-						<td class="">{{pa.vraceno_datum}}</td>
+						<td class="">
+						    <input ng-change="dpersinventarChanged(pa,'vydej_datum')" ng-disabled="pa.vraceno_datum!==null" ng-blur="" ng-model="pa.vydej_datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="vydej">
+						    <!--{{pa.vydej_datum}}-->
+						</td>
+						<td class="">
+						    <input ng-change="dpersinventarChanged(pa,'vraceno_datum')" ng-disabled="pa.vraceno_datum!==null" ng-blur="" ng-model="pa.vraceno_datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="vraceno">
+						</td>
 						<td title="naposledy editoval" class="">{{pa.user}}</td>
-						<td class="">{{pa.stamp}}</td>
+						<td class="">
+						    {{pa.stamp}}
+						    <button title="smazat" type="button" ng-if="isAdmin" class="btn btn-block no-print" ng-click="deleteDpersInventar(pa)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						    </button>
+						</td>
 					    </tr>
 					</tbody>
 				    </table>
@@ -464,10 +474,10 @@
 						    <div class="">
 							<div class="input-group input-group-sm">
 							    <span class="input-group-btn input-group-sm">
-								<button ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked && isAdmin==true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni,jm)">
+								<button tabindex="-1" ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked && isAdmin==true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni,jm)">
 								    <span class="text-success glyphicon glyphicon-asterisk"></span>
 								</button>
-								<button ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked" class="btn btn-default no-print" title="{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni,jm)">
+								<button tabindex="-1" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked" class="btn btn-default no-print" title="{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni,jm)">
 								    <!--<span ng-if="p.locked" class="glyphicon glyphicon-lock"></span>-->
 								    <span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked===true" class="text-danger glyphicon glyphicon-lock"></span>
 								    <span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked===false" class="text-success glyphicon glyphicon-lock"></span>
@@ -481,7 +491,7 @@
 							    </div>
 							</div>
 							<div class="input-group input-group-sm">
-							    <input ng-class="" ng-disabled="true" ng-change="" type="text" ng-model="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.castka" class="form-control input-sm text-right" title="castka" id="" />
+							    <input tabindex="-1" ng-class="" ng-disabled="true" ng-change="" type="text" ng-model="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.castka" class="form-control input-sm text-right" title="castka" id="" />
 							    <div title="" class="input-group-addon">
 								<span>Kč</span>
 							    </div>

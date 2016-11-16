@@ -362,6 +362,12 @@ $sql.="     ,durlaub1.jahranspruch";
 $sql.="     ,durlaub1.rest";
 $sql.="     ,durlaub1.gekrzt";
 $sql.=" from dpers";
+
+// TODO
+// --------------------------------------------------------------------------------------------------------------
+$sql.=" join dpers_isp on dpers_isp.persnr=dpers.persnr";	// abych exportoval jen ty, ktere mam v premieru
+// --------------------------------------------------------------------------------------------------------------
+
 $sql.=" join dzeit on dzeit.PersNr=dpers.PersNr";
 $sql.=" join dtattypen on dzeit.tat=dtattypen.tat";
 $sql.=" join calendar on calendar.datum=dzeit.Datum";
@@ -675,7 +681,13 @@ foreach ($persRows as $persnr=>$persnrA){
 	
 	//rozdeleni pracovnich dnu v pomeru hodin Akkord a Zeit
 	$atage = $a->getATageProPersnrBetweenDatums($persnr, $von, $bis,0);
-	$tageAkkord = round($atage * ($stundenAkkord/($stundenAkkord+$stundenZeit)));
+	if(($stundenAkkord+$stundenZeit)!=0){
+	    $tageAkkord = round($atage * ($stundenAkkord/($stundenAkkord+$stundenZeit)));
+	}
+	else{
+	    $tageAkkord = 0;
+	}
+	
 	$tageZeit = $atage - $tageAkkord;
 	
 	if(intval($zTage>0)){

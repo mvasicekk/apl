@@ -4,6 +4,16 @@
  * and open the template in the editor.
  */
 
+var convertMysql2Date = function(dt){
+	if(dt===null){
+	    return null;
+	}
+	var t = dt.split(/[- :]/);
+	// Apply each element to the Date function
+	var d = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+	return d;
+}
+    
 var aplApp = angular.module('persApp');
 
 aplApp.directive("enterfocus", function () {
@@ -16,7 +26,7 @@ aplApp.directive("enterfocus", function () {
                     if (code === 13) {
                         var current = focusables.index(this);
                         var next = focusables.eq(current + 1).length ? focusables.eq(current + 1) : focusables.eq(0);
-			//console.log('current='+current+' next=');
+			console.log('current='+current+' next=');
 			//console.log(next);
                         next.focus();
 			next.select();
@@ -88,6 +98,17 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.persInventarArray = [];
     $scope.addparents = false;
     
+    
+    $scope.deleteDpersInventar = function(pa){
+	$scope.addInventar(null,pa);
+    }
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.formSubmitted = function(){
+	console.log('submit');
+    }
     /**
      * 
      * @param {type} pa
@@ -111,17 +132,18 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @param {type} i
      * @returns {undefined}
      */
-    $scope.addInventar = function(i){
+    $scope.addInventar = function(i,pa){
 	console.log(i);
 	return	$http.post(
 			'./addInventar.php',
 			{
 			    i:i,
 			    persnr:$scope.ma.maInfo.PersNr,
-			    addparents:$scope.addparents
+			    addparents:$scope.addparents,
+			    pa:pa
 			}
 		).then(function (response) {
-		    if(response.data.insertId>0){
+		    if(response.data.insertId>0 || response.data.delRows>0){
 			//neco vlozeno , aktualizuju pole
 			getPersInventar();
 			$scope.addparents = false;
@@ -444,7 +466,15 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 			    persnr: $scope.ma.maInfo.PersNr
 			}
 		).then(function (response) {
+		    if(response.data.persInventarArray!==null && response.data.persInventarArray.length>0){
+			for(var i =0;i<response.data.persInventarArray.length;i++){
+			    response.data.persInventarArray[i]['vydej_datum1'] = convertMysql2Date(response.data.persInventarArray[i]['vydej_datum']);
+			    response.data.persInventarArray[i]['vraceno_datum1'] = convertMysql2Date(response.data.persInventarArray[i]['vraceno_datum']);
+			}
+		    }
+		    
 		    $scope.persInventarArray = response.data.persInventarArray;
+		    
 		});
     }
     

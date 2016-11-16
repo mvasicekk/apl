@@ -17,8 +17,8 @@ $sql.=" join inventar on inventar.id=dpersinventar.inventar_id";
 $sql.=" left join inventartyp on inventartyp.id=inventar.typinventare_id";
 $sql.=" where persnr='$persnr'";
 $sql.=" order by ";
-$sql.=" inventartyp.typ asc";
-$sql.=" ,dpersinventar.vydej_datum desc";
+$sql.=" dpersinventar.vydej_datum desc";
+$sql.=" ,inventartyp.typ asc";
 
 $persInventarArray = $a->getQueryRows($sql);
 

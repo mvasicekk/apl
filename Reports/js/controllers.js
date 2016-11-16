@@ -26,7 +26,6 @@ aplApp.directive("enterfocus", function () {
             }
         }
 });
-
 aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
     $scope.tinyMceOptions = {
 	inline:true,
@@ -291,10 +290,6 @@ $scope.getStkSumme = function(){
 	such.select();
     }
 });
-
-
-
-
 aplApp.controller('f450Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
     $scope.tinyMceOptions = {
 	inline:true,
@@ -415,4 +410,123 @@ aplApp.controller('f450Controller', function ($scope, $routeParams,$http,$timeou
 	such.select();
     }
 });
+aplApp.controller('f1810Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
+    $scope.tinyMceOptions = {
+	inline:true,
+	menubar:false
+    };
+    $scope.tinymceModel = "tady se da psat pomoci zabudovaneho editoru, zkus to !";
+    $scope.showHelp = false;
+    $scope.datePickerFormat = 'dd.MM.yyyy';
+    $scope.securityInfo = undefined;
+    $scope.isEditor = false;
+    $scope.ma = [];
+    $scope.maAktual = null;
+    $scope.ab = null;
+    $scope.now = new Date();
+    
+    
 
+    $scope.initHelp = function(){
+	var p={
+	    form_id:'f1810_urlaubantrag'
+	};
+	return $http.post('../getHelpInfo.php',p).then(
+		    function(response){
+			$scope.helpText = response.data.help.helpText;
+			$scope.hIArray = response.data.help.hiArray;
+		    }
+		);
+    }
+    
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'f1810_urlaubantrag'
+	};
+	return $http.post('../getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+			//zkusim najit roli helptexteditor
+			$scope.securityInfo.roles.forEach(function(v){
+			    if(v.rolename=='helptexteditor'){
+				$scope.isEditor = true;
+				console.log('is helptexteditor');
+			    }
+			});
+		    }
+		);
+    }
+
+    /**
+     * 
+     * @param {type} i
+     * @returns {undefined}
+     */
+        $scope.listRowClicked = function(i){
+	console.log(i);
+	$scope.ma_search = $scope.ma[i].persnr;
+	$scope.getMaMatch();
+    }
+    
+    /**
+     * 
+     */
+    $scope.getPolMatch = function () {
+	$scope.teilAktual = null;
+	
+	if($scope.teil_search.length>0){
+	    return $http.post(
+		'../dambew/getAmnrMatch.php',
+		{suchen: $scope.teil_search}
+	).then(function (response) {
+	    $scope.teile = response.data.karty;
+	});
+	}
+	else{
+	    $scope.teile = [];
+	}
+	
+    }
+    
+    $scope.createPdf = function(){
+    	    console.log('createPdf');
+	    //pred odeslanim prefiltruju pole teile poslu jen polozky s vyplnenym ab>=0
+	    teileFiltered = $scope.teile.filter(function(item){
+		if(parseInt(item.ab)>=0){
+		    return true;
+		}
+		else{
+		    return false;
+		}
+	    });
+	    
+	    var params = {
+		teile:teileFiltered,ab:$scope.ab
+	    };
+	    if(teileFiltered.length>0||$scope.teile.length==0){
+		$scope.noFilteredTeile = false;
+		$http.post('../Reports/F450_pdf.php', params).then(function (response) {
+		console.log('pdf generiert ' + response.data);
+		$scope.filename = response.data.filename;
+		$scope.pdfPath = response.data.pdfPath;
+		$scope.pdfReady = true;
+		
+	    });
+	    }
+	    else{
+		$scope.noFilteredTeile = true;
+	    }
+	    
+	
+    }
+    // init
+
+    $scope.initSecurity();
+    $scope.initHelp();
+
+    var such = $window.document.getElementById('ab');
+    if (such) {
+	such.focus();
+	such.select();
+    }
+});

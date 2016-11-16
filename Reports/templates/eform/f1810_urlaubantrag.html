@@ -1,0 +1,66 @@
+<div class="container-fluid" ng-controller="f1810Controller">
+
+    <div class="page-header">
+	<h4>F1810 - žádost o udělení volna
+	</h4>
+	<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+    </div>
+	<button type="button" class="btn btn-warning" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	
+    <!--sekce pro hledani dilu + tabulka-->
+
+
+    <div class="row">
+	<div class="col-sm-12">
+	    <div class="form-group">
+		<label for="ma_search">osobní číslo, jméno, příjmení</label>
+		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="ma_search" ng-change="getMaMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="osobní číslo číslo, jméno, příjmení">
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['search_field']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+    
+    
+    <!--seznam polozek-->
+    <div ng-show="ma.length > 0" class="col-sm-12">
+	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
+		<thead>
+		    <tr class="bg-primary">
+			<th>
+			    Persnr
+			</th>
+			<th>jmeno</th>
+			<th>OE</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr ng-repeat="p in ma">
+			<td ng-click="listRowClicked($index)">
+			    {{p.persnr}}
+			</td>
+			<td ng-click="listRowClicked($index)">{{p.name}} {{p.vorname}}</td>
+			<td ng-click="listRowClicked($index)>{{p.oe}}</td>
+		    </tr>
+		</tbody>
+	    </table>
+	</div>
+    
+    <!--help texty se vytahnou ze stejne tabulky jako resources-->
+    <div class="row">
+	<div class="col-sm-6">
+	    <a class="btn btn-info" ng-show="noFilteredTeile===false" ng-if="pdfReady && filename.length>0" ng-href="{{pdfPath}}">PDF ({{filename}})</a>
+	    <span class="text-warning" ng-show="noFilteredTeile===true">nic k vytištění, máte nastavené počáteční zůstatky ?</span>
+	</div>
+	<div class="col-sm-6">
+	    <!--<button ng-if="!(isNaN(ab)||ab===null||ab===undefined)&&(ab>=0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
+	    <!--<button ng-show="(ab>=0)&&(ab.toString().length>0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
+	    <button class="btn btn-info btn-block" ng-click="createPdf()">
+		<span ng-if="(teile.length>0)">PDF generieren (vyplnene)</span>
+		<span ng-if="teile.length==0">PDF generieren (prazdne)</span>
+	    </button>
+	</div>
+    </div>
+    
+</div>

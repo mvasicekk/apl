@@ -79,7 +79,7 @@
 				<div class="col-sm-3">
 				    {foreach from=$querys item=q key=k}
 				    {if $q.showButton && $q.form_typ=='eform'}
-					    <a style='text-align:left;' class='btn btn-lg btn-default btn-block' id="{$k}" href="#/{$q.form_typ}/{$q.tabid}">
+					    <a style='text-align:left;' class='btn btn-sm btn-default btn-block' id="{$k}" href="#/{$q.form_typ}/{$q.tabid}">
 						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {$q.buttonName}
 					    </a>
 				    {/if}

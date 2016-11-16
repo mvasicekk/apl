@@ -4,7 +4,7 @@ require_once '/var/www/workspace/apl/db.php';
 require '/var/www/workspace/apl/sqldb.php';
 
 
-echo "----- updateEinkArtikelFromPremier on :".date('Y-m-d H:i:s')." ----- \n";
+echo "----- updateEinkArtikelFromPremier on :" . date('Y-m-d H:i:s') . " ----- \n";
 $sqlDB = sqldb::getInstance();
 
 
@@ -21,11 +21,11 @@ if ($res !== NULL) {
 	$cislo = (trim($r['cislo']));
 	$sklad = intval(trim($r['sklad']));
 	$cena = floatval(trim($r['cena_mj']));
-	if (!array_key_exists($cislo,$cislaSklady)) {
+	if (!array_key_exists($cislo, $cislaSklady)) {
 	    $cislaSklady[$cislo] = array();
 	}
 	array_push($cislaSklady[$cislo], $sklad);
-	if($sklad!=999){
+	if ($sklad != 999) {
 	    // v matricnim skladu nemam cenu
 	    $cislaCeny[$cislo] = $cena;
 	}
@@ -37,29 +37,26 @@ if ($res !== NULL) {
 $a = AplDB::getInstance();
 
 //$a->query('truncate table `eink-artikel_sklad`');
-
-
 // 1. projedu podle premiera
-foreach ($cislaSklady as $cislo=>$sklady){
-	$amnr = trim($cislo);
-	$amnrInt = intval($amnr);
-	$imported = "$amnr"=="$amnrInt"?'A':'N';
-	if($imported=='A'){
-	    foreach ($sklady as $sklad){
-		$sklad = intval($sklad);
-		// zkusim najit radek v apl
-		$rs1 = $a->getQueryRows("select amnr from `eink-artikel_sklad` where amnr='$amnrInt' and sklad='$sklad'");
-		if($rs1===NULL){
-		    // tuto kombinaci nemam -> vlozim do db
-		    $sqlInsert = "insert into `eink-artikel_sklad` (amnr,sklad) values('$amnrInt','$sklad')";
-		    $insertId = $a->insert($sqlInsert);
-		    echo "vkladam novy: $sqlInsert ($insertId)\n";
-		}
+foreach ($cislaSklady as $cislo => $sklady) {
+    $amnr = trim($cislo);
+    $amnrInt = intval($amnr);
+    $imported = "$amnr" == "$amnrInt" ? 'A' : 'N';
+    if ($imported == 'A') {
+	foreach ($sklady as $sklad) {
+	    $sklad = intval($sklad);
+	    // zkusim najit radek v apl
+	    $rs1 = $a->getQueryRows("select amnr from `eink-artikel_sklad` where amnr='$amnrInt' and sklad='$sklad'");
+	    if ($rs1 === NULL) {
+		// tuto kombinaci nemam -> vlozim do db
+		$sqlInsert = "insert into `eink-artikel_sklad` (amnr,sklad) values('$amnrInt','$sklad')";
+		$insertId = $a->insert($sqlInsert);
+		echo "vkladam novy: $sqlInsert ($insertId)\n";
 	    }
 	}
-	else{
-	    //echo "$amnr - vynechavam z importu\n";
-	}
+    } else {
+	//echo "$amnr - vynechavam z importu\n";
+    }
 }
 
 
@@ -100,7 +97,13 @@ foreach ($res as $r) {
     $sortiment = trim($r['sortiment']);
     $am_ausgabe = strlen(trim($r['iden5']) > 0) ? 1 : 0;
 //    $cenaMj = floatval(trim($r['cena_mj']));
-    $cenaMj = $cislaCeny[$amnr];
+    if(array_key_exists($amnr, $cislaCeny)){
+	$cenaMj = $cislaCeny[$amnr];
+    }
+    else{
+	$cenaMj = 0;
+    }
+    
 
     // budu provadet jen pro cisla, ktera jsou "cisla", napr. nebudu updatovat polozky 350665-1 ...
     if ("$amnr" == "$amnrInt") {
@@ -121,6 +124,27 @@ foreach ($res as $r) {
 	$insertId = $a->insert($sqlInsert);
 	if ($onlyInsert === TRUE) {
 	    echo "vkladam novy: $sqlInsert\n";
+	}
+
+	
+	// mam ho v apl v zive eink-artikel ?
+	$rows = $a->getQueryRows("select `art-nr` as amnr from `eink-artikel` where convert(`art-nr`,CHAR)='$amnr'");
+	$onlyInsert = TRUE;
+	if ($rows !== NULL) {
+	    // smazu stary, ale ne v zive db
+	    $sqlDelete = "delete from `$einkArtikel` where convert(`art-nr`,CHAR)='$amnr'";
+	    //$ar = $a->query($sqlDelete);
+	    //echo "delete: $sqlDelete ($ar)\n";
+	    $onlyInsert = FALSE;
+	} else {
+	    //vlozit do apl
+	    $sqlInsert = "insert into `eink-artikel`";
+	    $sqlInsert.=" (`art-nr`,`art-name1`,`art-name2`,`mj`,`art-grp-nr`,`AM_Ausgabe`,`art-vr-preis`)";
+	    $sqlInsert.=" values('$amnrInt','$artName1','$artName2','$mj','$sortiment','$am_ausgabe','$cenaMj')";
+	    $insertId = $a->insert($sqlInsert);
+	    if ($onlyInsert === TRUE) {
+		echo "vkladam novy: $sqlInsert do eink-artikel \n";
+	    }
 	}
     }
 }

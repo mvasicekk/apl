@@ -22,7 +22,7 @@ require_once '../db.php';
 	$sql.=" left join inventartyp on inventartyp.id=inventar.typinventare_id";
 	$sql.=" left join mistnosti on mistnosti.id=inventar.mistnost_id";
 	$sql.=" where";
-	$sql.=" dpersinventar.id is null";	    // nikdo ho nema
+	$sql.=" (dpersinventar.id is null or dpersinventar.vraceno_datum is not null)";	    // nikdo ho nema
 	$sql.=" and (";
 	$sql.=" inventar.popis like LOWER('%$e%')";
 	$sql.=" or CONVERT(inventar.cislo,CHAR) like LOWER('%$e%')";
@@ -85,9 +85,11 @@ require_once '../db.php';
 		$rodic = "";
 	    }
 	    
-	    $inventarArray[$i]['formattedInventar'] = sprintf("<div>%s - %s %s (místnost: %s) $potomek1 $rodic1</div>",$row['inventartyp'],$row['cislo'],$row['popis'],$row['mistnost']);
+	    //$inventarArray[$i]['formattedInventar'] = sprintf("<div>%s - %s %s (místnost: %s) $potomek1 $rodic1</div>",$row['inventartyp'],$row['cislo'],$row['popis'],$row['mistnost']);
+	    $inventarArray[$i]['formattedInventar'] = sprintf("<div>%s - %s %s (místnost: %s)</div>",$row['inventartyp'],$row['cislo'],$row['popis'],$row['mistnost']);
 	    $inventarArray[$i]['potomek'] = $potomek;
 	    $inventarArray[$i]['rodic'] = $rodic;
+	    $inventarArray[$i]['vydej_datum1'] = strtotime($inventarArray[$i]['vydej_datum']);
 	}
     }
 

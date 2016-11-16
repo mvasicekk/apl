@@ -429,3 +429,7 @@ input.noborder
 	font-weight:bold;
 	text-align:right;
 }
+
+td.textdeleted{
+    text-decoration: line-through;
+}
