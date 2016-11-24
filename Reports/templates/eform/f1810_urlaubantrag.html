@@ -16,7 +16,7 @@
 	<div class="col-sm-12">
 	    <div class="form-group">
 		<label for="ma_search">osobní číslo, jméno, příjmení</label>
-		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="ma_search" ng-change="getMaMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="teil_search" placeholder="osobní číslo číslo, jméno, příjmení">
+		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="ma_search" ng-change="getMaMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="ma_search" placeholder="osobní číslo číslo, jméno, příjmení">
 		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['search_field']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	</div>
@@ -24,7 +24,7 @@
     
     
     <!--seznam polozek-->
-    <div ng-show="ma.length > 0" class="col-sm-12">
+    <div ng-show="ma.length > 0 && maAktual===null" class="col-sm-12">
 	    <table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
 		<thead>
 		    <tr class="bg-primary">
@@ -32,7 +32,7 @@
 			    Persnr
 			</th>
 			<th>jmeno</th>
-			<th>OE</th>
+			<th>RegelOE</th>
 		    </tr>
 		</thead>
 		<tbody>
@@ -41,24 +41,69 @@
 			    {{p.persnr}}
 			</td>
 			<td ng-click="listRowClicked($index)">{{p.name}} {{p.vorname}}</td>
-			<td ng-click="listRowClicked($index)>{{p.oe}}</td>
+			<td ng-click="listRowClicked($index)">{{p.regeloe}}</td>
 		    </tr>
 		</tbody>
 	    </table>
-	</div>
+    </div>
     
+    <div ng-if="maAktual!==null" class="row">
+	<div class="col-sm-12">
+	    <form class="form">
+		<div class="col-sm-6">
+		<div class="form-group">
+		    <label class="control-label">PersNr</label>
+		    <div class="">
+			<p class="form-control-static">{{maAktual.persnr}}</p>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <label class="control-label">jméno, příjmení</label>
+		    <div class="">
+			<p class="form-control-static">{{maAktual.vorname}} {{maAktual.name}} <span class="label label-info">{{maAktual.regeloe}}</span></p>
+		    </div>
+		</div>
+		</div>
+		<div class="col-sm-6">
+		<div class="form-group">		
+		    <label class="control-label">tímto žádám o :</label>
+		    <div class="radio">
+			<label>
+			    <input ng-model="maAktual.tat" type="radio" value="dp" checked>
+			    dovolenou (dp) <span class="label label-success">nárok: {{urlaubInfo.rest}} dnů</span>
+			</label>
+		    </div>
+		    <div class="radio">
+			<label>
+			    <input ng-model="maAktual.tat"  type="radio" value="nw">
+			    náhradní volno z konta přesčasových hodin (nw) <span ng-class="{'label-success':urlaubInfo.maStunden>0,'label-warning':urlaubInfo.maStunden<0}" class="label label-success">{{urlaubInfo.maStunden}} hod.</span>
+			</label>
+			<input ng-show="maAktual.tat=='nw'" ng-model="maAktual.grund"  type="text" class="form-control input-sm" placeholder="důvod">
+		    </div>
+		    <div class="radio">
+			<label>
+			    <input ng-model="maAktual.tat"  type="radio" value="nv">
+			    neplacené volno (nv)
+			</label>
+			<input ng-show="maAktual.tat=='nv'" ng-model="maAktual.grund"  type="text" class="form-control input-sm"  placeholder="důvod">
+		    </div>
+		</div>
+		    <label class="control-label">Datum od:</label>
+		    <input ng-model="maAktual.von" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="od">
+		    <label class="control-label">Datum do:</label>
+		    <input ng-model="maAktual.bis" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="do">
+		</div>
+	    </form>
+	</div>
+    </div>
     <!--help texty se vytahnou ze stejne tabulky jako resources-->
     <div class="row">
 	<div class="col-sm-6">
-	    <a class="btn btn-info" ng-show="noFilteredTeile===false" ng-if="pdfReady && filename.length>0" ng-href="{{pdfPath}}">PDF ({{filename}})</a>
-	    <span class="text-warning" ng-show="noFilteredTeile===true">nic k vytištění, máte nastavené počáteční zůstatky ?</span>
+	    <a class="btn btn-info" ng-if="pdfReady && filename.length>0" ng-href="{{pdfPath}}">PDF ({{filename}})</a>
 	</div>
 	<div class="col-sm-6">
-	    <!--<button ng-if="!(isNaN(ab)||ab===null||ab===undefined)&&(ab>=0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
-	    <!--<button ng-show="(ab>=0)&&(ab.toString().length>0)" class="btn btn-info btn-block" ng-click="createPdf()">-->
-	    <button class="btn btn-info btn-block" ng-click="createPdf()">
-		<span ng-if="(teile.length>0)">PDF generieren (vyplnene)</span>
-		<span ng-if="teile.length==0">PDF generieren (prazdne)</span>
+	    <button  ng-if="maAktual!==null" class="btn btn-info btn-block" ng-click="createPdf()">
+		<span>PDF generieren</span>
 	    </button>
 	</div>
     </div>

@@ -5,7 +5,7 @@
  */
 
 //var aplApp = angular.module('stApp',['ui.tinymce','ngSanitize','ngFileUpload','angular-thumbnails','ui.bootstrap','ngRoute']);
-var aplApp = angular.module('stApp',['ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
+var aplApp = angular.module('stApp',['ui.tinymce','ngSanitize','ui.bootstrap','ui.date','ngRoute']);
 
 aplApp.config(['$routeProvider',
     function($routeProvider){

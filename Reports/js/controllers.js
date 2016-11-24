@@ -422,9 +422,12 @@ aplApp.controller('f1810Controller', function ($scope, $routeParams,$http,$timeo
     $scope.isEditor = false;
     $scope.ma = [];
     $scope.maAktual = null;
-    $scope.ab = null;
     $scope.now = new Date();
-    
+    $scope.dateOptions = {
+	dateFormat: 'dd.mm.yy',
+	firstDay: 1
+    };
+    $scope.ma_search = '';
     
 
     $scope.initHelp = function(){
@@ -464,67 +467,78 @@ aplApp.controller('f1810Controller', function ($scope, $routeParams,$http,$timeo
      */
         $scope.listRowClicked = function(i){
 	console.log(i);
-	$scope.ma_search = $scope.ma[i].persnr;
-	$scope.getMaMatch();
+	$scope.ma_search = $scope.ma[i].persnr;// + ' - ' + $scope.ma[i].vorname + ' ' +  $scope.ma[i].name;
+	$scope.maAktual = $scope.ma[i];
+	$scope.maAktual.tat = "dp";
+	
+	    return $http.post(
+		'../pers/getPersUrlaubInfo.php',
+		{
+		    persnr:$scope.maAktual.persnr
+		}
+	).then(function (response) {
+	    $scope.urlaubInfo = response.data.urlaubInfo;
+	});
     }
     
     /**
      * 
      */
-    $scope.getPolMatch = function () {
-	$scope.teilAktual = null;
+    $scope.getMaMatch = function () {
+	$scope.maAktual = null;
+	$scope.urlaubInfo = null;
+	$scope.ma = [];
 	
-	if($scope.teil_search.length>0){
+	
+	if($scope.ma_search.length>0){
 	    return $http.post(
-		'../dambew/getAmnrMatch.php',
-		{suchen: $scope.teil_search}
+		'../pers/getPersInfo.php',
+		{
+		    osoba: $scope.ma_search,
+		    jenma:true,
+		    oeselected:'*'
+		}
 	).then(function (response) {
-	    $scope.teile = response.data.karty;
+	    $scope.ma = response.data.osoby;
+	    if($scope.ma!==null){
+		if($scope.ma.length==1){
+		$scope.listRowClicked(0);
+	    }
+	    }
+	    
 	});
 	}
 	else{
-	    $scope.teile = [];
+	    $scope.ma = [];
 	}
 	
     }
     
+    /**
+     * 
+     * @returns {undefined}
+     */
     $scope.createPdf = function(){
     	    console.log('createPdf');
-	    //pred odeslanim prefiltruju pole teile poslu jen polozky s vyplnenym ab>=0
-	    teileFiltered = $scope.teile.filter(function(item){
-		if(parseInt(item.ab)>=0){
-		    return true;
-		}
-		else{
-		    return false;
-		}
-	    });
-	    
 	    var params = {
-		teile:teileFiltered,ab:$scope.ab
+		ma:$scope.maAktual,
+		urlaubinfo:$scope.urlaubInfo
 	    };
-	    if(teileFiltered.length>0||$scope.teile.length==0){
 		$scope.noFilteredTeile = false;
-		$http.post('../Reports/F450_pdf.php', params).then(function (response) {
+		$http.post('../Reports/F1810_pdf.php', params).then(function (response) {
 		console.log('pdf generiert ' + response.data);
 		$scope.filename = response.data.filename;
 		$scope.pdfPath = response.data.pdfPath;
 		$scope.pdfReady = true;
 		
 	    });
-	    }
-	    else{
-		$scope.noFilteredTeile = true;
-	    }
-	    
-	
     }
     // init
 
     $scope.initSecurity();
     $scope.initHelp();
 
-    var such = $window.document.getElementById('ab');
+    var such = $window.document.getElementById('ma_search');
     if (such) {
 	such.focus();
 	such.select();
