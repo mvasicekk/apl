@@ -595,6 +595,7 @@ $sql.=" group by ";
 $sql.=" drueck.persnr";
 //$sql.=" drueck.Datum";
 
+echo $sql;
 $rows = $a->getQueryRows($sql);
 $persLeistRows = array();
 
@@ -608,7 +609,8 @@ if($rows!=NULL){
 $fieldSeparator = ';';
 $msRows = array();
 
-//AplDB::varDump($persRows);
+AplDB::varDump($persLeistRows);
+
 $slozkyDB = array();
 //jednovelke pole s hodnotama z db, vytvarim osobni cisla podle pole persRows
 foreach ($persRows as $persnr=>$persnrA){
