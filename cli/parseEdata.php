@@ -15,11 +15,13 @@ $latest_filename = '';
 $d = dir($path);
 while (false !== ($entry = $d->read())) {
     $filepath = "{$path}/{$entry}";
+    echo 'filepath: '.$filepath.'\n';
     // could do also other checks than just checking whether the entry is a file
     if (is_file($filepath) && filectime($filepath) > $latest_ctime && filesize($filepath)>0) {
         $latest_ctime = filectime($filepath);
         $latest_filename = $entry;
         $latest_filesize = filesize($filepath);
+	echo "latest_ctime: $latest_ctime, latest_filename: $latest_filename, latest_filesize: $latest_filesize \n";
     }
 }
 

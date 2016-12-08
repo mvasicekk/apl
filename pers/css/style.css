@@ -87,7 +87,14 @@ td.edited{
     font-size: small;
 }
 
+div.popover{
+    max-width: 1300px;
+}
 
+tbody.reparaturkopf>tr>td{
+    font-weight: bold;
+    background-color: lightgreen;
+}
 /********************** stylovani oblasti v help bloku ************************/
 /*
 .help-block p {

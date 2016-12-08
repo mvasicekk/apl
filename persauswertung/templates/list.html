@@ -24,6 +24,11 @@
 		    <input tabindex="3" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persVon" placeholder="PersNr von" type="text"/>
 		    <input tabindex="4" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="persBis" placeholder="PersNr bis" type="text"/>
 		    <input tabindex="5" style="width:8em;" class="form-control" ng-keypress="getZeilen($event)" maxlength="5" ng-model="stammOE" placeholder="stammOE" type="text"/>
+		    <div class="form-group form-group-sm">
+		    <label class="control-label" for="jenma">pouze MA
+		    <input ng-change="" ng-model="jenma" type="checkbox" class="form-control" id="jenma">
+		    </label>
+		</div>
 		</th>
 		
 		<th colspan="{{monthsArray.length + 2}}">

@@ -10,6 +10,7 @@ $o = json_decode($data);
 $persnr = $o->persnr;
 $direction = $o->direction;
 $jenMA = $o->jenma;
+$austritt60 = $o->austritt60;
 $oeselected = $o->oeselected;
 
 
@@ -47,9 +48,19 @@ if (intval($persnr) == 0) {
     $sql.=" $where";
     
     // pridat filtry
-    if($jenMA===TRUE){
-	$sql.=" and (dpersstatus='MA')";
+//    if($jenMA===TRUE){
+//	$sql.=" and (dpersstatus='MA')";
+//    }
+    if ($jenMA==TRUE) {
+    if($austritt60==TRUE){
+	$sql.=" and ((dpers.eintritt is not null) and ((dpers.dpersstatus='MA') or if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),0)<60))";
     }
+    else{
+	$sql.=" and (dpers.dpersstatus='MA')";
+    }
+    
+}
+    
     if($oeselected!='*'){
 	$sql.=" and (doe.oe='$oeselected')";
     }

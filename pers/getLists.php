@@ -38,12 +38,29 @@ $sql.="     inventar.cislo";
 
 $inventarArray = $a->getQueryRows($sql);
 
+//fahigkeiten
+$sql = " select dfaehigkeittyp.*";
+$sql.= " from dfaehigkeittyp";
+$sql.= " order by stat_nr";
+$fahtypenArray = $a->getQueryRows($sql);
+if($fahtypenArray!==NULL){
+    $fahtypidSelected = $fahtypenArray[0]['id'];
+}
+
+$sql=" select dfaehigkeiten.*";
+$sql.=" from dfaehigkeiten";
+$sql.=" order by faeh_abkrz";
+$fahigkeitenArray = $a->getQueryRows($sql);
+
 
 $returnArray = array(
-	'inventarArray'=>$inventarArray,
-	'oeArray'=>$oeArray,
-	'oeSelected'=>$oeSelected,
-	'u'=>$u
-    );
-    
+    'fahigkeitenArray'=>$fahigkeitenArray,
+    'fahtypenArray' => $fahtypenArray,
+    'fahtypidSelected' => $fahtypidSelected,
+    'inventarArray' => $inventarArray,
+    'oeArray' => $oeArray,
+    'oeSelected' => $oeSelected,
+    'u' => $u
+);
+
 echo json_encode($returnArray);

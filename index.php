@@ -5,7 +5,7 @@ $smarty = new Smarty;
 require_once './db.php';
 
 $apl = AplDB::getInstance();
-
+//fferfer
 $prihlasen = 0;
 // otestuju hodnoty POST promennych user a password
 // pokud budou neco obsahovat, zkusim uzivatele prihlasit

@@ -7,6 +7,7 @@
 var aplApp = angular.module('persstatApp');
 
 aplApp.controller('persstatController', function ($scope, $http,$timeout) {
+    $scope.jenma = true;
     $scope.persflagarray = [];
     $scope.persVon = "";
     
@@ -648,11 +649,13 @@ aplApp.controller('persstatController', function ($scope, $http,$timeout) {
 		$('div[id^=popover]').popover('destroy');
 	    }
 	    $('#spinner').show();
+	    var jma = $scope.jenma===true?1:0;
 	    $http.get('./getPersStat.php?persvon=' + $scope.persVon
 		    +'&persbis='+$scope.persBis
 		    +'&stammoe='+$scope.stammOE
 		    +'&von='+v
 		    +'&bis='+b
+		    +'&jenma='+jma
 		    )
 		    .success(function (data) {
 			$scope.zeilen = data.zeilen;

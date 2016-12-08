@@ -2486,6 +2486,34 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	}
 	return $hodnoceni;
     }
+    
+    public function getReparaturenProPersnr($persnr,$von,$bis){
+	$sql = " select";
+	$sql.= " dreparaturkopf.id,";
+	$sql.= " dreparaturkopf.invnummer,";
+	$sql.= " dreparatur_anlagen.anlage_beschreibung,";
+	$sql.= " dreparaturkopf.persnr_reparatur,";
+	$sql.= " dreparaturkopf.datum,";
+	$sql.= " dreparaturkopf.bemerkung,";
+	$sql.= " convert(dreparaturpos.artnr,char) as artnr,";
+	$sql.= " concat(`eink-artikel`.`art-name1`,' ',`eink-artikel`.`art-name2`) as artname,";
+	$sql.= " dreparaturpos.anzahl,";
+	$sql.= " dreparaturkopf.repzeit*5 as rep_kosten,";
+	$sql.= " dreparaturpos.anzahl*if(dreparaturpos.et_alt<>0,0.4*`eink-artikel`.`art-vr-preis`,`eink-artikel`.`art-vr-preis`) as rep_preis";
+	$sql.= " from dreparaturkopf";
+	$sql.= " join dreparatur_geraete on dreparatur_geraete.invnummer=dreparaturkopf.invnummer";
+	$sql.= " join dreparatur_anlagen on dreparatur_anlagen.anlage_id=dreparatur_geraete.anlage_id";
+	$sql.= " left join dreparaturpos on dreparaturpos.reparatur_id=dreparaturkopf.id";
+	$sql.= " left join `eink-artikel` on CONVERT(`eink-artikel`.`art-nr`,char)=convert(dreparaturpos.artnr,char)";
+	$sql.= " where";
+	$sql.= " dreparaturkopf.persnr_ma='$persnr'";
+	$sql.= " and";
+	$sql.= " dreparaturkopf.datum between '$von' and '$bis'";
+	$sql.= " order by";
+	$sql.= " dreparaturkopf.id,";
+	$sql.= " dreparaturpos.artnr";
+	return $this->getQueryRows($sql);
+    }
     /**
      * 
      * @param type $von
@@ -2688,7 +2716,8 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	    }
 	}
 	
-	//skutecne premie pro persnr a mesic -----------------------------------
+	//skutecne premie pro persnr a mesic + poznamka ------------------------
+	//poznamky jsou natvrdo vybirane jen pro tabulku dperspremie !!
 	$sql="";
 	$sql.=" select";
 	$sql.=" dperspremie.persnr,";
@@ -2698,13 +2727,16 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	$sql.=" dperspremie.betrag";
 	$sql.=" ,dperspremie.locked";
 	$sql.=" ,dperspremie.last_edit";
+	$sql.=" ,bemerkungen.bemerkung";
 	$sql.=" from dperspremie";
 	$sql.=" join dpremietypen on dpremietypen.id=dperspremie.id_premie";
+	$sql.=" left join bemerkungen on bemerkungen.rowid=dperspremie.id";
 	$sql.=" where";
 	$sql.=" dperspremie.persnr between '$persvon' and '$persbis'";
 	$sql.=" and";
 	$sql.=" dpremietypen.premiebeschreibung='hf_reparaturen_premie'";
 	$sql.=" and dperspremie.datum between '$von' and '$bis'";
+	$sql.=" and (bemerkungen.id is null or bemerkungen.`table`='dperspremie')";
 	$sql.=" order by";
 	$sql.=" dperspremie.persnr,";
 	$sql.=" YEAR(dperspremie.datum),";
@@ -2726,6 +2758,7 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 		$persSkutArray[$persnr][$jm]['id'] = $id;
 		$persSkutArray[$persnr][$jm]['locked'] = $pmr['locked'];
 		$persSkutArray[$persnr][$jm]['last_edit'] = $pmr['last_edit'];
+		$persSkutArray[$persnr][$jm]['bemerkung'] = $pmr['bemerkung'];
 	    }
 	}
 	
@@ -2758,6 +2791,7 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 		    $skutId = 0;
 		    $locked = FALSE;
 		    $last_edit = 'apl';
+		    $bemerkung = "";
 		    //test zda existuji vzkony pro osobu a mesic
 		    if (array_key_exists($persnr, $persMinutenArray)) {
 			if (array_key_exists($jm, $persMinutenArray[$persnr])) {
@@ -2782,6 +2816,7 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 			    $skutId = $persSkutArray[$persnr][$jm]['id'];
 			    $locked = $persSkutArray[$persnr][$jm]['locked']==0?FALSE:TRUE;
 			    $last_edit = $persSkutArray[$persnr][$jm]['last_edit'];
+			    $bemerkung = $persSkutArray[$persnr][$jm]['bemerkung'];
 			}
 		    }
 
@@ -2794,6 +2829,7 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 		    $pA[$persnr]['monate'][$jm]['skutId'] = $skutId;
 		    $pA[$persnr]['monate'][$jm]['locked'] = $locked;
 		    $pA[$persnr]['monate'][$jm]['last_edit'] = $last_edit;
+		    $pA[$persnr]['monate'][$jm]['bemerkung'] = $bemerkung;
 		    
 		    $faktor = $vzkd != 0 ? round($sumrep / $vzkd, 2) : 0;
 		    $pA[$persnr]['monate'][$jm]['faktor'] = $faktor;

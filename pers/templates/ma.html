@@ -23,7 +23,7 @@
     </div>
 
     <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
-	<div class="row no-print">
+	<div class="row no-print well-sm well">
 	    <div class="col-sm-2">
 		<div class="form-group form-group-sm">
 		    <label class="control-label" for="osoba">os. číslo / jméno</label>
@@ -36,6 +36,14 @@
 		    <label class="control-label" for="jenma">pouze MA</label>
 		    <input ng-change="jenMAChanged()" ng-model="jenma" type="checkbox" class="form-control" id="jenma">
 		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['jenma']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+	    </div>
+	    
+	    <div class="col-sm-1" ng-show="jenma">
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="jenma">ukoncen max. pred 60 dny</label>
+		    <input ng-change="austritt60Changed()" ng-model="austritt60" type="checkbox" class="form-control" id="austritt60">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['austritt60']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 		</div>
 	    </div>
 
@@ -118,6 +126,7 @@
 			    <th>persnr</th>
 			    <th>jmeno</th>
 			    <th>nastup. datum</th>
+			    <th>ukonč. datum</th>
 			    <th>RegelOE</th>
 			    <th>status</th>
 			</tr>
@@ -127,6 +136,7 @@
 			    <td>{{r.persnr}}</td>
 			    <td>{{r.name}} {{r.vorname}}</td>
 			    <td>{{r.eintritt}}</td>
+			    <td>{{r.austritt}}</td>
 			    <td>{{r.regeloe}}</td>
 			    <td>{{r.dpersstatus}}</td>
 			</tr>
@@ -155,6 +165,23 @@
 
 			</div>
 		    </div>
+		    
+		    <!--button group pro zobrazeni jednotlivych panelu -------->
+		    <div class="col-sm-2 no-print">
+			<div class="btn-group">
+			    <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				panel <span class="caret"></span>
+			    </button>
+			    <ul class="dropdown-menu">
+				<li><a ng-click="panelSwitch('inventar')" role="button" href="">inventar</a></li>
+				<li><a ng-click="panelSwitch('kvalifikace')" role="button" href="">kvalifikace</a></li>
+				<li role="separator" class="divider"></li>
+				<li><a ng-click="panelSwitch('hfpremie')" role="button" href="">HF Premie</a></li>
+				<li><a ng-click="panelSwitch('osobnihodnoceni')" role="button" href="">osobní hodnocení</a></li>
+			    </ul>
+			</div>
+		    </div>
+		    <!--------------------------------------------------------->
 		</div>
 
 		<!--stale viditelna informace o vybranem MA-->
@@ -170,34 +197,149 @@
 
 
 	<div class="row"  ng-show="ma.selectedIndex >= 0">
-	    <div class="col-sm-12" role="tablist">
-		<button class="btn btn-default no-print" role="tab" type="button" data-toggle="collapse" data-target="#zaklad" aria-expanded="false" aria-controls="zaklad">
-		    zaklad
-		</button>
-		<button class="btn btn-default no-print" role="tab"  type="button" data-toggle="collapse" data-target="#inventar" aria-expanded="false" aria-controls="inventar">
-		    inventar
-		</button>
-		<button class="btn btn-info no-print" role="tab"  type="button" data-toggle="collapse" data-target="#hfpremie" aria-expanded="false" aria-controls="hfpremie">
-		    HF Premie
-		</button>
-		<button class="btn btn-primary no-print" role="tab"  type="button" data-toggle="collapse" data-target="#osobnihodnoceni" aria-expanded="false" aria-controls="osobnihodnoceni">
-		    osobní hodnocení
-		</button>
-
-		<div class="collapse" id="zaklad" role="tabpanel">
+	    <div class="col-sm-12">
+		<div ng-show="showPanel.kvalifikace" id="kvalifikace">
 		    <div class="panel panel-success">
 			<div class="panel-heading">
-			    Základní informace
+			    kvalifikace
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['kvalifikace_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 			</div>
 			<div class="panel-body">
-			    obsah
+			    <div class="row">
+				<div class="col-md-6">
+				    <div class="panel panel-primary">
+					<div class="panel-heading">OE - kvalifikační požadavky</div>
+					<table class="table table-condensed table-responsive table-striped table-hover">
+					    <thead>
+						<tr   class="bg-info no-print">
+						    <th colspan="1">
+							<select class="form-control" id="oekvalifikace" name="oekvalifikace" ng-model="oekvalifikace">
+							    <option ng-if="oe.oe!='*'" ng-repeat="oe in oes.oeArray" value="{{oe.oe}}">{{oe.oe}} - {{oe.beschreibung_cz}}</option>
+							</select>
+						    </th>
+						    <th>
+							<input type="text" ng-model="kvalifikacebewertung" class="form-control input-sm text-right" placeholder="hodnoceni">
+						    </th>
+						    <th>
+							&nbsp;
+						    </th>
+						    <th>
+							&nbsp;
+						    </th>
+						    <th>
+							&nbsp;
+						    </th>
+						    <th>
+							<button ng-click="addKvalifikace()" id='add_kvalifikace' type="button" class="btn btn-sm btn-primary btn-block">+</button>
+						    </th>
+						</tr>
+						<tr class="bg-info">
+						    <th colspan="1" >oe</th>
+						    <th colspan="1" class="text-right">hodnoceni</th>
+						    <th colspan="1">poznamka</th>
+						    <th colspan="1" >user</th>
+						    <th colspan="1" >stamp</th>
+						    <th colspan="1" ></th>
+						</tr>
+					    </thead>
+					    <tbody>
+						<tr ng-repeat="pa in persKvalifikaceArray">
+						    <td >{{pa.oe}}</td>
+						    <td class="">
+							<input ng-change="dperskvalifikaceChanged(pa,'bewertung')" type="text" ng-model="pa.bewertung" class="form-control input-sm  text-right" placeholder="hodnoceni">
+						    </td>
+						    <td class="">
+							<input ng-change="dperskvalifikaceChanged(pa,'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
+						    </td>
+						    <td class="">
+							{{pa.user}}
+						    </td>
+						    <td class="">
+							{{pa.stamp}}
+						    </td>
+						    <td class="">
+							<button title="smazat" type="button" class="btn btn-block no-print" ng-click="deleteDpersKvalifikace(pa)">
+							    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+							</button>
+						    </td>
+						</tr>
+					    </tbody>
+					</table>
+				    </div>
+				    
+				</div>
+				<div class="col-md-6">
+				    <div class="panel panel-primary">
+					<div class="panel-heading">Kvalifikace Soll / Ist (školení)</div>
+					<table class="table table-condensed table-responsive table-striped table-hover">
+					    <thead>
+						<tr   class="bg-info no-print">
+						    <th colspan="1">
+							<select class="form-control" id="fahtypen" name="fahtypen" ng-model="fahtypen.fahtypidSelected">
+							    <option ng-selected="ft.id==fahtypen.fahtypidSelected" ng-repeat="ft in fahtypen.fahtypenArray" value="{{ft.id}}">{{ft.beschreibung}}</option>
+							</select>
+						    </th>
+						    <th>
+							<select class="form-control" id="fahigkeiten" name="fahigkeiten" ng-model="fahigkeiten.fahigkeitenidSelected">
+							    <option ng-selected="$index==0" ng-repeat="fh in fahigkeiten.fahigkeitenArray|filter:{faehigkeit_typ:fahtypen.fahtypidSelected}:true" value="{{fh.id}}">{{fh.faeh_abkrz}} - {{fh.beschreibung}}</option>
+							</select>
+						    </th>
+						    <th>
+							&nbsp;
+						    </th>
+						    <th>
+							&nbsp;
+						    </th>
+						    <th>
+							&nbsp;
+						    </th>
+						    <th>
+							<button ng-click="addKvalifikace()" id='add_kvalifikace' type="button" class="btn btn-sm btn-primary btn-block">+</button>
+						    </th>
+						</tr>
+						<tr class="bg-info">
+						    <th colspan="1" >oe</th>
+						    <th colspan="1" class="text-right">hodnoceni</th>
+						    <th colspan="1">poznamka</th>
+						    <th colspan="1" >user</th>
+						    <th colspan="1" >stamp</th>
+						    <th colspan="1" ></th>
+						</tr>
+					    </thead>
+					    <tbody>
+						<tr ng-repeat="pa in persKvalifikaceArray">
+						    <td >{{pa.oe}}</td>
+						    <td class="">
+							<input ng-change="dperskvalifikaceChanged(pa,'bewertung')" type="text" ng-model="pa.bewertung" class="form-control input-sm  text-right" placeholder="hodnoceni">
+						    </td>
+						    <td class="">
+							<input ng-change="dperskvalifikaceChanged(pa,'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
+						    </td>
+						    <td class="">
+							{{pa.user}}
+						    </td>
+						    <td class="">
+							{{pa.stamp}}
+						    </td>
+						    <td class="">
+							<button title="smazat" type="button" class="btn btn-block no-print" ng-click="deleteDpersKvalifikace(pa)">
+							    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+							</button>
+						    </td>
+						</tr>
+					    </tbody>
+					</table>
+				    </div>
+				</div>
+			    </div>
 			</div>
 		    </div>
 		</div>
-		<div class="collapse" id="inventar" role="tabpanel">
+		<div ng-show="showPanel.inventar" id="inventar">
 		    <div class="panel panel-default">
 			<div class="panel-heading">
 			    Inventář
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['inventar_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 			</div>
 			<div class="panel-body">
 			    <div class="row">
@@ -273,7 +415,7 @@
 			</div>
 		    </div>
 		</div>
-		<div class="collapse" id="hfpremie" role="tabpanel">
+		<div ng-show="showPanel.hfpremie" id="hfpremie">
 		    <div class="panel panel-info">
 			<div class="panel-heading">
 			    HF Premie
@@ -298,7 +440,7 @@
 				    <table class="table table-condensed table-responsive" ng-if="hfPremieArray[hfPremieArray.persnrArray[0].persnr].persinfo.hfkriteria!=null">
 					<tbody>
 					    <tr class="bg-success">
-						<td>vzkd / repkosten</td>
+						<td>repkosten / vzkd</td>
 						<td><=</td>
 						<td class="text-right">{{hfPremieArray[hfPremieArray.persnrArray[0].persnr].persinfo.hfkriteria.grenzedown|numeraljs:'0,0.00'}}</td>
 						<td>premie</td>
@@ -307,7 +449,7 @@
 						<td>z Sum vzkd</td>
 					    </tr>
 					    <tr class="bg-warning">
-						<td>vzkd / repkosten</td>
+						<td>repkosten / vzkd</td>
 						<td>>=</td>
 						<td class="text-right">{{hfPremieArray[hfPremieArray.persnrArray[0].persnr].persinfo.hfkriteria.grenzeup|numeraljs:'0,0.00'}}</td>
 						<td>premie</td>
@@ -316,7 +458,7 @@
 						<td>z Sum vzkd</td>
 					    </tr>
 					    <tr class="bg-danger">
-						<td>vzkd / repkosten</td>
+						<td>repkosten / vzkd</td>
 						<td>>=</td>
 						<td class="text-right">{{hfPremieArray[hfPremieArray.persnrArray[0].persnr].persinfo.hfkriteria.grenze_reparatur|numeraljs:'0,0.00'}}</td>
 						<td>premie</td>
@@ -335,12 +477,16 @@
 				    <table class="table table-condensed table-responsive table-striped table-hover">
 					<thead>
 					    <th class="bg-info">&nbsp;</th>
+					    <th class="bg-info text-right">Suma [von-bis]</th>
 					    <th class="bg-info text-right" ng-repeat="(jm,pocet) in hfPremieArray.jahrmonatArray">{{jm}}</th>
 					</thead>
 					<tbody>
 					    <tr>
 						<th>
 						    vzaby
+						</th>
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'vzaby')|numeraljs:'0,0'}}
 						</th>
 						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    {{p.vzaby|numeraljs:'0,0'}}
@@ -350,6 +496,9 @@
 						<th>
 						    vzkd S0011
 						</th>
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'vzkdS0011')|numeraljs:'0,0'}}
+						</th>
 						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    {{p.vzkdS0011|numeraljs:'0,0'}}
 						</td>
@@ -357,6 +506,9 @@
 					    <tr>
 						<th>
 						    vzkd S0051
+						</th>
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'vzkdS0051')|numeraljs:'0,0'}}
 						</th>
 						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    {{p.vzkdS0051|numeraljs:'0,0'}}
@@ -366,6 +518,9 @@
 						<th>
 						    Sum vzkd
 						</th>
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'vzkd')|numeraljs:'0,0'}}
+						</th>
 						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    {{p.vzkd|numeraljs:'0,0'}}
 						</td>
@@ -374,13 +529,22 @@
 						<th>
 						    repkosten
 						</th>
-						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
-						    {{p.repkosten|numeraljs:'0,0'}}
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'repkosten')|numeraljs:'0,0'}}
+						</th>
+						<td class="text-right bg-{{p.prclass}}" ng-repeat="(mo,p) in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
+						    <!--<span id="repkosten_{{hfPremieArray.persnrArray[0].persnr}}_{{mo}}" style="cursor: pointer;" ng-click="monthValueClicked($event,p)">-->
+							{{p.repkosten|numeraljs:'0,0'}}
+						    <!--</span>-->
+						    <span ng-if="p.repkosten!=0" title="zobrazit detail k hodnote" id="repkosten_{{hfPremieArray.persnrArray[0].persnr}}_{{mo}}" style="cursor: pointer;" ng-click="monthValueClicked($event,p)" class="glyphicon glyphicon-info-sign bg-success text-success" aria-hidden="true"></span>
 						</td>
 					    </tr>
 					    <tr>
 						<th>
 						    repkosten/vzkd
+						</th>
+						<th class="text-right">
+						    {{(sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'vzkd')!==0?sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'repkosten')/sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'vzkd'):0)|numeraljs:'0,0.00'}}
 						</th>
 						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    {{p.faktor|numeraljs:'0,0.00'}}
@@ -390,6 +554,9 @@
 						<th>
 						    premie - vypoc.
 						</th>
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'premie')|numeraljs:'0,0'}}
+						</th>
 						<td class="text-right bg-{{p.prclass}}" ng-repeat="p in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    {{p.premie}}
 						</td>
@@ -398,20 +565,33 @@
 						<th>
 						    premie - skut.
 						</th>
+						<th class="text-right">
+						    {{sumHFPremieRow(hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate,'skutBetrag')|numeraljs:'0,0'}}
+						</th>
 						<td ng-class="{'bg-success':p.skutBetrag>0,'bg-danger':p.skutBetrag<0}" class="text-right" ng-repeat="(m,p) in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    <div class="input-group input-group-sm">
 							<span class="input-group-btn input-group-sm">
 							    <button ng-if="p.locked && isAdmin==true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockHfPremie(p,m)">
 								<span class="text-success glyphicon glyphicon-asterisk"></span>
 							    </button>
-							    <button ng-disabled="p.locked" class="btn btn-default no-print" title="{{p.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockHfPremie(p,m)">
-								<!--<span ng-if="p.locked" class="glyphicon glyphicon-lock"></span>-->
+							    <button ng-if="p.locked==false" class="btn btn-default no-print" title="zamkne hodnotu" type="button" ng-click="lockHfPremie(p,m)">
+								<span class="text-success glyphicon glyphicon-lock"></span>
+							    </button>
+<!--							    <button ng-disabled="p.locked" class="btn btn-default no-print" title="{{p.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockHfPremie(p,m)">
+								<span ng-if="p.locked" class="glyphicon glyphicon-lock"></span>
 								<span ng-show="p.locked===true" class="text-danger glyphicon glyphicon-lock"></span>
 								<span ng-show="p.locked===false" class="text-success glyphicon glyphicon-lock"></span>
-								<!--<span ng-if="!p.locked" class="glyphicon glyphicon-unlock"></span>-->
-							    </button>
+								<span ng-if="!p.locked" class="glyphicon glyphicon-unlock"></span>
+							    </button>-->
 							</span>
-							<input   ng-class="{'bg-success':p.skutBetrag>0,'bg-danger':p.skutBetrag<0}" ng-disabled="p.locked" ng-change="skutPremieChanged(p,m)" type="text" ng-model="p.skutBetrag" class="form-control input-sm text-right" title="naposledy editoval :{{p.last_edit}}" id="hfprem_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" />
+							<input ng-class="{'bg-success':p.skutBetrag>0,'bg-danger':p.skutBetrag<0}" ng-disabled="p.locked" ng-change="skutPremieChanged(p,m)" type="text" ng-dblclick="updateBemerkung('dperspremie',p.skutId)" ng-model="p.skutBetrag" class="form-control input-sm text-right" title="naposledy editoval :{{p.last_edit}}" id="hfprem_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" />
+							<div ng-if="p.bemerkung.length>0" class="input-group-addon input-group-sm no-print">
+							    <span title="poznámka" id="comment_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" style="cursor: pointer;" ng-click="commentClicked($event,p)" class="glyphicon glyphicon-comment text-info" aria-hidden="true"></span>
+							</div>
+							
+						    </div>
+						    <div ng-show="bemerkung['dperspremie'][p.skutId].show">
+							    <textarea ng-change="bemerkungChanged('dperspremie',p.skutId,p)" class="form-control bg-warning" ng-model="bemerkung['dperspremie'][p.skutId].poznamka"></textarea>
 						    </div>
 						</td>
 					    </tr>
@@ -422,7 +602,7 @@
 			</div>
 		    </div>
 		</div>
-		<div class="collapse" id="osobnihodnoceni" role="tabpanel">
+		<div ng-show="showPanel.osobnihodnoceni" id="osobnihodnoceni">
 		    <div class="panel panel-primary">
 			<div class="panel-heading">
 			    osobní hodnocení

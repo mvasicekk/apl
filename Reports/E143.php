@@ -175,7 +175,8 @@ $exPol = array(
 	"stunden"=>0,
 	"tage"=>0,
 	"betrag"=>1,
-	"aktiv"=>0
+	"betragDB"=>"hfPremieBetrag",
+	"aktiv"=>1
     ),
     "737"=>array(
 	"popis"=>"doprava zahranici",
@@ -595,7 +596,7 @@ $sql.=" group by ";
 $sql.=" drueck.persnr";
 //$sql.=" drueck.Datum";
 
-echo $sql;
+//echo $sql;
 $rows = $a->getQueryRows($sql);
 $persLeistRows = array();
 
@@ -606,10 +607,31 @@ if($rows!=NULL){
     }
 }
 
+//premie hf naradi
+$sql= " select dperspremie.persnr,dperspremie.betrag,dperspremie.datum";
+$sql.= " from dperspremie";
+$sql.= " join dpremietypen on dpremietypen.id=dperspremie.id_premie";
+$sql.= " where";
+$sql.= "     persnr between '$persvon' and '$persbis'";
+$sql.= "     and";
+$sql.= "     dpremietypen.premiebeschreibung='hf_reparaturen_premie'";
+$sql.= "     and";
+$sql.= "     dperspremie.datum between '$von' and '$bis'";
+
+$rows = $a->getQueryRows($sql);
+$persHFPremieRows = array();
+
+if($rows!=NULL){
+    foreach ($rows as $r){
+	$persnr = $r['persnr'];
+	$persHFPremieRows[$persnr] = $r;
+    }
+}
+	
 $fieldSeparator = ';';
 $msRows = array();
 
-AplDB::varDump($persLeistRows);
+//AplDB::varDump($persLeistRows);
 
 $slozkyDB = array();
 //jednovelke pole s hodnotama z db, vytvarim osobni cisla podle pole persRows
@@ -634,6 +656,7 @@ foreach ($persRows as $persnr=>$persnrA){
     $qPremieBetrag = 0;
     $leistPremieBetrag = 0;
     $qtlPremieBetrag = 0;
+    $hfPremieBetrag = 0;
     $erschwernissBetrag = 0;
     $aPremieBetrag = 0;
     $zStunden = 0;
@@ -824,6 +847,10 @@ foreach ($persRows as $persnr=>$persnrA){
     if(array_key_exists($persnr, $persEssenRows)){
 	$essenBetrag = floatval($persEssenRows[$persnr]['essen']);
     }
+    
+    if(array_key_exists($persnr, $persHFPremieRows)){
+	$hfPremieBetrag = floatval($persHFPremieRows[$persnr]['betrag']);
+    }
 
     $slozkyDB[$persnr] = array(
 	"stundenZeit"=>$stundenZeit,
@@ -843,6 +870,7 @@ foreach ($persRows as $persnr=>$persnrA){
 	"qPremieBetrag"=>$qPremieBetrag,
 	"leistPremieBetrag"=>$leistPremieBetrag,
 	"qtlPremieBetrag"=>$qtlPremieBetrag,
+	"hfPremieBetrag"=>$hfPremieBetrag,
 	"erschwernissBetrag"=>$erschwernissBetrag,
 	"aPremieBetrag"=>$aPremieBetrag,
 	"zStunden"=>$zStunden,

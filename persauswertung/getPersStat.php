@@ -94,6 +94,7 @@ $persBis = intval(trim($_GET['persbis']));
 $datumVon = trim($_GET['von']);
 $datumBis = trim($_GET['bis']);
 $stammOE = strtoupper(strtr(trim($_GET['stammoe']),'*','%'));
+$jenma = $_GET['jenma']=="1"?TRUE:FALSE;
 
 
 if ($datumVon != 0 && $datumBis != 0) {
@@ -116,7 +117,11 @@ while($start<=$end){
 }
 
 
-$sql="select dpers.PersNr as persnr from dpers where (PersNr between '$persVon' and '$persBis') and (austritt is null or austritt<eintritt) and (dpersstatus='MA')";
+//$sql="select dpers.PersNr as persnr from dpers where (PersNr between '$persVon' and '$persBis') and (austritt is null or austritt<eintritt) and (dpersstatus='MA')";
+$sql="select dpers.PersNr as persnr from dpers where (PersNr between '$persVon' and '$persBis')";
+if($jenma===TRUE){
+    $sql.= " and (dpersstatus='MA')";
+}
 if((strlen($stammOE)>0) && ($stammOE!='%')){
     $sql.=" and dpers.regeloe like '%$stammOE%'";
 }

@@ -10,6 +10,7 @@ $o = json_decode($data);
 $jahr = $o->jahr;
 $monat = $o->monat;
 $jenma = $o->jenma;
+$austritt60 = $o->austritt60;
 $oeselected = $o->oeselected;
 $lock = $o->lock;
 $lockvalue = $o->lockvalue;
@@ -56,8 +57,15 @@ if ($oeselected != '*') {
     $where.=" and (dtattypen.oe='$oeselected')";
 }
 
+
 if ($jenma==TRUE) {
-    $where.=" and (dpers.dpersstatus='MA')";
+    if($austritt60==TRUE){
+	$where.=" and ((dpers.eintritt is not null) and ((dpers.dpersstatus='MA') or if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),0)<60))";
+    }
+    else{
+	$where.=" and (dpers.dpersstatus='MA')";
+    }
+    
 }
 
 if ($oeselected != '*') {

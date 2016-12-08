@@ -7,7 +7,7 @@ $apl = AplDB::getInstance();
 //$kunde = intval($_GET['kunde']);
 //if($kunde==0) exit ();
 //var_dump(AplDB::$DIRS_FOR_TEIL);
-$kunde = 355;
+$kunde = 152;
 $kundeGdatPath = $apl->getKundeGdatPath($kunde);
 $gdatPath = "/mnt/gdat/Dat/";
 // seznam dilu
