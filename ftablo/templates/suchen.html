@@ -1,0 +1,106 @@
+<div class="container-fluid" ng-controller="ftabloController">
+    <div>
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    </div>
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-12">
+		<h4>F Tablo</h4>
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    <form name="ftabloForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
+	<div class="row">
+	    <div class="col-md-6">
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="teilsuchen">Teil</label>
+		    <input ng-change="teilsuchenChanged()" ng-model="teilsuchen" type="text" class="form-control" id="teilsuchen" placeholder="hledání dílu, pro zákazníka {{kunde}}">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['teilsuchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+		<table ng-if="teile!==null && teile.length>0" class="table table-condensed table-hover table-striped">
+		    <thead>
+			<tr>
+			    <th>auftragsnr</th>
+			    <th>pal</th>
+			    <th>teil</th>
+			    <th class="text-right">im-stk</th>
+			    <th>tatkz</th>
+			    <th class="text-right">abgnr</th>
+			    <th class="text-right">gut_stk</th>
+			    <th class="text-right">A2</th>
+			    <th class="text-right">A4</th>
+			    <th class="text-right">A6</th>
+			    <th>plan</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			<tr ng-repeat="t in teile" ng-click="teilRowClicked(t,$index)">
+			    <td>{{t.auftragsnr}}</td>
+			    <td>{{t.pal}}</td>
+			    <td>{{t.teil}}</td>
+			    <td class="text-right">{{t.im_stk}}</td>
+			    <td>{{t.tat_kz}}</td>
+			    <td class="text-right">{{t.abgnr}}</td>
+			    <td class="text-right">{{t.gut_stk}}</td>
+			    <td class="text-right">{{t.a2}}</td>
+			    <td class="text-right">{{t.a4}}</td>
+			    <td class="text-right">{{t.a6}}</td>
+			    <td>{{t.termin}}</td>
+			</tr>
+		    </tbody>
+		</table>
+	    </div>
+	    <div class="col-md-6">
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="termin">Termin</label>
+		    <input ng-change="terminUpdated()" ui-date="dateOptions" ng-model="termin" type="text" class="form-control" id="termin" placeholder="">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['termin']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+		<div ng-if="v.pocet>0" class="panel panel-success" ng-repeat="(th,v) in getTeileTermin()">
+		    <div class="panel-heading">
+			<h3 class="panel-title">{{th}} {{v|json}}</h3>
+		    </div>
+		    
+		    <table ng-if="teiletermin!==null && teiletermin.length>0" class="table table-condensed table-hover table-striped">
+			<thead>
+			    <tr>
+				<th>auftragsnr</th>
+				<th>pal</th>
+				<th class="text-right">im-stk</th>
+				<th>tatkz</th>
+				<th class="text-right">abgnr</th>
+				<th class="text-right">gut_stk</th>
+				<th class="text-right">A2</th>
+				<th class="text-right">A4</th>
+				<th class="text-right">A6</th>
+				<th>plan</th>
+			    </tr>
+			</thead>
+			<tbody>
+			    <tr ng-repeat="t in teiletermin|filter:th" ng-click="teilTerminRowClicked(t,$index)">
+				<td>{{t.auftragsnr}}</td>
+				<td>{{t.pal}}</td>
+				<td class="text-right">{{t.im_stk}}</td>
+				<td>{{t.tat_kz}}</td>
+				<td class="text-right">{{t.abgnr}}</td>
+				<td class="text-right">{{t.gut_stk}}</td>
+				<td class="text-right">{{t.a2}}</td>
+				<td class="text-right">{{t.a4}}</td>
+				<td class="text-right">{{t.a6}}</td>
+				<td>{{t.termin}}</td>
+			    </tr>
+			</tbody>
+		    </table>
+
+		</div>
+	    </div>
+	</div>
+    </form>
+</div>

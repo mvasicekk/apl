@@ -142,7 +142,20 @@
 	    <!--<a href="../get_parameters.php?popisky=Geplant mit von;Geplant mit bis;Neue Seite nach Teil;Teil;Reporttyp,*RA&promenne=von;bis;teilpager;teil;reporttyp&values={{auftragInfo.auftragsnr}};{{auftragInfo.auftragsnr}};0;*;Detail,Detail mit Summen,nur Summen,Info an Kunden&report=D607" class="btn btn-xs btn-block btn-info">D607 Plan</a>-->
 	</div>
 	<div class="col-sm-3">
-	    <a ng-show="securityInfo.showArray.exportfullen" href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>
+	    <!--fullen-->
+	    <div style="margin-bottom: 4px;" class="btn-group btn-group-justified">
+	    <div class="btn-group dropup">
+	    <button ng-show="securityInfo.showArray.exportfullen" type="button" class="btn btn-xs btn-block btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		Fullen <span class="caret"></span>
+	    </button>
+	    <ul class="dropdown-menu">
+		<li><a href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}">Export / Plan</a></li>
+		<li><a href="../ftablo/ftablo.php#suchen/{{auftragInfo.kunde}}">F Tablo</a></li>
+	    </ul>
+	    </div>
+	    </div>
+	    <!--fullen end-->
+	    <!--<a ng-show="securityInfo.showArray.exportfullen" href="../dauftr/export_fullen/export_fuellen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export/Plan fullen</a>-->
 	    <a ng-show="securityInfo.showArray.exportloeschen" href="../dauftr/export_fullen/export_loeschen.php?auftragsnr={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Export loeschen</a>
 	    <a ng-show="securityInfo.showArray.exporttablo" href="../dauftr/exporttablo.php?export={{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">Exporttablo</a>
 	    <a ng-show="securityInfo.showArray.cmr" href="../cmr/cmr.php#/det/{{auftragInfo.auftragsnr}}" class="btn btn-xs btn-block btn-info">CMR</a>
