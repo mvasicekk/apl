@@ -47,3 +47,7 @@ aplApp.config(['$routeProvider','$sceProvider',
 aplApp.config(['$compileProvider', function ($compileProvider) {
   //$compileProvider.debugInfoEnabled(false);
 }]);
+
+aplApp.config(['$rootScopeProvider', function ($rootScopeProvider) {
+  //$rootScopeProvider.digestTtl(50);
+}]);

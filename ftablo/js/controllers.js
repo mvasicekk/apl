@@ -51,29 +51,25 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
 	firstDay: 1
     };
     $scope.showHelp = false;
-    //$scope.datePickerFormat = 'dd.MM.yyyy';
     $scope.securityInfo = undefined;
-
     $scope.kunde = $routeParams.kunde;
     $scope.termin = new Date();
-    
     $scope.teile = [];
     $scope.teiletermin = [];
-    //$scope.teileHeaders = {};
-    
+    teileHeaders = {};
     
     /**
      * 
      * @returns {Array}
      */
     $scope.getTeileTermin = function(){
-	var teileHeaders = {};
+	
 	if($scope.teiletermin.length>0){
 	    for(i = 0;i<$scope.teiletermin.length;i++){
 		t = $scope.teiletermin[i];
 		if(teileHeaders[t.teil]){
-		    teileHeaders[t.teil].pocet++;
-		    teileHeaders[t.teil].sumvzaby += t.im_stk*t.vzaby;
+		    //teileHeaders[t.teil].pocet++;
+		    //teileHeaders[t.teil].sumvzaby += t.im_stk*t.vzaby;
 		}
 		else{
 		    teileHeaders[t.teil] = {};
@@ -82,6 +78,7 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
 		}
 	    }
 	}
+	
 	return teileHeaders;
     }
     
@@ -118,36 +115,57 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
      * @returns {undefined}
      */
     $scope.teilRowClicked = function(t,i){
-	//console.log(t);
-	//console.log(i);
-	$scope.teile.splice(i,1);
-	//ulozit info do dauftr
-	return $http.post(
-		'./updateFTabloTermin.php',
-		{
-		    t: t,
-		    termin: $scope.termin
-		}
-	).then(function (response) {
-	    $scope.teiletermin.push(t);
-	});
+	
+	var teil = t.teil;
+	var pal = t.pal;
+	var auftragsnr = t.auftragsnr;
+	
+	var counter=$scope.teile.length;
+	console.log('counter='+counter);
+	while(counter--){
+	    itm = $scope.teile[counter];
+	    console.log('itm:');
+	    console.log(itm);
+	    
+	    if((itm.teil==teil) && (itm.pal==pal) && (itm.auftragsnr==auftragsnr)){
+		console.log('shoda');
+		//ulozit info do dauftr
+		$http.post(
+		    './updateFTabloTermin.php',
+		    {
+			t: itm,
+			termin: $scope.termin
+		    }
+		    ).then(function (response) {
+			
+		    });
+		    $scope.teiletermin.push(itm);
+		    $scope.teile.splice(counter,1);
+	    }
+	    console.log('counter='+counter);
+	}
     }
+    
     /**
      * 
      * @returns {unresolved}
      */
     $scope.teilsuchenChanged = function () {
 	console.log('teilsuchenChanged');
-	$scope.selectedIndex = -1;
 	return $http.post(
 		'./getTeile.php',
 		{
-		    termin:null,
+		    termin:0,
 		    kunde: $scope.kunde,
 		    teil: $scope.teilsuchen
 		}
 	).then(function (response) {
-	    $scope.teile = response.data.teile;
+	    if(response.data.teile!==null){
+		$scope.teile = response.data.teile;
+	    }
+	    else{
+		$scope.teile = [];
+	    }
 	});
     }
     
@@ -155,26 +173,46 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
      * 
      * @returns {unresolved}
      */
-    $scope.getTeileTermined = function () {
+    function getTeileTermined() {
 	console.log('getTeileTermined');
-	if($scope.termin!==undefined){
-	    return $http.post(
+
+	return $http.post(
 		'./getTeile.php',
 		{
 		    termin: $scope.termin,
 		    kunde: $scope.kunde,
-		    teil: null
+		    teil: ""
 		}
 	).then(function (response) {
-	    $scope.teiletermin = response.data.teile;
+	    teileHeaders = {};
+	    if(response.data.teile!==null){
+		$scope.teiletermin = response.data.teile;
+	    }
+	    else{
+		$scope.teiletermin = [];
+	    }
 	});
-	}
 	
     }
 
+
+    $scope.getRowCountForTeil = function(t){
+	return $scope.teiletermin.filter(function(item){
+	    if(item.teil==t){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	}).length;
+    }
+    /**
+     * 
+     * @returns {undefined}
+     */
     $scope.terminUpdated = function(){
 	console.log('terminUpdated');
-	$scope.getTeileTermined();
+	getTeileTermined();
     }
     
     /**
@@ -218,10 +256,12 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
 		}
 	);
     }
+    
     // init
     $scope.initSecurity();
-    //$scope.initLists();
     $scope.initHelp();
+    //$scope.initLists();
+    
     //$scope.getfirstActiveMA();
     //$scope.getTeileTermined();
     //console.log($routeParams);

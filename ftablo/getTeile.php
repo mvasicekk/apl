@@ -12,7 +12,7 @@ $teile = NULL;
 
 $a = AplDB::getInstance();
 		
-if($termin!==NULL){
+if($termin!==0){
     // vybrat terminovane radky
     $termin = date('Y-m-d',  strtotime($termin));
     $sql.=" select dauftr.auftragsnr,";
@@ -34,7 +34,8 @@ $sql.=" left join drueck on drueck.AuftragsNr=dauftr.auftragsnr and drueck.Teil=
 $sql.=" where";
 //$sql.="     LOWER(dauftr.teil) like '%$teilsuchen%'";
 $sql.="     daufkopf.kunde='$kunde'";
-$sql.="     and (dauftr.abgnr between 1100 and 1299)";
+//$sql.="     and (dauftr.abgnr between 1100 and 1299)";
+$sql.="     and (`dtaetkz-abg`.stat_nr='S0061' or `dtaetkz-abg`.stat_nr='S0062')";
 $sql.="     and dauftr.`auftragsnr-exp` is null";
 $sql.="     and dauftr.teil not like '%IM'";
 $sql.="     and dauftr.f_tablo_termin='$termin'";
@@ -71,7 +72,8 @@ $sql.="     dauftr.abgnr";
     $sql.=" where";
     $sql.="     LOWER(dauftr.teil) like '%$teilsuchen%'";
     $sql.="     and daufkopf.kunde='$kunde'";
-    $sql.="     and (dauftr.abgnr between 1100 and 1299)";
+    //$sql.="     and (dauftr.abgnr between 1100 and 1299)";
+    $sql.="     and (`dtaetkz-abg`.stat_nr='S0061' or `dtaetkz-abg`.stat_nr='S0062')";
     $sql.="     and dauftr.`auftragsnr-exp` is null";
     $sql.="     and dauftr.teil not like '%IM'";
     $sql.="     and dauftr.f_tablo_termin is null";
@@ -92,7 +94,7 @@ $teile = $a->getQueryRows($sql);
 $returnArray = array(
 	'teile'=>$teile,
 	'teilsuchen'=>$teilsuchen,
-	'sql'=>$sql
+	//'sql'=>$sql
     );
     
 echo json_encode($returnArray);

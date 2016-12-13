@@ -63,9 +63,9 @@
 		    <input ng-change="terminUpdated()" ui-date="dateOptions" ng-model="termin" type="text" class="form-control" id="termin" placeholder="">
 		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['termin']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 		</div>
-		<div ng-if="v.pocet>0" class="panel panel-success" ng-repeat="(th,v) in getTeileTermin()">
+		<div ng-if="getRowCountForTeil(th)>0" class="panel panel-success" ng-repeat="(th,v) in getTeileTermin()">
 		    <div class="panel-heading">
-			<h3 class="panel-title">{{th}} {{v|json}}</h3>
+			<h3 class="panel-title">{{th}}</h3>
 		    </div>
 		    
 		    <table ng-if="teiletermin!==null && teiletermin.length>0" class="table table-condensed table-hover table-striped">
@@ -84,7 +84,7 @@
 			    </tr>
 			</thead>
 			<tbody>
-			    <tr ng-repeat="t in teiletermin|filter:th" ng-click="teilTerminRowClicked(t,$index)">
+			    <tr ng-repeat="t in teiletermin|filter:th track by $index" ng-click="teilTerminRowClicked(t,$index)">
 				<td>{{t.auftragsnr}}</td>
 				<td>{{t.pal}}</td>
 				<td class="text-right">{{t.im_stk}}</td>
