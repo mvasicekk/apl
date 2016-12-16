@@ -23,6 +23,9 @@ and open the template in the editor.
     a[href]:after {
 	content: none;
     }
+    
+ 
+    .col-print-12 { width: 100% }
 }
 
 div.page-header{
@@ -94,6 +97,10 @@ div.popover{
 tbody.reparaturkopf>tr>td{
     font-weight: bold;
     background-color: lightgreen;
+}
+
+#toplan td.newpal{
+	border-top:2px solid blue;
 }
 /********************** stylovani oblasti v help bloku ************************/
 /*

@@ -56,32 +56,122 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
     $scope.termin = new Date();
     $scope.teile = [];
     $scope.teiletermin = [];
-    teileHeaders = {};
+    $scope.teileHeadersObj = {};
+    $scope.teileHeaders = [];
+    $scope.showPalTermin = false;
+    $scope.palOld = '';
+    
+    $scope.sortableOptions = {
+	stop: function(e, ui) {
+	    console.log('sortable stop');
+	    console.log($scope.teileHeaders);
+	    $http.post(
+			'./updateFTabloSort.php',
+			{
+			    th: $scope.teileHeaders,
+			    termin: $scope.termin
+			}
+		).then(function (response) {
+
+		});
+	}
+    };
     
     /**
      * 
      * @returns {Array}
      */
-    $scope.getTeileTermin = function(){
-	
+    function updateTeileTermin(){
+	console.log('updateTeileTermin');
+	$scope.teileHeadersObj = {};
+	$scope.teileHeaders = [];
 	if($scope.teiletermin.length>0){
 	    for(i = 0;i<$scope.teiletermin.length;i++){
 		t = $scope.teiletermin[i];
-		if(teileHeaders[t.teil]){
+		if($scope.teileHeadersObj[t.teil]){
 		    //teileHeaders[t.teil].pocet++;
 		    //teileHeaders[t.teil].sumvzaby += t.im_stk*t.vzaby;
 		}
 		else{
-		    teileHeaders[t.teil] = {};
-		    teileHeaders[t.teil].pocet = 1;
-		    teileHeaders[t.teil].sumvzaby = t.im_stk*t.vzaby;
+		    $scope.teileHeadersObj[t.teil] = {};
+		    $scope.teileHeadersObj[t.teil].pocet = 1;
+		    $scope.teileHeadersObj[t.teil].sumvzaby = t.im_stk*t.vzaby;
+		    $scope.teileHeaders.push({teil:t.teil,kunde:t.kunde});
 		}
 	    }
 	}
-	
-	return teileHeaders;
     }
     
+    
+    /**
+     * 
+     * @param {type} teil
+     * @returns {Number}
+     */
+    $scope.getAbgnrBarvaTerminedTeil = function(teil){
+	var abgnrBarva = '';
+	// pro kazdej dil a auftragsnr a paletu nascitat kusy jen jednou
+	var teilArray = $scope.teiletermin.filter(function(it){
+	    if(it.teil==teil){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	});
+	var abgnrOld=0;
+	
+	for(i = 0;i<teilArray.length;i++){
+	    itm = teilArray[i];
+	    if((itm.abgnr!==abgnrOld) && (itm.abgnr>=1100) && (itm.abgnr<=1299)){
+		abgnrBarva += itm.abgnr;//+' / ' + numeral(itm.vzaby).format('0,0.00') + ' min';
+		abgnrOld = itm.abgnr;
+	    }
+	}
+	return abgnrBarva;
+    }
+    /**
+     * 
+     * @param {type} teil
+     * @returns {Number}
+     */
+    $scope.getStkTerminedTeil = function(teil){
+	var sumStk = 0;
+	// pro kazdej dil a auftragsnr a paletu nascitat kusy jen jednou
+	var teilArray = $scope.teiletermin.filter(function(it){
+	    if(it.teil==teil){
+		return true;
+	    }
+	    else{
+		return false;
+	    }
+	});
+	
+	var auftrOld=0;
+	var palOld=0;
+	
+	for(i = 0;i<teilArray.length;i++){
+	    itm = teilArray[i];
+	    if(itm.auftragsnr!==auftrOld || itm.pal!==palOld){
+		sumStk += parseInt(itm.im_stk);
+		auftrOld = itm.auftragsnr;
+		palOld = itm.pal;
+	    }
+	}
+	return sumStk;
+    }
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.getVzAbyTermined = function(){
+	var sumVzAby = 0;
+	for(i = 0;i<$scope.teiletermin.length;i++){
+	    itm = $scope.teiletermin[i];
+	    sumVzAby += itm.im_stk * itm.vzaby;
+	}
+	return sumVzAby;
+    }
     /**
      * 
      * @param {type} t
@@ -89,23 +179,30 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
      * @returns {undefined}
      */
     $scope.teilTerminRowClicked = function (t, i) {
-	for (i = 0; i < $scope.teiletermin.length; i++) {
-	    //najit polozku, kterou chci smazat podle auftragsnr,teil,pal
-	    var p = $scope.teiletermin[i];
-	    if (p.auftragsnr == t.auftragsnr && p.teil == t.teil && p.pal == t.pal) {
-		$scope.teiletermin.splice(i, 1);
-		return $http.post(
+
+	var teil = t.teil;
+	var pal = t.pal;
+	var auftragsnr = t.auftragsnr;
+
+	var counter = $scope.teiletermin.length;
+
+	while (counter--) {
+	    itm = $scope.teiletermin[counter];
+	    if ((itm.teil == teil) && (itm.pal == pal) && (itm.auftragsnr == auftragsnr)) {
+		//ulozit info do dauftr
+		$http.post(
 			'./updateFTabloTermin.php',
 			{
-			    t: t,
+			    t: itm,
 			    termin: null
 			}
 		).then(function (response) {
+
 		});
-		break;
+		$scope.teiletermin.splice(counter, 1);
 	    }
 	}
-	//$scope.teiletermin.push(t);
+	updateTeileTermin();
     }
     
     /**
@@ -114,44 +211,58 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
      * @param {type} i
      * @returns {undefined}
      */
-    $scope.teilRowClicked = function(t,i){
-	
+    $scope.teilRowClicked = function (t, i) {
+
 	var teil = t.teil;
 	var pal = t.pal;
 	var auftragsnr = t.auftragsnr;
-	
-	var counter=$scope.teile.length;
-	console.log('counter='+counter);
-	while(counter--){
+
+	var counter = $scope.teile.length;
+	while (counter--) {
 	    itm = $scope.teile[counter];
-	    console.log('itm:');
-	    console.log(itm);
-	    
-	    if((itm.teil==teil) && (itm.pal==pal) && (itm.auftragsnr==auftragsnr)){
-		console.log('shoda');
-		//ulozit info do dauftr
-		$http.post(
-		    './updateFTabloTermin.php',
-		    {
-			t: itm,
-			termin: $scope.termin
-		    }
+	    if ((itm.teil == teil) && (itm.pal == pal) && (itm.auftragsnr == auftragsnr)) {
+		if((itm.statnr=='S0061' || itm.statnr=='S0062')){
+		    //do terminu presunu jen "barevne" operace
+		    //ulozit info do dauftr
+		    $http.post(
+			'./updateFTabloTermin.php',
+			{
+			    t: itm,
+			    termin: $scope.termin
+			}
 		    ).then(function (response) {
-			
+
 		    });
 		    $scope.teiletermin.push(itm);
-		    $scope.teile.splice(counter,1);
+		}
+		
+		$scope.teile.splice(counter, 1);
 	    }
-	    console.log('counter='+counter);
 	}
+	updateTeileTermin();
     }
     
+    /**
+     * 
+     * @param {type} pal
+     * @returns {undefined}
+     */
+    $scope.isNewPal = function(pal){
+	if(pal!==$scope.palOld){
+	    $scope.palOld=pal;
+	    return true;
+	}
+	else{
+	    return false;
+	}
+    }
     /**
      * 
      * @returns {unresolved}
      */
     $scope.teilsuchenChanged = function () {
 	console.log('teilsuchenChanged');
+	$scope.palOld='';
 	return $http.post(
 		'./getTeile.php',
 		{
@@ -184,9 +295,11 @@ aplApp.controller('ftabloController', function ($scope, $routeParams, $http, $ti
 		    teil: ""
 		}
 	).then(function (response) {
-	    teileHeaders = {};
+	    $scope.teileHeadersObj = {};
+	    $scope.teileHeaders = [];
 	    if(response.data.teile!==null){
 		$scope.teiletermin = response.data.teile;
+		updateTeileTermin();
 	    }
 	    else{
 		$scope.teiletermin = [];

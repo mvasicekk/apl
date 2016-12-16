@@ -18,13 +18,13 @@
 
     <form name="ftabloForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
 	<div class="row">
-	    <div class="col-md-6">
+	    <div class="col-md-6 no-print">
 		<div class="form-group form-group-sm">
 		    <label class="control-label" for="teilsuchen">Teil</label>
-		    <input ng-change="teilsuchenChanged()" ng-model="teilsuchen" type="text" class="form-control" id="teilsuchen" placeholder="hledání dílu, pro zákazníka {{kunde}}">
+		    <input ng-change="teilsuchenChanged()" ng-model="teilsuchen" type="text" class="form-control" id="teilsuchen" placeholder="hledání dílu, zadejte min. 3 znaky">
 		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['teilsuchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 		</div>
-		<table ng-if="teile!==null && teile.length>0" class="table table-condensed table-hover table-striped">
+		<table id='toplan' ng-if="teile!==null && teile.length>0" class="table table-condensed table-hover table-striped">
 		    <thead>
 			<tr>
 			    <th>auftragsnr</th>
@@ -41,34 +41,57 @@
 			</tr>
 		    </thead>
 		    <tbody>
-			<tr ng-repeat="t in teile" ng-click="teilRowClicked(t,$index)">
-			    <td>{{t.auftragsnr}}</td>
-			    <td>{{t.pal}}</td>
-			    <td>{{t.teil}}</td>
-			    <td class="text-right">{{t.im_stk}}</td>
-			    <td>{{t.tat_kz}}</td>
-			    <td class="text-right">{{t.abgnr}}</td>
-			    <td class="text-right">{{t.gut_stk}}</td>
-			    <td class="text-right">{{t.a2}}</td>
-			    <td class="text-right">{{t.a4}}</td>
-			    <td class="text-right">{{t.a6}}</td>
-			    <td>{{t.termin}}</td>
+			<tr ng-init="isnewpal=isNewPal(t.pal)" ng-repeat="t in teile" ng-click="teilRowClicked(t,$index)">
+			    <td ng-class="{newpal:isnewpal}">{{t.auftragsnr}}</td>
+			    <td ng-class="{newpal:isnewpal}">{{t.pal}}</td>
+			    <td ng-class="{newpal:isnewpal}">{{t.teil}}</td>
+			    <td ng-class="{newpal:isnewpal,'text-right':true}">{{t.im_stk}}</td>
+			    <td ng-class="{newpal:isnewpal}">{{t.tat_kz}}</td>
+			    <td ng-class="{newpal:isnewpal,'text-right':true}">{{t.abgnr}}</td>
+			    <td ng-class="{newpal:isnewpal,'text-right':true}">{{t.gut_stk}}</td>
+			    <td ng-class="{newpal:isnewpal,'text-right':true}">{{t.a2}}</td>
+			    <td ng-class="{newpal:isnewpal,'text-right':true}">{{t.a4}}</td>
+			    <td ng-class="{newpal:isnewpal,'text-right':true}">{{t.a6}}</td>
+			    <td ng-class="{newpal:isnewpal}">{{t.termin}}</td>
 			</tr>
 		    </tbody>
 		</table>
 	    </div>
-	    <div class="col-md-6">
+	    <div class="col-md-6 col-print-12">
+		<!--pro tisk se pouzije col-print-12, abych to roztahnul na celou sirku stranky-->
 		<div class="form-group form-group-sm">
 		    <label class="control-label" for="termin">Termin</label>
 		    <input ng-change="terminUpdated()" ui-date="dateOptions" ng-model="termin" type="text" class="form-control" id="termin" placeholder="">
 		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['termin']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-		</div>
-		<div ng-if="getRowCountForTeil(th)>0" class="panel panel-success" ng-repeat="(th,v) in getTeileTermin()">
-		    <div class="panel-heading">
-			<h3 class="panel-title">{{th}}</h3>
+		    <div class="no-print">
+			<div class="checkbox">
+			    <label>
+			        <input type="checkbox" ng-model="showPalTermin"> zobrazit palety
+			    </label>
+			</div>
 		    </div>
-		    
-		    <table ng-if="teiletermin!==null && teiletermin.length>0" class="table table-condensed table-hover table-striped">
+		    <div class="row well-sm">
+			<div class="col-sm-6">VzAby - suma</div>
+			<div class="col-sm-6 text-right">{{getVzAbyTermined()|numeraljs:'0,0'}} min</div>
+			
+		    </div>
+		</div>
+		<!--<p>{{teileHeaders|json}}</p>-->
+		<div ui-sortable="sortableOptions" ng-model="teileHeaders">
+		    <div ng-if="getRowCountForTeil(th.teil)>0" class="panel panel-success" ng-repeat="th in teileHeaders">
+		    <!--<div ng-if="getRowCountForTeil(th)>0" class="panel panel-success" ng-repeat="(th,v) in teileHeaders">-->
+		    <div class="panel-heading">
+			<div class="row">
+			    <div class="col-sm-4">
+				<h3 class="panel-title">{{th.kunde}} - {{th.teil}}</h3>
+			    </div>
+			    <div class="col-sm-2">
+				<span class="badge">{{getAbgnrBarvaTerminedTeil(th.teil)}}</span>
+			    </div>
+			    <div class="col-sm-6 text-right"><span class="badge">{{getStkTerminedTeil(th.teil)}} ks</span></div>
+			</div>
+		    </div>
+		    <table ng-show="showPalTermin" ng-if="teiletermin!==null && teiletermin.length>0" class="table table-condensed table-hover table-striped">
 			<thead>
 			    <tr>
 				<th>auftragsnr</th>
@@ -84,7 +107,7 @@
 			    </tr>
 			</thead>
 			<tbody>
-			    <tr ng-repeat="t in teiletermin|filter:th track by $index" ng-click="teilTerminRowClicked(t,$index)">
+			    <tr ng-repeat="t in teiletermin|filter:th.teil track by $index" ng-click="teilTerminRowClicked(t,$index)">
 				<td>{{t.auftragsnr}}</td>
 				<td>{{t.pal}}</td>
 				<td class="text-right">{{t.im_stk}}</td>
@@ -99,6 +122,7 @@
 			</tbody>
 		    </table>
 
+		</div>
 		</div>
 	    </div>
 	</div>
