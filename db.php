@@ -1733,6 +1733,41 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	return $bewertung;
     }
     
+    
+    public function getSvatkyTagePers($von,$bis,$persvon,$persbis){
+	$persArray = NULL;
+	$sql.= " select dzeit.PersNr as persnr,";
+	$sql.= " dzeit.Datum,";
+	$sql.= " calendar.cislodne,";
+	$sql.= " calendar.svatek";
+	$sql.= " from dzeit";
+	$sql.= " join calendar on calendar.datum=dzeit.Datum";
+	$sql.= " join dtattypen on dtattypen.tat=dzeit.tat";
+	$sql.= " where";
+	$sql.= " dzeit.PersNr between '$persvon' and '$persbis'";
+	$sql.= " and";
+	$sql.= " dzeit.datum between '$von' and '$bis'";
+	$sql.= " and";
+	$sql.= " calendar.svatek<>0";
+	$sql.= " and ";
+	$sql.= " calendar.cislodne<>7";
+	$sql.= " and";
+	$sql.= " dtattypen.oestatus='a'";
+	$sql.= " group by";
+	$sql.= " dzeit.PersNr,";
+	$sql.= " dzeit.datum";
+	
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    $persArray = array();
+	    foreach($rows as $r){
+		$persnr = $r['persnr'];
+		$persArray[$persnr]++; 
+	    }
+	}
+	
+	return $persArray;
+    }
     /**
      * 
      * @param type $kunde

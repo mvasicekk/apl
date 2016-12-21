@@ -1,4 +1,4 @@
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <?php
 session_start();
 require_once '../db.php';
@@ -281,11 +281,11 @@ $bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
 $user = $_SESSION['user'];
 $password = $_GET['password'];
 
-printf("monat: %02d\n",$monat);
-printf("jahr: %04d\n",$jahr);
-printf("persvon: %05d\n",$persvon);
-printf("persbis: %05d\n",$persbis);
-echo "<hr>";
+//printf("monat: %02d\n",$monat);
+//printf("jahr: %04d\n",$jahr);
+//printf("persvon: %05d\n",$persvon);
+//printf("persbis: %05d\n",$persbis);
+//echo "<hr>";
 
 //$pA = array(2411,4815,2440,5887,276,567,5557,2310,1490);
 $sql = "select dpers_isp.PersNr as persnr from dpers_isp where PersNr between '$persvon' and '$persbis' order by PersNr";
@@ -569,6 +569,7 @@ if($rows!=NULL){
     }
 }
 
+$persSvatkyTageRows = $a->getSvatkyTagePers($von,$bis,$persvon,$persbis);
 
 //AplDB::varDump($persQPremieRows);
 
@@ -699,7 +700,9 @@ foreach ($persRows as $persnr=>$persnrA){
 	$nvStunden = $persRows[$persnr]['grundinfo']['stunden_nv'];
 	$nvTage = $persRows[$persnr]['grundinfo']['tage_nv'];
 	$svatekStunden = $persRows[$persnr]['grundinfo']['stunden_svatek'];
-	$svatekTage = $persRows[$persnr]['grundinfo']['tage_svatek'];
+	
+	//$svatekTage = $persRows[$persnr]['grundinfo']['tage_svatek'];
+	
 	$d = $dTage;
 	$nw = $persRows[$persnr]['grundinfo']['tage_nw'];
 	$nachtStunden = $persRows[$persnr]['grundinfo']['nachtstd'];
@@ -720,6 +723,17 @@ foreach ($persRows as $persnr=>$persnrA){
 	    $bQPremie_akkord = FALSE;
 	}
     }
+    
+    //svatky dny jinak
+    if($persSvatkyTageRows!==NULL){
+	if(is_array($persSvatkyTageRows)){
+	    if(array_key_exists($persnr, $persSvatkyTageRows)){
+		$svatekTage = $persSvatkyTageRows[$persnr];
+	    }
+	}
+    }
+    //--------------------------------------------------------------------------
+    
     if(array_key_exists($persnr, $persLeistRows)){
 	$betragZeit = ($persLeistRows[$persnr]['vzaby']-$persLeistRows[$persnr]['vzaby_akkord'])*$persLohnFaktor;
 	$betragAkkord = $persLeistRows[$persnr]['vzaby_akkord_kc'];
@@ -946,9 +960,88 @@ foreach ($msRows as $r){
 }
 file_put_contents($path, $fileRows);
 
-/*
-foreach ($msRows as $msRow){
-    echo $msRow."<br>";
-}
- * */
-//AplDB::varDump($msRows);
+//
+//date_default_timezone_set('Europe/Prague');
+//
+///** PHPExcel */
+//require_once '../Classes/PHPExcel.php';
+//
+//// Create new PHPExcel object
+//$objPHPExcel = new PHPExcel();
+//
+////$user = get_user_pc();
+//$user = "aplgenerator";
+//// Set properties
+//$objPHPExcel->getProperties()->setCreator($user)
+//							 ->setLastModifiedBy($user)
+//							 ->setTitle("E143")
+//							 ->setSubject("E143")
+//							 ->setDescription("E143")
+//							 ->setKeywords("office openxml php")
+//							 ->setCategory("phpexcel");
+//
+//// popisky sloupcu
+//$radek = 2;
+//$sloupec = 1;
+//
+//$popisky = array(
+//    "rok",
+//    "mesic",
+//    "str",
+//    "persnr",
+//    "mzd",
+//    "castka",
+//    "dny",
+//    "hodiny",
+//    "a1",
+//    "a2",
+//    "a3",
+//    "a4",
+//    "od",
+//    "do",
+//    "comment"
+//);
+//
+//foreach($popisky as $p){
+//    //echo "$p";
+//    $objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($sloupec, $radek, $sloupec);
+//    $sloupec++;
+//}
+//
+//
+//$radek++;
+//$sloupec = 1;
+//
+//
+//foreach ($msRows as $row){
+//    $exrowA = split(';', $row['exrow']);
+//    $comment = $row['comment'];
+//    foreach ($exrowA as $p){
+//	$objPHPExcel->setActiveSheetIndex(0)
+//            ->setCellValueByColumnAndRow($sloupec, $radek, $p);
+//	$sloupec++;
+//    }
+//    $objPHPExcel->setActiveSheetIndex(0)
+//            ->setCellValueByColumnAndRow($sloupec, $radek, $comment);
+//    $radek++;
+//    $sloupec = 1;
+//}
+//
+//
+//// Rename sheet
+////$objPHPExcel->getActiveSheet()->setTitle('E143');
+//
+//
+//// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+//
+//$objPHPExcel->setActiveSheetIndex(0);
+//
+//
+//// Redirect output to a client’s web browser (Excel5)
+//header('Content-Type: application/vnd.ms-excel');
+//header('Content-Disposition: attachment;filename="E143.xls"');
+//header('Cache-Control: max-age=0');
+//
+//$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+//$objWriter->save('php://output');
+//exit;
