@@ -139,8 +139,8 @@ $sql.="     YEAR(Datum) as jahr,";
 $sql.="     MONTH(Datum) as monat,";
 $sql.="     drueck.oe,";
 $sql.="     sum(if(auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*`VZ-SOLL`,(drueck.`Stück`)*`VZ-SOLL`)) as sum_vzkd,";
-$sql.="     sum(if(TaetNr between 6400 and 6499,ABS(drueck.`Stück`)*`VZ-IST`,0)) as sum_vzaby_64XX,";
-$sql.="     sum(if(TaetNr between 6500 and 6599,ABS(drueck.`Stück`)*`VZ-IST`,0)) as sum_vzaby_65XX";
+$sql.="     sum(if(TaetNr between 6400 and 6499,(drueck.`Stück`)*`VZ-IST`,0)) as sum_vzaby_64XX,";
+$sql.="     sum(if(TaetNr between 6500 and 6599,(drueck.`Stück`)*`VZ-IST`,0)) as sum_vzaby_65XX";
 $sql.=" from drueck";
 $sql.=" join daufkopf on daufkopf.auftragsnr=drueck.AuftragsNr";
 $sql.=" where";
@@ -175,8 +175,8 @@ if($repArray!==NULL){
 	
 	//$oe = $oeSchicht;	    
 	
-	$vzaby64xx = $rep['sum_vzaby_64XX'];
-	$vzaby65xx = $rep['sum_vzaby_65XX'];
+	$vzaby64xx = abs($rep['sum_vzaby_64XX']);   // absolutni hodnota az celkove sumy
+	$vzaby65xx = abs($rep['sum_vzaby_65XX']);
 	$vzkd = $rep['sum_vzkd'];
 	$jm = sprintf("%04d-%02d",$rep['jahr'],$rep['monat']);	
 	
