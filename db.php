@@ -1734,7 +1734,35 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
     
     
-    public function getSvatkyTagePers($von,$bis,$persvon,$persbis){
+    public function getSvatkyTageCount($von,$bis){
+	$sql.=" select";
+	$sql.=" calendar.datum";
+	$sql.=" from";
+	$sql.=" calendar";
+	$sql.=" where";
+	$sql.=" calendar.svatek<>0";
+	$sql.=" and";
+	$sql.=" calendar.cislodne<6";
+	$sql.=" and";
+	$sql.=" calendar.datum between '$von' and '$bis'";
+	$rows = $this->getQueryRows($sql);
+	if($rows!==NULL){
+	    return count($rows);
+	}
+	else{
+	    return 0;
+	}
+    }
+    
+    /**
+     * 
+     * @param type $von
+     * @param type $bis
+     * @param type $persvon
+     * @param type $persbis
+     * @return array
+     */
+    public function getSvatkyTagePers($von,$bis,$persvon,$persbis,$nurArbeitsTage = TRUE){
 	$persArray = NULL;
 	$sql.= " select dzeit.PersNr as persnr,";
 	$sql.= " dzeit.Datum,";
@@ -1751,8 +1779,12 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
 	$sql.= " calendar.svatek<>0";
 	$sql.= " and ";
 	$sql.= " calendar.cislodne<>7";
-	$sql.= " and";
-	$sql.= " dtattypen.oestatus='a'";
+	$sql.= " and ";
+	$sql.= " calendar.cislodne<>6";
+	if($nurArbeitsTage===TRUE){
+	    $sql.= " and";
+	    $sql.= " dtattypen.oestatus='a'";
+	}
 	$sql.= " group by";
 	$sql.= " dzeit.PersNr,";
 	$sql.= " dzeit.datum";

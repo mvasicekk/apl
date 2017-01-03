@@ -42,6 +42,15 @@ $exPol = array(
 	"betrag"=>0,
 	"aktiv"=>1
     ),
+    "510"=>array(
+	"popis"=>"nahrada za svatek",
+	"stunden"=>1,
+	"stundenDB"=>"calSvatekStunden",
+	"tage"=>1,
+	"tageDB"=>"calSvatekTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
     //TODO
     "202"=>array(
 	"popis"=>"příplatek za práci ve svátek",
@@ -570,6 +579,7 @@ if($rows!=NULL){
 }
 
 $persSvatkyTageRows = $a->getSvatkyTagePers($von,$bis,$persvon,$persbis);
+$persSvatkyAllTageRows = $a->getSvatkyTagePers($von,$bis,$persvon,$persbis,FALSE);
 
 //AplDB::varDump($persQPremieRows);
 
@@ -673,6 +683,9 @@ foreach ($persRows as $persnr=>$persnrA){
     $nvTage = 0;
     $svatekStunden = 0;
     $svatekTage = 0;
+    $svatekAllTage = 0;
+    $calSvatekStunden = 0;
+    $calSvatekTage = 0;
     
     
     if(array_key_exists($persnr, $persRows)){
@@ -731,6 +744,25 @@ foreach ($persRows as $persnr=>$persnrA){
 		$svatekTage = $persSvatkyTageRows[$persnr];
 	    }
 	}
+    }
+    
+    if($persSvatkyAllTageRows!==NULL){
+	if(is_array($persSvatkyAllTageRows)){
+	    if(array_key_exists($persnr, $persSvatkyAllTageRows)){
+		$svatekAllTage = $persSvatkyAllTageRows[$persnr];
+	    }
+	}
+    }
+    
+    $cal1Svatek = $a->getSvatkyTageCount($von, $bis);
+    if($cal1Svatek>$svatekAllTage){
+	$calSvatekTage = $cal1Svatek-$svatekAllTage;
+	//TODO 8 nahradit uvazkem, max. 8 hodin
+	$regelStunden = $a->getRegelarbzeit($persnr);
+	if($regelStunden>8){
+	    $regelStunden = 8;
+	}
+	$calSvatekStunden = $calSvatekTage * $regelStunden;
     }
     //--------------------------------------------------------------------------
     
@@ -900,6 +932,8 @@ foreach ($persRows as $persnr=>$persnrA){
 	"nTage"=>$nTage,
 	"svatekStunden"=>$svatekStunden,
 	"svatekTage"=>$svatekTage,
+	"calSvatekStunden"=>$calSvatekStunden,
+	"calSvatekTage"=>$calSvatekTage,
     );
 }
 
