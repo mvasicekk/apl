@@ -482,21 +482,32 @@ $pdf->Ln();
 
 
 $pdf->Cell($mntWidth+$bewWidth,$rowHeight,  'Punktebewertung','LRTB',0,'L',$fill);
+$gesamtSummenKunden_E_p = 0;
+$gesamtSummenKunden_I_p = 0;
 foreach($jahrMonatArray as $jm=>$v5){
     $bewE = $a->getBewertungKriterium(100, "q_S367_rekl", $monatSummenKunden[$jm]['E']['bewertung'], 'bis', substr($jm,2), 1);
     $bewI = $a->getBewertungKriterium(100, "q_S367_rekl", $monatSummenKunden[$jm]['I']['bewertung'], 'bis', substr($jm,2), 1);
-    $gesamtSummenKunden['E']['punkte'] += $bewE;
-    $gesamtSummenKunden['I']['punkte'] += $bewI;
+//    $gesamtSummenKunden['E']['punkte'] += $bewE;
+//    $gesamtSummenKunden['I']['punkte'] += $bewI;
+    $gesamtSummenKunden_E_p += $bewE;
+    $gesamtSummenKunden_I_p += $bewI;
 
     $pdf->Cell($sWidth/2,$rowHeight,$bewE,'LRTB',0,'R',0);
     $pdf->Cell($sWidth/2,$rowHeight,$bewI,'LRTB',0,'R',0);
 }
 //Kompletni suma
 $pdf->SetFillColor(212,208,208); //grey
-$e = count($jahrMonatArray)!=0?$gesamtSummenKunden['E']['punkte']/count($jahrMonatArray):0;
-$e = number_format($e,0,',',' ');
-$i = count($jahrMonatArray)!=0?$gesamtSummenKunden['I']['punkte']/count($jahrMonatArray):0;
-$i = number_format($i,0,',',' ');
+$e = count($jahrMonatArray)!=0?$gesamtSummenKunden['E']['bewertung']/count($jahrMonatArray):0;
+$i = count($jahrMonatArray)!=0?$gesamtSummenKunden['I']['bewertung']/count($jahrMonatArray):0;
+//$e = count($jahrMonatArray)!=0?$gesamtSummenKunden['E']['punkte']/count($jahrMonatArray):0;
+$bewE = $a->getBewertungKriterium(100, "q_S367_rekl", $e, 'bis', substr($jm,2), 1);
+$bewI = $a->getBewertungKriterium(100, "q_S367_rekl", $i, 'bis', substr($jm,2), 1);
+    
+//$e = count($jahrMonatArray)!=0?$gesamtSummenKunden_E_p/count($jahrMonatArray):0;
+$e = number_format($bewE,0,',',' ');
+//$i = count($jahrMonatArray)!=0?$gesamtSummenKunden['I']['punkte']/count($jahrMonatArray):0;
+//$i = count($jahrMonatArray)!=0?$gesamtSummenKunden_I_p/count($jahrMonatArray):0;
+$i = number_format($bewI,0,',',' ');
 
 $pdf->Cell($sWidth/2,$rowHeight,$e,'LRTB',0,'R',1);
 $pdf->Cell($sWidth/2,$rowHeight,$i,'LRTB',0,'R',1);

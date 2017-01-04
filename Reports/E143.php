@@ -405,6 +405,100 @@ if($rows!=NULL){
 	//$persRows[$persnr][$datum] = $r;
     }
 }
+
+//kontrola, zda ze samotneho apl nedostanu vic lidi nez pri propojeni s Premierem
+$sql="";
+$sql.=" select";
+$sql.="     dpers.persnr,";
+$sql.="     dpers.`Name` as name,";
+$sql.="     dpers.`Vorname` as vorname,";
+$sql.="     CONCAT(dpers.`Name`,' ',dpers.`Vorname`) as vollname,";
+$sql.="     dpers.lohnfaktor/60 as perslohnfaktor,";
+$sql.="     dpers.leistfaktor,";
+$sql.="     dpers.premie_za_vykon,";
+$sql.="     dpers.regeloe,";
+$sql.="     dpers.alteroe,";
+$sql.="     dpers.premie_za_kvalitu,";
+$sql.="     dpers.qpremie_akkord,";
+$sql.="     dpers.qpremie_zeit,";
+$sql.="     dpers.premie_za_prasnost,";
+$sql.="     dpers.premie_za_3_mesice,";
+$sql.="     dpers.MAStunden,";
+$sql.="     dpers.dpersstatus,";
+$sql.="     if(dpersbewerber.exekution is null,0,dpersbewerber.exekution) as exekution,";
+$sql.="     DATE_FORMAT(dpers.eintritt,'%y-%m-%d') as eintritt,";
+$sql.="     DATE_FORMAT(dpers.austritt,'%y-%m-%d') as austritt,";
+$sql.="     DATE_FORMAT(dpers.geboren,'%Y-%m-%d') as geboren,";
+$sql.="     DATE_FORMAT(dpersdetail1.dobaurcita,'%y-%m-%d') as dobaurcita,";
+$sql.="     DATE_FORMAT(dpersdetail1.zkusebni_doba_dobaurcita,'%y-%m-%d') as zkusebni_doba_dobaurcita,";
+//$sql.="     dzeit.Datum as datum,";
+$sql.="     sum(dzeit.`Stunden`) as sumstunden,";
+$sql.="     sum(if(dtattypen.oestatus='a',dzeit.`Stunden`,0)) as sumstundena,";
+$sql.="     sum(if(dtattypen.oestatus='a' and dtattypen.akkord<>0,dzeit.`Stunden`,0)) as sumstundena_akkord,";
+$sql.="     sum(if(dtattypen.erschwerniss<>0,dzeit.`Stunden`*6,0)) as erschwerniss,";
+$sql.="     sum(if(dzeit.tat='z',1,0)) as tage_z,";
+$sql.="     sum(if(dzeit.tat='z',dzeit.Stunden,0)) as stunden_z,";
+$sql.="     sum(if(dzeit.tat='nv',1,0)) as tage_nv,";
+$sql.="     sum(if(dzeit.tat='nv',dzeit.Stunden,0)) as stunden_nv,";
+$sql.="     sum(if(dzeit.tat='nw',1,0)) as tage_nw,";
+$sql.="     sum(if(dzeit.tat='d',1,0)) as tage_d,";
+$sql.="     sum(if(dzeit.tat='d',dzeit.Stunden,0)) as stunden_d,";
+$sql.="     sum(if(dzeit.tat='np',1,0)) as tage_np,";
+$sql.="     sum(if(dzeit.tat='n',1,0)) as tage_n,";
+$sql.="     sum(if(dzeit.tat='n',dzeit.Stunden,0)) as stunden_n,";
+$sql.="     sum(if(dzeit.tat='nu',1,0)) as tage_nu,";
+$sql.="     sum(if(dzeit.tat='p',1,0)) as tage_p,";
+$sql.="     sum(if(dzeit.tat='p',dzeit.Stunden,0)) as stunden_p,";
+$sql.="     sum(if(dzeit.tat='u',1,0)) as tage_u,";
+$sql.="     sum(if(dzeit.tat='?',1,0)) as tage_frage";
+$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,dzeit.Stunden/8,0)) as tage_svatek";
+$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,dzeit.Stunden,0)) as stunden_svatek";
+$sql.="     ,sum(if(dtattypen.fr_sp='N',dzeit.stunden,0)) as nachtstd";
+$sql.="     ,durlaub1.jahranspruch";
+$sql.="     ,durlaub1.rest";
+$sql.="     ,durlaub1.gekrzt";
+$sql.=" from dpers";
+$sql.=" join dzeit on dzeit.PersNr=dpers.PersNr";
+$sql.=" join dtattypen on dzeit.tat=dtattypen.tat";
+$sql.=" join calendar on calendar.datum=dzeit.Datum";
+$sql.=" left join dpersdetail1 on dpersdetail1.persnr=dpers.`PersNr`";
+$sql.=" left join dpersbewerber on dpersbewerber.persnr=dpers.`PersNr`";
+$sql.=" left join durlaub1 on durlaub1.`PersNr`=dpers.`PersNr`";
+$sql.=" where";
+$sql.=" (";
+$sql.="     (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
+$sql.="     and (dzeit.`Datum` between '$von' and '$bis')";
+$sql.="     and (dpers.persnr between '$persvon' and '$persbis')";
+$sql.=" )";
+$sql.=" group by ";
+$sql.="     dpers.`PersNr`";
+
+$rows = $a->getQueryRows($sql);
+$persAplRows = array();
+
+if($rows!=NULL){
+    foreach ($rows as $r){
+	$persnr = $r['persnr'];
+	//$datum = $r['datum'];
+	$persAplRows[$persnr]['grundinfo'] = $r;
+	//$persRows[$persnr][$datum] = $r;
+    }
+}
+
+if(count($persAplRows)!=count($persRows)){
+    echo "rozdil mezi poctem MA ze samotneho APL a z APL kombinovanym s Premierem<hr>";
+    echo "pocet(aplonly)=".count($persAplRows).", pocet(apl+premier)=".count($persRows)."<br>";
+    foreach ($persAplRows as $persnr=>$pr){
+	if(array_key_exists($persnr, $persRows)){
+	    //mam
+	}
+	else{
+	    //nemam
+	    echo $persnr." - ".$pr['grundinfo']['name'].' '.$pr['grundinfo']['vorname']."<br>";
+	}
+    }
+    exit;
+}
 //AplDB::varDump($persRows);
 
 //transport
