@@ -19,6 +19,9 @@ if ($ucetniJednotka == "") {
 
 echo "----- START updateDpersFromPremier ($ucetniJednotka) on :" . date('Y-m-d H:i:s') . " ----- \n";
 $sqlDB = sqldb::getInstance($ucetniJednotka);
+//pod
+// cele pole pujde dolu
+// vnitrni cyklus foreach
 
 /**
  * 
@@ -137,6 +140,7 @@ function updateAplPersnr($zCislo, $field, $value, $oldValue, $table = 'dpers_isp
 
 $res = $sqlDB->getResult("select * from fl_PERSONAL_APL_view order by Z_CISLO,PP_CISLO");
 
+// polovicni pole
 
 $persArray = array();
 if ($res !== NULL) {
@@ -144,6 +148,7 @@ if ($res !== NULL) {
 	$zCislo = $ucetniJednotka . '_' . intval($r['Z_CISLO']);
 	if (!array_key_exists($zCislo, $persArray)) {
 	    $persArray[$zCislo]['pp'] = array();
+	    // persnr dwedhiwuedh d  wdhqwoeiduh
 	}
 	$persArray[$zCislo]['zPrijmeni'] = iconv('windows-1250', 'UTF-8', trim($r['Z_PRIJMENI']));
 	$persArray[$zCislo]['zJmeno'] = iconv('windows-1250', 'UTF-8', trim($r['Z_JMENO']));
@@ -180,7 +185,11 @@ if ($res !== NULL) {
     }
 }
 
+
+
 //seznam lidi z apl ============================================================
+
+
 
 $sql = "select";
 $sql.=" dpers_isp.persnr,";

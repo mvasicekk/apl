@@ -497,7 +497,7 @@ if(count($persAplRows)!=count($persRows)){
 	    echo $persnr." - ".$pr['grundinfo']['name'].' '.$pr['grundinfo']['vorname']."<br>";
 	}
     }
-    exit;
+    //exit;
 }
 //AplDB::varDump($persRows);
 

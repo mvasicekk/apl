@@ -3567,7 +3567,7 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	$sql.=" from calendar";
 	$sql.=" where";
 	$sql.=" (svatek<>0)";
-	$sql.=" and (cislodne<>7)";
+	$sql.=" and (cislodne<6)";
 	$sql.=" and (datum between '$von' and '$bis')";
 	$r=$this->getQueryRows($sql);
 	if($r!==NULL){
