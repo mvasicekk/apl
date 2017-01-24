@@ -953,6 +953,12 @@ public function getZeitVorschlag($kunde,$teil,$tatnr,$typ)
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $login
+     * @param type $pin
+     * @return boolean
+     */
     public function checkUserPIN($login,$pin){
 	$salt = "abydosgates";
 	$pin = md5($pin);
@@ -1021,7 +1027,11 @@ public function getZeitVorschlag($kunde,$teil,$tatnr,$typ)
 	return $this->getQueryRows($sql);
     }
 
-    
+/**
+ * 
+ * @param type $imanr
+ * @return type
+ */    
 public function getDMAInfo($imanr){
     $sql = "select * from dma where imanr='$imanr'";
     return $this->getQueryRows($sql);
@@ -1734,6 +1744,12 @@ public function insertAccessLog($username,$password,$prihlasen,$host)
     }
     
     
+    /**
+     * 
+     * @param type $von
+     * @param type $bis
+     * @return int
+     */
     public function getSvatkyTageCount($von,$bis){
 	$sql.=" select";
 	$sql.=" calendar.datum";
@@ -2062,6 +2078,10 @@ public function getRechnungDatums($rechnung) {
     return $this->getQueryRows($sql);
     }
     
+    /**
+     * 
+     * @return type
+     */
     public function getInfoPanelPlaces(){
 	$sql = "select dinfopanelplaces.id,dinfopanelplaces.place from dinfopanelplaces order by place";
         return $this->getQueryRows($sql);
@@ -2208,6 +2228,11 @@ public function istExportiert($import, $impal){
         return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     * @param type $artnr
+     * @return type
+     */
     public function getAussArtText($artnr){
 	$retString = "";
 	$sql = "select `a-bez` as aussbeschreibung from `auss-art` where `a-nr`='$artnr'";
@@ -2381,6 +2406,11 @@ public function istExportiert($import, $impal){
     }
 
     
+    /**
+     * 
+     * @param type $persnr
+     * @return type
+     */
     public function getOsobniHodnoceniFaktoryProPersNr($persnr){
 	
 	$vystup = NULL;
@@ -2554,6 +2584,13 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
 	return $hodnoceni;
     }
     
+    /**
+     * 
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type 
+    */
     public function getReparaturenProPersnr($persnr,$von,$bis){
 	$sql = " select";
 	$sql.= " dreparaturkopf.id,";

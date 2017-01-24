@@ -39,7 +39,7 @@
 		</div>
 	    </div>
 	    
-	    <div class="col-sm-1" ng-show="jenma">
+	    <div class="col-sm-1" ng-show="isDstatusOnlyMA()">
 		<div class="form-group form-group-sm">
 		    <label class="control-label" for="jenma">ukoncen max. pred 60 dny</label>
 		    <input ng-change="austritt60Changed()" ng-model="austritt60" type="checkbox" class="form-control" id="austritt60">
@@ -54,6 +54,19 @@
 			<option ng-selected="oe.oe=='*'" ng-repeat="oe in oes.oeArray" value="{{oe.oe}}">{{oe.oe}} - {{oe.beschreibung_cz}}</option>
 		    </select>
 		    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['oeselect']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+	    </div>
+	    
+	    <div class="col-sm-1">
+		<div class="form-group form-group-sm">
+		    <label class="control-label" for="dpersstatus">dpers status</label>
+		    <ui-select multiple ng-model="filt.dstatus" theme="bootstrap" close-on-select="false" style="width: 300px;" title="dpersstatus vybrat" ng-change="dpersstatusChanged()">
+		    <ui-select-match placeholder="vyberte status">{{$item}}</ui-select-match>
+		    <ui-select-choices repeat="s in dpersstatuses | filter:$select.search">
+		    {{s}}
+		    </ui-select-choices>
+		    </ui-select>
+		    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['dpersstatus']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 		</div>
 	    </div>
 	</div>

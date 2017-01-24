@@ -118,7 +118,22 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     };
     
     $scope.bemerkung = {};
+    
+    $scope.filt = {dstatus : ['MA']};
+    $scope.dpersstatuses = [];
 
+/**
+ * 
+ * @returns {undefined}
+ */
+    $scope.dpersstatusChanged = function(){
+	console.log('dstatus Changed');
+	console.log($scope.dstatus);
+    }
+    
+    /**
+     * 
+     */
     $scope.deleteDpersInventar = function (pa) {
 	$scope.addInventar(null, pa);
     }
@@ -941,6 +956,7 @@ $scope.commentClicked = function(e,p){
 		{}
 	).then(function (response) {
 	    //console.log(response.data);
+	    $scope.dpersstatuses = response.data.dpersstatuses;
 	    $scope.oes.oeArray = response.data.oeArray;
 	    $scope.oes.oeSelected = response.data.oeSelected;
 	    $scope.fahtypen.fahtypenArray = response.data.fahtypenArray;

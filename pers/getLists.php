@@ -11,6 +11,13 @@ $a = AplDB::getInstance();
 
 $u = $_SESSION['user'];
 
+//dpersstatuses
+$dpersstatuses = array();
+$sql="select dpersstatus.status from dpersstatus order by status";
+$rows = $a->getQueryRows($sql);
+foreach ($rows as $r){
+    array_push($dpersstatuses, $r['status']);
+}
 // oeArray
 $sql = "";
 $sql.=" select doe.oe,doe.beschreibung_cz from doe where stredisko_isp is not null order by doe.oe";
@@ -54,6 +61,7 @@ $fahigkeitenArray = $a->getQueryRows($sql);
 
 
 $returnArray = array(
+    'dpersstatuses'=>$dpersstatuses,
     'fahigkeitenArray'=>$fahigkeitenArray,
     'fahtypenArray' => $fahtypenArray,
     'fahtypidSelected' => $fahtypidSelected,
