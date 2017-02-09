@@ -261,16 +261,25 @@ foreach ($calArray['jahre'] as $jahr=>$m){
 }
 
 function pageReportHeader($pdf,$s,$kwWidth,$stkWidth,$rowHeight,$kundenNrArray,$kw="KW") {
+    global $kdvon,$kdbis;
     $fontSize = $s;
     $a = AplDB::getInstance();
     $pdf->SetFillColor(255, 255, 230);
     $pdf->SetFont("FreeSans", "B", $s);
+    
+    //sloupec pro kw/monat
     $pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
+    
+    // sloupce pro zakazniky
     foreach ($kundenNrArray as $kd => $v) {
         $pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
         $pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
         $pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
     }
+    
+    //sloupec pro sumy
+    $pdf->Cell(3*$stkWidth, $rowHeight, "Sum $kdvon - $kdbis", 'LBTR', 0, 'C', 1);
+    
     $pdf->Ln();
 
     //2.radek
@@ -288,6 +297,9 @@ function pageReportHeader($pdf,$s,$kwWidth,$stkWidth,$rowHeight,$kundenNrArray,$
         $pdf->Cell(2*$stkWidth, $rowHeight, $maxPPM, 'BRT', 0, 'R', 1);
 //	$pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
     }
+    //sloupec pro sumy
+    $pdf->Cell(3*$stkWidth, $rowHeight, '', 'LBTR', 0, 'R', 1);
+    
     $pdf->Ln();
     //3.radek
     $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRB', 0, 'R', 1);
@@ -296,6 +308,11 @@ function pageReportHeader($pdf,$s,$kwWidth,$stkWidth,$rowHeight,$kundenNrArray,$
         $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
         $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
     }
+    
+    // sloupec se sumama
+    $pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
+    $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
+    $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
 }
 
 require_once('../tcpdf_new/tcpdf.php');
@@ -333,7 +350,7 @@ $pdf->AddPage();
 
 $kwWidth = 10;
 $stkWidthMax = 20;
-$stkWidthBerechnet = ($pdf->getPageWidth()-PDF_MARGIN_LEFT-PDF_MARGIN_RIGHT-$kwWidth)/($pocetZakazniku*3);
+$stkWidthBerechnet = ($pdf->getPageWidth()-PDF_MARGIN_LEFT-PDF_MARGIN_RIGHT-$kwWidth)/(($pocetZakazniku+1)*3); // pocet zakazniku + 1 pro sumy
 $stkWidth = $stkWidthBerechnet>$stkWidthMax?$stkWidthMax:$stkWidthBerechnet;
 $rowHeight = 4;
 $pdf->SetFillColor(255, 255, 230);
@@ -360,6 +377,8 @@ foreach ($anzeigeArray as $jahr=>$m){
 	    }
             $pdf->Cell($kwWidth, $rowHeight, $kw, 'LRBT', 0, 'R', 0);
             //projedu seznam zakazniku
+	    $sumRowStk = 0;
+	    $sumRowStkRekl = 0;
             foreach ($kundenNrArray as $kd=>$v){
                 $obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['stk'],0,',',' ');
                 $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
@@ -367,7 +386,19 @@ foreach ($anzeigeArray as $jahr=>$m){
                 $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
                 $obsah = number_format($anzeigeArray[$jahr][$monat][$kw][$kd]['ppm'],0,',',' ');
                 $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+		$sumRowStk += $anzeigeArray[$jahr][$monat][$kw][$kd]['stk'];
+		$sumRowStkRekl += $anzeigeArray[$jahr][$monat][$kw][$kd]['stk_rekl'];
             }
+	    
+	    // sumy row
+	    $obsah = number_format($sumRowStk,0,',',' ');
+            $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+            $obsah = number_format($sumRowStkRekl,0,',',' ');
+            $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+	    $ppmRow = $sumRowStk != 0 ? 1e6 / $sumRowStk * $sumRowStkRekl : 0;
+            $obsah = number_format($ppmRow,0,',',' ');
+            $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+	    
             $pdf->Ln();
         }
     }
@@ -376,6 +407,8 @@ foreach ($anzeigeArray as $jahr=>$m){
 //sumy pro bericht
 $pdf->SetFont("FreeSans", "B", $fontSize);
 $pdf->Cell($kwWidth, $rowHeight, 'Sum', 'LRTB', 0, 'R', 1);
+$sumRowStk = 0;
+$sumRowStkRekl = 0;
 foreach ($kundenNrArray as $kd => $v) {
     $obsah = number_format($berichtAnzeigeArray[$kd]['stk'], 0, ',', ' ');
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
@@ -383,7 +416,17 @@ foreach ($kundenNrArray as $kd => $v) {
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
     $obsah = number_format($berichtAnzeigeArray[$kd]['ppm'], 0, ',', ' ');
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+    $sumRowStk += $berichtAnzeigeArray[$kd]['stk'];
+    $sumRowStkRekl += $berichtAnzeigeArray[$kd]['stk_rekl'];
 }
+//sumy row
+$obsah = number_format($sumRowStk, 0, ',', ' ');
+$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+$obsah = number_format($sumRowStkRekl, 0, ',', ' ');
+$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+$ppmRow = $sumRowStk != 0 ? 1e6 / $sumRowStk * $sumRowStkRekl : 0;
+$obsah = number_format($ppmRow, 0, ',', ' ');
+$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
 
 $pdf->AddPage();
 //sumy pro mesice
@@ -392,23 +435,6 @@ $pdf->SetFont("FreeSans", "B", 10);
 $pdf->Cell(0, 6, 'Monat - Summen', '', 1, 'L', 1);
 
 pageReportHeader($pdf, $fontSize, $kwWidth, $stkWidth, $rowHeight, $kundenNrArray,"Mnt");
-/*
-$pdf->SetFillColor(255, 255, 230);
-$pdf->SetFont("FreeSans", "B", $fontSize);
-$pdf->Cell($kwWidth, $rowHeight, '', 'LRT', 0, 'R', 1);
-foreach ($kundenNrArray as $kd=>$v){
-    $pdf->Cell($stkWidth, $rowHeight, '', 'LBT', 0, 'R', 1);
-    $pdf->Cell($stkWidth, $rowHeight, $kd, 'BT', 0, 'C', 1);
-    $pdf->Cell($stkWidth, $rowHeight, '', 'RBT', 0, 'R', 1);
-}
-$pdf->Ln();
-$pdf->Cell($kwWidth, $rowHeight, 'Mnt', 'LRB', 0, 'R', 1);
-foreach ($kundenNrArray as $kd=>$v){
-    $pdf->Cell($stkWidth, $rowHeight, 'Stk', 'LRBT', 0, 'R', 1);
-    $pdf->Cell($stkWidth, $rowHeight, 'Stk rekl', 'LRBT', 0, 'R', 1);
-    $pdf->Cell($stkWidth, $rowHeight, 'ppm', 'LRBT', 0, 'R', 1);
-}
- */
 
 $pdf->Ln();
 $pdf->SetFont("FreeSans", "", $fontSize);
@@ -416,6 +442,8 @@ foreach ($monatAnzeigeArray as $jahr=>$m){
     foreach ($m as $monat=>$k){
         $pdf->Cell($kwWidth, $rowHeight, $monat, 'LRBT', 0, 'R', 0);
         //projedu seznam zakazniku
+	$sumRowStk = 0;
+	$sumRowStkRekl = 0;
         foreach ($kundenNrArray as $kd=>$v){
             $obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['stk'],0,',',' ');
             $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
@@ -423,13 +451,27 @@ foreach ($monatAnzeigeArray as $jahr=>$m){
             $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
             $obsah = number_format($monatAnzeigeArray[$jahr][$monat][$kd]['ppm'],0,',',' ');
             $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+	    $sumRowStk += $monatAnzeigeArray[$jahr][$monat][$kd]['stk'];
+	    $sumRowStkRekl += $monatAnzeigeArray[$jahr][$monat][$kd]['stk_rekl'];
         }
+	
+	// sumy row
+	$obsah = number_format($sumRowStk,0,',',' ');
+        $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+        $obsah = number_format($sumRowStkRekl,0,',',' ');
+        $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+	$ppmRow = $sumRowStk != 0 ? 1e6 / $sumRowStk * $sumRowStkRekl : 0;
+        $obsah = number_format($ppmRow,0,',',' ');
+        $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 0);
+	    
         $pdf->Ln();
     }
 }
 //sumy pro bericht
 $pdf->SetFont("FreeSans", "B", $fontSize);
 $pdf->Cell($kwWidth, $rowHeight, 'Sum', 'LRTB', 0, 'R', 1);
+$sumRowStk = 0;
+$sumRowStkRekl = 0;
 foreach ($kundenNrArray as $kd => $v) {
     $obsah = number_format($berichtAnzeigeArray[$kd]['stk'], 0, ',', ' ');
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
@@ -437,7 +479,18 @@ foreach ($kundenNrArray as $kd => $v) {
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
     $obsah = number_format($berichtAnzeigeArray[$kd]['ppm'], 0, ',', ' ');
     $pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+    $sumRowStk += $berichtAnzeigeArray[$kd]['stk'];
+    $sumRowStkRekl += $berichtAnzeigeArray[$kd]['stk_rekl'];
 }
+//sumy row
+$obsah = number_format($sumRowStk, 0, ',', ' ');
+$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+$obsah = number_format($sumRowStkRekl, 0, ',', ' ');
+$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+$ppmRow = $sumRowStk != 0 ? 1e6 / $sumRowStk * $sumRowStkRekl : 0;
+$obsah = number_format($ppmRow, 0, ',', ' ');
+$pdf->Cell($stkWidth, $rowHeight, $obsah, 'LRBT', 0, 'R', 1);
+
 $pdf->AddPage();
 // mesice ve sloupcich
 $fontSize = $s;
@@ -452,7 +505,8 @@ $ppmWidth = $ppmWidthBerechnet>$ppmWidthMax?$ppmWidthMax:$ppmWidthBerechnet;
 $rowHeight = 4;
 //hlavicka
 $pdf->SetFont("FreeSans", "B", $fontSize);
-$pdf->Cell($kundeWidth, $rowHeight, 'Kunde', 'LRTB', 0, 'R', 1);
+$pdf->Cell($kundeWidth/3, $rowHeight, 'Kunde', 'LTB', 0, 'L', 1);
+$pdf->Cell(2*$kundeWidth/3, $rowHeight, 'max.PPM', 'RTB', 0, 'R', 1);
 
 $monatArr = array('0' => 'Januar','1' => 'Februar', '2' => 'März', '3' => 'April', '4' => 'Mai', '5' => 'Juni', '6' => 'Juli', '7' => 'August', '8' => 'September', '9' => 'Oktober', '10' => 'November', '11' => 'December');
 
@@ -463,7 +517,10 @@ for($x =0;$x<$pocetMesicu;$x++){
 
 
 
+
 $obsah = 'AVG';
+//$obsah = 'Ø';
+
 $pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'C', 1);
 $pdf->Ln();
 
@@ -471,7 +528,15 @@ $pdf->SetFont("FreeSans", "", $fontSize);
 // bunky s daty
 $obs = 0;
 foreach ($kdMonatAnzeigeArray as $kd=>$monatArray){
-    $pdf->Cell($kundeWidth, $rowHeight, $kd, 'LRTB', 0, 'R', 0);
+    $pdf->Cell($kundeWidth/3, $rowHeight, $kd, 'LTB', 0, 'L', 0);
+    $maxPPMInfo = $a->getBewertungKriteriumInfo($kd, 'ppm_max', date('y-m'));
+        if($maxPPMInfo!==NULL){
+            $maxPPM = $maxPPMInfo[0]['grenze']."/".$maxPPMInfo[0]['interval_monate']." Mnt";
+        }
+        else{
+            $maxPPM = '?';
+        }
+    $pdf->Cell(2*$kundeWidth/3, $rowHeight, " $maxPPM", 'RTB', 0, 'R', 0);
     foreach ($jmArray as $jm=>$v){
 
         $obsah = number_format($kdMonatAnzeigeArray[$kd][$jm]["ppm"],0,',',' ');
