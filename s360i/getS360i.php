@@ -70,6 +70,9 @@ if (
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['anerkannt_ausschuss_preis_eur'] += floatval($rekl['anerkannt_ausschuss_preis_eur']);
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['anerkannt_ausschuss_preis_czk'] += floatval($rekl['anerkannt_ausschuss_preis_eur'])*$kurs;
 	    
+	    $zeilen['kunden'][$rekl['kunde']]['summen']['anerkannt_ausschuss_selbst_preis_eur'] += floatval($rekl['anerkannt_ausschuss_selbst_preis_eur']);
+	    $zeilen['kunden'][$rekl['kunde']]['summen']['anerkannt_ausschuss_selbst_preis_czk'] += floatval($rekl['anerkannt_ausschuss_selbst_preis_eur'])*$kurs;
+	    
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['anerkannt_nacharbeit_preis_eur'] += floatval($rekl['anerkannt_nacharbeit_preis_eur']);
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['anerkannt_nacharbeit_preis_czk'] += floatval($rekl['anerkannt_nacharbeit_preis_eur'])*$kurs;
 	    
@@ -86,6 +89,7 @@ if (
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['pauschale_preis_czk'] += floatval($rekl['pauschale_preis_eur'])*$kurs;
 	    
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_anerkannt_ausschuss_eur']  += floatval($rekl['forecast_anerkannt_ausschuss_eur']);
+	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_anerkannt_ausschuss_selbst_eur']  += floatval($rekl['forecast_anerkannt_ausschuss_selbst_eur']);
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_anerkannt_nacharbeit_eur']  += floatval($rekl['forecast_anerkannt_nacharbeit_eur']);
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_dif_falsch_deklariert_eur']  += floatval($rekl['forecast_dif_falsch_deklariert_eur']);
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_verpackung_eur']  += floatval($rekl['forecast_verpackung_eur']);
@@ -93,6 +97,7 @@ if (
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_pauschale_eur']  += floatval($rekl['forecast_pauschale_eur']);
 	    
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_anerkannt_ausschuss_czk']  += floatval($rekl['forecast_anerkannt_ausschuss_eur'])*$kurs;
+	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_anerkannt_ausschuss_selbst_czk']  += floatval($rekl['forecast_anerkannt_ausschuss_selbst_eur'])*$kurs;
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_anerkannt_nacharbeit_czk']  += floatval($rekl['forecast_anerkannt_nacharbeit_eur'])*$kurs;
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_dif_falsch_deklariert_czk']  += floatval($rekl['forecast_dif_falsch_deklariert_eur'])*$kurs;
 	    $zeilen['kunden'][$rekl['kunde']]['summen']['forecast_verpackung_czk']  += floatval($rekl['forecast_verpackung_eur'])*$kurs;
@@ -111,10 +116,14 @@ if (
 		$rekl['giesstag'] = str_replace(',',', ',$rekl['giesstag']);
 		$rekl['rekl_datum'] = ($d=strtotime($rekl['rekl_datum']))!==FALSE?date('d.m.y',$d):'';
 		$rekl['rekl_erledigt_am'] = ($d=strtotime($rekl['rekl_erledigt_am']))!==FALSE?date('d.m.y',$d):'';
+		$rekl['wider_am'] = ($d=strtotime($rekl['wider_am']))!==FALSE?date('d.m.y',$d):'';
 		
 		$rekl['anerkannt_ausschuss_preis_eur'] = floatval($rekl['anerkannt_ausschuss_preis_eur']);
 		$rekl['anerkannt_ausschuss_preis_czk'] = floatval($rekl['anerkannt_ausschuss_preis_eur'])*$kurs;
 	    
+		$rekl['anerkannt_ausschuss_selbst_preis_eur'] = floatval($rekl['anerkannt_ausschuss_selbst_preis_eur']);
+		$rekl['anerkannt_ausschuss_selbst_preis_czk'] = floatval($rekl['anerkannt_ausschuss_selbst_preis_eur'])*$kurs;
+
 		$rekl['anerkannt_nacharbeit_preis_eur'] = floatval($rekl['anerkannt_nacharbeit_preis_eur']);
 		$rekl['anerkannt_nacharbeit_preis_czk'] = floatval($rekl['anerkannt_nacharbeit_preis_eur'])*$kurs;
 	    
@@ -131,6 +140,7 @@ if (
 		$rekl['pauschale_preis_czk'] = floatval($rekl['pauschale_preis_eur'])*$kurs;
 		
 		$rekl['forecast_anerkannt_ausschuss_czk']  = floatval($rekl['forecast_anerkannt_ausschuss_eur'])*$kurs;
+		$rekl['forecast_anerkannt_ausschuss_selbst_czk']  = floatval($rekl['forecast_anerkannt_ausschuss_selbst_eur'])*$kurs;
 		$rekl['forecast_anerkannt_nacharbeit_czk']  = floatval($rekl['forecast_anerkannt_nacharbeit_eur'])*$kurs;
 		$rekl['forecast_dif_falsch_deklariert_czk']  = floatval($rekl['forecast_dif_falsch_deklariert_eur'])*$kurs;
 		$rekl['forecast_verpackung_czk']  = floatval($rekl['forecast_verpackung_eur'])*$kurs;
@@ -138,6 +148,8 @@ if (
 		$rekl['forecast_pauschale_czk']  = floatval($rekl['forecast_pauschale_eur'])*$kurs;
 		
 		$rekl['forecast_anerkannt_ausschuss_eur']  = floatval($rekl['forecast_anerkannt_ausschuss_eur']);
+		$rekl['forecast_anerkannt_ausschuss_selbst_eur']  = floatval($rekl['forecast_anerkannt_ausschuss_selbst_eur']);
+		
 		$rekl['forecast_anerkannt_nacharbeit_eur']  = floatval($rekl['forecast_anerkannt_nacharbeit_eur']);
 		$rekl['forecast_dif_falsch_deklariert_eur']  = floatval($rekl['forecast_dif_falsch_deklariert_eur']);
 		$rekl['forecast_verpackung_eur']  = floatval($rekl['forecast_verpackung_eur']);

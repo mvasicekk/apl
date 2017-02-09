@@ -5,12 +5,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/Reports/E143.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dkopf/showIMA.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dispo_2/imexcalendar.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/utils/adaptace1.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/upload.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/newfile1</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/reklamation/templates/detail.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/templates/ma.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/getDetailContent.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/getMAInfo.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/reklamation/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/reklamation/getReklDetail.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/cli/updateDpersFromPremier.php</file>
         </group>
     </open-files>
 </project-private>

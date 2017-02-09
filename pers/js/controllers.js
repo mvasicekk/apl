@@ -119,18 +119,61 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     
     $scope.bemerkung = {};
     
-    $scope.filt = {dstatus : ['MA']};
+    $scope.filt = {
+	dstatus : ['MA'],
+	oearray : ['*']
+    };
+
     $scope.dpersstatuses = [];
 
+
+//    NgMap.getMap().then(function(map) {
+//    console.log(map.getCenter());
+//    console.log('markers', map.markers);
+//    console.log('shapes', map.shapes);
+//    });
+  
+    $scope.addresses = [];
+    $scope.refreshAddresses = function(address) {
+	console.log(address);
+    var params = {address: address, sensor: false};
+    if(address.length>0){
+	return $http.get('https://maps.googleapis.com/maps/api/geocode/json', {params: params})
+      .then(function(response) {
+	  if(response.data.status=='OK'){
+	      $scope.addresses = response.data.results
+	  }
+      });
+    }
+    
+    };
 /**
  * 
  * @returns {undefined}
  */
     $scope.dpersstatusChanged = function(){
 	console.log('dstatus Changed');
-	console.log($scope.dstatus);
+	console.log($scope.filt.dstatus);
+	$scope.osobaChanged();
     }
     
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.isDstatusOnlyMA = function () {
+	    if ($scope.filt.dstatus.length == 1) {
+		if ($scope.filt.dstatus[0] == 'MA') {
+		    return true;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    else {
+		return false;
+	    }
+    }
     /**
      * 
      */
@@ -791,11 +834,14 @@ $scope.commentClicked = function(e,p){
 		    direction: direction,
 		    jenma: $scope.jenma,
 		    austritt60: $scope.austritt60,
-		    oeselected: $scope.oes.oeSelected
+		    oeselected: $scope.oes.oeSelected,
+		    statusarray:    $scope.filt.dstatus,
+		    oearray:    $scope.filt.oearray
 		}
 	).then(function (response) {
 	    if (response.data.ma !== null) {
 		$scope.ma.maInfo = response.data.ma[0];
+		$scope.ma.bewerberInfo = response.data.bewerber[0];
 		$scope.ma.oeInfo = response.data.oeinfo;
 		// dodatecne informace
 		getHFPremie();
@@ -870,6 +916,12 @@ $scope.commentClicked = function(e,p){
 	    $scope.osobaChanged();
 	}
     }
+    
+    $scope.oeArrayChanged = function(){
+	if ($scope.ma.selectedIndex < 0) {
+	    $scope.osobaChanged();
+	}
+    }
 
     /**
      * 
@@ -884,7 +936,9 @@ $scope.commentClicked = function(e,p){
 		    osoba: $scope.osoba,
 		    jenma: $scope.jenma,
 		    austritt60: $scope.austritt60,
-		    oeselected: $scope.oes.oeSelected
+		    oeselected: $scope.oes.oeSelected,
+		    statusarray:    $scope.filt.dstatus,
+		    oearray:    $scope.filt.oearray,
 		}
 	).then(function (response) {
 	    $scope.osoby = response.data.osoby;

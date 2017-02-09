@@ -44,7 +44,7 @@
             </a>
             <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 		<div class="panel-body">
-		    <form>
+		    <form class="form-small">
 			<div class="row">
 			    <div class="form-group col-md-4 form-group-sm">
 				<label class="control-label" for="kunde">Kunde:</label>
@@ -472,6 +472,7 @@
 					<th class="text-right" >Stk</th>
 					<th class="text-right" >Gew ({{rekl.teilgew}} kg/Stk)</th>
 					<th>forecast Kosten[EUR]</th>
+					<th class="text-right" >forecast Kosten[CZK]</th>
 					<th>Beleg Nr</th>
 					<th class="text-right" >Kosten [EUR]</th>
 					<th class="text-right" >Kosten [CZK] {{rekl.kurs_EUR_CZK}}CZK=1EUR</th>
@@ -484,7 +485,7 @@
 					    <div class="input-group">
 						<input ng-model="rekl.anerkannt_stk_ausschuss" type="text" class="form-control" id="Aussstk" placeholder="Stk">
 						<span class="input-group-btn">
-						    <button ng-click="ausschussKostenVorschlag()" title="Kosten berechnen" class="btn btn-default" type="button">
+						    <button ng-click="ausschussKostenVorschlag()" title="forecast Kosten berechnen" class="btn btn-default" type="button">
 							<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
 						    </button>
 						</span>
@@ -494,16 +495,50 @@
 					    <input readonly value="{{rekl.anerkannt_stk_ausschuss*rekl.teilgew}}" type="text" class="form-control text-right" id="aussgew" placeholder="Gew">
 					</td>
 					<td>
-					    <input ng-model="rekl.forecast_anerkannt_ausschuss_eur" type="text" class="form-control text-right" placeholder="forecast">
+					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-model="rekl.forecast_anerkannt_ausschuss_eur"  ng-change="recalcKurs('EURtoCZK','forecast_anerkannt_ausschuss_eur','forecast_anerkannt_ausschuss_czk')" type="text" class="form-control text-right" placeholder="forecast">
+					</td>
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('CZKtoEUR','forecast_anerkannt_ausschuss_eur','forecast_anerkannt_ausschuss_czk')" ng-model="rekl.forecast_anerkannt_ausschuss_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 					<td>
 					    <input ng-model="rekl.anerkannt_ausschuss_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
 					<td>
-					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('EURtoCZK','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
 					</td>
 					<td>
-					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_Ausschuss_Vom}}' ng-change="recalcKurs('CZKtoEUR','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk')" ng-model="rekl.anerkannt_ausschuss_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
+				    </tr>
+				    <tr>
+					<th>Ausschuss Selbstanzeige</th>
+					<td>
+					    <div class="input-group">
+						<input ng-model="rekl.anerkannt_stk_ausschuss_selbst" type="text" class="form-control" id="Aussstkselbst" placeholder="Stk">
+						<span class="input-group-btn">
+						    <button ng-click="ausschussSelbstKostenVorschlag()" title="Kosten berechnen" class="btn btn-default" type="button">
+							<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+						    </button>
+						</span>
+					    </div>
+					</td>
+					<td>
+					    <input readonly value="{{rekl.anerkannt_stk_ausschuss_selbst*rekl.teilgew}}" type="text" class="form-control text-right" id="aussselbstgew" placeholder="Gew">
+					</td>
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_AusschussSelbst_Vom}}' ng-model="rekl.forecast_anerkannt_ausschuss_selbst_eur" ng-change="recalcKurs('EURtoCZK','forecast_anerkannt_ausschuss_selbst_eur','forecast_anerkannt_ausschuss_selbst_czk')" type="text" class="form-control text-right" placeholder="forecast">
+					</td>
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" title='Preisvorschlag laut: {{preisVorschlag_AusschussSelbst_Vom}}' ng-change="recalcKurs('CZKtoEUR','forecast_anerkannt_ausschuss_selbst_eur','forecast_anerkannt_ausschuss_selbst_czk')" ng-model="rekl.forecast_anerkannt_ausschuss_selbst_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
+					<td>
+					    <input ng-model="rekl.anerkannt_ausschuss_selbst_beleg" type="text" class="form-control" placeholder="BelegNr">
+					</td>
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('EURtoCZK','anerkannt_ausschuss_selbst_preis_eur','anerkannt_ausschuss_selbst_preis_czk')" ng-model="rekl.anerkannt_ausschuss_selbst_preis_eur" type="text" class="form-control text-right" placeholder="Kosten in EUR">
+					</td>
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','anerkannt_ausschuss_selbst_preis_eur','anerkannt_ausschuss_selbst_preis_czk')" ng-model="rekl.anerkannt_ausschuss_selbst_preis_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
 					</td>
 				    </tr>
 				    <tr>
@@ -515,8 +550,11 @@
 					    <input readonly value="{{rekl.anerkannt_stk_nacharbeit*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
-					    <input ng-model="rekl.forecast_anerkannt_nacharbeit_eur" type="text" class="form-control text-right" placeholder="forecast">
+					    <input ng-model-options="{updateOn:'blur'}" ng-model="rekl.forecast_anerkannt_nacharbeit_eur"  ng-change="recalcKurs('EURtoCZK','forecast_anerkannt_nacharbeit_eur','forecast_anerkannt_nacharbeit_czk')" type="text" class="form-control text-right" placeholder="forecast">
 					</td>					
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','forecast_anerkannt_nacharbeit_eur','forecast_anerkannt_nacharbeit_czk')" ng-model="rekl.forecast_anerkannt_nacharbeit_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
 					<td>
 					    <input ng-model="rekl.anerkannt_nacharbeit_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
@@ -536,8 +574,11 @@
 					    <input readonly value="{{rekl.dif_falsch_deklariert_stk*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
-					    <input ng-model="rekl.forecast_dif_falsch_deklariert_eur" type="text" class="form-control text-right" placeholder="forecast">
+					    <input ng-model-options="{updateOn:'blur'}" ng-model="rekl.forecast_dif_falsch_deklariert_eur" ng-change="recalcKurs('EURtoCZK','forecast_dif_falsch_deklariert_eur','forecast_dif_falsch_deklariert_czk')" type="text" class="form-control text-right" placeholder="forecast">
 					</td>					
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','forecast_dif_falsch_deklariert_eur','forecast_dif_falsch_deklariert_czk')" ng-model="rekl.forecast_dif_falsch_deklariert_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
 					<td>
 					    <input ng-model="rekl.dif_falsch_deklariert_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
@@ -558,8 +599,11 @@
 					    <input readonly value="0" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
 					<td>
-					    <input ng-model="rekl.forecast_verpackung_eur" type="text" class="form-control text-right" placeholder="forecast">
+					    <input ng-model-options="{updateOn:'blur'}" ng-model="rekl.forecast_verpackung_eur" ng-change="recalcKurs('EURtoCZK','forecast_verpackung_eur','forecast_verpackung_czk')" type="text" class="form-control text-right" placeholder="forecast">
 					</td>					
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','forecast_verpackung_eur','forecast_verpackung_czk')" ng-model="rekl.forecast_verpackung_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
 					<td>
 					    <input ng-model="rekl.verpackung_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
@@ -580,8 +624,11 @@
 					    <input readonly value="{{rekl.kreislauf_stk*rekl.teilgew}}" type="text" class="text-right form-control" placeholder="Gew">
 					</td>
 					<td>
-					    <input ng-model="rekl.forecast_kreislauf_eur" type="text" class="form-control text-right" placeholder="forecast">
+					    <input ng-model-options="{updateOn:'blur'}" ng-model="rekl.forecast_kreislauf_eur"  ng-change="recalcKurs('EURtoCZK','forecast_kreislauf_eur','forecast_kreislauf_czk')" type="text" class="form-control text-right" placeholder="forecast">
 					</td>					
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','forecast_kreislauf_eur','forecast_kreislauf_czk')" ng-model="rekl.forecast_kreislauf_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
 					<td>
 					    <input ng-model="rekl.kreislauf_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
@@ -605,6 +652,7 @@
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
 				    </tr>
 				    <tr>
 					<th>nicht anerkannt</th>
@@ -614,6 +662,7 @@
 					<td>
 					    <input readonly value="{{rekl.anerkannt_stk_nein*rekl.teilgew}}" type="text" class="form-control text-right" placeholder="Gew">
 					</td>
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -628,8 +677,11 @@
 					    
 					</td>
 					<td>
-					    <input ng-model="rekl.forecast_pauschale_eur" type="text" class="form-control text-right" placeholder="forecast">
+					    <input ng-model-options="{updateOn:'blur'}" ng-model="rekl.forecast_pauschale_eur" type="text" class="form-control text-right" placeholder="forecast">
 					</td>					
+					<td>
+					    <input ng-model-options="{updateOn:'blur'}" ng-change="recalcKurs('CZKtoEUR','forecast_pauschale_eur','forecast_pauschale_czk')" ng-model="rekl.forecast_pauschale_czk" type="text" class="form-control text-right" placeholder="Kosten in CZK">
+					</td>
 					<td>
 					    <input ng-model="rekl.pauschale_beleg" type="text" class="form-control" placeholder="BelegNr">
 					</td>
@@ -653,6 +705,9 @@
 					</td>
 					<td>
 					    <input readonly="readonly"  value="{{summeForecastEUR()|numeraljs:'0.0000'}}" type="text" class="form-control text-right" placeholder="Summe Kosten in EUR">
+					</td>
+					<td>
+					    <input readonly="readonly"  value="{{summeForecastCZK()|numeraljs:'0.00'}}" type="text" class="form-control text-right" placeholder="Summe Kosten in CZK">
 					</td>
 					<td>
 					    

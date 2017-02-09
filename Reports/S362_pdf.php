@@ -328,6 +328,20 @@ if($reklInfo!==NULL){
 	$obsah = number_format($rekl['anerkannt_ausschuss_preis_eur']*$kurs,2,',',' ');
 	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
 	
+	//ausschuss selbstanzeige
+	$pdf->SetFont("FreeSans", "B", 7);
+	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Ausschuss Selbstanzeige", 'LRBT', 0, 'L', 1);
+	$pdf->SetFont("FreeSans", "", 7);
+	//stk
+	$obsah = number_format($rekl['anerkannt_stk_ausschuss_selbst'],0,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//gewicht
+	$obsah = number_format($rekl['anerkannt_stk_ausschuss_selbst']*$gew,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 0, 'R', $fill);
+	//kosten czk
+	$obsah = number_format($rekl['anerkannt_ausschuss_selbst_preis_eur']*$kurs,2,',',' ');
+	$pdf->Cell($tbWidth, $schulungHeaderHeight, $obsah, 'LRBT', 1, 'R', $fill);
+	
 	//nacharbeit
 	$pdf->SetFont("FreeSans", "B", 7);
 	$pdf->Cell(2*$tbWidth, $schulungHeaderHeight, "Nacharbeit", 'LRBT', 0, 'L', 1);
@@ -536,7 +550,9 @@ if($reklInfo!==NULL){
 	//fehlerursachen
 	$pdf->SetFont("FreeSans", "B", 7);
 	$fill = 1;
-	$pdf->Cell($persTabsXOffset-20, $schulungHeaderHeight, "Fehlerursachen", '0', 1, 'L', $fill);
+	$pdf->Cell(($persTabsXOffset-20)/2, $schulungHeaderHeight, "Fehlerursachen", '0', 0, 'L', $fill);
+	$wieder = $rekl['report8D_4_wiederholfehler']!="0"?"Wiederholfehler !!!":"";
+	$pdf->Cell(($persTabsXOffset-20)/2, $schulungHeaderHeight, $wieder, '0', 1, 'R', $fill);
 	$fill = 0;
 	$pdf->SetFont("FreeSans", "", 7);
 	$obsah = trim($rekl['beschr_ursache']);

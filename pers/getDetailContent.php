@@ -86,34 +86,35 @@ if ($detailId == "repkosten") {
 		if(strlen(trim($rep['artnr']))>0){
 		    $content.="<tr>";
 		
-		$content.="<td class='text-right'>";
+		$content.="<td colspan='7' class='text-left'>";
 		//$content.="".$rep['invnummer']."";
-		$content.="</td>";
-		
-		$content.="<td>";
-		//$content.="".$rep['anlage_beschreibung']."";
-		$content.="</td>";
-		
-		$content.="<td class='text-right'>";
-		//$content.="".$rep['persnr_reparatur']."";
-		$content.="</td>";
-		
-		
-		$content.="<td>";
-		//$content.="".date('d.m.Y',strtotime($rep['datum']))."";
-		$content.="</td>";
-		
-		$content.="<td>";
-		//$content.="".$rep['bemerkung']."";
-		$content.="</td>";
-		
-		$content.="<td class='text-right' style='white-space:nowrap;'>";
-		//$content.="".number_format($rep['rep_kosten'],0,',',' ')."";
-		$content.="</td>";
-		
-		$content.="<td>";
 		$content.="".$rep['artnr']." - ".$rep['artname'];
 		$content.="</td>";
+//		
+//		$content.="<td>";
+//		//$content.="".$rep['anlage_beschreibung']."";
+//		$content.="</td>";
+//		
+//		$content.="<td class='text-right'>";
+//		//$content.="".$rep['persnr_reparatur']."";
+//		$content.="</td>";
+//		
+//		
+//		$content.="<td>";
+//		//$content.="".date('d.m.Y',strtotime($rep['datum']))."";
+//		$content.="</td>";
+//		
+//		$content.="<td>";
+//		//$content.="".$rep['bemerkung']."";
+//		$content.="</td>";
+//		
+//		$content.="<td class='text-right' style='white-space:nowrap;'>";
+//		//$content.="".number_format($rep['rep_kosten'],0,',',' ')."";
+//		$content.="</td>";
+//		
+//		$content.="<td>";
+//		$content.="".$rep['artnr']." - ".$rep['artname'];
+//		$content.="</td>";
 		
 		$content.="<td class='text-right' style='white-space:nowrap;'>";
 		$content.="".$rep['anzahl']."";

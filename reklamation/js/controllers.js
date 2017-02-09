@@ -36,6 +36,7 @@ aplApp.controller('detailController', ['$scope', '$routeParams', '$http',
 $scope.summeKostenEUR = function(){
     if($scope.rekl!==undefined){
 	return parseFloat($scope.rekl.anerkannt_ausschuss_preis_eur)
+	    +parseFloat($scope.rekl.anerkannt_ausschuss_selbst_preis_eur)
 	    +parseFloat($scope.rekl.anerkannt_nacharbeit_preis_eur)
 	    +parseFloat($scope.rekl.dif_falsch_deklariert_preis_eur)
 	    +parseFloat($scope.rekl.verpackung_preis_eur)
@@ -55,6 +56,7 @@ $scope.summeKostenEUR = function(){
 $scope.summeForecastEUR = function(){
     if($scope.rekl!==undefined){
 	return parseFloat($scope.rekl.forecast_anerkannt_ausschuss_eur)
+	    +parseFloat($scope.rekl.forecast_anerkannt_ausschuss_selbst_eur)
 	    +parseFloat($scope.rekl.forecast_anerkannt_nacharbeit_eur)
 	    +parseFloat($scope.rekl.forecast_dif_falsch_deklariert_eur)
 	    +parseFloat($scope.rekl.forecast_verpackung_eur)
@@ -69,11 +71,32 @@ $scope.summeForecastEUR = function(){
 
 /**
  * 
+ * @returns {Number}
+ */
+$scope.summeForecastCZK = function(){
+    if($scope.rekl!==undefined){
+	return parseFloat($scope.rekl.forecast_anerkannt_ausschuss_czk)
+	    +parseFloat($scope.rekl.forecast_anerkannt_ausschuss_selbst_czk)
+	    +parseFloat($scope.rekl.forecast_anerkannt_nacharbeit_czk)
+	    +parseFloat($scope.rekl.forecast_dif_falsch_deklariert_czk)
+	    +parseFloat($scope.rekl.forecast_verpackung_czk)
+	    +parseFloat($scope.rekl.forecast_kreislauf_czk)
+	    +parseFloat($scope.rekl.forecast_pauschale_czk);
+    }
+    else{
+	return 0;
+    }
+    
+}
+
+/**
+ * 
  * @returns {unresolved}
  */
 $scope.summeKostenCZK = function(){
     if($scope.rekl!==undefined){
 	return parseFloat($scope.rekl.anerkannt_ausschuss_preis_czk)
+	    +parseFloat($scope.rekl.anerkannt_ausschuss_selbst_preis_czk)
 	    +parseFloat($scope.rekl.anerkannt_nacharbeit_preis_czk)
 	    +parseFloat($scope.rekl.dif_falsch_deklariert_preis_czk)
 	    +parseFloat($scope.rekl.verpackung_preis_czk)
@@ -97,11 +120,36 @@ $scope.summeKostenCZK = function(){
 			console.log(response.data);
 			$scope.preisVorschlag_Ausschuss = response.data.preisVorschlag;
 			$scope.preisVorschlag_Ausschuss_Vom = response.data.vom;
-			$scope.rekl.anerkannt_ausschuss_preis_eur = response.data.preisVorschlag;
-			$scope.recalcKurs('EURtoCZK','anerkannt_ausschuss_preis_eur','anerkannt_ausschuss_preis_czk');
+			//2017-01-30 misto kosten ukladam navrh do forecast
+			//$scope.rekl.anerkannt_ausschuss_preis_eur = response.data.preisVorschlag;
+			$scope.rekl.forecast_anerkannt_ausschuss_eur = response.data.preisVorschlag;
+			$scope.recalcKurs('EURtoCZK','forecast_anerkannt_ausschuss_eur','forecast_anerkannt_ausschuss_czk');
 		    }
 		);
 	}
+	
+	/**
+	 * 
+	 * @returns {unresolved}
+	 */
+	$scope.ausschussSelbstKostenVorschlag = function(){
+	    var p={};
+	    p.teil = $scope.rekl.teil;
+	    p.aussStk = $scope.rekl.anerkannt_stk_ausschuss_selbst;
+	    return $http.post('./getAussKostenVorschlag.php',p).then(
+		    function(response){
+			console.log(response.data);
+			//$scope.preisVorschlag_Ausschuss = response.data.preisVorschlag;
+			$scope.preisVorschlag_AusschussSelbst_Vom = response.data.vom;
+			//2017-01-30 misto kosten ukladam navrh do forecast
+			//$scope.rekl.anerkannt_ausschuss_preis_eur = response.data.preisVorschlag;
+			$scope.rekl.forecast_anerkannt_ausschuss_selbst_eur = response.data.preisVorschlag;
+			$scope.recalcKurs('EURtoCZK','forecast_anerkannt_ausschuss_selbst_eur','forecast_anerkannt_ausschuss_selbst_czk');
+		    }
+		);
+	}
+	
+	
 	/**
 	 * 
 	 * @param {type} fromto

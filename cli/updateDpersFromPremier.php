@@ -87,6 +87,7 @@ function insertAplVertrag($ppRow, $persnr, $table = 'dpersvertrag_isp') {
     return $ins;
 }
 
+/** uprava dat poli **/
 //var_dump($sqlDB);
 /**
  * 
@@ -103,6 +104,7 @@ function updateAplVertrag($idVertrag, $field, $value, $table = 'dpersvertrag_isp
     }
 }
 
+/** zapnout */
 /**
  * 
  * @global type $a
@@ -518,5 +520,5 @@ foreach ($persArray as $zCislo => $persRow) {
     }
     echo "\n";
 }
-
+// ukonceni synchronizace do logu
 echo "----- KONEC updateDpersFromPremier on :" . date('Y-m-d H:i:s') . " ----- \n";

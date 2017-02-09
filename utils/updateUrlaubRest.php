@@ -12,7 +12,7 @@ echo "<table>";
 foreach ($persnrArray as $person){
     echo "<tr>";
     echo "<td>person:".$person."</td>";
-    $u=$apl->getUrlaubBisDatum($person, '2015-12-31');
+    $u=$apl->getUrlaubBisDatum($person, '2016-12-31');
     echo "<td>rest=".$u['rest']."</td>"
 	."<td>anspruch=".$u['anspruch']."</td>"
 	."<td>alt=".$u['alt']."</td>"

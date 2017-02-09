@@ -2,7 +2,9 @@
     <div class="row">
 	<div class="col-sm-12">
 	    <a target='_blank' class="btn btn-success" href="../s360i/s360i.php#/list" type="button" >S360i</a>
-	    <a target='_blank' class="btn btn-success" href="../utils/ppm.php" type="button" >PPM</a>
+	    <!--<a target='_blank' class="btn btn-success" href="../utils/ppm.php" type="button" >PPM</a>-->
+	    <a target="_blank" href="../get_parameters.php?popisky=Kunde von;Kunde bis;Erhalten am von,*DATE;Erhalten am bis,*DATE;laut Im/Ex,*RA&promenne=kdvon;kdbis;von;bis;laut&values=111;999;;;Import,Export&report=S365" class="btn btn-primary  btn-xs">S365 - PPM</a>
+	    <a target="_blank" href="../get_parameters.php?popisky=Kunde von;Kunde bis;Datum von,*DATE;Datum bis,*DATE&promenne=kdvon;kdbis;von;bis&values=111;999;;&report=S367" class="btn btn-primary  btn-xs">S367 - Hodnocení reklamací</a>
 	</div>
     </div>
     <table st-table="dReklamationen" st-safe-src="reklamationen" class="table table-bordered table-striped table-condensed table-hover">

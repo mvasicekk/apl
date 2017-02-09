@@ -39,6 +39,18 @@
 	
 	<script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
 	<link href="./bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
+	
+{*	<script src="../libs/bower_components/ngmap/build/scripts/ng-map.min.js"></script>*}
+	<script src="https://maps.google.com/maps/api/js?key=AIzaSyDLu4nP4fAKwfBje213A8-d_xf3OI2usmU"></script>
+	
+{*	<script src="../libs/bower_components/angular-google-maps/dist/angular-google-maps.min.js"></script>*}
+	
+	
+{*	<script src="../libs/bower_components/angular-google-maps/dist/angular-google-maps-street-view.min.js"></script>
+	<script src="../libs/bower_components/angular-google-maps/dist/angular-google-maps-street-view_dev_mapped.min.js"></script>
+	<script src="../libs/bower_components/angular-google-maps/dist/angular-google-maps_dev_mapped.min.js"></script>
+*}	
+	
 
 
 	

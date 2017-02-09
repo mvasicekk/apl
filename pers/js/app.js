@@ -35,7 +35,7 @@ aplApp.config(['$routeProvider','$sceProvider',
 	$routeProvider.
 		when('/ma/',{
 		    templateUrl:function(p){
-			console.log(p);
+			//console.log(p);
 			return 'templates/ma.html';
 		    }
 		    //controller:'eformController'
