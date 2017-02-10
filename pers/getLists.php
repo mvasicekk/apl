@@ -59,8 +59,17 @@ $sql.=" from dfaehigkeiten";
 $sql.=" order by faeh_abkrz";
 $fahigkeitenArray = $a->getQueryRows($sql);
 
+//status_fur_aby
+$sql = "select * from dtextbuch where kategorie='status_fur_aby' order by text_kurz";
+$status_fur_aby = $a->getQueryRows($sql);
+
+//info_vom
+$sql = "select * from dtextbuch where kategorie='info_vom' order by text_kurz";
+$info_vom = $a->getQueryRows($sql);
 
 $returnArray = array(
+    'infoVomArray'=>$info_vom,
+    'status_fur_aby'=>$status_fur_aby,
     'dpersstatuses'=>$dpersstatuses,
     'fahigkeitenArray'=>$fahigkeitenArray,
     'fahtypenArray' => $fahtypenArray,

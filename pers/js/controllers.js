@@ -125,6 +125,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     };
 
     $scope.dpersstatuses = [];
+    $scope.status_fur_aby = [];
+    
+    $scope.hodnoceniArray = ["0","1","2","3","4","5","6","7","8","9","10"];
 
 
 //    NgMap.getMap().then(function(map) {
@@ -1010,7 +1013,9 @@ $scope.commentClicked = function(e,p){
 		{}
 	).then(function (response) {
 	    //console.log(response.data);
+	    $scope.infoVomArray = response.data.infoVomArray;
 	    $scope.dpersstatuses = response.data.dpersstatuses;
+	    $scope.status_fur_aby = response.data.status_fur_aby;
 	    $scope.oes.oeArray = response.data.oeArray;
 	    $scope.oes.oeSelected = response.data.oeSelected;
 	    $scope.fahtypen.fahtypenArray = response.data.fahtypenArray;

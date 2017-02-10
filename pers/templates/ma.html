@@ -257,31 +257,34 @@
 				    <div class="form-horizontal">
 					<div class="form-group">
 					    <label for="bewerbe_datum" class="col-sm-6 control-label">Vostellungsgeprach am</label>
-					    <div class="col-sm-6">
+					    <div class="col-sm-3">
 						<input ng-model="ma.bewerberInfo.bewerbe_datum" ui-date="dateOptions" type="text" class="form-control" id="bewerbe_datum" placeholder="Vorstellungsgespraech am">
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="bewertung1" class="col-sm-6 control-label">Bewertung (physisch)</label>
-					    <div class="col-sm-6">
-						<input ng-model="ma.bewerberInfo.bewertung1" type="text" class="form-control" id="bewertung1" placeholder="Bewertung 1-10">
+					    <div class="col-sm-2">
+						<select ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung1" class="form-control" id="bewertung1" placeholder="Bewertung 1-10"></select>
+						<!--<input ng-model="ma.bewerberInfo.bewertung1" type="text" class="form-control" id="bewertung1" placeholder="Bewertung 1-10">-->
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="bewertung2" class="col-sm-6 control-label">Bewertung (Arbeitungserfahrungen)</label>
-					    <div class="col-sm-6">
-						<input ng-model="ma.bewerberInfo.bewertung2" type="text" class="form-control" id="bewertung2" placeholder="Bewertung 1-10">
+					    <div class="col-sm-2">
+						<select ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung2" class="form-control" id="bewertung2" placeholder="Bewertung 1-10"></select>
+						<!--<input ng-model="ma.bewerberInfo.bewertung2" type="text" class="form-control" id="bewertung2" placeholder="Bewertung 1-10">-->
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="bewertung3" class="col-sm-6 control-label">Bewertung (Arbeitsinteresse)</label>
-					    <div class="col-sm-6">
-						<input ng-model="ma.bewerberInfo.bewertung3" type="text" class="form-control" id="bewertung3" placeholder="Bewertung 1-10">
+					    <div class="col-sm-2">
+						<select ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung3" class="form-control" id="bewertung3" placeholder="Bewertung 1-10"></select>
+						<!--<input ng-model="ma.bewerberInfo.bewertung3" type="text" class="form-control" id="bewertung3" placeholder="Bewertung 1-10">-->
 					    </div>
 					</div>
 					<div class="form-group">
 					    <label for="eintritt_datum" class="col-sm-6 control-label">ET-Plan</label>
-					    <div class="col-sm-6">
+					    <div class="col-sm-3">
 						<input ng-model="ma.bewerberInfo.eintritt_datum" ui-date="dateOptions" type="text" class="form-control" id="eintritt_datum" placeholder="ET-Plan">
 					    </div>
 					</div>
@@ -298,6 +301,40 @@
 						</ui-select>
 					    </div>
 					</div>
+					
+					<!--status fur aby-->
+					<div class="form-group form-group-sm">
+					    <label class="col-sm-6 control-label" for="status_fur_aby">Status fur Aby</label>
+					    <div class="col-sm-6">
+						<ui-select ng-model="ma.bewerberInfo.status_fur_aby_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="">
+						<ui-select-match placeholder="vyberte status">{{$select.selected.text_kurz}} {{$select.selected.text_lang}}</ui-select-match>
+						<ui-select-choices repeat="s.id as s in status_fur_aby | filter:$select.search">
+						    <small>
+							<strong>{{s.text_kurz}}</strong>
+						    </small>
+						    <div><em>{{s.text_lang}}</em></div>
+						</ui-select-choices>
+						</ui-select>
+					    </div>
+					</div>
+
+					<!--info vom-->
+					<div class="form-group form-group-sm">
+					    <label class="control-label col-sm-6" for="dpersstatus">info vom</label>
+					    <div class="col-sm-6">
+					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.infoVomArray" theme="bootstrap" close-on-select="false" title="info vom">
+						<ui-select-match placeholder="vyberte info">{{$item.text_kurz}} <small>({{$item.text_lang}})</small></ui-select-match>
+					    <ui-select-choices repeat="s.id as s in infoVomArray | filter:$select.search">
+						<small>
+							<strong>{{s.text_kurz}}</strong>
+						    </small>
+						    <div><em>{{s.text_lang}}</em></div>
+					    </ui-select-choices>
+					    </ui-select>
+					    </div>
+					</div>
+					
+					
 					<div class="form-group form-group-sm">
 					    <label class="col-sm-6 control-label" for="adr">adr</label>
 					    <div class="col-sm-6">
@@ -309,7 +346,7 @@
 						</ui-select>
 					    </div>
 					    <div class="col-sm-12">
-						<pre>{{ma.bewerberInfo.adr}}</pre>
+						<!--<pre>{{ma.bewerberInfo.adr}}</pre>-->
 						<!--<map center="50.162306,12.2846787" zoom="5"></map>-->
 					    </div>
 					</div>
