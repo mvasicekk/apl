@@ -67,7 +67,27 @@ $status_fur_aby = $a->getQueryRows($sql);
 $sql = "select * from dtextbuch where kategorie='info_vom' order by text_kurz";
 $info_vom = $a->getQueryRows($sql);
 
+//fahigkeiten
+$sql = " select ";
+$sql.= "     dfaehigkeittyp.beschreibung as typ_beschreibung,";
+$sql.= "     dfaehigkeiten.faeh_abkrz,";
+$sql.= "     dfaehigkeiten.beschreibung as faeh_beschreibung,";
+$sql.= "     dfaehigkeiten.id as faeh_id,";
+$sql.= "     dfaehigkeiten.bew";
+$sql.= " from dfaehigkeittyp";
+$sql.= " join dfaehigkeiten on dfaehigkeiten.faehigkeit_typ=dfaehigkeittyp.id";
+$sql.= " where bew=1";
+$sql.= " order by";
+$sql.= "     dfaehigkeittyp.stat_nr,";
+$sql.= "     dfaehigkeiten.faeh_abkrz";
+
+$bewFahigkeiten = $a->getQueryRows($sql);
+
+
+// vystup ----------------------------------------------------------------------
+
 $returnArray = array(
+    'bewFahigkeiten'=>$bewFahigkeiten,
     'infoVomArray'=>$info_vom,
     'status_fur_aby'=>$status_fur_aby,
     'dpersstatuses'=>$dpersstatuses,

@@ -37,6 +37,17 @@ aplApp.directive("enterfocus", function () {
     }
 });
 
+aplApp.directive("formOnChange", function($parse){
+  return {
+    require: "form",
+    link: function(scope, element, attrs){
+       var cb = $parse(attrs.formOnChange);
+       element.on("change", function(){
+          cb(scope);
+       });
+    }
+  }
+});
 
 
 aplApp.controller('persController', function ($scope, $routeParams, $http, $timeout, $window, $location, $sanitize) {
@@ -128,6 +139,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.status_fur_aby = [];
     
     $scope.hodnoceniArray = ["0","1","2","3","4","5","6","7","8","9","10"];
+    
+    $scope.bewFahigkeiten = [];
 
 
 //    NgMap.getMap().then(function(map) {
@@ -150,6 +163,10 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     }
     
     };
+    
+    $scope.formchanged = function(){
+	console.log($scope.ma.bewerberInfo);
+    }
 /**
  * 
  * @returns {undefined}
@@ -1013,6 +1030,7 @@ $scope.commentClicked = function(e,p){
 		{}
 	).then(function (response) {
 	    //console.log(response.data);
+	    $scope.bewFahigkeiten = response.data.bewFahigkeiten;
 	    $scope.infoVomArray = response.data.infoVomArray;
 	    $scope.dpersstatuses = response.data.dpersstatuses;
 	    $scope.status_fur_aby = response.data.status_fur_aby;

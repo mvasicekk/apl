@@ -226,6 +226,16 @@
 			    <div class="row">
 				<div class="col-sm-6">
 				    <h4>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <small><span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span><span class="label label-success">{{ma.maInfo.dpersstatus}}</span></small></h4>
+				    <div class="form-group form-group-sm">
+					<div class="col-sm-12">
+					    <ui-select ng-model="ma.bewerberInfo.adr">
+						<ui-select-match placeholder="suche adresse">{{$select.selected.formatted_address}}</ui-select-match>
+						<ui-select-choices repeat="address in addresses track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+						    {{address.formatted_address}}
+						</ui-select-choices>
+					    </ui-select>
+					</div>
+				    </div>
 				</div>
 				<div class="col-sm-6">
 				    <p><small>Geburtsdatum :</small> {{ma.maInfo.geboren|date:'d.m.Y'}}</p>
@@ -335,29 +345,53 @@
 					</div>
 					
 					
+					<!--faehigkeiten-->
 					<div class="form-group form-group-sm">
-					    <label class="col-sm-6 control-label" for="adr">adr</label>
+					    <label class="control-label col-sm-6" for="fah">Faehigkeiten</label>
 					    <div class="col-sm-6">
-						<ui-select ng-model="ma.bewerberInfo.adr">
-						    <ui-select-match placeholder="suche adresse">{{$select.selected.formatted_address}}</ui-select-match>
-						    <ui-select-choices repeat="address in addresses track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
-							{{address.formatted_address}}
-						    </ui-select-choices>
-						</ui-select>
-					    </div>
-					    <div class="col-sm-12">
-						<!--<pre>{{ma.bewerberInfo.adr}}</pre>-->
-						<!--<map center="50.162306,12.2846787" zoom="5"></map>-->
+					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.faehigkeitenArray" theme="bootstrap" close-on-select="false" title="Faehigkeiten">
+						<ui-select-match placeholder="schopnosti">{{$item.typ_beschreibung}} <small>({{$item.faeh_beschreibung}})</small></ui-select-match>
+					    <ui-select-choices group-by="'typ_beschreibung'" repeat="s.faeh_id as s in bewFahigkeiten | filter:$select.search">
+						    <small>
+							<strong>{{s.faeh_abkrz}}</strong>
+						    </small>
+						    <div><em>{{s.faeh_beschreibung}}</em></div>
+					    </ui-select-choices>
+					    </ui-select>
 					    </div>
 					</div>
+					
+					<!--checkboxy-->
+					<div class="checkbox col-sm-4">
+				    <label>
+					<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.bewerberInfo.arbamt_evidenz">Arbeitsamtevidenz
+				    </label>
+				    </div>
+				    <div class="checkbox col-sm-4">
+				    <label>
+					<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'"  ng-model="ma.bewerberInfo.exekution">Exekution / Insolvenz
+				    </label>
+				    </div>
+				    <div class="checkbox col-sm-4">
+				    <label>
+					<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'"  ng-model="ma.bewerberInfo.vermindertfah">Verminderte Erwerbsfaehigkeit
+				    </label>
+				    </div>
 					    
 					
 					
 				    </div>
 				</div>
 				<div class="col-sm-6">
-				    <textarea class="form-control" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_sonst"></textarea>
-				    <pre>{{ma.bewerberInfo|json}}</pre>
+				    <div class="form-group">
+					<label class="control-label" for="bemerkung_sonst">Bemerkungen zum Gespraech / Sonst</label>
+					<textarea class="form-control small" id="bemerkung_sonst" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_sonst"></textarea>
+				    </div>
+				    <div class="form-group">
+					<label class="control-label" for="bemerkung_fah">Bemerkungen zum Faehigkeiten</label>
+					<textarea class="form-control small" id="bemerkung_faehigkeiten" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_faehigkeiten"></textarea>
+				    </div>
+				    <!--<pre>{{ma.bewerberInfo|json}}</pre>-->
 				</div>
 			    </div>
 			</div>

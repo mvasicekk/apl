@@ -73,6 +73,12 @@ td.edited{
 	background-color: lightgreen;
 }
 
+.ui-select-choices-group-label{
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+}
+
 .help-block {
     color: #000;
     display: block;
