@@ -2242,6 +2242,13 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     $gesamtQPraemie = 0;
     $gesamtQPraemie_akkord = 0;
     $gesamtQPraemie_zeit = 0;
+    
+    if(array_key_exists(intval($person->persnr), $aPremienArray)){
+	    $sonstpremie = $aPremienArray[intval($person->persnr)]['apremie'];
+	}
+	else{
+	    $sonstpremie = 0;
+	}
     // vypisu vsecha OG
 
     foreach ($person->ogs->og as $og) {
@@ -2338,6 +2345,18 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
     if ($prozentPritomnostZFonduPracHodin < 50)
         $gesamtLohn -= $sumQPraemie;
 
+    /*
+    echo "gesamtLohn = $gesamtLohn<br>";
+    echo "zeitKc = $gesamtLohnZeitKc<br>";
+    echo "akkordKc = $gesamtLohnAkkordKc<br>";
+    echo "sumQPremie = $sumQPraemie<br>";
+    echo "erschwerniss = $erschwerniss<br>";
+    echo "leistPremie = $leistPraemie<br>";
+    echo "qtlPraemie = $qtlPraemie<br>";
+    echo "sonstpremie = $sonstpremie<br>";
+     * 
+     */
+    
     if ($hodUkolove != 0)
         $factorAkkord = $gesamtVzAbyAkkord / ($hodUkolove * 60);
     else
@@ -2604,13 +2623,14 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr) {
         $pdf->Cell($headerCells['quartalpraemie']['width'], $vyskaradku, number_format($qtlPraemie, 0, ',', ' '), 'LRB', 0, 'R', $fill);
 	
 	//AplDB::varDump(intval($person->persnr));
+	/*
 	if(array_key_exists(intval($person->persnr), $aPremienArray)){
 	    $sonstpremie = $aPremienArray[intval($person->persnr)]['apremie'];
 	}
 	else{
 	    $sonstpremie = 0;
 	}
-	
+	*/
 	if($aPremieFlag=='!'){
 	    $pdf->SetFillColor(255,255,230);
 	    $fill = 1;
