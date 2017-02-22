@@ -124,6 +124,28 @@ if($ma!==NULL){
     $persnrNew = $ma[0]['PersNr'];
     $oeInfo = $a->getPersOEInfo($persnrNew);
     $bewerber = $a->getQueryRows("select * from dpersbewerber where persnr='$persnrNew'");
+    // v pripade, ze mi neco vratim upravim nektere hodnoty, napr pole .....
+    if($bewerber!==NULL){
+	$br = $bewerber[0];
+
+	// infoVomArray --------------------------------------------------------
+	$infoVomArrayStr = $br['infoVomArray'];
+	if($infoVomArrayStr!==NULL){
+	    $infoVomArray = split(",", $infoVomArrayStr);
+	    if(is_array($infoVomArray)){
+		$bewerber[0]['infoVomArray'] = $infoVomArray;
+	    }
+	}
+	
+	//  feahigkeitenArray --------------------------------------------------------
+	$infoVomArrayStr = $br['faehigkeitenArray'];
+	if($infoVomArrayStr!==NULL){
+	    $infoVomArray = split(",", $infoVomArrayStr);
+	    if(is_array($infoVomArray)){
+		$bewerber[0]['faehigkeitenArray'] = $infoVomArray;
+	    }
+	}
+    }
 }
 
 

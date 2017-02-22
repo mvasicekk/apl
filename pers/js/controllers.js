@@ -92,6 +92,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     $scope.hfPremieVon = new Date(curdate.getFullYear(), curdate.getMonth() - 2, 1);
     $scope.hfPremieBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
+    $scope.kvalifikaceGiltAb = new Date();
 
     $scope.osobniHodnoceniVon = new Date(curdate.getFullYear(), curdate.getMonth() - 2, 1);
     $scope.osobniHodnoceniBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
@@ -138,7 +139,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.dpersstatuses = [];
     $scope.status_fur_aby = [];
     
-    $scope.hodnoceniArray = ["0","1","2","3","4","5","6","7","8","9","10"];
+    $scope.hodnoceniArray = ["1","2","3","4","5","6","7","8","9","10"];
     
     $scope.bewFahigkeiten = [];
 
@@ -164,9 +165,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     
     };
     
-    $scope.formchanged = function(){
-	console.log($scope.ma.bewerberInfo);
-    }
+    
 /**
  * 
  * @returns {undefined}
@@ -214,6 +213,27 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     $scope.getShowPanel = function(panelid){
 	return showPanel[panelid];
+    }
+    
+    /**
+     * 
+     * @param {type} field
+     * @returns {undefined}
+     */
+    $scope.bewerberFieldChanged = function (field) {
+	console.log('bewerberFieldChanged: ' + field);
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './updateBewerberField.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr,
+			value: $scope.ma.bewerberInfo[field],
+			field: field
+		    }
+	    ).then(function (response) {
+	    });
+	}
+
     }
     /**
      * 
@@ -289,6 +309,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 		    k: k,
 		    oekvalifikace: $scope.oekvalifikace,
 		    hodnoceni: $scope.kvalifikacebewertung,
+		    giltab:$scope.kvalifikaceGiltAb,
 		    persnr: $scope.ma.maInfo.PersNr,
 		}
 	).then(function (response) {
@@ -765,6 +786,7 @@ $scope.commentClicked = function(e,p){
 	    $scope.hfPremieBis = new Date($scope.hfPremieBis.getFullYear(), $scope.hfPremieBis.getMonth() + 1, 0);
 	}
 	getHFPremie();
+
     }
     /**
      * 
@@ -772,52 +794,65 @@ $scope.commentClicked = function(e,p){
      */
     function getHFPremie() {
 	//hf premie ----------------------------------------------------
-	return	$http.post(
-		'./getHFPremie.php',
-		{
-		    persnr: $scope.ma.maInfo.PersNr,
-		    von: $scope.hfPremieVon,
-		    bis: $scope.hfPremieBis
-		}
-	).then(function (response) {
-	    $scope.hfPremieArray = response.data.hfpremiearray;
-	});
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './getHFPremie.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr,
+			von: $scope.hfPremieVon,
+			bis: $scope.hfPremieBis
+		    }
+	    ).then(function (response) {
+		$scope.hfPremieArray = response.data.hfpremiearray;
+	    });
+	}
+
     }
 
 
+    /**
+     * 
+     * @returns {unresolved}
+     */
     function getPersKvalifikace() {
-	return	$http.post(
-		'./getPersKvalifikace.php',
-		{
-		    persnr: $scope.ma.maInfo.PersNr
-		}
-	).then(function (response) {
-	    $scope.persKvalifikaceArray = response.data.persKvalifikaceArray;
-	    $scope.oekvalifikace = $scope.ma.oeInfo.oe;//$scope.oes.oeArray[0];
-	    $scope.kvalifikacebewertung = 6;
-	});
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './getPersKvalifikace.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr
+		    }
+	    ).then(function (response) {
+		$scope.persKvalifikaceArray = response.data.persKvalifikaceArray;
+		$scope.oekvalifikace = $scope.ma.oeInfo.oe;//$scope.oes.oeArray[0];
+		$scope.kvalifikacebewertung = 6;
+	    });
+	}
+
     }
     /**
      * 
      * @returns {unresolved}
      */
     function getPersInventar() {
-	return	$http.post(
-		'./getPersInventar.php',
-		{
-		    persnr: $scope.ma.maInfo.PersNr
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './getPersInventar.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr
+		    }
+	    ).then(function (response) {
+		if (response.data.persInventarArray !== null && response.data.persInventarArray.length > 0) {
+		    for (var i = 0; i < response.data.persInventarArray.length; i++) {
+			response.data.persInventarArray[i]['vydej_datum1'] = convertMysql2Date(response.data.persInventarArray[i]['vydej_datum']);
+			response.data.persInventarArray[i]['vraceno_datum1'] = convertMysql2Date(response.data.persInventarArray[i]['vraceno_datum']);
+		    }
 		}
-	).then(function (response) {
-	    if (response.data.persInventarArray !== null && response.data.persInventarArray.length > 0) {
-		for (var i = 0; i < response.data.persInventarArray.length; i++) {
-		    response.data.persInventarArray[i]['vydej_datum1'] = convertMysql2Date(response.data.persInventarArray[i]['vydej_datum']);
-		    response.data.persInventarArray[i]['vraceno_datum1'] = convertMysql2Date(response.data.persInventarArray[i]['vraceno_datum']);
-		}
-	    }
 
-	    $scope.persInventarArray = response.data.persInventarArray;
+		$scope.persInventarArray = response.data.persInventarArray;
 
-	});
+	    });
+	}
+
     }
 
     /**
@@ -825,16 +860,19 @@ $scope.commentClicked = function(e,p){
      */
     function getOsobniHodnoceni() {
 	//hf premie ----------------------------------------------------
-	return	$http.post(
-		'./getOsobniHodnoceni.php',
-		{
-		    persnr: $scope.ma.maInfo.PersNr,
-		    von: $scope.osobniHodnoceniVon,
-		    bis: $scope.osobniHodnoceniBis
-		}
-	).then(function (response) {
-	    $scope.osobniHodnoceniArray = response.data.osobniHodnoceniArray;
-	});
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './getOsobniHodnoceni.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr,
+			von: $scope.osobniHodnoceniVon,
+			bis: $scope.osobniHodnoceniBis
+		    }
+	    ).then(function (response) {
+		$scope.osobniHodnoceniArray = response.data.osobniHodnoceniArray;
+	    });
+	}
+
     }
     /**
      * 

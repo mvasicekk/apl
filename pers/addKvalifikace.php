@@ -11,6 +11,11 @@ $pa = NULL;
 $persnr = $o->persnr;
 $oekvalifikace = $o->oekvalifikace;
 $hodnoceni = intval(trim($o->hodnoceni));
+$giltab = strtotime($o->giltab);
+if($giltab!==FALSE){
+    $giltab = date('Y-m-d',$giltab);
+}
+
 $k = $o->k;
 
 $a = AplDB::getInstance();
@@ -28,15 +33,16 @@ if($k!==NULL){
 }
 else{
 // vlozeni noveho 
-    $sql = "insert into dpersoekvalifikace (persnr,oe,bewertung,`user`)";
+    $sql = "insert into dpersoekvalifikace (persnr,oe,bewertung,`user`,gilt_ab)";
     $sql.=" values(";
     $sql.=" '$persnr'";
     $sql.=" ,'$oekvalifikace'";
     $sql.=" ,'$hodnoceni'";
     $sql.=" ,'$u'";
+    $sql.=" ,'$giltab'";
     $sql.=" )";
     //nejake testy
-    if($hodnoceni>=6 || $hodnoceni<=9){
+    if(($hodnoceni>=6 || $hodnoceni<=9)&&($giltab!==FALSE)){
 	$insertId = $a->insert($sql);
     }
 }

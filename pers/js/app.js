@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('persApp',['ngNumeraljs','ui.date','ui.select','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
+var aplApp = angular.module('persApp',['ngNumeraljs','ui.uploader','ui.date','ui.scrollpoint','ui.select','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
 
 aplApp.config(['$numeraljsConfigProvider', function ($numeraljsConfigProvider) {
     var language = {

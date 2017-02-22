@@ -101,6 +101,35 @@ tbody.reparaturkopf>tr>td{
     font-weight: bold;
     background-color: lightgreen;
 }
+
+.ui-scrollpoint {
+margin-top: 0 !important;
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    border-radius: 0 0 0.5em 0.5em;
+    width:100%;
+}
+
+legend {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: -moz-use-text-color -moz-use-text-color #e5e5e5;
+    border-image: none;
+    border-style: none none solid;
+    border-width: 0 0 2px;
+    color: #333;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: inherit;
+    margin-bottom: 5px;
+    padding: 2px;
+    width: 100%;
+    background-color: #eef;
+}
 /********************** stylovani oblasti v help bloku ************************/
 /*
 .help-block p {

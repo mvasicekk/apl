@@ -518,7 +518,7 @@ for($x =0;$x<$pocetMesicu;$x++){
 
 
 
-$obsah = 'AVG';
+$obsah = 'Durchschnitt';
 //$obsah = 'Ø';
 
 $pdf->Cell($ppmWidth, $rowHeight, $obsah, 'LRBT', 0, 'C', 1);
@@ -558,7 +558,7 @@ foreach ($kdMonatAnzeigeArray as $kd=>$monatArray){
 
 //AVG za mesic
 $obs = 0;
-$pdf->Cell($kundeWidth, $rowHeight, 'AVG', 'LRBT', 0, 'R', 1);
+$pdf->Cell($kundeWidth, $rowHeight, 'Durchschnitt', 'LRBT', 0, 'R', 1);
 
 
 

@@ -35,7 +35,7 @@ if ($oeselected != '*') {
     $join.=" join doe on doe.oe=dtattypen.oe";
 }
 */
-$sql = "select  DATE_FORMAT(dpers.austritt,'%d.%m.%Y') as austritt,DATE_FORMAT(dpers.eintritt,'%d.%m.%Y') as eintritt,dpers.persnr,`name`,vorname,regeloe,dpersstatus from dpers";
+$sql = "select  if(dpers.geboren is not null,DATE_FORMAT(dpers.geboren,'%d.%m.%Y'),'') as geboren,DATE_FORMAT(dpers.austritt,'%d.%m.%Y') as austritt,DATE_FORMAT(dpers.eintritt,'%d.%m.%Y') as eintritt,dpers.persnr,`name`,vorname,regeloe,dpersstatus from dpers";
 $sql.= " $join";
 $sql.=" where (";
 $sql.=" ((`PersNr` like'" . $suchen . "%') or (LOWER(`name`) like '%" . $suchen . "%')  or (LOWER(`Vorname`) like '%" . $suchen . "%'))";

@@ -4175,6 +4175,21 @@ public static function hodnoceni2Penize($vaha,$hodnoceni){
     
     /**
      * 
+     * @param type $persnr
+     * @param type $field
+     * @param type $value1
+     */
+    public function updateBewerberField($persnr,$field,$value1){
+	if($value1==NULL){
+	    $sql = "update dpersbewerber set `$field`=null where persnr='$persnr' limit 1";
+	}
+	else{
+	    $sql = "update dpersbewerber set `$field`='$value1' where persnr='$persnr' limit 1";
+	}
+	return $this->query($sql);
+    }
+    /**
+     * 
      */
     public function updateRundlaufField($field,$value,$id){
 	$sql = "update drundlauf set `$field`='$value' where id='$id' limit 1";
