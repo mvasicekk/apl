@@ -26,6 +26,7 @@
 			<input id="E140" onClick="location.href='../get_parameters.php?popisky=Alle MA,*CH;Sort nach,*RA&promenne=alle;sort&values=a;PersNr,geboren&report=E140'" class='reportbutton' type="button"  name="E140" value="E140 - MA Liste"/>
 			<input id="E142" onClick="location.href='../get_parameters.php?popisky=Password,password;Monat;Jahr;Datum von,*DATE;Datum bis,*DATE;Persnr von;Persnr bis;Reporttyp,*RA&promenne=password;monat;jahr;von;bis;persvon;persbis;reporttyp&values=;{$aktualniMesic};{$aktualniRok};{$prvnidenmesice};{$dnes};1;99999;lohn&report=E142'" class='reportbutton' type="button"  name="E142" value="E142"/>
 			<input id="E145" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;Pers von;Pers bis&promenne=datevon;datebis;persvon;persbis&values=;;;;&report=E145'" class='reportbutton' type="button"  name="E145" value="E145 - Pers Anwesenheit Edata"/>
+			<input id="E147" onClick="location.href='../get_parameters.php?popisky=Pers von;Pers bis;Jahr;Monat&promenne=persvon;persbis;jahr;monat&values=;;{$aktualniRok};{$aktualniMesic}&report=E147'" class='reportbutton' type="button"  name="E147" value="E147 - Pers Anwesenheit"/>
 		    </div>
 		    <div id='S3XX'>
 			<input id="E310" onClick="location.href='../get_parameters.php?popisky=Datum von,*DATE;Datum bis,*DATE;Kunde&promenne=datevon;datebis;kunde&values=;;;&report=E310'" class='reportbutton' type="button"  name="E310" value="E310 - Teil - TatNr - Uebersicht"/>

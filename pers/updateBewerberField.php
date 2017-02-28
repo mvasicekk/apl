@@ -54,6 +54,21 @@ if($field=='status_fur_aby_id'){
     }
 }
 
+if($field=='staats_angehoerigkeit_id'){
+    $value1 = intval($value);
+    if($value1>0){
+	$valid = TRUE;
+    }
+}
+
+if($field=='staats_gruppe_id'){
+    $value1 = intval($value);
+    if($value1>0){
+	$valid = TRUE;
+    }
+}
+
+
 if($field=='arbamt_evidenz'){
     $value1 = intval($value);
     $valid = TRUE;

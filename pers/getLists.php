@@ -63,6 +63,10 @@ $fahigkeitenArray = $a->getQueryRows($sql);
 $sql = "select * from dtextbuch where kategorie='status_fur_aby' order by text_kurz";
 $status_fur_aby = $a->getQueryRows($sql);
 
+//staats_gruppe
+$sql = "select * from dtextbuch where kategorie='staats_gruppe' order by text_kurz";
+$staats_gruppe = $a->getQueryRows($sql);
+
 //info_vom
 $sql = "select * from dtextbuch where kategorie='info_vom' order by text_kurz";
 $info_vom = $a->getQueryRows($sql);
@@ -83,10 +87,14 @@ $sql.= "     dfaehigkeiten.faeh_abkrz";
 
 $bewFahigkeiten = $a->getQueryRows($sql);
 
-
+//staaten
+$sql = "select * from dstaaten where anzeigen=1 order by staat_abkrz";
+$staaten = $a->getQueryRows($sql);
 // vystup ----------------------------------------------------------------------
 
 $returnArray = array(
+    'staats_gruppen'=>$staats_gruppe,
+    'staaten'=>$staaten,
     'bewFahigkeiten'=>$bewFahigkeiten,
     'infoVomArray'=>$info_vom,
     'status_fur_aby'=>$status_fur_aby,

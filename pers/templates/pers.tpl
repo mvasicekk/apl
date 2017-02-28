@@ -26,8 +26,8 @@
 	
 	<script src="../libs/bower_components/angular/angular.min.js"></script>
 	<script src="../libs/bower_components/angular-route/angular-route.min.js"></script>
-	<script src="../libs/bower_components/angular-ui-scrollpoint/dist/scrollpoint.min.js"></script>
-	<script src="../libs/bower_components/angular-ui-uploader/dist/uploader.min.js"></script>
+{*	<script src="../libs/bower_components/angular-ui-scrollpoint/dist/scrollpoint.min.js"></script>*}
+	<script src="../libs/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 	
 	<script src="../libs/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="../libs/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>

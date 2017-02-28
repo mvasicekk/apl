@@ -16,12 +16,17 @@
 	    </div>
 
 	    <div class="col-sm-2 no-print">
-		<button class="btn btn-primary btn-small" type="button" ng-click="toggleHromadneOperace()">
+		<button ng-if="securityInfo.showArray['btn_hromadneoperace']" class="btn btn-primary btn-small" type="button" ng-click="toggleHromadneOperace()">
 		    hromadné operace
 		</button>
 	    </div>
 	</div>
     </div>
+
+    <!--debug-->
+<!--    <div>
+	{{securityInfo|json}}
+    </div>-->
 
     <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
 	<div class="row no-print well-sm well">
@@ -30,6 +35,11 @@
 		    <label class="control-label" for="osoba">os. číslo / jméno</label>
 		    <input ng-change="osobaChanged()" ng-model="osoba" type="text" class="form-control" id="osoba" placeholder="hledání pracovníka, zadejte osobní, číslo, jméno ..">
 		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['osoba_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+		<div ng-if="(osoby.length == 0 || osoby == null) && ma.selectedIndex == - 1 && persnrExists === false && isPersNr(osoba)" class="form-group form-group-sm">
+		    <button class="btn btn-primary btn-small" type="button" ng-click="addNewBewerber(osoba)">
+		    nový uchazeč
+		    </button>
 		</div>
 	    </div>
 
@@ -202,7 +212,7 @@
 		    </div>
 
 		    <!--button group pro zobrazeni jednotlivych panelu -------->
-		    <div class="col-sm-2 no-print">
+		    <div ng-show="securityInfo.showArray['select_panelswitch']" class="col-sm-2 no-print">
 			<div class="btn-group">
 				<button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				panel <span class="caret"></span>
@@ -221,6 +231,9 @@
 		    
 		    <div class="col-sm-8 no-print">
 			<div class="btn-group btn-group-justified btn-group-sm" role="group">
+			    <div class="btn-group" role="group">
+				<button type="button" ng-click="panelSwitch('grundinfo')" class="btn btn-info" role="button" href="">Grundinfo</button>
+			    </div>
 			    <div class="btn-group" role="group">
 				<button type="button" ng-click="panelSwitch('bewerber')" class="btn btn-info" role="button" href="">uchazeč (Bewerber)</button>
 			    </div>
@@ -242,7 +255,7 @@
 			<div class="well well-sm">
 			    <div class="row">
 				<div class="col-sm-6">
-				    <h4>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <small><span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span><span class="label label-success">{{ma.maInfo.dpersstatus}}</span></small></h4>
+				    <h4>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <small><span class="label label-success">{{ma.maInfo.dpersstatus}}</span><span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span></small></h4>
 <!--				    <div class="form-group form-group-sm">
 					<div class="col-sm-12">
 					    <ui-select ng-model="ma.bewerberInfo.adr">
@@ -253,10 +266,30 @@
 					    </ui-select>
 					</div>
 				    </div>-->
+				    <img style="width:120px;" class="img-thumbnail" ng-if="ma.maFotoUrl!==null" ng-src="{{ma.maFotoUrl}}" />
+				    <div ng-if="ma.maFotoUrl==null">
+				    <!--<div>-->
+					<button ngf-select="uploadFiles1($files,$invalidFiles,selectedButton)" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>foto
+				    </button>
+				    <div ng-if="files.length>0">
+					<ul class="list-group">
+					    <li class="list-group-item" ng-repeat="f in files" style="font:smaller">{{f.name}}
+						<div class="progress">
+						<div aria-valuenow="{{f.progress}}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-warning" role="progressbar" style="width: {{f.progress}}%">
+						{{f.progress}} %
+						</div>
+						</div>
+					    </li>
+					</ul>
+				    </div>
+				    </div>
+				    
 				</div>
 				<div class="col-sm-6">
-				    <p><small>Geburtsdatum :</small> {{ma.maInfo.geboren|date:'d.m.Y'}}</p>
-				    <p><small>email :</small> {{ma.maInfo.email}}</p>
+				    <p><small>Geburtsdatum: </small> {{ma.maInfo.geborenF}}</p>
+				    <p><small>Gegurtsort: </small> {{ma.maInfo.gebort}}</p>
+				    <p><small>Tel.: </small> {{ma.dpersDetail.kom7}}</p>
 				</div>
 			    </div>
 			    
@@ -271,6 +304,91 @@
 	<div class="row"  ng-show="ma.selectedIndex >= 0">
 	    <div class="col-sm-12">
 		
+		<!--panel grundinfo ---------------------------------->
+		<div ng-show="showPanel.grundinfo" id="grundinfo">
+		    <div class="panel panel-success">
+			<div class="panel-heading">
+			    Grundinfo
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['grundinfo_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="col-sm-6">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>person</legend>
+					    <div class="form-group">
+						<label for="vorname" class="col-sm-2 control-label">jméno</label>
+						<div class="col-sm-4">
+						    <input ng-model="ma.maInfo.Vorname" type="text" class="form-control" id="vorname" placeholder="jmeno"  ng-change="dpersFieldChanged('Vorname')">
+						</div>
+						<label for="name" class="col-sm-2 control-label">příjmení</label>
+						<div class="col-sm-4">
+						    <input ng-model="ma.maInfo.Name" type="text" class="form-control" id="name" placeholder="příjmení"  ng-change="dpersFieldChanged('Name')">
+						</div>
+					    </div>
+					    <div class="form-group">
+						<label for="g" class="col-sm-2 control-label">datum narození</label>
+						<div class="col-sm-4">
+						    <input ng-model="ma.maInfo.geboren" ui-date="dateOptions" type="text" class="form-control" id="g" placeholder="datum narození"  ng-change="dpersFieldChanged('geboren')">
+						</div>
+					    </div>
+					</fieldset>
+					<fieldset>
+					    <legend>stát</legend>
+					    <div class="form-group">
+						<label class="col-sm-2 control-label" for="staats_angehoerigkeit_id">státní příslušnost</label>
+						<div class="col-sm-10">
+						    <ui-select ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('staats_angehoerigkeit_id')">
+							<ui-select-match placeholder="vyberte státní příslušnost">{{$select.selected.staat_abkrz}} {{$select.selected.staat_name}}</ui-select-match>
+							<ui-select-choices repeat="s.id as s in staaten | filter:$select.search">
+							    <small>
+								<strong>{{s.staat_abkrz}}</strong>
+							    </small>
+							    <div><em>{{s.staat_name}}</em></div>
+							</ui-select-choices>
+						    </ui-select>
+						</div>
+					    </div>
+					    <div class="form-group">
+						<label class="col-sm-2 control-label" for="staats_gruppe_id">staatsgruppe</label>
+						<div class="col-sm-10">
+						    <ui-select ng-model="ma.bewerberInfo.staats_gruppe_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('staats_gruppe_id')">
+							<ui-select-match placeholder="vyberte staatsgruppe">{{$select.selected.text_kurz}} {{$select.selected.text_lang}}</ui-select-match>
+							<ui-select-choices repeat="s.id as s in staats_gruppen | filter:$select.search">
+							    <small>
+								<strong>{{s.text_kurz}}</strong>
+							    </small>
+							    <div><em>{{s.text_lang}}</em></div>
+							</ui-select-choices>
+						    </ui-select>
+						</div>
+					    </div>
+					    
+					</fieldset>
+				    </div>
+				</div>
+				<div class="col-sm-6">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>kontakty</legend>
+					    <div class="form-group">
+						<label for="tc" class="col-sm-2 control-label">telefonní číslo</label>
+						<div class="col-sm-4">
+						    <input ng-model="ma.dpersDetail.kom7" type="text" class="form-control" id="tc" placeholder="telefonní číslo"  ng-change="dpersdetailFieldChanged('kom7')">
+						</div>
+						<label for="em" class="col-sm-2 control-label">email</label>
+						<div class="col-sm-4">
+						    <input ng-model="ma.maInfo.email" type="text" class="form-control" id="email" placeholder="email"  ng-change="dpersFieldChanged('email')">
+						</div>
+					    </div>
+					</fieldset>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
 		<!--panel uchazec / bewerber ---------------------------------->
 		<div ng-show="showPanel.bewerber" id="bewerber">
 		    <div class="panel panel-success">

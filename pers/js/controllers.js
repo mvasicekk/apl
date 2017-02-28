@@ -50,7 +50,7 @@ aplApp.directive("formOnChange", function($parse){
 });
 
 
-aplApp.controller('persController', function ($scope, $routeParams, $http, $timeout, $window, $location, $sanitize) {
+aplApp.controller('persController', function ($scope, $routeParams, $http, $timeout, $window, $location, $sanitize,Upload) {
     $scope.isEditor = false;	//urcuje zda muze uzivatel editovat helptext
     $scope.tinyMceOptions = {
 	inline: true,
@@ -112,7 +112,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.osobniHodnoceniMonat = curdate.getMonth();
     $scope.fillOHButtonDisabled = false;
     $scope.lockOHButtonDisabled = false;
-
+    $scope.persnrExists = false;
 
     $scope.inventar = {};
     $scope.inventarArray = [];
@@ -165,7 +165,85 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     
     };
     
+    /**
+     * test zda muze bzt zadani osobnim cislem
+     * @param {type} osoba
+     * @returns {Boolean}
+     */
+    $scope.isPersNr = function(osoba){
+	if(parseInt(osoba)>0){
+	    return true;
+	}
+	else{
+	    return false;
+	}
+    }
     
+    /**
+     * 
+     * @param {type} files
+     * @param {type} errFiles
+     * @param {type} b
+     * @returns {undefined}
+     */
+    $scope.uploadFiles1 = function(files, errFiles,b) {
+        $scope.files = files;
+        $scope.errFiles = errFiles;
+        angular.forEach(files, function(file) {
+            file.upload = Upload.upload({
+                url: './upload.php',
+		data: {file: file, att:'foto',persnr:$scope.ma.maInfo.PersNr}
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                    $scope.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 * 
+                                         evt.loaded / evt.total));
+		//pokud bude progress = 100, odstranim file ze seznamu files
+		if(file.progress==100){
+		    var ind = $scope.files.findIndex(function(v){v.name==file.name});
+		    $scope.files.splice(ind,1);
+		    //pokud bude pole nulove, obnovim prehled souboru
+		    if($scope.files.length==0){
+			$scope.anlagenButtonClicked(b);
+		    }
+		}
+            });
+        });
+    }
+    
+    /**
+     * 
+     * @param {type} persnr
+     * @returns {undefined}
+     */
+    $scope.addNewBewerber = function(persnr){
+	$http.post(
+		    './createNewMA.php',
+		    {
+			persnr: persnr
+		    }
+	    ).then(function (response) {
+		if(response.data.persnr!==null){
+		    //byl vytvoren novy MA, vytahnu informace
+		    //jeste vhodne nastavit filtry
+		    $scope.jenma = false;
+		    $scope.austritt60 = false;
+		    $scope.oes.oeSelected = "*";
+		    $scope.filt.dstatus = ["BEWERBER"];
+		    $scope.filt.oearray = ["*"];
+		    $scope.ma.selectedIndex = 1;
+		    $scope.panelSwitch('grundinfo');
+		    getMAInfo(response.data.persnr,0);
+		}
+	    });
+    }
 /**
  * 
  * @returns {undefined}
@@ -215,6 +293,46 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	return showPanel[panelid];
     }
     
+    
+    /**
+     * 
+     * @param {type} field
+     * @returns {undefined}
+     */
+    $scope.dpersFieldChanged = function(field){
+	console.log('dpersFieldChanged: ' + field);
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './updateDpersField.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr,
+			value: $scope.ma.maInfo[field],
+			field: field
+		    }
+	    ).then(function (response) {
+	    });
+	}
+    }
+    
+    /**
+     * 
+     * @param {type} field
+     * @returns {unresolved}
+     */
+    $scope.dpersdetailFieldChanged = function(field){
+	console.log('dpersdetailFieldChanged: ' + field);
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './updateDpersDetailField.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr,
+			value: $scope.ma.dpersDetail[field],
+			field: field
+		    }
+	    ).then(function (response) {
+	    });
+	}
+    }
     /**
      * 
      * @param {type} field
@@ -900,6 +1018,17 @@ $scope.commentClicked = function(e,p){
 	    if (response.data.ma !== null) {
 		$scope.ma.maInfo = response.data.ma[0];
 		$scope.ma.bewerberInfo = response.data.bewerber[0];
+		if(response.data.dpersdetail!==null){
+		    $scope.ma.dpersDetail = response.data.dpersdetail[0];
+		}
+		
+		if(response.data.attArray.docsArray!==null){
+		    $scope.ma.maFotoUrl = response.data.attArray.docsArray[0].thumburl;
+		}
+		else{
+		    $scope.ma.maFotoUrl = null;
+		}
+		console.log($scope.ma.maFotoUrl);
 		$scope.ma.oeInfo = response.data.oeinfo;
 		// dodatecne informace
 		getHFPremie();
@@ -1000,6 +1129,7 @@ $scope.commentClicked = function(e,p){
 		}
 	).then(function (response) {
 	    $scope.osoby = response.data.osoby;
+	    $scope.persnrExists = response.data.persnrExists;
 	});
     }
 
@@ -1068,6 +1198,8 @@ $scope.commentClicked = function(e,p){
 		{}
 	).then(function (response) {
 	    //console.log(response.data);
+	    $scope.staaten = response.data.staaten;
+	    $scope.staats_gruppen = response.data.staats_gruppen;
 	    $scope.bewFahigkeiten = response.data.bewFahigkeiten;
 	    $scope.infoVomArray = response.data.infoVomArray;
 	    $scope.dpersstatuses = response.data.dpersstatuses;

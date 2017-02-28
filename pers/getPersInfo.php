@@ -21,6 +21,15 @@ $a = AplDB::getInstance();
 
 $u = $_SESSION['user'];
 
+// test zda existuje persnr
+$sql = "select persnr from dpers where persnr='$suchen'";
+$rs = $a->getQueryRows($sql);
+if($rs!==NULL){
+    $persnrExists = TRUE;
+}
+else{
+    $persnrExists = FALSE;
+}
 if (count($oearray) == 1 && $oearray[0] == '*') {
     
 }
@@ -115,6 +124,7 @@ $returnArray = array(
     'suchen' => $suchen,
     'sql' => $sql,
     'jenma' => $jenma,
+    'persnrExists'=>$persnrExists,
 );
 
 echo json_encode($returnArray);
