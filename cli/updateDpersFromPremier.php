@@ -254,6 +254,8 @@ foreach ($persArray as $zCislo => $persRow) {
     }
     echo " persnr = $persNr";
 
+    // tree full, node add, recursive nodelist()
+    // kontrola duplicit !!!
     // mam cloveka s timto isp cislem v apl ?
     if (array_key_exists($zCislo, $aplPersArray)) {
 	// cloveka s timto cislem mam apl, zkontroluju zmeny v hodnotach poli

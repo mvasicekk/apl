@@ -11,7 +11,7 @@ $apl = AplDB::getInstance();
 $sql.= " select";
 $sql.= "     dkopf.Teil,";
 $sql.= "     dkopf.preis_stk_gut,";
-$sql.= "     sum(dpos.`VZ-min-kunde`*0.45) as sum_vzkd";
+$sql.= "     sum(dpos.`VZ-min-kunde`) as sum_vzkd";
 $sql.= " from dkopf";
 $sql.= " join dpos on dpos.Teil=dkopf.Teil";
 $sql.= " where";
@@ -37,5 +37,5 @@ foreach ($rs as $r){
     echo "sumMit95 = ".$sumMit95."<br>";
     $sql = "update dpos set `VZ-min-kunde`='$vzkd95Rnd' where Teil='".$r['Teil']."' and `TaetNr-Aby`=95";
     echo "sql = ".$sql."<hr>";
-    //$apl->query($sql);
+    $apl->query($sql);
 }
