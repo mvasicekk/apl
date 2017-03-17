@@ -4,6 +4,11 @@ require_once '../security.php';
 <?
 include "../db.php";
 require("../libs/Smarty.class.php");
+
+$von = $_GET['von'];
+$bis = $_GET['bis'];
+
+
 $smarty = new Smarty;
 
 	$dnyvTydnu = array('Ne','Po','Út','St','Čt','Pá','So');
@@ -16,6 +21,9 @@ $smarty = new Smarty;
 	}
 
 	$a = AplDB::getInstance();
+
+	$vonDB = $a->make_DB_datum($von);
+	$bisDB = $a->make_DB_datum($bis);
 	
 	$kundeVon = 111;
 	$kundeBis = 999;
@@ -45,13 +53,26 @@ $smarty = new Smarty;
 	
 	//$pocetDnuPredAktualnimDnem = 7;
 	//$datumVon = date('Y-m-d',  time()-$pocetDnuPredAktualnimDnem*24*60*60);
-	$datumVon = date('Y-m-d',  mktime(01, 01, 01, 2, 1,2017));
+	if($vonDB!=''){
+	    $datumVon = date('Y-m-d',strtotime($vonDB)-7*24*60*60); // odecist 7 dnu od zadaneho datumu
+	}
+	else{
+	    $datumVon = date('Y-m-d',  mktime(01, 01, 01, 2, 25,2017));
+	}
+	
 	// + 14 dnu
 	$pocetdnu = $pocetDnuPredAktualnimDnem+34;
 	//mkti
-	$bisCustom = mktime(23, 59, 59, 3, 31,2017);
+	if($bisDB!=''){
+	    $datumBis = $bisDB;
+	}
+	else{
+	    $bisCustom = mktime(23, 59, 59, 5, 1,2017);
+	    $datumBis = date('Y-m-d',  $bisCustom);
+	}
+	
 	//$konecRokuTime = mktime(23, 59, 59, 4, 31,2016);
-	$datumBis = date('Y-m-d',  $bisCustom);
+	
 	$datetime1 = new DateTime($datumBis);
 	$datetime2 = new DateTime($datumVon);
 	$interval = $datetime1->diff($datetime2);

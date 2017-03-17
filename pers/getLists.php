@@ -68,7 +68,7 @@ $sql = "select * from dtextbuch where kategorie='staats_gruppe' order by text_ku
 $staats_gruppe = $a->getQueryRows($sql);
 
 //info_vom
-$sql = "select * from dtextbuch where kategorie='info_vom' order by text_kurz";
+$sql = "select * from dtextbuch where kategorie='info_vom_n' order by text_kurz";
 $info_vom = $a->getQueryRows($sql);
 
 //fahigkeiten

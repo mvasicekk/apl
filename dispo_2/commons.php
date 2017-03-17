@@ -18,6 +18,8 @@ function getLkwFormDivs($rundlaufid) {
     $exCount = 0;
     $imCount = 0;
 
+    //prehled nalozenych zakazek
+    //vsechny na aute
     $imexArray = $apl->getRundlaufImExArray($rundlaufid);
     if ($imexArray !== NULL) {
 	$pocet = 0;
