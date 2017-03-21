@@ -86,6 +86,28 @@ if($persRows!==NULL){
 	    $vzaby_akkord_kc = 0;
 	    $vzaby_zeit_kc = 0;
 	}
+	
+	
 	echo "<br>vzaby = $vzaby<br>vzaby_akkord = $vzaby_akkord<br>vzaby_akkord_kc = $vzaby_akkord_kc<br>vzaby_zeit = $vzaby_zeit<br>vzaby_zeit_kc = $vzaby_zeit_kc<br>";
+	// test na moznost adaptace, tj. mam vyplneno probezeit ?
+	if($eeZuschlagBerechnen==1 && strlen(trim($zkusebni_doba_dobaurcita))>0){
+	    echo "<br><strong>pocitam hodinovou mzdu podle adaptacnich pravidel</strong><br>";
+	    //potrebuju dochazku pro zadane obdobi
+	    
+	}
     }
 }
+
+//------------------------------------------------------------------------------
+// formatovany vystup                                                          |
+//------------------------------------------------------------------------------
+//persnr = 2857
+//einarbzuschlag_berechnen=1
+//zkusebni_doba_dobaurcita=
+//perslohnfaktor=1
+//vzaby = 10474.6
+//vzaby_akkord = 10474.6
+//vzaby_akkord_kc = 17457.6666666667
+//vzaby_zeit = 0
+//vzaby_zeit_kc = 0
+//------------------------------------------------------------------------------
