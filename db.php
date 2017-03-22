@@ -9986,6 +9986,113 @@ class AplDB {
     }
 
     /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     * 
+     */
+    public function getPremieZaKvalifikaci($persvon,$persbis,$von,$bis){
+	$qArr = array();
+	$sql.=" select";
+	$sql.=" drueck.PersNr as persnr,";
+	$sql.=" dtattypen.oe,";
+	$sql.=" sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+	$sql.=" sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*doe.czk/60*if(dpersoekvalifikace.bewertung>8,20/100,if(dpersoekvalifikace.bewertung>7,15/100,if(dpersoekvalifikace.bewertung>6,5/100,0))),(drueck.`Stück`)*drueck.`VZ-IST`*doe.czk/60*if(dpersoekvalifikace.bewertung>8,20/100,if(dpersoekvalifikace.bewertung>7,15/100,if(dpersoekvalifikace.bewertung>6,5/100,0)))),0)) as vzaby_akkord_kvalifikace_kc";
+	$sql.=" from drueck";
+	$sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	$sql.=" join doe on doe.oe=dtattypen.oe";
+	$sql.=" join dpersoekvalifikace on dpersoekvalifikace.persnr=drueck.PersNr and dpersoekvalifikace.oe=dtattypen.oe";
+	$sql.=" where";
+	$sql.=" drueck.PersNr between '$persvon' and '$persbis'";
+	$sql.=" and";
+	$sql.=" drueck.Datum between '$von' and '$bis'";
+	$sql.=" group by";
+	$sql.=" drueck.PersNr,";
+	$sql.=" dtattypen.oe";
+	
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    foreach($rs as $r){
+		$qArr[$r['persnr']][$r['oe']] = floatval($r['vzaby_akkord_kvalifikace_kc']);
+	    }
+	}
+	
+	return $qArr;
+    }
+    /**
+     * 
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type
+     */
+    public function getPersAnwStdArbeit($persnr,$von,$bis){
+	$anwArray = array();
+	$sql.=" select";
+	$sql.=" DATE_FORMAT(dzeit.Datum,'%Y-%m-%d') as datum,";
+	$sql.=" sum(dzeit.Stunden) as a_stunden";
+	$sql.=" from dzeit";
+	$sql.=" join dtattypen on dtattypen.tat=dzeit.tat";
+	$sql.=" where";
+	$sql.=" dzeit.PersNr='$persnr'";
+	$sql.=" and";
+	$sql.=" dzeit.Datum between '$von' and '$bis'";
+	$sql.=" and";
+	$sql.=" dtattypen.oestatus='a'";
+	$sql.=" group by";
+	$sql.=" dzeit.Datum";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    foreach ($rs as $r){
+		$anwArray[$r['datum']] = floatval($r['a_stunden']);
+	    }
+	}
+	return $anwArray;
+    }
+    /**
+     * 
+     * @param type $persnr
+     * @param type $dbDatumVon
+     * @param type $dbDatumBis
+     * @return int
+     */
+    public function getATageProPersnrBetweenDatumsAdaptace($persnr, $dbDatumVon, $dbDatumBis) {
+	$nurArbeitsTage = 1;
+	$atage = 0;
+	$sql = "select";
+	$sql.=" dzeit.`PersNr`,";
+	$sql.=" dzeit.`Datum`";
+	$sql.=" from";
+	$sql.=" dzeit";
+	$sql.=" join";
+	$sql.=" dtattypen on dzeit.tat=dtattypen.tat";
+	$sql.=" join";
+	$sql.=" calendar on dzeit.`Datum`=calendar.datum";
+	$sql.=" where";
+	$sql.=" dzeit.`Datum` between '$dbDatumVon' and '$dbDatumBis'";
+	$sql.=" and";
+	$sql.=" dzeit.`PersNr`='$persnr'";
+	$sql.=" and ";
+	$sql.=" (dzeit.tat<>'n' and dzeit.tat<>'nu' and dzeit.tat<>'u')";
+	if ($nurArbeitsTage == 1) {
+	    $sql.=" and";
+	    $sql.=" calendar.cislodne between 1 and 5";
+	    $sql.=" and";
+	    $sql.=" calendar.svatek=0";
+	}
+	$sql.=" group by";
+	$sql.=" dzeit.`PersNr`,";
+	$sql.=" dzeit.datum";
+
+	$result = mysql_query($sql);
+	$atage = mysql_num_rows($result);
+	if ($atage == FALSE)
+	    $atage = 0;
+	return $atage;
+    }
+    /**
      * vrati pocet dnu kdy persnr pracoval (oestatus=a) mezi zadanyma datumama
      *
      * @param int $persnr osobni cislo
