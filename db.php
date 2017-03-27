@@ -9989,6 +9989,50 @@ class AplDB {
      * 
      * @param type $persvon
      * @param type $persbis
+     * @param type $von ve formatu YYY-MM-DD
+     * @param type $bis ve formatu YYY-MM-DD
+     */
+    public function getPremieZaKvalifikaciPctArray($persvon,$persbis,$von,$bis){
+	$qArr = array();
+	$sql.=" select";
+	$sql.=" dpersoekvalifikace.persnr,";
+	$sql.=" dpersoekvalifikace.oe,";
+	$sql.=" DATE_FORMAT(dpersoekvalifikace.gilt_ab,'%Y-%m-%d') as gilt_ab_date,";
+	$sql.=" sum(if(dpersoekvalifikace.bewertung>8,20/100,if(dpersoekvalifikace.bewertung>7,15/100,if(dpersoekvalifikace.bewertung>6,5/100,0)))) as kvalifikace_pct";
+	$sql.=" from dpersoekvalifikace";
+	$sql.=" where";
+	$sql.=" dpersoekvalifikace.persnr between '$persvon' and '$persbis'";
+	$sql.=" group by";
+	$sql.=" dpersoekvalifikace.persnr,";
+	$sql.=" dpersoekvalifikace.oe,";
+	$sql.=" dpersoekvalifikace.gilt_ab";
+	$sql.=" order by";
+	$sql.=" dpersoekvalifikace.persnr,";
+	$sql.=" dpersoekvalifikace.oe,";
+	$sql.=" dpersoekvalifikace.gilt_ab desc";
+
+ 	$bisTime = strtotime($bis);
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    foreach($rs as $r){
+		$giltAbTime = strtotime($r['gilt_ab_date']);
+		// kontrola na platnost gilt ab
+		if($giltAbTime<=$bisTime){
+		    if(is_array($qArr[$r['persnr']][$r['oe']])){
+			// uz mam -> neukladam
+		    }
+		    else{
+			$qArr[$r['persnr']][$r['oe']] = array('gilt_ab'=>$r['gilt_ab_date'],'pct'=>$r['kvalifikace_pct']);
+		    }
+		}
+	    }
+	}
+	return $qArr;
+    }
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
      * @param type $von
      * @param type $bis
      * 
