@@ -15,6 +15,7 @@ $persvon = $_GET['persvon'];
 $persbis = $_GET['persbis'];
 $jahr = $_GET['jahr'];
 $monat = $_GET['monat'];
+$mzdaPodleAdaptace = FALSE;
 
 $von = sprintf("%04d-%02d-%02d",$jahr,$monat,1);
 $bis = sprintf("%04d-%02d-%02d",$jahr,$monat,  cal_days_in_month(CAL_GREGORIAN, $monat, $jahr));
@@ -319,14 +320,16 @@ if($persRows!==NULL){
 	// adaptace ------------------------------------------------------------
 	// test na moznost adaptace, tj. mam vyplneno probezeit ?
 	if($eeZuschlagBerechnen==1 && strlen(trim($zkusebni_doba_dobaurcita))>0){
+	    $mzdaPodleAdaptace = TRUE;
 	    $anwArray = $a->getPersAnwStdArbeit($persnr,$von,$bis);
 	    $adaptaceBisDate = date('Y-m-d',$adaptaceBisTime);
+	    $zkusebnidobaTime = strtotime($zkusebni_doba_dobaurcita);
 	    echo "<br><strong>pocitam hodinovou mzdu podle adaptacnich pravidel (adaptace bis: $adaptaceBisDate)</strong>";
 	    //potrebuju dochazku pro zadane obdobi
 	    //projdu po jednotlivych dne za cely mesic
 	    $vonTime = strtotime($von);$bisTime = strtotime($bis." 23:59:59");
 	    $adaptLohnSum = 0;
-	    for($aktualTime=$vonTime;$aktualTime<=$bisTime && $aktualTime<=$adaptaceBisTime;$aktualTime+=24*60*60){
+	    for($aktualTime=$vonTime;$aktualTime<=$bisTime && $aktualTime<=$adaptaceBisTime && $aktualTime<=$zkusebnidobaTime;$aktualTime+=24*60*60){
 		$aktualDate = date('Y-m-d',$aktualTime);
 		
 		echo "<br>$aktualDate - ";
@@ -345,9 +348,11 @@ if($persRows!==NULL){
 	    }
 	    echo "<br>adaptLohn = $adaptLohnSum";
 	    //test jestli mu adaptace konci pred koncem mesice, tj. od konce adaptace do konce mesice mu spocitam vykon normalne (ukolove)
-	    if ($adaptaceBisTime < $bisTime) {
+	    if ($adaptaceBisTime < $bisTime || $zkusebnidobaTime < $bisTime) {
 		//adaptace konci pred koncem mesice
-		$leistArray = getPersGrundLeistung($persnr, date('Y-m-d', $adaptaceBisTime), $bis);
+		//odkdy skoncila adaptace?
+		$konecAdaptaceTime = min(array($adaptaceBisTime,$zkusebnidobaTime));
+		$leistArray = getPersGrundLeistung($persnr, date('Y-m-d', $konecAdaptaceTime), $bis);
 		if ($leistArray !== NULL) {
 		    $vzaby = $leistArray[0]['vzaby'];
 		    $vzaby_akkord = $leistArray[0]['vzaby_akkord'];
@@ -361,7 +366,7 @@ if($persRows!==NULL){
 		    $vzaby_akkord_kc = 0;
 		    $vzaby_zeit_kc = 0;
 		}
-		echo "<br><strong>mzda po ukonceni adaptace do konce mesice ".date('Y-m-d', $adaptaceBisTime+24*60*60).' - '.$bis.'</strong>';
+		echo "<br><strong>mzda po ukonceni adaptace do konce mesice ".date('Y-m-d', $konecAdaptaceTime+24*60*60).' - '.$bis.'</strong>';
 		echo "<br>vzaby = $vzaby<br>vzaby_akkord = $vzaby_akkord<br>vzaby_akkord_kc = $vzaby_akkord_kc<br>vzaby_zeit = $vzaby_zeit<br>vzaby_zeit_kc = $vzaby_zeit_kc<br>";
 	    }
 	}
