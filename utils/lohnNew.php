@@ -1,3 +1,11 @@
+<html>
+    <head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>
+	    Personal - Lohn - New - Detail
+	</title>
+    </head>
 <?php
 require_once '../db.php';
 
@@ -150,6 +158,7 @@ if($rows!=NULL){
 $sql = "";
 $sql.=" select";
 $sql.="     dpers.PersNr as persnr,";
+$sql.="     concat(dpers.`name`,' ',dpers.`vorname`) as persname,";
 $sql.="     dpers.eintritt,";
 $sql.="     dpers.austritt,";
 $sql.="     dpers.dpersstatus,";
@@ -176,11 +185,13 @@ $persRows = $a->getQueryRows($sql);
 $premieZaKvalifikaciArray = $a->getPremieZaKvalifikaci($persvon, $persbis, $von, $bis);
 $premieZaKvalifikaciPctArray = $a->getPremieZaKvalifikaciPctArray($persvon, $persbis, $von, $bis);
 //AplDB::varDump($premieZaKvalifikaciPctArray);
+//pocitat jen pro lidi s priznakem a_premie
 $aPremienArray = $a->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',FALSE);
 
 if($persRows!==NULL){
     foreach ($persRows as $pers){
 	$persnr = $pers['persnr'];
+	$persname = $pers['persname'];
 	$eeZuschlagBerechnen = $pers['einarb_zuschlag'];
 	$eintrittDate = $pers['eintritt'];
 	$zkusebni_doba_dobaurcita = $pers['zkusebni_doba_dobaurcita'];
@@ -188,7 +199,7 @@ if($persRows!==NULL){
 	$leistFaktor = $pers['leistfaktor'];
 	$adaptaceBisTime = $pers['adaptace_bis']!=NULL?strtotime($pers['adaptace_bis']):strtotime("2100-01-01");
 	echo "<hr>";
-	echo "<strong>persnr = $persnr</strong> (ET:$eintrittDate);einarbzuschlag_berechnen=$eeZuschlagBerechnen;zkusebni_doba_dobaurcita=$zkusebni_doba_dobaurcita;perslohnfaktor=$perslohnfaktor,leistfaktor=$leistFaktor";
+	echo "<strong>persnr = $persnr ($persname)</strong> (ET:$eintrittDate);einarbzuschlag_berechnen=$eeZuschlagBerechnen;zkusebni_doba_dobaurcita=$zkusebni_doba_dobaurcita;perslohnfaktor=$perslohnfaktor,leistfaktor=$leistFaktor";
 	$leistArray = getPersGrundLeistung($persnr, $von, $bis);
 	$lAAll = array();
 	$sumVzaby = 0;
@@ -392,6 +403,41 @@ if($persRows!==NULL){
 	    echo "<br>a-Premie=".$persAArray['apremie']." ( ".$persAArray['apremie_flag']." )";
 	}
 	
+	
+	$bLeistPremie = FALSE;
+	$bQTLPremie = FALSE;
+	if(array_key_exists($persnr, $persAplRows)){
+	    $d = $persAplRows[$persnr]['grundinfo']['tage_d'];
+	    $nw = $persAplRows[$persnr]['grundinfo']['tage_nw'];
+	    $z = $persAplRows[$persnr]['grundinfo']['tage_z'];
+	    $bLeistPremie = $persAplRows[$persnr]['grundinfo']['premie_za_vykon']<>0?TRUE:FALSE;
+	    $bQTLPremie = $persAplRows[$persnr]['grundinfo']['premie_za_3_mesice']<>0?TRUE:FALSE;
+	}
+	
+	//kvartalni premie
+	if ($bQTLPremie) {
+	    echo "<br><strong>QTL Premie</strong>";
+	    $pracovnik = $persnr;
+	    $leistungArray = array('leistung_min' => 0, 'leistung_kc' => 0);
+	    if ($monat % 3 == 0) {
+		$qtl = ceil($monat / 3);
+		$qtlTageSoll = $a->sollTageQTLProPersNr($jahr, $qtl, $pracovnik);
+		$leistungArray = $a->getQTLLeistungProPersNrNeu($jahr, $qtl, $pracovnik);
+	    }
+
+	    //zobrazeni dnu soll
+	    echo "<br>qtlTageSoll=$qtlTageSoll";
+	    $qtlLeistungIst = $leistungArray['leistung_min'];
+	    $qtlLeistungIstKc = $leistungArray['leistung_kc'];
+	    $qtlLeistungSoll = isset($qtlTageSoll) ? $qtlTageSoll * 480 : 0;
+	    echo "<br>qtlLeistungIst=$qtlLeistungIst,qtlLeistungIstKc=$qtlLeistungIstKc,qtlLeistungSoll=$qtlLeistungSoll";
+	    $qtlPraemie = $bQTLPremie == true ? round(0.1 * $qtlLeistungIstKc) : 0;
+	    if ($qtlLeistungIst < $qtlLeistungSoll) {
+		$qtlPraemie = 0;
+	    }
+	    $qtlPremieBetrag = $qtlPraemie;
+	    echo "<br>qtlPremieBetrag=<strong>$qtlPremieBetrag</strong>";
+	}
 	// premie za vykon
 	// pocet kalendarnik prac dnu
 	echo "<br><strong>vykonnostni premie</strong>";
@@ -408,12 +454,7 @@ if($persRows!==NULL){
 	$eintrittTimestamp = strtotime($eintrittDate);
 	$d = 0;
 	$nw = 0;
-	$bLeistPremie = FALSE;
-	if(array_key_exists($persnr, $persAplRows)){
-	    $d = $persAplRows[$persnr]['grundinfo']['tage_d'];
-	    $nw = $persAplRows[$persnr]['grundinfo']['tage_nw'];
-	    $bLeistPremie = $persAplRows[$persnr]['grundinfo']['premie_za_vykon'];
-	}
+	
 
 	echo "<br>d = ".$d;
 	if ($eintrittTimestamp > $vonTimestamp)
@@ -457,19 +498,13 @@ if($persRows!==NULL){
 	}
 	$leistPremieBetrag = $bLeistPremie ? $leistPraemieBerechnet : 0;
 	echo "<br>leistPremieBetrag:$leistPremieBetrag<br>";
+	
+	//zjistit, zda mel nejake Z
+	if(intval($z)>0){
+	    echo "<h2 style='color:red;'>ma neomluvenou absenci <strong>$z</strong> dnu, vyplatit premie ?</h2>";
+	}
     }
 }
 
-//------------------------------------------------------------------------------
-// formatovany vystup                                                          |
-//------------------------------------------------------------------------------
-//persnr = 2857
-//einarbzuschlag_berechnen=1
-//zkusebni_doba_dobaurcita=
-//perslohnfaktor=1
-//vzaby = 10474.6
-//vzaby_akkord = 10474.6
-//vzaby_akkord_kc = 17457.6666666667
-//vzaby_zeit = 0
-//vzaby_zeit_kc = 0
-//------------------------------------------------------------------------------
+?>
+</html>

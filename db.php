@@ -9752,6 +9752,13 @@ class AplDB {
 	return mysql_num_rows($res);
     }
 
+    /**
+     * 
+     * @param type $jahr
+     * @param type $qtl
+     * @param type $persnr
+     * @return type
+     */
     public function getQTLLeistungProPersNr($jahr, $qtl, $persnr) {
 	$leistungGesamt = 0;
 	$kcGesamt = 0;
@@ -9796,6 +9803,66 @@ class AplDB {
 //            echo "<br>month=".$row['month']."vzaby=".$row['vzaby']." vzaby_akkord=".$row['vzaby_akkord']." vzaby_zeit=".$row['vzaby_zeit']." vzaby_zeit_kc=".$row['vzaby_zeit_kc']." vzaby_akkord_kc=".$row['vzaby_akkord_kc'];
 		$leistungGesamt += intval($row['vzaby_akkord']) + intval($row['vzaby_zeit_leistung']);
 		$kcGesamt += intval($row['vzaby_akkord_kc']) + intval($row['vzaby_zeit_kc']);
+	    }
+	}
+	return array('leistung_min' => $leistungGesamt, 'leistung_kc' => $kcGesamt);
+    }
+    
+    /**
+     * 
+     * @param type $jahr
+     * @param type $qtl
+     * @param type $persnr
+     * @return type
+     */
+    public function getQTLLeistungProPersNrNeu($jahr, $qtl, $persnr) {
+	$leistungGesamt = 0;
+	$kcGesamt = 0;
+	$monateVonBisProQTL = array(
+	    1 => array('von' => 1, 'bis' => 3),
+	    2 => array('von' => 4, 'bis' => 6),
+	    3 => array('von' => 7, 'bis' => 9),
+	    4 => array('von' => 10, 'bis' => 12),
+	);
+	if ($qtl > 0 && $qtl < 5) {
+
+	    $von = sprintf("%04d-%02d-01", $jahr, $monateVonBisProQTL[$qtl]['von']);
+	    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monateVonBisProQTL[$qtl]['bis'], $jahr);
+	    $bis = sprintf("%04d-%02d-%02d", $jahr, $monateVonBisProQTL[$qtl]['bis'], $pocetDnuVMesici);
+//	    $eintrittsDatumDB = $this->getEintrittsDatumDB($persnr);
+
+	    
+	    $sql.=" select";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
+	    $sql.="	dpers.leistfaktor,";
+	    $sql.="     dtattypen.oe,";
+	    $sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+	    $sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+	    $sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*doe.czk/60,(drueck.`Stück`)*drueck.`VZ-IST`*doe.czk/60),0)) as vzaby_akkord_kc";
+	    $sql.=" from drueck";
+	    $sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	    $sql.=" join doe on doe.oe=dtattypen.oe";
+	    $sql.=" join dpers on dpers.persnr=drueck.persnr";
+	    $sql.=" where";
+	    $sql.="     drueck.PersNr='$persnr'";
+	    $sql.="     and";
+	    $sql.="     drueck.Datum between '$von' and '$bis'";
+	    $sql.=" group by";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="     dtattypen.oe";
+
+	    $rs = $this->getQueryRows($sql);
+	    if($rs!==NULL){
+		foreach ($rs as $r){
+		    $vzaby = $r['vzaby'];
+		    $vzaby_akkord = $r['vzaby_akkord'];
+		    $vzaby_zeit = ($vzaby - $vzaby_akkord)*$r['leistfaktor'];
+		    $vzaby_akkord_kc = $r['vzaby_akkord_kc'];
+		    $vzaby_zeit_kc = $vzaby_zeit*$r['perslohnfaktor'];
+		    $leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+		    $kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		}
 	    }
 	}
 	return array('leistung_min' => $leistungGesamt, 'leistung_kc' => $kcGesamt);
