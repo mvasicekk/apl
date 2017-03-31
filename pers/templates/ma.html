@@ -225,6 +225,7 @@
 				<li role="separator" class="divider"></li>
 				<li><a ng-click="panelSwitch('hfpremie')" role="button" href="">HF Premie</a></li>
 				<li><a ng-click="panelSwitch('osobnihodnoceni')" role="button" href="">osobní hodnocení</a></li>
+				<li><a ng-click="panelSwitch('lohnberechnung')" role="button" href="">výpočet mzdy</a></li>
 			    </ul>
 			</div>
 		    </div>
@@ -256,16 +257,6 @@
 			    <div class="row">
 				<div class="col-sm-6">
 				    <h4>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <small><span class="label label-success">{{ma.maInfo.dpersstatus}}</span><span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span></small></h4>
-<!--				    <div class="form-group form-group-sm">
-					<div class="col-sm-12">
-					    <ui-select ng-model="ma.bewerberInfo.adr">
-						<ui-select-match placeholder="suche adresse">{{$select.selected.formatted_address}}</ui-select-match>
-						<ui-select-choices repeat="address in addresses track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
-						    {{address.formatted_address}}
-						</ui-select-choices>
-					    </ui-select>
-					</div>
-				    </div>-->
 				    <img style="width:120px;" class="img-thumbnail" ng-if="ma.maFotoUrl!==null" ng-src="{{ma.maFotoUrl}}" />
 				    <div ng-if="ma.maFotoUrl==null">
 				    <!--<div>-->
@@ -304,6 +295,231 @@
 	<div class="row"  ng-show="ma.selectedIndex >= 0">
 	    <div class="col-sm-12">
 		
+		<!--lohn berechnung ------------------------------------------->
+		<div ng-show="showPanel.lohnberechnung" id="lohnberechnung">
+		    <div class="panel panel-success">
+			<div class="panel-heading">
+			    výpočet mzdy
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['lohnberechnung_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			</div>
+			<div ng-show="lohnArray===null" class="panel-body">
+			    <div class="alert alert-warning text-center"><h4>počítám ....</h4></div>
+			</div>
+			<div ng-show="lohnArray!==null" class="panel-body">
+			    <div class="row">
+				<div class='col-sm-12'>
+				<div class="form-group col-md-2 form-group-sm">
+				    <label class="control-label"  for="lohnMonat">měsíc:</label>
+				    <div class="input-group">
+					<input ng-change="updateLohn()" ng-model="lohnMonat" type="number" class="form-control" id="lohnMonat" placeholder="měsíc">
+				    </div>
+				</div>
+				<div class="form-group col-md-2 form-group-sm">
+				    <label class="control-label"  for="lohnJahr">rok:</label>
+				    <div class="input-group">
+					<input ng-change="updateLohn()" ng-model="lohnJahr" type="number" class="form-control" id="lohnJahr" placeholder="rok">
+				    </div>
+				</div>
+				</div>
+				<div class="col-sm-6">
+    					<fieldset>
+					    <legend>hodiny / dny</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th class="text-right">Anw - Akkord</th>
+							<th class="text-right">Anw - Zeit</th>
+							<th class="text-right">Tage - d</th>
+							<th class="text-right">Tage - z</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<td class="text-right">{{lohnArray.grundinfo.sumstundena_akkord|numeraljs:'0,0.0'}}</td>
+							<td class="text-right">{{(lohnArray.grundinfo.sumstundena-lohnArray.grundinfo.sumstundena_akkord)|numeraljs:'0,0.0'}}</td>
+							<td class="text-right">{{lohnArray.grundinfo.tage_d}}</td>
+							<td class="text-right">{{lohnArray.grundinfo.tage_z}}</td>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
+
+					<fieldset>
+					    <legend>mzda pro cely mesic akkord/zeit</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th>OE</th>
+							<th class="text-right">vzaby</th>
+							<th class="text-right">vzaby_akkord</th>
+							<th class="text-right">vzaby_akkord_kc</th>
+							<th class="text-right">vzaby_zeit</th>
+							<th class="text-right">vzaby_zeit_kc</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr ng-repeat="r in lohnArray.monatlohn.oes">
+							<td>{{r.oe}}</td>
+							<td class="text-right">{{r.vzaby|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{r.vzaby_akkord|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{r.vzaby_akkord_kc|numeraljs:'0,0.00'}}</td>
+							<td class="text-right">{{r.vzaby_zeit|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{r.vzaby_zeit_kc|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						</tbody>
+						<tfoot>
+						    <tr>
+							<th>Sum</th>
+							<th class="text-right">{{lohnArray.monatlohn.sumVzaby|numeraljs:'0,0'}}</th>
+							<th class="text-right">{{lohnArray.monatlohn.sumVzabyAkkord|numeraljs:'0,0'}}</th>
+							<th class="text-right">{{lohnArray.monatlohn.sumVzabyAkkordKc|numeraljs:'0,0.00'}} Kč</th>
+							<th class="text-right">{{lohnArray.monatlohn.sumVzabyZeit|numeraljs:'0,0'}}</th>
+							<th class="text-right">{{lohnArray.monatlohn.sumVzabyZeitKc|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>
+						</tfoot>
+					    </table>
+					</fieldset>
+					
+				</div>
+				<div class="col-sm-6">
+				    <fieldset>
+					    <legend>C.1 prémie za kvalifikaci</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th>OE</th>
+							<th>platí od</th>
+							<th class="text-right">%</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr ng-repeat="(oe,r) in lohnArray.premieZaKvalifikaci.oeKvalifikaceArray">
+							<td>{{oe}}</td>
+							<td>{{r.gilt_ab}}</td>
+							<td class="text-right">{{r.pct|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						</tbody>
+						<tfoot>
+						    <tr>
+							<th>Sum</th>
+							<th class="text-right"></th>
+							<th class="text-right">{{lohnArray.premieZaKvalifikaci.sumPctKvalifikace|numeraljs:'0,0.00'}}</th>
+						    </tr>
+						</tfoot>
+					    </table>
+					    <table  class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th></th>
+							<th class="text-right">Kč</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<th>akkord</th>
+							<td class="text-right">{{lohnArray.premieZaKvalifikaci.akkord|numeraljs:'0,0.00'}} Kč</td>
+						    </tr>
+    						    <tr>
+							<th>zeit</th>
+							<td class="text-right">{{lohnArray.premieZaKvalifikaci.zeit|numeraljs:'0,0.00'}} Kč</td>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
+				    
+				    <fieldset ng-if="lohnArray.aPremie.apremie_flag.length>0">
+					    <legend>C.2 A-Prémie (prémie za kvalitu)</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th>částka</th>
+							<th>info</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<th class="text-right">{{lohnArray.aPremie.apremie|numeraljs:'0,0.00'}} Kč</th>
+							<td class="text-center">
+							    <span ng-if="lohnArray.aPremie.apremie_flag=='V'" class="label label-success">{{lohnArray.aPremie.apremie_flag}}</span>
+							    <span ng-if="lohnArray.aPremie.apremie_flag=='!'" class="label label-danger">{{lohnArray.aPremie.apremie_flag}}</span>
+							</td>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
+				    
+				    <fieldset>
+					    <legend>C.3 výkonnostní prémie</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<th class="text-left">vzabyLeistung = vzabyAkkord + leistungZeit</th>
+							<td style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.vzabyAkkord|numeraljs:'0,0'}}</td>
+							<td style='white-space: nowrap;'  class="text-right">{{lohnArray.leistungPremie.leistungZeit|numeraljs:'0,0'}}</td>
+							<th  style='white-space: nowrap;' class="text-right">{{(lohnArray.leistungPremie.leistungZeit+lohnArray.leistungPremie.vzabyAkkord)|numeraljs:'0,0'}}</th>
+						    </tr>
+						    <tr>
+							<th class="text-left">monatNormMinuten</th>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.monatNormMinuten|numeraljs:'0,0'}}</td>
+							<th class="text-left">leistungsGrad</th>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.leistungsGrad|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						    <tr>
+							<th class="text-left">ganzMonatNormMinuten</th>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.ganzMonatNormMinuten|numeraljs:'0,0'}}</td>
+							<th class="text-left">leistungsGradGanzMonat</th>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.leistungsGradGanzMonat|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						    <tr>
+							<th class="text-left" colspan="2">Betrag</th>
+							<th  style='white-space: nowrap;' class="text-right" colspan="2">{{lohnArray.leistungPremie.leistungsPremieBetrag|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
+				    
+				    <fieldset>
+					    <legend>C.4 čtvrtletní prémie</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th></th>
+							<th></th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<th class="text-left">QTL Leistung SOLL</th>
+							<td class="text-right">{{lohnArray.qtlPremie.qtlLeistungSoll|numeraljs:'0,0'}}</td>
+						    </tr>
+   						    <tr>
+							<th class="text-left">QTL Leistung IST</th>
+							<td class="text-right">{{lohnArray.qtlPremie.qtlLeistungIst|numeraljs:'0,0'}}</td>
+						    </tr>
+						    <tr>
+							<th class="text-left">QTL Leistung Kč</th>
+							<td class="text-right">{{lohnArray.qtlPremie.qtlLeistungIstKc|numeraljs:'0,0.00'}} Kč</td>
+						    </tr>						    
+						    <tr>
+							<th class="text-left">QTL Premie Kč</th>
+							<th class="text-right">{{lohnArray.qtlPremie.qtlPremieBetrag|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>						    
+						</tbody>
+					    </table>
+					</fieldset>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
 		<!--panel grundinfo ---------------------------------->
 		<div ng-show="showPanel.grundinfo" id="grundinfo">
 		    <div class="panel panel-success">
@@ -339,7 +555,7 @@
 					    <div class="form-group">
 						<label class="col-sm-2 control-label" for="staats_angehoerigkeit_id">státní příslušnost</label>
 						<div class="col-sm-10">
-						    <ui-select ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('staats_angehoerigkeit_id')">
+						    <ui-select ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('staats_angehoerigkeit_id')" on-select="bewerberFieldOnSelect($item,$model)">
 							<ui-select-match placeholder="vyberte státní příslušnost">{{$select.selected.staat_abkrz}} {{$select.selected.staat_name}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in staaten | filter:$select.search">
 							    <small>

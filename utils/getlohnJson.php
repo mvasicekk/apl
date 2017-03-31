@@ -1,46 +1,36 @@
-<html>
-    <head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>
-	    Personal - Lohn - New - Detail
-	</title>
-	<style>
-	    body{
-		font-family: roboto,sans-serif;
-	    }
-	    table {
-		border-collapse: collapse;
-		border:1px solid black;
-	    }
-	    td {
-		border-collapse: collapse;
-		border:1px solid black;
-		padding: 3px;
-	    }
-	    th {
-		border-collapse: collapse;
-		border:1px solid black;
-		padding: 3px;
-		background-color: lightblue;
-		font-size: small;
-	    }
-	</style>
-    </head>
     <?php
     require_once '../db.php';
 
     $a = AplDB::getInstance();
 
-    $persvon = $_GET['persvon'];
-    $persbis = $_GET['persbis'];
-    $jahr = $_GET['jahr'];
-    $monat = $_GET['monat'];
+    $data = file_get_contents("php://input");
+    $o = json_decode($data);
+
+
+    $persvon = $o->persvon;//$_GET['persvon'];
+    $persbis = $o->persbis;//$_GET['persbis'];
+    $jahr = $o->jahr;//$_GET['jahr'];
+    $monat = $o->monat;//$_GET['monat'];
     $mzdaPodleAdaptace = FALSE;
 
     $von = sprintf("%04d-%02d-%02d", $jahr, $monat, 1);
     $bis = sprintf("%04d-%02d-%02d", $jahr, $monat, cal_days_in_month(CAL_GREGORIAN, $monat, $jahr));
 
+    
+    $lohnArray = array(
+	'params'=>array(
+	    'persvon'=>$persvon,
+	    'persbis'=>$persbis,
+	    'jahr'=>$jahr,
+	    'monat'=>$monat,
+	    'mzdaPodleAdaptace'=>$mzdaPodleAdaptace,
+	    'von'=>$von,
+	    'bis'=>$bis,
+	),
+    );
+    
+    
+    
     function getPersGrundLeistung($persnr, $von, $bis) {
 	global $a;
 	$sql = "";
@@ -91,7 +81,7 @@
     }
 
 //AplDB::varDump($_GET);
-    echo "persvon = $persvon, persbis=$persbis, von = $von, bis = $bis<br>";
+//    echo "persvon = $persvon, persbis=$persbis, von = $von, bis = $bis<br>";
 
 //grundinfo z E143
     $sql.=" select";
@@ -215,8 +205,13 @@
 	    $perslohnfaktor = $pers['perslohnfaktor'];
 	    $leistFaktor = $pers['leistfaktor'];
 	    $adaptaceBisTime = $pers['adaptace_bis'] != NULL ? strtotime($pers['adaptace_bis']) : strtotime("2100-01-01");
-	    echo "<hr>";
-	    echo "<strong>persnr = $persnr ($persname)</strong> (ET:$eintrittDate);einarbzuschlag_berechnen=$eeZuschlagBerechnen;zkusebni_doba_dobaurcita=$zkusebni_doba_dobaurcita;perslohnfaktor=$perslohnfaktor,leistfaktor=$leistFaktor";
+	    
+	    $lohnArray['personen'][$persnr]['persinfoinfo'] = $pers;
+	    $lohnArray['personen'][$persnr]['grundinfo'] = $persAplRows[$persnr]['grundinfo'];
+	    
+	    
+//	    echo "<hr>";
+//	    echo "<strong>persnr = $persnr ($persname)</strong> (ET:$eintrittDate);einarbzuschlag_berechnen=$eeZuschlagBerechnen;zkusebni_doba_dobaurcita=$zkusebni_doba_dobaurcita;perslohnfaktor=$perslohnfaktor,leistfaktor=$leistFaktor";
 	    $leistArray = getPersGrundLeistung($persnr, $von, $bis);
 	    $lAAll = array();
 	    $sumVzaby = 0;
@@ -254,83 +249,92 @@
 		);
 	    }
 
-	    echo "<br><br><strong>mzda pro cely mesic akkord/zeit</strong>";
-//	echo "<br>vzaby = $vzaby<br>vzaby_akkord = $vzaby_akkord<br>vzaby_akkord_kc = $vzaby_akkord_kc<br>vzaby_zeit = $vzaby_zeit<br>vzaby_zeit_kc = $vzaby_zeit_kc<br>";
-	    echo "<table>";
-	    echo "<thead>";
-	    echo "<tr>";
-	    echo "<th>";
-	    echo "OE";
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo "vzaby";
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo "vzaby_akkord";
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo "vzaby_akkord_kc";
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo "vzaby_zeit";
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo "vzaby_zeit_kc";
-	    echo "</th>";
-	    echo "</tr>";
-	    echo "</thead>";
-	    foreach ($lAAll as $la) {
-		echo "<tr>";
-		$oe = $la['oe'];
-		$vzaby = $la['vzaby'];
-		$vzaby_akkord = $la['vzaby_akkord'];
-		$vzaby_zeit = $la['vzaby_zeit'];
-		$vzaby_akkord_kc = $la['vzaby_akkord_kc'];
-		$vzaby_zeit_kc = $la['vzaby_zeit_kc'];
-//	    echo "<br>OE = $oe,vzaby = $vzaby, vzaby_akkord = $vzaby_akkord, vzaby_akkord_kc = $vzaby_akkord_kc, vzaby_zeit = $vzaby_zeit, vzaby_zeit_kc = $vzaby_zeit_kc";    
-		echo "<td>";
-		echo $oe;
-		echo "</td>";
-		echo "<td style='text-align:right;'>";
-		echo number_format($vzaby, 0, ',', ' ');
-		echo "</td>";
-		echo "<td style='text-align:right;'>";
-		echo number_format($vzaby_akkord, 0, ',', ' ');
-		echo "</td>";
-		echo "<td style='text-align:right;'>";
-		echo number_format($vzaby_akkord_kc, 0, ',', ' ');
-		echo "</td>";
-		echo "<td style='text-align:right;'>";
-		echo number_format($vzaby_zeit, 0, ',', ' ');
-		echo "</td>";
-		echo "<td style='text-align:right;'>";
-		echo number_format($vzaby_zeit_kc, 0, ',', ' ');
-		echo "</td>";
-		echo "</tr>";
-	    }
-	    echo "<tfoot>";
-	    echo "<tr>";
-	    echo "<th>";
-	    echo "";
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo number_format($sumVzaby, 0, ',', ' ');
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo number_format($sumVzabyAkkord, 0, ',', ' ');
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo number_format($sumVzabyAkkordKc, 0, ',', ' ');
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo number_format($sumVzabyZeit, 0, ',', ' ');
-	    echo "</th>";
-	    echo "<th style='text-align:right;'>";
-	    echo number_format($sumVzabyZeitKc, 0, ',', ' ');
-	    echo "</th>";
-	    echo "</tr>";
-	    echo "</tfoot>";
-	    echo "</table>";
+//	    echo "<br><br><strong>mzda pro cely mesic akkord/zeit</strong>";
+////	echo "<br>vzaby = $vzaby<br>vzaby_akkord = $vzaby_akkord<br>vzaby_akkord_kc = $vzaby_akkord_kc<br>vzaby_zeit = $vzaby_zeit<br>vzaby_zeit_kc = $vzaby_zeit_kc<br>";
+//	    echo "<table>";
+//	    echo "<thead>";
+//	    echo "<tr>";
+//	    echo "<th>";
+//	    echo "OE";
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo "vzaby";
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo "vzaby_akkord";
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo "vzaby_akkord_kc";
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo "vzaby_zeit";
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo "vzaby_zeit_kc";
+//	    echo "</th>";
+//	    echo "</tr>";
+//	    echo "</thead>";
+	    
+	    $lohnArray['personen'][$persnr]['monatlohn']['oes'] = $lAAll;
+	    $lohnArray['personen'][$persnr]['monatlohn']['sumVzaby'] = $sumVzaby;
+	    $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyAkkord'] = $sumVzabyAkkord;
+	    $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeit'] = $sumVzabyZeit;
+	    $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyAkkordKc'] = $sumVzabyAkkordKc;
+	    $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeitKc'] = $sumVzabyZeitKc;
+	    
+//	    foreach ($lAAll as $la) {
+//		echo "<tr>";
+//		$oe = $la['oe'];
+//		$vzaby = $la['vzaby'];
+//		$vzaby_akkord = $la['vzaby_akkord'];
+//		$vzaby_zeit = $la['vzaby_zeit'];
+//		$vzaby_akkord_kc = $la['vzaby_akkord_kc'];
+//		$vzaby_zeit_kc = $la['vzaby_zeit_kc'];
+////	    echo "<br>OE = $oe,vzaby = $vzaby, vzaby_akkord = $vzaby_akkord, vzaby_akkord_kc = $vzaby_akkord_kc, vzaby_zeit = $vzaby_zeit, vzaby_zeit_kc = $vzaby_zeit_kc";    
+//		
+//		echo "<td>";
+//		echo $oe;
+//		echo "</td>";
+//		echo "<td style='text-align:right;'>";
+//		echo number_format($vzaby, 0, ',', ' ');
+//		echo "</td>";
+//		echo "<td style='text-align:right;'>";
+//		echo number_format($vzaby_akkord, 0, ',', ' ');
+//		echo "</td>";
+//		echo "<td style='text-align:right;'>";
+//		echo number_format($vzaby_akkord_kc, 0, ',', ' ');
+//		echo "</td>";
+//		echo "<td style='text-align:right;'>";
+//		echo number_format($vzaby_zeit, 0, ',', ' ');
+//		echo "</td>";
+//		echo "<td style='text-align:right;'>";
+//		echo number_format($vzaby_zeit_kc, 0, ',', ' ');
+//		echo "</td>";
+//		echo "</tr>";
+//	    }
+//	    echo "<tfoot>";
+//	    echo "<tr>";
+//	    echo "<th>";
+//	    echo "";
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo number_format($sumVzaby, 0, ',', ' ');
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo number_format($sumVzabyAkkord, 0, ',', ' ');
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo number_format($sumVzabyAkkordKc, 0, ',', ' ');
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo number_format($sumVzabyZeit, 0, ',', ' ');
+//	    echo "</th>";
+//	    echo "<th style='text-align:right;'>";
+//	    echo number_format($sumVzabyZeitKc, 0, ',', ' ');
+//	    echo "</th>";
+//	    echo "</tr>";
+//	    echo "</tfoot>";
+//	    echo "</table>";
 
 	    // adaptace ------------------------------------------------------------
 	    // test na moznost adaptace, tj. mam vyplneno probezeit ?
@@ -339,7 +343,7 @@
 		$anwArray = $a->getPersAnwStdArbeit($persnr, $von, $bis);
 		$adaptaceBisDate = date('Y-m-d', $adaptaceBisTime);
 		$zkusebnidobaTime = strtotime($zkusebni_doba_dobaurcita);
-		echo "<br><strong>pocitam hodinovou mzdu podle adaptacnich pravidel (adaptace bis: $adaptaceBisDate)</strong>";
+//		echo "<br><strong>pocitam hodinovou mzdu podle adaptacnich pravidel (adaptace bis: $adaptaceBisDate)</strong>";
 		//potrebuju dochazku pro zadane obdobi
 		//projdu po jednotlivych dne za cely mesic
 		$vonTime = strtotime($von);
@@ -348,27 +352,37 @@
 		for ($aktualTime = $vonTime; $aktualTime <= $bisTime && $aktualTime <= $adaptaceBisTime && $aktualTime <= $zkusebnidobaTime; $aktualTime+=24 * 60 * 60) {
 		    $aktualDate = date('Y-m-d', $aktualTime);
 
-		    echo "<br>$aktualDate - ";
+//		    echo "<br>$aktualDate - ";
 		    $arbTageBetweenEintrittAktual = $a->getArbTageBetweenDatums($eintrittDate, date('Y-m-d', $aktualTime));
 		    $persArbTageBetweenEintrittAktual = $a->getATageProPersnrBetweenDatumsAdaptace($persnr, $eintrittDate, date('Y-m-d', $aktualTime));
-		    echo "persArbTage ab Eintritt = $persArbTageBetweenEintrittAktual";
+//		    echo "persArbTage ab Eintritt = $persArbTageBetweenEintrittAktual";
 		    $adaptace = getAdaptaceLevel($persArbTageBetweenEintrittAktual);
 //		echo ", adaptace = $adaptace";
 		    $stdLohn = getStdLohnForAdaptace($adaptace);
-		    echo ", stdLohn = $stdLohn";
+//		    echo ", stdLohn = $stdLohn";
 		    $aStunden = array_key_exists($aktualDate, $anwArray) ? $anwArray[$aktualDate] : 0;
-		    echo ", anwArbStunden = $aStunden";
+//		    echo ", anwArbStunden = $aStunden";
 		    $tagLohn = $aStunden * $stdLohn;
-		    echo ", tagesLohn = $tagLohn";
+//		    echo ", tagesLohn = $tagLohn";
 		    $adaptLohnSum += $tagLohn;
+		    $lohnArray['personen'][$persnr]['adaptlohn']['tage'][$aktualDate] = array(
+			'tageAbEintritt'=>$persArbTageBetweenEintrittAktual,
+			'stundenLohn'=>$stdLohn,
+			'anwStunden'=>$aStunden,
+			'tagLohn'=>$tagLohn,
+		    );
 		}
-		echo "<br>adaptLohn = <strong>$adaptLohnSum</strong>";
+		$lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'] = $adaptLohnSum;
+		
+//		echo "<br>adaptLohn = <strong>$adaptLohnSum</strong>";
 		//test jestli mu adaptace konci pred koncem mesice, tj. od konce adaptace do konce mesice mu spocitam vykon normalne (ukolove)
 		if ($adaptaceBisTime < $bisTime || $zkusebnidobaTime < $bisTime) {
 		    //adaptace konci pred koncem mesice
 		    //odkdy skoncila adaptace?
 		    $konecAdaptaceTime = min(array($adaptaceBisTime, $zkusebnidobaTime));
 		    $leistArray = getPersGrundLeistung($persnr, date('Y-m-d', $konecAdaptaceTime), $bis);
+		    $lohnArray['personen'][$persnr]['monatlohnRest'] = $leistArray;
+		    
 		    if ($leistArray !== NULL) {
 			$vzaby = $leistArray[0]['vzaby'];
 			$vzaby_akkord = $leistArray[0]['vzaby_akkord'];
@@ -382,119 +396,128 @@
 			$vzaby_akkord_kc = 0;
 			$vzaby_zeit_kc = 0;
 		    }
-		    echo "<br><strong>mzda po ukonceni adaptace do konce mesice " . date('Y-m-d', $konecAdaptaceTime + 24 * 60 * 60) . ' - ' . $bis . '</strong>';
-		    echo "<br>vzaby = $vzaby<br>vzaby_akkord = $vzaby_akkord<br>vzaby_akkord_kc = $vzaby_akkord_kc<br>vzaby_zeit = $vzaby_zeit<br>vzaby_zeit_kc = $vzaby_zeit_kc<br>";
+//		    echo "<br><strong>mzda po ukonceni adaptace do konce mesice " . date('Y-m-d', $konecAdaptaceTime + 24 * 60 * 60) . ' - ' . $bis . '</strong>';
+//		    echo "<br>vzaby = $vzaby<br>vzaby_akkord = $vzaby_akkord<br>vzaby_akkord_kc = $vzaby_akkord_kc<br>vzaby_zeit = $vzaby_zeit<br>vzaby_zeit_kc = $vzaby_zeit_kc<br>";
 		}
 	    }
 	    // adaptace konec ------------------------------------------------------
 
+	    $lohnArray['personen'][$persnr]['mzdaPodleAdaptace'] = $mzdaPodleAdaptace;
+	    
 	    if (!$mzdaPodleAdaptace) {
 		
 		
 		// premie za kvalifikaci II ------------------------------------
 		$sumPremieZaKvalifikaciPct = 0;
-		echo "<br><strong>premie za kvalifikaci</strong>";
-		echo "<table>";
-		echo "<thead>";
-		echo "<tr>";
-		echo "<th>";
-		echo "OE";
-		echo "</th>";
-		echo "<th>";
-		echo "gilt ab";
-		echo "</th>";
-		echo "<th style='text-align:right;'>";
-		echo "%";
-		echo "</th>";
-		echo "</thead>";
-		echo "<tbody>";
+//		echo "<br><strong>premie za kvalifikaci</strong>";
+//		echo "<table>";
+//		echo "<thead>";
+//		echo "<tr>";
+//		echo "<th>";
+//		echo "OE";
+//		echo "</th>";
+//		echo "<th>";
+//		echo "gilt ab";
+//		echo "</th>";
+//		echo "<th style='text-align:right;'>";
+//		echo "%";
+//		echo "</th>";
+//		echo "</thead>";
+//		echo "<tbody>";
 		if (array_key_exists($persnr, $premieZaKvalifikaciPctArray)) {
 		    $persQArray = $premieZaKvalifikaciPctArray[$persnr];
+		    $lohnArray['personen'][$persnr]['premieZaKvalifikaci']['oeKvalifikaceArray'] = $persQArray;
 		    foreach ($persQArray as $oe => $qpremieArray) {
-			echo "<tr>";
-			echo "<td>";
-			echo "$oe";
-			echo "</td>";
-			echo "<td>";
-			echo $qpremieArray['gilt_ab'];
-			echo "</td>";
-			echo "<td>";
-			echo $qpremieArray['pct']*100;
-			echo "</td>";
+//			echo "<tr>";
+//			echo "<td>";
+//			echo "$oe";
+//			echo "</td>";
+//			echo "<td>";
+//			echo $qpremieArray['gilt_ab'];
+//			echo "</td>";
+//			echo "<td>";
+//			echo $qpremieArray['pct']*100;
+//			echo "</td>";
 			$sumPremieZaKvalifikaciPct += floatval($qpremieArray['pct']);
-			echo "</tr>";
+//			echo "</tr>";
 		    }
 		}
-			echo "<tr>";
-			echo "<td colspan='2'>";
-			echo "premie za kvalifikaci [%]";
-			echo "</td>";
-			echo "<td>";
-			echo "<strong>".($sumPremieZaKvalifikaciPct*100)."</strong>";
-			echo "</td>";
-			echo "</tr>";
-			echo "</tbody>";
-		echo "</table>";
-
+//			echo "<tr>";
+//			echo "<td colspan='2'>";
+//			echo "premie za kvalifikaci [%]";
+//			echo "</td>";
+//			echo "<td>";
+//			echo "<strong>".($sumPremieZaKvalifikaciPct*100)."</strong>";
+//			echo "</td>";
+//			echo "</tr>";
+//			echo "</tbody>";
+//		echo "</table>";
+		$lohnArray['personen'][$persnr]['premieZaKvalifikaci']['sumPctKvalifikace'] = $sumPremieZaKvalifikaciPct;
+		
+		
 //		echo "<br>premieZaKvalifikaciSumPct=$sumPremieZaKvalifikaciPct";
 		$qPremieAkkord = $sumPremieZaKvalifikaciPct * $sumVzabyAkkordKc;
 		$qPremieZeit = $sumPremieZaKvalifikaciPct * $sumVzabyZeitKc;
 		
-		echo "<table>";
-		echo "<thead>";
-		echo "<tr>";
-		echo "<th>";
-		echo "";
-		echo "</th>";
-		echo "<th>";
-		echo "vypocet";
-		echo "</th>";
-		echo "<th style='text-align:right;'>";
-		echo "Kc";
-		echo "</th>";
-		echo "</thead>";
-		echo "<tbody>";
-		echo "<tr>";
-		echo "<td>";
-		echo "akkord";
-		echo "</td>";
-		echo "<td>";
-		echo "$sumPremieZaKvalifikaciPct x ".number_format($sumVzabyAkkordKc,0,',',' ');
-		echo "</td>";
-		echo "<td  style='text-align:right;'>";
-		echo number_format($qPremieAkkord,0,',',' ');
-		echo "</td>";
-		echo "</tr>";
-		echo "<tr>";
-		echo "<td>";
-		echo "zeit";
-		echo "</td>";
-		echo "<td>";
-		echo "$sumPremieZaKvalifikaciPct x ".number_format($sumVzabyZeitKc,0,',',' ');
-		echo "</td>";
-		echo "<td  style='text-align:right;'>";
-		echo number_format($qPremieZeit,0,',',' ');
-		echo "</td>";
-		echo "</tr>";
-		echo "<tr>";
-		echo "<td colspan='2'>";
-		echo "Sum";
-		echo "</td>";
-		echo "<td  style='text-align:right;'>";
-		echo "<strong>".number_format($qPremieAkkord+$qPremieZeit,0,',',' ')."</strong>";
-		echo "</td>";
-		echo "</tr>";
-//		echo "<br>premieZaKvalifikaciAkkord = $sumPremieZaKvalifikaciPct x $sumVzabyAkkordKc = <strong>$qPremieAkkord</strong>";
-//		echo "<br>premieZaKvalifikaciZeit = $sumPremieZaKvalifikaciPct x $sumVzabyZeitKc = <strong>$qPremieZeit</strong>";
-		echo "</tbody>";
-		echo "</table>";
+		$lohnArray['personen'][$persnr]['premieZaKvalifikaci']['akkord'] = $qPremieAkkord;
+		$lohnArray['personen'][$persnr]['premieZaKvalifikaci']['zeit'] = $qPremieZeit;
+		
+//		echo "<table>";
+//		echo "<thead>";
+//		echo "<tr>";
+//		echo "<th>";
+//		echo "";
+//		echo "</th>";
+//		echo "<th>";
+//		echo "vypocet";
+//		echo "</th>";
+//		echo "<th style='text-align:right;'>";
+//		echo "Kc";
+//		echo "</th>";
+//		echo "</thead>";
+//		echo "<tbody>";
+//		echo "<tr>";
+//		echo "<td>";
+//		echo "akkord";
+//		echo "</td>";
+//		echo "<td>";
+//		echo "$sumPremieZaKvalifikaciPct x ".number_format($sumVzabyAkkordKc,0,',',' ');
+//		echo "</td>";
+//		echo "<td  style='text-align:right;'>";
+//		echo number_format($qPremieAkkord,0,',',' ');
+//		echo "</td>";
+//		echo "</tr>";
+//		echo "<tr>";
+//		echo "<td>";
+//		echo "zeit";
+//		echo "</td>";
+//		echo "<td>";
+//		echo "$sumPremieZaKvalifikaciPct x ".number_format($sumVzabyZeitKc,0,',',' ');
+//		echo "</td>";
+//		echo "<td  style='text-align:right;'>";
+//		echo number_format($qPremieZeit,0,',',' ');
+//		echo "</td>";
+//		echo "</tr>";
+//		echo "<tr>";
+//		echo "<td colspan='2'>";
+//		echo "Sum";
+//		echo "</td>";
+//		echo "<td  style='text-align:right;'>";
+//		echo "<strong>".number_format($qPremieAkkord+$qPremieZeit,0,',',' ')."</strong>";
+//		echo "</td>";
+//		echo "</tr>";
+////		echo "<br>premieZaKvalifikaciAkkord = $sumPremieZaKvalifikaciPct x $sumVzabyAkkordKc = <strong>$qPremieAkkord</strong>";
+////		echo "<br>premieZaKvalifikaciZeit = $sumPremieZaKvalifikaciPct x $sumVzabyZeitKc = <strong>$qPremieZeit</strong>";
+//		echo "</tbody>";
+//		echo "</table>";
 
 		//a-premie
 
 		if (array_key_exists($persnr, $aPremienArray)) {
 		    $persAArray = $aPremienArray[$persnr];
-		    echo "<br><strong>A-Premie</strong>";
-		    echo "<br>a-Premie=<strong>" . $persAArray['apremie'] . "</strong> ( " . $persAArray['apremie_flag'] . " )";
+		    $lohnArray['personen'][$persnr]['aPremie'] = $persAArray;
+//		    echo "<br><strong>A-Premie</strong>";
+//		    echo "<br>a-Premie=<strong>" . $persAArray['apremie'] . "</strong> ( " . $persAArray['apremie_flag'] . " )";
 		}
 
 
@@ -510,7 +533,7 @@
 
 		//kvartalni premie
 		if ($bQTLPremie) {
-		    echo "<br><strong>QTL Premie</strong>";
+//		    echo "<br><strong>QTL Premie</strong>";
 		    $pracovnik = $persnr;
 		    $leistungArray = array('leistung_min' => 0, 'leistung_kc' => 0);
 		    if ($monat % 3 == 0) {
@@ -520,23 +543,30 @@
 		    }
 
 		    //zobrazeni dnu soll
-		    echo "<br>qtlTageSoll=$qtlTageSoll";
+//		    echo "<br>qtlTageSoll=$qtlTageSoll";
 		    $qtlLeistungIst = $leistungArray['leistung_min'];
 		    $qtlLeistungIstKc = $leistungArray['leistung_kc'];
 		    $qtlLeistungSoll = isset($qtlTageSoll) ? $qtlTageSoll * 480 : 0;
-		    echo "<br>qtlLeistungIst=$qtlLeistungIst,qtlLeistungIstKc=$qtlLeistungIstKc,qtlLeistungSoll=$qtlLeistungSoll";
+//		    echo "<br>qtlLeistungIst=$qtlLeistungIst,qtlLeistungIstKc=$qtlLeistungIstKc,qtlLeistungSoll=$qtlLeistungSoll";
 		    $qtlPraemie = $bQTLPremie == true ? round(0.1 * $qtlLeistungIstKc) : 0;
 		    if ($qtlLeistungIst < $qtlLeistungSoll) {
 			$qtlPraemie = 0;
 		    }
 		    $qtlPremieBetrag = $qtlPraemie;
-		    echo "<br>qtlPremieBetrag=<strong>$qtlPremieBetrag</strong>";
+//		    echo "<br>qtlPremieBetrag=<strong>$qtlPremieBetrag</strong>";
+		    
+		    $lohnArray['personen'][$persnr]['qtlPremie']['qtlLeistungIst'] = $qtlLeistungIst;
+		    $lohnArray['personen'][$persnr]['qtlPremie']['qtlLeistungIstKc'] = $qtlLeistungIstKc;
+		    $lohnArray['personen'][$persnr]['qtlPremie']['qtlLeistungSoll'] = $qtlLeistungSoll;
+		    $lohnArray['personen'][$persnr]['qtlPremie']['qtlPremieBetrag'] = $qtlPremieBetrag;
 		}
+		
+		
 		// premie za vykon
 		// pocet kalendarnik prac dnu
-		echo "<br><strong>vykonnostni premie</strong>";
+//		echo "<br><strong>vykonnostni premie</strong>";
 		$pracKalDny = $a->getArbTageBetweenDatums($von, $bis);
-		echo "<br>pocet prac. kalendarnich dnu = " . $pracKalDny;
+//		echo "<br>pocet prac. kalendarnich dnu = " . $pracKalDny;
 		$pracovnik = $persnr;
 		$gesamtVzabyAkkord = $sumVzabyAkkord;
 		$gesamtLeistungZeit = $sumVzabyZeit * $leistFaktor;
@@ -550,7 +580,7 @@
 //		$nw = 0;
 
 
-		echo "<br>d = " . $d;
+//		echo "<br>d = " . $d;
 		if ($eintrittTimestamp > $vonTimestamp)
 		    $arbTage = $a->getArbTageBetweenDatums($eintrittDate, $bis);
 		else
@@ -570,11 +600,11 @@
 		    $leistungsGradGanzMonat = 0;
 		}
 
-		echo "<br>vzabyLeistung:$gesamtVzabyAkkord (akkord)+ $gesamtLeistungZeit (leistungZeit) = $citatel";
-		echo "<br>monatNormMinuten:$monatNormMinuten";
-		echo "<br>ganzMonatNormMinuten:$ganzMonatNormMinuten";
-		echo "<br>leistungsGrad:$leistungsGrad";
-		echo "<br>leistungsGradGanzMonat:$leistungsGradGanzMonat";
+//		echo "<br>vzabyLeistung:$gesamtVzabyAkkord (akkord)+ $gesamtLeistungZeit (leistungZeit) = $citatel";
+//		echo "<br>monatNormMinuten:$monatNormMinuten";
+//		echo "<br>ganzMonatNormMinuten:$ganzMonatNormMinuten";
+//		echo "<br>leistungsGrad:$leistungsGrad";
+//		echo "<br>leistungsGradGanzMonat:$leistungsGradGanzMonat";
 
 		$leistPraemieBerechnet1 = $a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) * $aTageProMonat;
 		if ($a->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) == 200) {
@@ -587,14 +617,25 @@
 		    }
 		}
 		$leistPremieBetrag = $bLeistPremie ? $leistPraemieBerechnet : 0;
-		echo "<br>leistPremieBetrag:<strong>$leistPremieBetrag</strong><br>";
+//		echo "<br>leistPremieBetrag:<strong>$leistPremieBetrag</strong><br>";
 
+		$lohnArray['personen'][$persnr]['leistungPremie']['pracKalDny'] = $pracKalDny;
+		$lohnArray['personen'][$persnr]['leistungPremie']['vzabyAkkord'] = $gesamtVzabyAkkord;
+		$lohnArray['personen'][$persnr]['leistungPremie']['leistungZeit'] = $gesamtLeistungZeit;
+		$lohnArray['personen'][$persnr]['leistungPremie']['monatNormMinuten'] = $monatNormMinuten;
+		$lohnArray['personen'][$persnr]['leistungPremie']['ganzMonatNormMinuten'] = $ganzMonatNormMinuten;
+		$lohnArray['personen'][$persnr]['leistungPremie']['leistungsGrad'] = $leistungsGrad;
+		$lohnArray['personen'][$persnr]['leistungPremie']['leistungsGradGanzMonat'] = $leistungsGradGanzMonat;
+		$lohnArray['personen'][$persnr]['leistungPremie']['leistungsPremieBetrag'] = $leistPremieBetrag;
+		
 		//zjistit, zda mel nejake Z
-		if (intval($z) > 0) {
-		    echo "<h2 style='color:red;'>ma neomluvenou absenci <strong>$z</strong> dnu, vyplatit premie ?</h2>";
-		}
+//		if (intval($z) > 0) {
+//		    echo "<h2 style='color:red;'>ma neomluvenou absenci <strong>$z</strong> dnu, vyplatit premie ?</h2>";
+//		}
+		$lohnArray['personen'][$persnr]['zTageWarnung'] = $z;
 	    }
 	}
     }
+    
+    echo json_encode($lohnArray);
     ?>
-</html>

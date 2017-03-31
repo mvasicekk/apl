@@ -110,6 +110,10 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     $scope.osobniHodnoceniJahr = curdate.getFullYear();
     $scope.osobniHodnoceniMonat = curdate.getMonth();
+    
+    $scope.lohnJahr = parseInt(curdate.getFullYear());
+    $scope.lohnMonat = parseInt(curdate.getMonth()+1);
+    
     $scope.fillOHButtonDisabled = false;
     $scope.lockOHButtonDisabled = false;
     $scope.persnrExists = false;
@@ -126,7 +130,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	kvalifikace:false,
 	inventar:false,
 	hfpremie:false,
-	osobnihodnoceni:false
+	osobnihodnoceni:false,
+	lohnberechnung:false
     };
     
     $scope.bemerkung = {};
@@ -218,6 +223,12 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
         });
     }
     
+    
+    $scope.updateLohn = function(){
+	console.log($scope.lohnMonat);
+	console.log($scope.lohnJahr);
+	getPersLohn();
+    }
     /**
      * 
      * @param {type} persnr
@@ -332,6 +343,14 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	    ).then(function (response) {
 	    });
 	}
+    }
+    
+    $scope.bewerberFieldOnSelect = function(i,m){
+	console.log('bewerberFieldOnSelect');
+	console.log('item');
+	console.log(i);
+	console.log('model');
+	console.log(m);
     }
     /**
      * 
@@ -780,6 +799,11 @@ $scope.commentClicked = function(e,p){
 	    } 
 	}
 	$scope.showPanel[panelid] = true;
+	//pri zvoleni lohnberechnung nacist pole s udaji
+	if(panelid=='lohnberechnung'){
+	    console.log('volam getPersLohn');
+	    getPersLohn();
+	}
     }
     /**
      * 
@@ -905,6 +929,27 @@ $scope.commentClicked = function(e,p){
 	}
 	getHFPremie();
 
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function getPersLohn(){
+	$scope.lohnArray = null;
+	if ($scope.ma.maInfo !== null) {
+	    return $http.post(
+		    '../utils/getlohnJson.php',
+		    {
+			persvon: $scope.ma.maInfo.PersNr,
+			persbis: $scope.ma.maInfo.PersNr,
+			jahr: $scope.lohnJahr,
+			monat: $scope.lohnMonat
+		    }
+	    ).then(function (response) {
+		$scope.lohnArray = response.data.personen[$scope.ma.maInfo.PersNr];
+	    });
+	}
     }
     /**
      * 
@@ -1035,7 +1080,11 @@ $scope.commentClicked = function(e,p){
 		getOsobniHodnoceni();
 		getPersInventar();
 		getPersKvalifikace();
-		
+
+		//jen kdyz je panel zobrazen, protoze jinak to moc dlouho trva
+		if($scope.showPanel.lohnberechnung===true){
+		    getPersLohn();
+		}
 		//zrusit popovery
 		if($('div[id^=popover]').length>0){
 		    $('div[id^=popover]').popover('destroy');
