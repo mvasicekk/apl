@@ -1152,7 +1152,7 @@ function pageheader($pdfobjekt,$rgb,$vyskaradku,$monat,$jahr) {
         $pdfobjekt->Cell(
                             $headerCells['qpraemie']['width']
                             ,$vyskaradku
-                            ,'Kvalif.'
+                            ,'Qualit'
                             ,'LR'
                             ,0
                             ,'R'
@@ -1194,7 +1194,7 @@ function pageheader($pdfobjekt,$rgb,$vyskaradku,$monat,$jahr) {
         $pdfobjekt->Cell(
                             $headerCells['erschwerniss']['width']
                             ,$vyskaradku
-                            ,'Adapt.'
+                            ,'Erschw.'
                             ,'LR'
                             ,0
                             ,'R'
@@ -2139,8 +2139,8 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     global $summenZapati;
     global $stundenDecimals;
     global $reporttyp;
-    global $lohnArray;
-    
+    global $aPremienArray;
+
     $fill = 0;
 
     $a = AplDB::getInstance();
@@ -2179,13 +2179,13 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
 
     $stundenA = floatval(trim($person->sumstundena));
     $stundenAkkord = floatval(trim($person->sumstundena_akkord));
-    //$erschwerniss = intval(trim($person->risiko));
+    $erschwerniss = intval(trim($person->risiko));
 
     $essen = intval(trim($person->essen));
     $exekution = intval(trim($person->exekution));
     $vorschuss = intval(trim($person->vorschuss));
     $transport = intval(trim($person->transport));
-    //$sonstpremie = intval(trim($person->sonstpremie));
+    $sonstpremie = intval(trim($person->sonstpremie));
     $abmahnung = intval(trim($person->abmahnung));
 
     $dpp_von = trim($person->dpp_von);
@@ -2201,7 +2201,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     $bQTLPraemie = intval(trim($person->premie_za_3_mesice)) != 0 ? TRUE : FALSE;
     $bMAStunden = intval(trim($person->MAStunden)) != 0 ? TRUE : FALSE;
 
-    //$erschwerniss = $bErschwerniss===TRUE?$erschwerniss:0;
+    $erschwerniss = $bErschwerniss===TRUE?$erschwerniss:0;
     
     $d = intval(trim($person->tage_d));
     $p = intval(trim($person->tage_p));
@@ -2216,9 +2216,8 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
         $bQPraemie_zeit = FALSE;
     }
 
-    //$persnr = $person->persnr;
+    $persnr = $person->persnr;
 
-    
     $vonTimestamp = strtotime($von);
     $eintrittTimestamp = strtotime($eintritt);
     if ($eintrittTimestamp > $vonTimestamp)
@@ -2244,43 +2243,92 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     $gesamtQPraemie_akkord = 0;
     $gesamtQPraemie_zeit = 0;
     
-    if(array_key_exists($persnr, $lohnArray['personen'])){
-	$sonstpremie = floatval($lohnArray['personen'][$persnr]['aPremie']['apremie']);
-    }
-    else{
-	$sonstpremie = 0;
-    }
-    
-    $von = $jahr . "-" . $monat . "-01";
-    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
-    $bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
-    
-    $bMzdaPodleAdaptace = FALSE;
-    $bMzdaPodleAdaptace = $lohnArray['personen'][$persnr]['mzdaPodleAdaptace'];
+    if(array_key_exists(intval($person->persnr), $aPremienArray)){
+	    $sonstpremie = $aPremienArray[intval($person->persnr)]['apremie'];
+	}
+	else{
+	    $sonstpremie = 0;
+	}
+    // vypisu vsecha OG
 
-    
-    $gesamtLohnZeitKc = $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeitKc'];
-    $gesamtLohnAkkordKc = $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyAkkordKc'];
-    $gesamtVzAby = $lohnArray['personen'][$persnr]['monatlohn']['sumVzaby'];
-    $gesamtVzAbyAkkord = $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyAkkord'];
-    $gesamtVzAbyZeit = $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeit'];
-    $gesamtQPraemie_akkord = $lohnArray['personen'][$persnr]['premieZaKvalifikaci']['akkord'];
-    $gesamtQPraemie_zeit = $lohnArray['personen'][$persnr]['premieZaKvalifikaci']['zeit'];
-    $gesamtQPraemie = $gesamtQPraemie_akkord + $gesamtQPraemie_zeit;
-    
+    foreach ($person->ogs->og as $og) {
+        $personal_faktor = floatval(trim($og->og_personalfaktor));
+        $vzaby = intval(trim($og->vzaby));
+
+        $vzaby_akkord = intval(trim($og->vzaby_akkord));
+        $vzaby_zeit = $vzaby - $vzaby_akkord;
+
+        $vzaby_akkord_kc = intval(trim($og->vzaby_akkord_kc));
+        $vzaby_zeit_kc = $vzaby_zeit * $persLohnFaktor;
+        $vzaby_zeit_leistung = $vzaby_zeit * $leistFaktor;
+
+        //qpraemie
+        $qpraemie_kc = floatval(trim($og->qpraemie_kc));
+        $qpraemie_akkord_kc = floatval(trim($og->qpraemie_akkord_kc));
+        $qpraemie_zeit_min = floatval(trim($og->qpraemie_zeit_min));
+        $qpraemie_zeit_kc = $qpraemie_zeit_min * $persLohnFaktor;
+
+        $gesamtLohnZeitKc += $vzaby_zeit_kc;
+        $gesamtLeistungZeit += $vzaby_zeit_leistung;
+        $gesamtLohnAkkordKc += $vzaby_akkord_kc;
+
+        $gesamtVzAby += $vzaby;
+        $gesamtVzAbyAkkord += $vzaby_akkord;
+        $gesamtVzAbyZeit += ( $vzaby - $vzaby_akkord);
+        $gesamtQPraemie += $qpraemie_kc;
+        $gesamtQPraemie_akkord += $qpraemie_akkord_kc;
+        $gesamtQPraemie_zeit += $qpraemie_zeit_kc;
+    }
+
+    // leistungsgrad
+    $citatel = $gesamtLeistungZeit + $gesamtVzAbyAkkord;
+
+    if ($monatNormMinuten != 0)
+        $leistungsGrad = round(($citatel) / $monatNormMinuten, 2);
+    else
+        $leistungsGrad = 0;
+
+    if ($ganzMonatNormMinuten != 0)
+        $leistungsGradGanzMonat = round(($citatel) / $ganzMonatNormMinuten, 2);
+    else
+        $leistungsGradGanzMonat = 0;
+
+
+    if ($reporttyp == 'lohn') {
+        $leistPraemieBerechnet1 = $aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) * $aTageProMonat;
+        if ($aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat) == 200)
+            $leistPraemieBerechnet = $leistPraemieBerechnet1;
+        else {
+            if ($aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGrad) > $aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat))
+                $leistPraemieBerechnet = $aplDB->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGrad) * $anwTageArbeitsTage;
+            else
+                $leistPraemieBerechnet = $leistPraemieBerechnet1;
+        }
+    }
     // leistungspreamie
 
-    $leistPraemieBerechnet = $lohnArray['personen'][$persnr]['leistungPremie']['leistungsPremieBetrag'];
     $leistPraemie = $bleistungsPraemie == true ? $leistPraemieBerechnet : 0;
+
     $anspruchLeistungspremie = $bleistungsPraemie == true ? 'ja' : 'nein';
+
     // QTL Praemie
-    if(array_key_exists($persnr, $lohnArray['personen'])){
-	$qtlPremieBetrag = $bQTLPraemie==TRUE?$lohnArray['personen'][$persnr]['qtlPremie']['qtlPremieBetrag']:0;
+    $leistungArray = array('leistung_min' => 0, 'leistung_kc' => 0);
+    if ($monat % 3 == 0) {
+        $qtl = ceil($monat / 3);
+        $qtlTageSoll = $aplDB->sollTageQTLProPersNr($jahr, $qtl, $persnr);
+        $leistungArray = $aplDB->getQTLLeistungProPersNr($jahr, $qtl, $persnr);
     }
+
     if ($reporttyp == 'lohn') {
-	$qtlPraemie = $qtlPremieBetrag;
+        $qtlLeistungIst = $leistungArray['leistung_min'];
+        $qtlLeistungIstKc = $leistungArray['leistung_kc'];
+        $qtlLeistungSoll = isset($qtlTageSoll) ? $qtlTageSoll * 480 : 0;
+        $qtlPraemie = $bQTLPraemie == true ? round(0.1 * $qtlLeistungIstKc) : 0;
+        if ($qtlLeistungIst < $qtlLeistungSoll)
+            $qtlPraemie = 0;
         $anspruchQTLPremie = $bQTLPraemie == true ? 'ja' : 'nein';
     }
+
 
     $gesamtQPraemie_zeit = $bQPraemie_zeit == true ? round($gesamtQPraemie_zeit) : 0;
     $gesamtQPraemie_akkord = $bQPraemie_akkord == true ? round($gesamtQPraemie_akkord) : 0;
@@ -2292,18 +2340,22 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     $sumLohn = $gesamtLohnZeitKc + $gesamtLohnAkkordKc;
     $sumQPraemie = $gesamtQPraemie_akkord + $gesamtQPraemie_zeit;
     $gesamtLohn = $sumLohn + $sumQPraemie + $erschwerniss + $leistPraemie + $qtlPraemie + $sonstpremie;
-
-    $gesamtLohnAdapt = "";
-    if($bMzdaPodleAdaptace){
-	$erschwerniss = $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'];
-	$gesamtLohn = $erschwerniss;
-	$gesamtLohnAdapt = $sumLohn + $sumQPraemie + $leistPraemie + $qtlPraemie + $sonstpremie;
-    }
-    
     $prozentPritomnostZFonduPracHodin = round($hodCelkem / $ganzMonatNormStunden, 2) * 100;
 
-//    if ($prozentPritomnostZFonduPracHodin < 50)
-//        $gesamtLohn -= $sumQPraemie;
+    if ($prozentPritomnostZFonduPracHodin < 50)
+        $gesamtLohn -= $sumQPraemie;
+
+    /*
+    echo "gesamtLohn = $gesamtLohn<br>";
+    echo "zeitKc = $gesamtLohnZeitKc<br>";
+    echo "akkordKc = $gesamtLohnAkkordKc<br>";
+    echo "sumQPremie = $sumQPraemie<br>";
+    echo "erschwerniss = $erschwerniss<br>";
+    echo "leistPremie = $leistPraemie<br>";
+    echo "qtlPraemie = $qtlPraemie<br>";
+    echo "sonstpremie = $sonstpremie<br>";
+     * 
+     */
     
     if ($hodUkolove != 0)
         $factorAkkord = $gesamtVzAbyAkkord / ($hodUkolove * 60);
@@ -2346,14 +2398,12 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
         }
     }
 
-    $aPremieFlag = $lohnArray['personen'][$persnr]['aPremie']['apremie_flag'];
-
-//    if(array_key_exists(intval($person->persnr), $aPremienArray)){
-//	    $aPremieFlag = $aPremienArray[intval($person->persnr)]['apremie_flag'];
-//	}
-//	else{
-//	    $aPremieFlag = '';
-//	}
+    if(array_key_exists(intval($person->persnr), $aPremienArray)){
+	    $aPremieFlag = $aPremienArray[intval($person->persnr)]['apremie_flag'];
+	}
+	else{
+	    $aPremieFlag = '';
+	}
     //popisek do hlavicky
     $headerCells['mehrarbeit']['text'] = $maStundenDatumAb;
     //prescas. hodiny pocitam vztazene ke startStd, napr. k 31.12.2013
@@ -2502,21 +2552,8 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
         $pdf->Cell($headerCells['sonstpremie']['width'], $vyskaradku, $aPremieFlag, 'LR', 0, 'C', $fill);
 	$fill = 0;
 	
-	$pdf->Cell($headerCells['erschwerniss']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
-        
-	if($bMzdaPodleAdaptace===TRUE){
-	    $pdf->SetFillColor(240,255,230);
-	    $fill = 1;
-	    $pdf->Cell($headerCells['lohn']['width'], $vyskaradku, ''.  number_format($gesamtLohnAdapt,0,',',' ').'', 'LR', 0, 'R', $fill);
-	    $pdf->SetFillColor(255,255,255);
-	    $fill = 0;
-	}
-	else{
-	    $pdf->SetFillColor(255,255,255);
-	    $fill = 0;
-	    $pdf->Cell($headerCells['lohn']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
-	}
-        
+        $pdf->Cell($headerCells['erschwerniss']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
+        $pdf->Cell($headerCells['lohn']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
         $pdf->Cell($headerCells['transport']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
         $pdf->Cell($headerCells['vorschuss']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
         $pdf->Cell($headerCells['abmahnung']['width'], $vyskaradku, '', 'LR', 0, 'R', $fill);
@@ -2703,8 +2740,7 @@ $personen = simplexml_import_dom($domxml);
 $apl = new AplDB();
 $aTageProMonat = $apl->getArbTageBetweenDatums($von, $bis);
 //$aPremienArray = $apl->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*',FALSE);
-$lohnArray = $apl->getLohnArray($persvon, $persbis, $jahr, $monat);
-//AplDB::varDump($lohnArray);
+$lohnArray = $a->getLohnArray($persvon, $persbis, $jahr, $monat);
 
 foreach ($personen as $klic => $person) {
     if ($klic == 'person') {

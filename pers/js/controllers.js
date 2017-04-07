@@ -224,6 +224,14 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     }
     
     
+    /**
+     * pro prepocteni mzdy pri zmene MA,monat nebo jahr
+     * 
+     * vola privatni funkci = do budoucna, kdyby potreboval ridit parametrem
+     * 
+     * @returns {undefined}
+     * 
+     */
     $scope.updateLohn = function(){
 	console.log($scope.lohnMonat);
 	console.log($scope.lohnJahr);
@@ -948,6 +956,7 @@ $scope.commentClicked = function(e,p){
 		    }
 	    ).then(function (response) {
 		$scope.lohnArray = response.data.personen[$scope.ma.maInfo.PersNr];
+		$scope.lohnParams = response.data.params;
 	    });
 	}
     }

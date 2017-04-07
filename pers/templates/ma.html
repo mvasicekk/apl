@@ -322,6 +322,43 @@
 				</div>
 				</div>
 				<div class="col-sm-6">
+					<fieldset>
+					    <legend>info / parametry</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th class="">parametr</th>
+							<th class="">hodnota</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<th class="">perslohnfaktor = sundenlohn Kč/hod</th>
+							<td class="text-right">{{lohnArray.grundinfo.perslohnfaktor*60|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						    <tr>
+							<th class="">leistungfaktor</th>
+							<td class="text-right">{{lohnArray.grundinfo.leistfaktor|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						    <tr>
+							<th class="">eintritt</th>
+							<td class="text-right">{{lohnArray.persinfoinfo.eintritt}}</td>
+						    </tr>
+						    <tr>
+							<th class="">zkusebni doba do</th>
+							<td class="text-right">{{lohnArray.persinfoinfo.zkusebni_doba_dobaurcita}}</td>
+						    </tr>
+						    <tr>
+							<th class="">einarb zuschlag</th>
+							<td class="text-right">{{lohnArray.persinfoinfo.einarb_zuschlag}}</td>
+						    </tr>
+						    <tr>
+							<th class="">adaptace do</th>
+							<td class="text-right">{{lohnArray.persinfoinfo.adaptace_bis}}</td>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
     					<fieldset>
 					    <legend>hodiny / dny</legend>
 					    <table class="table-condensed table-striped table-responsive table-bordered">
@@ -379,6 +416,36 @@
 						</tfoot>
 					    </table>
 					</fieldset>
+				    
+				    <fieldset ng-show="lohnArray.mzdaPodleAdaptace">
+					    <legend>mzda podle adaptace</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th>datum</th>
+							<th class="text-right">prac. dnu od nastupu</th>
+							<th class="text-right">Kč / hod</th>
+							<th class="text-right">dochazka (hod)</th>
+							<th class="text-right">mzda / den ( Kč )</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr ng-repeat="(datum,al) in lohnArray.adaptlohn.tage">
+							<td>{{datum}}</td>
+							<td class="text-right">{{al.tageAbEintritt|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{al.stundenLohn|numeraljs:'0,0.00'}} Kč</td>
+							<td class="text-right">{{al.anwStunden|numeraljs:'0,0.00'}}</td>
+							<td class="text-right">{{al.tagLohn|numeraljs:'0,0.00'}} Kč</td>
+						    </tr>
+						</tbody>
+						<tfoot>
+						    <tr>
+							<th colspan="4">Sum</th>
+							<th class="text-right">{{lohnArray.adaptlohn.summeLohn|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>
+						</tfoot>
+					    </table>
+					</fieldset>
 					
 				</div>
 				<div class="col-sm-6">
@@ -396,14 +463,14 @@
 						    <tr ng-repeat="(oe,r) in lohnArray.premieZaKvalifikaci.oeKvalifikaceArray">
 							<td>{{oe}}</td>
 							<td>{{r.gilt_ab}}</td>
-							<td class="text-right">{{r.pct|numeraljs:'0,0.00'}}</td>
+							<td class="text-right">{{r.pct*100|numeraljs:'0,0.00'}}</td>
 						    </tr>
 						</tbody>
 						<tfoot>
 						    <tr>
 							<th>Sum</th>
 							<th class="text-right"></th>
-							<th class="text-right">{{lohnArray.premieZaKvalifikaci.sumPctKvalifikace|numeraljs:'0,0.00'}}</th>
+							<th class="text-right">{{lohnArray.premieZaKvalifikaci.sumPctKvalifikace*100|numeraljs:'0,0.00'}}</th>
 						    </tr>
 						</tfoot>
 					    </table>
@@ -423,13 +490,17 @@
 							<th>zeit</th>
 							<td class="text-right">{{lohnArray.premieZaKvalifikaci.zeit|numeraljs:'0,0.00'}} Kč</td>
 						    </tr>
+						    <tr>
+							<th>Sum</th>
+							<th class="text-right">{{(lohnArray.premieZaKvalifikaci.zeit+lohnArray.premieZaKvalifikaci.akkord)|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>
 						</tbody>
 					    </table>
 					</fieldset>
 				    
 				    <fieldset ng-if="lohnArray.aPremie.apremie_flag.length>0">
 					    <legend>C.2 A-Prémie (prémie za kvalitu)</legend>
-					    <table class="table-condensed table-striped table-responsive table-bordered">
+<!--					    <table class="table-condensed table-striped table-responsive table-bordered">
 						<thead>
 						    <tr>
 							<th>částka</th>
@@ -445,7 +516,78 @@
 							</td>
 						    </tr>
 						</tbody>
+					    </table>-->
+					    
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th>info</th>
+							<th class="text-right">částka</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr>
+							<th>opravy (65XX)</th>
+							<td class="text-right">
+							    {{lohnArray.aPremie.zeilen[ma.maInfo.PersNr].nacharbeit.faktor.czk|numeraljs:'0,0.00'}} Kč
+							</td>
+						    </tr>
+						    <tr>
+							<th>A6</th>
+							<td class="text-right">
+							    {{lohnArray.aPremie.zeilen[ma.maInfo.PersNr].A6.a6_prozent.czk|numeraljs:'0,0.00'}} Kč
+							</td>
+						    </tr>
+						    <tr>
+							<th>reklamace INTERN</th>
+							<td class="text-right">
+							    {{lohnArray.aPremie.zeilen[ma.maInfo.PersNr].rekl.sum_bewertung_I.czk|numeraljs:'0,0.00'}} Kč
+							</td>
+						    </tr>
+						    <tr>
+							<th>reklamace EXTERN</th>
+							<td class="text-right">
+							    {{lohnArray.aPremie.zeilen[ma.maInfo.PersNr].rekl.sum_bewertung_E.czk|numeraljs:'0,0.00'}} Kč
+							</td>
+						    </tr>
+						    <tr>
+							<th>leistung (VzAby/Anw) [%]</th>
+							<td class="text-right">
+							    {{lohnArray.aPremie.zeilen[ma.maInfo.PersNr].leistung.leistGrad[lohnParams.mj]|numeraljs:'0,0'}}
+							</td>
+						    </tr>
+						    <tr>
+							<th>
+							    Suma A-Premie (Kč x Leistung)
+							    <span ng-if="lohnArray.aPremie.apremie_flag=='V'" class="label label-success">{{lohnArray.aPremie.apremie_flag}}</span>
+							    <span ng-if="lohnArray.aPremie.apremie_flag=='!'" class="label label-danger">{{lohnArray.aPremie.apremie_flag}}</span>
+							</th>
+							<th class="text-right">{{lohnArray.aPremie.apremie|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>
+						    <!--ko kriteria , jen ty, ktere mi vynuluji premii-->
+						    <tr ng-show="lohnArray.aPremie.koKriteriaArray.ko_dzeit_z.multi=='0'">
+							<th colspan="2">
+							    <span class="label label-danger">ko-kriterium "Z" !!!</span>
+							</th>
+						    </tr>
+						    <tr ng-show="lohnArray.aPremie.koKriteriaArray.ko_dzeit_anw_prozent.multi=='0'">
+							<th colspan="2">
+							    <span class="label label-danger">ko-kriterium "Anw-Prozent" !!!</span>
+							</th>
+						    </tr>
+						    <tr ng-show="lohnArray.aPremie.koKriteriaArray.ko_a50.multi=='0'">
+							<th colspan="2">
+							    <span class="label label-danger">ko-kriterium "Ausschuss 50" !!!</span>
+							</th>
+						    </tr>
+						    <tr ng-show="lohnArray.aPremie.koKriteriaArray.ko_rekl_E.multi=='0'">
+							<th colspan="2">
+							    <span class="label label-danger">ko-kriterium "reklamace EXTERN" !!!</span>
+							</th>
+						    </tr>
+						</tbody>
 					    </table>
+					    
 					</fieldset>
 				    
 				    <fieldset>
@@ -470,13 +612,19 @@
 							<th class="text-left">monatNormMinuten</th>
 							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.monatNormMinuten|numeraljs:'0,0'}}</td>
 							<th class="text-left">leistungsGrad</th>
-							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.leistungsGrad|numeraljs:'0,0.00'}}</td>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.leistungsGrad|numeraljs:'0,0.00'}} ({{lohnArray.leistungPremie.betragLGrad|numeraljs:'0,0'}} Kč)</td>
 						    </tr>
 						    <tr>
 							<th class="text-left">ganzMonatNormMinuten</th>
 							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.ganzMonatNormMinuten|numeraljs:'0,0'}}</td>
 							<th class="text-left">leistungsGradGanzMonat</th>
-							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.leistungsGradGanzMonat|numeraljs:'0,0.00'}}</td>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.leistungsGradGanzMonat|numeraljs:'0,0.00'}} ({{lohnArray.leistungPremie.betragLGradMonat|numeraljs:'0,0'}} Kč)</td>
+						    </tr>
+						    <tr>
+							<th class="text-left">Tage (dny pro vypocet premie)</th>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.tageBerechnet|numeraljs:'0,0'}}</td>
+							<th class="text-left">anwTageArbTage</th>
+							<td  style='white-space: nowrap;' class="text-right">{{lohnArray.leistungPremie.anwTageArbTage|numeraljs:'0,0'}}</td>
 						    </tr>
 						    <tr>
 							<th class="text-left" colspan="2">Betrag</th>

@@ -20,8 +20,7 @@ $db->query("set names utf8");
 
 $pcip=get_pc_ip();
 
-//$views=array("anwesenheit","leistung","vorschuss","transport","essen","abmahnung","sonstpremie","nachtzuschlag","risiko","dpp");
-$views=array("anwesenheit","vorschuss","transport","essen","abmahnung","sonstpremie","nachtzuschlag","dpp");
+$views=array("anwesenheit","leistung","vorschuss","transport","essen","abmahnung","sonstpremie","nachtzuschlag","risiko","dpp");
 
 $viewname=$pcip.$views[0];
 $db->query("drop view $viewname");
@@ -84,54 +83,54 @@ $pt.=" group by dpers.`PersNr`";
 $db->query($pt);
 
 
-//$viewname=$pcip.$views[1];
-//$db->query("drop view $viewname");
-//$pt="create view $viewname";
-//$pt.=" as select";
-//$pt.="    drueck.persnr,";
-//$pt.="    dtattypen.og as og,";
-//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
-//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
-//
-//// prepocet na kc podle faktoru u OE v tabulce dtattypen
-//// zmena 2014-01-23
-//// prepocet na kc bude podle faktoru ulozeneho u operace
-////$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor,(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor)) as vzaby_kc,";
-////$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor,(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor),0)) as vzaby_akkord_kc,";
-//
-//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor)) as vzaby_kc,";
-//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor),0)) as vzaby_akkord_kc,";
-//
-//// qpraemie prozent
-////$pt .= " if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von>=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie) as qpraemie_prozent,";
-//// qpraemie
-////$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
-////$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
-////$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
-////$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
-//
-//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
-//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
-//$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
-//$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
-//
-//$pt.=" from drueck";
-//$pt.=" join dtattypen on drueck.oe=dtattypen.tat";
-////$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.taetnr";
-//$pt.=" join dpers on dpers.persnr=drueck.persnr";
-//$pt.=" left join dpersstempel on dpersstempel.persnr=drueck.persnr and dpersstempel.oe=drueck.oe";
-//$pt.=" where";
-//$pt.=" (";
-//$pt.="    (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
-//$pt.="    and (drueck.`Datum` between '$von' and '$bis')";
-//$pt.="    and (drueck.persnr between '$persvon' and '$persbis')";
-//$pt.=" )";
-//$pt.=" group by drueck.persnr,dtattypen.og";
-//
-////echo $pt."<br>";
-//$db->query($pt);
-
 $viewname=$pcip.$views[1];
+$db->query("drop view $viewname");
+$pt="create view $viewname";
+$pt.=" as select";
+$pt.="    drueck.persnr,";
+$pt.="    dtattypen.og as og,";
+$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+
+// prepocet na kc podle faktoru u OE v tabulce dtattypen
+// zmena 2014-01-23
+// prepocet na kc bude podle faktoru ulozeneho u operace
+//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor,(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor)) as vzaby_kc,";
+//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor,(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor),0)) as vzaby_akkord_kc,";
+
+$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor)) as vzaby_kc,";
+$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor),0)) as vzaby_akkord_kc,";
+
+// qpraemie prozent
+//$pt .= " if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von>=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie) as qpraemie_prozent,";
+// qpraemie
+//$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
+//$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
+//$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*`dtaetkz-abg`.lohn_faktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
+//$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
+
+$pt .= "  sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie))) as qpraemie_kc,";
+$pt .= "  sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_akkord_kc,";
+$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie),(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor/100*if(dpersstempel.qpraemie_prozent is not null,if(dpersstempel.datum_von<=drueck.datum,dpersstempel.qpraemie_prozent,dtattypen.qualitatspraemie),dtattypen.qualitatspraemie)),0)) as qpraemie_zeit_kc,";
+$pt .= "  sum(if(dtattypen.akkord=0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.qualitatspraemie/100),0)) as qpraemie_zeit_min";
+
+$pt.=" from drueck";
+$pt.=" join dtattypen on drueck.oe=dtattypen.tat";
+//$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.taetnr";
+$pt.=" join dpers on dpers.persnr=drueck.persnr";
+$pt.=" left join dpersstempel on dpersstempel.persnr=drueck.persnr and dpersstempel.oe=drueck.oe";
+$pt.=" where";
+$pt.=" (";
+$pt.="    (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
+$pt.="    and (drueck.`Datum` between '$von' and '$bis')";
+$pt.="    and (drueck.persnr between '$persvon' and '$persbis')";
+$pt.=" )";
+$pt.=" group by drueck.persnr,dtattypen.og";
+
+//echo $pt."<br>";
+$db->query($pt);
+
+$viewname=$pcip.$views[2];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
 $pt.=" as select";
@@ -140,7 +139,7 @@ $pt.=" dvorschuss.persnr,sum(dvorschuss.vorschuss) as sumvorschuss from dvorschu
 $db->query($pt);
 
 //transport
-$viewname=$pcip.$views[2];
+$viewname=$pcip.$views[3];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
 $pt.=" as select dperstransport.persnr,sum(dperstransport.preis) as transport";
@@ -150,7 +149,7 @@ $pt.=" group by dperstransport.persnr";
 $db->query($pt);
 
 //essen
-$viewname=$pcip.$views[3];
+$viewname=$pcip.$views[4];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
 $pt.=" as select";
@@ -163,7 +162,7 @@ $pt.=" group by dzeit.`PersNr`";
 $db->query($pt);
 
 //abmahnung
-$viewname=$pcip.$views[4];
+$viewname=$pcip.$views[5];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
 $pt.=" as select";
@@ -172,7 +171,7 @@ $pt.=" dabmahnung.persnr,sum(dabmahnung.betr) as abmahnung from dabmahnung where
 $db->query($pt);
 
 // sonstpremie
-$viewname=$pcip.$views[5];
+$viewname=$pcip.$views[6];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
 $pt.=" as select";
@@ -181,7 +180,7 @@ $pt.=" dperspremie.persnr,sum(dperspremie.betrag) as sonstpremie from dperspremi
 $db->query($pt);
 
 // nachtzuschlag
-$viewname=$pcip.$views[6];
+$viewname=$pcip.$views[7];
 $db->query("drop view $viewname");
 $pt="create view $viewname";
 $pt.=" as select";
@@ -218,7 +217,7 @@ $db->query($pt);
 //echo $pt;
 
 // risiko
-//$viewname=$pcip.$views[8];
+$viewname=$pcip.$views[8];
 //$pt=" create view $viewname";
 //$pt.=" as select";
 //$pt.="    drueck.PersNr as persnr,";
@@ -238,29 +237,28 @@ $db->query($pt);
 //$pt.="     drueck.PersNr";
 
 // 2014-03-11 vzpocet rizikoveho priplatku podle OE
-
-//$pt=" create view $viewname";
-//$pt.=" as select";
-//$pt.="    drueck.PersNr as persnr,";
-//// zmena 2013-01-23 misto verb-zeit se bude pro vypocet pouzivat vzaby
-////$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
-//$pt.="     sum(oe_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
-//$pt.=" from";
-//$pt.="     drueck";
-////$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
-//$pt.=" join dpers on dpers.PersNr=drueck.PersNr";
-//$pt.=" join oe_risiko_zuschlag on oe_risiko_zuschlag.oe=drueck.oe";
-//$pt.=" left join risikozuschlag on risikozuschlag.id=oe_risiko_zuschlag.risiko_zuschlag_id";
-//$pt.=" where";
-//$pt.="     drueck.Datum between '$von' and '$bis'";
-//$pt.="     and drueck.persnr between $persvon and $persbis";
-//$pt.=" group by";
-//$pt.="     drueck.PersNr";
-////echo $pt;
-//$db->query($pt);
+$pt=" create view $viewname";
+$pt.=" as select";
+$pt.="    drueck.PersNr as persnr,";
+// zmena 2013-01-23 misto verb-zeit se bude pro vypocet pouzivat vzaby
+//$pt.="     sum(abgnr_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*drueck.`Verb-Zeit`/60) as risiko_zuschlag";
+$pt.="     sum(oe_risiko_zuschlag.faktor/100*risikozuschlag.stunden_zuschlag*if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)/60) as risiko_zuschlag";
+$pt.=" from";
+$pt.="     drueck";
+//$pt.=" join `dtaetkz-abg` on `dtaetkz-abg`.`abg-nr`=drueck.TaetNr";
+$pt.=" join dpers on dpers.PersNr=drueck.PersNr";
+$pt.=" join oe_risiko_zuschlag on oe_risiko_zuschlag.oe=drueck.oe";
+$pt.=" left join risikozuschlag on risikozuschlag.id=oe_risiko_zuschlag.risiko_zuschlag_id";
+$pt.=" where";
+$pt.="     drueck.Datum between '$von' and '$bis'";
+$pt.="     and drueck.persnr between $persvon and $persbis";
+$pt.=" group by";
+$pt.="     drueck.PersNr";
+//echo $pt;
+$db->query($pt);
 
 // dpp
-$viewname=$pcip.$views[7];
+$viewname=$pcip.$views[9];
 $pt=" create view $viewname";
 $pt.=" as select";
 $pt.="    persnr,";
@@ -279,15 +277,15 @@ $pt.="     and dpersvertrag.persnr between $persvon and $persbis";
 $db->query($pt);
 
 $anwesenheit=$pcip.$views[0];
-//$leistung=$pcip.$views[1];
-$vorschuss = $pcip.$views[1];
-$transport = $pcip.$views[2];
-$essen = $pcip.$views[3];
-$abmahnung = $pcip.$views[4];
-$sonstpremie = $pcip.$views[5];
-$nachtzuschlag = $pcip.$views[6];
-//$risiko = $pcip.$views[8];
-$dpp = $pcip.$views[7];
+$leistung=$pcip.$views[1];
+$vorschuss = $pcip.$views[2];
+$transport = $pcip.$views[3];
+$essen = $pcip.$views[4];
+$abmahnung = $pcip.$views[5];
+$sonstpremie = $pcip.$views[6];
+$nachtzuschlag = $pcip.$views[7];
+$risiko = $pcip.$views[8];
+$dpp = $pcip.$views[9];
 
 $sql = "select $anwesenheit.persnr,";
 $sql.= " $anwesenheit.name,";
@@ -340,20 +338,20 @@ $sql.= " if($sonstpremie.sonstpremie is not null,$sonstpremie.sonstpremie,0) as 
 //$sql.= " if($nachtzuschlag.nacht is not null,if($nachtzuschlag.nacht>4,$nachtzuschlag.nacht-0.5,$nachtzuschlag.nacht),0) as nachtstd,";
 //$sql.= " if($nachtzuschlag.nacht is not null,$nachtzuschlag.nacht,0) as nachtstd,";
 $sql.= " if($nachtzuschlag.sonestd is not null,$nachtzuschlag.sonestd,0) as sonestd,";
-//$sql.= " if($risiko.risiko_zuschlag is not null,$risiko.risiko_zuschlag,0) as risiko,";
-//$sql.= " $leistung.og,";
+$sql.= " if($risiko.risiko_zuschlag is not null,$risiko.risiko_zuschlag,0) as risiko,";
+$sql.= " $leistung.og,";
 //$sql.= " if(dperslohnfaktor.faktor is null,1,dperslohnfaktor.faktor/60) as og_personalfaktor,";
 $sql.= " $anwesenheit.perslohnfaktor,";
-$sql.= " $anwesenheit.leistfaktor";
-//$sql.= " $leistung.vzaby,";
-//$sql.= " $leistung.vzaby_akkord,";
-//
-//$sql.= " $leistung.vzaby_kc,";
-//$sql.= " $leistung.vzaby_akkord_kc,";
-//$sql.= " $leistung.qpraemie_kc,";
-//$sql.= " $leistung.qpraemie_akkord_kc,";
-//$sql.= " $leistung.qpraemie_zeit_min,";
-//$sql.= " $leistung.qpraemie_zeit_kc";
+$sql.= " $anwesenheit.leistfaktor,";
+$sql.= " $leistung.vzaby,";
+$sql.= " $leistung.vzaby_akkord,";
+
+$sql.= " $leistung.vzaby_kc,";
+$sql.= " $leistung.vzaby_akkord_kc,";
+$sql.= " $leistung.qpraemie_kc,";
+$sql.= " $leistung.qpraemie_akkord_kc,";
+$sql.= " $leistung.qpraemie_zeit_min,";
+$sql.= " $leistung.qpraemie_zeit_kc";
 $sql.= " ,if($dpp.eintritt is not null,DATE_FORMAT($dpp.eintritt,'%y-%m-%d'),'') as dpp_von";
 $sql.= " ,if($dpp.befristet is not null,DATE_FORMAT($dpp.befristet,'%y-%m-%d'),'') as dpp_bis";
 
@@ -362,14 +360,14 @@ $sql.= " ,if($dpp.befristet is not null,DATE_FORMAT($dpp.befristet,'%y-%m-%d'),'
 //$sql.=" if(if(dperslohnfaktor.faktor is null,1,dperslohnfaktor.faktor/60)<>1,vzaby_akkord*if(dperslohnfaktor.faktor is null,1,dperslohnfaktor.faktor/60),vzaby_akkord_kc) as lohn_akkord_kc";
 
 $sql.= " from $anwesenheit";
-//$sql.= " left join $leistung on $leistung.persnr=$anwesenheit.persnr";
+$sql.= " left join $leistung on $leistung.persnr=$anwesenheit.persnr";
 $sql.= " left join $vorschuss on $vorschuss.persnr=$anwesenheit.persnr";
 $sql.= " left join $transport on $transport.persnr=$anwesenheit.persnr";
 $sql.= " left join $essen on $essen.persnr=$anwesenheit.persnr";
 $sql.= " left join $abmahnung on $abmahnung.persnr=$anwesenheit.persnr";
 $sql.= " left join $sonstpremie on $sonstpremie.persnr=$anwesenheit.persnr";
 $sql.= " left join $nachtzuschlag on $nachtzuschlag.persnr=$anwesenheit.persnr";
-//$sql.= " left join $risiko on $risiko.persnr=$anwesenheit.persnr";
+$sql.= " left join $risiko on $risiko.persnr=$anwesenheit.persnr";
 $sql.= " left join $dpp on $dpp.persnr=$anwesenheit.persnr";
 
 //$sql.=" left join dperslohnfaktor on dperslohnfaktor.persnr=$anwesenheit.persnr and dperslohnfaktor.og=$leistung.og";
@@ -414,7 +412,7 @@ $options = array(
                     'sumstundena',
                     'sumstundena_akkord',
                     'erschwerniss',
-//                    'risiko',
+                    'risiko',
                     'essen',
                     'sonstpremie',
                     'abmahnung',
@@ -448,23 +446,23 @@ $options = array(
 		    'dpp_bis',
                     'genom'=>'#urlaubgenom();',
                     'offen'=>'#offen();',
-//                    'ogs'=>array(
-//                        'rootTag'=>'ogs',
-//                        'idColumn'=>'og',
-//                        'rowTag'=>'og',
-//                        'elements'=>array(
-//                            'ognr'=>'og',
-////                            'og_personalfaktor',
-//                            'vzaby',
-//                            'vzaby_akkord',
-//                            'vzaby_kc',
-//                            'vzaby_akkord_kc',
-//                            'qpraemie_kc',
-//                            'qpraemie_akkord_kc',
-//                            'qpraemie_zeit_kc',
-//                            'qpraemie_zeit_min',
-//                        ),
-//                    )
+                    'ogs'=>array(
+                        'rootTag'=>'ogs',
+                        'idColumn'=>'og',
+                        'rowTag'=>'og',
+                        'elements'=>array(
+                            'ognr'=>'og',
+//                            'og_personalfaktor',
+                            'vzaby',
+                            'vzaby_akkord',
+                            'vzaby_kc',
+                            'vzaby_akkord_kc',
+                            'qpraemie_kc',
+                            'qpraemie_akkord_kc',
+                            'qpraemie_zeit_kc',
+                            'qpraemie_zeit_min',
+                        ),
+                    )
                   ),
 );
 					

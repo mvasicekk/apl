@@ -48,7 +48,7 @@ $datumBis = $bis;
 $monthsArrayAll = array();
 // vytvorim si pole mesico podle zadaneho rozsahu von a bis
 $start = strtotime($datumVon);
-$end = strtotime($datumBis);
+$end = strtotime($datumBis." 23:59:59");
 $increment = 60 * 60 * 24; // 1 den
 while($start<=$end){
     $year = date('y',$start);

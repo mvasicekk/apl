@@ -62,6 +62,243 @@ class AplDB {
 	"100" => "100 Reklamation",
     );
 
+    public static $mzdPolozkyProExportISP = array(
+    "102"=>array(
+	"popis"=>"smluvní hodinová mzda (odpracované dny-v hodinové mzdě)",
+	"stunden"=>1,
+	"stundenDB"=>"stundenZeit",
+	"tage"=>1,
+	"tageDB"=>"tageZeit",
+	"betrag"=>1,
+	"betragDB"=>"betragZeit",
+	"aktiv"=>1
+    ),
+    "103"=>array(
+	"popis"=>"smluvní úkolová mzda (odpracované dny v úkolové mzdě)",
+	"stunden"=>1,
+	"stundenDB"=>"stundenAkkord",
+	"tage"=>1,
+	"tageDB"=>"tageAkkord",
+	"betrag"=>1,
+	"betragDB"=>"betragAkkord",
+	"aktiv"=>1
+    ),
+    "500"=>array(
+	"popis"=>"počet dnů dovolene",
+	"stunden"=>1,
+	"stundenDB"=>"dStunden",
+	"tage"=>1,
+	"tageDB"=>"dTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "511"=>array(
+	"popis"=>"osobní překážky v práci na straně zaměstnance",
+	"stunden"=>1,
+	"stundenDB"=>"pStunden",
+	"tage"=>1,
+	"tageDB"=>"pTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "510"=>array(
+	"popis"=>"nahrada za svatek",
+	"stunden"=>1,
+	"stundenDB"=>"calSvatekStunden",
+	"tage"=>1,
+	"tageDB"=>"calSvatekTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    //TODO
+    "202"=>array(
+	"popis"=>"příplatek za práci ve svátek",
+	"stunden"=>1,
+	"stundenDB"=>"svatekStunden",
+	"tage"=>1,
+	"tageDB"=>"svatekTage",
+	"betrag"=>0,
+	"aktiv"=>1,
+	"nodpp"=>TRUE,
+    ),
+    "206"=>array(
+	"popis"=>"příplatek za práci v sobotu",
+	"stunden"=>1,
+	"stundenDB"=>"soStunden",
+	"tage"=>0,
+	"tageDB"=>"soTage",
+	"betrag"=>0,
+	"aktiv"=>1,
+	"nodpp"=>TRUE,
+    ),
+    "207"=>array(
+	"popis"=>"příplatek za práci v neděli",
+	"stunden"=>1,
+	"stundenDB"=>"neStunden",
+	"tage"=>0,
+	"tageDB"=>"neTage",
+	"betrag"=>0,
+	"nodpp"=>TRUE,
+	"aktiv"=>1
+    ),
+    "203"=>array(
+	"popis"=>"příplatek za práci v noci",
+	"stunden"=>1,
+	"stundenDB"=>"nachtStunden",
+	"tage"=>0,
+	"tageDB"=>"nachtTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "321"=>array(
+	"popis"=>"kvalifikační prémie",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"qPremieBetrag",
+	"aktiv"=>1
+    ),
+    "322"=>array(
+	"popis"=>"prémie za výkon",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"leistPremieBetrag",
+	"aktiv"=>1
+    ),
+    "323"=>array(
+	"popis"=>"prémie čtvrtletní",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"qtlPremieBetrag",
+	"aktiv"=>1
+    ),
+    "303"=>array(
+	"popis"=>"osobní ohodnocení",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "324"=>array(
+	"popis"=>"příplatek k normě",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"erschwernissBetrag",
+	"aktiv"=>0
+    ),
+    "330"=>array(
+	"popis"=>"A-prémie",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"aPremieBetrag",
+	"aktiv"=>1
+    ),
+    "332"=>array(
+	"popis"=>"vánoční prémie",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "551"=>array(
+	"popis"=>"neomluvená absence",
+	"stunden"=>0,
+	"stundenDB"=>"zStunden",
+	"tage"=>1,
+	"tageDB"=>"zTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "552"=>array(
+	"popis"=>"neplacené volno bez nároku dle ZP",
+	"stunden"=>1,
+	"stundenDB"=>"nvStunden",
+	"tage"=>1,
+	"tageDB"=>"nvTage",
+	"betrag"=>0,
+	"aktiv"=>1
+    ),
+    "333"=>array(
+	"popis"=>"prémie prach",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "610"=>array(
+	"popis"=>"dny nemoci",
+	"stunden"=>1,
+	"stundenDB"=>"nStunden",
+	"tage"=>1,
+	"tageDB"=>"nTage",
+	"betrag"=>0,
+	"aktiv"=>0
+    ),
+    "334"=>array(
+	"popis"=>"prémie rucni naradi",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"hfPremieBetrag",
+	"aktiv"=>1
+    ),
+    "737"=>array(
+	"popis"=>"doprava zahranici",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "751"=>array(
+	"popis"=>"srážka za dopravu",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"transportBetrag",
+	"aktiv"=>1
+    ),
+    "760"=>array(
+	"popis"=>"srážka za ubytování",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "770"=>array(
+	"popis"=>"pohledávky za zaměstnance",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+    "746"=>array(
+	"popis"=>"záloha na mzdu",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"vorschussBetrag",
+	"aktiv"=>1
+    ),
+    "748"=>array(
+	"popis"=>"srážka za obědy",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"betragDB"=>"essenBetrag",
+	"aktiv"=>1
+    ),
+    "750"=>array(
+	"popis"=>"pohl. zál 2",
+	"stunden"=>0,
+	"tage"=>0,
+	"betrag"=>1,
+	"aktiv"=>0
+    ),
+);
     /**
      * 
      * @return string
@@ -279,6 +516,136 @@ class AplDB {
 
     /**
      * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     */
+    public function getTransportRows($persvon, $persbis, $von, $bis) {
+	$pt = "";
+	$pt.=" select dperstransport.persnr,sum(dperstransport.preis) as transport";
+	$pt.=" from dperstransport";
+	$pt.=" where dperstransport.persnr between '$persvon' and '$persbis' and dperstransport.datum between '$von' and '$bis'";
+	$pt.=" group by dperstransport.persnr";
+
+	return $this->getQueryRows($pt);
+    }
+
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     */
+    public function getVorschussRows($persvon, $persbis, $von, $bis) {
+	$pt = "";
+	$pt.=" select";
+	$pt.=" dvorschuss.persnr,sum(dvorschuss.vorschuss) as sumvorschuss from dvorschuss where dvorschuss.datum between '$von' and '$bis' and dvorschuss.persnr between '$persvon' and '$persbis' group by dvorschuss.persnr";
+
+	return $this->getQueryRows($pt);
+    }
+
+    
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     */
+    public function getEssenRows($persvon, $persbis, $von, $bis) {
+	$pt = "";
+	$pt.="select";
+	$pt.=" dzeit.`PersNr` as persnr,";
+	$pt.=" sum(dessen.essen_preis) as essen";
+	$pt.=" from dzeit ";
+	$pt.=" join dessen on dessen.id_essen=dzeit.id_essen";
+	$pt.=" where dzeit.`Datum` between '$von' and '$bis' and dzeit.`PersNr` between '$persvon' and '$persbis' and dzeit.essen<>0";
+	$pt.=" group by dzeit.`PersNr`";
+
+	return $this->getQueryRows($pt);
+    }
+
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     */
+    public function getNachtSoNeRows($persvon, $persbis, $von, $bis) {
+	$pt = "";
+	$pt.="select";
+	$pt.="     dzeit.PersNr as persnr,";
+	$pt.="     sum(if(";
+	$pt.="          (DATE_FORMAT(dzeit.anw_von,'%H:%i')>='22:00' and DATE_FORMAT(dzeit.anw_von,'%H:%i')<='23:59') and (dzeit.anw_bis>dzeit.anw_von),";
+	$pt.="         if(TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,dzeit.anw_von))>4*60*60,TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,dzeit.anw_von))-0.5*60*60,TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,dzeit.anw_von))),";
+	$pt.="         if(";
+	$pt.="             DATE_FORMAT(dzeit.anw_von,'%H:%i')>='00:01' and DATE_FORMAT(dzeit.anw_von,'%H:%i')<='06:00' and DATE_FORMAT(dzeit.anw_bis,'%H:%i')<='06:00',";
+	$pt.="             if(TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,dzeit.anw_von))>4*60*60,TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,dzeit.anw_von))-0.5*60*60,TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,dzeit.anw_von))),";
+	$pt.="             if(";
+	$pt.="                 DATE_FORMAT(dzeit.anw_von,'%H:%i')>='00:01' and DATE_FORMAT(dzeit.anw_von,'%H:%i')<='06:00' and DATE_FORMAT(dzeit.anw_bis,'%H:%i')>='06:00',";
+	$pt.="                 if(TIME_TO_SEC(TIMEDIFF(ADDTIME(dzeit.datum,'06:00:00'),dzeit.anw_von))>4*60*60,TIME_TO_SEC(TIMEDIFF(ADDTIME(dzeit.datum,'06:00:00'),dzeit.anw_von))-0.5*60*60,TIME_TO_SEC(TIMEDIFF(ADDTIME(dzeit.datum,'06:00:00'),dzeit.anw_von))),";
+	$pt.="                 if(";
+	$pt.="                     DATE_FORMAT(dzeit.anw_bis,'%H:%i')>='22:00' and DATE_FORMAT(dzeit.anw_bis,'%H:%i')<='23:59' and DATE_FORMAT(dzeit.anw_von,'%H:%i')<='22:00',";
+	$pt.="                     if(TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,ADDTIME(dzeit.datum,'22:00:00')))>4*60*60,TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,ADDTIME(dzeit.datum,'22:00:00')))*0.5*60*60,TIME_TO_SEC(TIMEDIFF(dzeit.anw_bis,ADDTIME(dzeit.datum,'22:00:00')))),";
+	$pt.="                     0";
+	$pt.="                 )";
+	$pt.="             )";
+	$pt.="         )";
+	$pt.=" )/(60*60)) as nacht,";
+	$pt.=" sum(if(cislodne=6,dzeit.stunden,0)) as sostd,";
+	$pt.=" sum(if(cislodne=7,dzeit.stunden,0)) as nestd";
+	$pt.=" from";
+	$pt.="     dzeit";
+	$pt.=" join calendar on calendar.datum=dzeit.datum";
+	$pt.=" where";
+	$pt.="     dzeit.Datum between '$von' and '$bis'";
+	$pt.="     and dzeit.persnr between $persvon and $persbis";
+	$pt.=" group by";
+	$pt.="     dzeit.PersNr";
+
+	return $this->getQueryRows($pt);
+    }
+
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     */
+    public function getAbmahnungRows($persvon, $persbis, $von, $bis) {
+	$pt = "";
+	$pt.=" select";
+	$pt.=" dabmahnung.persnr,sum(dabmahnung.betr) as abmahnung from dabmahnung where dabmahnung.betrdat between '$von' and '$bis' and dabmahnung.persnr between '$persvon' and '$persbis' group by dabmahnung.persnr";
+	return $this->getQueryRows($pt);
+    }
+
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $von
+     * @param type $bis
+     */
+    public function getHFPremieRows($persvon, $persbis, $von, $bis) {
+	$sql = " select dperspremie.persnr,dperspremie.betrag,dperspremie.datum";
+	$sql.= " from dperspremie";
+	$sql.= " join dpremietypen on dpremietypen.id=dperspremie.id_premie";
+	$sql.= " where";
+	$sql.= "     persnr between '$persvon' and '$persbis'";
+	$sql.= "     and";
+	$sql.= "     dpremietypen.premiebeschreibung='hf_reparaturen_premie'";
+	$sql.= "     and";
+	$sql.= "     dperspremie.datum between '$von' and '$bis'";
+
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
      * @param type $bruttoflag
      * @param type $teil
      * @return type
@@ -323,6 +690,486 @@ class AplDB {
 	    $rows = $this->getQueryRows($sql);
 	    return $rows[0];
 	}
+    }
+
+    /**
+     * 
+     * @global type $a
+     * @param type $persnr
+     * @param type $von
+     * @param type $bis
+     * @return type
+     */
+    function getPersGrundLeistung($persnr, $von, $bis) {
+	    //global $a;
+	    $sql = "";
+	    $sql.=" select";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="     dtattypen.oe,";
+	    $sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+	    $sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+	    $sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*doe.czk/60,(drueck.`Stück`)*drueck.`VZ-IST`*doe.czk/60),0)) as vzaby_akkord_kc";
+	    $sql.=" from drueck";
+	    $sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	    $sql.=" join doe on doe.oe=dtattypen.oe";
+	    $sql.=" where";
+	    $sql.="     drueck.PersNr='$persnr'";
+	    $sql.="     and";
+	    $sql.="     drueck.Datum between '$von' and '$bis'";
+	    $sql.=" group by";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="     dtattypen.oe";
+
+	    $rs = $this->getQueryRows($sql);
+	    return $rs;
+	}
+
+	/**
+	 * 
+	 * @param type $persArbTageBetweenEintrittAktual
+	 * @return int
+	 */
+	function getAdaptaceLevel($persArbTageBetweenEintrittAktual) {
+	    $adaptace = 0;
+	    if ($persArbTageBetweenEintrittAktual > 0) {
+		if ($persArbTageBetweenEintrittAktual > 40) {
+		    $adaptace = 3;
+		} else if ($persArbTageBetweenEintrittAktual > 20) {
+		    $adaptace = 2;
+		} else {
+		    $adaptace = 1;
+		}
+	    }
+	    return $adaptace;
+	}
+
+	/**
+	 * 
+	 * @param type $adaptace
+	 * @return int
+	 */
+	function getStdLohnForAdaptace($adaptace) {
+	    if ($adaptace > 2) {
+		return 130;
+	    } elseif ($adaptace > 1) {
+		return 120;
+	    } elseif ($adaptace > 0) {
+		return 110;
+	    }
+	    return 0;
+	}
+	
+    /**
+     * 
+     * @param type $persvon
+     * @param type $persbis
+     * @param type $jahr YYYY
+     * @param type $monat MM
+     */
+    public function getLohnArray($persvon, $persbis, $jahr, $monat) {
+	$mzdaPodleAdaptace = FALSE;
+	$mj = sprintf("%02d-%02d", $jahr - 2000, $monat);
+	$von = sprintf("%04d-%02d-%02d", $jahr, $monat, 1);
+	$bis = sprintf("%04d-%02d-%02d", $jahr, $monat, cal_days_in_month(CAL_GREGORIAN, $monat, $jahr));
+
+
+	$lohnArray = array(
+	    'params' => array(
+		'persvon' => $persvon,
+		'persbis' => $persbis,
+		'jahr' => $jahr,
+		'monat' => $monat,
+		'mzdaPodleAdaptace' => $mzdaPodleAdaptace,
+		'von' => $von,
+		'bis' => $bis,
+		'mj' => $mj,
+	    ),
+	);
+
+	
+
+//grundinfo z E143
+	$sql.=" select";
+	$sql.="     dpers.persnr,";
+	$sql.="     dpers.`Name` as name,";
+	$sql.="     dpers.`Vorname` as vorname,";
+	$sql.="     CONCAT(dpers.`Name`,' ',dpers.`Vorname`) as vollname,";
+	$sql.="     dpers.lohnfaktor/60 as perslohnfaktor,";
+	$sql.="     dpers.leistfaktor,";
+	$sql.="     dpers.premie_za_vykon,";
+	$sql.="     dpers.regeloe,";
+	$sql.="     dpers.alteroe,";
+	$sql.="     dpers.premie_za_kvalitu,";
+	$sql.="     dpers.qpremie_akkord,";
+	$sql.="     dpers.qpremie_zeit,";
+	$sql.="     dpers.premie_za_prasnost,";
+	$sql.="     dpers.premie_za_3_mesice,";
+	$sql.="     dpers.MAStunden,";
+	$sql.="     dpers.dpersstatus,";
+	$sql.="     if(dpersbewerber.exekution is null,0,dpersbewerber.exekution) as exekution,";
+	$sql.="     DATE_FORMAT(dpers.eintritt,'%y-%m-%d') as eintritt,";
+	$sql.="     DATE_FORMAT(dpers.austritt,'%y-%m-%d') as austritt,";
+	$sql.="     DATE_FORMAT(dpers.geboren,'%Y-%m-%d') as geboren,";
+	$sql.="     DATE_FORMAT(dpersdetail1.dobaurcita,'%y-%m-%d') as dobaurcita,";
+	$sql.="     DATE_FORMAT(dpersdetail1.zkusebni_doba_dobaurcita,'%y-%m-%d') as zkusebni_doba_dobaurcita,";
+//$sql.="     dzeit.Datum as datum,";
+	$sql.="     sum(dzeit.`Stunden`) as sumstunden,";
+	$sql.="     sum(if(dtattypen.oestatus='a',dzeit.`Stunden`,0)) as sumstundena,";
+	$sql.="     sum(if(dtattypen.oestatus='a' and dtattypen.akkord<>0,dzeit.`Stunden`,0)) as sumstundena_akkord,";
+	$sql.="     sum(if(dtattypen.erschwerniss<>0,dzeit.`Stunden`*6,0)) as erschwerniss,";
+	$sql.="     sum(if(dzeit.tat='z',1,0)) as tage_z,";
+	$sql.="     sum(if(dzeit.tat='z',dzeit.Stunden,0)) as stunden_z,";
+	$sql.="     sum(if(dzeit.tat='nv',1,0)) as tage_nv,";
+	$sql.="     sum(if(dzeit.tat='nv',dzeit.Stunden,0)) as stunden_nv,";
+	$sql.="     sum(if(dzeit.tat='nw',1,0)) as tage_nw,";
+	$sql.="     sum(if(dzeit.tat='d',1,0)) as tage_d,";
+	$sql.="     sum(if(dzeit.tat='d',dzeit.Stunden,0)) as stunden_d,";
+	$sql.="     sum(if(dzeit.tat='np',1,0)) as tage_np,";
+	$sql.="     sum(if(dzeit.tat='n',1,0)) as tage_n,";
+	$sql.="     sum(if(dzeit.tat='n',dzeit.Stunden,0)) as stunden_n,";
+	$sql.="     sum(if(dzeit.tat='nu',1,0)) as tage_nu,";
+	$sql.="     sum(if(dzeit.tat='p',1,0)) as tage_p,";
+	$sql.="     sum(if(dzeit.tat='p',dzeit.Stunden,0)) as stunden_p,";
+	$sql.="     sum(if(dzeit.tat='u',1,0)) as tage_u,";
+	$sql.="     sum(if(dzeit.tat='?',1,0)) as tage_frage";
+	$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,dzeit.Stunden/8,0)) as tage_svatek";
+	$sql.="     ,sum(if(calendar.cislodne<>7 and calendar.svatek<>0,dzeit.Stunden,0)) as stunden_svatek";
+	$sql.="     ,sum(if(dtattypen.fr_sp='N',dzeit.stunden,0)) as nachtstd";
+	$sql.="     ,durlaub1.jahranspruch";
+	$sql.="     ,durlaub1.rest";
+	$sql.="     ,durlaub1.gekrzt";
+	$sql.=" from dpers";
+	$sql.=" join dzeit on dzeit.PersNr=dpers.PersNr";
+	$sql.=" join dtattypen on dzeit.tat=dtattypen.tat";
+	$sql.=" join calendar on calendar.datum=dzeit.Datum";
+	$sql.=" left join dpersdetail1 on dpersdetail1.persnr=dpers.`PersNr`";
+	$sql.=" left join dpersbewerber on dpersbewerber.persnr=dpers.`PersNr`";
+	$sql.=" left join durlaub1 on durlaub1.`PersNr`=dpers.`PersNr`";
+	$sql.=" where";
+	$sql.=" (";
+	$sql.="     (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
+	$sql.="     and (dzeit.`Datum` between '$von' and '$bis')";
+	$sql.="     and (dpers.persnr between '$persvon' and '$persbis')";
+	$sql.=" )";
+	$sql.=" group by ";
+	$sql.="     dpers.`PersNr`";
+
+	$rows = $this->getQueryRows($sql);
+	$persAplRows = array();
+
+	if ($rows != NULL) {
+	    foreach ($rows as $r) {
+		$persnr = $r['persnr'];
+		//$datum = $r['datum'];
+		$persAplRows[$persnr]['grundinfo'] = $r;
+		//$persRows[$persnr][$datum] = $r;
+	    }
+	}
+
+
+	$sql = "";
+	$sql.=" select";
+	$sql.="     dpers.PersNr as persnr,";
+	$sql.="     concat(dpers.`name`,' ',dpers.`vorname`) as persname,";
+	$sql.="     dpers.eintritt,";
+	$sql.="     dpers.austritt,";
+	$sql.="     dpers.dpersstatus,";
+	$sql.="     dpers.einarb_zuschlag,";
+	$sql.="     dpers.adaptace_bis,";
+	$sql.="     if(dpersdetail1.zkusebni_doba_dobaurcita is not null,DATE_FORMAT(dpersdetail1.zkusebni_doba_dobaurcita,'%Y-%m-%d'),null) as zkusebni_doba_dobaurcita,";
+	$sql.="     dpers.lohnfaktor/60 as perslohnfaktor,";
+	$sql.="     dpers.leistfaktor,";
+	$sql.="     if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),0) as austritt_diff";
+	$sql.=" from";
+	$sql.="     dpers";
+	$sql.=" join dpersdetail1 on dpersdetail1.persnr=dpers.persnr";
+	$sql.=" where";
+	$sql.="	    (dpers.kor=0) AND";
+	$sql.="	    (dpers.persnr between '$persvon' and '$persbis')";
+	$sql.="     AND";
+	$sql.="     (dpers.dpersstatus='MA'";
+	$sql.="     or";
+	$sql.="     if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),10000)<60)";
+	$sql.=" order by";
+	$sql.="     dpers.PersNr";
+
+	$persRows = $this->getQueryRows($sql);
+
+	$premieZaKvalifikaciArray = $this->getPremieZaKvalifikaci($persvon, $persbis, $von, $bis);
+	$premieZaKvalifikaciPctArray = $this->getPremieZaKvalifikaciPctArray($persvon, $persbis, $von, $bis);
+	//pocitat jen pro lidi s priznakem a_premie
+	$aPremienArray = $this->getPersnrApremieArray($monat, $jahr, $persvon, $persbis, '*', FALSE);
+	if ($monat % 3 == 0) {
+	    $qtl = ceil($monat / 3);
+	    $qtlLeistungArray = $this->getQTLLeistungProPersVonBisNeu($jahr, $qtl, $persvon, $persbis, TRUE);
+	}
+	
+	
+//	echo "<pre>";
+//	var_dump($qtlLeistungArray);
+//	echo "</pre>";
+	
+
+	if ($persRows !== NULL) {
+	    foreach ($persRows as $pers) {
+		$persnr = $pers['persnr'];
+		$persname = $pers['persname'];
+		$eeZuschlagBerechnen = $pers['einarb_zuschlag'];
+		$eintrittDate = $pers['eintritt'];
+		$zkusebni_doba_dobaurcita = $pers['zkusebni_doba_dobaurcita'] == NULL ? NULL : $pers['zkusebni_doba_dobaurcita'] . ' 23:59:59';
+		$perslohnfaktor = $pers['perslohnfaktor'];
+		$leistFaktor = $pers['leistfaktor'];
+		$adaptaceBisTime = $pers['adaptace_bis'] != NULL ? strtotime($pers['adaptace_bis']) : strtotime("2100-01-01");
+
+		$lohnArray['personen'][$persnr]['persinfoinfo'] = $pers;
+		$lohnArray['personen'][$persnr]['grundinfo'] = $persAplRows[$persnr]['grundinfo'];
+
+		$leistArray = $this->getPersGrundLeistung($persnr, $von, $bis);
+		$lAAll = array();
+		$sumVzaby = 0;
+		$sumVzabyAkkord = 0;
+		$sumVzabyZeit = 0;
+		$sumVzabyAkkordKc = 0;
+		$sumVzabyZeitKc = 0;
+
+		if ($leistArray !== NULL) {
+		    foreach ($leistArray as $lA) {
+			array_push($lAAll, array(
+			    'vzaby' => $lA['vzaby'],
+			    'vzaby_akkord' => $lA['vzaby_akkord'],
+			    'vzaby_zeit' => $lA['vzaby'] - $lA['vzaby_akkord'],
+			    'vzaby_akkord_kc' => $lA['vzaby_akkord_kc'],
+			    //'vzaby_zeit_kc' => ($lA['vzaby'] - $lA['vzaby_akkord']) * $perslohnfaktor,
+			    'vzaby_zeit_kc' => ($lA['vzaby'] - $lA['vzaby_akkord']) * $perslohnfaktor * $leistFaktor,
+			    'oe' => $lA['oe']
+				)
+			);
+			$sumVzaby += $lA['vzaby'];
+			$sumVzabyAkkord += $lA['vzaby_akkord'];
+			$sumVzabyZeit += ($lA['vzaby'] - $lA['vzaby_akkord']);
+			$sumVzabyAkkordKc += $lA['vzaby_akkord_kc'];
+			//$sumVzabyZeitKc += ($lA['vzaby'] - $lA['vzaby_akkord']) * $perslohnfaktor;
+			$sumVzabyZeitKc += ($lA['vzaby'] - $lA['vzaby_akkord']) * $perslohnfaktor * $leistFaktor;
+		    }
+		} else {
+		    array_push($lAAll, array(
+			'vzaby' => 0,
+			'vzaby_akkord' => 0,
+			'vzaby_zeit' => 0,
+			'vzaby_akkord_kc' => 0,
+			'vzaby_zeit_kc' => 0,
+			'oe' => 'bez vykonu'
+			    )
+		    );
+		}
+
+		$lohnArray['personen'][$persnr]['monatlohn']['oes'] = $lAAll;
+		$lohnArray['personen'][$persnr]['monatlohn']['sumVzaby'] = $sumVzaby;
+		$lohnArray['personen'][$persnr]['monatlohn']['sumVzabyAkkord'] = $sumVzabyAkkord;
+		$lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeit'] = $sumVzabyZeit;
+		$lohnArray['personen'][$persnr]['monatlohn']['sumVzabyAkkordKc'] = $sumVzabyAkkordKc;
+		$lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeitKc'] = $sumVzabyZeitKc;
+		// adaptace ------------------------------------------------------------
+		// test na moznost adaptace, tj. mam vyplneno probezeit ?
+		$mzdaPodleAdaptace = FALSE;
+		if ($eeZuschlagBerechnen == 1 && strlen(trim($zkusebni_doba_dobaurcita)) > 0) {
+		    $mzdaPodleAdaptace = TRUE;
+		    $anwArray = $this->getPersAnwStdArbeit($persnr, $von, $bis);
+		    $adaptaceBisDate = date('Y-m-d', $adaptaceBisTime);
+		    $zkusebnidobaTime = strtotime($zkusebni_doba_dobaurcita);
+		    //potrebuju dochazku pro zadane obdobi
+		    //projdu po jednotlivych dne za cely mesic
+		    $vonTime = strtotime($von);
+		    $bisTime = strtotime($bis . " 23:59:59");
+		    $adaptLohnSum = 0;
+		    for ($aktualTime = $vonTime; $aktualTime <= $bisTime && $aktualTime <= $adaptaceBisTime && $aktualTime <= $zkusebnidobaTime; $aktualTime+=24 * 60 * 60) {
+			$aktualDate = date('Y-m-d', $aktualTime);
+			$arbTageBetweenEintrittAktual = $this->getArbTageBetweenDatums($eintrittDate, date('Y-m-d', $aktualTime));
+			$persArbTageBetweenEintrittAktual = $this->getATageProPersnrBetweenDatumsAdaptace($persnr, $eintrittDate, date('Y-m-d', $aktualTime));
+			$adaptace = $this->getAdaptaceLevel($persArbTageBetweenEintrittAktual);
+			$stdLohn = $this->getStdLohnForAdaptace($adaptace);
+			$aStunden = array_key_exists($aktualDate, $anwArray) ? $anwArray[$aktualDate] : 0;
+			$tagLohn = $aStunden * $stdLohn;
+			$adaptLohnSum += $tagLohn;
+			$lohnArray['personen'][$persnr]['adaptlohn']['tage'][$aktualDate] = array(
+			    'tageAbEintritt' => $persArbTageBetweenEintrittAktual,
+			    'stundenLohn' => $stdLohn,
+			    'anwStunden' => $aStunden,
+			    'tagLohn' => $tagLohn,
+			);
+		    }
+		    $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'] = $adaptLohnSum;
+
+		    //test jestli mu adaptace konci pred koncem mesice, tj. od konce adaptace do konce mesice mu spocitam vykon normalne (ukolove)
+		    if ($adaptaceBisTime < $bisTime || $zkusebnidobaTime < $bisTime) {
+			//adaptace konci pred koncem mesice
+			//odkdy skoncila adaptace?
+			$konecAdaptaceTime = min(array($adaptaceBisTime, $zkusebnidobaTime));
+			$leistArray = $this->getPersGrundLeistung($persnr, date('Y-m-d', $konecAdaptaceTime), $bis);
+			$lohnArray['personen'][$persnr]['monatlohnRest'] = $leistArray;
+
+			if ($leistArray !== NULL) {
+			    $vzaby = $leistArray[0]['vzaby'];
+			    $vzaby_akkord = $leistArray[0]['vzaby_akkord'];
+			    $vzaby_zeit = $vzaby - $vzaby_akkord;
+			    $vzaby_akkord_kc = $leistArray[0]['vzaby_akkord_kc'];
+			    //$vzaby_zeit_kc = $vzaby_zeit * $perslohnfaktor;
+			    $vzaby_zeit_kc = $vzaby_zeit * $perslohnfaktor * $leistFaktor;
+			} else {
+			    $vzaby = 0;
+			    $vzaby_akkord = 0;
+			    $vzaby_zeit = 0;
+			    $vzaby_akkord_kc = 0;
+			    $vzaby_zeit_kc = 0;
+			}
+		    }
+		}
+		// adaptace konec ------------------------------------------------------
+
+		$lohnArray['personen'][$persnr]['mzdaPodleAdaptace'] = $mzdaPodleAdaptace;
+
+//	    if (!$mzdaPodleAdaptace) {
+		if (TRUE) {
+		    // premie za kvalifikaci II ------------------------------------
+		    $sumPremieZaKvalifikaciPct = 0;
+		    if (array_key_exists($persnr, $premieZaKvalifikaciPctArray)) {
+			$persQArray = $premieZaKvalifikaciPctArray[$persnr];
+			$lohnArray['personen'][$persnr]['premieZaKvalifikaci']['oeKvalifikaceArray'] = $persQArray;
+			foreach ($persQArray as $oe => $qpremieArray) {
+			    $sumPremieZaKvalifikaciPct += floatval($qpremieArray['pct']);
+			}
+		    }
+		    $lohnArray['personen'][$persnr]['premieZaKvalifikaci']['sumPctKvalifikace'] = $sumPremieZaKvalifikaciPct;
+
+
+
+		    $qPremieAkkord = $sumPremieZaKvalifikaciPct * $sumVzabyAkkordKc;
+		    $qPremieZeit = $sumPremieZaKvalifikaciPct * $sumVzabyZeitKc;
+
+		    $lohnArray['personen'][$persnr]['premieZaKvalifikaci']['akkord'] = $qPremieAkkord;
+		    $lohnArray['personen'][$persnr]['premieZaKvalifikaci']['zeit'] = $qPremieZeit;
+		    //a-premie
+
+		    if (array_key_exists($persnr, $aPremienArray)) {
+			$persAArray = $aPremienArray[$persnr];
+			$lohnArray['personen'][$persnr]['aPremie'] = $persAArray;
+		    }
+
+
+		    $bLeistPremie = FALSE;
+		    $bQTLPremie = FALSE;
+		    if (array_key_exists($persnr, $persAplRows)) {
+			$d = $persAplRows[$persnr]['grundinfo']['tage_d'];
+			$nw = $persAplRows[$persnr]['grundinfo']['tage_nw'];
+			$z = $persAplRows[$persnr]['grundinfo']['tage_z'];
+			$bLeistPremie = $persAplRows[$persnr]['grundinfo']['premie_za_vykon'] <> 0 ? TRUE : FALSE;
+			$bQTLPremie = $persAplRows[$persnr]['grundinfo']['premie_za_3_mesice'] <> 0 ? TRUE : FALSE;
+		    }
+
+		    //kvartalni premie
+		    if ($bQTLPremie) {
+
+			$pracovnik = $persnr;
+			$leistungArray = array('leistung_min' => 0, 'leistung_kc' => 0);
+			if ($monat % 3 == 0) {
+			    $qtl = ceil($monat / 3);
+			    $qtlTageSoll = $this->sollTageQTLProPersNr($jahr, $qtl, $pracovnik, FALSE);
+			    // useHack=TRUE pro pouziti vyjimky v 1.kvartalu 2017
+			    if(array_key_exists($pracovnik, $qtlLeistungArray)){
+				$leistungArray = $qtlLeistungArray[$pracovnik];
+			    }
+			    //$leistungArray = $this->getQTLLeistungProPersNrNeu($jahr, $qtl, $pracovnik, TRUE);
+			}
+
+			//zobrazeni dnu soll
+
+			$qtlLeistungIst = $leistungArray['leistung_min'];
+			$qtlLeistungIstKc = $leistungArray['leistung_kc'];
+			$qtlLeistungSoll = isset($qtlTageSoll) ? $qtlTageSoll * 480 : 0;
+
+			$qtlPraemie = $bQTLPremie == true ? round(0.1 * $qtlLeistungIstKc) : 0;
+			if ($qtlLeistungIst < $qtlLeistungSoll) {
+			    $qtlPraemie = 0;
+			}
+			$qtlPremieBetrag = $qtlPraemie;
+
+
+			$lohnArray['personen'][$persnr]['qtlPremie']['qtlLeistungIst'] = $qtlLeistungIst;
+			$lohnArray['personen'][$persnr]['qtlPremie']['qtlLeistungIstKc'] = $qtlLeistungIstKc;
+			$lohnArray['personen'][$persnr]['qtlPremie']['qtlLeistungSoll'] = $qtlLeistungSoll;
+			$lohnArray['personen'][$persnr]['qtlPremie']['qtlPremieBetrag'] = $qtlPremieBetrag;
+		    }
+
+
+		    // premie za vykon
+		    // pocet kalendarnik prac dnu
+		    $pracKalDny = $this->getArbTageBetweenDatums($von, $bis);
+		    $pracovnik = $persnr;
+		    $gesamtVzabyAkkord = $sumVzabyAkkord;
+		    $gesamtLeistungZeit = $sumVzabyZeit * $leistFaktor;
+		    $citatel = $gesamtLeistungZeit + $gesamtVzabyAkkord;
+		    $aTageProMonat = $pracKalDny;
+		    $anwTageArbeitsTage = $this->getATageProPersnrBetweenDatums($pracovnik, $von, $bis, 1);
+		    $ganzMonatNormMinuten = $aTageProMonat * 8 * 60;
+		    $vonTimestamp = strtotime($von);
+		    $eintrittTimestamp = strtotime($eintrittDate);
+
+		    if ($eintrittTimestamp > $vonTimestamp)
+			$arbTage = $this->getArbTageBetweenDatums($eintrittDate, $bis);
+		    else
+			$arbTage = $this->getArbTageBetweenDatums($von, $bis);
+
+		    //$monatNormStunden = 8 * ($arbTage - $d - $nw);
+		    $monatNormStunden = 8 * ($arbTage - $d);
+		    $monatNormMinuten = $monatNormStunden * 60;
+		    if ($monatNormMinuten != 0) {
+			$leistungsGrad = round(($citatel) / $monatNormMinuten, 2);
+		    } else {
+			$leistungsGrad = 0;
+		    }
+		    if ($ganzMonatNormMinuten != 0) {
+			$leistungsGradGanzMonat = round(($citatel) / $ganzMonatNormMinuten, 2);
+		    } else {
+			$leistungsGradGanzMonat = 0;
+		    }
+
+		    $betragGrad = $this->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGrad);
+		    $betragGradMonat = $this->getLeistungsPraemieBetragProLeistungsFaktor($leistungsGradGanzMonat);
+		    if ($betragGrad == $betragGradMonat) {
+			$leistPraemieBerechnet = $betragGrad * $aTageProMonat;
+			$tageBerechnet = $aTageProMonat;
+		    } else {
+			if ($betragGrad > $betragGradMonat) {
+			    $leistPraemieBerechnet = $betragGrad * ($arbTage - $d);
+			    $tageBerechnet = $arbTage - $d;
+			} else {
+			    $leistPraemieBerechnet = $betragGradMonat * ($aTageProMonat);
+			    $tageBerechnet = $aTageProMonat;
+			}
+		    }
+
+		    $leistPremieBetrag = $bLeistPremie ? $leistPraemieBerechnet : 0;
+
+		    $lohnArray['personen'][$persnr]['leistungPremie']['pracKalDny'] = $pracKalDny;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['betragLGrad'] = $betragGrad;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['betragLGradMonat'] = $betragGradMonat;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['tageBerechnet'] = $tageBerechnet;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['pracKalDny'] = $pracKalDny;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['vzabyAkkord'] = $gesamtVzabyAkkord;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['leistungZeit'] = $gesamtLeistungZeit;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['monatNormMinuten'] = $monatNormMinuten;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['ganzMonatNormMinuten'] = $ganzMonatNormMinuten;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['leistungsGrad'] = $leistungsGrad;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['leistungsGradGanzMonat'] = $leistungsGradGanzMonat;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['leistungsPremieBetrag'] = $leistPremieBetrag;
+		    $lohnArray['personen'][$persnr]['leistungPremie']['anwTageArbTage'] = $anwTageArbeitsTage;
+
+		    $lohnArray['personen'][$persnr]['zTageWarnung'] = $z;
+		}
+	    }
+	}
+	
+	return $lohnArray;
     }
 
     /**
@@ -5870,11 +6717,11 @@ class AplDB {
 	$bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
 	$datumVon = $von;
 	$datumBis = $bis;
-
+	$persApremieArray = array();
 	$monthsArrayAll = array();
 // vytvorim si pole mesico podle zadaneho rozsahu von a bis
 	$start = strtotime($datumVon);
-	$end = strtotime($datumBis);
+	$end = strtotime($datumBis." 23:59:59");
 	$increment = 60 * 60 * 24; // 1 den v sekundach
 	while ($start <= $end) {
 	    $year = date('y', $start);
@@ -6206,6 +7053,7 @@ class AplDB {
 			$vzaby_zeit = 0;
 		    }
 		    $zeilen[$persnr]['leistung']['leistGrad'][$yearMonth] = $zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] != 0 ? ($vzaby_akkord + $vzaby_zeit) / ($zeilen[$persnr]['dzeit']['anwstd'][$yearMonth] * 60) * 100 : 0;
+		    $zeilen[$persnr]['leistung']['leistArray'][$yearMonth] = $leistungArray;
 		}
 
 		//ko_kriteria
@@ -6246,15 +7094,18 @@ class AplDB {
 		} else {
 		    $koKriteriaArray[$persnr]['ko_rekl_E']['multi'] = $bew['betrag'];
 		}
+		$persApremieArray[$persnr]['koKriteriaArray'] = $koKriteriaArray[$persnr];
 	    }
 	}
 
 //AplDB::varDump($zeilen);
 //exit();
 
+	
 	$gesammtSummePremie = 0;
-	$persApremieArray = array();
+	
 	if (is_array($zeilen)) {
+	    $persApremieArray[$persnr]['zeilen'] = $zeilen;
 	    foreach ($zeilen as $persnr => $persZeile) {
 		$sumPremie = 0;
 		$sumPremie += floatval($persZeile['A6']['a6_prozent']['czk']);
@@ -9815,7 +10666,7 @@ class AplDB {
      * @param type $persnr
      * @return type
      */
-    public function getQTLLeistungProPersNrNeu($jahr, $qtl, $persnr) {
+    public function getQTLLeistungProPersNrNeu($jahr, $qtl, $persnr,$useHack=FALSE) {
 	$leistungGesamt = 0;
 	$kcGesamt = 0;
 	$monateVonBisProQTL = array(
@@ -9824,15 +10675,57 @@ class AplDB {
 	    3 => array('von' => 7, 'bis' => 9),
 	    4 => array('von' => 10, 'bis' => 12),
 	);
-	if ($qtl > 0 && $qtl < 5) {
 
-	    $von = sprintf("%04d-%02d-01", $jahr, $monateVonBisProQTL[$qtl]['von']);
-	    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monateVonBisProQTL[$qtl]['bis'], $jahr);
-	    $bis = sprintf("%04d-%02d-%02d", $jahr, $monateVonBisProQTL[$qtl]['bis'], $pocetDnuVMesici);
-//	    $eintrittsDatumDB = $this->getEintrittsDatumDB($persnr);
-
-	    
+	// pro prvni kvartal roku 2017 musim pocitat jinak, od brezna se kc z minut pocitaji jinak nez za leden a unor
+	if (($useHack==TRUE)&&($qtl == 1 && $jahr == 2017)) {
+	    // leden, unor
+	    $von = sprintf("%04d-%02d-01", $jahr, 1);
+	    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, 2, $jahr);
+	    $bis = sprintf("%04d-%02d-%02d", $jahr, 2, $pocetDnuVMesici);
 	    $sql.=" select";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
+	    $sql.="	dpers.leistfaktor,";
+	    $sql.="     dtattypen.oe,";
+	    $sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+	    $sql.="     sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+	    $sql.="     sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor),0)) as vzaby_akkord_kc";
+	    $sql.=" from drueck";
+	    $sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	    $sql.=" join dpers on dpers.persnr=drueck.persnr";
+	    $sql.=" where";
+	    $sql.="     drueck.PersNr='$persnr'";
+	    $sql.="     and";
+	    $sql.="     drueck.Datum between '$von' and '$bis'";
+	    $sql.=" group by";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="     dtattypen.oe";
+
+	    $rs = $this->getQueryRows($sql);
+	    $vzabyGesamt = 0;
+	    $vzabyAkkordGesamt = 0;
+	    $vzabyZeitGesamt = 0;
+	    if ($rs !== NULL) {
+		foreach ($rs as $r) {
+		    $vzaby = $r['vzaby'];
+		    $vzaby_akkord = $r['vzaby_akkord'];
+		    $vzaby_zeit = ($vzaby - $vzaby_akkord) * $r['leistfaktor'];
+		    $vzaby_akkord_kc = $r['vzaby_akkord_kc'];
+		    $vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'];
+		    // dle dumluvy s hl
+		    //$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'] * $r['leistfaktor'];
+		    $leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+		    $kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		    $vzabyGesamt += $vzaby;
+		    $vzabyAkkordGesamt += $vzaby_akkord;
+		    $vzabyZeitGesamt += ($vzaby - $vzaby_akkord);
+		}
+	    }
+	    // brezen uz se pocita novym zpusobem
+	    $von = sprintf("%04d-%02d-01", $jahr, 3);
+	    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, 3, $jahr);
+	    $bis = sprintf("%04d-%02d-%02d", $jahr, 3, $pocetDnuVMesici);
+	    $sql=" select";
 	    $sql.="     drueck.PersNr,";
 	    $sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
 	    $sql.="	dpers.leistfaktor,";
@@ -9853,19 +10746,268 @@ class AplDB {
 	    $sql.="     dtattypen.oe";
 
 	    $rs = $this->getQueryRows($sql);
-	    if($rs!==NULL){
-		foreach ($rs as $r){
+//	    $vzabyGesamt = 0;
+//	    $vzabyAkkordGesamt = 0;
+//	    $vzabyZeitGesamt = 0;
+
+	    if ($rs !== NULL) {
+		foreach ($rs as $r) {
 		    $vzaby = $r['vzaby'];
 		    $vzaby_akkord = $r['vzaby_akkord'];
-		    $vzaby_zeit = ($vzaby - $vzaby_akkord)*$r['leistfaktor'];
+		    $vzaby_zeit = ($vzaby - $vzaby_akkord) * $r['leistfaktor'];
 		    $vzaby_akkord_kc = $r['vzaby_akkord_kc'];
-		    $vzaby_zeit_kc = $vzaby_zeit*$r['perslohnfaktor'];
+		    //$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'];
+		    $vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'] * $r['leistfaktor'];
 		    $leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
 		    $kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		    $vzabyGesamt += $vzaby;
+		    $vzabyAkkordGesamt += $vzaby_akkord;
+		    $vzabyZeitGesamt += ($vzaby - $vzaby_akkord);
+		}
+	    }
+	} else {
+	    if ($qtl > 0 && $qtl < 5) {
+		$von = sprintf("%04d-%02d-01", $jahr, $monateVonBisProQTL[$qtl]['von']);
+		$pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monateVonBisProQTL[$qtl]['bis'], $jahr);
+		$bis = sprintf("%04d-%02d-%02d", $jahr, $monateVonBisProQTL[$qtl]['bis'], $pocetDnuVMesici);
+		$sql.=" select";
+		$sql.="     drueck.PersNr,";
+		$sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
+		$sql.="	dpers.leistfaktor,";
+		$sql.="     dtattypen.oe,";
+		$sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+		$sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+		$sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*doe.czk/60,(drueck.`Stück`)*drueck.`VZ-IST`*doe.czk/60),0)) as vzaby_akkord_kc";
+		$sql.=" from drueck";
+		$sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+		$sql.=" join doe on doe.oe=dtattypen.oe";
+		$sql.=" join dpers on dpers.persnr=drueck.persnr";
+		$sql.=" where";
+		$sql.="     drueck.PersNr='$persnr'";
+		$sql.="     and";
+		$sql.="     drueck.Datum between '$von' and '$bis'";
+		$sql.=" group by";
+		$sql.="     drueck.PersNr,";
+		$sql.="     dtattypen.oe";
+
+		$rs = $this->getQueryRows($sql);
+		$vzabyGesamt = 0;
+		$vzabyAkkordGesamt = 0;
+		$vzabyZeitGesamt = 0;
+
+		if ($rs !== NULL) {
+		    foreach ($rs as $r) {
+			$vzaby = $r['vzaby'];
+			$vzaby_akkord = $r['vzaby_akkord'];
+			$vzaby_zeit = ($vzaby - $vzaby_akkord) * $r['leistfaktor'];
+			$vzaby_akkord_kc = $r['vzaby_akkord_kc'];
+			//$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'];
+			$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'] * $r['leistfaktor'];
+			$leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+			$kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+			$vzabyGesamt += $vzaby;
+			$vzabyAkkordGesamt += $vzaby_akkord;
+			$vzabyZeitGesamt += ($vzaby - $vzaby_akkord);
+		    }
 		}
 	    }
 	}
-	return array('leistung_min' => $leistungGesamt, 'leistung_kc' => $kcGesamt);
+
+	return array(
+	    'vzaby' => $vzabyGesamt,
+	    'vzabyAkkord' => $vzabyAkkordGesamt,
+	    'vzabyZeit' => $vzabyZeitGesamt,
+	    'leistung_min' => $leistungGesamt,
+	    'leistung_kc' => $kcGesamt
+	);
+    }
+    
+    
+    /**
+     * 
+     * @param type $jahr
+     * @param type $qtl
+     * @param type $persnr
+     * @param type $useHack
+     * @return type
+     */
+    public function getQTLLeistungProPersVonBisNeu($jahr, $qtl, $persvon,$persbis,$useHack=FALSE) {
+	
+	//echo "getQTLLeistungProPersVonBisNeu";
+	$leistungGesamt = 0;
+	$kcGesamt = 0;
+	$monateVonBisProQTL = array(
+	    1 => array('von' => 1, 'bis' => 3),
+	    2 => array('von' => 4, 'bis' => 6),
+	    3 => array('von' => 7, 'bis' => 9),
+	    4 => array('von' => 10, 'bis' => 12),
+	);
+
+	$retArray = array();
+	// pro prvni kvartal roku 2017 musim pocitat jinak, od brezna se kc z minut pocitaji jinak nez za leden a unor
+	if (($useHack==TRUE)&&($qtl == 1 && $jahr == 2017)) {
+	    // leden, unor
+	    $von = sprintf("%04d-%02d-01", $jahr, 1);
+	    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, 2, $jahr);
+	    $bis = sprintf("%04d-%02d-%02d", $jahr, 2, $pocetDnuVMesici);
+	    $sql.=" select";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
+	    $sql.="	dpers.leistfaktor,";
+//	    $sql.="     dtattypen.oe,";
+	    $sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+	    $sql.="     sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+	    $sql.="     sum(if(dtattypen.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor,(drueck.`Stück`)*drueck.`VZ-IST`*dtattypen.lohnfaktor),0)) as vzaby_akkord_kc";
+	    $sql.=" from drueck";
+	    $sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	    $sql.=" join dpers on dpers.persnr=drueck.persnr";
+	    $sql.=" where";
+	    $sql.="     drueck.PersNr between '$persvon' and '$persbis'";
+	    $sql.="     and";
+	    $sql.="     drueck.Datum between '$von' and '$bis'";
+	    $sql.=" group by";
+	    $sql.="     drueck.PersNr";
+//	    $sql.="     dtattypen.oe";
+
+	    $rs = $this->getQueryRows($sql);
+//	    echo "$sql";
+//	    var_dump($rs);
+	    $vzabyGesamt = 0;
+	    $vzabyAkkordGesamt = 0;
+	    $vzabyZeitGesamt = 0;
+	    if ($rs !== NULL) {
+		foreach ($rs as $r) {
+		    $vzaby = $r['vzaby'];
+		    $vzaby_akkord = $r['vzaby_akkord'];
+		    $vzaby_zeit = ($vzaby - $vzaby_akkord) * $r['leistfaktor'];
+		    $vzaby_akkord_kc = $r['vzaby_akkord_kc'];
+		    $vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'];
+		    // dle dumluvy s hl
+		    //$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'] * $r['leistfaktor'];
+		    $leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+		    $kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		    $vzabyGesamt += $vzaby;
+		    $vzabyAkkordGesamt += $vzaby_akkord;
+		    $vzabyZeitGesamt += ($vzaby - $vzaby_akkord);
+		    
+		    $retArray[$r['PersNr']]['vzaby'] += $vzaby;
+		    $retArray[$r['PersNr']]['vzabyAkkord'] += $vzaby_akkord;
+		    $retArray[$r['PersNr']]['vzabyZeit'] += ($vzaby - $vzaby_akkord);
+		    $retArray[$r['PersNr']]['leistung_min'] += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+		    $retArray[$r['PersNr']]['leistung_kc'] += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		}
+	    }
+	    
+	    // brezen uz se pocita novym zpusobem
+	    $von = sprintf("%04d-%02d-01", $jahr, 3);
+	    $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, 3, $jahr);
+	    $bis = sprintf("%04d-%02d-%02d", $jahr, 3, $pocetDnuVMesici);
+	    $sql=" select";
+	    $sql.="     drueck.PersNr,";
+	    $sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
+	    $sql.="	dpers.leistfaktor,";
+//	    $sql.="     dtattypen.oe,";
+	    $sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+	    $sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+	    $sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*doe.czk/60,(drueck.`Stück`)*drueck.`VZ-IST`*doe.czk/60),0)) as vzaby_akkord_kc";
+	    $sql.=" from drueck";
+	    $sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+	    $sql.=" join doe on doe.oe=dtattypen.oe";
+	    $sql.=" join dpers on dpers.persnr=drueck.persnr";
+	    $sql.=" where";
+	    $sql.="     drueck.PersNr between '$persvon' and '$persbis'";
+	    $sql.="     and";
+	    $sql.="     drueck.Datum between '$von' and '$bis'";
+	    $sql.=" group by";
+	    $sql.="     drueck.PersNr";
+//	    $sql.="     dtattypen.oe";
+
+	    $rs = $this->getQueryRows($sql);
+//	    $vzabyGesamt = 0;
+//	    $vzabyAkkordGesamt = 0;
+//	    $vzabyZeitGesamt = 0;
+
+	    if ($rs !== NULL) {
+		foreach ($rs as $r) {
+		    $vzaby = $r['vzaby'];
+		    $vzaby_akkord = $r['vzaby_akkord'];
+		    $vzaby_zeit = ($vzaby - $vzaby_akkord) * $r['leistfaktor'];
+		    $vzaby_akkord_kc = $r['vzaby_akkord_kc'];
+		    //$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'];
+		    $vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'] * $r['leistfaktor'];
+		    $leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+		    $kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		    $vzabyGesamt += $vzaby;
+		    $vzabyAkkordGesamt += $vzaby_akkord;
+		    $vzabyZeitGesamt += ($vzaby - $vzaby_akkord);
+    		    $retArray[$r['PersNr']]['vzaby'] += $vzaby;
+		    $retArray[$r['PersNr']]['vzabyAkkord'] += $vzaby_akkord;
+		    $retArray[$r['PersNr']]['vzabyZeit'] += ($vzaby - $vzaby_akkord);
+		    $retArray[$r['PersNr']]['leistung_min'] += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+		    $retArray[$r['PersNr']]['leistung_kc'] += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		}
+	    }
+	} else {
+	    if ($qtl > 0 && $qtl < 5) {
+		$von = sprintf("%04d-%02d-01", $jahr, $monateVonBisProQTL[$qtl]['von']);
+		$pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monateVonBisProQTL[$qtl]['bis'], $jahr);
+		$bis = sprintf("%04d-%02d-%02d", $jahr, $monateVonBisProQTL[$qtl]['bis'], $pocetDnuVMesici);
+		$sql.=" select";
+		$sql.="     drueck.PersNr,";
+		$sql.="	dpers.lohnfaktor/60 as perslohnfaktor,";
+		$sql.="	dpers.leistfaktor,";
+//		$sql.="     dtattypen.oe,";
+		$sql.="     sum(if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`)) as vzaby,";
+		$sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`,(drueck.`Stück`)*drueck.`VZ-IST`),0)) as vzaby_akkord,";
+		$sql.="     sum(if(doe.akkord<>0,if(drueck.auss_typ=4,(drueck.`Stück`+drueck.`Auss-Stück`)*drueck.`VZ-IST`*doe.czk/60,(drueck.`Stück`)*drueck.`VZ-IST`*doe.czk/60),0)) as vzaby_akkord_kc";
+		$sql.=" from drueck";
+		$sql.=" join dtattypen on dtattypen.tat=drueck.oe";
+		$sql.=" join doe on doe.oe=dtattypen.oe";
+		$sql.=" join dpers on dpers.persnr=drueck.persnr";
+		$sql.=" where";
+		$sql.="     drueck.PersNr between '$persvon' and '$persbis'";
+		$sql.="     and";
+		$sql.="     drueck.Datum between '$von' and '$bis'";
+		$sql.=" group by";
+		$sql.="     drueck.PersNr";
+//		$sql.="     dtattypen.oe";
+
+		$rs = $this->getQueryRows($sql);
+		$vzabyGesamt = 0;
+		$vzabyAkkordGesamt = 0;
+		$vzabyZeitGesamt = 0;
+
+		if ($rs !== NULL) {
+		    foreach ($rs as $r) {
+			$vzaby = $r['vzaby'];
+			$vzaby_akkord = $r['vzaby_akkord'];
+			$vzaby_zeit = ($vzaby - $vzaby_akkord) * $r['leistfaktor'];
+			$vzaby_akkord_kc = $r['vzaby_akkord_kc'];
+			//$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'];
+			$vzaby_zeit_kc = ($vzaby - $vzaby_akkord) * $r['perslohnfaktor'] * $r['leistfaktor'];
+			$leistungGesamt += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+			$kcGesamt += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+			$vzabyGesamt += $vzaby;
+			$vzabyAkkordGesamt += $vzaby_akkord;
+			$vzabyZeitGesamt += ($vzaby - $vzaby_akkord);
+			$retArray[$r['PersNr']]['vzaby'] += $vzaby;
+			$retArray[$r['PersNr']]['vzabyAkkord'] += $vzaby_akkord;
+			$retArray[$r['PersNr']]['vzabyZeit'] += ($vzaby - $vzaby_akkord);
+			$retArray[$r['PersNr']]['leistung_min'] += floatval($vzaby_akkord) + floatval($vzaby_zeit);
+			$retArray[$r['PersNr']]['leistung_kc'] += floatval($vzaby_akkord_kc) + floatval($vzaby_zeit_kc);
+		    }
+		}
+	    }
+	}
+
+	return $retArray;
+//	return array(
+//	    'vzaby' => $vzabyGesamt,
+//	    'vzabyAkkord' => $vzabyAkkordGesamt,
+//	    'vzabyZeit' => $vzabyZeitGesamt,
+//	    'leistung_min' => $leistungGesamt,
+//	    'leistung_kc' => $kcGesamt
+//	);
     }
 
     /**
@@ -9876,7 +11018,7 @@ class AplDB {
      * @param integer $persnr
      * @return integer 
      */
-    public function sollTageQTLProPersNr($jahr, $qtl, $persnr) {
+    public function sollTageQTLProPersNr($jahr, $qtl, $persnr,$ohneNW = TRUE) {
 	$sollTage = 0;
 	$monateVonBisProQTL = array(
 	    1 => array('von' => 1, 'bis' => 3),
@@ -9906,7 +11048,11 @@ class AplDB {
 	    if (mysql_affected_rows() > 0) {
 		$row = mysql_fetch_assoc($res);
 //            echo "<br>d_tage=".$row['d_tage']." nw_tage=".$row['nw_tage'];
-		$sollTagen -= intval($row['d_tage']) + intval($row['nw_tage']);
+		$odecist = intval($row['d_tage']);
+		if($ohneNW){
+		    $odecist += intval($row['nw_tage']);
+		}
+		$sollTagen -= $odecist;
 	    }
 	    $sollTage = $sollTagen;
 	}
