@@ -37,6 +37,12 @@ aplApp.controller('vzkdController', function ($scope, $http,$timeout,$window,$lo
 	    aktual:0
 	},
 	{
+	    statnr:'S0043',
+	    plan:0,
+	    schatzung:0,
+	    aktual:0
+	},
+	{
 	    statnr:'S0051',
 	    plan:0,
 	    schatzung:0,
@@ -44,6 +50,12 @@ aplApp.controller('vzkdController', function ($scope, $http,$timeout,$window,$lo
 	},
 	{
 	    statnr:'S0061',
+	    plan:0,
+	    schatzung:0,
+	    aktual:0
+	},
+	{
+	    statnr:'S0062',
 	    plan:0,
 	    schatzung:0,
 	    aktual:0
