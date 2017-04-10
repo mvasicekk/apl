@@ -10,6 +10,7 @@ $a = AplDB::getInstance();
 $kdVon=$o->kdvon;
 $kdBis=$o->kdbis;
 
+//
 // S0081 bude delat rozdil hl, ok vi, souhlasi
 $sql=" select";
 $sql.="     dispostatnrvzkd.statnr,";
