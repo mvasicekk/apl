@@ -37,7 +37,7 @@
 	    </thead>
 	    <tbody>
 	{foreach from=$calendarArray item=tag key=tagdatum}
-	    <tr id="tag_{$tag.datum}" class="{$tag.tagname} {$tag.dnes}">
+	    <tr id="tag_{$tag.datum}" class="{$tag.tagname} {$tag.dnes} {$tag.svatek}">
 		<th id="tagheader_{$tag.datum}" class="datumheader">
 		    {$tag.datum}&nbsp;{$tag.tagname}
 		    {foreach from=$lkwDatumArray[$tagdatum] item=lkw}<div title="{$lkw.id}" id="lkw_{$lkw.id}" class="lkw lkwdraggable lkw_{$lkw.id} {$lkw.archived}">{$lkw.lkw_kz}/{$lkw.imexstr}</div>{/foreach}

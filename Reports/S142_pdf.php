@@ -2291,13 +2291,25 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     $sumVzAby = $gesamtVzAbyZeit + $gesamtVzAbyAkkord;
     $sumLohn = $gesamtLohnZeitKc + $gesamtLohnAkkordKc;
     $sumQPraemie = $gesamtQPraemie_akkord + $gesamtQPraemie_zeit;
-    $gesamtLohn = $sumLohn + $sumQPraemie + $erschwerniss + $leistPraemie + $qtlPraemie + $sonstpremie;
+    if($z>0){
+	$gesamtLohn = $sumLohn;// + $sumQPraemie + $erschwerniss + $leistPraemie + $qtlPraemie + $sonstpremie;
+    }
+    else{
+	$gesamtLohn = $sumLohn + $sumQPraemie + $erschwerniss + $leistPraemie + $qtlPraemie + $sonstpremie;
+    }
+    
 
     $gesamtLohnAdapt = "";
     if($bMzdaPodleAdaptace){
 	$erschwerniss = $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'];
 	$gesamtLohn = $erschwerniss;
-	$gesamtLohnAdapt = $sumLohn + $sumQPraemie + $leistPraemie + $qtlPraemie + $sonstpremie;
+	if($z>0){
+	    $gesamtLohnAdapt = $sumLohn;// + $sumQPraemie + $leistPraemie + $qtlPraemie + $sonstpremie;
+	}
+	else{
+	    $gesamtLohnAdapt = $sumLohn + $sumQPraemie + $leistPraemie + $qtlPraemie + $sonstpremie;
+	}
+	
     }
     
     $prozentPritomnostZFonduPracHodin = round($hodCelkem / $ganzMonatNormStunden, 2) * 100;

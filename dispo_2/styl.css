@@ -143,6 +143,14 @@ table.imextable tr.Ne{
     background-color: #cccccc;
 }    
 
+table.imextable tr.svatek{
+    background-color: lightpink;
+}    
+
+.svatek{
+    background-color: lightpink;
+}
+
 td.kundeTagBox{
     /*width: 10em;*/
     border: 1px solid black;

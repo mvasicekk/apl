@@ -13,8 +13,16 @@ $suchen = strtolower(trim($o->osoba));
 $suchen = strtr($suchen, '*', '%');
 $jenma = $o->jenma;
 $austritt60 = $o->austritt60;
-$oeselected = $o->oeselected;
 $statusarray = $o->statusarray;
+
+if(count($statusarray)==1 && $statusarray[0]=='MA'){
+    $austritt60 = $o->austritt60;
+}
+else{
+    $austritt60 = FALSE;
+}
+$oeselected = $o->oeselected;
+
 $oearray = $o->oearray;
 
 $a = AplDB::getInstance();
@@ -74,12 +82,17 @@ if ($jenma==TRUE) {
 		$inStr.=",";
 	    }
 	    $inStr = substr($inStr, 0, strlen($inStr)-1);
+	    //nahradim carku zavorkou
 	    $inStr.= ")";
-	    $sql.=" and ( dpers.dpersstatus IN $inStr )";
+	    $sql.=" and (( dpers.dpersstatus IN $inStr )";
+	    if($austritt60===TRUE){
+		$sql.=" or if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),999)<60 ";
+	    }
+	    $sql.=" ) ";
 	}
 	else{
 	    //pokud nemam zadne statusy nenajdu radeji nic
-	    $sql.=" and ( dpers.dpersstatus='8515')";
+	    $sql.=" and ( false )";
 	}
     }
 
@@ -112,6 +125,8 @@ if ($jenma==TRUE) {
 
 
 $sql.=" )";
+
+
 $sql.=" order by persnr";
 if (strlen($suchen) >= 1) {
     $osoby = $a->getQueryRows($sql);

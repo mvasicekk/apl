@@ -14,6 +14,14 @@ $jenMA = $o->jenma;
 $austritt60 = $o->austritt60;
 $oeselected = $o->oeselected;
 $statusarray = $o->statusarray;
+
+if(count($statusarray)==1 && $statusarray[0]=='MA'){
+    $austritt60 = $o->austritt60;
+}
+else{
+    $austritt60 = FALSE;
+}
+
 $oearray = $o->oearray;
 
 
@@ -76,10 +84,14 @@ if (intval($persnr) == 0) {
 	    }
 	    $inStr = substr($inStr, 0, strlen($inStr) - 1);
 	    $inStr.= ")";
-	    $sql.=" and dpers.dpersstatus IN $inStr";
+	    $sql.=" and (( dpers.dpersstatus IN $inStr ) ";
+	    if($austritt60===TRUE){
+		$sql.=" or if(dpers.austritt is not null,DATEDIFF(NOW(),dpers.austritt),999)<60 ";
+	    }
+	    $sql.=" ) ";
 	} else {
 	    //pokud nemam zadne statusy nenajdu radeji nic
-	    $sql.=" and ( dpers.dpersstatus='8515')";
+	    $sql.=" and ( false )";
 	}
     }
 

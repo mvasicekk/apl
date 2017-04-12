@@ -76,6 +76,12 @@ require_once '../db.php';
 	    }
 
 	    $dayClass = date('D', $time);
+	    // pridat class pokud je den cesky nebo nemecky svatek
+	    $dbtest = date('Y-m-d',$time);
+	    if($apl->isDatumVikendSvatek($dbtest,TRUE,TRUE)){
+		$dayClass.= " svatek";
+	    }
+	    //$dayClass.= "svatek";
 	    $todayTime = strtotime($apl->make_DB_datum(date('d.m.Y')));
 	    $summinAll = $apl->getPlanSollTagAll(date('Y-m-d',$time));
 	    if ($time == $todayTime)

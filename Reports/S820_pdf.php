@@ -77,67 +77,81 @@ array(
 => array ("popis"=>"","sirka"=>12,"ram"=>'LTB',"align"=>"L","radek"=>0,"fill"=>0),
 
 "teilbez" 
-=> array ("popis"=>"","sirka"=>33,"ram"=>'TB',"align"=>"L","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>28,"ram"=>'TB',"align"=>"L","radek"=>0,"fill"=>0),
 
 "gew" 
 => array ("nf"=>array(1,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
 
-"pt_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>12,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+"g_imp_stk" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "pt_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>12,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "pt_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>12,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "pt_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>12,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
-
-"st_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
-
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
 "st_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "st_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "st_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
 
-"g_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+"st1_kdmin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+
+"st1_abymin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+
+"st1_verb" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+
+//"g_stk" 
+//=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "g_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "g_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "g_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+    
+"g1_kdmin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
-"sonst_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+"g1_abymin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+
+"g1_verb" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),    
+
+//"sonst_stk" 
+//=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "sonst_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "sonst_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "sonst_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
 
 "kdmin_zu_verb" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TB',"align"=>"R","radek"=>0,"fill"=>0),
 
 "abymin_zu_verb" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(2,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
 
 "sum_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>10,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>9,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
 
 "waehr_pro_tonne" 
 => array ("nf"=>array(1,',',' '),"popis"=>"","sirka"=>8,"ram"=>'TBR',"align"=>"R","radek"=>0,"fill"=>0),
@@ -154,67 +168,83 @@ array(
 => array ("popis"=>"\nteil","sirka"=>12,"ram"=>'LB',"align"=>"L","radek"=>0,"fill"=>1),
 
 "teilbez" 
-=> array ("popis"=>"\nteilbez","sirka"=>33,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
+=> array ("popis"=>"\nteilbez","sirka"=>28,"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
 
 "gew" 
 => array ("nf"=>array(1,',',' '),"popis"=>"\ngew","sirka"=>10,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
 
-"pt_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>12,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
+"g_imp_stk" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
 
 "pt_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "pt_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "pt_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>12,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
 
-"st_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
+//"st_stk" 
+//=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
 
 "st_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "st_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "st_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>10,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
 
-"g_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
+"st1_kdmin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+
+"st1_abymin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+
+"st1_verb" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+//"g_stk" 
+//=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
 
 "g_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "g_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "g_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>10,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
 
-"sonst_stk" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
+"g1_kdmin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+
+"g1_abymin" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+
+"g1_verb" 
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+//"sonst_stk" 
+//=> array ("nf"=>array(0,',',' '),"popis"=>"\nstk","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
 
 "sonst_kdmin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzkd","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "sonst_abymin" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>10,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nvzaby","sirka"=>9,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>1),
 
 "sonst_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>10,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
 
 "kdmin_zu_verb" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"vzkd\nverb","sirka"=>10,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(2,',',' '),"popis"=>"vzkd\nverb","sirka"=>9,"ram"=>'LB',"align"=>"R","radek"=>0,"fill"=>1),
 
 "abymin_zu_verb" 
-=> array ("nf"=>array(2,',',' '),"popis"=>"vzaby\nverb","sirka"=>10,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(2,',',' '),"popis"=>"vzaby\nverb","sirka"=>9,"ram"=>'BR',"align"=>"R","radek"=>0,"fill"=>1),
 
 "sum_verb" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"ges.\nverb","sirka"=>10,"ram"=>'LBR',"align"=>"R","radek"=>0,"fill"=>1),
+=> array ("nf"=>array(0,',',' '),"popis"=>"ges.\nverb","sirka"=>9,"ram"=>'LBR',"align"=>"R","radek"=>0,"fill"=>1),
 
 "waehr_pro_tonne" 
 => array ("nf"=>array(1,',',' '),"popis"=>"EUR\ntonne","sirka"=>8,"ram"=>'LBR',"align"=>"R","radek"=>0,"fill"=>1),
@@ -232,11 +262,19 @@ $sum_zapati_kunde_array = array(
 								"st_kdmin"=>0,
 								"st_abymin"=>0,
 								"st_verb"=>0,
+    
+								"st1_kdmin"=>0,
+								"st1_abymin"=>0,
+								"st1_verb"=>0,
 								
 								"g_kdmin"=>0,
 								"g_abymin"=>0,
 								"g_verb"=>0,
 
+								"g1_kdmin"=>0,
+								"g1_abymin"=>0,
+								"g1_verb"=>0,
+    
 								"sonst_kdmin"=>0,
 								"sonst_abymin"=>0,
 								"sonst_verb"=>0,
@@ -270,11 +308,16 @@ function pageheader($pdfobjekt,$pole,$headervyskaradku,$popisek)
 	//$pdfobjekt->Cell(0,$headervyskaradku,$popisek,'0',1,'L',0);
 	$pdfobjekt->SetFillColor(255,255,200,1);
 	$pdfobjekt->SetFont("FreeSans", "B", 6);
-	$pdfobjekt->MyMultiCell(12+33+10,$headervyskaradku,"\n",'LT','L',1);
-	$pdfobjekt->MyMultiCell(12+12+12+12,$headervyskaradku,"Trennen+Putzen\nS0011",'LTR','C',1);
-	$pdfobjekt->MyMultiCell(10+10+10+10,$headervyskaradku,"Strahlen\nS0041",'LTR','C',1);
-	$pdfobjekt->MyMultiCell(10+10+10+10,$headervyskaradku,"Farbe\nS0061",'LTR','C',1);
-	$pdfobjekt->MyMultiCell(10+10+10+10,$headervyskaradku,"Sonstiges\nS00XX",'LTR','C',1);
+	$pdfobjekt->MyMultiCell(12+28+10,$headervyskaradku,"\n",'LT','L',1);
+	$pdfobjekt->MyMultiCell(10+9+9+9,$headervyskaradku,"Trennen+Putzen\nS0011",'LTR','C',1);
+	//$pdfobjekt->MyMultiCell(9+10+10+10,$headervyskaradku,"Strahlen\nS0041",'LTR','C',1);
+	$pdfobjekt->MyMultiCell(9+9+9,$headervyskaradku,"Strahlen\nS0041",'LTR','C',1);
+	$pdfobjekt->MyMultiCell(9+9+9,$headervyskaradku,"Strahlen\nS0043",'LTR','C',1);
+	//$pdfobjekt->MyMultiCell(10+10+10+10,$headervyskaradku,"Farbe\nS0061",'LTR','C',1);
+	$pdfobjekt->MyMultiCell(9+9+9,$headervyskaradku,"Farbe\nS0061",'LTR','C',1);
+	$pdfobjekt->MyMultiCell(9+9+9,$headervyskaradku,"Farbe\nS0062",'LTR','C',1);
+	//$pdfobjekt->MyMultiCell(10+10+10+10,$headervyskaradku,"Sonstiges\nS00XX",'LTR','C',1);
+	$pdfobjekt->MyMultiCell(9+9+9,$headervyskaradku,"Sonstiges\nS00XX",'LTR','C',1);
 	$pdfobjekt->MyMultiCell(0,$headervyskaradku,"\n",'LTR','C',1);
 	$pdfobjekt->Ln();$pdfobjekt->Ln();
 	
@@ -360,67 +403,96 @@ function zapati_kunde($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapati_array,
 	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
 
 	$kundePopis = getValueForNode($childnodes,'kundenr');
-	$pdfobjekt->Cell(12+33+10+12,$vyskaradku,"Summe Kunde: ".$kundePopis."  ( Anz. Positionen: $positionen )",'LTB',0,'L',$fill);
+	$pdfobjekt->Cell(12+28+10+10,$vyskaradku,"Summe Kunde: ".$kundePopis."  ( Anz. Positionen: $positionen )",'LTB',0,'L',$fill);
 	
 	$obsah=$sum_zapati_array['pt_kdmin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(12,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['pt_abymin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(12,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['pt_verb'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(12,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['st_kdmin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['st_abymin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['st_verb'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+
+	$obsah=$sum_zapati_array['st1_kdmin'];
+	$obsah=number_format($obsah,0,',',' ');
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+
+	$obsah=$sum_zapati_array['st1_abymin'];
+	$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
+
+	$obsah=$sum_zapati_array['st1_verb'];
+	$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['g_kdmin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['g_abymin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['g_verb'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+
+	$obsah=$sum_zapati_array['g1_kdmin'];
+	$obsah=number_format($obsah,0,',',' ');
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+
+	$obsah=$sum_zapati_array['g1_abymin'];
+	$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
+
+	$obsah=$sum_zapati_array['g1_verb'];
+	$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['sonst_kdmin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['sonst_abymin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['sonst_verb'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['sum_kdmin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['sum_abymin'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 	$obsah=$sum_zapati_array['sum_verb'];
 	$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'LTBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTBR',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['sum_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
@@ -439,14 +511,14 @@ function zapati_kunde_faktory($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapat
 	//$obsah=number_format($obsah,0,',',' ');
 	//$pdfobjekt->Cell(45,$vyskaradku,$obsah,'0',0,'R',0);
 
-	$pdfobjekt->Cell(12+33+10+12,$vyskaradku,"Faktoren",'LTB',0,'L',$fill);
+	$pdfobjekt->Cell(12+28+10+10,$vyskaradku,"Faktoren",'LTB',0,'L',$fill);
 	
 	if($sum_zapati_array['pt_verb']!=0)
 		$obsah=$sum_zapati_array['pt_kdmin']/$sum_zapati_array['pt_verb'];
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(12,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 
 	if($sum_zapati_array['pt_verb']!=0)
@@ -454,11 +526,11 @@ function zapati_kunde_faktory($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapat
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(12,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['pt_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(12,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 
 
@@ -467,19 +539,38 @@ function zapati_kunde_faktory($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapat
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	if($sum_zapati_array['st_verb']!=0)
 		$obsah=$sum_zapati_array['st_abymin']/$sum_zapati_array['st_verb'];
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['st_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
+	if($sum_zapati_array['st1_verb']!=0)
+		$obsah=$sum_zapati_array['st1_kdmin']/$sum_zapati_array['st1_verb'];
+	else
+		$obsah=0;
+	$obsah=number_format($obsah,2,',',' ');
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+
+	if($sum_zapati_array['st1_verb']!=0)
+		$obsah=$sum_zapati_array['st1_abymin']/$sum_zapati_array['st1_verb'];
+	else
+		$obsah=0;
+	$obsah=number_format($obsah,2,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
+
+	$obsah="";//$sum_zapati_array['st_verb'];
+	//$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 
 
@@ -488,19 +579,38 @@ function zapati_kunde_faktory($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapat
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	if($sum_zapati_array['g_verb']!=0)
 		$obsah=$sum_zapati_array['g_abymin']/$sum_zapati_array['g_verb'];
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['g_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
+	if($sum_zapati_array['g1_verb']!=0)
+		$obsah=$sum_zapati_array['g1_kdmin']/$sum_zapati_array['g1_verb'];
+	else
+		$obsah=0;
+	$obsah=number_format($obsah,2,',',' ');
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+
+	if($sum_zapati_array['g1_verb']!=0)
+		$obsah=$sum_zapati_array['g1_abymin']/$sum_zapati_array['g1_verb'];
+	else
+		$obsah=0;
+	$obsah=number_format($obsah,2,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
+
+	$obsah="";//$sum_zapati_array['g_verb'];
+	//$obsah=number_format($obsah,0,',',' ');
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 
 	if($sum_zapati_array['sonst_verb']!=0)
@@ -508,18 +618,19 @@ function zapati_kunde_faktory($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapat
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	//$pdfobjekt->Cell(20,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	if($sum_zapati_array['sonst_verb']!=0)
 		$obsah=$sum_zapati_array['sonst_abymin']/$sum_zapati_array['sonst_verb'];
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TB',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['sonst_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 
 
@@ -528,18 +639,18 @@ function zapati_kunde_faktory($pdfobjekt,$vyskaradku,$rgb,$childnodes,$sum_zapat
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'LTB',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTB',0,'R',$fill);
 
 	if($sum_zapati_array['sum_verb']!=0)
 		$obsah=$sum_zapati_array['sum_abymin']/$sum_zapati_array['sum_verb'];
 	else
 		$obsah=0;
 	$obsah=number_format($obsah,2,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'TBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'TBR',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['sum_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
-	$pdfobjekt->Cell(10,$vyskaradku,$obsah,'LTBR',0,'R',$fill);
+	$pdfobjekt->Cell(9,$vyskaradku,$obsah,'LTBR',0,'R',$fill);
 
 	$obsah="";//$sum_zapati_array['sum_verb'];
 	//$obsah=number_format($obsah,0,',',' ');
@@ -678,12 +789,6 @@ foreach($kunden as $kunde)
 	}
 	*/
 }
-
-/*
-if(test_pageoverflow_noheader($pdf,5))
-		pageheader($pdf,$cells_header,5,"Leistung nach Teil - Taetigkeit:");
-zapati_tab1($pdf,5,array(200,200,255),$teilChildNodes,$sum_zapati_tab1_array);
-*/
 
 //Close and output PDF document
 $pdf->Output();

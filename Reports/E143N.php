@@ -7,7 +7,7 @@
 	</title>
 	<style>
 	    body{
-		font-family: roboto,sans-serif;
+		font-family: "Courier New",monospace,sans-serif;
 	    }
 	    table {
 		border-collapse: collapse;
@@ -24,6 +24,9 @@
 		padding: 3px;
 		background-color: lightblue;
 		font-size: small;
+	    }
+	    .negativ{
+		color: red;
 	    }
 	</style>
     </head>
@@ -529,10 +532,14 @@ foreach ($slozkyDB as $persnr=>$slA){
 	    $sumy[$kod]['dny'] += $dny1;
 	    $sumy[$kod]['hodiny'] += $hodiny1;
 	    
+	    $negKorunyClass = $korunyCelkem1<0?'negativ':'';
+	    $negDnyClass = $dny1<0?'negativ':'';
+	    $negHodinyClass = $hodiny1<0?'negativ':'';
+	    
 	    echo "<td style='text-align:right;white-space:nowrap;'>";
-	    echo "$korunyCelkemF<br>";
-	    echo "$dny<br>";
-	    echo "$hodiny";
+	    echo "<span class='$negKorunyClass'>$korunyCelkemF</span><br>";
+	    echo "<span class='$negDnyClass'>$dny</span><br>";
+	    echo "<span class='$negHodinyClass'>$hodiny</span>";
 	    echo "</td>";
 	    array_push($msRows, array("exrow"=>$exportRow,"comment"=>$slozkaInfo['popis']));
 	}

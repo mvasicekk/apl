@@ -187,6 +187,7 @@ $smarty = new Smarty;
 	    $calendarArray[$datum] = array(
 		'datum'=>$datum,
 		'tagname'=>$dnyvTydnu[date('w',$t)],
+		'svatek'=>$a->isDatumVikendSvatek(date('Y-m-d',$t),TRUE,TRUE)?'svatek':'',
 		'dnes'=>$dnesDatum==$datum?'dnes':''
 		);
 	    $den++;

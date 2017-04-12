@@ -11885,17 +11885,36 @@ class AplDB {
      * @return boolean true pokud je datum sobota, nedele nebo svatek
      *                  false jinak nebo v pripade, ze datum nenajdu v kalendari
      */
-    public function isDatumVikendSvatek($datum) {
-	$sql = "select calendar.cislodne,calendar.svatek from calendar where datum = '$datum'";
+    public function isDatumVikendSvatek($datum,$jensvatek=FALSE,$mitsvatekde=FALSE) {
+	$sql = "select calendar.cislodne,calendar.svatek,calendar.svatekde from calendar where datum = '$datum'";
 	$res = mysql_query($sql);
 	if (mysql_num_rows($res) > 0) {
 	    $row = mysql_fetch_assoc($res);
-	    if ($row['cislodne'] == 6 || $row['cislodne'] == 7 || $row['svatek'] != 0)
-		return true;
-	    else
+	    
+	    $isSvatek = $mitsvatekde?$row['svatek'] != 0||$row['svatekde'] != 0:$row['svatek'] != 0;
+	    
+	    //if ($row['cislodne'] == 6 || $row['cislodne'] == 7 || $row['svatek'] != 0){
+	    if ($row['cislodne'] == 6 || $row['cislodne'] == 7 || $isSvatek){
+		if($jensvatek===TRUE){
+		    //if($row['svatek'] != 0){
+		    if($isSvatek){
+			return TRUE;
+		    }
+		    else{
+			return FALSE;
+		    }
+		}
+		else{
+		    return true;
+		}
+	    }
+	    else{
 		return false;
-	} else
+	    }
+		
+	} else{
 	    return false;
+	}
     }
 
     /**

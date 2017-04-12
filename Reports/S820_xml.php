@@ -14,43 +14,48 @@ $db->setFetchMode(DB_FETCHMODE_ASSOC);
 $db->query("set names utf8");
 
 
-
-// vytvorim si nekolik pohledu
-
-$sql="select daufkopf.kunde,dkopf.teil,dkopf.teilbez,dkopf.gew,";
-$sql.="DATE_FORMAT(dkopf.`muster-vom`,'%d.%m.%Y') as mustervom, ";
-$sql.=" dksd.preismin,dksd.name1, ";
-$sql.="sum(if(stat_nr='S0011' and `taetkz-nr`='P',`Stück`,0)) as pt_stk, ";
-$sql.="sum(if(stat_nr='S0011',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as pt_kdmin, ";
-$sql.="sum(if(stat_nr='S0011',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as pt_abymin, ";
-$sql.="sum(if(stat_nr='S0011',`verb-zeit`,0)) as pt_verb, ";
-$sql.="sum(if(stat_nr='S0041',Stück+`auss-Stück`,0)) as st_stk, ";
-$sql.="sum(if(stat_nr='S0041',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as st_kdmin, ";
-$sql.="sum(if(stat_nr='S0041',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as st_abymin, ";
-$sql.="sum(if(stat_nr='S0041',`verb-zeit`,0)) as st_verb, ";
-$sql.="sum(if(stat_nr='S0061',Stück+`auss-Stück`,0)) as g_stk, ";
-$sql.="sum(if(stat_nr='S0061',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as g_kdmin, ";
-$sql.="sum(if(stat_nr='S0061',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as g_abymin, ";
-$sql.="sum(if(stat_nr='S0061',`verb-zeit`,0)) as g_verb, ";
-$sql.="sum(if(stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',Stück+`auss-Stück`,0)) as sonst_stk, ";
-$sql.="sum(if(stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`),0)) as sonst_kdmin, ";
-$sql.="sum(if(stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`),0)) as sonst_abymin, ";
-$sql.="sum(if(stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',`verb-zeit`,0)) as sonst_verb, ";
-$sql.="sum(if(auss_typ=4,(Stück+`auss-Stück`)*`vz-soll`,`Stück`*`vz-soll`)) as sum_kdmin, ";
-$sql.="sum(if(auss_typ=4,(Stück+`auss-Stück`)*`vz-ist`,`Stück`*`vz-ist`)) as sum_abymin, ";
-$sql.="sum(`verb-zeit`) as sum_verb ";
-$sql.="from drueck join daufkopf using (auftragsnr) join dkopf on (drueck.teil=dkopf.teil) ";
-$sql.="join dksd on (dksd.kunde=daufkopf.kunde) ";
-$sql.="join `dtaetkz-abg` on (`dtaetkz-abg`.`abg-nr`=drueck.taetnr) ";
-$sql.="where ((drueck.datum between '$datevon'  and '$datebis') and (daufkopf.kunde between '$kundevon' and '$kundebis') ) ";
-$sql.="group by daufkopf.kunde,dkopf.teil,dkopf.teilbez,dkopf.gew,dkopf.`muster-vom`,dksd.preismin,dksd.Name1";
-if($reporttyp=='sort VerbZeit')
-    $sql.=" order by kunde,sum_verb desc,teil";
-else
-    $sql.=" order by kunde,teil";
-
-
-// echo $ip
+$sql="select ";
+$sql.="    daufkopf.kunde,";
+$sql.="     dkopf.teil,";
+$sql.="     dkopf.teilbez,dkopf.gew,";
+$sql.="     DATE_FORMAT(dkopf.`muster-vom`,'%d.%m.%Y') as mustervom, ";
+$sql.="     dksd.preismin,dksd.name1, ";
+$sql.="     sum(if(stat_nr='S0011' and `taetkz-nr`='P',drueck.`Stück`,0)) as pt_stk, ";
+$sql.="     sum(if(dauftr.KzGut='G',dauftr.`stück`,0)) as g_imp_stk, ";
+$sql.="     sum(if(dauftr.KzGut='G',dauftr.`stück`*dkopf.Gew,0)) as g_imp_gew, ";
+$sql.="     sum(if(stat_nr='S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as pt_kdmin, ";
+$sql.="     sum(if(stat_nr='S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as pt_abymin, ";
+$sql.="     sum(if(stat_nr='S0011',`verb-zeit`,0)) as pt_verb, ";
+$sql.="     sum(if(stat_nr='S0041',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as st_kdmin, ";
+$sql.="     sum(if(stat_nr='S0041',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as st_abymin, ";
+$sql.="     sum(if(stat_nr='S0041',`verb-zeit`,0)) as st_verb, ";
+$sql.="     sum(if(stat_nr='S0043',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as st1_kdmin, ";
+$sql.="     sum(if(stat_nr='S0043',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as st1_abymin, ";
+$sql.="     sum(if(stat_nr='S0043',`verb-zeit`,0)) as st1_verb, ";
+$sql.="     sum(if(stat_nr='S0061',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as g_kdmin, ";
+$sql.="     sum(if(stat_nr='S0061',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as g_abymin, ";
+$sql.="     sum(if(stat_nr='S0061',`verb-zeit`,0)) as g_verb, ";
+$sql.="     sum(if(stat_nr='S0062',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as g1_kdmin, ";
+$sql.="     sum(if(stat_nr='S0062',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as g1_abymin, ";
+$sql.="     sum(if(stat_nr='S0062',`verb-zeit`,0)) as g1_verb, ";
+$sql.="     sum(if(stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as sonst_kdmin, ";
+$sql.="     sum(if(stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as sonst_abymin, ";
+$sql.="     sum(if(stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',`verb-zeit`,0)) as sonst_verb, ";
+$sql.="     sum(if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`)) as sum_kdmin, ";
+$sql.="     sum(if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`)) as sum_abymin, ";
+$sql.="     sum(`verb-zeit`) as sum_verb ";
+$sql.=" from drueck join daufkopf using (auftragsnr) ";
+$sql.=" join dauftr on dauftr.auftragsnr=drueck.AuftragsNr and dauftr.`pos-pal-nr`=drueck.`pos-pal-nr` and dauftr.teil=drueck.Teil and dauftr.abgnr=drueck.TaetNr";
+$sql.=" join dkopf on (drueck.teil=dkopf.teil) ";
+$sql.=" join dksd on (dksd.kunde=daufkopf.kunde) ";
+$sql.=" join `dtaetkz-abg` on (`dtaetkz-abg`.`abg-nr`=drueck.taetnr) ";
+$sql.=" where ";
+$sql.="     ((drueck.datum between '$datevon'  and '$datebis') and (daufkopf.kunde between '$kundevon' and '$kundebis') ) ";
+$sql.=" group by ";
+$sql.="     daufkopf.kunde,";
+$sql.="     dkopf.teil";
+$sql.=" order by kunde,sum_verb desc,teil";
+	    
 //echo "sql=$sql"."<br>";
 
 function get_kdmin_zu_verb($record)
@@ -71,9 +76,9 @@ function get_abymin_zu_verb($record)
 
 function get_waehr_pro_tonne($record)
 {
-	if(($record['pt_stk']*$record['gew'])!=0)
+	if(($record['g_imp_stk']*$record['gew'])!=0)
 	{
-		$hodnota=($record['pt_kdmin']*$record['preismin'])/($record['pt_stk']*$record['gew'])*1000;
+		$hodnota=($record['sum_kdmin']*$record['preismin'])/($record['g_imp_stk']*$record['gew'])*1000;
 		return $hodnota;
 	}	
 	else
@@ -104,19 +109,23 @@ $options = array(
 								'teilbez',
 								'gew',
 								'mustervom',
-								'pt_stk',
+								'g_imp_stk',
+								'g_imp_gew',
 								'pt_kdmin',
 								'pt_abymin',
 								'pt_verb',
-								'st_stk',
 								'st_kdmin',
 								'st_abymin',
 								'st_verb',
-								'g_stk',
+								'st1_kdmin',	//S0043
+								'st1_abymin',
+								'st1_verb',
 								'g_kdmin',
 								'g_abymin',
 								'g_verb',
-								'sonst_stk',
+								'g1_kdmin',	//S0062
+								'g1_abymin',
+								'g1_verb',
 								'sonst_kdmin',
 								'sonst_abymin',
 								'sonst_verb',
