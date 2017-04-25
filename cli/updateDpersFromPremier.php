@@ -158,6 +158,7 @@ if ($res !== NULL) {
 	$persArray[$zCislo]['zMistoNar'] = iconv('windows-1250', 'UTF-8', trim($r['Z_MISTO_NAR']));
 	$persArray[$zCislo]['zStObc'] = iconv('windows-1250', 'UTF-8', trim($r['Z_ST_OBC']));
 	$persArray[$zCislo]['zMobil'] = iconv('windows-1250', 'UTF-8', trim($r['Z_MOBIL']));
+	$persArray[$zCislo]['zTelefon'] = iconv('windows-1250', 'UTF-8', trim($r['Z_TELEFON']));
 	$persArray[$zCislo]['zEmail'] = iconv('windows-1250', 'UTF-8', trim($r['Z_EMAIL']));
 	$persArray[$zCislo]['zPsTime'] = strtotime($r['Z_PS_TIME']) === FALSE ? '' : date('Y-m-d H:i:s', strtotime($r['Z_PS_TIME']));
 	$persArray[$zCislo]['kUlice'] = iconv('windows-1250', 'UTF-8', trim($r['K_ULICE']));
@@ -284,8 +285,17 @@ foreach ($persArray as $zCislo => $persRow) {
 	//----------------------------------------------------------------------
 	//
 	// mobil ---------------------------------------------------------------
-	if ($aplPersArray[$zCislo]['mobil'] != $persArray[$zCislo]['zMobil']) {
-	    updateAplPersnr($zCislo, 'kom7', $persArray[$zCislo]['zMobil'], $aplPersArray[$zCislo]['mobil'], 'dpersdetail1_isp');
+	$tel = $persArray[$zCislo]['zMobil'];
+	if(strlen($persArray[$zCislo]['zTelefon'])>0){
+	    if(strlen($tel)>0){
+		$tel.=','.$persArray[$zCislo]['zTelefon'];
+	    }
+	    else{
+		$tel.= $persArray[$zCislo]['zTelefon'];
+	    }
+	}
+	if ($aplPersArray[$zCislo]['mobil'] != $tel) {
+	    updateAplPersnr($zCislo, 'kom7', $tel, $aplPersArray[$zCislo]['mobil'], 'dpersdetail1_isp');
 	}
 	//----------------------------------------------------------------------
 	//

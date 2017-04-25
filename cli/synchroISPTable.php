@@ -15,6 +15,7 @@ if ($argc > 1) {
  */
 $tables = array(
     "STREDISK"=>array(				    //jmeno tabulky v Premieru
+	"active"=>0,
 	"aplTable"=>"strediska_isp",		    // jmeno tabulky v apl databazi
 	"ispSelect"=>"*,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky v Premieru
 	"ispKey"=>"STREDISKO",			    //sloupec v Premieru podle ktereho porovnavam, zda mam radek v apl
@@ -32,6 +33,7 @@ $tables = array(
     ),
     "MZDY_POL"=>array(
 	"aplTable"=>"mzdpol_isp",
+	"active"=>1,
 	"ispSelect"=>"*,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky
 	"ispKey"=>"KOD",
 	"bIspKeyGUID"=>FALSE,
@@ -48,6 +50,7 @@ $tables = array(
     ),
     "PERS_HYS"=>array(
 	"aplTable" => "pers_uvazky_isp",
+	"active"=>1,
 	"ispSelect"=>"*,IIF(ISNULL(PLATNY_OD,'19000101')>'19000101',CONVERT(DATE,PLATNY_OD,120),NULL) as PLAT_OD,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky
 	"ispKey" => "ID",
 	"bIspKeyGUID"=>TRUE,
@@ -102,6 +105,7 @@ if ($ucetniJednotka == "") {
 }
 
 echo "\n----- START synchroISPTable ($ucetniJednotka) on :" . date('Y-m-d H:i:s') . " ----- \n";
+// init db objektu
 $sqlDB = sqldb::getInstance($ucetniJednotka);
 
 // budu prochazet definovane tabulky z Premiera, cela konfigurace pro synchro je ulozena v poli $tables
@@ -109,6 +113,11 @@ foreach ($tables as $tISP=>$tAPLArray){
   echo "\n ISP Table : $tISP";
   $tAPL = $tAPLArray['aplTable'];
   echo "\n APL Table : $tAPL";
+  $active = intval($tAPLArray['active']);
+  if($active==0){				// moznost nastaveni tabulky jako "nesynchronizovane" pomoci priznaku active
+      echo "\n skip, active=0";
+      continue;
+  }
   $ispSelect =$tAPLArray['ispSelect'];
   //echo "\nselect $ispSelect from $tISP";
   $ispSql = "select $ispSelect from $tISP";
@@ -210,12 +219,18 @@ foreach ($tables as $tISP=>$tAPLArray){
   }
 }
 
+// a taky jen s active>0
 // a jeste obracene, projdu vsechny v apl a pokud nenajdu v isp, tak smazu
 echo "\n delete from apltable";
 foreach ($tables as $tISP=>$tAPLArray){
   echo "\n ISP Table : $tISP";
   $tAPL = $tAPLArray['aplTable'];
   echo "\n APL Table : $tAPL";
+  $active = intval($tAPLArray['active']);
+  if($active<1){				// moznost nastaveni tabulky jako "nesynchronizovane" pomoci priznaku active
+      echo "\n skip, active=0";
+      continue;
+  }
   $ispKey = $tAPLArray['ispKey'];
   $aplKey = $tAPLArray['aplKey'];
   $sql = "select `".$tAPLArray['aplKey']."` from `".$tAPLArray['aplTable']."`";

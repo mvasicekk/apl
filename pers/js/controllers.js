@@ -125,13 +125,15 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.addparents = false;
 
     $scope.persKvalifikaceArray = [];
+    $scope.persIdentifikatoryArray = [];
     
     $scope.showPanel = {
 	kvalifikace:false,
 	inventar:false,
 	hfpremie:false,
 	osobnihodnoceni:false,
-	lohnberechnung:false
+	lohnberechnung:false,
+	identifikatory:false
     };
     
     $scope.bemerkung = {};
@@ -380,6 +382,20 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	}
 
     }
+    
+    $scope.dpersidentifikatoryChanged = function (pa, field) {
+	console.log(field);
+	console.log(pa);
+	return	$http.post(
+		'./updateDpersIdentifikatory.php',
+		{
+		    pi: pa,
+		    field: field
+		}
+	).then(function (response) {
+	});
+    }
+    
     /**
      * 
      * @param {type} pa
@@ -454,6 +470,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 		    k: k,
 		    oekvalifikace: $scope.oekvalifikace,
 		    hodnoceni: $scope.kvalifikacebewertung,
+		    poznamka: $scope.kvalifikacepoznamka,
 		    giltab:$scope.kvalifikaceGiltAb,
 		    persnr: $scope.ma.maInfo.PersNr,
 		}
@@ -1001,6 +1018,20 @@ $scope.commentClicked = function(e,p){
 	}
 
     }
+    
+    function getPersIdentifikatory() {
+	if ($scope.ma.maInfo !== null) {
+	    return	$http.post(
+		    './getPersIdentifikatory.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr
+		    }
+	    ).then(function (response) {
+		$scope.persIdentifikatoryArray = response.data.persIdentifikatoryArray;
+	    });
+	}
+
+    }
     /**
      * 
      * @returns {unresolved}
@@ -1089,6 +1120,7 @@ $scope.commentClicked = function(e,p){
 		getOsobniHodnoceni();
 		getPersInventar();
 		getPersKvalifikace();
+		getPersIdentifikatory();
 
 		//jen kdyz je panel zobrazen, protoze jinak to moc dlouho trva
 		if($scope.showPanel.lohnberechnung===true){
@@ -1247,6 +1279,37 @@ $scope.commentClicked = function(e,p){
 		}
 	);
     }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.updateIdentArray = function(contrl){
+	console.log('updateIdentArray');
+	return $http.post(
+		'./updateIdentArray.php',
+		{
+		    oe:$scope.oeidentifikator,
+		    kunde:$scope.kundeidentifikator,
+		    ctrl:contrl
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    if(response.data.ctrl=='oe'){
+		$scope.kundeIdentArray = response.data.kundeIdentArray;
+		$scope.kundeIdentSelected = response.data.kundeIdentSelected;
+		$scope.kundeidentifikator = $scope.kundeIdentSelected;
+		$scope.identifikatorArray = response.data.identifikatorArray;
+		$scope.identifikatorSelected = response.data.identifikatorSelected;
+		$scope.identifikator = $scope.identifikatorSelected;
+	    }
+	    if(response.data.ctrl=='kunde'){
+		$scope.identifikatorArray = response.data.identifikatorArray;
+		$scope.identifikatorSelected = response.data.identifikatorSelected;
+		$scope.identifikator = $scope.identifikatorSelected;
+	    }
+	});
+    }
     /**
      * 
      */
@@ -1262,6 +1325,15 @@ $scope.commentClicked = function(e,p){
 	    $scope.infoVomArray = response.data.infoVomArray;
 	    $scope.dpersstatuses = response.data.dpersstatuses;
 	    $scope.status_fur_aby = response.data.status_fur_aby;
+	    $scope.oes.oeIdentArray = response.data.oeIdentArray;
+	    $scope.oes.oeIdentSelected = response.data.oeIdentSelected;
+	    $scope.oeidentifikator = $scope.oes.oeIdentSelected;
+	    $scope.kundeIdentArray = response.data.kundeIdentArray;
+	    $scope.kundeIdentSelected = response.data.kundeIdentSelected;
+	    $scope.kundeidentifikator = $scope.kundeIdentSelected;
+	    $scope.identifikatorArray = response.data.identifikatorArray;
+	    $scope.identifikatorSelected = response.data.identifikatorSelected;
+	    $scope.identifikator = $scope.identifikatorSelected;
 	    $scope.oes.oeArray = response.data.oeArray;
 	    $scope.oes.oeSelected = response.data.oeSelected;
 	    $scope.fahtypen.fahtypenArray = response.data.fahtypenArray;

@@ -284,6 +284,8 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	$timeID = date('Ymd',$time);
 	
 	$dayClass = date('D', $time);
+	$bSvatek = $apl->isDatumVikendSvatek(date('Y-m-d',$time),TRUE,TRUE);
+	
 	$todayTime = strtotime($apl->make_DB_datum(date('d.m.Y')));
 	if ($time == $todayTime)
 	    $bToday = TRUE;
@@ -305,6 +307,9 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	// sloupec s datumem
 	if($bToday){
 	    $pdf->SetFillColor(255,255,0);
+	}
+	else if($bSvatek){
+	    $pdf->SetFillColor(255,245,245);
 	}
 	else if($dayClass=='Sat'){
 	    $pdf->SetFillColor(200,200,200);
@@ -372,7 +377,10 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	    else{
 		if($bToday){
 		    $pdf->SetFillColor(255,255,0);
-		}   
+		}
+		else if($bSvatek){
+		    $pdf->SetFillColor(255,245,245);
+		}
 		else if($dayClass=='Sat'){
 		    $pdf->SetFillColor(200,200,200);
 		}
@@ -394,6 +402,9 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 	// prostor pro datum
 	if($bToday){
 	    $pdf->SetFillColor(255,255,0);
+	}
+	else if($bSvatek){
+	    $pdf->SetFillColor(255,245,245);
 	}
 	else if($dayClass=='Sat'){
 	    $pdf->SetFillColor(200,200,200);
@@ -443,6 +454,9 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 		if($bToday){
 		    $pdf->SetFillColor(255,255,0);
 		}
+		else if($bSvatek){
+		    $pdf->SetFillColor(255,245,245);
+		}
 		else if($dayClass=='Sat'){
 		    $pdf->SetFillColor(200,200,200);
 		}
@@ -464,6 +478,9 @@ if (($timeVon > 0) && ($timeBis >= $timeVon)) {
 
 	if($bToday){
 	    $pdf->SetFillColor(255,255,0);
+	}
+	else if($bSvatek){
+	    $pdf->SetFillColor(255,245,245);
 	}
 	else if($dayClass=='Sat'){
 	    $pdf->SetFillColor(200,200,200);

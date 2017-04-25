@@ -39,6 +39,8 @@ if($queryInfo!==NULL){
 	if(preg_match($pattern, $varValue)>0){
 	    $varValue = $a->make_DB_datum($varValue);
 	}
+	//vymenit hvezdicku za procenta
+	$varValue = strtr($varValue, '*', '%');
 	$sql = str_replace('$'.$varName, $varValue, $sql);
 //	echo "$sql<br>";
     }

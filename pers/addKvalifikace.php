@@ -11,6 +11,7 @@ $pa = NULL;
 $persnr = $o->persnr;
 $oekvalifikace = $o->oekvalifikace;
 $hodnoceni = intval(trim($o->hodnoceni));
+$poznamka = trim($o->poznamka);
 $giltab = strtotime($o->giltab);
 if($giltab!==FALSE){
     $giltab = date('Y-m-d',$giltab);
@@ -33,13 +34,14 @@ if($k!==NULL){
 }
 else{
 // vlozeni noveho 
-    $sql = "insert into dpersoekvalifikace (persnr,oe,bewertung,`user`,gilt_ab)";
+    $sql = "insert into dpersoekvalifikace (persnr,oe,bewertung,`user`,gilt_ab,poznamka)";
     $sql.=" values(";
     $sql.=" '$persnr'";
     $sql.=" ,'$oekvalifikace'";
     $sql.=" ,'$hodnoceni'";
     $sql.=" ,'$u'";
     $sql.=" ,'$giltab'";
+    $sql.=" ,'$poznamka'";
     $sql.=" )";
     //nejake testy
     if(($hodnoceni>=6 || $hodnoceni<=9)&&($giltab!==FALSE)){

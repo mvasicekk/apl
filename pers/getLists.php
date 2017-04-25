@@ -18,6 +18,22 @@ $rows = $a->getQueryRows($sql);
 foreach ($rows as $r){
     array_push($dpersstatuses, $r['status']);
 }
+//oeIdentifikatory
+$sql="";
+$sql.=" select distinct ident.oe";
+$sql.=" from ident";
+$sql.=" order by";
+$sql.=" oe";
+$oeIdentArray = $a->getQueryRows($sql);
+$oeIdentSelected = $oeIdentArray[0]['oe'];
+
+//identKundeArray
+$kundeIdentArray = $a->getKundeIdentArrayForOE($oeIdentSelected);
+$kundeIdentSelected = $kundeIdentArray[0]['kunde'];
+
+//identifikatorArray
+$identifikatorArray = $a->getIdentifikatorArrayForOEKunde($oeIdentSelected,$kundeIdentSelected);
+$identifikatorSelected = $identifikatorArray[0]['iident'];
 // oeArray
 $sql = "";
 $sql.=" select doe.oe,doe.beschreibung_cz from doe where stredisko_isp is not null order by doe.oe";
@@ -105,6 +121,12 @@ $returnArray = array(
     'inventarArray' => $inventarArray,
     'oeArray' => $oeArray,
     'oeSelected' => $oeSelected,
+    'oeIdentArray'=>$oeIdentArray,
+    'oeIdentSelected'=>$oeIdentSelected,
+    'kundeIdentArray'=>$kundeIdentArray,
+    'kundeIdentSelected'=>$kundeIdentSelected,
+    'identifikatorArray'=>$identifikatorArray,
+    'identifikatorSelected'=>$identifikatorSelected,
     'u' => $u
 );
 

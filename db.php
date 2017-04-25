@@ -1324,6 +1324,59 @@ class AplDB {
 
     /**
      * 
+     * @param type $oeIdentSelected
+     * @param type $kundeIdentSelected
+     */
+    public function getIdentifikatorArrayForOEKunde($oeIdentSelected, $kundeIdentSelected) {
+
+	$sql .= " select ";
+	$sql .= " ident.oe,";
+	$sql .= " ident.kunde,";
+	$sql .= " ident.identifikator as iident,";
+	$sql .= " dpersident.identifikator as persident,";
+	$sql .= " dpersident.persnr,";
+	$sql .= " dpersident.vydano,";
+	$sql .= " dpersident.vraceno";
+	$sql .= " from ident";
+	$sql .= " left join dpersident on ident.oe=dpersident.oe and ident.kunde=dpersident.kunde and ident.identifikator=dpersident.identifikator";
+	$sql .= " where ";
+	$sql .= " ident.oe='$oeIdentSelected'";
+	$sql .= " and";
+	if ($kundeIdentSelected === NULL) {
+	    $sql .= " ident.kunde is null";
+	} else {
+	    $sql .= " ident.kunde='$kundeIdentSelected'";
+	}
+	$sql .= " and";
+	$sql .= " dpersident.vydano is null";
+	$sql .= " and ";
+	$sql .= " dpersident.vraceno is null";
+	$sql .= " order by";
+	$sql .= " ident.identifikator";
+
+
+	$nepouziteForOEKunde = $this->getQueryRows($sql);
+
+	//odebrat ty, ktere jsou uz nekomu prirazene
+	$kDispozici = $nepouziteForOEKunde;
+	return $kDispozici;
+    }
+
+    /**
+     * 
+     * @param type $oeIdentSelected
+     */
+    public function getKundeIdentArrayForOE($oeIdentSelected) {
+	$sql = " select distinct ident.kunde";
+	$sql .= " from ident";
+	$sql .= " where oe='$oeIdentSelected'";
+	$sql .= " order by";
+	$sql .= " kunde";
+	return $this->getQueryRows($sql);
+    }
+
+    /**
+     * 
      * @param type $atyp
      * @param type $year
      * @param type $month
