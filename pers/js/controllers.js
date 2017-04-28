@@ -126,6 +126,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     $scope.persKvalifikaceArray = [];
     $scope.persIdentifikatoryArray = [];
+    $scope.identifikatorvydano = curdate;
     
     $scope.showPanel = {
 	kvalifikace:false,
@@ -457,6 +458,33 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	});
     }
 
+
+/**
+ * 
+ * @param {type} k
+ * @returns {unresolved}
+ */
+    $scope.addIdentifikator = function (k) {
+	return	$http.post(
+		'./addIdentifikator.php',
+		{
+		    k: k,
+		    oe: $scope.oeidentifikator,
+		    kunde: $scope.kundeidentifikator,
+		    identifikator: $scope.identifikator,
+		    vydano:$scope.identifikatorvydano,
+		    poznamka:$scope.identifikatorpoznamka,
+		    persnr: $scope.ma.maInfo.PersNr,
+		}
+	).then(function (response) {
+	    if (response.data.insertId > 0 || response.data.delRows > 0) {
+		//neco vlozeno , aktualizuju pole
+		getPersIdentifikatory();
+		$scope.updateIdentArray('kunde');
+	    }
+
+	});
+    }
     /**
      * 
      * @param {type} i

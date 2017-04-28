@@ -972,8 +972,9 @@ class AplDB {
 		// adaptace ------------------------------------------------------------
 		// test na moznost adaptace, tj. mam vyplneno probezeit ?
 		$mzdaPodleAdaptace = FALSE;
+		
 		if ($eeZuschlagBerechnen == 1 && strlen(trim($zkusebni_doba_dobaurcita)) > 0) {
-		    $mzdaPodleAdaptace = TRUE;
+		    //$mzdaPodleAdaptace = TRUE;
 		    $anwArray = $this->getPersAnwStdArbeit($persnr, $von, $bis);
 		    $adaptaceBisDate = date('Y-m-d', $adaptaceBisTime);
 		    $zkusebnidobaTime = strtotime($zkusebni_doba_dobaurcita);
@@ -983,6 +984,7 @@ class AplDB {
 		    $bisTime = strtotime($bis . " 23:59:59");
 		    $adaptLohnSum = 0;
 		    for ($aktualTime = $vonTime; $aktualTime <= $bisTime && $aktualTime <= $adaptaceBisTime && $aktualTime <= $zkusebnidobaTime; $aktualTime+=24 * 60 * 60) {
+			$mzdaPodleAdaptace = TRUE;
 			$aktualDate = date('Y-m-d', $aktualTime);
 			$arbTageBetweenEintrittAktual = $this->getArbTageBetweenDatums($eintrittDate, date('Y-m-d', $aktualTime));
 			$persArbTageBetweenEintrittAktual = $this->getATageProPersnrBetweenDatumsAdaptace($persnr, $eintrittDate, date('Y-m-d', $aktualTime));

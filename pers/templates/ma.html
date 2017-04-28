@@ -1070,31 +1070,31 @@
 					    <thead>
 						<tr   class="bg-info no-print">
 						    <th colspan="1">
-							<select ng-change="updateIdentArray('oe')" class="form-control" id="oeidentifikator" name="oeidentifikator" ng-model="oeidentifikator">
+							<select ng-change="updateIdentArray('oe')" class="form-control input-sm" id="oeidentifikator" name="oeidentifikator" ng-model="oeidentifikator">
 							    <option ng-repeat="oe in oes.oeIdentArray" value="{{oe.oe}}">{{oe.oe}}</option>
 							</select>
 						    </th>
 						    <th>
-							<select ng-change="updateIdentArray('kunde')" class="form-control" id="kundeidentifikator" name="kundeidentifikator" ng-model="kundeidentifikator">
+							<select ng-change="updateIdentArray('kunde')" class="form-control input-sm" id="kundeidentifikator" name="kundeidentifikator" ng-model="kundeidentifikator">
 							    <option ng-repeat="k in kundeIdentArray" value="{{k.kunde}}">{{k.kunde}}</option>
 							</select>
 						    </th>
 						    <th>
-							<select class="form-control" id="identifikator" name="identifikator" ng-model="identifikator">
+							<select class="form-control input-sm" id="identifikator" name="identifikator" ng-model="identifikator">
 							    <option ng-repeat="i in identifikatorArray" value="{{i.iident}}">{{i.iident}}</option>
 							</select>
 						    </th>
 						    <th>
-							<!--<input ng-model="kvalifikaceGiltAb" ui-date="dateOptions" type="text" class="form-control" id="kvalifikacegiltab" placeholder="plati od">-->
+							<input ng-model="identifikatorvydano" ui-date="dateOptions" type="text" class="form-control input-sm" id="identifikatorvydano" placeholder="vydano">
 						    </th>
 						    <th>
-							<!--&nbsp;-->
+							&nbsp;
 						    </th>
 						    <th>
-							<!--&nbsp;-->
+							<input ng-model="identifikatorpoznamka" type="text" class="form-control input-sm" id="identifikatorpoznamka" placeholder="poznamka">
 						    </th>
 						    <th>
-							<!--<button ng-click="addKvalifikace()" id='add_kvalifikace' type="button" class="btn btn-sm btn-primary btn-block">+</button>-->
+							<button ng-click="addIdentifikator()" id='add_identifikator' type="button" class="btn btn-sm btn-primary btn-block">+</button>
 						    </th>
 						</tr>
 						<tr class="bg-info">
@@ -1126,7 +1126,7 @@
 							<input ng-change="dpersidentifikatoryChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
 						    </td>
 						    <td class="">
-							<button title="smazat" type="button" class="btn btn-block no-print" ng-click="">
+							<button title="smazat" type="button" class="btn btn-block no-print" ng-click="addIdentifikator(pa)">
 							    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</button>
 						    </td>
