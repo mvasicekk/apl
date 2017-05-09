@@ -36,6 +36,16 @@ if($field=='kom7'){
     $valid = TRUE;
 }
 
+if($field=='schuhegroesse'){
+    $value1 = trim($value);
+    $valid = TRUE;
+}
+
+if($field=='regeltrans'){
+    $value1 = intval(trim($value));
+    $valid = TRUE;
+}
+
 //if($field=='bewertung1'||$field=='bewertung2'||$field=='bewertung3'){
 //    $value1 = intval($value);
 //    if($value1>0){

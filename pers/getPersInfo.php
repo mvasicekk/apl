@@ -15,12 +15,21 @@ $jenma = $o->jenma;
 $austritt60 = $o->austritt60;
 $statusarray = $o->statusarray;
 
-if(count($statusarray)==1 && $statusarray[0]=='MA'){
-    $austritt60 = $o->austritt60;
-}
+//brutus podminka
+if(
+	(count($statusarray)==2 && $statusarray[0]=='MA' && $statusarray[1]=='DOHODA' )
+	||
+	(count($statusarray)==2 && $statusarray[1]=='MA' && $statusarray[0]=='DOHODA' )
+	||
+	(count($statusarray)==1 && ($statusarray[0]=='MA' || $statusarray[0]=='DOHODA' ))
+  )
+    {
+	$austritt60 = $o->austritt60;
+    }
 else{
     $austritt60 = FALSE;
 }
+
 $oeselected = $o->oeselected;
 
 $oearray = $o->oearray;

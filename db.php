@@ -1167,6 +1167,20 @@ class AplDB {
 		    $lohnArray['personen'][$persnr]['leistungPremie']['anwTageArbTage'] = $anwTageArbeitsTage;
 
 		    $lohnArray['personen'][$persnr]['zTageWarnung'] = $z;
+		    
+		    //osobni hodnoceni
+		    $osobniHodnoceni = $this->getOsobniHodnoceniProPersNr($persnr,$von,$bis);
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni'] = $osobniHodnoceni;
+		    //spocitat sumu
+		    $s = 0;
+		    if($osobniHodnoceni!==NULL){
+			foreach ($osobniHodnoceni as $id=>$datArray){
+			    foreach($datArray as $datum=>$hodnoceniArray){
+				$s += floatval($hodnoceniArray['hodnoceni_osobni']['castka']);
+			    }
+			}
+		    }
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastka'] = $s;
 		}
 	    }
 	}
@@ -1340,7 +1354,13 @@ class AplDB {
 	$sql .= " dpersident.vydano,";
 	$sql .= " dpersident.vraceno";
 	$sql .= " from ident";
-	$sql .= " left join dpersident on ident.oe=dpersident.oe and ident.kunde=dpersident.kunde and ident.identifikator=dpersident.identifikator";
+	if ($kundeIdentSelected === NULL) {
+	    $sql .= " left join dpersident on ident.oe=dpersident.oe and ident.identifikator=dpersident.identifikator";
+	}
+	else{
+	    $sql .= " left join dpersident on ident.oe=dpersident.oe and ident.kunde=dpersident.kunde and ident.identifikator=dpersident.identifikator";
+	}
+	
 	$sql .= " where ";
 	$sql .= " ident.oe='$oeIdentSelected'";
 	$sql .= " and";
@@ -1353,6 +1373,8 @@ class AplDB {
 	$sql .= " dpersident.vydano is null";
 	$sql .= " and ";
 	$sql .= " dpersident.vraceno is null";
+	$sql .= " and ";
+	$sql .= " dpersident.persnr is null";
 	$sql .= " order by";
 	$sql .= " ident.identifikator";
 

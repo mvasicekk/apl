@@ -1,7 +1,35 @@
 {
     "elements": {
-	"apl-help": {},
-	"ui-select": {}
+	"apl-help": {
+	    "attributes": {
+		"editable": {},
+		"el": {},
+		"showhelp": {},
+		"helpTextUpdater": {},
+		"showadmininfo": {}
+	    }
+	},
+	"ui-select-match": {
+	    "attributes": {
+		"placeholder": {}
+	    }
+	},
+	"ui-select-choices": {
+	    "attributes": {
+		"repeat": {}
+	    }
+	},
+	"ui-select": {
+	    "attributes": {
+		"ng-model": {},
+		"ng-change": {},
+		"close-on-select": {},
+		"multiple": {},
+		"theme": {},
+		"style": {},
+		"title": {}
+	    }
+	}
     },
     "attributes": {
 	"ng-repeat": {

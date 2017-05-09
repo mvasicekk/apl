@@ -15,12 +15,27 @@ $austritt60 = $o->austritt60;
 $oeselected = $o->oeselected;
 $statusarray = $o->statusarray;
 
-if(count($statusarray)==1 && $statusarray[0]=='MA'){
-    $austritt60 = $o->austritt60;
-}
+//brutus podminka
+if(
+	(count($statusarray)==2 && $statusarray[0]=='MA' && $statusarray[1]=='DOHODA' )
+	||
+	(count($statusarray)==2 && $statusarray[1]=='MA' && $statusarray[0]=='DOHODA' )
+	||
+	(count($statusarray)==1 && ($statusarray[0]=='MA' || $statusarray[0]=='DOHODA' ))
+  )
+    {
+	$austritt60 = $o->austritt60;
+    }
 else{
     $austritt60 = FALSE;
 }
+
+//if(count($statusarray)==1 && $statusarray[0]=='MA'){
+//    $austritt60 = $o->austritt60;
+//}
+//else{
+//    $austritt60 = FALSE;
+//}
 
 $oearray = $o->oearray;
 
@@ -133,6 +148,8 @@ if ($ma !== NULL) {
     $persnrNew = $ma[0]['PersNr'];
     //upravit geboren
     $ma[0]['geborenF'] = $ma[0]['geboren'] != NULL ? date('d.m.Y', strtotime($ma[0]['geboren'])) : '';
+    $ma[0]['eintrittF'] = $ma[0]['eintritt'] != NULL ? date('d.m.Y', strtotime($ma[0]['eintritt'])) : '';
+    $ma[0]['austrittF'] = $ma[0]['austritt'] != NULL ? date('d.m.Y', strtotime($ma[0]['austritt'])) : '';
     $oeInfo = $a->getPersOEInfo($persnrNew);
     $bewerber = $a->getQueryRows("select * from dpersbewerber where persnr='$persnrNew'");
     // v pripade, ze mi neco vratim upravim nektere hodnoty, napr pole .....
@@ -159,6 +176,10 @@ if ($ma !== NULL) {
     }
     $sql = "select * from dpersdetail1 where persnr='$persnrNew'";
     $dpersdetail = $a->getQueryRows($sql);
+    if($dpersdetail!==NULL){
+	$dpersdetail[0]['dobaurcitaF'] = $dpersdetail[0]['dobaurcita'] != NULL ? date('d.m.Y', strtotime($dpersdetail[0]['dobaurcita'])) : '';
+	$dpersdetail[0]['zkusebni_doba_dobaurcitaF'] = $dpersdetail[0]['zkusebni_doba_dobaurcita'] != NULL ? date('d.m.Y', strtotime($dpersdetail[0]['zkusebni_doba_dobaurcita'])) : '';
+    }
 
     //prilohy k zobrazeni
     $gdatPath = "/mnt/gdat/Dat/";

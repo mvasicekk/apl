@@ -32,15 +32,18 @@ $sql.="     sum(if(stat_nr='S0041',`verb-zeit`,0)) as st_verb, ";
 $sql.="     sum(if(stat_nr='S0043',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as st1_kdmin, ";
 $sql.="     sum(if(stat_nr='S0043',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as st1_abymin, ";
 $sql.="     sum(if(stat_nr='S0043',`verb-zeit`,0)) as st1_verb, ";
+$sql.="     sum(if(stat_nr='S0051',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as e_kdmin, ";
+$sql.="     sum(if(stat_nr='S0051',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as e_abymin, ";
+$sql.="     sum(if(stat_nr='S0051',`verb-zeit`,0)) as e_verb, ";
 $sql.="     sum(if(stat_nr='S0061',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as g_kdmin, ";
 $sql.="     sum(if(stat_nr='S0061',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as g_abymin, ";
 $sql.="     sum(if(stat_nr='S0061',`verb-zeit`,0)) as g_verb, ";
 $sql.="     sum(if(stat_nr='S0062',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as g1_kdmin, ";
 $sql.="     sum(if(stat_nr='S0062',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as g1_abymin, ";
 $sql.="     sum(if(stat_nr='S0062',`verb-zeit`,0)) as g1_verb, ";
-$sql.="     sum(if(stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as sonst_kdmin, ";
-$sql.="     sum(if(stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as sonst_abymin, ";
-$sql.="     sum(if(stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',`verb-zeit`,0)) as sonst_verb, ";
+$sql.="     sum(if(stat_nr<>'S0051' and stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`),0)) as sonst_kdmin, ";
+$sql.="     sum(if(stat_nr<>'S0051' and stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`),0)) as sonst_abymin, ";
+$sql.="     sum(if(stat_nr<>'S0051' and stat_nr<>'S0043' and stat_nr<>'S0062' and stat_nr<>'S0061' and stat_nr<>'S0041' and stat_nr<>'S0011',`verb-zeit`,0)) as sonst_verb, ";
 $sql.="     sum(if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-soll`,drueck.`Stück`*`vz-soll`)) as sum_kdmin, ";
 $sql.="     sum(if(auss_typ=4,(drueck.Stück+drueck.`auss-Stück`)*`vz-ist`,drueck.`Stück`*`vz-ist`)) as sum_abymin, ";
 $sql.="     sum(`verb-zeit`) as sum_verb ";
@@ -117,6 +120,9 @@ $options = array(
 								'st_kdmin',
 								'st_abymin',
 								'st_verb',
+								'e_kdmin',
+								'e_abymin',
+								'e_verb',
 								'st1_kdmin',	//S0043
 								'st1_abymin',
 								'st1_verb',

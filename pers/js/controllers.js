@@ -88,6 +88,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	fahigkeitenidSelected: 0
     };
 
+    $scope.lohnArray = null;
     var curdate = new Date();
 
     $scope.hfPremieVon = new Date(curdate.getFullYear(), curdate.getMonth() - 2, 1);
@@ -129,6 +130,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.identifikatorvydano = curdate;
     
     $scope.showPanel = {
+	grundinfo:true,
 	kvalifikace:false,
 	inventar:false,
 	hfpremie:false,
@@ -140,7 +142,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.bemerkung = {};
     
     $scope.filt = {
-	dstatus : ['MA'],
+	dstatus : ['MA','DOHODA'],
 	oearray : ['*']
     };
 
@@ -281,11 +283,26 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.isDstatusOnlyMA = function () {
-	    if ($scope.filt.dstatus.length == 1) {
-		if ($scope.filt.dstatus[0] == 'MA') {
+	
+	    if ($scope.filt.dstatus.length == 2) {
+		if (
+			(($scope.filt.dstatus[0] == 'MA') && ($scope.filt.dstatus[1] == 'DOHODA') )
+			||
+			(($scope.filt.dstatus[1] == 'MA') && ($scope.filt.dstatus[0] == 'DOHODA') )
+		    ) {
+			return true;
+			}
+		else{
+		    return false;
+		}
+	    }
+	    else if($scope.filt.dstatus.length == 1){
+		    if (
+			(($scope.filt.dstatus[0] == 'MA') || ($scope.filt.dstatus[0] == 'DOHODA') )
+		    ) {
 		    return true;
 		}
-		else {
+		else{
 		    return false;
 		}
 	    }
@@ -851,7 +868,9 @@ $scope.commentClicked = function(e,p){
 		$scope.showPanel[prop] = false;
 	    } 
 	}
+	
 	$scope.showPanel[panelid] = true;
+	
 	//pri zvoleni lohnberechnung nacist pole s udaji
 	if(panelid=='lohnberechnung'){
 	    console.log('volam getPersLohn');
@@ -1002,6 +1021,7 @@ $scope.commentClicked = function(e,p){
 	    ).then(function (response) {
 		$scope.lohnArray = response.data.personen[$scope.ma.maInfo.PersNr];
 		$scope.lohnParams = response.data.params;
+		//$scope.showPanel['lohnberechnung'] = true;
 	    });
 	}
     }

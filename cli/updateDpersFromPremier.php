@@ -24,6 +24,8 @@ $sqlDB = sqldb::getInstance($ucetniJednotka);
 // vnitrni cyklus foreach
 
 /**
+ * vlozim informaci o smlouvach do stavajici struktury
+ * pozdeji vyuzijeme jen strukturu z ISP
  * 
  */
 function insertAplVertrag($ppRow, $persnr, $table = 'dpersvertrag_isp') {
