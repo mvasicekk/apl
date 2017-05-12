@@ -32,8 +32,16 @@ if($textArray!==NULL){
     $tA['t1']=$textArray[0]['text1'];
     $tA['t2']=$textArray[0]['text2'];
     $tA['t3']=$textArray[0]['text3'];
-    $tA['t4']=$textArray[0]['text4'];
-    $tA['t5']=$textArray[0]['text5'];
+    if(intval($textArray[0]['itid'])==0){
+	// pokud ma panel prirazenu tabulku d id=0, zobrazim ip adreesa a datum cas
+	$tA['t4']=$ip;
+	$tA['t5']=$dt;
+    }
+    else{
+	$tA['t4']=$textArray[0]['text4'];
+	$tA['t5']=$textArray[0]['text5'];
+    }
+    
 //    if(strlen(trim($tA['t3']))==0) $tA['t3']=$dt;
 }
 else{

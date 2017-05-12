@@ -7,6 +7,7 @@
 	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
 	    AI
 	</button>
+	<apl-help el="hIArray['admininfo_btn']" showadmininfo="showhI"></apl-help>
     </div>
     <div class="page-header">
 	<div class="row">
@@ -19,6 +20,7 @@
 		<button ng-if="securityInfo.showArray['btn_hromadneoperace']" class="btn btn-primary btn-small" type="button" ng-click="toggleHromadneOperace()">
 		    hromadné operace
 		</button>
+		<apl-help el="hIArray['btn_hromadneoperace']" showadmininfo="showhI"></apl-help>
 	    </div>
 	</div>
     </div>
@@ -52,6 +54,7 @@
 			    {{s}}
 			</ui-select-choices>
 		    </ui-select>
+		    <apl-help el="hIArray['dpersstatus_select']" showadmininfo="showhI"></apl-help>
 		    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['dpersstatus']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 		</div>
 	    </div>
@@ -221,14 +224,29 @@
 <!--				<li><a ng-click="panelSwitch('bewerber')" role="button" href="">uchazeč (Bewerber)</a></li>
 				<li role="separator" class="divider"></li>
 				<li><a ng-click="panelSwitch('inventar')" role="button" href="">inventar</a></li>-->
-				<li ng-show="securityInfo.showArray['kvalifikace_switch_item']"><a ng-click="panelSwitch('kvalifikace')" role="button" href="">kvalifikace</a></li>
-				<li ng-show="securityInfo.showArray['identifikatory_switch_item']"><a ng-click="panelSwitch('identifikatory')" role="button" href="">identifikátory</a></li>
+				<li ng-show="securityInfo.showArray['kvalifikace_switch_item']">
+				    <a ng-click="panelSwitch('kvalifikace')" role="button" href="">kvalifikace</a>
+				    <apl-help el="hIArray['kvalifikace_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
+				<li ng-show="securityInfo.showArray['identifikatory_switch_item']">
+				    <a ng-click="panelSwitch('identifikatory')" role="button" href="">identifikátory</a>
+				    <apl-help el="hIArray['identifikatory_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
 				<li role="separator" class="divider"></li>
-				<li ng-show="securityInfo.showArray['hfpremie_switch_item']"><a ng-click="panelSwitch('hfpremie')" role="button" href="">HF Premie</a></li>
-				<li ng-show="securityInfo.showArray['osobnihodnoceni_switch_item']"><a ng-click="panelSwitch('osobnihodnoceni')" role="button" href="">osobní hodnocení</a></li>
-				<li ng-show="securityInfo.showArray['lohnberechnung_switch_item']"><a ng-click="panelSwitch('lohnberechnung')" role="button" href="">výpočet mzdy</a></li>
+				<li ng-show="securityInfo.showArray['hfpremie_switch_item']">
+				    <a ng-click="panelSwitch('hfpremie')" role="button" href="">HF Premie</a>
+				    <apl-help el="hIArray['hfpremie_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
+				<li ng-show="securityInfo.showArray['osobnihodnoceni_switch_item']">
+				    <a ng-click="panelSwitch('osobnihodnoceni')" role="button" href="">osobní hodnocení</a>
+				    <apl-help el="hIArray['osobnihodnoceni_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
+				<li ng-show="securityInfo.showArray['lohnberechnung_switch_item']"><a ng-click="panelSwitch('lohnberechnung')" role="button" href="">výpočet mzdy</a>
+				<apl-help el="hIArray['lohnberechnung_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
 			    </ul>
 			</div>
+			<apl-help el="hIArray['select_panelswitch']" showadmininfo="showhI"></apl-help>
 		    </div>
 		    
 		    <div class="col-sm-8 no-print">
@@ -238,9 +256,11 @@
 			    </div>
 			    <div ng-show="securityInfo.showArray['bewerber_btn']" class="btn-group" role="group">
 				<button type="button" ng-click="panelSwitch('bewerber')" class="btn btn-info" role="button" href="">uchazeč (Bewerber)</button>
+				<apl-help el="hIArray['bewerber_btn']" showadmininfo="showhI"></apl-help>
 			    </div>
 			    <div ng-show="securityInfo.showArray['inventar_btn']"  class="btn-group" role="group">
 				<button type="button" ng-click="panelSwitch('inventar')"  class="btn btn-info" role="button" href="">inventar</button>
+				<apl-help el="hIArray['inventar_btn']" showadmininfo="showhI"></apl-help>
 			    </div>
 			</div>
 		    </div>
@@ -311,6 +331,7 @@
 						<div class="form-group">
 						    <label for="schuhegroesse" class="control-label">SchuheGr.:</label>
 						    <input ng-readonly="!securityInfo.editArray['schuhegroesse_input']" ng-model="ma.dpersDetail.schuhegroesse" type="text" class="form-control text-right" id="schuhegroesse" placeholder="velikost bot"  ng-change="dpersdetailFieldChanged('schuhegroesse')">
+						    <apl-help el="hIArray['schuhegroesse_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    <!--</div>-->
 					</div>
@@ -494,6 +515,14 @@
 						    <tr>
 							<td>osobní hodnoceni</td>
 							<td class="text-right">{{lohnArray.osobnihodnoceni.sumaCastka|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						    <tr>
+							<td>koeficient (anwMinuten/monatNormMinuten), max. 1</td>
+							<td class="text-right">{{lohnArray.osobnihodnoceni.anwStd*60|numeraljs:'0,0'}} / {{lohnArray.osobnihodnoceni.ganzMonatNormMinuten|numeraljs:'0,0'}} = {{lohnArray.osobnihodnoceni.koeficient|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						    <tr>
+							<th>osobní hodnocení k výplatě</th>
+							<th class="text-right">{{lohnArray.osobnihodnoceni.sumaCastkaFinal|numeraljs:'0,0.00'}} Kč</th>
 						    </tr>
 						</tbody>
 					    </table>
@@ -717,16 +746,19 @@
 						<label for="vorname" class="col-sm-2 control-label">jméno</label>
 						<div class="col-sm-4">
 						    <input ng-readonly="!securityInfo.editArray['vorname_input']" ng-model="ma.maInfo.Vorname" type="text" class="form-control" id="vorname" placeholder="jmeno"  ng-change="dpersFieldChanged('Vorname')">
+						    <apl-help el="hIArray['vorname_input']" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="name" class="col-sm-2 control-label">příjmení</label>
 						<div class="col-sm-4">
 						    <input ng-readonly="!securityInfo.editArray['name_input']" ng-model="ma.maInfo.Name" type="text" class="form-control" id="name" placeholder="příjmení"  ng-change="dpersFieldChanged('Name')">
+						    <apl-help el="hIArray['name_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					    <div class="form-group">
 						<label for="g" class="col-sm-2 control-label">datum narození</label>
 						<div class="col-sm-4">
 						    <input ng-readonly="!securityInfo.editArray['geboren_input']" ng-model="ma.maInfo.geboren" ui-date="dateOptions" type="text" class="form-control" id="g" placeholder="datum narození"  ng-change="dpersFieldChanged('geboren')">
+						    <apl-help el="hIArray['geboren_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					</fieldset>
@@ -744,6 +776,7 @@
 							    <div><em>{{s.staat_name}}</em></div>
 							</ui-select-choices>
 						    </ui-select>
+						    <apl-help el="hIArray['staats_angehoerigkeit_select']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					    <div class="form-group">
@@ -755,6 +788,7 @@
 							    <div><em>{{s.text_lang}}</em></div>
 							</ui-select-choices>
 						    </ui-select>
+						    <apl-help el="hIArray['staats_gruppe_select']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					    
@@ -769,10 +803,12 @@
 						<label for="tc" class="col-sm-2 control-label">telefonní číslo</label>
 						<div class="col-sm-4">
 						    <input ng-readonly="!securityInfo.editArray['kom7_input']" ng-model="ma.dpersDetail.kom7" type="text" class="form-control" id="tc" placeholder="telefonní číslo"  ng-change="dpersdetailFieldChanged('kom7')">
+						    <apl-help el="hIArray['kom7_input']" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="em" class="col-sm-2 control-label">email</label>
 						<div class="col-sm-4">
 						    <input ng-readonly="!securityInfo.editArray['email_input']" ng-model="ma.maInfo.email" type="text" class="form-control" id="email" placeholder="email"  ng-change="dpersFieldChanged('email')">
+						    <apl-help el="hIArray['email_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					</fieldset>
@@ -817,6 +853,7 @@
 					<label for="regeltrans" class="control-label col-sm-7">Regeltransport Preis</label>
 					<div class="col-sm-5">
 					    <input ng-readonly="!securityInfo.editArray['regeltrans_input']" ng-model="ma.dpersDetail.regeltrans" type="text" class="form-control text-right" id="regeltrans" placeholder="cena za dopravu"  ng-change="dpersdetailFieldChanged('regeltrans')">
+					    <apl-help el="hIArray['regeltrans_input']" showadmininfo="showhI"></apl-help>
 					</div>
 					
 				    </div>
@@ -1030,9 +1067,11 @@
 						    <td >{{pa.oe}}</td>
 						    <td class="">
 							<input ng-readonly="!securityInfo.editArray['kvalifikace_bewertung_input']" ng-change="dperskvalifikaceChanged(pa, 'bewertung')" type="text" ng-model="pa.bewertung" class="form-control input-sm  text-right" placeholder="hodnoceni">
+							<apl-help el="hIArray['kvelifikace_bewertung_input']" showadmininfo="showhI"></apl-help>
 						    </td>
 						    <td class="">
 							<input ng-readonly="!securityInfo.editArray['kvalifikace_poznamka_input']" ng-change="dperskvalifikaceChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
+							<apl-help el="hIArray['kvalifikace_poznamka_input']" showadmininfo="showhI"></apl-help>
 						    </td>
 						    <td class="">
 							{{pa.gilt_ab}}
@@ -1044,6 +1083,7 @@
 							<button  ng-show="securityInfo.showArray['kvalifikace_delete_row']" title="smazat" type="button" class="btn btn-block no-print" ng-click="deleteDpersKvalifikace(pa)">
 							    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</button>
+							<apl-help el="hIArray['kvalifikace_delete_row']" showadmininfo="showhI"></apl-help>
 						    </td>
 						</tr>
 					    </tbody>

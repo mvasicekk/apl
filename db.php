@@ -1180,7 +1180,16 @@ class AplDB {
 			    }
 			}
 		    }
+		    $anwStd = floatval($lohnArray['personen'][$persnr]['grundinfo']['sumstundena']);
+		    $koef = $ganzMonatNormMinuten<>0?$anwStd*60/$ganzMonatNormMinuten:0;
+		    if($koef>1){
+			$koef = 1;
+		    }
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastka'] = $s;
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastkaFinal'] = round($s*$koef);
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['anwStd'] = $anwStd;
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['ganzMonatNormMinuten'] = $ganzMonatNormMinuten;
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['koeficient'] = $koef;
 		}
 	    }
 	}
@@ -2995,7 +3004,15 @@ class AplDB {
      * @return type
      */
     public function getInfoPanelsForPlaceId($place_id) {
+	
+	$panels = array();
+	
 	$sql.=" select ";
+	$sql.=" dinfopanel.idpanel,";
+	$sql.=" dinfopanel.ip,";
+	$sql.=" dinfopanel.note,";
+	$sql.=" dinfopanel.rada,";
+	$sql.=" dinfopanel.sloupec,";
 	$sql.=" dinfotable.id,";
 	$sql.=" dinfotable.text1,";
 	$sql.=" dinfotable.text2,";
@@ -3012,7 +3029,13 @@ class AplDB {
 	$sql.=" CAST(dinfotable.text1 as SIGNED INTEGER),";
 	$sql.=" dinfotable.id";
 
-	return $this->getQueryRows($sql);
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    foreach ($rs as $r){
+		$panels[$r['rada']][$r['sloupec']] = $r;
+	    }
+	}
+	return $panels;
     }
 
     /**
@@ -3020,7 +3043,7 @@ class AplDB {
      * @return type
      */
     public function getInfoPanelPlaces() {
-	$sql = "select dinfopanelplaces.id,dinfopanelplaces.place from dinfopanelplaces order by place";
+	$sql = "select dinfopanelplaces.id,dinfopanelplaces.place,dinfopanelplaces.rows,dinfopanelplaces.poznamka from dinfopanelplaces order by place";
 	return $this->getQueryRows($sql);
     }
 
@@ -6730,25 +6753,47 @@ class AplDB {
     public function getDisplaySec($form_id, $element_id, $puser) {
 
 	$sql = " select dbenutzerroles.benutzername,acl.allowed";
-	$sql.= " from acl";
-	$sql.= " join resources on resources.id=acl.resource_id";
-	$sql.= " join dbenutzerroles on dbenutzerroles.role_id=acl.role_id";
-	$sql.= " where";
-	$sql.= " resources.form_id='$form_id'";
-	$sql.= " and resources.element_id='$element_id'";
-	$sql.= " and dbenutzerroles.benutzername='$puser'";
+	$sql .= " from acl";
+	$sql .= " join resources on resources.id=acl.resource_id";
+	$sql .= " join dbenutzerroles on dbenutzerroles.role_id=acl.role_id";
+	$sql .= " where";
+	$sql .= " resources.form_id='$form_id'";
+	$sql .= " and resources.element_id='$element_id'";
+	$sql .= " and dbenutzerroles.benutzername='$puser'";
+
+	$allow = FALSE;
 
 	$rows = $this->getQueryRows($sql);
-	if ($rows === NULL)
-	    return FALSE;
-	else {
+	if ($rows !== NULL) {
 	    // musim projet vsechny radky, pokud narazim na allowed=Y vracim TRUE a koncim
 	    foreach ($rows as $row) {
-		if ($row['allowed'] == 'Y')
-		    return TRUE;
+		if ($row['allowed'] == 'Y') {
+		    $allow = TRUE;
+		    break;
+		}
 	    }
-	    return FALSE;
+	    //return FALSE;
 	}
+
+	//2017-05-11
+	//pokud ma uzivatel roli, ktera mu vybrany element explicitne zakazuje (privilege=lesen,allow=N, tak nepovolim
+	$sql = " select dbenutzerroles.role_id,dbenutzerroles.benutzername,acl.allowed";
+	$sql .= " from acl";
+	$sql .= " join resources on resources.id=acl.resource_id";
+	$sql .= " join dbenutzerroles on dbenutzerroles.role_id=acl.role_id";
+	$sql .= " join `privileges` on `privileges`.id=acl.privilege_id";
+	$sql .= " where";
+	$sql .= " resources.form_id='$form_id'";
+	$sql .= " and `privileges`.`name`='lesen'";
+	$sql .= " and acl.allowed='N'";
+	$sql .= " and resources.element_id='$element_id'";
+	$sql .= " and dbenutzerroles.benutzername='$puser'";
+	$rows = $this->getQueryRows($sql);
+	if ($rows !== NULL) {
+	    $allow = FALSE;
+	}
+
+	return $allow;
     }
 
     /**
@@ -6896,7 +6941,7 @@ class AplDB {
 		    }
 
 		    //bewertung czk
-		    $value = $zeilen[$persnr]['nacharbeit']['faktor'][$mj];
+		    $value = round($zeilen[$persnr]['nacharbeit']['faktor'][$mj],2);
 		    //echo "value: $value<br>";
 		    $bew = $a->getBewertungKriteriumArray(100, 'q_nacharbeit', $value, 'bis', $mj, 1, $regeloe);
 		    //AplDB::varDump($bew);
@@ -6966,7 +7011,7 @@ class AplDB {
 			//$bew = $a->getBewertungKriterium(100,'q_auss',$value,'bis',$yearMonth,1);
 		    }
 		    //bewertung czk
-		    $value = $zeilen[$persnr]['A6']['a6_prozent'][$mj];
+		    $value = round($zeilen[$persnr]['A6']['a6_prozent'][$mj],2);
 		    //echo "value: $value<br>";
 		    $bew = $a->getBewertungKriteriumArray(100, 'q_auss', $value, 'bis', $mj, 1, $regeloe);
 		    //AplDB::varDump($bew);
@@ -7860,6 +7905,7 @@ class AplDB {
 	if ($ipKlienta !== NULL) {
 	    $sql = "";
 	    $sql.=" select";
+	    $sql.=" dinfotable.id as itid,";
 	    $sql.=" dinfotable.text1,";
 	    $sql.=" dinfotable.text2,";
 	    $sql.=" dinfotable.text3,";

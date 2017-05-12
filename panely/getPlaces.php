@@ -1,4 +1,5 @@
 <?
+
 require_once '../db.php';
 $data = file_get_contents("php://input");
 $o = json_decode($data);
@@ -9,12 +10,12 @@ $a = AplDB::getInstance();
 
 
 $panels = array();
-$places = $a->getInfoPanelPlaces();
+
 
 if (intval($placeid) > 0) {
-    foreach ($places as $place) {
-	$panels[$place['id']] = $a->getInfoPanelsForPlaceId($place['id']);
-    }
+    $panels[$placeid] = $a->getInfoPanelsForPlaceId($placeid);
+} else {
+    $places = $a->getInfoPanelPlaces();
 }
 
 

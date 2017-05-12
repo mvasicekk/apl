@@ -1,0 +1,120 @@
+<div class="container-fluid" ng-controller="panelyController">
+    <div>
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    </div>
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-12">
+		<h4>správa infopanelů</h4>
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    <!--<form name="panelyForm" ng-model-options="{ updateOn: 'default blur' , debounce: { 'default': 500, 'blur': 0 }}">-->
+    <form name="panelyForm">
+	<div class="row">
+	    <div class='col-sm-12'>
+		<div class="panel panel-info">
+		    <div class="panel-heading">
+			<h3 class="panel-title">umístění panelů</h3>
+		    </div>
+		    <div class="panel-body">
+			<div class="row">
+			    <div ng-repeat="p in places" class="col-md-4">
+				<button ng-click="getPlacesAndPanels(p.id)" title="{{p.poznamka}}" type="button" class="btn btn-block btn-info btn-lg">{{p.place}}</button>
+			    </div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+	
+	<!--s tabulkou-->
+	<div class="row">
+	    <div class="col-md-12">
+		<table>
+		    <tr ng-repeat="(rada,v1) in panels[activePlace]">
+			<td title="{{panel.ip}}" ng-repeat="(sloupec,panel) in v1">
+			    <table class='paneltable'>
+				<tr>
+				    <td>
+					<!--<input maxlength="12" ng-change="textChanged(panel,'text1')" class='text1' type="text" ng-model="panel.text1"/>-->
+					<input ng-change="textChanged(panel,'text1')" class='text1' type="text" ng-model="panel.text1"/>
+				    </td>
+				</tr>
+				<tr>
+				    <td>
+					<!--<input maxlength="12" class='text2' type="text" ng-model="panels[activePlace][rada][sloupec].text2"/>-->
+					<input ng-change="textChanged(panel,'text2')" class='text2' type="text" ng-model="panel.text2"/>
+				    </td>
+				</tr>
+				<tr>
+				    <td>
+					<!--<input maxlength="8" class='text3' type="text" ng-model="panels[activePlace][rada][sloupec].text3"/>-->
+					<input ng-change="textChanged(panel,'text3')" class='text3' type="text" ng-model="panel.text3"/>
+				    </td>
+				</tr>
+				<tr>
+				    <td>
+					<!--<input maxlength="12" class='text4' type="text" ng-model="panels[activePlace][rada][sloupec].text4"/>-->
+					<input ng-change="textChanged(panel,'text4')" class='text4' type="text" ng-model="panel.text4"/>
+				    </td>
+				</tr>
+				<tr>
+				    <td>
+					<!--<input maxlength="16" class='text5' type="text" ng-model="panels[activePlace][rada][sloupec].text5"/>-->
+					<input ng-change="textChanged(panel,'text5')" class='text5' type="text" ng-model="panel.text5"/>
+				    </td>
+				</tr>
+			    </table>   
+			</td>
+		    </tr>
+		</table>
+	    </div>
+	</div>
+
+	<!--s divama-->
+<!--	<div title="{{rada}}" class="row panelyrow" ng-repeat="(rada,v1) in panels[activePlace]">
+	    <div title="{{panel.ip}}" class='col-md-1' ng-repeat="(sloupec,panel) in v1">
+		<table class='paneltable'>
+		    <tr>
+			<td>
+			    <input maxlength="12" ng-change="textChanged(panel,'text1')" class='text1' type="text" ng-model="panel.text1"/>
+			    <input ng-change="textChanged(panel,'text1')" class='text1' type="text" ng-model="panel.text1"/>
+			</td>
+		    </tr>
+		    <tr>
+			<td>
+			    <input maxlength="12" class='text2' type="text" ng-model="panels[activePlace][rada][sloupec].text2"/>
+			    <input ng-change="textChanged(panel,'text2')" class='text2' type="text" ng-model="panel.text2"/>
+			</td>
+		    </tr>
+		    <tr>
+			<td>
+			    <input maxlength="8" class='text3' type="text" ng-model="panels[activePlace][rada][sloupec].text3"/>
+			    <input ng-change="textChanged(panel,'text3')" class='text3' type="text" ng-model="panel.text3"/>
+			</td>
+		    </tr>
+		    <tr>
+			<td>
+			    <input maxlength="12" class='text4' type="text" ng-model="panels[activePlace][rada][sloupec].text4"/>
+			    <input ng-change="textChanged(panel,'text4')" class='text4' type="text" ng-model="panel.text4"/>
+			</td>
+		    </tr>
+		    <tr>
+			<td>
+			    <input maxlength="16" class='text5' type="text" ng-model="panels[activePlace][rada][sloupec].text5"/>
+			    <input ng-change="textChanged(panel,'text5')" class='text5' type="text" ng-model="panel.text5"/>
+			</td>
+		    </tr>
+		</table>
+	    </div>
+	</div>-->
+    </form>
+</div>

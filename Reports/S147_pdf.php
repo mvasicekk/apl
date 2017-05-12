@@ -150,7 +150,7 @@ foreach ($persnrArray as $p) {
 	}
 	
 	//bewertung czk
-	$value = $zeilen[$persnr]['nacharbeit']['faktor'][$mj];
+	$value = round($zeilen[$persnr]['nacharbeit']['faktor'][$mj],2);
 	//echo "value: $value<br>";
 	$bew = $a->getBewertungKriteriumArray(100,'q_nacharbeit',$value,'bis',$mj,1,$regeloe);
 	//AplDB::varDump($bew);
@@ -221,7 +221,7 @@ foreach ($persnrArray as $p) {
 	    //$bew = $a->getBewertungKriterium(100,'q_auss',$value,'bis',$yearMonth,1);
 	}
 	//bewertung czk
-	$value = $zeilen[$persnr]['A6']['a6_prozent'][$mj];
+	$value = round($zeilen[$persnr]['A6']['a6_prozent'][$mj],2);
 	//echo "value: $value<br>";
 	$bew = $a->getBewertungKriteriumArray(100,'q_auss',$value,'bis',$mj,1,$regeloe);
 	//AplDB::varDump($bew);
