@@ -299,6 +299,25 @@ class AplDB {
 	"aktiv"=>0
     ),
 );
+    
+    /**
+     * kam se ukladaji osobni dokumenty na "GDat"
+     * @var type 
+     */
+    public static $MADokumentePath = 'Aby 18 Mitarbeiter -/02 Arbeitsverhaltnis - Pr.smlouvy,dodatky,skonceni PP/08 Slozky_novych_MA/';
+    
+    /**
+     * kde jsou ulozeny sablony pro vytvoreni osobnich dokumentu na GDat
+     * @var type 
+     */
+    public static $MASablonyPath = 'Aby 18 Mitarbeiter -/09 Nove nastupy/APL_sablony_slozkaMA/';
+    
+    /**
+     * kde je na aplserveru pripojena slozka GDat z abyserveru
+     * @var type 
+     */
+    public static $GDatPath = '/mnt/gdat/Dat/';
+    
     /**
      * 
      * @return string
@@ -1229,31 +1248,49 @@ class AplDB {
      * @return boolean
      */
     public function testReportPassword($reportname, $password, $user, $usePassword = 0) {
-	//dbConnect();
-	if ($usePassword != 0)
-	    $sql = "select user from reportsecurity where((reportname='$reportname') and (user='$user') and (password='$password'))";
-	else
-	    $sql = "select user from reportsecurity where((reportname='$reportname') and (user='$user'))";
+	$allow = FALSE;
 
-//	echo $sql;
-	$res = mysql_query($sql);
-
-	if (mysql_affected_rows() > 0) {
-	    if ($usePassword == 1)
-		return true;
-	    else {
-		// zkontroluju znovu zadane heslo uzivatele
-		$sql = "select dbenutzer.name from dbenutzer where name='$user' and password='$password'";
-		$res = mysql_query($sql);
-		if (mysql_affected_rows() > 0)
-		    return true;
-		else
-		    return false;
+	// zjistim si prihlasovaci heslo
+	$sql = "select dbenutzer.name,password from dbenutzer where name='$user'";
+	$rs = $this->getQueryRows($sql);
+	$loginPassword = $rs[0]['password'];
+	
+	$sql = "select reportsecurity.password from reportsecurity where reportname='$reportname' and `user`='$user'";
+	$rs = $this->getQueryRows($sql);
+	if ($rs !== NULL) {
+	    // uzivatel ma pro sestavu/resource zaznam v tabulce -> ma sanci
+	    if ($usePassword == 0) {
+		// kontroluju jen proti prihlasovacimu heslo
+		if ($password == $loginPassword) {
+		    $allow = TRUE;
+		}
 	    }
-	} else
-	    return false;
+	    else{
+		$reportPassword = $rs[0]['password'];
+		if ($reportPassword == NULL) {
+		    //kontroluju pro prihlasovacimu heslu
+		    if ($password == $loginPassword) {
+			$allow = TRUE;
+		    }
+		} else {
+		    //kontroluju pro report/resource heslu
+		    if ($password == $reportPassword) {
+			$allow = TRUE;
+		    }
+		}
+	    }
+	}
+	return $allow;
     }
 
+    /**
+     * 
+     * @param type $persnr
+     */
+    public function getBewerberInfoArray($persnr){
+	$sql = "select * from dpersbewerber where persnr='$persnr'";
+	return $this->getQueryRows($sql);
+    }
     /**
      * vrati cislo zakaznika podle zadaneho dilu
      * 
@@ -2698,8 +2735,24 @@ class AplDB {
      * @param type $bis
      * @return int
      */
-    public function getSvatkyTageCount($von, $bis) {
-	$sql.=" select";
+    public function getSvatkyTageCount($von, $bis,$persnr=0) {
+	$svatky = 0;
+	//pro persnr>0 se budu zajimat jen o svatky, kdy mel persnr platny prac pomer
+	$sql = "select dpers.eintritt,dpers.austritt from dpers where PersNr='$persnr'";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    $et = date('Y-m-d',strtotime($rs[0]['eintritt']));
+	    $atTime = strtotime($rs[0]['austritt']);
+	    if($atTime){
+		$at = date('Y-m-d',strtotime($rs[0]['austritt']));
+	    }
+	    else{
+		$at = $bis;
+	    }
+	}
+	
+	//echo "et=$et,at=$at<br>";
+	$sql=" select";
 	$sql.=" calendar.datum";
 	$sql.=" from";
 	$sql.=" calendar";
@@ -2709,14 +2762,40 @@ class AplDB {
 	$sql.=" calendar.cislodne<6";
 	$sql.=" and";
 	$sql.=" calendar.datum between '$von' and '$bis'";
-	$rows = $this->getQueryRows($sql);
-	if ($rows !== NULL) {
-	    return count($rows);
-	} else {
-	    return 0;
+	if($persnr>0){
+	    $sql.=" and";
+	    $sql.=" calendar.datum between '$et' and '$at'";
 	}
+	//echo "sql=$sql<br>";
+	$rows = $this->getQueryRows($sql);
+	//projedu datumy a zjistim, jestli byl v praci
+	if($rows!==NULL){
+	    foreach ($rows as $r){
+		$s = "select datum from dzeit join dtattypen on dtattypen.tat=dzeit.tat where datum='".$r['datum']."' and dtattypen.oestatus='a' and dzeit.persnr='$persnr'";
+		//echo "s=$s<br>";
+		$rs1 = $this->getQueryRows($s);
+		if($rs1!==NULL){
+		    // byl v praci ma uz priplatek
+		    continue;
+		}
+		else{
+		    // nebyl v praci, dostane nahradu za svatek
+		    $svatky++;
+		}
+	    }
+	}
+	
+	return $svatky;
     }
 
+    /**
+     * 
+     * @param type $id
+     */
+    public function getStaatFromId($id){
+	$sql = "select dstaaten.id,dstaaten.staat_abkrz,dstaaten.staat_name from dstaaten where id='$id'";
+	return $this->getQueryRows($sql);
+    }
     /**
      * 
      * @param type $von

@@ -299,21 +299,21 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	$pdfobjekt->SetY($y_old);
 
 
-	$pdfobjekt->Ln();
-	$pdfobjekt->Cell(60,5,"Mit freundlichen Grüssen",'0',1,'L',$fill);
-	$pdfobjekt->Cell(60,5,getValueForNode($childNodes,"SachbearbeiterAby"),'0',1,'L',$fill);
-	$pdfobjekt->Cell(60,5,"Tel.  :".getValueForNode($childNodes,"TelAby"),'0',1,'L',$fill);
-	$pdfobjekt->Cell(60,5,"Fax.  :".getValueForNode($childNodes,"FaxAby"),'0',1,'L',$fill);
-	$pdfobjekt->Cell(60,5,"Email.:".getValueForNode($childNodes,"EmailAby"),'0',1,'L',$fill);
-
-//	$pdfobjekt->SetY($y_typausschussu+90);
-//	$pdfobjekt->SetX($x_typausschussu+120);
-
-
-        $pdfobjekt->SetY($pdfobjekt->GetY()-20);
-        $pdfobjekt->SetX(120);
-	$pdfobjekt->SetFont("FreeSans", "B", 12);
-	$pdfobjekt->MultiCell(70,10,"Datum: ........................\nUnterschrift: ...............",0,2,'R',0);
+//	$pdfobjekt->Ln();
+//	$pdfobjekt->Cell(60,5,"Mit freundlichen Grüssen",'0',1,'L',$fill);
+//	$pdfobjekt->Cell(60,5,getValueForNode($childNodes,"SachbearbeiterAby"),'0',1,'L',$fill);
+//	$pdfobjekt->Cell(60,5,"Tel.  :".getValueForNode($childNodes,"TelAby"),'0',1,'L',$fill);
+//	$pdfobjekt->Cell(60,5,"Fax.  :".getValueForNode($childNodes,"FaxAby"),'0',1,'L',$fill);
+//	$pdfobjekt->Cell(60,5,"Email.:".getValueForNode($childNodes,"EmailAby"),'0',1,'L',$fill);
+//
+////	$pdfobjekt->SetY($y_typausschussu+90);
+////	$pdfobjekt->SetX($x_typausschussu+120);
+//
+//
+//        $pdfobjekt->SetY($pdfobjekt->GetY()-20);
+//        $pdfobjekt->SetX(120);
+//	$pdfobjekt->SetFont("FreeSans", "B", 12);
+//	$pdfobjekt->MultiCell(70,10,"Datum: ........................\nUnterschrift: ...............",0,2,'R',0);
 
 
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
@@ -702,6 +702,22 @@ if(test_pageoverflow_noheader($pdf,120))
 	zahlavi_export($pdf,5,array(255,255,255),$exportChildNodes);
 sestava_tabulka($pdf,10,array(255,255,255),$exportChildNodes);
 
+if(test_pageoverflow_noheader($pdf,6*5)){
+    zahlavi_export($pdf,5,array(255,255,255),$exportChildNodes);
+}
+	
+$pdf->Ln();
+$fill = 0;
+$pdf->SetFont("FreeSans", "", 9);
+$pdf->Cell(60, 5, "Mit freundlichen Grüssen", '0', 1, 'L', $fill);
+$pdf->Cell(60, 5, getValueForNode($exportChildNodes, "SachbearbeiterAby"), '0', 1, 'L', $fill);
+$pdf->Cell(60, 5, "Tel.  :" . getValueForNode($exportChildNodes, "TelAby"), '0', 1, 'L', $fill);
+$pdf->Cell(60, 5, "Fax.  :" . getValueForNode($exportChildNodes, "FaxAby"), '0', 1, 'L', $fill);
+$pdf->Cell(60, 5, "Email.:" . getValueForNode($exportChildNodes, "EmailAby"), '0', 1, 'L', $fill);
+$pdf->SetY($pdf->GetY() - 20);
+$pdf->SetX(120);
+$pdf->SetFont("FreeSans", "B", 12);
+$pdf->MultiCell(70, 10, "Datum: ........................\nUnterschrift: ...............", 0, 2, 'R', 0);
 //Close and output PDF document
 $pdf->Output();
 

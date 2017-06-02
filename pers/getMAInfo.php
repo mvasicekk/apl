@@ -215,6 +215,28 @@ if ($ma !== NULL) {
 		$docsArray[$index]['thumburl'] = substr($doc['url'], 0, $separatorPos) . "/.thumbs/" . substr($doc['filename'], 0, $extPos) . '.jpg';
 	    }
 	}
+	
+	$maDocPath = 'Aby 18 Mitarbeiter -/02 Arbeitsverhaltnis - Pr.smlouvy,dodatky,skonceni PP/08 Slozky_novych_MA/'."$persnrNew"."/";
+	$dokumentyDir = $gdatPath . $maDocPath;
+	$extensions = 'DOCX|docx|DOC|doc|XLSX|xlsx|PDF|pdf|JPG|jpg';
+	$filter = "/.*.($extensions)$/";
+	$dokumentyArray = $a->getFilesForPath($dokumentyDir, $filter);
+	if ($dokumentyArray !== NULL) {
+	    foreach ($dokumentyArray as $index => $doc) {
+		$dokumentyArray[$index]['mtimeF'] = date('d.m.Y H:i:s',$doc['mtime']);
+	    }
+	}
+	
+	$sablonyPath = 'Aby 18 Mitarbeiter -/09 Nove nastupy/APL_sablony_slozkaMA/';
+	$dokumentyDir = $gdatPath . $sablonyPath;
+	$extensions = 'DOCX|docx';
+	$filter = "/.*.($extensions)$/";
+	$sablonyArray = $a->getFilesForPath($dokumentyDir, $filter);
+	if ($sablonyArray !== NULL) {
+	    foreach ($sablonyArray as $index => $doc) {
+		$sablonyArray[$index]['mtimeF'] = date('d.m.Y H:i:s',$doc['mtime']);
+	    }
+	}
 
 
     $attArray = array(
@@ -234,6 +256,10 @@ $returnArray = array(
     'dpersdetail' => $dpersdetail,
     'oeinfo' => $oeInfo,
     'attArray'=>$attArray,
+    'dokumentyArray'=>$dokumentyArray,
+    'maDocPath'=>$maDocPath,
+    'sablonyArray'=>$sablonyArray,
+    'sablonyPath'=>$sablonyPath,
     'sql' => $sql,
 );
 

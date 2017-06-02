@@ -346,9 +346,12 @@ foreach ($persRows as $persnr=>$persnrA){
 	}
     }
     
-    $cal1Svatek = $a->getSvatkyTageCount($von, $bis);
-    if($cal1Svatek>$svatekAllTage){
-	$calSvatekTage = $cal1Svatek-$svatekAllTage;
+    //nahrada za svatek, kdyz nebyl v praci
+    $cal1Svatek = $a->getSvatkyTageCount($von, $bis,$persnr);
+    //echo "cal1svatek=$cal1Svatek<br>";
+    if($cal1Svatek>0){
+	//jeste zkontrolovat zda mel v dane svatky platny prac. pomer
+	$calSvatekTage = $cal1Svatek;
 	//TODO 8 nahradit uvazkem, max. 8 hodin
 	$regelStunden = $a->getRegelarbzeit($persnr);
 	if($regelStunden>8){

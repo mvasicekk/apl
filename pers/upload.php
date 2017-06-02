@@ -9,7 +9,13 @@ $a = AplDB::getInstance();
 
     
 $gdatPath = "/mnt/gdat/Dat/";
-$targetDir = $gdatPath . 'Aby 18 Mitarbeiter -/02 Arbeitsverhaltnis - Pr.smlouvy,dodatky,skonceni PP/08 Slozky_novych_MA/'."$persnr"."/"."$att"."/";
+if($att=='dokument'){
+    $targetDir = AplDB::$GDatPath . 'Aby 18 Mitarbeiter -/02 Arbeitsverhaltnis - Pr.smlouvy,dodatky,skonceni PP/08 Slozky_novych_MA/'."$persnr"."/";
+}
+else{
+    $targetDir = AplDB::$GDatPath . 'Aby 18 Mitarbeiter -/02 Arbeitsverhaltnis - Pr.smlouvy,dodatky,skonceni PP/08 Slozky_novych_MA/'."$persnr"."/"."$att"."/";
+}
+
 
 // 5 minutes execution time
 @set_time_limit(5 * 60);
@@ -50,15 +56,20 @@ function webalize($s, $charlist = NULL, $lower = TRUE)
      }
 
 $fileName = trim(webalize($fileName, '.', FALSE), '.-');
-$fileName = "ma_foto.jpg";
+if($att=='foto'){
+    $fileName = "ma_foto.jpg";
+}
 $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
 
 // pokud existuje, smazu
-if (file_exists($filePath)){
-    unlink($filePath);
-    //i nahled
-    @unlink($targetDir . DIRECTORY_SEPARATOR .'.thumbs/'.$fileName);
+if ($att == 'foto') {
+    if (file_exists($filePath)) {
+	unlink($filePath);
+	//i nahled
+	@unlink($targetDir . DIRECTORY_SEPARATOR . '.thumbs/' . $fileName);
+    }
 }
+
 // Create target dir
 if (!file_exists($targetDir)){
     umask(0000);

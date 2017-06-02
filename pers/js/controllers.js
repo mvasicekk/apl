@@ -136,7 +136,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	hfpremie:false,
 	osobnihodnoceni:false,
 	lohnberechnung:false,
-	identifikatory:false
+	identifikatory:false,
+	lohninfo:false,
+	dokumenty:false
     };
     
     $scope.bemerkung = {};
@@ -152,6 +154,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.hodnoceniArray = ["1","2","3","4","5","6","7","8","9","10"];
     
     $scope.bewFahigkeiten = [];
+    
+    $scope.dokumentyArray = [];
 
 
 //    NgMap.getMap().then(function(map) {
@@ -221,7 +225,39 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 		    $scope.files.splice(ind,1);
 		    //pokud bude pole nulove, obnovim prehled souboru
 		    if($scope.files.length==0){
-			$scope.anlagenButtonClicked(b);
+			//$scope.anlagenButtonClicked(b);
+		    }
+		}
+            });
+        });
+    }
+    
+    $scope.uploadMAFiles = function(files, errFiles,b) {
+        $scope.files = files;
+        $scope.errFiles = errFiles;
+        angular.forEach(files, function(file) {
+            file.upload = Upload.upload({
+                url: './upload.php',
+		data: {file: file, att:'dokument',persnr:$scope.ma.maInfo.PersNr}
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                });
+            }, function (response) {
+                if (response.status > 0)
+                    $scope.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 * 
+                                         evt.loaded / evt.total));
+		//pokud bude progress = 100, odstranim file ze seznamu files
+		if(file.progress==100){
+		    var ind = $scope.files.findIndex(function(v){v.name==file.name});
+		    $scope.files.splice(ind,1);
+		    //pokud bude pole nulove, obnovim prehled souboru
+		    if($scope.files.length==0){
+			refreshMAFiles();
 		    }
 		}
             });
@@ -340,6 +376,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      */
     $scope.dpersFieldChanged = function(field){
 	console.log('dpersFieldChanged: ' + field);
+	
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
 		    './updateDpersField.php',
@@ -349,6 +386,13 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 			field: field
 		    }
 	    ).then(function (response) {
+		// pokud vyhodim a premii, nastavim automaticky a_praemie na 0
+		if(field=='a_praemie'){
+		    if($scope.ma.maInfo[field]=='0'){
+			$scope.ma.maInfo['a_praemie_st'] = '0';
+			$scope.dpersFieldChanged('a_praemie_st');
+		    }
+		}
 	    });
 	}
     }
@@ -856,20 +900,57 @@ $scope.commentClicked = function(e,p){
     $scope.formKeyDown = function($event){
 	console.log($event);
     }
+    
+    $scope.checkExtraPassword = function(){
+	console.log('checkExtraPassword, kontroluji panel '+$scope.checkedPanelId + ', resourceid=' + $scope.checkedResourceId);
+	$http.post(
+		'./resourceSecurity.php',
+		{
+		    panelid: $scope.checkedPanelId,
+		    resourceid:$scope.checkedResourceId,
+		    pass:$scope.extraPassword
+		}
+	    ).then(function (response) {
+		if(response.data.allow===true){
+		    // muzu prepnout panel, uz nebudu kontrolovat heslo, dam resourceid = 0 ( bez parametru )
+		    $scope.panelSwitch(response.data.panelid);
+		}
+	    });
+	$('#extra_password_modal').modal('hide');
+    }
     /**
      * 
      * @param {type} panelid
      * @returns {undefined}
      */
-    $scope.panelSwitch = function (panelid) {
+    $scope.panelSwitch = function (panelid,resourceid=0) {
 	console.log(panelid);
+	
 	for (var prop in $scope.showPanel) {
 	    if( $scope.showPanel.hasOwnProperty( prop ) ) {
+		if($scope.showPanel[prop]==true){
+		    //zapamatovat puvodni
+		    oldpanel = prop;
+		}
 		$scope.showPanel[prop] = false;
 	    } 
 	}
 	
-	$scope.showPanel[panelid] = true;
+	//kontrola extra security
+	if(resourceid>0){
+	    $scope.checkedPanelId = panelid;
+	    $scope.checkedResourceId = resourceid;
+	    $scope.extraPassword='';
+	    
+	    // zobrazit modal dialog s vyzvou k zadani dodatecneho hesla
+	    $('#extra_password_modal').modal();
+	    console.log('ukoncen modal');
+	    $scope.showPanel[oldpanel] = true;
+	}
+	else{
+	    $scope.showPanel[panelid] = true;
+	}
+	
 	
 	//pri zvoleni lohnberechnung nacist pole s udaji
 	if(panelid=='lohnberechnung'){
@@ -1125,6 +1206,53 @@ $scope.commentClicked = function(e,p){
 	}
 
     }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function getTemplateVariables(){
+	$http.post(
+		'./getTemplateVariables.php',
+		{
+		    persnr: $scope.ma.maInfo.PersNr,
+		}
+	).then(function (response) {
+	    $scope.templateVariables = response.data.variables;
+	});
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    function refreshMAFiles(){
+	$http.post(
+		'./getMAInfo.php',
+		{
+		    persnr: $scope.ma.maInfo.PersNr,
+		    //direction: direction,
+		    jenma: $scope.jenma,
+		    austritt60: $scope.austritt60,
+		    oeselected: $scope.oes.oeSelected,
+		    statusarray:    $scope.filt.dstatus,
+		    oearray:    $scope.filt.oearray
+		}
+	).then(function (response) {
+	    if (response.data.ma !== null) {
+		
+		$scope.maDocPath = response.data.maDocPath;
+		$scope.sablonyPath = response.data.sablonyPath;
+
+		if(response.data.dokumentyArray!==null){
+		    $scope.dokumentyArray = response.data.dokumentyArray;
+		}
+		else{
+		    $scope.dokumentyArray = [];
+		}
+	    }
+	});
+    }
     /**
      * 
      * @param {type} persnr
@@ -1155,6 +1283,23 @@ $scope.commentClicked = function(e,p){
 		    $scope.ma.dpersDetail = response.data.dpersdetail[0];
 		}
 		
+		$scope.maDocPath = response.data.maDocPath;
+		$scope.sablonyPath = response.data.sablonyPath;
+
+		if(response.data.dokumentyArray!==null){
+		    $scope.dokumentyArray = response.data.dokumentyArray;
+		}
+		else{
+		    $scope.dokumentyArray = [];
+		}
+		
+		if(response.data.sablonyArray!==null){
+		    $scope.sablonyArray = response.data.sablonyArray;
+		}
+		else{
+		    $scope.sablonyArray = [];
+		}
+		
 		if(response.data.attArray.docsArray!==null){
 		    $scope.ma.maFotoUrl = response.data.attArray.docsArray[0].thumburl;
 		}
@@ -1169,6 +1314,7 @@ $scope.commentClicked = function(e,p){
 		getPersInventar();
 		getPersKvalifikace();
 		getPersIdentifikatory();
+		getTemplateVariables();
 
 		//jen kdyz je panel zobrazen, protoze jinak to moc dlouho trva
 		if($scope.showPanel.lohnberechnung===true){
@@ -1187,6 +1333,26 @@ $scope.commentClicked = function(e,p){
 
     }
 
+    $scope.sablona2Doku = function () {
+	selectedDocs = $scope.sablonyArray.filter(function (item) {
+	    return item.selected;
+	});
+	if (selectedDocs.length > 0) {
+	    return $http.post(
+		    './sablona2Doku.php',
+		    {
+			docs: selectedDocs,
+			persnr: $scope.ma.maInfo.PersNr
+		    }
+	    ).then(function (response) {
+		if (response.data.dokumentyArray !== null) {
+		    $scope.dokumentyArray = response.data.dokumentyArray;
+		} else {
+		    $scope.dokumentyArray = [];
+		}
+	    });
+	}
+    };
     /**
      * 
      * @param {type} direction

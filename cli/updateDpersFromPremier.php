@@ -122,6 +122,10 @@ function updateAplPersnr($zCislo, $field, $value, $oldValue, $table = 'dpers_isp
     if ($table == 'dpers_isp') {
 	// jen v teto tabulce mam isp_cislo, muzu vybirat podle nej
 	$sql = "update `$table` set `$field`='$value' where isp_cislo='$zCislo'";
+//	$ar = $a->query($sql);
+//	if ($ar > 0) {
+//	    echo "\nUPDATEFIELD $field = $value (from $oldValue) for isp_cislo=$zCislo (ar=$ar),table = $table, persnr = $persnr";
+//	}
     } else {
 	// v ostatnich tabulkach mam jako primarni klic persnr, ten si musim zjistit posle isp_cislo
 	$rs = $a->getQueryRows("select persnr from dpers_isp where isp_cislo='$zCislo'");
@@ -193,9 +197,6 @@ if ($res !== NULL) {
 
 
 //seznam lidi z apl ============================================================
-
-
-
 $sql = "select";
 $sql.=" dpers_isp.persnr,";
 $sql.=" isp_cislo,name,";
@@ -215,11 +216,7 @@ $sql.=" ,dpersdetail1_isp.plz_op as tpsc";
 $sql.=" ,dpersdetail1_isp.stat_op as tstat";
 $sql.=" from dpers_isp";
 $sql.=" join  dpersdetail1_isp on dpersdetail1_isp.persnr=dpers_isp.persnr";
-
-
-
 $aplPersDBRows = $a->getQueryRows($sql);
-
 //var_dump($aplPersDBRows);
 $aplPersArray = array();
 if ($aplPersDBRows !== NULL) {
@@ -234,28 +231,82 @@ if ($aplPersDBRows !== NULL) {
     }
 }
 
+//seznam lidi z apl live =======================================================
+$sql = "select";
+$sql.=" dpers.persnr,";
+$sql.=" isp_cislo,name,";
+$sql.=" vorname,";
+$sql.=" geboren,";
+$sql.=" gebort,";
+$sql.=" email,";
+$sql.=" dpersstatus";
+$sql.=" ,dpersdetail1.kom7 as mobil";
+$sql.=" ,dpersdetail1.strasse as kulice";
+$sql.=" ,dpers.komm_ort as kmisto";
+$sql.=" ,dpersdetail1.plz as kpsc";
+$sql.=" ,dpersdetail1.stat as kstat";
+$sql.=" ,dpersdetail1.strasse_op as tulice";
+$sql.=" ,dpersdetail1.ort_op as tmisto";
+$sql.=" ,dpersdetail1.plz_op as tpsc";
+$sql.=" ,dpersdetail1.stat_op as tstat";
+$sql.=" from dpers";
+$sql.=" join  dpersdetail1 on dpersdetail1.persnr=dpers.persnr";
+$aplPersDBRows = $a->getQueryRows($sql);
+//var_dump($aplPersDBRows);
+$aplPersArrayLive = array();
+if ($aplPersDBRows !== NULL) {
+    foreach ($aplPersDBRows as $r) {
+	$zCislo = trim($r['isp_cislo']);
+	if (strlen($zCislo)) {
+	    if (!array_key_exists($zCislo, $aplPersArrayLive)) {
+		$aplPersArrayLive[$zCislo]['pp'] = array();
+	    }
+	    foreach ($r as $fieldName => $fieldValue) {
+		$aplPersArrayLive[$zCislo][$fieldName] = $fieldValue;
+	    }
+	}
+    }
+}
+
+//------------------------------------------------------------------------------
+//
 // projdu podle lidi z premiera
 foreach ($persArray as $zCislo => $persRow) {
     $import = TRUE;
     //interni cislo zamestnance
-    echo "$zCislo:" . $persRow['zPrijmeni'] . ' ' . $persRow['zJmeno'] . ' ' . $persRow['zDatNar'] . ' - ';
+    echo "pers start --------------------------------------------------------------------------------------------------\n";
+    echo "$zCislo:" . $persRow['zPrijmeni'] . ' ' . $persRow['zJmeno'] . ' ' . $persRow['zDatNar'] . "\n";
     // cisla pracovnich pomeru -------------------------------------------------
     $persNr = 0;
+    echo "pp start ==========================================================\n";
     foreach ($persRow['pp'] as $poradi => $ppRow) {
 	$ppCislo = intval($ppRow['ppCislo']);
 	if ($ppCislo == 0) {
 	    echo "zadne cislo prac. pomeru !, pokud je novy - nebudu importovat do APL!\n";
 	    $import = FALSE;
 	} else {
-	    if ($poradi == 0) {
-		// nejnizsi cislo prac. pomeru ( to ze bude prvni je zajisteno -
-		// sort by v dotazu ) bude zaroven persnr ----------------------
+	    if (strlen(trim($ppRow['ppVystup'])) == 0) {
+		// jako osobni cislo vezmu to , ktere nema ukonceny prac pomer
+		// tj. nema vyplneno pp_vystup
 		$persNr = $ppCislo;
 	    }
-	    echo "$ppCislo ,";
+		echo "ppCislo = $ppCislo \n";
+		echo "ppKate = " . $ppRow['ppKate'] . "\n";
+		echo "ppVstup = " . $ppRow['ppVstup'] . "\n";
+		echo "ppVystup = " . $ppRow['ppVystup'] . "\n";
+		echo "dovNarok = " . $ppRow['dovNarok'] . "\n";
+		echo "dovNarokS = " . $ppRow['dovNarokS'] . "\n";
+		echo "dovZusMinr = " . $ppRow['dovZusMinr'] . "\n";
+		echo "uvaDoba = " . $ppRow['uvaDoba'] . "\n";
+		echo "uvaTypMzdy = " . $ppRow['uvaTypMzdy'] . "\n";
+		echo "uvaPlatOd = " . $ppRow['uvaPlatOd'] . "\n";
+		echo "smlDobaUrcita = " . $ppRow['smlDobaUrcita'] . "\n";
+		echo "smlDatVystup = " . $ppRow['smlDatVystup'] . "\n";
 	}
+	echo "pp $poradi ----------------------------------------------------\n";
     }
-    echo " persnr = $persNr";
+    echo " persnr = $persNr\n";
+    echo "pp end ============================================================\n";
 
     // tree full, node add, recursive nodelist()
     // kontrola duplicit !!!
@@ -267,10 +318,20 @@ foreach ($persArray as $zCislo => $persRow) {
 	    updateAplPersnr($zCislo, 'name', $persArray[$zCislo]['zPrijmeni'], $aplPersArray[$zCislo]['name']);
 	}
 	//----------------------------------------------------------------------
+	// prijmeni live--------------------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['name'] != $persArray[$zCislo]['zPrijmeni']) {
+	    updateAplPersnr($zCislo, 'name', $persArray[$zCislo]['zPrijmeni'], $aplPersArray[$zCislo]['name'],"dpers");
+	}
+	//----------------------------------------------------------------------
 	//
 	// jmeno ---------------------------------------------------------------
 	if ($aplPersArray[$zCislo]['vorname'] != $persArray[$zCislo]['zJmeno']) {
 	    updateAplPersnr($zCislo, 'vorname', $persArray[$zCislo]['zJmeno'], $aplPersArray[$zCislo]['vorname']);
+	}
+	//----------------------------------------------------------------------
+	// jmeno live ----------------------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['vorname'] != $persArray[$zCislo]['zJmeno']) {
+	    updateAplPersnr($zCislo, 'vorname', $persArray[$zCislo]['zJmeno'], $aplPersArray[$zCislo]['vorname'],"dpers");
 	}
 	//----------------------------------------------------------------------
 	//
@@ -279,10 +340,18 @@ foreach ($persArray as $zCislo => $persRow) {
 	    updateAplPersnr($zCislo, 'gebort', $persArray[$zCislo]['zMistoNar'], $aplPersArray[$zCislo]['gebort']);
 	}
 	//----------------------------------------------------------------------
+	// misto narozeni live -------------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['gebort'] != $persArray[$zCislo]['zMistoNar']) {
+	    updateAplPersnr($zCislo, 'gebort', $persArray[$zCislo]['zMistoNar'], $aplPersArray[$zCislo]['gebort'],"dpers");
+	}
 	//
 	// email ---------------------------------------------------------------
 	if ($aplPersArray[$zCislo]['email'] != $persArray[$zCislo]['zEmail']) {
 	    updateAplPersnr($zCislo, 'email', $persArray[$zCislo]['zEmail'], $aplPersArray[$zCislo]['email']);
+	}
+	// email live ----------------------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['email'] != $persArray[$zCislo]['zEmail']) {
+	    updateAplPersnr($zCislo, 'email', $persArray[$zCislo]['zEmail'], $aplPersArray[$zCislo]['email'],"dpers");
 	}
 	//----------------------------------------------------------------------
 	//
@@ -299,11 +368,19 @@ foreach ($persArray as $zCislo => $persRow) {
 	if ($aplPersArray[$zCislo]['mobil'] != $tel) {
 	    updateAplPersnr($zCislo, 'kom7', $tel, $aplPersArray[$zCislo]['mobil'], 'dpersdetail1_isp');
 	}
+	// mobil live ----------------------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['mobil'] != $tel) {
+	    updateAplPersnr($zCislo, 'kom7', $tel, $aplPersArray[$zCislo]['mobil'], 'dpersdetail1');
+	}
 	//----------------------------------------------------------------------
 	//
 	// korespondencni adresa, ulice ----------------------------------------
 	if ($aplPersArray[$zCislo]['kulice'] != $persArray[$zCislo]['kUlice']) {
 	    updateAplPersnr($zCislo, 'strasse', $persArray[$zCislo]['kUlice'], $aplPersArray[$zCislo]['kulice'], 'dpersdetail1_isp');
+	}
+	// korespondencni adresa, ulice live -----------------------------------
+	if ($aplPersArrayLive[$zCislo]['kulice'] != $persArray[$zCislo]['kUlice']) {
+	    updateAplPersnr($zCislo, 'strasse', $persArray[$zCislo]['kUlice'], $aplPersArray[$zCislo]['kulice'], 'dpersdetail1');
 	}
 	//----------------------------------------------------------------------
 	//
@@ -311,11 +388,19 @@ foreach ($persArray as $zCislo => $persRow) {
 	if ($aplPersArray[$zCislo]['kmisto'] != $persArray[$zCislo]['kMisto']) {
 	    updateAplPersnr($zCislo, 'komm_ort', $persArray[$zCislo]['kMisto'], $aplPersArray[$zCislo]['kmisto'], 'dpers_isp');
 	}
+	// korespondencni adresa, mesto live -----------------------------------
+	if ($aplPersArrayLive[$zCislo]['kmisto'] != $persArray[$zCislo]['kMisto']) {
+	    updateAplPersnr($zCislo, 'komm_ort', $persArray[$zCislo]['kMisto'], $aplPersArray[$zCislo]['kmisto'], 'dpers');
+	}
 	//----------------------------------------------------------------------
 	//
 	// korespondencni adresa, psc ------------------------------------------
 	if ($aplPersArray[$zCislo]['kpsc'] != $persArray[$zCislo]['kPsc']) {
 	    updateAplPersnr($zCislo, 'plz', $persArray[$zCislo]['kPsc'], $aplPersArray[$zCislo]['kpsc'], 'dpersdetail1_isp');
+	}
+	// korespondencni adresa, psc live -------------------------------------
+	if ($aplPersArrayLive[$zCislo]['kpsc'] != $persArray[$zCislo]['kPsc']) {
+	    updateAplPersnr($zCislo, 'plz', $persArray[$zCislo]['kPsc'], $aplPersArray[$zCislo]['kpsc'], 'dpersdetail1');
 	}
 	//----------------------------------------------------------------------
 	//
@@ -323,11 +408,19 @@ foreach ($persArray as $zCislo => $persRow) {
 	if ($aplPersArray[$zCislo]['kstat'] != $persArray[$zCislo]['kStat']) {
 	    updateAplPersnr($zCislo, 'stat', $persArray[$zCislo]['kStat'], $aplPersArray[$zCislo]['kstat'], 'dpersdetail1_isp');
 	}
+	// korespondencni adresa, stat live ------------------------------------
+	if ($aplPersArrayLive[$zCislo]['kstat'] != $persArray[$zCislo]['kStat']) {
+	    updateAplPersnr($zCislo, 'stat', $persArray[$zCislo]['kStat'], $aplPersArray[$zCislo]['kstat'], 'dpersdetail1');
+	}
 	//----------------------------------------------------------------------
 	//
 	// trvala adresa, ulice ------------------------------------------------
 	if ($aplPersArray[$zCislo]['tulice'] != $persArray[$zCislo]['tUlice']) {
 	    updateAplPersnr($zCislo, 'strasse_op', $persArray[$zCislo]['tUlice'], $aplPersArray[$zCislo]['tulice'], 'dpersdetail1_isp');
+	}
+	// trvala adresa, ulice live -------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['tulice'] != $persArray[$zCislo]['tUlice']) {
+	    updateAplPersnr($zCislo, 'strasse_op', $persArray[$zCislo]['tUlice'], $aplPersArray[$zCislo]['tulice'], 'dpersdetail1');
 	}
 	//----------------------------------------------------------------------
 	//
@@ -335,17 +428,29 @@ foreach ($persArray as $zCislo => $persRow) {
 	if ($aplPersArray[$zCislo]['tmisto'] != $persArray[$zCislo]['tMisto']) {
 	    updateAplPersnr($zCislo, 'ort_op', $persArray[$zCislo]['tMisto'], $aplPersArray[$zCislo]['tmisto'], 'dpersdetail1_isp');
 	}
+	// trvala adresa, mesto live -------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['tmisto'] != $persArray[$zCislo]['tMisto']) {
+	    updateAplPersnr($zCislo, 'ort_op', $persArray[$zCislo]['tMisto'], $aplPersArray[$zCislo]['tmisto'], 'dpersdetail1');
+	}
 	//----------------------------------------------------------------------
 	//
 	// trvala adresa, psc --------------------------------------------------
 	if ($aplPersArray[$zCislo]['tpsc'] != $persArray[$zCislo]['tPsc']) {
 	    updateAplPersnr($zCislo, 'plz_op', $persArray[$zCislo]['tPsc'], $aplPersArray[$zCislo]['tpsc'], 'dpersdetail1_isp');
 	}
+	// trvala adresa, psc live ---------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['tpsc'] != $persArray[$zCislo]['tPsc']) {
+	    updateAplPersnr($zCislo, 'plz_op', $persArray[$zCislo]['tPsc'], $aplPersArray[$zCislo]['tpsc'], 'dpersdetail1');
+	}
 	//----------------------------------------------------------------------
 	//
 	// trvala adresa, stat -------------------------------------------------
 	if ($aplPersArray[$zCislo]['tstat'] != $persArray[$zCislo]['tStat']) {
 	    updateAplPersnr($zCislo, 'stat_op', $persArray[$zCislo]['tStat'], $aplPersArray[$zCislo]['tstat'], 'dpersdetail1_isp');
+	}
+	// trvala adresa, stat live --------------------------------------------
+	if ($aplPersArrayLive[$zCislo]['tstat'] != $persArray[$zCislo]['tStat']) {
+	    updateAplPersnr($zCislo, 'stat_op', $persArray[$zCislo]['tStat'], $aplPersArray[$zCislo]['tstat'], 'dpersdetail1');
 	}
 	//----------------------------------------------------------------------
 	//
@@ -357,6 +462,16 @@ foreach ($persArray as $zCislo => $persRow) {
 
 	if (date('Y-m-d', strtotime($geboren)) != date('Y-m-d', strtotime($zDatNar))) {
 	    updateAplPersnr($zCislo, 'geboren', $zDatNar, $geboren);
+	}
+	
+	// datum narozeni live -------------------------------------------------
+	// prevedu jen Y-m-d pomoci date
+
+	$geboren = $aplPersArrayLive[$zCislo]['geboren'] == '0000-00-00 00:00:00' ? NULL : $aplPersArrayLive[$zCislo]['geboren'];
+	$zDatNar = $persArray[$zCislo]['zDatNar'] == '0000-00-00 00:00:00' ? NULL : $persArray[$zCislo]['zDatNar'];
+
+	if (date('Y-m-d', strtotime($geboren)) != date('Y-m-d', strtotime($zDatNar))) {
+	    updateAplPersnr($zCislo, 'geboren', $zDatNar, $geboren,"dpers");
 	}
 	//----------------------------------------------------------------------
 	// pri update se podivam i na pracovni pomery
@@ -481,7 +596,7 @@ foreach ($persArray as $zCislo => $persRow) {
 		}
 	    }
 	    if ($import === TRUE) {
-		// testy prosly, zakladam dpers
+		// testy prosly, zakladam dpers_isp
 		echo " INSERTNEW - zakladam !";
 		$sql_insert = "insert into dpers_isp";
 		$sql_insert.=" (";
@@ -503,8 +618,33 @@ foreach ($persArray as $zCislo => $persRow) {
 		$sql_insert.=" 'BEWERBER'";
 		$sql_insert.=" )";
 		$iid = $a->insert($sql_insert);
+		echo " (dpers_isp,$iid)";
+		
+		// testy prosly, zakladam dpers
+		echo " INSERTNEW - zakladam !";
+		$sql_insert = "insert into dpers";
+		$sql_insert.=" (";
+		$sql_insert.=" persnr,";
+		$sql_insert.=" isp_cislo,";
+		$sql_insert.=" name,";
+		$sql_insert.=" vorname,";
+		$sql_insert.=" geboren,";
+		$sql_insert.=" gebort,";
+		$sql_insert.=" dpersstatus";
+		$sql_insert.=" )";
+		$sql_insert.=" values(";
+		$sql_insert.=" '$persNr',";
+		$sql_insert.=" '$zCislo',";
+		$sql_insert.=" '" . $persRow['zPrijmeni'] . "',";
+		$sql_insert.=" '" . $persRow['zJmeno'] . "',";
+		$sql_insert.=" '" . $persRow['zDatNar'] . "',";
+		$sql_insert.=" '" . $persRow['zMistoNar'] . "',";
+		$sql_insert.=" 'BEWERBER'";
+		$sql_insert.=" )";
+		$iid = $a->insert($sql_insert);
 		echo " (dpers,$iid)";
-		// testy prosly, zakladam dpersdetail1
+		
+		// testy prosly, zakladam dpersdetail1_isp
 		$sql_insert = "insert into dpersdetail1_isp";
 		$sql_insert.=" (";
 		$sql_insert.=" persnr";
@@ -513,9 +653,34 @@ foreach ($persArray as $zCislo => $persRow) {
 		$sql_insert.=" '$persNr'";
 		$sql_insert.=" )";
 		$iid = $a->insert($sql_insert);
+		echo " (dpersdetail1_isp,$iid)";
+		
+		// testy prosly, zakladam dpersdetail1
+		$sql_insert = "insert into dpersdetail1";
+		$sql_insert.=" (";
+		$sql_insert.=" persnr";
+		$sql_insert.=" )";
+		$sql_insert.=" values(";
+		$sql_insert.=" '$persNr'";
+		$sql_insert.=" )";
+		$iid = $a->insert($sql_insert);
 		echo " (dpersdetail1,$iid)";
-		// testy prosly, zakladam dpersbewerber
+		
+		// testy prosly, zakladam dpersbewerber_isp
 		$sql_insert = "insert into dpersbewerber_isp";
+		$sql_insert.=" (";
+		$sql_insert.=" persnr,";
+		$sql_insert.=" bewerbe_datum";
+		$sql_insert.=" )";
+		$sql_insert.=" values(";
+		$sql_insert.=" '$persNr'";
+		$sql_insert.=" ,'" . $persRow['zPsTime'] . "'";
+		$sql_insert.=" )";
+		$iid = $a->insert($sql_insert);
+		echo " (dpersbewerber_isp,$iid)";
+		
+		// testy prosly, zakladam dpersbewerber
+		$sql_insert = "insert into dpersbewerber";
 		$sql_insert.=" (";
 		$sql_insert.=" persnr,";
 		$sql_insert.=" bewerbe_datum";
@@ -532,6 +697,7 @@ foreach ($persArray as $zCislo => $persRow) {
 	    echo " NOPERSNR - nevkladam noveho MA s zCislo=$zCislo, protoze neznam jeho persnr (nema prac pomer)";
 	}
     }
+    echo "pers end  --------------------------------------------------------------------------------------------------\n";
     echo "\n";
 }
 // ukonceni synchronizace do logu

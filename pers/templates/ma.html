@@ -232,9 +232,13 @@
 				    <a ng-click="panelSwitch('identifikatory')" role="button" href="">identifikátory</a>
 				    <apl-help el="hIArray['identifikatory_switch_item']" showadmininfo="showhI"></apl-help>
 				</li>
+				<li ng-show="securityInfo.showArray['lohninfo_switch_item']">
+				    <a ng-click="panelSwitch('lohninfo')" role="button" href="">lohninfo</a>
+				    <apl-help el="hIArray['lohninfo_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
 				<li role="separator" class="divider"></li>
 				<li ng-show="securityInfo.showArray['hfpremie_switch_item']">
-				    <a ng-click="panelSwitch('hfpremie')" role="button" href="">HF Premie</a>
+				    <a ng-click="panelSwitch('hfpremie',hIArray['hfpremie_switch_item'][0].id)" role="button" href="">HF Premie</a>
 				    <apl-help el="hIArray['hfpremie_switch_item']" showadmininfo="showhI"></apl-help>
 				</li>
 				<li ng-show="securityInfo.showArray['osobnihodnoceni_switch_item']">
@@ -262,6 +266,10 @@
 				<button type="button" ng-click="panelSwitch('inventar')"  class="btn btn-info" role="button" href="">inventar</button>
 				<apl-help el="hIArray['inventar_btn']" showadmininfo="showhI"></apl-help>
 			    </div>
+			    <div ng-show="securityInfo.showArray['dokumenty_switch_item']"  class="btn-group" role="group">
+				<button type="button" ng-click="panelSwitch('dokumenty')"  class="btn btn-info" role="button" href="">dokumenty</button>
+				<apl-help el="hIArray['dokumenty_switch_item']" showadmininfo="showhI"></apl-help>
+			    </div>
 			</div>
 		    </div>
 		    
@@ -278,17 +286,19 @@
 			    <div class="row">
 				<div class="col-sm-4">
 				    <h4>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <span ng-show="ma.maInfo.abkrz.length>0">({{ma.maInfo.abkrz}})</span>
-					<small><span class="label label-success">{{ma.maInfo.dpersstatus}}</span></small>
+					<small><span ng-show="!securityInfo.showArray['dpersstatus1']" class="label label-success">{{ma.maInfo.dpersstatus}}</span></small>
+					<select style='width:33%;' title="status" ng-show="securityInfo.showArray['dpersstatus1']" ng-options="option for option in dpersstatuses" ng-model="ma.maInfo.dpersstatus" class="form-control input-xs" ng-change="dpersFieldChanged('dpersstatus')"></select>
+					<apl-help el="hIArray['dpersstatus1']" showadmininfo="showhI"></apl-help>
 				    </h4>
 				    <span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span>
-
+				    
 				    <!--obrazek -------------------------------> 
 <!--				    <img style="width:120px;" class="img-thumbnail" ng-if="ma.maFotoUrl!==null && isEditor" ng-src="{{ma.maFotoUrl}}" />
 				    <div ng-if="ma.maFotoUrl==null  && isEditor">
 				    <div>
 					<button ngf-select="uploadFiles1($files,$invalidFiles,selectedButton)" type="button" class="btn btn-xs btn-success" aria-label="Left Align">
 					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>foto
-				    </button>
+					</button>
 				    <div ng-if="files.length>0">
 					<ul class="list-group">
 					    <li class="list-group-item" ng-repeat="f in files" style="font:smaller">{{f.name}}
@@ -1016,6 +1026,238 @@
 			</div>
 		    </div>
 		</div>
+		
+		<!--panel lohninfo ----------------------------------------- -->
+		<div ng-show="showPanel.lohninfo" id="lohninfo">
+		    <div class="panel panel-success">
+			<div class="panel-heading">
+			    Lohninfo
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['lohninfo_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="col-sm-9">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>Premie</legend>
+					    <div class="row">
+						<!--leistungspremie-->
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.premie_za_vykon"   ng-change="dpersFieldChanged('premie_za_vykon')">Leistungspraemie
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['premie_za_vykon']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<!--qpremie_akkord-->
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.qpremie_akkord"   ng-change="dpersFieldChanged('qpremie_akkord')">QPraemie-Akkord
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['qpremie_akkord']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<!--qtl premie-->
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.premie_za_3_mesice"   ng-change="dpersFieldChanged('premie_za_3_mesice')">QuartPraemie
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['premie_za_3_mesice']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<!--a premie-->
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.a_praemie"   ng-change="dpersFieldChanged('a_praemie')">A-Praemie
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['a_praemie']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+					    </div>
+					    <div class="row">
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.bewertung"   ng-change="dpersFieldChanged('bewertung')">Bewertung
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['bewertung']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.qpremie_zeit"   ng-change="dpersFieldChanged('qpremie_zeit')">QPraemie-Zeit
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['qpremie_zeit']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.MAStunden"   ng-change="dpersFieldChanged('MAStunden')">MAStunden zaehlen
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['MAStunden']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<div class="checkbox col-sm-3">
+						    <label>
+							<input ng-disabled="ma.maInfo.a_praemie=='0'" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.a_praemie_st"   ng-change="dpersFieldChanged('a_praemie_st')">A-Praemie-St
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['a_praemie_st']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+					    </div>
+					</fieldset>
+				    </div>
+				</div>
+				<div class="col-sm-3">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>Adaptace</legend>
+					    <div class="row">
+						<div class="checkbox col-sm-12">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.einarb_zuschlag"   ng-change="dpersFieldChanged('einarb_zuschlag')">Adaptace
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['einarb_zuschlag']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						
+					    </div>
+					    <div class="row">
+						<label for="adaptace_bis" class="col-sm-2 control-label">bis</label>
+						<div class="col-sm-10">
+						    <input ng-model="ma.maInfo.adaptace_bis" ui-date="dateOptions" type="text" class="form-control" id="adaptace_bis" placeholder="adaptace bis"  ng-change="dpersFieldChanged('adaptace_bis')">
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['adaptace_bis']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						
+					    </div>
+					</fieldset>
+				    </div>
+				</div>
+			    </div>
+			    <div class="row">
+				<div class="col-sm-12">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>Hodinova mzda, leistfaktor</legend>
+					    <div class="row">
+						<div class="form-group">
+						    <label for="lohnfaktor" class="control-label col-sm-2">Zeitlohn [Kč/hod]</label>
+						    <div class="col-sm-1">
+							<input ng-model="ma.maInfo.lohnfaktor" type="text" class="form-control text-right" id="lohnfaktor" placeholder="hodinova mzda"  ng-change="dpersFieldChanged('lohnfaktor')">
+						    </div>
+						</div>
+						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['lohnfaktor_input']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						<div class="form-group">
+						    <label for="leistfaktor" class="control-label col-sm-2">Leist.faktor</label>
+						    <div class="col-sm-1">
+							<input ng-model="ma.maInfo.leistfaktor" type="text" class="form-control text-right" id="leistfaktor" placeholder="leistungsfaktor"  ng-change="dpersFieldChanged('leistfaktor')">
+						    </div>
+						</div>
+						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['leistfaktor_input']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+					    </div>
+					</fieldset>
+				    </div>
+				</div>
+			    </div>	
+			</div>
+		    </div>
+		</div>
+		
+		<!--panel dokumenty ----------------------------------------- -->
+		<div ng-show="showPanel.dokumenty" id="dokumenty">
+		    <div class="panel panel-success">
+			<div class="panel-heading">
+			    Dokumenty
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['dokumenty_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="col-sm-12">
+				    <div>
+					<button ngf-select="uploadMAFiles($files,$invalidFiles,selectedButton)" type="button" class="btn btn-small btn-info" aria-label="Left Align">
+					    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>přidat dokument
+					</button>
+					<div ng-if="files.length>0">
+					    <ul class="list-group">
+						<li class="list-group-item" ng-repeat="f in files" style="font:smaller">{{f.name}}
+						    <div class="progress">
+						    <div aria-valuenow="{{f.progress}}" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar-warning" role="progressbar" style="width: {{f.progress}}%">
+						    {{f.progress}} %
+						    </div>
+						    </div>
+						</li>
+					    </ul>
+					</div>
+				    </div>
+				</div>
+				<div class="col-sm-12">
+					<fieldset>
+					    <legend>MA Dokumenty</legend>
+					    <table class="table table-condensed table-striped table-hover">
+						<caption>{{maDocPath}}</caption>
+						<thead>
+						    <tr>
+							<th>jmeno souboru</th>
+							<th>cas posl. zmeny</th>
+							<th class="text-right">velikost</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr ng-repeat="d in dokumentyArray">
+							<td><a ng-href="{{d.url}}">{{d.filename}}</a></td>
+							<td>{{d.mtimeF}}</td>
+							<td class="text-right">{{d.size}}</td>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
+				</div>
+				<div class="col-sm-12">
+					<fieldset>
+					    <legend>šablony</legend>
+					    <table class="table table-condensed table-striped table-hover">
+						<caption><button ng-click="sablona2Doku()" type="button" class="btn btn-small btn-info">šablona->pers. Dokument</button>&nbsp;{{sablonyPath}}</caption>
+						<thead>
+						    <tr>
+							<th>výběr</th>
+							<th>jmeno souboru</th>
+							<th>cas posl. zmeny</th>
+							<th class="text-right">velikost</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr ng-repeat="d in sablonyArray">
+							<td><input type="checkbox" ng-model="d.selected"/></td>
+							<td><a ng-href="{{d.url}}">{{d.filename}}</a></td>
+							<td>{{d.mtimeF}}</td>
+							<td class="text-right">{{d.size}}</td>
+						    </tr>
+						</tbody>
+					    </table>
+					</fieldset>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row">
+			<div class="col-sm-12">
+			    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#variablesHelp" aria-expanded="false" aria-controls="variablesHelp">
+			    zobrazit promenne
+			    </button>
+			    <div class="collapse" id="variablesHelp">
+				<div class="well">
+				    <table class="table table-condensed table-striped table-hover">
+					<thead>
+					    <tr>
+						<th>promenna</th>
+						<th>popis</th>
+						<th>hodnota</th>
+					    </tr>
+					</thead>
+					<tbody>
+					    <tr ng-repeat="(varname,v) in templateVariables">
+						<td><span>${</span>{{varname}}<span>}</span></td>
+						<td>{{v.label}}</td>
+						<td>{{v.value}}</td>
+					    </tr>
+					</tbody>
+				    </table>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+
 		<!-------------------------------------------------------------------->
 		<!--panel kvalifikace-->
 		<div ng-show="showPanel.kvalifikace" id="kvalifikace">
@@ -1504,9 +1746,9 @@
 								<button tabindex="-1" ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked && isAdmin == true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
 								    <span class="text-success glyphicon glyphicon-asterisk"></span>
 								</button>
-								<button tabindex="-1" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked" class="btn btn-default no-print" title="{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
+								<button ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === false" tabindex="-1" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked" class="btn btn-default no-print" title="{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
 								    <!--<span ng-if="p.locked" class="glyphicon glyphicon-lock"></span>-->
-								    <span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === true" class="text-danger glyphicon glyphicon-lock"></span>
+								    <!--<span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === true" class="text-danger glyphicon glyphicon-lock"></span>-->
 								    <span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === false" class="text-success glyphicon glyphicon-lock"></span>
 								    <!--<span ng-if="!p.locked" class="glyphicon glyphicon-unlock"></span>-->
 								</button>
@@ -1536,4 +1778,38 @@
 	    </div>
 	</div>
     </form>
+
+<!-- Modal pro heslo-->
+<div class="modal fade" id="extra_password_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Nenéé zlatíčko, zvýšená ostraha - chci ještě další heslo</h4>
+      </div>
+      <div class="modal-body">
+	  <div class="row">
+	      <div class="col-sm-6">
+		  <img src="img/wtf.jpg" alt="co to ?" class="img-rounded img-responsive">
+	      </div>
+	      <div class="col-sm-6">
+		  <div class="form-group">
+		    <label for="exampleInputPassword1">Heslo</label>
+		    <input type="password" class="form-control" id="extraPassword" ng-model="extraPassword" placeholder="Password">
+		  </div>
+		  <div class="alert alert-info">
+		      Z důvodu citlivosti dále zobrazovaných údajů je nutné zadat znovu heslo. Po zobrazení následujících údajů nenechávejte
+		       počítač volně přístupný nebo se odhlašte, přepněte na jiné zobrazení ....
+		  </div>
+	      </div>
+	  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">zavřít</button>
+        <button type="button" ng-click="checkExtraPassword()" class="btn btn-primary">ověřit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!------------------------------------------------------------------------------------>
 </div>

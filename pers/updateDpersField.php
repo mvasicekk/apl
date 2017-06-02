@@ -24,6 +24,13 @@ if($field=='bewerbe_datum'){
     }
 }
 
+if($field=='adaptace_bis'){
+    $value1 = $value!==NULL?date('Y-m-d',strtotime($value)):NULL;
+    if(strtotime($value)!==FALSE || $value==NULL){
+	$valid = TRUE;
+    }
+}
+
 if($field=='geboren'){
     $value1 = $value!==NULL?date('Y-m-d',strtotime($value)):NULL;
     if(strtotime($value)!==FALSE || $value==NULL){
@@ -43,29 +50,37 @@ if($field=='email'){
     $valid = TRUE;
 }
 
-//if($field=='bewertung1'||$field=='bewertung2'||$field=='bewertung3'){
-//    $value1 = intval($value);
-//    if($value1>0){
-//	$valid = TRUE;
-//    }
-//}
-//
-//if($field=='oe_voraussichtlich'){
-//    $value1 = strlen(trim($value))>0?trim($value):NULL;
-//    $valid = TRUE;
-//}
-//
-//if($field=='bemerkung_sonst'||$field=='bemerkung_faehigkeiten'){
-//    $value1 = strlen(trim($value))>0?trim($value):NULL;
-//    $valid = TRUE;
-//}
-//
-//if($field=='status_fur_aby_id'){
-//    $value1 = intval($value);
-//    if($value1>0){
-//	$valid = TRUE;
-//    }
-//}
+if($field=='dpersstatus'){
+    $value1 = trim($value);
+    $valid = TRUE;
+}
+
+if($field=='lohnfaktor'){
+    $value1 = intval(trim($value));
+    if($value1>=0 && $value<1000)
+    $valid = TRUE;
+}
+
+if($field=='leistfaktor'){
+    $value1 = floatval(strtr(trim($value), ',', '.'));
+    if($value1>=0 && $value<1000)
+    $valid = TRUE;
+}
+
+if(
+	$field=='premie_za_vykon'
+	||$field=='qpremie_akkord'
+	||$field=='premie_za_3_mesice'
+	||$field=='a_praemie'
+	||$field=='bewertung'
+	||$field=='qpremie_zeit'
+	||$field=='MAStunden'
+	||$field=='a_praemie_st'
+	||$field=='einarb_zuschlag')
+    {
+    $value1 = strlen(trim($value))>0?trim($value):NULL;
+    $valid = TRUE;
+}
 
 
 if(($valid===TRUE) && ($persnr>0)){
