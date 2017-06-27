@@ -179,7 +179,8 @@ class AplDB {
 	"stunden"=>0,
 	"tage"=>0,
 	"betrag"=>1,
-	"aktiv"=>0
+	"betragDB"=>"osobniHodnoceniBetrag",
+	"aktiv"=>1
     ),
     "324"=>array(
 	"popis"=>"příplatek k normě",
@@ -1022,26 +1023,30 @@ class AplDB {
 		    $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'] = $adaptLohnSum;
 
 		    //test jestli mu adaptace konci pred koncem mesice, tj. od konce adaptace do konce mesice mu spocitam vykon normalne (ukolove)
-		    if ($adaptaceBisTime < $bisTime || $zkusebnidobaTime < $bisTime) {
+		    if (($adaptaceBisTime < $bisTime || $zkusebnidobaTime < $bisTime)&&($vonTime<$zkusebnidobaTime)) {
 			//adaptace konci pred koncem mesice
 			//odkdy skoncila adaptace?
 			$konecAdaptaceTime = min(array($adaptaceBisTime, $zkusebnidobaTime));
-			$leistArray = $this->getPersGrundLeistung($persnr, date('Y-m-d', $konecAdaptaceTime), $bis);
-			$lohnArray['personen'][$persnr]['monatlohnRest'] = $leistArray;
-
+			$leistArray = $this->getPersGrundLeistung($persnr, date('Y-m-d', $konecAdaptaceTime+(24 * 60 * 60)), $bis);
+			$lohnArray['personen'][$persnr]['monatlohnRest']['oes'] = $leistArray;
 			if ($leistArray !== NULL) {
-			    $vzaby = $leistArray[0]['vzaby'];
-			    $vzaby_akkord = $leistArray[0]['vzaby_akkord'];
-			    $vzaby_zeit = $vzaby - $vzaby_akkord;
-			    $vzaby_akkord_kc = $leistArray[0]['vzaby_akkord_kc'];
-			    //$vzaby_zeit_kc = $vzaby_zeit * $perslohnfaktor;
-			    $vzaby_zeit_kc = $vzaby_zeit * $perslohnfaktor * $leistFaktor;
-			} else {
-			    $vzaby = 0;
-			    $vzaby_akkord = 0;
-			    $vzaby_zeit = 0;
-			    $vzaby_akkord_kc = 0;
-			    $vzaby_zeit_kc = 0;
+			    $sumVzaby = 0;
+			    $sumVzabyAkkord = 0;
+			    $sumVzabyZeit = 0;
+			    $sumVzabyAkkordKc = 0;
+			    $sumVzabyZeitKc = 0;
+			    foreach ($leistArray as $lA) {
+				$sumVzaby += $lA['vzaby'];
+				$sumVzabyAkkord += $lA['vzaby_akkord'];
+				$sumVzabyZeit += ($lA['vzaby'] - $lA['vzaby_akkord']);
+				$sumVzabyAkkordKc += $lA['vzaby_akkord_kc'];
+				$sumVzabyZeitKc += ($lA['vzaby'] - $lA['vzaby_akkord']) * $perslohnfaktor * $leistFaktor;
+			    }
+			    $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzaby'] = $sumVzaby;
+			    $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyAkkord'] = $sumVzabyAkkord;
+			    $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyZeit'] = $sumVzabyZeit;
+			    $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyAkkordKc'] = $sumVzabyAkkordKc;
+			    $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyZeitKc'] = $sumVzabyZeitKc;
 			}
 		    }
 		}
@@ -1208,7 +1213,7 @@ class AplDB {
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastkaFinal'] = round($s*$koef);
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['anwStd'] = $anwStd;
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['ganzMonatNormMinuten'] = $ganzMonatNormMinuten;
-		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['koeficient'] = $koef;
+		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['koeficient'] = round($koef,2);
 		}
 	    }
 	}
@@ -3479,30 +3484,97 @@ class AplDB {
 
     /**
      * 
+     */
+    public function getOsobniHodnoceniKoeficientProPersNr($persnr,$von,$bis){
+	//vytvorim si pole roku mesicu
+	    $start = strtotime($von);
+	    $end = strtotime($bis);
+	    $step = 24 * 60 * 60;
+	    for ($t = $start; $t <= $end; $t+=$step) {
+		$jm = date('Y-m', $t);
+		$jahrMonatArray[$jm] += 1;
+	    }
+	    
+	    $koeficientyArray = array();
+	    
+	    foreach ($jahrMonatArray as $jm => $pocet) {
+		$von = $jm."-01";
+		$pocetDnu = cal_days_in_month(CAL_GREGORIAN, substr($jm, strpos($jm, "-")+1), substr($jm, 0, 4));
+		$bis = $jm."-$pocetDnu";
+		$pracKalDny = $this->getArbTageBetweenDatums($von, $bis);
+		$ganzMonatNormMinuten = $pracKalDny * 8 * 60;
+		$sql = "";
+		$sql.=" select";
+		$sql.="     dpers.persnr,";
+		$sql.="     sum(if(dtattypen.oestatus='a',dzeit.`Stunden`,0)) as sumstundena";
+		$sql.=" from dpers";
+		$sql.=" join dzeit on dzeit.PersNr=dpers.PersNr";
+		$sql.=" join dtattypen on dzeit.tat=dtattypen.tat";
+		$sql.=" join calendar on calendar.datum=dzeit.Datum";
+		$sql.=" where";
+		$sql.=" (";
+		$sql.="     (dzeit.`Datum` between '$von' and '$bis')";
+		$sql.="     and (dpers.persnr='$persnr')";
+		$sql.=" )";
+		$sql.=" group by ";
+		$sql.="     dpers.`PersNr`";
+		$rs = $this->getQueryRows($sql);
+		$anwStd = 0;
+		if($rs!==NULL){
+		    $anwStd = floatval($rs[0]['sumstundena']);
+		}
+		$k = $ganzMonatNormMinuten!=0?round(($anwStd*60)/$ganzMonatNormMinuten,2):0;
+		if($k>1){
+		    $k = 1;
+		}
+		$koeficientyArray[$jm] = $k;
+	    }
+	    return $koeficientyArray;
+    }
+    /**
+     * 
      * @param type $persnr
      * @param type $von
      * @param type $bis
      * @return type
      */
-    public function getOsobniHodnoceniProPersNr($persnr, $von, $bis) {
+    public function getOsobniHodnoceniProPersNr($persnr, $von, $bis,$oe=NULL) {
 
 	$vystup = NULL;
 
-	$sql = " select";
-	$sql.=" dpers.PersNr,";
-	$sql.=" dtattypen.oe,";
-	$sql.=" hodnoceni_faktory_oe.id_faktor,";
-	$sql.=" hodnoceni_osobni_faktory.id_firma_faktor,";
-	$sql.=" hodnoceni_osobni_faktory.vaha,";
-	$sql.=" hodnoceni_osobni_faktory.popis";
-	$sql.=" from dpers";
-	$sql.=" join dtattypen on dtattypen.tat=dpers.regeloe";
-	$sql.=" join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
-	$sql.=" join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
-	$sql.=" where";
-	$sql.="     dpers.PersNr='$persnr'";
-	$sql.=" order by";
-	$sql.=" hodnoceni_osobni_faktory.sort";
+	if ($oe == NULL) {
+	    $sql = " select";
+	    $sql .= " dpers.PersNr,";
+	    $sql .= " dtattypen.oe,";
+	    $sql .= " hodnoceni_faktory_oe.id_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.vaha,";
+	    $sql .= " hodnoceni_osobni_faktory.popis";
+	    $sql .= " from dpers";
+	    $sql .= " join dtattypen on dtattypen.tat=dpers.regeloe";
+	    $sql .= " join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
+	    $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+	    $sql .= " where";
+	    $sql .= "     dpers.PersNr='$persnr'";
+	    $sql .= " order by";
+	    $sql .= " hodnoceni_osobni_faktory.sort";
+	}
+	else{
+	    $sql = " select";
+	    $sql .= " dpers.PersNr,";
+	    $sql .= " dtattypen.oe,";
+	    $sql .= " hodnoceni_faktory_oe.id_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.vaha,";
+	    $sql .= " hodnoceni_osobni_faktory.popis";
+	    $sql .= " from dpers";
+	    $sql .= " join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe='$oe'";
+	    $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+	    $sql .= " where";
+	    $sql .= "     dpers.PersNr='$persnr'";
+	    $sql .= " order by";
+	    $sql .= " hodnoceni_osobni_faktory.sort";
+	}
 
 	$faktory = $this->getQueryRows($sql);
 
@@ -3537,6 +3609,8 @@ class AplDB {
 		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_osobni'] = $hodnoceniOsobni;
 		}
 	    }
+	    // TODO
+	    // a jeste projit jiz zadane hodnoceni, ktere neodpovida zadanemu oe nebo regeloe
 	}
 	return $vystup;
     }
@@ -3607,6 +3681,59 @@ class AplDB {
 
     /**
      * 
+     * @param type $oes
+     */
+    public function getOEInfoForOES($oes){
+	$sql.=" select doe.oe,doe.beschreibung_cz ";
+	$sql.=" from doe";
+	$sql.=" join dtattypen on dtattypen.oe=doe.oe";
+	$sql.=" where";
+	$sql.=" dtattypen.tat='$oes'";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    return $rs[0];
+	}
+	else{
+	    return NULL;
+	}
+    }
+/**
+ * 
+ */
+public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat){
+    $von = sprintf("%04d-%02d-%02d",$jahr,$monat,1);
+    $days = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
+    $bis = sprintf("%04d-%02d-%02d",$jahr,$monat,$days);
+    $sql.=" select persnr from hodnoceni_osobni";
+    $sql.=" where";
+    $sql.=" persnr between '$persvon' and '$persbis'";
+    $sql.=" and datum between '$von' and '$bis'";
+    $sql.=" group by persnr";
+    return $this->getQueryRows($sql);
+}
+    /**
+     * 
+     * @param type $id_firma_faktor
+     */
+    public function getHodnoceniFiremniFaktor($id_firma_faktor) {
+	$sql.=" select ";
+	$sql.=" hodnoceni_firemni_faktory.id,";
+	$sql.=" hodnoceni_firemni_faktory.popis,";
+	$sql.=" hodnoceni_firemni_faktory.cil_hodnoceni";
+	$sql.=" from hodnoceni_firemni_faktory";
+	$sql.=" where";
+	$sql.=" hodnoceni_firemni_faktory.id='$id_firma_faktor'";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    $r = $rs[0];
+	    return $r;
+	}
+	else{
+	    return NULL;
+	}
+    }
+    /**
+     * 
      * @param type $id_firma_faktor
      * @param type $datum
      */
@@ -3624,7 +3751,7 @@ class AplDB {
 	}
 	return $hodnoceni;
     }
-
+    
     /**
      * 
      * @param type $persnr
@@ -6906,7 +7033,7 @@ class AplDB {
      * @return array asoc. pole array("persnr"=>array("apremie"=>hodnota,"apremie_flag"=>"[V!]"))
      */
     public function getPersnrApremieArray($monat, $jahr, $persvon, $persbis, $stammOE, $calculateIfFlagNotTrue = TRUE) {
-// vytahnu paramety z _GET ( z getparameters.php )
+
 	$stammOE = strtoupper(strtr(trim($stammOE), '*', '%'));
 	$persVon = $persvon;
 	$persBis = $persbis;

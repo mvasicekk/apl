@@ -14,6 +14,15 @@ $(document).ready(function(){
 	}
     });
     
+    $('div.buttony').each(function(index){
+	//zjistim pocet viditelnych inputu
+	var visibleInputs = $(this).has('input:button:visible');
+	var visibleInputsCount = visibleInputs.length;
+	if(visibleInputsCount==0){
+	    $(this).hide();
+	}
+    });
+    
     // graf
     makeGraph(31);
 });

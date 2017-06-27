@@ -10,7 +10,7 @@
     <div class="page-header">
 	<div class="row">
 	    <div class="col-sm-12">
-		<h4>Hodnocení - firemní</h4>
+		<h4>Bewertung - Firma</h4>
 		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	</div>
@@ -71,7 +71,8 @@
 			    </th>
 			    <th class="text-right">{{f.cil_hodnoceni}}</th>
 			    <td ng-repeat="jm in jmArray" ng-class="{'bg-success':f.cil_hodnoceni<=firmaFaktorMonat[f.id][jm].hodnoceni,'bg-warning':f.cil_hodnoceni>firmaFaktorMonat[f.id][jm].hodnoceni,'bg-danger':6>=firmaFaktorMonat[f.id][jm].hodnoceni}">
-				<input ng-change="updateHodnoceniFirma(firmaFaktorMonat[f.id][jm])" ng-min="0" ng-max="9"  min="0" max="9" ng-model="firmaFaktorMonat[f.id][jm].hodnoceni" type="text" class="form-control text-right input-sm" id="ffm_{{f.id}}_{{jm}}" placeholder="hodnoceni">
+				<input ng-disabled="!securityInfo.editArray['hodnoceni_input']" ng-change="updateHodnoceniFirma(firmaFaktorMonat[f.id][jm])" ng-min="0" ng-max="9"  min="0" max="9" ng-model="firmaFaktorMonat[f.id][jm].hodnoceni" type="text" class="form-control text-right input-sm" id="ffm_{{f.id}}_{{jm}}" placeholder="hodnoceni">
+				<apl-help el="hIArray['hodnoceni_input']" showadmininfo="showhI"></apl-help>
 			    </td>
 			</tr>
 		    </tbody>

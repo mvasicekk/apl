@@ -48,7 +48,8 @@
 	    <div class="col-sm-2">
 		<div class="form-group form-group-sm">
 		    <label class="control-label" for="dpersstatus">status</label>
-		    <ui-select ng-disabled="!securityInfo.editArray['dpersstatus_select']"  ng-readonly="!securityInfo.editArray['dpersstatus_select']" multiple ng-model="filt.dstatus" theme="bootstrap" close-on-select="false" style="width: 200px;" title="dpersstatus vybrat" ng-change="dpersstatusChanged()">
+		    <ui-select multiple ng-model="filt.dstatus" ng-disabled="!securityInfo.editArray['dpersstatus_select']"  ng-readonly="!securityInfo.editArray['dpersstatus_select']" theme="bootstrap" close-on-select="false" style="width: 200px;" title="dpersstatus vybrat" on-select = "statusSelectAction($item,$model)">
+		    <!--<ui-select multiple ng-model="filt.dstatus" theme="bootstrap" close-on-select="false" style="width: 200px;" title="dpersstatus vybrat" on-select = "statusSelectAction($item,$model)">-->
 			<ui-select-match placeholder="vyberte status">{{$item}}</ui-select-match>
 			<ui-select-choices repeat="s in dpersstatuses | filter:$select.search">
 			    {{s}}
@@ -508,6 +509,41 @@
 						</tfoot>
 					    </table>
 					</fieldset>
+				    <fieldset ng-show="lohnArray.monatlohnRest!==undefined">
+					    <legend>mzda Akkord/Zeit - Rest po adaptaci</legend>
+					    <table class="table-condensed table-striped table-responsive table-bordered">
+						<thead>
+						    <tr>
+							<th>OE</th>
+							<th class="text-right">vzaby</th>
+							<th class="text-right">vzaby_akkord</th>
+							<th class="text-right">vzaby_akkord_kc</th>
+							<th class="text-right">vzaby_zeit</th>
+							<th class="text-right">vzaby_zeit_kc</th>
+						    </tr>
+						</thead>
+						<tbody>
+						    <tr ng-repeat="r in lohnArray.monatlohnRest.oes">
+							<td>{{r.oe}}</td>
+							<td class="text-right">{{r.vzaby|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{r.vzaby_akkord|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{r.vzaby_akkord_kc|numeraljs:'0,0.00'}}</td>
+							<td class="text-right">{{r.vzaby_zeit|numeraljs:'0,0'}}</td>
+							<td class="text-right">{{r.vzaby_zeit_kc|numeraljs:'0,0.00'}}</td>
+						    </tr>
+						</tbody>
+						<tfoot>
+						    <tr>
+							<th>Sum</th>
+							<th class="text-right">{{lohnArray.monatlohnRest.sumVzaby|numeraljs:'0,0'}}</th>
+							<th class="text-right">{{lohnArray.monatlohnRest.sumVzabyAkkord|numeraljs:'0,0'}}</th>
+							<th class="text-right">{{lohnArray.monatlohnRest.sumVzabyAkkordKc|numeraljs:'0,0.00'}} Kč</th>
+							<th class="text-right">{{lohnArray.monatlohnRest.sumVzabyZeit|numeraljs:'0,0'}}</th>
+							<th class="text-right">{{lohnArray.monatlohnRest.sumVzabyZeitKc|numeraljs:'0,0.00'}} Kč</th>
+						    </tr>
+						</tfoot>
+					    </table>
+					</fieldset>
 					
 				</div>
 				<div class="col-sm-6"  ng-if="lohnArray!==null">
@@ -777,7 +813,7 @@
 					    <div class="form-group">
 						<label class="col-sm-2 control-label" for="staats_angehoerigkeit_id">státní příslušnost</label>
 						<div class="col-sm-10">
-						    <ui-select ng-disabled="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-readonly="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('staats_angehoerigkeit_id')" on-select="bewerberFieldOnSelect($item,$model)">
+						    <ui-select ng-disabled="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-readonly="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'staats_angehoerigkeit_id')">
 							<ui-select-match placeholder="vyberte státní příslušnost">{{$select.selected.staat_abkrz}} {{$select.selected.staat_name}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in staaten | filter:$select.search">
 							    <small>
@@ -792,7 +828,7 @@
 					    <div class="form-group">
 						<label class="col-sm-2 control-label" for="staats_gruppe_id">staatsgruppe</label>
 						<div class="col-sm-10">
-						    <ui-select  ng-disabled="!securityInfo.editArray['staats_gruppe_select']" ng-readonly="!securityInfo.editArray['staats_gruppe_select']" ng-model="ma.bewerberInfo.staats_gruppe_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('staats_gruppe_id')">
+						    <ui-select  ng-disabled="!securityInfo.editArray['staats_gruppe_select']" ng-readonly="!securityInfo.editArray['staats_gruppe_select']" ng-model="ma.bewerberInfo.staats_gruppe_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'staats_gruppe_id')">
 							<ui-select-match placeholder="vyberte staatsgruppe">{{$select.selected.text_lang}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in staats_gruppen | filter:$select.search">
 							    <div><em>{{s.text_lang}}</em></div>
@@ -894,7 +930,7 @@
 						</div>
 						<label class="col-sm-2 control-label" for="status_fur_aby">geeignet</label>
 						<div class="col-sm-6">
-						    <ui-select ng-model="ma.bewerberInfo.status_fur_aby_id" theme="bootstrap" close-on-select="true" title="vybrat status" ng-change="bewerberFieldChanged('status_fur_aby_id')">
+						    <ui-select ng-model="ma.bewerberInfo.status_fur_aby_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'status_fur_aby_id')">
 							<ui-select-match placeholder="vyberte status">{{$select.selected.text_kurz}} {{$select.selected.text_lang}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in status_fur_aby | filter:$select.search">
 							    <small>
@@ -943,7 +979,7 @@
 					    </div>
 					    <label class="col-sm-2 control-label" for="oevorauss">OE</label>
 					    <div class="col-sm-6">
-						<ui-select ng-model="ma.bewerberInfo.oe_voraussichtlich" theme="bootstrap" close-on-select="true" title="vybrat OE" ng-change="bewerberFieldChanged('oe_voraussichtlich')">
+						<ui-select ng-model="ma.bewerberInfo.oe_voraussichtlich" theme="bootstrap" close-on-select="true" title="vybrat OE" on-select="bewerberFieldOnSelect($item,$model,'oe_voraussichtlich')">
 						<ui-select-match placeholder="vyberte OE">{{$select.selected.oe}}</ui-select-match>
 						<ui-select-choices repeat="s.oe as s in oes.oeArray | filter:$select.search">
 						    <small>
@@ -963,7 +999,7 @@
 					<div class="form-group form-group-sm">
 					    <label class="control-label col-sm-1" for="dpersstatus">info vom</label>
 					    <div class="col-sm-5">
-					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.infoVomArray" theme="bootstrap" close-on-select="false" title="info vom" ng-change="bewerberFieldChanged('infoVomArray')">
+					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.infoVomArray" theme="bootstrap" close-on-select="false" title="info vom"  ng-change="bewerberFieldChanged('infoVomArray')" on-select="bewerberFieldOnSelect($item,$model,'infoVomArray',true)">
 						<ui-select-match placeholder="vyberte info">{{$item.text_kurz}} <small>({{$item.text_lang}})</small></ui-select-match>
 					    <ui-select-choices repeat="s.id as s in infoVomArray | filter:$select.search">
 						<small>
@@ -975,7 +1011,7 @@
 					    </div>
 					    <label class="control-label col-sm-1" for="fah">Fāhig.</label>
 					    <div class="col-sm-5">
-					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.faehigkeitenArray" theme="bootstrap" close-on-select="false" title="Faehigkeiten" ng-change="bewerberFieldChanged('faehigkeitenArray')">
+					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.faehigkeitenArray" theme="bootstrap" close-on-select="false" title="Faehigkeiten" ng-change="bewerberFieldChanged('faehigkeitenArray')" on-select="bewerberFieldOnSelect($item,$model,'faehigkeitenArray',true)">
 						<ui-select-match placeholder="schopnosti">{{$item.typ_beschreibung}} <small>({{$item.faeh_beschreibung}})</small></ui-select-match>
 					    <ui-select-choices group-by="'typ_beschreibung'" repeat="s.faeh_id as s in bewFahigkeiten | filter:$select.search">
 						    <small>
@@ -1725,12 +1761,16 @@
 				    <table class="table table-condensed table-responsive table-striped table-hover">
 					<thead>
 					    <tr>
-						<th class="bg-info">osobní faktor</th>
+						<th class="bg-info"></th>
 						<th class="bg-info text-right" ng-repeat="(jm, pocet) in osobniHodnoceniArray.jahrmonatArray">{{jm}}</th>
 					    </tr>
 					    <tr>
-						<th class="bg-info"></th>
-						<th class="bg-info text-right" ng-repeat="(jm, pocet) in osobniHodnoceniArray.jahrmonatArray">{{sumaOsobniHodnoceniMonat('castka',jm)}} Kč</th>
+						<th class="bg-info">normmonat</th>
+						<td class="bg-info text-right" ng-repeat="(jm, pocet) in osobniHodnoceniArray.jahrmonatArray">{{sumaOsobniHodnoceniMonat('castka',jm)}} Kč</td>
+					    </tr>
+					    <tr>
+						<th class="bg-info">(anw/norm) ist</th>
+						<th class="bg-info text-right" ng-repeat="(jm, pocet) in osobniHodnoceniArray.jahrmonatArray">({{osobniHodnoceniKoeficientArray[jm]|numeraljs:'0.00'}}) {{(sumaOsobniHodnoceniMonat('castka',jm)*osobniHodnoceniKoeficientArray[jm])|numeraljs:'0'}} Kč</th>
 					    </tr>
 					</thead>
 					<tbody>
@@ -1798,7 +1838,7 @@
 		    <input type="password" class="form-control" id="extraPassword" ng-model="extraPassword" placeholder="Password">
 		  </div>
 		  <div class="alert alert-info">
-		      Z důvodu citlivosti dále zobrazovaných údajů je nutné zadat znovu heslo. Po zobrazení následujících údajů nenechávejte
+		      Z důvodu citlivosti dále zobrazovaných údajů je nutné zadat znovu heslo. Pravděpodobně i jiné, než heslo přihlašovací. Po zobrazení následujících údajů nenechávejte
 		       počítač volně přístupný nebo se odhlašte, přepněte na jiné zobrazení ....
 		  </div>
 	      </div>

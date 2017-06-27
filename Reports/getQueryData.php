@@ -7,6 +7,12 @@ $a = AplDB::getInstance();
 $sql = $_POST['sql'];
 $tabid = $_POST['tabid'];
 
+$s = "select dschltabellen.`sql` from dschltabellen where tabid='$tabid'";
+$rs = $a->getQueryRows($s);
+if($rs!==null){
+    $sql1 = $rs[0]['sql'];
+    //$sql=$sql1;
+}
 
 $data = $a->getQueryRows($sql);
 $columnNames = array();
@@ -75,6 +81,7 @@ foreach ($columnNames as $columnName){
 
 $retArray = array(
     'sql'=>$sql,
+    'sql1'=>$sql1,
     'data'=>$data,
     'tabid'=>$tabid,
     'columns'=>$columns,

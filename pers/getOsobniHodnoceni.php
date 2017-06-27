@@ -25,7 +25,11 @@ for ($t = $start; $t <= $end; $t+=$step) {
 }
 
 $osobniHodnoceniArray = NULL;
+$koeficientArray = NULL;
+
 $osobniHodnoceni = $a->getOsobniHodnoceniProPersNr($persnr,  date('Y-m-d',$start),date('Y-m-d',$end));
+$koeficientArray = $a->getOsobniHodnoceniKoeficientProPersNr($persnr,  date('Y-m-d',$start),date('Y-m-d',$end));
+
 if($osobniHodnoceni!==NULL){
     $osobniHodnoceniArray = array();
     $osobniHodnoceniArray['jahrmonatArray'] = $jahrMonatArray;
@@ -33,11 +37,13 @@ if($osobniHodnoceni!==NULL){
 }
 
 
+
 $returnArray = array(
     'u' => $u,
     'von'=>$von,
     'bis'=>$bis,
     'osobniHodnoceniArray' => $osobniHodnoceniArray,
+    'osobniHodnoceniKoeficientArray'=>$koeficientArray,
     'sql' => $sql,
 );
 

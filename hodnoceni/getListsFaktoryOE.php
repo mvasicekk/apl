@@ -16,7 +16,7 @@ $u = $_SESSION['user'];
 
 
 //osobni faktory
-$sql = "select * from hodnoceni_osobni_faktory order by `sort`";
+$sql = "select hodnoceni_osobni_faktory.*,hodnoceni_firemni_faktory.popis as firemni_faktor_popis from hodnoceni_osobni_faktory left join hodnoceni_firemni_faktory on hodnoceni_firemni_faktory.id=hodnoceni_osobni_faktory.id_firma_faktor order by `sort`";
 $osobniFaktory = $a->getQueryRows($sql);
 
 

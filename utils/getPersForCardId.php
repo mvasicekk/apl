@@ -15,10 +15,14 @@ $readerId=$o->readerid;
 $sql = "insert into rfidreader (cardid,readerid) values('$cardId','$readerId')";
 $insertId = $a->insert($sql);
 
-$sql = "select * from dpers where cardid='$cardId'";
+//simulovat zapis ctecky otisku
+
+$sql = "select * from dpers where cardid125='$cardId'";
 $rows = $a->getQueryRows($sql);
 if($rows!==NULL){
     $persinfo = $rows[0];
+    $sqlinsert = "insert into edata_access_events (class,time,dt,type,address,badgenumber,persnr) values('access',UNIX_TIMESTAMP(),NOW(),'Access granted','$readerId','karta:$cardId','".$persinfo['PersNr']."')";
+    $a->insert($sqlinsert);
 }
 else{
     $persinfo = NULL;

@@ -245,6 +245,7 @@ foreach ($persRows as $persnr=>$persnrA){
     $qPremieBetrag = 0;
     $leistPremieBetrag = 0;
     $qtlPremieBetrag = 0;
+    $osobniHodnoceniBetrag = 0;
     $hfPremieBetrag = 0;
     $erschwernissBetrag = 0;
     $aPremieBetrag = 0;
@@ -294,6 +295,10 @@ foreach ($persRows as $persnr=>$persnrA){
 	//rozdeleni pracovnich dnu v pomeru hodin Akkord a Zeit
 	//nove 2017-04-05
 	$bMzdaPodleAdaptace = FALSE;
+	//jeste budu potrebovat pro korekci pri adaptaci pres cast mesice
+	$stundenAkkord1 = $stundenAkkord;
+	$stundenZeit1 = $stundenZeit;
+	
 	$atage = $a->getATageProPersnrBetweenDatums($persnr, $von, $bis, 0);
 	if (array_key_exists($persnr, $lohnArray['personen'])) {
 	    $bMzdaPodleAdaptace = $lohnArray['personen'][$persnr]['mzdaPodleAdaptace'];
@@ -302,15 +307,15 @@ foreach ($persRows as $persnr=>$persnrA){
 		$stundenAkkord = 0;
 		$tageZeit = $atage;
 		$stundenZeit = 0;
+		$adaptRest = $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyAkkordKc']+$lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyZeitKc'];
 		if(is_array($lohnArray['personen'][$persnr]['adaptlohn']['tage'])){
 		    foreach ($lohnArray['personen'][$persnr]['adaptlohn']['tage'] as $adaptTag) {
-		    $stundenZeit += floatval($adaptTag['anwStunden']);
-		}
+			$stundenZeit += floatval($adaptTag['anwStunden']);
+		    }
 		}
 		else{
 		    $stundenZeit = 0;
 		}
-		
 	    } else {
 		if (($stundenAkkord + $stundenZeit) != 0) {
 		    $tageAkkord = round($atage * ($stundenAkkord / ($stundenAkkord + $stundenZeit)));
@@ -318,6 +323,13 @@ foreach ($persRows as $persnr=>$persnrA){
 		    $tageAkkord = 0;
 		}
 		$tageZeit = $atage - $tageAkkord;
+	    }
+	    
+	    // pokud mam nejaky rest po adaptaci musim jeste znovu spocitat dny a hodiny toho zbytku
+	    // potrebuju datum ukonceni adaptace pro zjisteni spravneho poctu hodin, dnu v ukole
+	    if($adaptRest!=0){
+		$rozdil = ($stundenAkkord1+$stundenZeit1)-$stundenZeit;
+		$stundenZeit += $rozdil;
 	    }
 	}
 
@@ -366,7 +378,8 @@ foreach ($persRows as $persnr=>$persnrA){
 	//TODO upravit pro mzdu v adaptaci
 	if ($bMzdaPodleAdaptace) {
 	    $betragAkkord = 0;
-	    $betragZeit = $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'];
+	    $adaptRest = $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyAkkordKc']+$lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyZeitKc'];
+	    $betragZeit = $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'] + $adaptRest;
 	}
 	else{
 	    $betragZeit = $lohnArray['personen'][$persnr]['monatlohn']['sumVzabyZeitKc'];
@@ -399,6 +412,13 @@ foreach ($persRows as $persnr=>$persnrA){
     if(array_key_exists($persnr, $lohnArray['personen'])){
 	$qtlPremieBetrag = $bQTLPremie==TRUE?$lohnArray['personen'][$persnr]['qtlPremie']['qtlPremieBetrag']:0;
     }
+    
+    //osobni hodnoceni
+    //nove 2017-06-09
+    if(array_key_exists($persnr, $lohnArray['personen'])){
+	$osobniHodnoceniBetrag = $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastkaFinal'];
+    }
+    
     //nove 2017-04-05
     if(array_key_exists($persnr, $lohnArray['personen'])){
 	$aPremieBetrag = floatval($lohnArray['personen'][$persnr]['aPremie']['apremie']);
@@ -438,6 +458,7 @@ foreach ($persRows as $persnr=>$persnrA){
 	"qPremieBetrag"=>$bMzdaPodleAdaptace||$zTage>0?0:$qPremieBetrag,
 	"leistPremieBetrag"=>$bMzdaPodleAdaptace||$zTage>0?0:$leistPremieBetrag,
 	"qtlPremieBetrag"=>$bMzdaPodleAdaptace||$zTage>0?0:$qtlPremieBetrag,
+	"osobniHodnoceniBetrag"=>$osobniHodnoceniBetrag,
 	"hfPremieBetrag"=>$zTage>0&&$hfPremieBetrag>0?0:$hfPremieBetrag,
 	"erschwernissBetrag"=>$erschwernissBetrag,
 	"aPremieBetrag"=>$bMzdaPodleAdaptace||$zTage>0?0:$aPremieBetrag,

@@ -29,7 +29,7 @@ aplApp.directive("enterfocus", function () {
 
 
 
-aplApp.controller('hodnocenifiremniController', function ($scope, $routeParams, $http, $timeout, $window, $location, $sanitize) {
+aplApp.controller('hodnocenifiremniController', function ($scope, $routeParams, $http, $timeout, $window, $location, $sanitize,$filter) {
     $scope.isEditor = false;	//urcuje zda muze uzivatel editovat helptext
     $scope.tinyMceOptions = {
 	inline: true,
@@ -53,6 +53,9 @@ aplApp.controller('hodnocenifiremniController', function ($scope, $routeParams, 
     $scope.curJahr = curdate.getFullYear();
     $scope.hodnoceniMonat = curdate.getMonth();
     $scope.firmaFaktorMonat = {};
+    $scope.faktorfilter = {
+	popis:''
+    };
 
 
     $scope.initSecurity = function () {
@@ -113,14 +116,27 @@ aplApp.controller('hodnocenifiremniController', function ($scope, $routeParams, 
      */
     $scope.sumaMonat = function (p, jm) {
 	var suma = 0;
+	//var filteredArray = $filter('filter')($scope.firmaFaktorMonat,$scope.faktorfilter,true);
 	for (pr in $scope.firmaFaktorMonat) {
+	    //for (pr in filteredArray) {
 	    if (typeof ($scope.firmaFaktorMonat[pr][jm]) !== 'undefined') {
-		value = parseFloat($scope.firmaFaktorMonat[pr][jm][p]);
-		if (!isNaN(value)) {
-		    suma += value;
+		//jeste filtrovat podle zadaneho filtru $scope.faktorfilter.popis, pokud je neco zadano ve filtru
+		if ($scope.faktorfilter.popis.length > 0) {
+		    var re = new RegExp($scope.faktorfilter.popis, "gi");
+		    if ($scope.firmaFaktorMonat[pr][jm]['firemni_faktor_popis'].match(re)) {
+			value = parseFloat($scope.firmaFaktorMonat[pr][jm][p]);
+			if (!isNaN(value)) {
+			    suma += value;
+			}
+		    }
+		} else {
+		    value = parseFloat($scope.firmaFaktorMonat[pr][jm][p]);
+		    if (!isNaN(value)) {
+			suma += value;
+		    }
 		}
-	    }
 
+	    }
 	}
 	return suma;
     }

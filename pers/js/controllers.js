@@ -91,11 +91,11 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.lohnArray = null;
     var curdate = new Date();
 
-    $scope.hfPremieVon = new Date(curdate.getFullYear(), curdate.getMonth() - 2, 1);
+    $scope.hfPremieVon = new Date(curdate.getFullYear(), 0, 1);
     $scope.hfPremieBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
     $scope.kvalifikaceGiltAb = new Date();
 
-    $scope.osobniHodnoceniVon = new Date(curdate.getFullYear(), curdate.getMonth() - 2, 1);
+    $scope.osobniHodnoceniVon = new Date(curdate.getFullYear(), 0, 1);
     $scope.osobniHodnoceniBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
 
     $scope.hfPremieArray = null;
@@ -144,8 +144,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.bemerkung = {};
     
     $scope.filt = {
-	dstatus : ['MA','DOHODA'],
-	oearray : ['*']
+	dstatus : ["MA","DOHODA"],
+	oearray : ["*"]
     };
 
     $scope.dpersstatuses = [];
@@ -193,6 +193,17 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	}
     }
     
+    /**
+     * 
+     * @param {type} $item
+     * @param {type} $model
+     * @returns {undefined}
+     */
+    $scope.statusSelectAction = function($item,$model){
+	//console.log($item);
+	//console.log($model);
+	$scope.filt.dstatus.push($item);
+    }
     /**
      * 
      * @param {type} files
@@ -417,12 +428,25 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	}
     }
     
-    $scope.bewerberFieldOnSelect = function(i,m){
+    $scope.bewerberFieldOnSelect = function(i,m,field,isArray=false){
 	console.log('bewerberFieldOnSelect');
 	console.log('item');
 	console.log(i);
 	console.log('model');
 	console.log(m);
+	console.log('field = '+field);
+	if(isArray===true){
+	    if($scope.ma.bewerberInfo[field]===null){
+		$scope.ma.bewerberInfo[field] = [];
+	    }
+	    $scope.ma.bewerberInfo[field].push(m);
+	}
+	else{
+	    $scope.ma.bewerberInfo[field] = m;
+	}
+	
+	console.log($scope.ma.bewerberInfo[field]);
+	$scope.bewerberFieldChanged(field);
     }
     /**
      * 
@@ -1202,6 +1226,7 @@ $scope.commentClicked = function(e,p){
 		    }
 	    ).then(function (response) {
 		$scope.osobniHodnoceniArray = response.data.osobniHodnoceniArray;
+		$scope.osobniHodnoceniKoeficientArray = response.data.osobniHodnoceniKoeficientArray;
 	    });
 	}
 

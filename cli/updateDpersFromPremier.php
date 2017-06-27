@@ -279,17 +279,37 @@ foreach ($persArray as $zCislo => $persRow) {
     // cisla pracovnich pomeru -------------------------------------------------
     $persNr = 0;
     echo "pp start ==========================================================\n";
-    foreach ($persRow['pp'] as $poradi => $ppRow) {
+    if (count($persRow['pp']) == 1) {
+	//ma je jeden prac pomer, nemusim prochazet vsechny
+	echo "jen jeden prac pomer, beru tento jeden\n";
+	$poradi = 0;
+	$ppRow = $persRow['pp'][0];
 	$ppCislo = intval($ppRow['ppCislo']);
-	if ($ppCislo == 0) {
-	    echo "zadne cislo prac. pomeru !, pokud je novy - nebudu importovat do APL!\n";
-	    $import = FALSE;
-	} else {
-	    if (strlen(trim($ppRow['ppVystup'])) == 0) {
-		// jako osobni cislo vezmu to , ktere nema ukonceny prac pomer
-		// tj. nema vyplneno pp_vystup
-		$persNr = $ppCislo;
-	    }
+	$persNr = $ppCislo;
+	echo "ppCislo = $ppCislo \n";
+	echo "ppKate = " . $ppRow['ppKate'] . "\n";
+	echo "ppVstup = " . $ppRow['ppVstup'] . "\n";
+	echo "ppVystup = " . $ppRow['ppVystup'] . "\n";
+	echo "dovNarok = " . $ppRow['dovNarok'] . "\n";
+	echo "dovNarokS = " . $ppRow['dovNarokS'] . "\n";
+	echo "dovZusMinr = " . $ppRow['dovZusMinr'] . "\n";
+	echo "uvaDoba = " . $ppRow['uvaDoba'] . "\n";
+	echo "uvaTypMzdy = " . $ppRow['uvaTypMzdy'] . "\n";
+	echo "uvaPlatOd = " . $ppRow['uvaPlatOd'] . "\n";
+	echo "smlDobaUrcita = " . $ppRow['smlDobaUrcita'] . "\n";
+	echo "smlDatVystup = " . $ppRow['smlDatVystup'] . "\n";
+    } else {
+	foreach ($persRow['pp'] as $poradi => $ppRow) {
+	    $ppCislo = intval($ppRow['ppCislo']);
+	    if ($ppCislo == 0) {
+		echo "zadne cislo prac. pomeru !, pokud je novy - nebudu importovat do APL!\n";
+		$import = FALSE;
+	    } else {
+		if (strlen(trim($ppRow['ppVystup'])) == 0) {
+		    // jako osobni cislo vezmu to , ktere nema ukonceny prac pomer
+		    // tj. nema vyplneno pp_vystup
+		    $persNr = $ppCislo;
+		}
 		echo "ppCislo = $ppCislo \n";
 		echo "ppKate = " . $ppRow['ppKate'] . "\n";
 		echo "ppVstup = " . $ppRow['ppVstup'] . "\n";
@@ -302,9 +322,11 @@ foreach ($persArray as $zCislo => $persRow) {
 		echo "uvaPlatOd = " . $ppRow['uvaPlatOd'] . "\n";
 		echo "smlDobaUrcita = " . $ppRow['smlDobaUrcita'] . "\n";
 		echo "smlDatVystup = " . $ppRow['smlDatVystup'] . "\n";
+	    }
+	    echo "pp $poradi ----------------------------------------------------\n";
 	}
-	echo "pp $poradi ----------------------------------------------------\n";
     }
+
     echo " persnr = $persNr\n";
     echo "pp end ============================================================\n";
 

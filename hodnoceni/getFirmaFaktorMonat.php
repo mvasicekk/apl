@@ -32,6 +32,7 @@ $firemniFaktory = $a->getQueryRows($sql);
 
 foreach ($firemniFaktory as $ff){
     $ffId = $ff['id'];
+    $ffPopis = $ff['popis'];
     foreach ($jmArray as $jm){
 	$datum = $jm."-01";
 	$sql = "select * from hodnoceni_firemni where id_faktor='$ffId' and datum='$datum'";
@@ -39,6 +40,7 @@ foreach ($firemniFaktory as $ff){
 	if($hr!==NULL){
 	    $firmaFaktorMonat[$ffId][$jm]['hodnoceni'] = intval($hr[0]['hodnoceni']);
 	    $firmaFaktorMonat[$ffId][$jm]['id'] = intval($hr[0]['id']);
+	    $firmaFaktorMonat[$ffId][$jm]['firemni_faktor_popis'] = $ffPopis;
 	}
 	else{
 	    // musim v db vytvorit
@@ -48,6 +50,7 @@ foreach ($firemniFaktory as $ff){
 	    $hr = $a->getQueryRows($sql);
 	    $firmaFaktorMonat[$ffId][$jm]['hodnoceni'] = intval($hr[0]['hodnoceni']);
 	    $firmaFaktorMonat[$ffId][$jm]['id'] = intval($hr[0]['id']);
+	    $firmaFaktorMonat[$ffId][$jm]['firemni_faktor_popis'] = $ffPopis;
 	}
     }
 }

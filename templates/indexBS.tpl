@@ -25,18 +25,10 @@
 	
 {*d3	*}
 	<script src="./brany/bower_components/d3/d3.min.js"></script>
-        
-{*	<link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="./libs/bootstrap/js/bootstrap.min.js">
-        <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap-theme.min.css">
-*}
-	
 {*custom styl	*}
-{*        <link rel="stylesheet" href="./styl_common.css" type="text/css">*}
         <link rel="stylesheet" href="./stylBS.css" type="text/css">
 
 {*custom js	*}
-{*	<script src="./brany/js/digest-ajax.min.js"></script>*}
 	<script src="./brany/js/brany.js"></script>
 	<script type="text/javascript" src="./apl.js"></script>
     </head>
@@ -48,24 +40,25 @@
 	    {if $prihlasen}
 	    <div class="container-fluid col-md-6" >
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> Personal</h3>
 		    </div>
 		    <div class="panel-body ">
 			<div class="row">
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dzeitedata};" type="button" value="Anwesenheitserfassung lt. Leistung" id="dzeitedata" onClick="location.href='./personal/doc_root/index.php?action=edataAnw&presenter=DpersAnwesenheit'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dpers};" type="button" value="Personal Pflegen" id="dpers" onClick="okno=window.open();okno.location.href='./personal/doc_root/index.php?presenter=Persinfo'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dpers};" type="button" value="Personal Alt" id="dpers" onClick="okno=window.open();okno.location.href='./personal/doc_root/index.php?presenter=Persinfo'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dpersnew};" type="button" value="Personal pflegen" id="dpers" onClick="okno=window.open();okno.location.href='./pers/pers.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.dzeit};" type="button" value="Anwesenheitserfassung" id="dzeit" onClick="location.href='./dzeit/dzeit.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung" id="anwesenheitplan"  onClick="location.href='./personal/doc_root/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.vorschuss} ;" type="button" value="Vorschuss" id="vorschuss"  onClick="location.href='./dpers/vorschuss.php'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_firemni} ;" type="button" value="Hodnocení firemní" id="hodnoceni_firemni"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_firemni'" /></div>
-			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_firemni} ;" type="button" value="Hodnocení faktory OE" id="hodnoceni_faktory_oe"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_faktory_oe'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_firemni} ;" type="button" value="Bewertung - Firma" id="hodnoceni_firemni"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_firemni'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_faktory_oe} ;" type="button" value="Bewertung - OE-Matrix" id="hodnoceni_faktory_oe"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_faktory_oe'" /></div>
 			</div>
 		    </div>
 		</div>
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-briefcase"></span> Kunden / zakaznici</h3>
 		    </div>
@@ -77,17 +70,16 @@
 		    </div>
 		</div>
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-edit"></span> Auftraege / zakazky</h3>
 		    </div>
 		    <div class="panel-body ">
 			<div class="row">
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.daufkopf};" type="button" value="Aufträge Pflegen" id="daufkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./auftrag/auftrag.php#/list'" /></div>
-{*			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" /></div>*}
-			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/dkopfjs.php'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf};" type="button" value="Arbeitsplan Pflegen" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/teilsuchen.php'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dkopf_new};" type="button" value="Arbeitsplan Pflegen Neu" id="dkopf" class="abyStartButton" onClick="okno=window.open();okno.location.href='./dkopf/dkopfjs.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.umtermin};" type="button" value="Umterminieren" id="umtermin" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./dauftr/umterminieren/umterminieren.php'" /></div>
-{*			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.rundlauf};" type="button" value="Rundlauf" id="rundlauf"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./napl/www/?action=rundlauf&presenter=Dispo'" /></div>*}
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dispo};" type="button" value="Dispo" id="dispo"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./dispo_2/dispo.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block"style="display:{$display_sec.reklamation};" type="button" value="Reklamation" id="reklamation"  class="abyStartButton" onClick="okno=window.open();okno.location.href='./reklamation/reklamation.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.infopanely};" type="button" value="Infopanely" id="infopanely" class="abyStartButton"  onClick="okno=window.open();okno.location.href='./panely/panely.php'" /></div>
@@ -106,7 +98,7 @@
 		    </div>
 		</div>
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-hdd"></span> Laeger / sklady</h3>
 		    </div>
@@ -114,13 +106,12 @@
 			<div class="row">
 			    <div class="col-sm-6">  <input class="btn btn-default btn-block" style="display:{$display_sec.lagerbew};" type="button" value="Lagerumbuchung / pridani do skladu" id="lagerbew" class="abyStartButton" onClick="location.href='./dlager/umbuchung.php'" /></div>
 			    <div class="col-sm-6">  <input class="btn btn-default btn-block" style="display:{$display_sec.lagerstk};" type="button" value="Lager Inventur" id="lagerstk" class="abyStartButton" onClick="location.href='./dlagstk/dlagstk.php'" /></div>
-      {*		    <input style="display:{$display_sec.behlagerbew};" type="button" value="Behaelterbewegung / palety pohyby" id="behlagerbew" class="abyStartButton" onClick="location.href='./dbehaelter/bewegung.php'" />*}
 			    <div class="col-sm-6"> <input class="btn btn-default btn-block" style="display:{$display_sec.behlagerinv};" type="button" value="Behaelterinventur / palety inventura" id="behlagerinv" class="abyStartButton" onClick="location.href='./dbehaelter/inventur.php'" /></div>
 			</div>
 		    </div>
 		</div>
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-folder-close"></span> Berichte / sestavy</h3>
 		    </div>
@@ -130,14 +121,11 @@
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.phpexcel};" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" /></div>
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php?form_typ=schltabelle'" /></div>
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.eforms};" type="button" value="eForms zeigen" id="eforms" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php?form_typ=eform'" /></div>
-      {*		    <input style="" type="button" value="Berichte Drucken" id="berichte" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/reports.php'" />*}
-      {*		    <input style="" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" />*}
-      {*		    <input style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/querys.php'" />*}
 			</div>
 		    </div>
 		</div>
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-wrench"></span> Reparaturen</h3>
 		    </div>
@@ -148,7 +136,7 @@
 		    </div>
 		</div>
 
-		<div  class="panel panel-success" >
+		<div  class="panel panel-success buttony" >
 		    <div class="panel-heading">
 			<h3 class="panel-title"><span class="glyphicon glyphicon-shopping-cart"></span> Einkauf / nákup</h3>
 		    </div>
@@ -196,26 +184,17 @@
 		    <div style="display:{$display_sec.branydiv};" id="branydiv">
 			<input type="hidden" id="userinfo" value="{$user}" />
 			<div class="container-fluid">
-			    {*<div class="row">
-			    <div class="col-xs-12 text-center">
-			    <span id="sock_status" class="badge">not connected</span>
-			    </div>
-			    </div>*}
 			    <div class="row">
 				<div class="col-md-4 text-center">
 				    <input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
-{*				    <button title="obnovit obraz z kamer" class="btn btn-block" onclick="refreshWebcam('brana1img');refreshWebcam('brana2img');" id="brrefrbt">Camera refresh</button>*}
-{*				    <button class="btn btn-block" onclick="window.location.reload();" id="brrefrbt">Camera refresh</button>*}
 				</div>
 				<div class="col-md-4 text-center">
-{*				    <button class="btn btn-block" id="brana1Button">horní brana</button>*}
 				    <button title='horní brána' class="btn btn-block" id="brana1Button">
 {*				    <img id='brana1img' width="100%" src="http://a:a@172.16.1.102/Streaming/channels/801/picture" title='horní brána' >*}
 				    horní brána
 				    </button>
 				</div>
 				<div class="col-md-4 text-center">
-{*				    <button class="btn btn-block" id="brana2Button">dolní brana</button>*}
 				    <button title='dolní brána' class="btn btn-block" id="brana2Button">
 {*				    <img id='brana2img' width="100%" src="http://a:a@172.16.1.102/Streaming/channels/401/picture" title='dolní brána' >*}
 				    dolní brána
@@ -263,14 +242,6 @@
 		    </div>
 		    </div>
 		</div>
-	    
-			   
-		{*<div class="row">
-		    <div class="col-xs-12">
-	    		<div id="myChart"></div>
-		    </div>
-		</div>	    *}
-		
 		<div class="row">
 		    <div class="col-xs-12">
 			<div id="svgChart">
@@ -283,19 +254,19 @@
 		<div class="row" id="option">
 		    <div class="btn-group btn-group-sm btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
-			    <button class="btn btn-info" value="week" onclick="updateData(7)">Week</button>
+			    <button class="btn btn-info" value="week" onclick="updateData(7)">Woche</button>
 			</div>
 			<div class="btn-group" role="group">
-			    <button class="btn btn-info" value="month" onclick="updateData(31)" >Month</button>
+			    <button class="btn btn-info" value="month" onclick="updateData(31)" >Monat</button>
 			</div>
 			<div class="btn-group" role="group">
-			    <button class="btn btn-info" value="120 days" onclick="updateData(120)" >120 days</button>
+			    <button class="btn btn-info" value="120 days" onclick="updateData(120)" >120 Tage</button>
 			</div>
 			<div class="btn-group" role="group">
-			    <button class="btn btn-info" value="year" onclick="updateData(365)" >Year</button>
+			    <button class="btn btn-info" value="year" onclick="updateData(365)" >Jahr</button>
 			</div>
 			<div class="btn-group" role="group">
-			    <button class="btn btn-info" value="year" onclick="updateData(730)" >2 Years</button>
+			    <button class="btn btn-info" value="year" onclick="updateData(730)" >2 Jahre</button>
 			</div>
 		    </div>
 		</div>

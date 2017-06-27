@@ -2302,7 +2302,8 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     $gesamtLohnAdapt = "";
     if($bMzdaPodleAdaptace){
 	$erschwerniss = $lohnArray['personen'][$persnr]['adaptlohn']['summeLohn'];
-	$gesamtLohn = $erschwerniss;
+	$adaptRest = $lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyAkkordKc']+$lohnArray['personen'][$persnr]['monatlohnRest']['sumVzabyZeitKc'];
+	$gesamtLohn = $erschwerniss + $adaptRest;
 	if($z>0){
 	    $gesamtLohnAdapt = $sumLohn;// + $sumQPraemie + $leistPraemie + $qtlPraemie + $sonstpremie;
 	}
@@ -2332,7 +2333,10 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     else
         $factorGesamt = 0;
 
-    $maStundenDatumAb = '000000';
+    //$maStundenDatumAb = '000000';
+    $prosinecDnu = cal_days_in_month(CAL_GREGORIAN, 12, $jahr-1);
+    $maStundenDatumAb = substr($jahr-1, 2,2)."12".$prosinecDnu;
+    
     if ($reporttyp == 'lohn') {
         if ($bMAStunden) {
 	    $stddiff = $aplDB->getStdDiff($monat, $jahr, $persnr);
@@ -2617,8 +2621,18 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
         $pdf->Cell($headerCells['sonstpremie']['width'], $vyskaradku, number_format($sonstpremie, 0, ',', ' '), 'LRB', 0, 'R', $fill);
 	$fill = 0;
 	
+	if($adaptRest!=0){
+	    $pdf->SetFillColor(255,230,230);
+	    $fill = 1;
+	}
+	else{
+	    $pdf->SetFillColor(255,255,255);
+	    $fill = 0;
+	}
         $pdf->Cell($headerCells['erschwerniss']['width'], $vyskaradku, number_format($erschwerniss, 0, ',', ' '), 'LRB', 0, 'R', $fill);
         $pdf->Cell($headerCells['lohn']['width'], $vyskaradku, number_format($gesamtLohn, 0, ',', ' '), 'LRB', 0, 'R', $fill);
+	$pdf->SetFillColor(255,255,255);
+	$fill = 0;
         $pdf->Cell($headerCells['transport']['width'], $vyskaradku, $transport, 'LRB', 0, 'R', $fill);
         $pdf->Cell($headerCells['vorschuss']['width'], $vyskaradku, $vorschuss, 'LRB', 0, 'R', $fill);
         $pdf->Cell($headerCells['abmahnung']['width'], $vyskaradku, $abmahnung, 'LRB', 0, 'R', $fill);
