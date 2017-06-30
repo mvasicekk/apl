@@ -1346,11 +1346,17 @@ class AplDB {
      *  radky - datumy
      *  sloupce - typy minut
      */
-    public function getLeistungTable($daysBack = NULL) {
+    public function getLeistungTable($daysBack = NULL,$sortdescend = TRUE) {
+	if($sortdescend===TRUE){
+	    $sort = "DESC";
+	}
+	else{
+	    $sort = "ASC";
+	}
 	if ($daysBack === NULL) {
-	    $sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),day(current_date())-1) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit 31";
+	    $sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),day(current_date())-1) and CURRENT_DATE()) group by drueck.datum order by drueck.datum $sort limit 31";
 	} else {
-	    $sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),$daysBack) and CURRENT_DATE()) group by drueck.datum order by drueck.datum desc limit $daysBack";
+	    $sql_leistung = "select DATE_FORMAT(drueck.datum,'%d.%m.%Y') as datum,sum(if(kunden_stat_nr=1,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg1,sum(if(kunden_stat_nr=3,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg3,sum(if(kunden_stat_nr=4,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg4,sum(if(kunden_stat_nr=9,if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`),0)) as pg9,sum(if(auss_typ=4,(`stück`+`auss-stück`)*`vz-soll`,`stück`*`vz-soll`)) as celkem from drueck join dkopf using (teil) join dksd using (kunde) where (datum between  subdate(current_date(),$daysBack) and CURRENT_DATE()) group by drueck.datum order by drueck.datum $sort limit $daysBack";
 	}
 
 	//echo $sql_leistung;

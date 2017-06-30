@@ -15,7 +15,7 @@ require_once './db.php';
     $returnArray = array(
 	"inputData"=>$inputData,
 	"leistungTablearray"=>$apl->getLeistungTable(),
-	"graphTablearray"=>$apl->getLeistungTable($daysBack),
+	"graphTablearray"=>$apl->getLeistungTable($daysBack,FALSE),
     );
     
     echo json_encode($returnArray);

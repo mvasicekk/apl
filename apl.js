@@ -78,10 +78,11 @@ function makeGraph(daysBack){
 	});
 	//console.log(datumArray);
 	
-	maxValue = 85000;
+	maxValue = 80000;
 
 	//var x = d3.time.scale().range([0,graphWidth]);
-	var x = d3.time.scale().range([graphWidth,0]);
+	//var x = d3.time.scale().range([graphWidth,0]);
+	var x = d3.time.scale().range([0,graphWidth]);
 	xDomain = d3.extent(datumArray, function(d) { return d; }); 
 	//console.log(xDomain);
 	x.domain(xDomain);
@@ -127,7 +128,7 @@ function makeGraph(daysBack){
 	
 	var normy = [
 	    {
-		hranice:58000,
+		hranice:50000,
 		trida:'pg1norma',
 		label:'Guss'
 	    },
@@ -137,7 +138,7 @@ function makeGraph(daysBack){
 		label:'NE'
 	    },
 	    {
-		hranice:75000,
+		hranice:67000,
 		trida:'celkemnorma',
 		label:'Sum'
 	    },
@@ -145,7 +146,8 @@ function makeGraph(daysBack){
 	
 	graphGroup.append("path")
 	    .attr("class", "line_celkem")
-	    .attr("d", valueline_celkem(datumNestedArray))
+	    .attr("d", valueline_celkem(datumNestedArray));
+    /*
 	    .on("mouseover",function(d){
 		graphGroup.selectAll('circle')
 		    .data(datumNestedArray)
@@ -163,6 +165,7 @@ function makeGraph(daysBack){
 		graphGroup.selectAll('circle')
 		.remove();
 	    });
+	    */
     
     
 //	graphGroup.selectAll('circle')
