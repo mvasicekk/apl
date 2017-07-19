@@ -10,7 +10,7 @@
 			{
 				// plus omezeni na maximalne 100 zaznamu
 				// 2013-01-03 vyhledave i podle fremdauftr_dkopf
-				$sql = "select teil,teillang,teilbez,kunde,gew,status from dkopf where ((teil regexp '.*".$keyword.".*') or (teillang regexp '.*".$keyword.".*') or (fremdauftr_dkopf regexp '.*".$keyword.".*')) order by kunde,teil limit 100";
+				$sql = "select teil,teillang,teilbez,kunde,gew,status from dkopf where ((teil regexp '.*".$keyword.".*') or (teillang regexp '.*".$keyword.".*') or (fremdauftr_dkopf regexp '.*".$keyword.".*') or (teilbez regexp '.*".$keyword.".*')) order by kunde,teil limit 100";
 			}
 			else
 			{

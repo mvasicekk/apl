@@ -181,11 +181,11 @@
 		
 	    <div class="row">
 		<div class="col-xs-12">
-		    <div style="display:{$display_sec.branydiv};" id="branydiv">
+		    <div id="branydiv">
 			<input type="hidden" id="userinfo" value="{$user}" />
 			<div class="container-fluid">
 			    <div class="row">
-				<div class="col-md-4 text-center">
+				<div style="display:{$display_sec.branydiv};" class="col-md-4 text-center">
 				    <input value="" type="password" maxlength="4" class="form-control text-center" id="branaPin" placeholder="PIN" />
 				</div>
 				<div class="col-md-4 text-center">

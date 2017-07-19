@@ -3706,15 +3706,27 @@ class AplDB {
 /**
  * 
  */
-public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat){
+public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,$oe=NULL){
     $von = sprintf("%04d-%02d-%02d",$jahr,$monat,1);
     $days = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
     $bis = sprintf("%04d-%02d-%02d",$jahr,$monat,$days);
-    $sql.=" select persnr from hodnoceni_osobni";
+    if($oe===NULL){
+	$sql.=" select persnr from hodnoceni_osobni";
     $sql.=" where";
     $sql.=" persnr between '$persvon' and '$persbis'";
     $sql.=" and datum between '$von' and '$bis'";
     $sql.=" group by persnr";
+    }
+    else{
+    $sql.=" select hodnoceni_osobni.persnr from hodnoceni_osobni";
+    $sql.=" join dpers on dpers.PersNr=hodnoceni_osobni.persnr";
+    $sql.=" join dtattypen on dtattypen.tat=dpers.regeloe";
+    $sql.=" where";
+    $sql.=" hodnoceni_osobni.persnr between '$persvon' and '$persbis'";
+    $sql.=" and datum between '$von' and '$bis'";
+    $sql.=" and dtattypen.oe like '%".$oe."%'";
+    $sql.=" group by hodnoceni_osobni.persnr";
+    }
     return $this->getQueryRows($sql);
 }
     /**

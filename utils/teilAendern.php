@@ -7,7 +7,7 @@ require_once '../db.php';
  */
 
 $apl = AplDB::getInstance();
-$von = 'R977011759';
-$nach = '011759';
+$von = 'R917007363';
+$nach = '7363';
 
 $apl->teilNrAendern($von, $nach);

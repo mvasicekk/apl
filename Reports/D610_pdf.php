@@ -118,7 +118,7 @@ function zapatiSestava($pdf,$rowHeight,$rgb,$sumArray){
 	    );
 }
 // funkce pro vykresleni hlavicky na kazde strance
-function pageheader($pdfobjekt, $pole, $headervyskaradku, $geplannt, $exdatum,$zielort) {
+function pageheader($pdfobjekt, $pole, $headervyskaradku, $geplannt, $exdatum,$zielort="") {
     $pdfobjekt->SetFont("FreeSans", "B", 9);
     $pdfobjekt->SetFillColor(255, 255, 200, 1);
     foreach ($pole as $key=>$cell) {

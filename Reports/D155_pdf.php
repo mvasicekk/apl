@@ -18,6 +18,12 @@ $jahr = $_GET['jahr'];
 $monat = $_GET['monat'];
 $persvon = $_GET['persvon'];
 $persbis = $_GET['persbis'];
+$oe1 = trim($_GET['oe']);
+$oe1 = strtr($oe1, "*", "%");
+
+if(strlen($oe1)==0 || $oe1=="%"){
+    $oe1 = NULL;
+}
 
 $fullAccess = $a->testReportPassword("D155", $password, $user, 0);
 
@@ -96,7 +102,7 @@ $pdf->setLanguageArray($l); //set language items
 $pdf->SetFont("FreeSans", "", 8);
 
 //vybrat osobni cisla, ktera mji v danem mesici osobni hodnoceni
-$persnrArray = $a->getPersNrArrayHodnoceniMonatJahr($persvon, $persbis, $jahr, $monat);
+$persnrArray = $a->getPersNrArrayHodnoceniMonatJahr($persvon, $persbis, $jahr, $monat,$oe1);
 if ($persnrArray !== NULL) {
     foreach ($persnrArray as $pr) {
 	$persnr = $pr['persnr'];
