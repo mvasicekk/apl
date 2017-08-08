@@ -35,7 +35,8 @@
 			</tr>
 			<tr>
 			    <th class="bg-info">
-				osobní faktor
+				osobní faktor (váha)
+				<!--nove pro rozliseni nekterych faktoru, ktere maji stejny popis a lisi se jen vahou-->-->
 			    </th>
 			    <th class="bg-info">
 				firemni faktor
@@ -46,7 +47,7 @@
 		    <tbody>
 			<tr ng-repeat="f in osobniFaktory|filter:faktorfilter:strict">
 			    <th>
-				{{f.popis}}
+				{{f.popis}} ({{f.vaha}})
 			    </th>
 			    <td class="text-left">
 				<select ng-show="securityInfo.editArray['firma_faktor_select']" ng-change="updateFiremniFaktor(f)" class="form-control input-xs" ng-model="f.id_firma_faktor">

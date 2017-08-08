@@ -42,6 +42,8 @@ $e=$pcip.$views[0];
 
 $sql.=" select ";
 $sql.="     dzeit.persnr,";
+$sql.="     dpers.regeloe,";
+$sql.="     dpers.specnr,";
 $sql.="     CONCAT(dpers.name,' ',dpers.vorname) as name,";
 $sql.="     DATE_FORMAT(dzeit.datum,'%Y-%m-%d') as datum,";
 $sql.="     DATE_FORMAT(min(dzeit.anw_von),'%H:%i') as von,";
@@ -82,6 +84,8 @@ $options = array(
 			'rowTag'=>'den',
 			'elements'=>array(
 			    'persnr',
+			    'regeloe',
+			    'specnr',
 			    'name',
 			    'datum',
 			    'von',

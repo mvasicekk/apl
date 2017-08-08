@@ -338,6 +338,8 @@ foreach ($persRows as $persnr=>$persnrA){
 	if(intval($zTage>0)){
 	    $bQPremie_zeit = FALSE;
 	    $bQPremie_akkord = FALSE;
+	    //2017-08-04, sebrat i vykonnostni premii v pripade Z
+	    $bLeistPremie = FALSE;
 	}
     }
     
@@ -598,11 +600,40 @@ echo "</table>";
 //foreach ($msRows as $row){
 //    echo $row['exrow'].' - '.$row['comment']."<br>";
 //}
+
+echo "<table>";
+echo "<thead>";
+echo "<tr>";
+echo "<th>";
+echo "cislo slozky";
+echo "</th>";
+echo "<th>";
+echo "popis slozky";
+echo "</th>";
+echo "<th style='text-align:right;white-space:nowrap;'>";
+echo "suma Kč";
+echo "</th>";
+echo "</tr>";
+echo "</thead>";
+echo "<tbody>";
 foreach ($exPol as $cisloSlozky=>$slozkaInfo){
 	if(intval($slozkaInfo['aktiv'])>0){
-	    printf("%03d - %s <br>",$cisloSlozky,$slozkaInfo['popis']);
+	    echo "<tr>";
+	    echo "<td style='text-align:right;white-space:nowrap;'>";
+	    echo "<span>".$cisloSlozky."</span>";
+	    echo "</td>";
+	    echo "<td style='white-space:nowrap;'>";
+	    echo "<span>".$slozkaInfo['popis']."</span>";
+	    echo "</td>";
+	    echo "<td style='text-align:right;white-space:nowrap;'>";
+	    echo "<span>".number_format($sumy[$cisloSlozky]['koruny'],0,',',' ')."</span>";
+	    echo "</td>";
+	    //printf("%03d - %s (%8s)<br>",$cisloSlozky,$slozkaInfo['popis'],number_format($sumy[$cisloSlozky]['koruny'],0,',',' '));
+	    echo "</tr>";
 	}
 }
+echo "</tbody>";
+echo "</table>";
 // ulozit do souboru
 $timestamp = date('His');
 $path = sprintf("%s%s/%04d%02d_%s.TXT",$a->getGdatPath(),$a->getDat99Path(),$jahr,$monat,$timestamp);

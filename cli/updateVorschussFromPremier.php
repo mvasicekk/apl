@@ -17,17 +17,25 @@ if ($ucetniJednotka == "") {
 
 
 $sqlDB = sqldb::getInstance($ucetniJednotka);
+$a = AplDB::getInstance();
+
 echo "----- updateVorschussFromPremier on :" . date('Y-m-d H:i:s') . " ----- \n";
 
 
 
 
-$res = $sqlDB->getResult("select convert(varchar, DATUM, 120) as datum1,* from dbo.PUB_UCTO where (DOKLAD='PK' or DOKLAD='PK2') and ZKKOD between 1 and 99999 and MD=33101 and DATUM>'2017-06-30' order by ZKKOD,DATUM");
+$res = $sqlDB->getResult("select convert(varchar, DATUM, 120) as datum1,* from dbo.PUB_UCTO where (DOKLAD='PK' or DOKLAD='PK2' or DOKLAD='B21') and ZKKOD between 1 and 99999 and MD=33101 and DATUM>'2017-06-30' order by ZKKOD,DATUM");
 //$res = $sqlDB->getResult("select convert(varchar, DATUM, 120) as datum1,* from dbo.PUB_UCTO where (DOKLAD='PK' or DOKLAD='PK2') and ZKKOD between 1 and 99999 and MD=33101 order by ZKKOD,DATUM");
 
 $suma = array();
 $sumA = array();
 
+// ted bych mel smazat vsechno v apl v tabulce dvorschuss
+$sql_delete = "delete from dvorschuss where Datum>'2017-06-30' and uj='$ucetniJednotka'";
+$smazano = 0;	
+$smazano = $a->query($sql_delete);
+echo "pocet smazanych radku v apl (dvorschuss): $smazano\n";
+    
 if ($res !== NULL) {
     foreach ($res as $r) {
 	$persnr = intval(trim($r['ZKKOD']));
@@ -35,10 +43,14 @@ if ($res !== NULL) {
 	$datum1 = substr(trim($r['datum1']),0,10);
 	$mesic = intval(date('m',strtotime($datum1)));
 	$popis = iconv('windows-1250', 'UTF-8', trim($r['POPIS']));
+	$doklad = iconv('windows-1250', 'UTF-8', trim($r['DOKLAD']));
 	$vystavil = iconv('windows-1250', 'UTF-8', trim($r['VYSTAVIL']));
 	$castka = intval(trim($r['CASTKA']));
-	$radek = sprintf("%6d dne: %s (%s / %s) castka: %8d",$persnr,$datum1,$popis,$vystavil,$castka);
-	
+	$radek = sprintf("%6d dne: %s (%s / %s / %s) castka: %8d",$persnr,$datum1,$popis,$vystavil,$doklad,$castka);
+
+	$sql_insert = "insert into dvorschuss (PersNr,Datum,Vorschuss,`user`,uj) values('$persnr','$datum1','$castka','$vystavil','$ucetniJednotka')";
+	//echo "$sql_insert"."\n";
+	$a->insert($sql_insert);
 	if(array_key_exists($persnr, $sumA)){
 	    if(array_key_exists($mesic, $sumA[$persnr])){
 		$sumA[$persnr][$mesic] += $castka;
@@ -86,10 +98,12 @@ if ($res !== NULL) {
 	echo $radek;
 	//echo "------------------------------------------------------------------\n";
     }
+    
+    
+    //vlozit vse z premiera
+    
 }
 
 //var_dump($cislaSklady);
 
 $a = AplDB::getInstance();
-
-

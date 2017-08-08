@@ -71,6 +71,8 @@ $cells =
 array(
             'persnr' => array("popis" => "", "sirka" => 8, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
 	    'name' => array("popis" => "", "sirka" => 40, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
+	    'regeloe' => array("popis" => "", "sirka" => 20, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
+	    'specnr' => array("popis" => "", "sirka" => 20, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
 	    'datum' => array("popis" => "", "sirka" => 12, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
     	    'von' => array("popis" => "", "sirka" => 10, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
     	    'bis' => array("popis" => "", "sirka" => 10, "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
@@ -86,6 +88,8 @@ $cells_header =
         array(
             'persnr' => array("popis" => "persnr", "sirka" => $cells['persnr']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
 	    'name' => array("popis" => "persnr", "sirka" => $cells['name']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
+	    'regeloe' => array("popis" => "regeloe", "sirka" => $cells['regeloe']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
+	    'specnr' => array("popis" => "specnr", "sirka" => $cells['regeloe']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
 	    'datum' => array("popis" => "datum", "sirka" => $cells['datum']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
     	    'von' => array("popis" => "anw_von", "sirka" => $cells['von']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),
     	    'bis' => array("popis" => "anw_bis", "sirka" => $cells['bis']['sirka'], "ram" => 'B', "align" => "R", "radek" => 0, "fill" => 0),

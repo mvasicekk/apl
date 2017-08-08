@@ -94,7 +94,7 @@ $pdf->SetProtection(array('extract'), $pdfpass, '', 1);
 
 $pdf->setHeaderFont(Array("FreeSans", '', 9));
 $pdf->setFooterFont(Array("FreeSans", '', 8));
-
+$pdf->setPrintFooter(FALSE);
 $pdf->setLanguageArray($l); //set language items
 //initialize document
 //$pdf->AliasNbPages();
@@ -111,20 +111,48 @@ if ($persnrArray !== NULL) {
 	$persinfo = $a->getPersInfoArray($persnr);
 	$name = $persinfo[0]['Name'];
 	$vorname = $persinfo[0]['Vorname'];
-	$regeloe = $persinfo[0]['regeloe'];
-	$oeInfo = $a->getOEInfoForOES($regeloe);
-	if($oeInfo!==NULL){
-	    $oe = $oeInfo['oe'];
-	    $popis = $oeInfo['beschreibung_cz'];
+	$regeloes = $persinfo[0]['regeloe'];
+	$oeInfo = $a->getOEInfoForOES($regeloes);
+	$regelOE = $oeInfo['oe'];
+	$popis = $a->getOePopis($regelOE);
+	$regelOEText = "$regelOE - $popis";
+	$osobniFaktoryArray = $a->getHodnoceniOsobniFaktoryForOE($regelOE);
+	$hasOEHodnoceni = $osobniFaktoryArray!==NULL?TRUE:FALSE;
+
+	$osobniHodnoceni = $a->getOsobniHodnoceniProPersNrPersForm($persnr, date('Y-m-d', $start), date('Y-m-d', $end));
+	$koeficientArray = $a->getOsobniHodnoceniKoeficientProPersNr($persnr, date('Y-m-d', $start), date('Y-m-d', $end));
+
+	$osobniHodnoceniForm = $osobniHodnoceni;
+	$oeSelectArray = array();
+	foreach ($osobniHodnoceniForm as $idFaktor=>$ohf){
+	    foreach ($ohf as $jm=>$r){
+		if($r['hodnoceni_osobni']['rowexists']==TRUE){
+		    $oeSelectArray[$r['hodnoceni_osobni']['oe']] +=1;
+		}
+	    }
+	}
+	$podleOEArray = array_keys($oeSelectArray);
+	//AplDB::varDump($podleOEArray);
+	$osobniHodnoceniDleArray = array();
+	if($hasOEHodnoceni){
+	    $oe = $regelOE;
+	    $popis = $a->getOePopis($oe);
 	    $dleOEText = "$oe - $popis";
+	    array_push($osobniHodnoceniDleArray, $dleOEText);
 	}
 	else{
-	    $dleOEText = "RegelOE $regeloe";
+	    foreach ($podleOEArray as $oe){
+		$popis = $a->getOePopis($oe);
+		$dleOEText = "$oe - $popis";
+		array_push($osobniHodnoceniDleArray, $dleOEText);
+	    }
+	    //$dleOEText = "RegelOE $regeloe, hodnoceni dle: ". join(',', $podleOEArray);
 	}
 	
 	
-	$osobniHodnoceni = $a->getOsobniHodnoceniProPersNr($persnr, date('Y-m-d', $start), date('Y-m-d', $end));
-	$koeficientArray = $a->getOsobniHodnoceniKoeficientProPersNr($persnr, date('Y-m-d', $start), date('Y-m-d', $end));
+	//$osobniHodnoceni = $a->getOsobniHodnoceniProPersNr($persnr, date('Y-m-d', $start), date('Y-m-d', $end));
+	
+	
 
 	if ($koeficientArray != NULL) {
 	    foreach ($koeficientArray as $jm => $k) {
@@ -150,7 +178,12 @@ if ($persnrArray !== NULL) {
 	    $pdf->SetFont("FreeSans", "B", 8);
 	    $pdf->Text(PDF_MARGIN_LEFT+5, 45+9-8, "Osobní hodnocení dle OE");
 	    $pdf->SetFont("FreeSans", "", 8);
-	    $pdf->Text(PDF_MARGIN_LEFT+5, 45+9+5-8, "$dleOEText");
+	    $ystart = 5;
+	    foreach ($osobniHodnoceniDleArray as $dleOEText){
+		$pdf->Text(PDF_MARGIN_LEFT+5, 45+9+$ystart-8, "$dleOEText");
+		$ystart += 3;
+	    }
+	    
 	    
 	    $pdf->SetY(115);
 	    
@@ -169,7 +202,7 @@ if ($persnrArray !== NULL) {
 	    $pdf->Ln();
 	    
 	    $pdf->SetFont("FreeSans", "", 7);
-	    $pdf->Cell(70+8+10, 5, "$dleOEText", 'L', 0, 'L', 0);
+	    $pdf->Cell(70+8+10, 5, "$regelOEText", 'L', 0, 'L', 0);
 	    $pdf->SetFont("FreeSans", "U", 7);
 	    $pdf->Cell(0, 5, "Abydos s.r.o.", 'R', 0, 'R', 0);
 	    

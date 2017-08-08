@@ -73,37 +73,34 @@ for ($t = $start; $t <= $end; $t+=$step) {
     $jahrMonatArray[$jm] += 1;
 }
 
+$l = $lockvalue == 0 ? "apl_unlocked_von_$u" : "apl_locked_von_$u";
 
 if ($persnrArray !== NULL) {
     // projit seznam ma podle nastaveneho filtru oeselected, jenma
     foreach ($persnrArray as $pr) {
 	$persnr = $pr['persnr'];
+	$regelOES = $a->getRegelOE($persnr);
+	$oeInfo = $a->getOEInfoForOES($regelOES);
+	$oe = $oeInfo['oe'];
+	$osobniFaktoryArray = $a->getHodnoceniOsobniFaktoryForOE($oe);
+	$hasOEHodnoceni = $osobniFaktoryArray!==NULL?TRUE:FALSE;
+	
 	if ($lock == TRUE) {
-	    //zamykani
-	    $osobniFaktory = $a->getOsobniHodnoceniFaktoryProPersNr($persnr);
-	    if ($osobniFaktory !== NULL) {
-		foreach ($osobniFaktory as $of) {
+	    // 1. u existujicich radku v hodnoceni_osobni provedu update
+	    $sql = "update hodnoceni_osobni set locked='$lockvalue',last_edit='$l' where persnr='$persnr' and datum='$von'";
+	    $a->query($sql);
+	    // 2.pokud ma persnr hodnoceni podle oe, tak mu radky vytvorim a nastavim lock/unlock
+	    if($hasOEHodnoceni){
+		foreach ($osobniFaktoryArray as $of) {
 		    $id_osobni_faktor = $of['id_faktor'];
-		    $sql = "select id from hodnoceni_osobni where persnr='$persnr' and id_faktor='$id_osobni_faktor' and datum='$von'";
-		    $prs = $a->getQueryRows($sql);
-		    $l = $lockvalue == 0 ? "apl_unlocked_von_$u" : "apl_locked_von_$u";
-		    if ($prs !== NULL) {
-			//radek uz mam, zamknu
-			$id = $prs[0]['id'];
-			$upd = "update hodnoceni_osobni set locked='$lockvalue',last_edit='$l' where (id='$id')";
-			$a->query($upd);
-		    } else {
-			//radek jeste nemam, provedu insert
-			$sql = "insert into hodnoceni_osobni (persnr,id_faktor,datum,last_edit,locked) values('$persnr','$id_osobni_faktor','$von','$l','$lockvalue')";
-			$insertId = $a->insert($sql);
-		    }
+		    //radek jeste nemam, provedu insert
+		    $sql = "insert into hodnoceni_osobni (persnr,id_faktor,datum,last_edit,locked) values('$persnr','$id_osobni_faktor','$von','$l','$lockvalue')";
+		    $insertId = $a->insert($sql);
 		}
 	    }
 	} else {
 	    // prevezmu hodnoceni podle firemnich hodnot
-	    $osobniHodnoceniArray = $a->getOsobniHodnoceniProPersNr($persnr,  $von,$bis);
-	    //$jmArray = $osobniHodnoceniArray['jahrmonatArray'];
-	    
+	    $$osobniHodnoceniArray = $a->getOsobniHodnoceniProPersNrPersForm($persnr,  $von,$bis);
 	    if($osobniHodnoceniArray!==NULL){
 		foreach($osobniHodnoceniArray['osobniFaktory'] as $index=>$of){
 		    $id_osobni_faktor = $of['id_faktor'];
@@ -120,16 +117,14 @@ if ($persnrArray !== NULL) {
 				$sql = "select id from hodnoceni_osobni where persnr='$persnr' and id_faktor='$id_osobni_faktor' and datum='$datum'";
 				$rr = $a->getQueryRows($sql);
 				if($rr==NULL){
-				    //nemam, vlozim
-				    $insert = "insert into hodnoceni_osobni (persnr,id_faktor,datum) values('$persnr','$id_osobni_faktor','$datum')";
-				    $id_hodnoceni = $a->insert($insert);
+				    //nemelo by se stat protoze pro hodnoceni podle OE by mi radky mela vytvorit funkce getOsobniHodnoceniProPersNrPersForm
 				}
 				else{
 				    $id_hodnoceni = $rr[0]['id'];
+				    // update, ale jen nezamcene
+				    $sql = "update hodnoceni_osobni set hodnoceni='$hodnoceniFirma',castka='$castka' where (id='$id_hodnoceni') and (locked=0)";
+				    $ar = $a->query($sql);
 				}
-				// update, ale jen nezamcene
-				$sql = "update hodnoceni_osobni set hodnoceni='$hodnoceniFirma',castka='$castka' where (id='$id_hodnoceni') and (locked=0)";
-				$ar = $a->query($sql);
 			    }
 			}
 		    }

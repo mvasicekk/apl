@@ -174,7 +174,7 @@ class AplDB {
 	"betragDB"=>"qtlPremieBetrag",
 	"aktiv"=>1
     ),
-    "303"=>array(
+    "340"=>array(
 	"popis"=>"osobní ohodnocení",
 	"stunden"=>0,
 	"tage"=>0,
@@ -3547,42 +3547,45 @@ class AplDB {
     public function getOsobniHodnoceniProPersNr($persnr, $von, $bis,$oe=NULL) {
 
 	$vystup = NULL;
-
 	if ($oe == NULL) {
-	    $sql = " select";
+	    $sql = " select distinct";
 	    $sql .= " dpers.PersNr,";
 	    $sql .= " dtattypen.oe,";
-	    $sql .= " hodnoceni_faktory_oe.id_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.id as id_faktor,";
 	    $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
 	    $sql .= " hodnoceni_osobni_faktory.vaha,";
 	    $sql .= " hodnoceni_osobni_faktory.popis";
 	    $sql .= " from dpers";
 	    $sql .= " join dtattypen on dtattypen.tat=dpers.regeloe";
-	    $sql .= " join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
-	    $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+	    $sql .= " join hodnoceni_osobni on hodnoceni_osobni.persnr=dpers.PersNr";
+	    $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_osobni.id_faktor";
 	    $sql .= " where";
-	    $sql .= "     dpers.PersNr='$persnr'";
+	    $sql .= " dpers.PersNr='$persnr'";
+	    $sql .= " and";
+	    $sql .= " hodnoceni_osobni.datum between '$von' and '$bis'";
 	    $sql .= " order by";
 	    $sql .= " hodnoceni_osobni_faktory.sort";
-	}
-	else{
-	    $sql = " select";
-	    $sql .= " dpers.PersNr,";
-	    $sql .= " dtattypen.oe,";
-	    $sql .= " hodnoceni_faktory_oe.id_faktor,";
-	    $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
-	    $sql .= " hodnoceni_osobni_faktory.vaha,";
-	    $sql .= " hodnoceni_osobni_faktory.popis";
-	    $sql .= " from dpers";
-	    $sql .= " join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe='$oe'";
-	    $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
-	    $sql .= " where";
-	    $sql .= "     dpers.PersNr='$persnr'";
-	    $sql .= " order by";
-	    $sql .= " hodnoceni_osobni_faktory.sort";
+//
+//	    
+//            $sql = " select";
+//            $sql .= " dpers.PersNr,";
+//            $sql .= " dtattypen.oe,";
+//            $sql .= " hodnoceni_faktory_oe.id_faktor,";
+//            $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
+//            $sql .= " hodnoceni_osobni_faktory.vaha,";
+//            $sql .= " hodnoceni_osobni_faktory.popis";
+//            $sql .= " from dpers";
+//            $sql .= " join dtattypen on dtattypen.tat=dpers.regeloe";
+//            $sql .= " join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
+//            $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+//            $sql .= " where";
+//            $sql .= "     dpers.PersNr='$persnr'";
+//            $sql .= " order by";
+//            $sql .= " hodnoceni_osobni_faktory.sort";
 	}
 
 	$faktory = $this->getQueryRows($sql);
+	//AplDB::varDump($faktory);
 
 	if ($faktory !== NULL) {
 	    $vystup = array();
@@ -3618,9 +3621,123 @@ class AplDB {
 	    // TODO
 	    // a jeste projit jiz zadane hodnoceni, ktere neodpovida zadanemu oe nebo regeloe
 	}
+	//AplDB::varDump($vystup);
 	return $vystup;
     }
 
+    public function getOsobniHodnoceniProPersNrPersForm($persnr, $von, $bis,$oe=NULL) {
+	$vystup = NULL;
+
+	//osobni faktory ziskam na zaklade projiti jiz zadaneho hodnoceni v danem casovem rozsahu
+	if ($oe == NULL) {
+	    $sql = " select distinct";
+	    $sql .= " dpers.PersNr,";
+	    $sql .= " dtattypen.oe,";
+	    $sql .= " hodnoceni_osobni_faktory.id as id_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
+	    $sql .= " hodnoceni_osobni_faktory.vaha,";
+	    $sql .= " hodnoceni_osobni_faktory.popis";
+	    $sql .= " from dpers";
+	    $sql .= " join dtattypen on dtattypen.tat=dpers.regeloe";
+	    $sql .= " join hodnoceni_osobni on hodnoceni_osobni.persnr=dpers.PersNr";
+	    $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_osobni.id_faktor";
+	    $sql .= " where";
+	    $sql .= " dpers.PersNr='$persnr'";
+	    $sql .= " and";
+	    $sql .= " hodnoceni_osobni.datum between '$von' and '$bis'";
+	    $sql .= " order by";
+	    $sql .= " hodnoceni_osobni_faktory.sort";
+	}
+
+	$faktoryPodleZadanehoHodnoceni = $this->getQueryRows($sql);
+	$hasFaktoryPodleZadanehoHodnoceni = count($faktoryPodleZadanehoHodnoceni)>0?TRUE:FALSE;
+	//pokud jeste neni zadane hodnoceni a persnr ma regeloe ktere ma faktory k hodnoceni vytahnu si i tyto
+	$faktoryPodleOE = NULL;
+	$regelOES = $this->getRegelOE($persnr);
+	$oeInfo = $this->getOEInfoForOES($regelOES);
+	$oe = $oeInfo['oe'];
+	$osobniFaktoryArray = $this->getHodnoceniOsobniFaktoryForOE($oe);
+	$hasOEHodnoceni = $osobniFaktoryArray!==NULL?TRUE:FALSE;
+	
+	if($hasOEHodnoceni){
+            $sql = " select";
+            $sql .= " dpers.PersNr,";
+            $sql .= " dtattypen.oe,";
+            $sql .= " hodnoceni_faktory_oe.id_faktor,";
+            $sql .= " hodnoceni_osobni_faktory.id_firma_faktor,";
+            $sql .= " hodnoceni_osobni_faktory.vaha,";
+            $sql .= " hodnoceni_osobni_faktory.popis";
+            $sql .= " from dpers";
+            $sql .= " join dtattypen on dtattypen.tat=dpers.regeloe";
+            $sql .= " join hodnoceni_faktory_oe on hodnoceni_faktory_oe.oe=dtattypen.oe";
+            $sql .= " join hodnoceni_osobni_faktory on hodnoceni_osobni_faktory.id=hodnoceni_faktory_oe.id_faktor";
+            $sql .= " where";
+            $sql .= "     dpers.PersNr='$persnr'";
+            $sql .= " order by";
+            $sql .= " hodnoceni_osobni_faktory.sort";
+	}
+	$faktoryPodleOE = $this->getQueryRows($sql);
+	
+	//ted musim sloucit pole do jednoho pole faktory, ktere bude sjednocenim obou poli
+	//na zaklade jedinecne kombinace id_faktor a id_firma_faktor
+	$faktory = NULL;
+	$faktory1 = array();
+	
+	if($faktoryPodleZadanehoHodnoceni!==NULL){
+	    foreach ($faktoryPodleZadanehoHodnoceni as $f){
+		$faktory1[$f['id_faktor'].':'.$f['id_firma_faktor']] = $f;
+	    }
+	}
+	if($faktoryPodleOE!==NULL){
+	    foreach ($faktoryPodleOE as $f){
+		$faktory1[$f['id_faktor'].':'.$f['id_firma_faktor']] = $f;
+	    }
+	}
+	
+	if(count($faktory1)>0){
+	    $faktory = array();
+	    foreach ($faktory1 as $f){
+		array_push($faktory, $f);
+	    }
+	}
+	
+
+	if ($faktory !== NULL) {
+	    $vystup = array();
+	    $vystup['osobniFaktory'] = $faktory;
+
+	    //vytvorim si pole roku mesicu
+	    $start = strtotime($von);
+	    $end = strtotime($bis);
+	    $step = 24 * 60 * 60;
+	    for ($t = $start; $t <= $end; $t+=$step) {
+		$jm = date('Y-m', $t);
+		$jahrMonatArray[$jm] += 1;
+	    }
+
+	    //jedu po faktorech
+	    foreach ($faktory as $f) {
+		$id_firma_faktor = $f['id_firma_faktor'];
+		$id_osobni_faktor = $f['id_faktor'];
+		// a jedu jednotlive jm
+		foreach ($jahrMonatArray as $jm => $pocet) {
+		    $datum = $jm . '-01'; //prvni den mesice o ktery se zajimam
+		    // zjistim firemni hodnoceni pokud me u osobniho faktoru zajima
+		    $hodnoceniFirma = NULL;
+		    if ($id_firma_faktor > 0) {
+			$hodnoceniFirma = $this->getHodnoceniFirmaFaktorDatum($id_firma_faktor, $datum);
+		    }
+		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_firma'] = $hodnoceniFirma;
+		    //zjistim osobni hodnoceni pro faktor a mesic
+		    $hodnoceniOsobni = $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni);
+		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_osobni'] = $hodnoceniOsobni;
+		}
+	    }
+	    // TODO
+	    // a jeste projit jiz zadane hodnoceni, ktere neodpovida zadanemu oe nebo regeloe
+	}
+	return $vystup;
+    }
     /**
      * 
      * @param type $id
@@ -3637,9 +3754,10 @@ class AplDB {
     /**
      * 
      * @param type $id_osobni_faktor
+     * @param boolean $hasOEHodnoceni - priznak, ze persnr ma hodnoceni podle regeloe
      * @param type $datum
      */
-    public function getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum) {
+    public function getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni=TRUE) {
 	$sql.=" select hodnoceni_osobni.*";
 	$sql.=" from hodnoceni_osobni";
 	$sql.=" where";
@@ -3658,12 +3776,21 @@ class AplDB {
 	    } else {
 		$rr[0]['locked'] = TRUE;
 	    }
+	    $rr[0]['rowexists'] = TRUE;
 	    return $rr[0];
 	} else {
-	    // nemam, vytvorim, vratim
-	    $insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
-	    $this->insert($insert);
-	    return $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum);
+	    // nemam, vytvorim, vratim, ale jen pokud ma persnr hodnoceni podle regeloe
+	    if($hasOEHodnoceni){
+		$insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
+		$this->insert($insert);
+		return $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum);
+	    }
+	    else{
+		//vratim pseudo hodnoty s nulama, radek v tabulce nevytvorim, pro jistotu nastavim jako locked
+		return array("locked"=>TRUE,
+		    "rowexists"=>FALSE,	// neni to skutecny radek
+		    );
+	    }
 	}
     }
 
@@ -3685,6 +3812,19 @@ class AplDB {
 	return intval($v * $vaha);
     }
 
+    public function getOePopis($oe){
+	$sql.=" select doe.oe,doe.beschreibung_cz ";
+	$sql.=" from doe";
+	$sql.=" where";
+	$sql.=" doe.oe='$oe'";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    return $rs[0]['beschreibung_cz'];
+	}
+	else{
+	    return "";
+	}
+    }
     /**
      * 
      * @param type $oes
@@ -3703,7 +3843,28 @@ class AplDB {
 	    return NULL;
 	}
     }
-/**
+    
+    
+    /**
+     * 
+     * @param type $oe
+     */
+    public function getHodnoceniOsobniFaktoryForOE($oe) {
+	$sql .= " select hodnoceni_faktory_oe.id_faktor as id_osobni_faktor,";
+	$sql .= " hodnoceni_osobni_faktory.popis as osobni_faktor_popis,";
+	$sql .= " hodnoceni_osobni_faktory.vaha";
+	$sql .= " from hodnoceni_faktory_oe";
+	$sql .= " join hodnoceni_osobni_faktory on hodnoceni_faktory_oe.id_faktor=hodnoceni_osobni_faktory.id";
+	$sql .= " where";
+	$sql .= " hodnoceni_faktory_oe.oe='$oe'";
+	$sql .= " order by";
+	$sql .= " hodnoceni_osobni_faktory.sort,";
+	$sql .= " hodnoceni_osobni_faktory.id";
+
+	return $this->getQueryRows($sql);
+    }
+
+    /**
  * 
  */
 public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,$oe=NULL){
@@ -3724,7 +3885,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
     $sql.=" where";
     $sql.=" hodnoceni_osobni.persnr between '$persvon' and '$persbis'";
     $sql.=" and datum between '$von' and '$bis'";
-    $sql.=" and dtattypen.oe like '%".$oe."%'";
+    $sql.=" and ( dtattypen.oe like '%".$oe."%' or hodnoceni_osobni.oe like '%".$oe."%'";
     $sql.=" group by hodnoceni_osobni.persnr";
     }
     return $this->getQueryRows($sql);
@@ -5908,6 +6069,13 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
 	return $this->getQueryRows($sql);
     }
 
+    /**
+     * 
+     */
+    public function getRolesArray(){
+	$sql = "select roles.id,roles.`name`,roles.bemerkung,roles.stamp from roles order by id";
+	return $this->getQueryRows($sql);
+    }
     /**
      * 
      * @param type $user

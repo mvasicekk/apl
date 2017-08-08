@@ -73,7 +73,8 @@ function get_muster_vom($record)
 
 function get_bemerkung($record){
     $a = AplDB::getInstance();
-    return $a->getPalBemerkungIMPal($record['auftragsnr'],$record['palimp']);
+    // oriznout dlouhou poznamku
+    return substr($a->getPalBemerkungIMPal($record['auftragsnr'],$record['palimp']), 0, 50);
 }
 
 

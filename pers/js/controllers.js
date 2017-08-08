@@ -204,6 +204,28 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	//console.log($model);
 	$scope.filt.dstatus.push($item);
     }
+    
+    /**
+     * 
+     * @param {type} $item
+     * @param {type} $model
+     * @returns {undefined}
+     */
+    $scope.hodnoceniOESelectAction = function($item,$model,jm){
+	console.log($item);
+	console.log($model);
+	console.log(jm);
+	$http.post(
+		    './createOsobniHodnoceni.php',
+		    {
+			persnr: $scope.ma.maInfo.PersNr,
+			jm: jm,
+			oe: $model
+		    }
+	    ).then(function (response) {
+		getOsobniHodnoceni();
+	    });
+    }
     /**
      * 
      * @param {type} files
@@ -795,11 +817,15 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      */
     $scope.sumaOsobniHodnoceniMonat = function (p, jm) {
 	var suma = 0;
-	for (pr in $scope.osobniHodnoceniArray.hodnoceni) {
-	    //console.log(pr);
-	    if (pr !== "osobniFaktory") {
-		//console.log($scope.osobniHodnoceniArray.hodnoceni[pr][jm].hodnoceni_osobni[p]);
-		suma += parseFloat($scope.osobniHodnoceniArray.hodnoceni[pr][jm].hodnoceni_osobni[p]);
+	if ($scope.osobniHodnoceniArray !== null) {
+	    for (pr in $scope.osobniHodnoceniArray.hodnoceni) {
+		//console.log(pr);
+		if (pr !== "osobniFaktory") {
+		    //console.log($scope.osobniHodnoceniArray.hodnoceni[pr][jm].hodnoceni_osobni[p]);
+		    if($scope.osobniHodnoceniArray.hodnoceni[pr][jm].hodnoceni_osobni.rowexists===true){
+			suma += parseFloat($scope.osobniHodnoceniArray.hodnoceni[pr][jm].hodnoceni_osobni[p]);
+		    }
+		}
 	    }
 	}
 	return suma;
@@ -1011,11 +1037,15 @@ $scope.commentClicked = function(e,p){
     $scope.oshodDatumChanged = function (grenze) {
 	if (grenze == 'von') {
 	    //nastavim na prvni den mesice
-	    $scope.osobniHodnoceniVon = new Date($scope.osobniHodnoceniVon.getFullYear(), $scope.osobniHodnoceniVon.getMonth(), 1);
+	    if($scope.osobniHodnoceniVon!=undefined){
+		$scope.osobniHodnoceniVon = new Date($scope.osobniHodnoceniVon.getFullYear(), $scope.osobniHodnoceniVon.getMonth(), 1);
+	    }
 	}
 	if (grenze == 'bis') {
 	    //nastavim na posledni den mesice
-	    $scope.osobniHodnoceniBis = new Date($scope.osobniHodnoceniBis.getFullYear(), $scope.osobniHodnoceniBis.getMonth() + 1, 0);
+	    if($scope.osobniHodnoceniBis!=undefined){
+		$scope.osobniHodnoceniBis = new Date($scope.osobniHodnoceniBis.getFullYear(), $scope.osobniHodnoceniBis.getMonth() + 1, 0);
+	    }
 	}
 	getOsobniHodnoceni();
     }
@@ -1225,8 +1255,11 @@ $scope.commentClicked = function(e,p){
 			bis: $scope.osobniHodnoceniBis
 		    }
 	    ).then(function (response) {
+		$scope.hasOEHodnoceni = response.data.hasOEHodnoceni;
 		$scope.osobniHodnoceniArray = response.data.osobniHodnoceniArray;
+		$scope.osobniHodnoceniJMArray = response.data.jahrmonatarray;
 		$scope.osobniHodnoceniKoeficientArray = response.data.osobniHodnoceniKoeficientArray;
+		$scope.osobniHodnoceniOeSelectArray = response.data.oeSelectArray;
 	    });
 	}
 
