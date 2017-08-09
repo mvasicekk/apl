@@ -1,0 +1,60 @@
+div.page-header{
+  background-color: lightyellow;
+  text-align: center;
+  margin: 0px 0px 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+.cards{
+  background-color: #e3e3e3;
+  height: 30px;
+  padding: 5px;
+}
+.palli{
+  padding-left: unset;
+  padding-right: unset;
+  cursor: pointer;
+}
+.statSeznam{
+  cursor: pointer;
+}
+.statSeznam:hover{
+  background-color:#dadaf8;
+}
+.problem{
+  background-color: #f6a0a0;
+}
+.vyrazen{
+  float: right;
+  margin: 5px;
+  margin-right: 47px;
+}
+.addStat{
+  color: green;
+  cursor: pointer;
+}
+.customPopUp{
+  z-index: 11112;
+  position: absolute;
+}
+
+@media print {
+ body * {
+     visibility: hidden;
+ }
+ #divtoprint * {
+     visibility: visible;
+ }
+ .modal{
+     position: absolute;
+     left: 0;
+     top: 0;
+     margin: 0;
+     padding: 0;
+     min-height:550px
+ }
+ .no-print, .no-print *
+   {
+       display: none !important;
+   }
+}
