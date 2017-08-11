@@ -5,8 +5,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/index.html</file>
             <file>file:/home/jr/NetBeansProjects/apl/pers/templates/ma.html</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/fillOsobniHodnoceni.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/api/admin/getRoles.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/E145_pdf.php</file>
         </group>
     </open-files>
 </project-private>
