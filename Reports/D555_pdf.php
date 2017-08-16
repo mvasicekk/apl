@@ -621,8 +621,8 @@ endif
 //
 //$fitcell
 //(boolean) if true attempt to fit all the text within the cell by reducing the font size (do not work in HTML mode). $maxh must be greater than 0 and wqual to $h.
-#zatim pouze zmena textu a zakaznika. Dalsi zmeny budou az se vyresi posledni zakaznik
-if ($kunde == 174) {
+# 20170816 -> veta u kazdeho zakaznika
+
     $pdf->SetX(0);
     $pdf->SetAutoPageBreak(FALSE);
 //$pdf->MultiCell($w, $h, $txt, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell)
@@ -633,7 +633,7 @@ if ($kunde == 174) {
     $pdf->SetY($pdf->getPageHeight() - 9 * $radku);
     $pdf->SetFont("FreeSans", "", 10);
     $pdf->MultiCell(0, 5, $text, '0', 'L', 0, 0, '', '', FALSE, 0, FALSE, FALSE, 0, 'B');
-}
+
 
 //$pdf->Output();
 ////AplDB::varDump($seskupenePole);
