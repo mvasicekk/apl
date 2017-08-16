@@ -143,7 +143,6 @@ foreach($imas as $ima){
     $teilnr = getValueForNode($imaChilds, 'teil');
     $imaid = getValueForNode($imaChilds, 'id');
     $kundenr = $apl->getKundeFromTeil($teilnr);
-    // aktualizovat ciso zakaznika z dilu
     $kunde = $kundenr;
     $kundeInfoArray = $apl->getKundeInfoArray($kundenr);
     $waehrkz = $kundeInfoArray[0]['waehrkz'];
@@ -622,13 +621,14 @@ endif
 //
 //$fitcell
 //(boolean) if true attempt to fit all the text within the cell by reducing the font size (do not work in HTML mode). $maxh must be greater than 0 and wqual to $h.
-if ($kunde == 111) {
+#zatim pouze zmena textu a zakaznika. Dalsi zmeny budou az se vyresi posledni zakaznik
+if ($kunde == 174) {
     $pdf->SetX(0);
     $pdf->SetAutoPageBreak(FALSE);
 //$pdf->MultiCell($w, $h, $txt, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell)
-    $text = "Die Teile entsprechen nicht dem PPA und Muster und müssen aus Liefertermingründen weiter bearbeitet werden.\n";
-    $text .= "Wir bitten Sie innerhalb von 24 Stunden um Überprüfung bzw. Genehmigung der Mehrarbeitsanmeldung. Sonst sehen\n";
-    $text .= "wir die Mehrarbeitsanmeldung als genehmigt an.";
+    $text = "Die Teile entsprechen nicht der PPA und/oder dem Putzmuster. Ein Mehraufwand ist erforderlich.\n";
+    $text .= "Um die Liefertermine nicht zu gefährden bitten wir Sie innerhalb von 24 Stunden die Mehrarbeitsanmeldung zu\n";
+    $text .= "überprüfen bzw. zu genehmigen. Sonst werden wir diese Mehrarbeitsanmeldung als genehmigt betrachten.";
     $radku = count(split("\n", $text));
     $pdf->SetY($pdf->getPageHeight() - 9 * $radku);
     $pdf->SetFont("FreeSans", "", 10);
