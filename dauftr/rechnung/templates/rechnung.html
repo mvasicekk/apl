@@ -1,0 +1,115 @@
+<div class="container-fluid" ng-controller="rechnungController">
+    <div>
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+    </div>
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-12">
+		<!--zahlavi formulare-->
+		<h4>Rechnung</h4>
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    <form name="rechnungForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
+	<div class="row">
+	    <div class="col-md-9 maxheightfull">
+		<table id='rechtable' class="table table-condensed table-hover table-striped">
+		    <thead>
+			<tr>
+			    <th>Teil</th>
+			    <th class="text-right">Pal</th>
+			    <th>TatKZ</th>
+			    <th class="text-right">Im-Stk</th>
+			    <th class="text-right">Ex-Stk</th>
+			    <th class="text-right">Preis</th>
+			    <th class="text-right">GesPreis</th>
+			    <th class="text-right">Auss</th>
+			    <th>Bestell</th>
+			    <th>Pos</th>
+			    <th class="text-right">Ex-Im</th>
+			    <th>vom Im</th>
+			    <th>Taetigkeit</th>
+			</tr>
+		    </thead>
+		    <tbody>
+<!--			<tr ng-init="isnewpal=isNewPal(t.pal)" ng-repeat="t in teile" ng-click="teilRowClicked(t,$index)">-->
+			<tr ng-repeat="t in dauftrRows">
+			    <td ng-class="{}">{{t.teil}}</td>
+			    <td ng-class="{'text-right':true}">{{t.pal}}</td>
+			    <td ng-class="{}">{{t.tatkz}}</td>
+			    <td ng-class="{'text-right':true}">{{t.importstk}}</td>
+			    <td ng-class="{'text-right':true}">{{t.exportstk}}</td>
+			    <td ng-class="{'text-right':true}">{{t.preis|numeraljs:'#.####'}}</td>
+			    <td ng-class="{'text-right':true}">{{t.gespreis|numeraljs:'#.####'}}</td>
+			    <td ng-class="{'text-right':true}">{{t.auss}}</td>
+			    <td ng-class="{}">{{t.fremdauftr}}</td>
+			    <td ng-class="{}">{{t.fremdpos}}</td>
+			    <td ng-class="{'text-right':true}">{{t.diff}}</td>
+			    <td ng-class="{}">{{t.auftragsnr}}</td>
+			    <td ng-class="{}">{{t.text}}</td>
+			</tr>
+		    </tbody>
+		</table>
+	    </div>
+	    <div class="col-md-3">
+		<div class="panel panel-success">
+		    <div class="panel-heading">ExportInfo</div>
+			<table class="table">
+			    <tr>
+				<th>Export:</th>
+				<td class="text-right"><span class="label label-success">{{rechnungInfo.auftragsnr}}</span></td>
+			    </tr>
+			    <tr>
+				<th>Auslief-Datum:</th>
+				<td class="text-right">{{rechnungInfo.auftrInfo[0].ausliefer_raw}}</td>
+			    </tr>
+			</table>
+		</div>
+		<div class="panel panel-info">
+		    <div class="panel-heading">Rechnung/Drueck</div>
+			<table class="table">
+			    <tr>
+				<th>Rechnungspreis</th>
+				<td class="text-right">{{rechnungInfo.rechnung|numeraljs:'#.####'}}</td>
+			    </tr>
+			    <tr>
+				<th>Drueckpreis</th>
+				<td class="text-right">{{rechnungInfo.drueck|numeraljs:'#.####'}}</td>
+			    </tr>
+			    <tr>
+				<th>Diff</th>
+				<td ng-class="{'text-right':true,'text-warning':rechnungInfo.drueckRechnungDiff<0,'text-success':rechnungInfo.drueckRechnungDiff=0}">{{rechnungInfo.drueckRechnungDiff|numeraljs:'#.####'}}</td>
+			    </tr>
+			    <tr ng-if="rechnungInfo.auftrInfo[0].hatrechnung=='0'">
+				<td colspan="2"><button class="btn btn-block btn-success">Rechnung berechnen</button></td>
+				<td colspan="2"><button disabled class="btn btn-block btn-success">Umrechnung</button></td>
+				<td colspan="2"><button class="btn btn-block btn-success">Rechnung teilen</button></td>
+			    </tr>
+			</table>
+		</div>
+		<div ng-if="rechnungInfo.auftrInfo[0].hatrechnung=='1'" class="panel panel-info">
+		    <div class="panel-heading">Rechnungen drucken</div>
+		    <div class="panel-body">
+			<div class="btn-group-vertical btn-block" role="group" aria-label="...">
+			    <a role="button" class="btn btn-info" href="">D740 kurz</a>
+			    <a role="button" class="btn btn-info" href="">D742 kurz</a>
+			    <a role="button" class="btn btn-info" href="">D750 normal</a>
+			    <a role="button" class="btn btn-info" href="">D752 normal</a>
+			    <a role="button" class="btn btn-info" href="">D760 kurz</a>
+			    <a role="button" class="btn btn-info" href="">D770 normal</a>
+			    <a role="button" class="btn btn-info" href="">D792 kurz</a>
+			    <a role="button" class="btn btn-info" href="">D794 kurz</a>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+    </form>
+</div>

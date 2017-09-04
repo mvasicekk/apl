@@ -239,6 +239,7 @@ function pageheader($pdfobjekt,$cells,$childnodes)
         if($textMeziZavorkama=="re-nr") $textMeziZavorkama = $renr;
 
         $berechnenText .= $textPredZavorkama." ".$textMeziZavorkama." ".$textZaZavorkama;
+	$berechnenText = "";
 		$pdfobjekt->Cell(0,7,$berechnenText,'0',1,'L',0);
 	}
 	else
@@ -394,7 +395,7 @@ function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 //}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
+function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumBetrag=0)
 {
 
     global $parametersPDF;
@@ -405,8 +406,11 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
     $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Ln();
-	$pdfobjekt->Cell(0,$vyskaradku,"Bitte überweisen Sie den Betrag bis ".getValueForNode($childNodes,"zahldatum")." auf das Konto",'0',1,'1',0);
-	$pdfobjekt->Cell(0,$vyskaradku,"Nr. ".getValueForNode($childNodes,"kontotext")."",'0',1,'1',0);
+	if($sumBetrag>=0){
+	    $pdfobjekt->Cell(0,$vyskaradku,"Bitte überweisen Sie den Betrag bis ".getValueForNode($childNodes,"zahldatum")." auf das Konto",'0',1,'1',0);
+	    $pdfobjekt->Cell(0,$vyskaradku,"Nr. ".getValueForNode($childNodes,"kontotext")."",'0',1,'1',0);
+	}
+	
 
 
     // verwendungszweck
@@ -456,7 +460,10 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
     else
         $zweckText="";
 //    $zweckText .= $textPredZavorkama." ".$textMeziZavorkama." ".$textZaZavorkama;
-    $pdfobjekt->Cell(0,$vyskaradku,$zweckText,'0',1,'1',0);
+    if($sumBetrag>=0){
+	$pdfobjekt->Cell(0,$vyskaradku,$zweckText,'0',1,'1',0);
+    }
+    
     }
 
 	$dic=getValueForNode($childNodes,"andic");
@@ -687,7 +694,7 @@ foreach ($rechnunge as $rechnung) {
 }
 
 
-zapati_sestava($pdf,6,array(255,255,255),$rechnungChildNodes);
+zapati_sestava($pdf,6,array(255,255,255),$rechnungChildNodes,$sum_zapati_rechnung_array['betrag']);
 
 
 //Close and output PDF document
