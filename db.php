@@ -3691,6 +3691,7 @@ class AplDB {
 	if($faktoryPodleOE!==NULL){
 	    foreach ($faktoryPodleOE as $f){
 		$faktory1[$f['id_faktor'].':'.$f['id_firma_faktor']] = $f;
+		$faktoryPodleOE1[$f['id_faktor']] += 1;
 	    }
 	}
 	
@@ -3717,8 +3718,11 @@ class AplDB {
 
 	    //jedu po faktorech
 	    foreach ($faktory as $f) {
+		$bIsOEFaktor = FALSE;	// jestli je to osobni faktor podle oe
+		$bIsOEFaktor = array_key_exists($f['id_faktor'], $faktoryPodleOE1);
 		$id_firma_faktor = $f['id_firma_faktor'];
 		$id_osobni_faktor = $f['id_faktor'];
+		$bIsOEFaktor = array_key_exists($id_osobni_faktor, $faktoryPodleOE1);
 		// a jedu jednotlive jm
 		foreach ($jahrMonatArray as $jm => $pocet) {
 		    $datum = $jm . '-01'; //prvni den mesice o ktery se zajimam
@@ -3729,12 +3733,10 @@ class AplDB {
 		    }
 		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_firma'] = $hodnoceniFirma;
 		    //zjistim osobni hodnoceni pro faktor a mesic
-		    $hodnoceniOsobni = $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni);
+		    $hodnoceniOsobni = $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni,$bIsOEFaktor);
 		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_osobni'] = $hodnoceniOsobni;
 		}
 	    }
-	    // TODO
-	    // a jeste projit jiz zadane hodnoceni, ktere neodpovida zadanemu oe nebo regeloe
 	}
 	return $vystup;
     }
@@ -3757,7 +3759,7 @@ class AplDB {
      * @param boolean $hasOEHodnoceni - priznak, ze persnr ma hodnoceni podle regeloe
      * @param type $datum
      */
-    public function getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni=TRUE) {
+    public function getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni=TRUE,$isOEFaktor=FALSE) {
 	$sql.=" select hodnoceni_osobni.*";
 	$sql.=" from hodnoceni_osobni";
 	$sql.=" where";
@@ -3766,8 +3768,9 @@ class AplDB {
 	$sql.=" datum='$datum'";
 	$sql.=" and";
 	$sql.=" id_faktor='$id_osobni_faktor'";
-
+	
 	$rr = $this->getQueryRows($sql);
+	
 	if ($rr !== NULL) {
 	    //radek uz mam, jen ho vratim
 	    //upravim true/false
@@ -3779,11 +3782,19 @@ class AplDB {
 	    $rr[0]['rowexists'] = TRUE;
 	    return $rr[0];
 	} else {
-	    // nemam, vytvorim, vratim, ale jen pokud ma persnr hodnoceni podle regeloe
+	    // nemam, vytvorim, vratim, ale jen pokud ma persnr hodnoceni podle regeloe a id_osobni_faktor patri k tomuto oe
 	    if($hasOEHodnoceni){
-		$insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
-		$this->insert($insert);
-		return $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum);
+		//zkontrolovat jestli id_osobni_faktor patri k oe
+		if($isOEFaktor){
+		    $insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
+		    $this->insert($insert);
+		    return $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni,$isOEFaktor);
+		}
+		else{
+		    return array("locked"=>TRUE,
+		    "rowexists"=>FALSE,	// neni to skutecny radek
+		    );
+		}
 	    }
 	    else{
 		//vratim pseudo hodnoty s nulama, radek v tabulce nevytvorim, pro jistotu nastavim jako locked

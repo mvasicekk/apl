@@ -128,8 +128,8 @@
 			    </div>
 
 			    <div class="form-group col-md-4 form-group-sm">
-				<label class="control-label" for="bk">Bearbeier kunde:</label>
-				<input maxlength="255" ng-model="rekl.bearbeiter_kunde" type="text" class="form-control pinput" id="bk" placeholder="Bearbeier kunde">
+				<label class="control-label" for="bk">Bearbeiter Kunde:</label>
+				<input maxlength="255" ng-model="rekl.bearbeiter_kunde" type="text" class="form-control pinput" id="bk" placeholder="Bearbeiter Kunde">
 			    </div>
 			</div>
 
@@ -162,7 +162,7 @@
         <div class="panel panel-primary">
             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="detail.html#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 		<div class="panel-heading phead" role="tab" id="headingTwo">
-		    <h4 class="panel-title"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Teil - identifikator</h4>
+		    <h4 class="panel-title"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Teil - Identifikator</h4>
 		    <div style="float:right;">Charge/Giesstag <span class="badge">{{rekl.giesstag|limitTo:255:0}}</span></div>
 		    <hr class="clear">
 		</div>
@@ -351,7 +351,7 @@
 			<!--4. Fehlerursachenng-true-value="'1'" ng-false-value="'0'"-->
                         <div class="row">
                             <div class="col-md-12">
-                                <h5> <span class="col-md-4 Grenpozadi "> 4. Fehlerursachen: </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_erstmalig" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" > Fehler tritt erstmalig auf </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_wiederholfehler" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"> Wiederholferhler </span>  </h5>
+                                <h5> <span class="col-md-4 Grenpozadi "> 4. Fehlerursachen: </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_erstmalig" ng-true-value="'1'" ng-false-value="'0'" type="checkbox" > Fehler tritt zum erstenmal auf </span> <span class="col-md-4 Grenpozadi"> <input ng-model="rekl.report8D_4_wiederholfehler" ng-true-value="'1'" ng-false-value="'0'" type="checkbox"> Wiederholfehler </span>  </h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
                                 <textarea maxlength="255" ng-model="rekl.beschr_ursache" class="form-control"" rows="3"></textarea>
@@ -360,7 +360,7 @@
                         
 			<div class="row">
                             <div class="col-md-12 ">
-                                <h5  style="margin-top: 0px;"> <span class="col-xs-12 Grenpozadi">Art der Bestigung </span></h5>
+                                <h5  style="margin-top: 0px;"> <span class="col-xs-12 Grenpozadi">Art der Beseitigung </span></h5>
                             </div>
                             <div class="col-xs-12 .col-sm-6 .col-lg-8">
                                 <textarea maxlength="255" ng-model="rekl.beschr_beseitigung" class="form-control" rows="3"></textarea>

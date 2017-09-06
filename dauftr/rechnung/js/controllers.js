@@ -51,10 +51,22 @@ aplApp.controller('rechnungController', function ($scope, $routeParams, $http, $
 	firstDay: 1
     };
     $scope.showHelp = false;
+    $scope.showRechnungTeilenForm = false;
     $scope.securityInfo = undefined;
     $scope.auftragsnr = $routeParams.auftragsnr;
     $scope.curDate = new Date();
     $scope.dauftrRows = [];
+    $scope.maradio = {
+	druckMA:'voll'
+    };
+
+/**
+ * 
+ * @returns {undefined}
+ */
+$scope.toggleRechnungTeilenForm  = function(){
+    $scope.showRechnungTeilenForm = !$scope.showRechnungTeilenForm;
+}
 
     /**
      * 
@@ -105,6 +117,12 @@ aplApp.controller('rechnungController', function ($scope, $routeParams, $http, $
 	).then(function (response) {
 	    console.log(response.data);
 	    $scope.rechnungInfo = response.data;
+	    // TODO, pro testovani, smazat !!!
+	    //$scope.rechnungInfo.hatMARechnung = true;
+	    $scope.maradio.druckMA='voll';
+	    if($scope.rechnungInfo!==null){
+		
+	    }
 	    $scope.dauftrRows = response.data.dauftrRows;
 	});
     }

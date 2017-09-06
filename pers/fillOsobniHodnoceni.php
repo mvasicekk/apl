@@ -100,7 +100,7 @@ if ($persnrArray !== NULL) {
 	    }
 	} else {
 	    // prevezmu hodnoceni podle firemnich hodnot
-	    $$osobniHodnoceniArray = $a->getOsobniHodnoceniProPersNrPersForm($persnr,  $von,$bis);
+	    $osobniHodnoceniArray = $a->getOsobniHodnoceniProPersNrPersForm($persnr,  $von,$bis);
 	    if($osobniHodnoceniArray!==NULL){
 		foreach($osobniHodnoceniArray['osobniFaktory'] as $index=>$of){
 		    $id_osobni_faktor = $of['id_faktor'];
