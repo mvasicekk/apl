@@ -636,7 +636,7 @@ echo "</tbody>";
 echo "</table>";
 // ulozit do souboru
 $timestamp = date('His');
-$path = sprintf("%s%s/%04d%02d_%s.TXT",$a->getGdatPath(),$a->getDat99Path(),$jahr,$monat,$timestamp);
+$path = sprintf("%s%s/%04d%02d_%s.TXT",$a->getGdatPath(),$a->getDatE143Path(),$jahr,$monat,$timestamp);
 
 $fileRows = array();
 foreach ($msRows as $r){

@@ -331,6 +331,10 @@ class AplDB {
     public function getDat99Path() {
 	return "Aby 99 Nezarazene";
     }
+    
+    public function getDatE143Path() {
+	return "Aby 18 Mitarbeiter -/21 LUG (Lohn und Gehaltsabrechnung)/Mzdy/E143 - export pro ISP";
+    }
 
     public function getArbMittelAnlagenPath() {
 	return "Aby 20 Technik, Produktivitat/Arbeitsmittel - Messmittel";
@@ -1209,6 +1213,7 @@ class AplDB {
 		    if($koef>1){
 			$koef = 1;
 		    }
+		    $koef = round($koef, 2);
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastka'] = $s;
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastkaFinal'] = round($s*$koef);
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['anwStd'] = $anwStd;
