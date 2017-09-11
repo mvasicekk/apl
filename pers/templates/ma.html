@@ -806,6 +806,11 @@
 						    <input ng-readonly="!securityInfo.editArray['geboren_input']" ng-model="ma.maInfo.geboren" ui-date="dateOptions" type="text" class="form-control" id="g" placeholder="datum narození"  ng-change="dpersFieldChanged('geboren')">
 						    <apl-help el="hIArray['geboren_input']" showadmininfo="showhI"></apl-help>
 						</div>
+						<label for="g" class="col-sm-2 control-label">Spec.Nr</label>
+						<div class="col-sm-4">
+						    <input ng-readonly="!securityInfo.editArray['specnr_input']" ng-model="ma.maInfo.specnr" type="text" class="form-control text-right" id="g1" placeholder="např. č. udávané VS"  ng-change="dpersFieldChanged('specnr')">
+						    <apl-help el="hIArray['specnr_input']" showadmininfo="showhI"></apl-help>
+						</div>
 					    </div>
 					</fieldset>
 					<fieldset>
