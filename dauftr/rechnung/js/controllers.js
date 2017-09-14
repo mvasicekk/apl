@@ -12,7 +12,8 @@ var convertMysql2Date = function (dt) {
     // Apply each element to the Date function
     var d = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
     return d;
-}
+};
+
 
 var aplApp = angular.module('rechnungApp');
 
@@ -34,7 +35,7 @@ aplApp.directive("enterfocus", function () {
 		}
 	    });
 	}
-    }
+    };
 });
 
 
@@ -59,14 +60,57 @@ aplApp.controller('rechnungController', function ($scope, $routeParams, $http, $
     $scope.maradio = {
 	druckMA:'voll'
     };
+    $scope.tat_von = 2000;
+    $scope.tat_bis = 9999;
 
+
+/**
+ * 
+ * @returns {undefined}
+ */
+$scope.rechnungTeilen = function(){
+    console.log("rechnung teilen");
+    $scope.showRechnungTeilenForm = false;
+    $http.post(
+		'./rechnungTeilenAby.php',
+		{
+		    abgnr_von:$scope.tat_von,
+		    abgnr_bis:$scope.tat_bis,
+		    rechnr_regular:$scope.rechnungInfo.auftragsnr,
+		    rechnr_ma:$scope.rechnungInfo.ma_rechnrVorschlag
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    $scope.initRechnung();
+    });
+};
+
+/**
+ * 
+ * @returns {undefined}
+ */
+    $scope.getCountTeilenSelected = function(){
+	count = 0;
+	count = $scope.dauftrRows.filter(function(item){
+	    return (item.abgnr>=$scope.tat_von)&&(item.abgnr<=$scope.tat_bis);
+	}).length;
+	return count;
+    };
+/**
+ * 
+ * @param {type} dauftrRow
+ * @returns {undefined}
+ */
+    $scope.isForTeilenSelected = function(dauftrRow){
+	return ($scope.showRechnungTeilenForm)&&(dauftrRow.abgnr>=$scope.tat_von)&&(dauftrRow.abgnr<=$scope.tat_bis)?true:false;
+    };
 /**
  * 
  * @returns {undefined}
  */
 $scope.toggleRechnungTeilenForm  = function(){
     $scope.showRechnungTeilenForm = !$scope.showRechnungTeilenForm;
-}
+};
 
     /**
      * 
@@ -81,18 +125,18 @@ $scope.toggleRechnungTeilenForm  = function(){
 		    $scope.securityInfo = response.data.securityInfo;
 		    //zkusim najit roli helptexteditor
 		    $scope.securityInfo.roles.forEach(function (v) {
-			if (v.rolename == 'helptexteditor') {
+			if (v.rolename === 'helptexteditor') {
 			    $scope.isEditor = true;
 			    console.log('is helptexteditor');
 			}
-			if (v.rolename == 'admin') {
+			if (v.rolename === 'admin') {
 			    $scope.isAdmin = true;
 			    console.log('is admin');
 			}
 		    });
 		}
 	);
-    }
+    };
 
     /**
      * 
@@ -108,7 +152,7 @@ $scope.toggleRechnungTeilenForm  = function(){
 		    $scope.hIArray = response.data.help.hiArray;
 		}
 	);
-    }
+    };
 
     $scope.initRechnung = function () {
 	return $http.post(
@@ -125,7 +169,7 @@ $scope.toggleRechnungTeilenForm  = function(){
 	    }
 	    $scope.dauftrRows = response.data.dauftrRows;
 	});
-    }
+    };
     
     // init
     $scope.initSecurity();

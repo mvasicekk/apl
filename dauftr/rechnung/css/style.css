@@ -46,7 +46,9 @@ table#rechtable th{
     height: 100vh;
     overflow: auto;
 }*/
-
+.mehrSelected{
+    background-color: yellow;
+}
 
 div.page-header{
     background-color: lightyellow;

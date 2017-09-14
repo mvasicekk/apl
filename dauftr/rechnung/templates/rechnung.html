@@ -23,7 +23,32 @@
 		<div ng-show="showRechnungTeilenForm" class="panel panel-info">
 		    <div class="panel-heading">Rechnung teilen - Taetigkeiten auswaehlen</div>
 		    <div class="panel-body">
-			form
+			<div class="row">
+			    <div class="col-md-12">
+				<div class="form-inline">
+				    <div class="form-group">
+					<label>markiere Taetigkeiten: von:</label>
+					<input style="width:6em;" type="number" ng-model="tat_von" class="form-control" id="tatnr_von" placeholder="von">
+				    </div>
+				    <div class="form-group">
+					<label>bis:</label>
+					<input style="width:6em;" type="number" ng-model="tat_bis" class="form-control" id="tatnr_bis" placeholder="bis">
+				    </div>
+				    <span class="label label-info">Anzahl mark. Positionen: <span class="badge">{{getCountTeilenSelected()}}</span></span>
+				</div>
+				<div class="form-inline">
+				    <div class="form-group">
+					<label>Re.Nr fūr <strong>markierte Positionen</strong> :</label>
+					<input readonly="readonly" class="form-control" maxlength='8' size="8" type="text" id="rechnr_ma" ng-model="rechnungInfo.ma_rechnrVorschlag"/>
+				    </div>
+				    <div class="form-group">
+					<label>Re.Nr fūr nicht markierte Positionen :</label>
+					<input readonly="readonly" class="form-control" maxlength='8' size="8" type="text" id="rechnr_regular" ng-model="rechnungInfo.auftragsnr"/>
+				    </div>
+				    <button class="btn btn-primary" ng-show="getCountTeilenSelected()>0" ng-click="rechnungTeilen()">Teilen</button>
+				</div>
+			    </div>
+			</div>
 		    </div>
 		</div>
 		<table id='rechtable' class="table table-condensed table-hover table-striped">
@@ -46,20 +71,20 @@
 		    </thead>
 		    <tbody>
 <!--			<tr ng-init="isnewpal=isNewPal(t.pal)" ng-repeat="t in teile" ng-click="teilRowClicked(t,$index)">-->
-			<tr ng-repeat="t in dauftrRows">
-			    <td ng-class="{}">{{t.teil}}</td>
-			    <td ng-class="{'text-right':true}">{{t.pal}}</td>
-			    <td ng-class="{}">{{t.tatkz}}</td>
-			    <td ng-class="{'text-right':true}">{{t.importstk}}</td>
-			    <td ng-class="{'text-right':true}">{{t.exportstk}}</td>
-			    <td ng-class="{'text-right':true}">{{t.preis|numeraljs:'#.####'}}</td>
-			    <td ng-class="{'text-right':true}">{{t.gespreis|numeraljs:'#.####'}}</td>
-			    <td ng-class="{'text-right':true}">{{t.auss}}</td>
-			    <td ng-class="{}">{{t.fremdauftr}}</td>
-			    <td ng-class="{}">{{t.fremdpos}}</td>
-			    <td ng-class="{'text-right':true}">{{t.diff}}</td>
-			    <td ng-class="{}">{{t.auftragsnr}}</td>
-			    <td ng-class="{}">{{t.text}}</td>
+			<tr ng-class="" ng-repeat="t in dauftrRows">
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.teil}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.pal}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.tatkz}} ({{t.abgnr}})</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.importstk}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.exportstk}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.preis|numeraljs:'#.####'}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.gespreis|numeraljs:'#.####'}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.auss}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.fremdauftr}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.fremdpos}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.diff}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.auftragsnr}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.text}}</td>
 			</tr>
 		    </tbody>
 		</table>
@@ -76,12 +101,6 @@
 				<th>Auslief-Datum:</th>
 				<td class="text-right">
 				    <input ng-model="rechnungInfo.auftrInfo[0].ausliefer_raw" style="" ui-date="dateOptions" type="text" class="form-control text-right" id="" placeholder="Ausliefer Datum">
-				</td>
-			    </tr>
-			    <tr>
-				<th>Auslief-Datum-ro</th>
-				<td class="text-right">
-				    {{rechnungInfo.auftrInfo[0].ausliefer_raw}}
 				</td>
 			    </tr>
 			</table>

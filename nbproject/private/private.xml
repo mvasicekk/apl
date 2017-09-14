@@ -5,13 +5,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/dauftr/rechnung/js/controllers.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/js/controllers.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dauftr/rechnung/getRechnungInit.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/dauftr/rechnung/templates/rechnung.html</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dauftr/rechnung/templates/rechnung_berechnen.tpl</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/createOsobniHodnoceni.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/updateOsobniHodnoceni.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/templates/ma.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/dauftr/rechnung/css/style.css</file>
         </group>
     </open-files>
 </project-private>
