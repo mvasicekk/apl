@@ -267,6 +267,10 @@
 				<button type="button" ng-click="panelSwitch('inventar')"  class="btn btn-info" role="button" href="">inventar</button>
 				<apl-help el="hIArray['inventar_btn']" showadmininfo="showhI"></apl-help>
 			    </div>
+			    <div ng-show="securityInfo.showArray['majetek_btn']"  class="btn-group" role="group">
+				<button type="button" ng-click="panelSwitch('majetek')"  class="btn btn-info" role="button" href="">majetek</button>
+				<apl-help el="hIArray['majetek_btn']" showadmininfo="showhI"></apl-help>
+			    </div>
 			    <div ng-show="securityInfo.showArray['dokumenty_switch_item']"  class="btn-group" role="group">
 				<button type="button" ng-click="panelSwitch('dokumenty')"  class="btn btn-info" role="button" href="">dokumenty</button>
 				<apl-help el="hIArray['dokumenty_switch_item']" showadmininfo="showhI"></apl-help>
@@ -1545,6 +1549,86 @@
 			</div>
 		    </div>
 		</div>
+		
+		
+		<!--majetek-->
+		<div ng-show="showPanel.majetek" id="majetek">
+		    <div class="panel panel-default">
+			<div class="panel-heading">
+			    Majetek
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['majetek_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="col-md-12">
+				    <table class="table table-condensed table-responsive table-striped table-hover">
+					<thead>
+					    <tr class="bg-info no-print">
+						<th colspan="8">
+					<ui-select
+					    ng-model="majetek.selected" 
+					    ng-disabled="disabled" 
+					    reset-search-input="true" 
+					    theme="bootstrap"
+					    close-on-select="true"
+					    on-select="majetekSelectAction($item,$model)"
+					    ><ui-select-match placeholder="vyhledani majetku">{{$select.selected.CISLO}} - {{$select.selected.POPIS}}</ui-select-match>
+					    <ui-select-choices repeat="p in majetekArray track by $index"
+							       refresh="refreshMajetek($select.search)"
+							       refresh-delay="0">
+						<!--<div>{{p|json}}</div>-->
+						<div ng-bind-html="p.CISLO + ' ' + p.POPIS + ' ' + p.TEXT_2 + ' (' + p.POZNAMKA + ')'| highlight: $select.search"></div>
+						<!--<div ng-bind-html="p.CISLO | highlight: $select.search"></div>-->
+					    </ui-select-choices>
+					</ui-select>
+					<div>{{majetek.selected}}</div>
+					</th>
+					
+					<th>
+					</th>
+					
+					</tr>
+					<tr class="bg-info">
+					    <th colspan="1" >AMNr (popis)</th>
+					    <th colspan="1" >OE</th>
+					    <th colspan="1" >popis</th>
+					    <th colspan="1" >datum</th>
+					    <th colspan="1" >Ausgabe Stk</th>
+					    <th colspan="1" >Rueckgabe Stk</th>
+					    <th colspan="1" >InvNr</th>
+					    <th colspan="1" >Bemerkung</th>
+					    <th colspan="1" ></th>
+					</tr>
+					</thead>
+					<tbody>
+					    <tr ng-repeat="pa in majetekPersArray" ng-class="">
+						<td >{{pa.AMNr}}</td>
+						<td class="">{{pa.oe}}</td>
+						<td class="">{{pa.amnr_popis}}</td>
+						<td class="">
+						    <input ng-model="pa.Datum" ui-date="dateOptions" type="text" class="form-control" placeholder="datum"  ng-change="updateAmBewDatum(pa)">
+						</td>
+						<td class="">{{pa.AusgabeStk}}</td>
+						<td class="">{{pa.RueckgabeStk}}</td>
+						<td class="">{{pa.invnr}}</td>
+						<td class="">
+						    <input type="text" class="form-control input-xs" ng-model="pa.Bemerkung" ng-change="updateAmbewBemerkung(pa)" />
+						</td>
+						<td class="">
+						    <button ng-if="(pa.AusgabeStk>pa.RueckgabeStk)&&(pa.canreturn)" title="vratit" type="button" class="btn btn-block no-print" ng-click="vratitMajetek(pa)">
+							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>vrátit
+						    </button>
+						</td>
+					    </tr>
+					</tbody>
+				    </table>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+		
+		<!--hfpremie-->
 		<div ng-show="showPanel.hfpremie" id="hfpremie">
 		    <div class="panel panel-info">
 			<div class="panel-heading">

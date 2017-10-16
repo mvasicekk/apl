@@ -20,6 +20,16 @@
     <form name="rechnungForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
 	<div class="row">
 	    <div class="col-md-9 maxheightfull">
+		<div class="panel panel-info">
+		    <div class="panel-heading">Rechnung Kopf Text</div>
+		    <div class="panel-body">
+			<div class="row">
+			    <div class="col-md-12">
+				<input ng-change="updateRechnungText()" ng-readonly="rechnungInfo.auftrInfo[0].hatrechnung=='1'" ng-model="rechnungInfo.auftrInfo[0].rechnung_kopf_text" type="text" class="form-control" id="rechnung_kopf_text" placeholder="Rechnung Kopf Text">
+			    </div>
+			</div>
+		    </div>
+		</div>
 		<div ng-show="showRechnungTeilenForm" class="panel panel-info">
 		    <div class="panel-heading">Rechnung teilen - Taetigkeiten auswaehlen</div>
 		    <div class="panel-body">
@@ -72,7 +82,12 @@
 		    <tbody>
 <!--			<tr ng-init="isnewpal=isNewPal(t.pal)" ng-repeat="t in teile" ng-click="teilRowClicked(t,$index)">-->
 			<tr ng-class="" ng-repeat="t in dauftrRows">
-			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.teil}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">
+				{{t.teil}}
+				<!--<input ng-if="(rechnungInfo.auftrInfo[0].hatrechnung=='0')&&(t.rechnung_edit=='1')" type="text" class="form-control" ng-model="t.text">-->
+				<input ng-if="(t.rechnung_edit=='1')" type="text" class="form-control input-sm" ng-model="t.teilbez">
+				<span ng-if="(t.rechnung_edit=='0')">{{t.teilbez}}</span>
+			    </td>
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.pal}}</td>
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.tatkz}} ({{t.abgnr}})</td>
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.importstk}}</td>
@@ -84,7 +99,11 @@
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.fremdpos}}</td>
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t),'text-right':true}">{{t.diff}}</td>
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.auftragsnr}}</td>
-			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.text}}</td>
+			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">
+				<!--<input ng-if="(rechnungInfo.auftrInfo[0].hatrechnung=='0')&&(t.rechnung_edit=='1')" type="text" class="form-control" ng-model="t.text">-->
+				<input ng-if="(t.rechnung_edit=='1')" type="text" class="form-control input-sm" ng-model="t.text">
+				<span ng-if="(t.rechnung_edit=='0')">{{t.text}}</span>
+			    </td>
 			</tr>
 		    </tbody>
 		</table>
@@ -98,9 +117,10 @@
 				<td class="text-right"><span class="label label-success">{{rechnungInfo.auftragsnr}}</span></td>
 			    </tr>
 			    <tr>
-				<th>Auslief-Datum:</th>
+				<th>Auslief-Datum:<span class="alert alert-danger" ng-show="!ausLiefError&&rechnungInfo.auftrInfo[0].ausliefer_raw===null">?</span></th>
 				<td class="text-right">
 				    <input ng-model="rechnungInfo.auftrInfo[0].ausliefer_raw" style="" ui-date="dateOptions" type="text" class="form-control text-right" id="" placeholder="Ausliefer Datum">
+				    
 				</td>
 			    </tr>
 			</table>
@@ -118,17 +138,11 @@
 			    </tr>
 			    <tr>
 				<th>Diff</th>
-				<td ng-class="{'text-right':true,'text-warning':rechnungInfo.drueckRechnungDiff<0,'text-success':rechnungInfo.drueckRechnungDiff=0}">{{rechnungInfo.drueckRechnungDiff|numeraljs:'#.####'}}</td>
+				<td ng-class="{'text-right':true,'text-warning':rechnungInfo.drueckRechnungDiff<0,'text-success':rechnungInfo.drueckRechnungDiff==0}">{{rechnungInfo.drueckRechnungDiff|numeraljs:'#.####'}}</td>
 			    </tr>
 			    <tbody ng-if="rechnungInfo.auftrInfo[0].hatrechnung=='0'">
 				<tr>
-				    <td colspan="2"><button class="btn btn-block btn-success">Rechnung berechnen</button></td>
-				</tr>
-				<tr>
-				    <td colspan="2"><button disabled class="btn btn-block btn-success">Umrechnung</button></td>
-				</tr>
-				<tr>
-				    <td colspan="2"><button class="btn btn-block btn-success">Rechnung teilen</button></td>
+				    <td colspan="2"><button ng-click="rechnungBerechnen()" class="btn btn-block btn-success">Rechnung erstellen</button></td>
 				</tr>
 			    </tbody>
 			    <tbody ng-if="rechnungInfo.auftrInfo[0].hatrechnung=='1' && !rechnungInfo.hatMARechnung">

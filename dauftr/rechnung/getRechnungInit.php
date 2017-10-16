@@ -12,7 +12,7 @@ $a = AplDB::getInstance();
 $u = $_SESSION['user'];
 
 if ($auftragsnr>0) {
-    $sql = " select dauftr.id_dauftr as id,dauftr.teil, dauftr.auftragsnr, `stück` as importstk, `mehrarb-kz` as tatkz, preis, `pos-pal-nr` as pal,";
+    $sql = " select dkopf.rechnung_edit,dauftr.id_dauftr as id,dauftr.teil, dauftr.auftragsnr, `stück` as importstk, `mehrarb-kz` as tatkz, preis, `pos-pal-nr` as pal,";
     $sql .= " `stk-exp` as exportstk, fremdauftr, fremdpos, preis*`stk-exp` as gespreis, `stk-exp`-`stück` as diff,auss4_stk_exp as auss, teilbez,";
     $sql .= " dtaetkz.text, daufkopf.bestellnr, kzgut, `auftragsnr-exp` as export,dauftr.abgnr";
     $sql .= " from dauftr";
@@ -29,6 +29,7 @@ if ($auftragsnr>0) {
 
     // zjistim minutovou sazbu z auftragu
     $minpreis = $a->getMinPreisProImport($auftragsnr);
+    
     $hatMARechnung = $a->hatMARechnung($auftragsnr);
     if ($hatMARechnung) {
 	$letzte_MA_RECHNR = $a->getMARechNr($auftragsnr);

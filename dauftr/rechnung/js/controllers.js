@@ -62,7 +62,42 @@ aplApp.controller('rechnungController', function ($scope, $routeParams, $http, $
     };
     $scope.tat_von = 2000;
     $scope.tat_bis = 9999;
+    $scope.ausLiefError = true;
 
+
+/**
+ * aktualizuje text v hlavicce, ktery se zobrazuje na fakture
+ * @returns {undefined}
+ */
+$scope.updateRechnungText = function(){
+    console.log("update rechnung text");
+    $http.post(
+		'./updateRechnungKopfText.php',
+		{
+		    text:$scope.rechnungInfo.auftrInfo[0].rechnung_kopf_text,
+		    auftragsnr:$scope.auftragsnr
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    //$scope.initRechnung();
+    });
+}
+/**
+ * 
+ * @returns {undefined}
+ */
+$scope.rechnungBerechnen = function(){
+    console.log("rechnung berechnen");
+    $http.post(
+		'./rechnungErfassen.php',
+		{
+		    rechnungInfo:$scope.rechnungInfo
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    $scope.initRechnung();
+    });
+};
 
 /**
  * 
@@ -164,6 +199,7 @@ $scope.toggleRechnungTeilenForm  = function(){
 	    // TODO, pro testovani, smazat !!!
 	    //$scope.rechnungInfo.hatMARechnung = true;
 	    $scope.maradio.druckMA='voll';
+	    $scope.ausLiefError = response.data.ausliefError;
 	    if($scope.rechnungInfo!==null){
 		
 	    }

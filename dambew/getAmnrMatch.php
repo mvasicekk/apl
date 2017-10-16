@@ -12,6 +12,7 @@ $a = AplDB::getInstance();
 		
 $artikelTabelle = "eink-artikel_test";
 
+
 $sql="select `$artikelTabelle`.`art-nr` as amnr,`$artikelTabelle`.`art-vr-preis` as preis,`$artikelTabelle`.`art-name1` as text,`$artikelTabelle`.`art-name2` as text1,AM_Ausgabe as ausgabe from `$artikelTabelle` where (LOWER(`art-nr`) like '%".$suchen."%' or LOWER(`$artikelTabelle`.`art-name1`) like '%".$suchen."%' or LOWER(`$artikelTabelle`.`art-name2`) like '%".$suchen."%') order by `art-nr`";
 $karty = $a->getQueryRows($sql);
 if($karty!==NULL){

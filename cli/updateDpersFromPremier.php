@@ -194,7 +194,13 @@ if ($res !== NULL) {
     }
 }
 
-
+//2017-10-02
+// pokud v live tabulce nemam vyplnene isp_cislo, pretahnu si ho z dpers_isp pro pozdejsi praci s zivou tabulkou
+$sql = " update dpers";
+$sql.= " join dpers_isp on dpers_isp.PersNr=dpers.PersNr";
+$sql.= " set dpers.isp_cislo = dpers_isp.isp_cislo";
+$sql.= " where dpers.isp_cislo is null";
+$a->query($sql);
 
 //seznam lidi z apl ============================================================
 $sql = "select";

@@ -49,6 +49,8 @@ $smarty = new Smarty;
 		$smarty->assign("schwierigkeitsgrad_S11_value",$row['schwierigkeitsgrad_S11']);
 		$smarty->assign("schwierigkeitsgrad_S51_value",$row['schwierigkeitsgrad_S51']);
 		$smarty->assign("schwierigkeitsgrad_SO_value",$row['schwierigkeitsgrad_SO']);
+		$smarty->assign("rechnungeditflag_value",$row['rechnung_edit']);
+		
 		
 		// nove hodnoty jahresbedarf
 		// jb_lfd_2 = aktualni rok - 2
@@ -175,6 +177,7 @@ $smarty = new Smarty;
 		
 		//security
 		$elementsIdArray = array(
+		    'rechnungeditflag_sec',
 		    'kunde_sec',
 		    "teillang_sec",
 		    "status_sec",

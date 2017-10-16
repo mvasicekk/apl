@@ -15,7 +15,7 @@ if ($argc > 1) {
  */
 $tables = array(
     "STREDISK"=>array(				    //jmeno tabulky v Premieru
-	"active"=>0,
+	"active"=>1,
 	"aplTable"=>"strediska_isp",		    // jmeno tabulky v apl databazi
 	"ispSelect"=>"*,'$ucetniJednotka' as UJ",   //ktera pole vybiram z tabulky v Premieru
 	"ispKey"=>"STREDISKO",			    //sloupec v Premieru podle ktereho porovnavam, zda mam radek v apl

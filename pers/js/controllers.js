@@ -125,6 +125,12 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.persInventarArray = [];
     $scope.addparents = false;
 
+
+    $scope.majetekArray = [];
+    $scope.majetekPersArray = [];
+    $scope.majetek = {};
+    $scope.invnrMajetek;
+    
     $scope.persKvalifikaceArray = [];
     $scope.persIdentifikatoryArray = [];
     $scope.identifikatorvydano = curdate;
@@ -133,6 +139,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	grundinfo:true,
 	kvalifikace:false,
 	inventar:false,
+	majetek:false,
 	hfpremie:false,
 	osobnihodnoceni:false,
 	lohnberechnung:false,
@@ -193,6 +200,19 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	}
     }
     
+    /**
+     * 
+     * @param {type} $item
+     * @param {type} $model
+     * @returns {undefined}
+     */
+    $scope.majetekSelectAction = function($item,$model){
+	console.log('$item');
+	console.log($item);
+	console.log('$model');
+	console.log($model);
+	$scope.majetek.selected = $item;
+    }
     /**
      * 
      * @param {type} $item
@@ -1007,6 +1027,11 @@ $scope.commentClicked = function(e,p){
 	    console.log('volam getPersLohn');
 	    getPersLohn();
 	}
+	
+	if(panelid=='majetek'){
+	    console.log('volam getMajetek');
+	    getPersMajetekArray();
+	}
     }
     /**
      * 
@@ -1215,6 +1240,94 @@ $scope.commentClicked = function(e,p){
 	}
 
     }
+    
+    /**
+     * vrati seznanm majetku prirazeneho k cloveku
+     * @returns {undefined}
+     */
+    function getPersMajetekArray(){
+	
+	var params = {
+	    e:null,
+	    persnr:$scope.ma.maInfo.PersNr
+	};
+	
+	return	$http.post(
+		    './getMajetek.php',
+		    {
+			params: params
+		    }
+	    ).then(function (response) {
+		$scope.majetekPersArray = response.data.majetekPersArray;
+	    });
+    }
+    
+    /**
+     * 
+     */
+    $scope.vratitMajetek = function(pa){
+	console.log(pa);
+	return	$http.post(
+		    './returnMajetek.php',
+		    {
+			pa: pa
+		    }
+	    ).then(function (response) {
+		if(response.data.insertid>0){
+		    getPersMajetekArray();
+		}
+	    });
+    }
+
+/**
+ * 
+ * @param {type} pa
+ * @returns {undefined}
+ */
+$scope.updateAmBewDatum = function(pa){
+    return	$http.post(
+		    './updateAmBew.php',
+		    {
+			field:'Datum',
+			value:pa.Datum,
+			pa: pa
+		    }
+	    ).then(function (response) {
+		//$scope.majetekArray = response.data.majetekArrayBezVydanych;
+	    });
+}
+/**
+ * 
+ * @param {type} pa
+ * @returns {undefined}
+ */
+    $scope.updateAmbewBemerkung = function(pa){
+	return	$http.post(
+		    './updateAmBew.php',
+		    {
+			field:'Bemerkung',
+			value:pa.Bemerkung,
+			pa: pa
+		    }
+	    ).then(function (response) {
+		//$scope.majetekArray = response.data.majetekArrayBezVydanych;
+	    });
+    }
+    /**
+     * vrati seznam majetku, z ktereho muzu vybirat
+     * @returns {undefined}
+     */
+    function getMajetekArray(params){
+	return	$http.post(
+		    './getMajetek.php',
+		    {
+			params: params
+		    }
+	    ).then(function (response) {
+		$scope.majetekArray = response.data.majetekArrayBezVydanych;
+	    });
+    }
+    
     /**
      * 
      * @returns {unresolved}
@@ -1378,6 +1491,10 @@ $scope.commentClicked = function(e,p){
 		if($scope.showPanel.lohnberechnung===true){
 		    getPersLohn();
 		}
+		
+		if($scope.showPanel.majetek===true){
+		    getPersMajetekArray();
+		}
 		//zrusit popovery
 		if($('div[id^=popover]').length>0){
 		    $('div[id^=popover]').popover('destroy');
@@ -1495,6 +1612,17 @@ $scope.commentClicked = function(e,p){
 	});
     }
 
+
+/**
+ * 
+ * @param {type} e
+ * @returns {unresolved}
+ */
+    $scope.refreshMajetek = function (e) {
+	var params = {e: e};
+	console.log('e='+e);
+	getMajetekArray(params);
+    };
     /**
      * 
      * @param {type} e
