@@ -61,6 +61,12 @@ if($field=='lohnfaktor'){
     $valid = TRUE;
 }
 
+if($field=='specnr'){
+    $value1 = intval(trim($value));
+    if($value1>=0 && $value<999999)
+    $valid = TRUE;
+}
+
 if($field=='leistfaktor'){
     $value1 = floatval(strtr(trim($value), ',', '.'));
     if($value1>=0 && $value<1000)
@@ -96,5 +102,7 @@ $returnArray = array(
     'sql' => $sql,
     'persnr'=>$persnr
 );
+
+// HID Card Info
 
 echo json_encode($returnArray);

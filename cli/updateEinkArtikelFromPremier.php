@@ -150,3 +150,25 @@ foreach ($res as $r) {
 }
 // 2. smazani tech, ktere neexistuji v matricnim skladu, zatim ne
 
+//2017-09-11, aktualizace ceny v zive db, protoze tam zatim nemnazu polozky, tak
+// - pokud uz byla polozka zalozena v minulosti ale napr. s nulovou cenou, nebude se mi cena v zive db aktualizovat, proto takto
+// - aktualizuju cenu, popisky a am_ausgabe priznak
+
+
+// 2017-09-22 zakazan update popisku a cen protoze napr. problem s behaeltrama, nejsou nemecke popisy ...
+$testArtikelArray = $a->getQueryRows("select `art-nr` as amnr,`art-name1` as name1,`art-name2` as name2,`mj`,`art-grp-nr`,`AM_Ausgabe`,`art-vr-preis` as preis from `eink-artikel_test`");
+foreach ($testArtikelArray as $ar){
+    //zkusim najit v zive db
+    $amnr = $ar['amnr'];
+    $preis = floatval($ar['preis']);
+    $rows = $a->getQueryRows("select `art-nr` as amnr from `eink-artikel` where convert(`art-nr`,CHAR)='$amnr'");
+    if($rows!=NULL){
+	//nasel jsem
+	// updatnu popisky a am_ausgabe
+	//$a->query("update `eink-artikel` set `art-name1`='".$ar['name1']."',`art-name2`='".$ar['name2']."',`AM_Ausgabe`=".$ar['AM_Ausgabe']." where convert(`art-nr`,CHAR)='$amnr' limit 1");
+	// pokus cena v premieru neni 0, updatnu i cenu v zive
+	if($preis<>0){
+	  //  $a->query("update `eink-artikel` set `art-vr-preis`='".$preis."' where convert(`art-nr`,CHAR)='$amnr' limit 1");
+	}
+    }
+}

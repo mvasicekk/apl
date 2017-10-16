@@ -271,26 +271,31 @@ function sestava_tabulka($pdfobjekt,$vyskaradku,$rgb,$childNodes)
         }
         $pdfobjekt->Ln();
         //ted radky s behaeltrama
-        foreach($behaelterArray as $behaelter){
-            $pdfobjekt->SetFont("FreeSans", "B", 7);
-            $pdfobjekt->Cell(25,$vyskaradku,$behaelter['name'],'1',0,'L',$fill);
-            $pdfobjekt->SetFont("FreeSans", "", 9);
-            foreach($spaltenArray as $spalte){
-                $behnr = $behaelter['behaelternr'];
-                $zustand = $spalte['zustand_id'];
-                $stk = getStk($stkArray, $behnr, $zustand);
-                $pdfobjekt->Cell(20,$vyskaradku,$stk,'1',0,'C',$fill);
-            }
-            $pdfobjekt->Ln();
-        }
-        //jeden prazdny radek
-        $pdfobjekt->SetFont("FreeSans", "B", 7);
-        $pdfobjekt->Cell(25,$vyskaradku,'','1',0,'L',$fill);
-        $pdfobjekt->SetFont("FreeSans", "", 9);
-        foreach($spaltenArray as $spalte){
-            $pdfobjekt->Cell(20,$vyskaradku,'','1',0,'C',$fill);
-        }
-        $pdfobjekt->Ln();
+	//2017-09-27 pokud neni inventura, tabulku nekreslim
+	if ($behaelterArray !== NULL) {
+	foreach ($behaelterArray as $behaelter) {
+	    $pdfobjekt->SetFont("FreeSans", "B", 7);
+	    $pdfobjekt->Cell(25, $vyskaradku, $behaelter['name'], '1', 0, 'L', $fill);
+	    $pdfobjekt->SetFont("FreeSans", "", 9);
+	    foreach ($spaltenArray as $spalte) {
+		$behnr = $behaelter['behaelternr'];
+		$zustand = $spalte['zustand_id'];
+		$stk = getStk($stkArray, $behnr, $zustand);
+		$pdfobjekt->Cell(20, $vyskaradku, $stk, '1', 0, 'C', $fill);
+	    }
+	    $pdfobjekt->Ln();
+	}
+	}
+
+    //jeden prazdny radek
+	//2017-10-12 zruseno pr, hl
+//        $pdfobjekt->SetFont("FreeSans", "B", 7);
+//        $pdfobjekt->Cell(25,$vyskaradku,'','1',0,'L',$fill);
+//        $pdfobjekt->SetFont("FreeSans", "", 9);
+//        foreach($spaltenArray as $spalte){
+//            $pdfobjekt->Cell(20,$vyskaradku,'','1',0,'C',$fill);
+//        }
+//        $pdfobjekt->Ln();
 
 	$x_old = $pdfobjekt->GetX();
 	$y_old = $pdfobjekt->GetY();

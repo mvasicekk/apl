@@ -27,7 +27,7 @@ $user = get_user_pc();
 $recipients = $apl->getRecipientsArray(
 	array(2,3,6),
 	array(
-	    "jr@abydos.cz",
+//	    "jr@abydos.cz",
 	    //"hl@abydos.cz",
 	    "rk@abydos.cz",
 	    "gu@abydos.cz"),
@@ -36,6 +36,8 @@ $recipients = $apl->getRecipientsArray(
 	    "hl@abydos.cz",
 	    "rb@abydos.cz",
 	    "ok@abydos.cz",
+	    "jr@abydos.cz",
+	    "ho@abydos.cz",
 	    "ne@abydos.cz")
 	,FALSE
 	);

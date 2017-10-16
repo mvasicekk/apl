@@ -33,15 +33,17 @@ require_once '../db.php';
 	$recipients = $apl->getRecipientsArray(
 	array(2,3,6),
 	array(
-	    "jr@abydos.cz",
+//	    "jr@abydos.cz",
 	    //"hl@abydos.cz",
 	    "rk@abydos.cz",
 	    "gu@abydos.cz"),
 	array(
 	    "hl@abydos.cz",
+	    "jr@abydos.cz",
 	    "bb@abydos.cz",
 	    "rb@abydos.cz",
 	    "ok@abydos.cz",
+	    "ho@abydos.cz",
 	    "ne@abydos.cz")
 		,FALSE		//nebrat uzivatele s level=0,2016-09-06
 	);

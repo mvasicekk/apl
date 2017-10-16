@@ -1,0 +1,139 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12.2.2016, 12:25:30
+    Author     : jr
+*/
+
+@media print
+{    
+    * {
+	background: inherit;
+	color: inherit;
+    }
+    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+    
+    a[href]:after {
+	content: none;
+    }
+    
+ 
+    .col-print-12 { width: 100% }
+}
+
+table#rechtable{
+    font-size: small;
+/*    height: 100vh;
+    overflow: auto;*/
+}
+
+table#rechtable th{
+    background-color: lightsalmon;
+}
+
+.maxheightfull{
+    max-height: 80vh;
+    overflow: auto;
+}
+/*.container {
+    height: 100vh;
+    overflow: auto;
+}*/
+.mehrSelected{
+    background-color: yellow;
+}
+
+div.page-header{
+    background-color: lightyellow;
+    text-align: center;
+    margin: 0px 0px 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+div.page-header h4{
+    margin: 0px;
+}
+
+.valign_bottom {
+    float:none;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.valign_top {
+    float:none;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.kzgut{
+    background-color: yellow !important;  
+}
+.tatnotactive{
+    /*text-decoration: line-through;*/
+    color: #777;
+    font-size: small;
+}
+
+/* zobrazeni dilu ktery je ALT */
+#searchtable tr.altteil{
+    background-color: #f55;
+    color: #000;
+}
+
+.tatactive{
+    font-weight: bold;
+    background-color: #f55;
+}
+
+td.edited{
+	background-color: lightgreen;
+}
+
+.help-block {
+    color: #000;
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    padding: 3px;
+    background-color: lightcyan;
+    border: 1px solid lightblue;
+    border-radius: 3px;
+    word-wrap: break-word;
+    font-weight: normal;
+    font-size: small;
+}
+
+div.popover{
+    max-width: 1300px;
+}
+
+tbody.reparaturkopf>tr>td{
+    font-weight: bold;
+    background-color: lightgreen;
+}
+
+#toplan td.newpal{
+	border-top:2px solid blue;
+}
+/********************** stylovani oblasti v help bloku ************************/
+/*
+.help-block p {
+    background-color: lightblue;
+    border: 1px solid black;
+    border-radius: 4px;
+    line-height: 1.2;
+    margin: 0 0 0.5em;
+    padding: 0.5em 1em 0.7em;
+    text-indent: 9px;
+}
+*/
+/******************************************************************************/

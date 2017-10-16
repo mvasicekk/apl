@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../fns_dotazy.php";
+require_once "../db.php";
 
 $doc_title = "D740";
 $doc_subject = "D740 Report";
@@ -181,13 +182,14 @@ function pageheader($pdfobjekt,$cells,$childnodes)
 	$pdfobjekt->Ln();
 	$pdfobjekt->Ln();
 	$pdfobjekt->Ln();
-    $pdfobjekt->Ln();
-    $pdfobjekt->Ln();
+	$pdfobjekt->Ln();
+	$pdfobjekt->Ln();
 	$pdfobjekt->SetFont("FreeSans", "B", 10);
 	$pdfobjekt->SetLineWidth(0.5);
 	$pdfobjekt->Cell(50,7,"Rechnung",'TB',0,'L',0);
 	
 	$obsah = getValueForNode($childnodes,"auftragsnr");
+	$auftragsnr = $obsah;
 	
         if($teilen!=0){
             if($dt=='ma')
@@ -239,6 +241,16 @@ function pageheader($pdfobjekt,$cells,$childnodes)
         if($textMeziZavorkama=="re-nr") $textMeziZavorkama = $renr;
 
         $berechnenText .= $textPredZavorkama." ".$textMeziZavorkama." ".$textZaZavorkama;
+	
+	$a = AplDB::getInstance();
+	$berechnenTextFromKopfArray = $a->getAuftragInfoArray($auftragsnr);
+	if($berechnenTextFromKopfArray!==NULL){
+	    $t = $berechnenTextFromKopfArray[0]['rechnung_kopf_text'];
+	    if(strlen($t)>0){
+		$berechnenText = $t;
+	    }
+	}
+	//$berechnenText = "";
 		$pdfobjekt->Cell(0,7,$berechnenText,'0',1,'L',0);
 	}
 	else
@@ -394,7 +406,7 @@ function zapati_rechnung($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumarray)
 //}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
+function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sumBetrag=0)
 {
 
     global $parametersPDF;
@@ -405,8 +417,11 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
     $pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
 	$pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->Ln();
-	$pdfobjekt->Cell(0,$vyskaradku,"Bitte überweisen Sie den Betrag bis ".getValueForNode($childNodes,"zahldatum")." auf das Konto",'0',1,'1',0);
-	$pdfobjekt->Cell(0,$vyskaradku,"Nr. ".getValueForNode($childNodes,"kontotext")."",'0',1,'1',0);
+	if($sumBetrag>=0){
+	    $pdfobjekt->Cell(0,$vyskaradku,"Bitte überweisen Sie den Betrag bis ".getValueForNode($childNodes,"zahldatum")." auf das Konto",'0',1,'1',0);
+	    $pdfobjekt->Cell(0,$vyskaradku,"Nr. ".getValueForNode($childNodes,"kontotext")."",'0',1,'1',0);
+	}
+	
 
 
     // verwendungszweck
@@ -456,7 +471,10 @@ function zapati_sestava($pdfobjekt,$vyskaradku,$rgb,$childNodes)
     else
         $zweckText="";
 //    $zweckText .= $textPredZavorkama." ".$textMeziZavorkama." ".$textZaZavorkama;
-    $pdfobjekt->Cell(0,$vyskaradku,$zweckText,'0',1,'1',0);
+    if($sumBetrag>=0){
+	$pdfobjekt->Cell(0,$vyskaradku,$zweckText,'0',1,'1',0);
+    }
+    
     }
 
 	$dic=getValueForNode($childNodes,"andic");
@@ -582,9 +600,6 @@ function test_pageoverflow_noheader($pdfobjekt,$vysradku)
 	if(($pdfobjekt->GetY()+$vysradku)>($pdfobjekt->getPageHeight()-$pdfobjekt->getBreakMargin()))
 	{
 		$pdfobjekt->AddPage();
-		//pageheader($pdfobjekt,$cellhead,$vysradku);
-		//$pdfobjekt->Ln();
-		//$pdfobjekt->Ln();
 		return 1;
 	}
 	else
@@ -614,17 +629,6 @@ $pdf->SetFooterMargin(PDF_MARGIN_FOOTER+6);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
 $pdf->SetProtection(array('extract'), $pdfpass, '', 1);
 
-
-//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "D740 Rechnung", $params);
-//set margins
-//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-//set auto page breaks
-//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-//$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
-
-//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setHeaderFont(Array("FreeSans", '', 9));
 $pdf->setFooterFont(Array("FreeSans", '', 8));
 
@@ -687,7 +691,7 @@ foreach ($rechnunge as $rechnung) {
 }
 
 
-zapati_sestava($pdf,6,array(255,255,255),$rechnungChildNodes);
+zapati_sestava($pdf,6,array(255,255,255),$rechnungChildNodes,$sum_zapati_rechnung_array['betrag']);
 
 
 //Close and output PDF document

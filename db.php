@@ -331,6 +331,10 @@ class AplDB {
     public function getDat99Path() {
 	return "Aby 99 Nezarazene";
     }
+    
+    public function getDatE143Path() {
+	return "Aby 18 Mitarbeiter -/21 LUG (Lohn und Gehaltsabrechnung)/Mzdy/E143 - export pro ISP";
+    }
 
     public function getArbMittelAnlagenPath() {
 	return "Aby 20 Technik, Produktivitat/Arbeitsmittel - Messmittel";
@@ -778,7 +782,25 @@ class AplDB {
 	    }
 	    return 0;
 	}
-	
+
+	/**
+	 * 
+	 */
+    public function getRolesForStredisko($stkod){
+	$sql = " select stredisko_role.role_id";
+	$sql.= " from stredisko_role";
+	$sql.= " where stredisko_role.stredisko='$stkod'";
+	$rs = $this->getQueryRows($sql);
+	$roles = array();
+	if($rs!==NULL){
+	    foreach ($rs as $r){
+		array_push($roles, $r['role_id']);
+	    }
+	    return $roles;
+	}
+	return NULL;
+    }
+    
     /**
      * 
      * @param type $persvon
@@ -1209,6 +1231,7 @@ class AplDB {
 		    if($koef>1){
 			$koef = 1;
 		    }
+		    $koef = round($koef, 2);
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastka'] = $s;
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['sumaCastkaFinal'] = round($s*$koef);
 		    $lohnArray['personen'][$persnr]['osobnihodnoceni']['anwStd'] = $anwStd;
@@ -3691,6 +3714,7 @@ class AplDB {
 	if($faktoryPodleOE!==NULL){
 	    foreach ($faktoryPodleOE as $f){
 		$faktory1[$f['id_faktor'].':'.$f['id_firma_faktor']] = $f;
+		$faktoryPodleOE1[$f['id_faktor']] += 1;
 	    }
 	}
 	
@@ -3717,8 +3741,11 @@ class AplDB {
 
 	    //jedu po faktorech
 	    foreach ($faktory as $f) {
+		$bIsOEFaktor = FALSE;	// jestli je to osobni faktor podle oe
+		$bIsOEFaktor = array_key_exists($f['id_faktor'], $faktoryPodleOE1);
 		$id_firma_faktor = $f['id_firma_faktor'];
 		$id_osobni_faktor = $f['id_faktor'];
+		$bIsOEFaktor = array_key_exists($id_osobni_faktor, $faktoryPodleOE1);
 		// a jedu jednotlive jm
 		foreach ($jahrMonatArray as $jm => $pocet) {
 		    $datum = $jm . '-01'; //prvni den mesice o ktery se zajimam
@@ -3729,12 +3756,10 @@ class AplDB {
 		    }
 		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_firma'] = $hodnoceniFirma;
 		    //zjistim osobni hodnoceni pro faktor a mesic
-		    $hodnoceniOsobni = $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni);
+		    $hodnoceniOsobni = $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni,$bIsOEFaktor);
 		    $vystup[$id_osobni_faktor][$jm]['hodnoceni_osobni'] = $hodnoceniOsobni;
 		}
 	    }
-	    // TODO
-	    // a jeste projit jiz zadane hodnoceni, ktere neodpovida zadanemu oe nebo regeloe
 	}
 	return $vystup;
     }
@@ -3757,7 +3782,7 @@ class AplDB {
      * @param boolean $hasOEHodnoceni - priznak, ze persnr ma hodnoceni podle regeloe
      * @param type $datum
      */
-    public function getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni=TRUE) {
+    public function getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni=TRUE,$isOEFaktor=FALSE) {
 	$sql.=" select hodnoceni_osobni.*";
 	$sql.=" from hodnoceni_osobni";
 	$sql.=" where";
@@ -3766,8 +3791,9 @@ class AplDB {
 	$sql.=" datum='$datum'";
 	$sql.=" and";
 	$sql.=" id_faktor='$id_osobni_faktor'";
-
+	
 	$rr = $this->getQueryRows($sql);
+	
 	if ($rr !== NULL) {
 	    //radek uz mam, jen ho vratim
 	    //upravim true/false
@@ -3779,11 +3805,19 @@ class AplDB {
 	    $rr[0]['rowexists'] = TRUE;
 	    return $rr[0];
 	} else {
-	    // nemam, vytvorim, vratim, ale jen pokud ma persnr hodnoceni podle regeloe
+	    // nemam, vytvorim, vratim, ale jen pokud ma persnr hodnoceni podle regeloe a id_osobni_faktor patri k tomuto oe
 	    if($hasOEHodnoceni){
-		$insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
-		$this->insert($insert);
-		return $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum);
+		//zkontrolovat jestli id_osobni_faktor patri k oe
+		if($isOEFaktor){
+		    $insert = "insert into hodnoceni_osobni (persnr,datum,id_faktor) values('$persnr','$datum','$id_osobni_faktor')";
+		    $this->insert($insert);
+		    return $this->getHodnoceniOsobniFaktorDatum($persnr, $id_osobni_faktor, $datum,$hasOEHodnoceni,$isOEFaktor);
+		}
+		else{
+		    return array("locked"=>TRUE,
+		    "rowexists"=>FALSE,	// neni to skutecny radek
+		    );
+		}
 	    }
 	    else{
 		//vratim pseudo hodnoty s nulama, radek v tabulce nevytvorim, pro jistotu nastavim jako locked
@@ -8128,12 +8162,12 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
      */
     public function getAuftragInfoArray($auftrag, $kunde = NULL, $match = FALSE) {
 	if ($kunde === NULL)
-	    $sql = "select  waehr_kz,zielort_id,im_stk_gespeichert,if(fertig='2100-01-01','0','1') hatrechnung,DATE_FORMAT(fertig,'%Y-%m-%d') as fertigdat1,DATE_FORMAT(ausliefer_datum,'%H:%i') as auslieferuhr1,DATE_FORMAT(ausliefer_datum,'%Y-%m-%d') as auslieferdat1,DATE_FORMAT(ex_datum_soll,'%H:%i') as exsolluhr1,DATE_FORMAT(ex_datum_soll,'%Y-%m-%d') as exsolldat1,DATE_FORMAT(im_datum_soll,'%H:%i') as imsolluhr1,DATE_FORMAT(im_datum_soll,'%Y-%m-%d') as imsolldat1,DATE_FORMAT(aufdat,'%H:%i') as aufuhr1,DATE_FORMAT(aufdat,'%Y-%m-%d') as aufdat1,fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
+	    $sql = "select  rechnung_kopf_text,waehr_kz,zielort_id,im_stk_gespeichert,if(fertig='2100-01-01','0','1') hatrechnung,DATE_FORMAT(fertig,'%Y-%m-%d') as fertigdat1,DATE_FORMAT(ausliefer_datum,'%H:%i') as auslieferuhr1,DATE_FORMAT(ausliefer_datum,'%Y-%m-%d') as auslieferdat1,DATE_FORMAT(ex_datum_soll,'%H:%i') as exsolluhr1,DATE_FORMAT(ex_datum_soll,'%Y-%m-%d') as exsolldat1,DATE_FORMAT(im_datum_soll,'%H:%i') as imsolluhr1,DATE_FORMAT(im_datum_soll,'%Y-%m-%d') as imsolldat1,DATE_FORMAT(aufdat,'%H:%i') as aufuhr1,DATE_FORMAT(aufdat,'%Y-%m-%d') as aufdat1,fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag";
 	else
-	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
+	    $sql = "select  rechnung_kopf_text,fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr=$auftrag and kunde='$kunde'";
 
 	if ($match === TRUE) {
-	    $sql = "select  fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%Y-%m-%d') as aufdat1,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr like '$auftrag%' limit 100";
+	    $sql = "select  rechnung_kopf_text,fertig as fertig_raw,ausliefer_datum as ausliefer_raw,aufdat as aufdat_raw,im_datum_soll as im_soll_datetime,ex_datum_soll as ex_soll_datetime,bestellnr,zielort_id,auftragsnr,bemerkung,kunde,minpreis,DATE_FORMAT(aufdat,'%Y-%m-%d') as aufdat1,DATE_FORMAT(aufdat,'%d.%m.%Y') as aufdat,DATE_FORMAT(ausliefer_datum,'%d.%m.%Y') as ausliefer_datum,DATE_FORMAT(ex_datum_soll,'%d.%m.%Y') as ex_soll_datum,DATE_FORMAT(ex_datum_soll,'%H:%i') as ex_soll_uhrzeit from daufkopf where auftragsnr like '$auftrag%' limit 100";
 	}
 	//echo $sql;
 	return $this->getQueryRows($sql);

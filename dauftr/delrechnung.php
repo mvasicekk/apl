@@ -52,7 +52,7 @@ mysql_query('set names utf8');
 		
 //		$recipient = "jr@abydos.cz,";
 		$recipient.= "hl@abydos.cz,";
-		$recipient.= "in@abydos.cz,";
+		$recipient.= "ho@abydos.cz,";
 		$recipient.= "jk@abydos.cz";
                 //$recipient.= "sz@abydos.cz,";
 

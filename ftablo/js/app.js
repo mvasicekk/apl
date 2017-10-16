@@ -40,6 +40,14 @@ aplApp.config(['$routeProvider','$sceProvider',
 		    }
 		    //controller:'eformController'
 		})
+		// pro pripad, ze chybi :kunde, ktereho vlastne nepotrebuju
+		.when('/suchen/',{
+		    templateUrl:function(p){
+			console.log(p);
+			return 'templates/suchen.html';
+		    }
+		    //controller:'eformController'
+		})
 		.otherwise({redirectTo:'/suchen/'});
     }]);
 

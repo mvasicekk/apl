@@ -90,6 +90,11 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 			<label for="bezeichnung">Bezeichnung/oznaceni</label>
 			<input {$edit_sec.bezeichnung_sec} size="40" type="text" id="bezeichnung" name="bezeichnung" value="{$bezeichnung_value}"/>
 			</span>
+			
+			<span style="display:{$display_sec.rechnungeditflag_sec};" id="rechnungeditflag_sec">
+			<label for="bezeichnung">RechEdit</label>
+			<input {$edit_sec.rechnungeditflag_sec} size="1" type="text" id="rechnungeditflag" name="rechnungeditflag" value="{$rechnungeditflag_value}"/>
+			</span>
 		</td>
 	</tr>
 	<tr>
