@@ -21,8 +21,8 @@ if($id>0){
     }
 
     if($field=='Datum'){
-	//$sql = "update dambew set `$field`='$value',comp_user_accessuser='$ident' where id='$id' limit 1";
-	
+	$value = date('Y-m-d',strtotime($value));
+	$sql = "update dambew set `$field`='$value',comp_user_accessuser='$ident' where id='$id' limit 1";
     }
     
     if(strlen($sql)>0){

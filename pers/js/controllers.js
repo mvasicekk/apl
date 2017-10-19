@@ -128,7 +128,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     $scope.majetekArray = [];
     $scope.majetekPersArray = [];
-    $scope.majetek = {};
+    $scope.majetek = {
+	selected:{}
+    };
     $scope.invnrMajetek;
     
     $scope.persKvalifikaceArray = [];
@@ -560,6 +562,30 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	).then(function (response) {
 	});
     }
+    
+    /**
+     * 
+     * @param {type} m
+     * @returns {unresolved}
+     */
+    $scope.addMajetek = function(m){
+	console.log('addMajetek');
+	console.log(m);
+	$scope.majetek.selected = {};
+	return	$http.post(
+		'./addMajetek.php',
+		{
+		    persnr: $scope.ma.maInfo.PersNr,
+		    m: m
+		}
+	).then(function (response) {
+	    if (response.data.insertId > 0 || response.data.delRows > 0) {
+		//neco vlozeno , aktualizuju pole
+		getPersMajetekArray();
+	    }
+	});
+    }
+    
     /**
      * 
      * @param {type} i

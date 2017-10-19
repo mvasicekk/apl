@@ -64,6 +64,7 @@ if($userRolesArray!==NULL){
 	array_push($userRoles, $ur['role_id']);
     }
 }
+
 foreach ($veskeryMajetek as $m){
     // a jeste omezeni podle roli a stredisek
     $roleProMajetek = $m['roles'];
@@ -118,7 +119,16 @@ if($persnr>0){
 	foreach ($majetekPersArray as $index=>$mpa){
 	    $invnr = $mpa['invnr'];
 	    $canReturn = array_key_exists($invnr, $vydanyMajetek)?TRUE:FALSE;
+	    //popis majetku
+	    $popisMajetku = "";
+	    $ispSql = " SELECT POPIS,TEXT_2 FROM MAJETEK";
+	    $ispSql.=" WHERE (CISLO='$invnr')";
+	    $res = $sqlDB->getResult($ispSql);
+	    if($res!==NULL){
+		$popisMajetku = $res[0]['POPIS'].' '.$res[0]['TEXT_2'];
+	    }
 	    $majetekPersArray[$index]['canreturn'] = $canReturn;
+	    $majetekPersArray[$index]['popismajetku'] = $popisMajetku;
 	}
     }
 }

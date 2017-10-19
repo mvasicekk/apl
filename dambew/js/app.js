@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 
-var aplApp = angular.module('dambewApp',['ngNumeraljs','ui.date','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
+var aplApp = angular.module('dambewApp',['ngNumeraljs','ui.date','ui.tinymce','ui.select','ngSanitize','ui.bootstrap','ngRoute']);
+//var aplApp = angular.module('dambewApp',['ngNumeraljs','ui.date','ui.tinymce','ngSanitize','ui.bootstrap','ngRoute']);
 
 aplApp.config(['$numeraljsConfigProvider', function ($numeraljsConfigProvider) {
     var language = {
@@ -37,6 +38,13 @@ aplApp.config(['$routeProvider','$sceProvider',
 		    templateUrl:function(p){
 			console.log(p);
 			return 'templates/dambew.html';
+		    }
+		    //controller:'eformController'
+		})
+		.when('/majetek/',{
+		    templateUrl:function(p){
+			console.log(p);
+			return 'templates/majetekbew.html';
 		    }
 		    //controller:'eformController'
 		})

@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>
-	    DAMBew
+	    výdej pomůcek / majetku
 	</title>
 {*	Bootstrap*}
 	<link href="../libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -36,6 +36,10 @@
 
 	<script src="../libs/bower_components/numeral/min/numeral.min.js"></script>
 	<script src="../libs/bower_components/angular-numeraljs/dist/angular-numeraljs.min.js"></script>
+	
+	<script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
+	<link href="./bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
+
 	<script src="./js/app.js"></script>
 	<script src="./js/controllers.js"></script>
 	<script src="./js/directives.js"></script>
