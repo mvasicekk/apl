@@ -79,10 +79,10 @@ array(
 => array ("popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "giesstag" 
-=> array ("popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("popis"=>"","sirka"=>20,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "Gew" 
-=> array ("nf"=>array(3,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(3,',',' '),"popis"=>"","sirka"=>12,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vahacelkem" 
 => array ("nf"=>array(0,',',' '),"popis"=>"","sirka"=>15,"ram"=>'0',"align"=>"R","radek"=>0,"fill"=>0),
@@ -116,10 +116,10 @@ $cells_header = array(
 => array ("nf"=>array(0,',',' '),"popis"=>"Beh","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "giesstag" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"GT","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"GT","sirka"=>20,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "Gew" 
-=> array ("nf"=>array(0,',',' '),"popis"=>"Gew","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
+=> array ("nf"=>array(0,',',' '),"popis"=>"Gew","sirka"=>12,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
 
 "vahacelkem" 
 => array ("nf"=>array(0,',',' '),"popis"=>"GesGew","sirka"=>15,"ram"=>'B',"align"=>"R","radek"=>0,"fill"=>0),
@@ -209,7 +209,7 @@ function telo($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$funkce,$nodelist)
 		}
 		else
 		{
-			$cellobsah=getValueForNode($nodelist,$nodename);
+			$cellobsah= strip_tags(getValueForNode($nodelist,$nodename));
 		}
 		$pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$cellobsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
 	}

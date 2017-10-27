@@ -12,7 +12,7 @@ aplApp.directive("enterfocus", function () {
             link: function ($scope, elem, attrs) {
                 var focusables = $(":tabbable");
 		//var selectsearch  = $(".");
-		console.log(focusables);
+		//console.log(focusables);
 		//jeste musim nektere objekty vyradit, napr. odkazy
 		//console.log(focusables);
 		//vyradim ty, ktere maji tabindex = -1
@@ -300,7 +300,7 @@ $scope.submitForm = function(){
     true);
     */
     
-    var such = $window.document.getElementById('persnr');
+    var such = $window.document.getElementById('majinvnr');
     if (such) {
 	such.focus();
 	such.select();

@@ -25,6 +25,10 @@ and open the template in the editor.
     }
 }
 
+.ui-select-bootstrap>.ui-select-choices{
+    width: auto !important;
+}
+
 div.page-header{
     background-color: lightyellow;
     text-align: center;
