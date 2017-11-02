@@ -106,6 +106,17 @@ $bewFahigkeiten = $a->getQueryRows($sql);
 //staaten
 $sql = "select * from dstaaten where anzeigen=1 order by staat_abkrz";
 $staaten = $a->getQueryRows($sql);
+
+//oeschicht
+$oesArray = $a->getOESForOEStatus('a');
+//autoleistungAbgnrArray
+$sql = "select `abg-nr` as abgnr,`Name` as abgnrname from `dtaetkz-abg` where `abg-nr` between 7000 and 7999 order by `abg-nr`";
+$autoleistungAbgnrArray = $a->getQueryRows($sql);
+
+//anwgruppen
+$sql = "select anwgruppe,bezeichnung from anwesenheitgruppen order by anwgruppe";
+$anwgruppenArray = $a->getQueryRows($sql);
+
 // vystup ----------------------------------------------------------------------
 
 $returnArray = array(
@@ -120,6 +131,7 @@ $returnArray = array(
     'fahtypidSelected' => $fahtypidSelected,
     'inventarArray' => $inventarArray,
     'oeArray' => $oeArray,
+    'oesArray' => $oesArray,
     'oeSelected' => $oeSelected,
     'oeIdentArray'=>$oeIdentArray,
     'oeIdentSelected'=>$oeIdentSelected,
@@ -127,6 +139,8 @@ $returnArray = array(
     'kundeIdentSelected'=>$kundeIdentSelected,
     'identifikatorArray'=>$identifikatorArray,
     'identifikatorSelected'=>$identifikatorSelected,
+    'autoleistungAbgnrArray'=>$autoleistungAbgnrArray,
+    'anwgruppenArray'=>$anwgruppenArray,
     'u' => $u
 );
 

@@ -99,7 +99,12 @@ $monthsArrayAll = array();
 $start = strtotime($datumVon);
 $end = strtotime($datumBis);
 $increment = 60 * 60 * 24; // 1 den
+$dny = 0;
 while($start<=$end){
+    $dny++;
+    if($dny>31){
+	break;
+    }
     $year = date('y',$start);
     $month = date('m',$start);
     $yearMonth = "$year-$month";

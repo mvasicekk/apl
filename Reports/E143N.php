@@ -91,6 +91,8 @@ $user = $_SESSION['user'];
 $password = $_GET['password'];
 
 // dochazka, dovolena nemoci, zakladni udaje o persnr
+
+    
 $joinDpersISP = "dpers_isp";
 $sql="";
 $sql.=" select";
@@ -114,6 +116,8 @@ $sql.=" (";
 $sql.="     (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
 $sql.="     and (dzeit.`Datum` between '$von' and '$bis')";
 $sql.="     and (dpers.persnr between '$persvon' and '$persbis')";
+//2017-10-30 - pokud bude podle ISP ukoncen -> neexportovat
+//$sql.="     and (if(dpers_isp.dpersstatus=='BEENDET',$austrittCheck,1))";
 $sql.=" )";
 $sql.=" group by ";
 $sql.="     dpers.`PersNr`";
@@ -124,7 +128,32 @@ $persRows = array();
 if($rows!=NULL){
     foreach ($rows as $r){
 	$persnr = $r['persnr'];
-	$persRows[$persnr]['grundinfo'] = $lohnArray['personen'][$persnr]['grundinfo'];
+	//test na datum vystupu podle premiera
+	$s = "select persnr,austritt";
+	$s.= " from dpersvertrag_isp";
+	$s.= " where persnr='$persnr'";
+	$s.= " order by eintritt desc";
+	$s.= " limit 1";
+	$rs1 = $a->getQueryRows($s);
+	$austrittCheck = TRUE;
+	if($rs1!==NULL){
+	    //echo "$persnr isp austritt:".$rs1[0]['austritt'];
+	    // test na ukonceni prac pomeru
+	    $austrittStr=trim($rs1[0]['austritt']);
+	    // nemusi byt jen null, v pripade invalid datumu se ulozi 0000-00-00 00:00:00
+	    // nastavit jako by tam byl null
+	    if($austrittStr=="0000-00-00 00:00:00"){
+		$austrittStr="";
+	    }
+	    if((strlen($austrittStr)>0) && (strtotime($rs1[0]['austritt'])<strtotime($von))){
+		$austrittCheck = FALSE;
+	    }
+	}
+	//$checkStr = $austrittCheck?'ok':'nok';
+	//echo "$checkStr<br>";
+	if($austrittCheck){
+	    $persRows[$persnr]['grundinfo'] = $lohnArray['personen'][$persnr]['grundinfo'];
+	}
     }
 }
 

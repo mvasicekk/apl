@@ -2214,6 +2214,7 @@ function radek_person($pdf, $vyskaradku, $rgb, $person, $monat, $jahr,$persnr=0)
     if ($z > 0) {
         $bQPraemie_akkord = FALSE;
         $bQPraemie_zeit = FALSE;
+	$bleistungsPraemie = FALSE;
     }
 
     //$persnr = $person->persnr;

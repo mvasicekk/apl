@@ -26,6 +26,7 @@ $a = AplDB::getInstance();
 $von = $jahr . "-" . $monat . "-01";
 $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
 $bis = $jahr . "-" . $monat . "-" . $pocetDnuVMesici;
+//echo "pocetDnuVMesici:$pocetDnuVMesici<br>";
 
 
 $user = $_SESSION['user'];
@@ -50,7 +51,13 @@ $monthsArrayAll = array();
 $start = strtotime($datumVon);
 $end = strtotime($datumBis." 23:59:59");
 $increment = 60 * 60 * 24; // 1 den
+$dny = 0;
 while($start<=$end){
+    //kvuli posunu casu o hodinu zpet
+    $dny++;
+    if($dny>31){
+	break;
+    }
     $year = date('y',$start);
     $month = date('m',$start);
     $yearMonth = "$year-$month";
@@ -328,6 +335,8 @@ foreach ($persnrArray as $p) {
     $sql.= " dzeit.tat,";
     $sql.= " dzeit.Datum";
     
+    //echo $sql;
+    
     $monthsArray = array();
     $persRows = $a->getQueryRows($sql);
     if ($persRows !== NULL) {
@@ -345,16 +354,21 @@ foreach ($persnrArray as $p) {
 	    }
 	}
     }
+    
+    
+    
     foreach ($monthsArrayAll as $yearMonth=>$dayCount){
 	$year = 2000 + intval(substr($yearMonth, 0, 2));
 	$month = intval(substr($yearMonth, 3));
 	$von = "$year-$month-01";
 	$bis = "$year-$month-$dayCount";
 	$arbTageProMonat = $a->getArbTageBetweenDatums($von, $bis);
+	//echo "von:$von,bis:$bis,arbTageProMonat:$arbTageProMonat<br>";
 	$zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth] = $arbTageProMonat*8;
 	$zeilen[$persnr]['dzeit']['anw_prozent'][$yearMonth] = $zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth]!=0?$zeilen[$persnr]['dzeit']['anwstd'][$yearMonth]/$zeilen[$persnr]['dzeit']['astunden_fond'][$yearMonth]*100:0;
     }
-
+    //AplDB::varDump($zeilen);
+    
     // leistung ----------------------------------------------------------------
     foreach ($monthsArrayAll as $yearMonth=>$dayCount){
 	$year = 2000 + intval(substr($yearMonth, 0, 2));

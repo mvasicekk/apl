@@ -45,11 +45,27 @@ if($field=='Name'||$field=='Vorname'){
     }
 }
 
+if($field=='regeloe'||$field=='alteroe'){
+    $value1 = strlen(trim($value))>0?trim($value):NULL;
+    if($value1!==NULL){
+	$valid = TRUE;
+    }
+}
+
 if($field=='email'){
     $value1 = strlen(trim($value))>0?trim($value):NULL;
     $valid = TRUE;
 }
 
+if($field=='auto_leistung_abgnr'){
+    $value1 = $value->abgnr;
+    $valid = TRUE;
+}
+
+if($field=='anwgruppe'){
+    $value1 = $value->anwgruppe;
+    $valid = TRUE;
+}
 if($field=='dpersstatus'){
     $value1 = trim($value);
     $valid = TRUE;
@@ -57,6 +73,18 @@ if($field=='dpersstatus'){
 
 if($field=='lohnfaktor'){
     $value1 = intval(trim($value));
+    if($value1>=0 && $value<1000)
+    $valid = TRUE;
+}
+
+if($field=='regelarbzeit'){
+    $value1 = floatval(strtr(trim($value), ',', '.'));
+    if($value1>=0 && $value<1000)
+    $valid = TRUE;
+}
+
+if($field=='anwvzkd_faktor'){
+    $value1 = floatval(strtr(trim($value), ',', '.'));
     if($value1>=0 && $value<1000)
     $valid = TRUE;
 }
@@ -82,6 +110,7 @@ if(
 	||$field=='qpremie_zeit'
 	||$field=='MAStunden'
 	||$field=='a_praemie_st'
+	||$field=='auto_leistung'
 	||$field=='einarb_zuschlag')
     {
     $value1 = strlen(trim($value))>0?trim($value):NULL;

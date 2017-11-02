@@ -3919,7 +3919,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
     $sql.=" where";
     $sql.=" hodnoceni_osobni.persnr between '$persvon' and '$persbis'";
     $sql.=" and datum between '$von' and '$bis'";
-    $sql.=" and ( dtattypen.oe like '%".$oe."%' or hodnoceni_osobni.oe like '%".$oe."%'";
+    $sql.=" and ( dtattypen.oe like '%".$oe."%' or hodnoceni_osobni.oe like '%".$oe."%')";
     $sql.=" group by hodnoceni_osobni.persnr";
     }
     return $this->getQueryRows($sql);
@@ -7271,7 +7271,12 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
 	$start = strtotime($datumVon);
 	$end = strtotime($datumBis." 23:59:59");
 	$increment = 60 * 60 * 24; // 1 den v sekundach
+	$dny = 0;
 	while ($start <= $end) {
+	        $dny++;
+		if($dny>31){
+		    break;
+	    }
 	    $year = date('y', $start);
 	    $month = date('m', $start);
 	    $yearMonth = "$year-$month";
@@ -12320,7 +12325,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
      */
     public function getOESForOEStatus($oestatus, $gleich = TRUE) {
 	if ($gleich == TRUE)
-	    $query = "select dtattypen.tat from dtattypen where oestatus='$oestatus'";
+	    $query = "select dtattypen.tat from dtattypen where oestatus='$oestatus' order by dtattypen.tat";
 	else
 	    $query = "select dtattypen.tat from dtattypen where oestatus<>'$oestatus'";
 

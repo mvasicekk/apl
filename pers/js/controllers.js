@@ -136,6 +136,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.persKvalifikaceArray = [];
     $scope.persIdentifikatoryArray = [];
     $scope.identifikatorvydano = curdate;
+
+    $scope.autoleistungAbgnr = {};
+    $scope.anwgruppe = {};
     
     $scope.showPanel = {
 	grundinfo:true,
@@ -147,6 +150,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	lohnberechnung:false,
 	identifikatory:false,
 	lohninfo:false,
+	aplinfo:false,
 	dokumenty:false
     };
     
@@ -431,13 +435,19 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      */
     $scope.dpersFieldChanged = function(field){
 	console.log('dpersFieldChanged: ' + field);
-	
+	var v = $scope.ma.maInfo[field];
+	if(field=='auto_leistung_abgnr'){
+	    v = $scope.autoleistungAbgnr;
+	}
+	if(field=='anwgruppe'){
+	    v = $scope.anwgruppe;
+	}
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
 		    './updateDpersField.php',
 		    {
 			persnr: $scope.ma.maInfo.PersNr,
-			value: $scope.ma.maInfo[field],
+			value: v,
 			field: field
 		    }
 	    ).then(function (response) {
@@ -1475,6 +1485,9 @@ $scope.updateAmBewDatum = function(pa){
 	).then(function (response) {
 	    if (response.data.ma !== null) {
 		$scope.ma.maInfo = response.data.ma[0];
+		$scope.autoleistungAbgnr.abgnr = $scope.ma.maInfo.auto_leistung_abgnr;
+		$scope.anwgruppe.anwgruppe = $scope.ma.maInfo.anwgruppe;
+		
 		$scope.ma.bewerberInfo = response.data.bewerber[0];
 		if(response.data.dpersdetail!==null){
 		    $scope.ma.dpersDetail = response.data.dpersdetail[0];
@@ -1760,6 +1773,9 @@ $scope.updateAmBewDatum = function(pa){
 	    $scope.identifikatorArray = response.data.identifikatorArray;
 	    $scope.identifikatorSelected = response.data.identifikatorSelected;
 	    $scope.identifikator = $scope.identifikatorSelected;
+	    $scope.autoleistungAbgnrArray = response.data.autoleistungAbgnrArray;
+	    $scope.anwgruppenArray = response.data.anwgruppenArray;
+	    $scope.oesArray = response.data.oesArray;
 	    $scope.oes.oeArray = response.data.oeArray;
 	    $scope.oes.oeSelected = response.data.oeSelected;
 	    $scope.fahtypen.fahtypenArray = response.data.fahtypenArray;

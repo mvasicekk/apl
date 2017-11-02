@@ -237,6 +237,10 @@
 				    <a ng-click="panelSwitch('lohninfo')" role="button" href="">lohninfo</a>
 				    <apl-help el="hIArray['lohninfo_switch_item']" showadmininfo="showhI"></apl-help>
 				</li>
+				<li ng-show="securityInfo.showArray['aplinfo_switch_item']">
+				    <a ng-click="panelSwitch('aplinfo')" role="button" href="">aplinfo</a>
+				    <apl-help el="hIArray['aplinfo_switch_item']" showadmininfo="showhI"></apl-help>
+				</li>
 				<li role="separator" class="divider"></li>
 				<li ng-show="securityInfo.showArray['hfpremie_switch_item']">
 				    <a ng-click="panelSwitch('hfpremie',hIArray['hfpremie_switch_item'][0].id)" role="button" href="">HF Premie</a>
@@ -1198,6 +1202,72 @@
 		    </div>
 		</div>
 		
+		<!--panel aplinfo ----------------------------------------- -->
+		<div ng-show="showPanel.aplinfo" id="aplinfo">
+		    <div class="panel panel-success">
+			<div class="panel-heading">
+			    Aplinfo
+			    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['aplinfo_panel']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+			</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="col-sm-12">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>Regel</legend>
+					    <div class="row">
+						<label for="regelarbzeit" class="col-sm-2 control-label">Regelarbstunden</label>
+						<div class="col-sm-1">
+						    <input ng-model="ma.maInfo.regelarbzeit" type="text" class="form-control text-right" id="regelarbzeit" placeholder="regelarbzeit"  ng-change="dpersFieldChanged('regelarbzeit')">
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['regelarbzeit']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<label for="regeloe" class="col-sm-1 control-label">RegelOE</label>
+						<div class="col-sm-2">
+						    <select title="regeloe" ng-options="option for option in oesArray" ng-model="ma.maInfo.regeloe" class="form-control" ng-change="dpersFieldChanged('regeloe')"></select>
+						</div>
+						<label for="alteroe" class="col-sm-2 control-label">Alternativ OE</label>
+						<div class="col-sm-2">
+						    <select title="alteroe" ng-options="option for option in oesArray" ng-model="ma.maInfo.alteroe" class="form-control" ng-change="dpersFieldChanged('alteroe')"></select>
+						</div>
+						<label for="anwvzkd" class="col-sm-1 control-label">Anw.->VzKd</label>
+						<div class="col-sm-1">
+						    <input ng-model="ma.maInfo.anwvzkd_faktor" type="text" class="form-control text-right" id="anwvzkd_faktor" placeholder="anwvzkd_faktor"  ng-change="dpersFieldChanged('anwvzkd_faktor')">
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['anwvzkd_faktor']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+					    </div>
+					</fieldset>
+				    </div>				    
+				</div>
+			    </div>
+			    <div class="row">
+				<div class="col-sm-12">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>Autoleistung</legend>
+					    <div class="row">
+						<!--leistungspremie-->
+						<div class="checkbox col-sm-2">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.auto_leistung" ng-change="dpersFieldChanged('auto_leistung')">Autoleistung
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['auto_leistung']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<label for="auto_leistung_abgnr" class="col-sm-2 control-label">Autoleistung Abgnr</label>
+						<div class="col-sm-3">
+						    <select title="auto_leistung_abgnr" ng-options="option.abgnr+' '+option.abgnrname for option in autoleistungAbgnrArray track by option.abgnr" ng-model="autoleistungAbgnr" class="form-control" ng-change="dpersFieldChanged('auto_leistung_abgnr')"></select>
+						</div>
+						<label for="anwgruppe" class="col-sm-2 control-label">Anw. Gruppe</label>
+						<div class="col-sm-2">
+						    <select title="anwgruppe" ng-options="option.anwgruppe+' '+option.bezeichnung for option in anwgruppenArray track by option.anwgruppe" ng-model="anwgruppe" class="form-control" ng-change="dpersFieldChanged('anwgruppe')"></select>
+						</div>
+					    </div>
+					</fieldset>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
 		<!--panel dokumenty ----------------------------------------- -->
 		<div ng-show="showPanel.dokumenty" id="dokumenty">
 		    <div class="panel panel-success">
