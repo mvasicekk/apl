@@ -45,6 +45,8 @@ require_once '../db.php';
 	    "rb@abydos.cz",
 	    "ok@abydos.cz",
 	    "ho@abydos.cz",
+	    "kp@abydos.cz",
+	    "pva@abydos.cz",
 	    "ne@abydos.cz")
 		,FALSE		//nebrat uzivatele s level=0,2016-09-06
 	);

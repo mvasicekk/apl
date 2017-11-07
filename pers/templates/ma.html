@@ -1224,10 +1224,12 @@
 						<label for="regeloe" class="col-sm-1 control-label">RegelOE</label>
 						<div class="col-sm-2">
 						    <select title="regeloe" ng-options="option for option in oesArray" ng-model="ma.maInfo.regeloe" class="form-control" ng-change="dpersFieldChanged('regeloe')"></select>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['regeloe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="alteroe" class="col-sm-2 control-label">Alternativ OE</label>
 						<div class="col-sm-2">
 						    <select title="alteroe" ng-options="option for option in oesArray" ng-model="ma.maInfo.alteroe" class="form-control" ng-change="dpersFieldChanged('alteroe')"></select>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['alteroe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="anwvzkd" class="col-sm-1 control-label">Anw.->VzKd</label>
 						<div class="col-sm-1">
@@ -1255,10 +1257,29 @@
 						<label for="auto_leistung_abgnr" class="col-sm-2 control-label">Autoleistung Abgnr</label>
 						<div class="col-sm-3">
 						    <select title="auto_leistung_abgnr" ng-options="option.abgnr+' '+option.abgnrname for option in autoleistungAbgnrArray track by option.abgnr" ng-model="autoleistungAbgnr" class="form-control" ng-change="dpersFieldChanged('auto_leistung_abgnr')"></select>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['auto_leistung_abgnr']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="anwgruppe" class="col-sm-2 control-label">Anw. Gruppe</label>
 						<div class="col-sm-2">
 						    <select title="anwgruppe" ng-options="option.anwgruppe+' '+option.bezeichnung for option in anwgruppenArray track by option.anwgruppe" ng-model="anwgruppe" class="form-control" ng-change="dpersFieldChanged('anwgruppe')"></select>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['anwgruppe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+					    </div>
+					</fieldset>
+				    </div>
+				</div>
+			    </div>
+			    <div class="row">
+				<div class="col-sm-12">
+				    <div class="form-horizontal">
+					<fieldset>
+					    <legend>Korektur</legend>
+					    <div class="row">
+						<div class="checkbox col-sm-6">
+						    <label>
+							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.kor" ng-change="dpersFieldChanged('kor')">PersNr=KORREKTUR
+						    </label>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['kor']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					</fieldset>

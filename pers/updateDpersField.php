@@ -111,6 +111,7 @@ if(
 	||$field=='MAStunden'
 	||$field=='a_praemie_st'
 	||$field=='auto_leistung'
+	||$field=='kor'
 	||$field=='einarb_zuschlag')
     {
     $value1 = strlen(trim($value))>0?trim($value):NULL;
