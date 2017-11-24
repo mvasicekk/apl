@@ -1449,12 +1449,22 @@ class AplDB {
 	} else {
 	    $sql .= " ident.kunde='$kundeIdentSelected'";
 	}
+	
 	$sql .= " and";
-	$sql .= " dpersident.vydano is null";
-	$sql .= " and ";
-	$sql .= " dpersident.vraceno is null";
-	$sql .= " and ";
-	$sql .= " dpersident.persnr is null";
+	$sql .= " (";
+	$sql .= " ( dpersident.identifikator is null and vydano is null and vraceno is null)";
+	$sql .= " or";
+	$sql .= " ( dpersident.identifikator is not null and vydano is not null and vraceno is not null)";
+	$sql .= " or";
+	$sql .= " ( dpersident.identifikator is not null and vydano is null and vraceno is not null)";
+	$sql .= " )";
+	
+//	$sql .= " and";
+//	$sql .= " dpersident.vydano is null";
+//	$sql .= " and ";
+//	$sql .= " dpersident.vraceno is null";
+//	$sql .= " and ";
+//	$sql .= " dpersident.persnr is null";
 	$sql .= " order by";
 	$sql .= " ident.identifikator";
 

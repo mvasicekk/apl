@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="majetekController">
+<div class="container-fluid" ng-controller="majetekbewController">
     <div class="page-header">
 	<h4>výdej majetku
 	</h4>
@@ -13,11 +13,10 @@
 	</button>
     <form ng-submit="submitForm()" name="dambewForm" ng-model-options="{ updateOn: 'blur'}">
 	<div class="row">
-	    
-	    <div class="form-group col-sm-2 form-group-sm valign_top">
+	    <div class="form-group col-sm-2 form-group-sm">
 		<label class="control-label" for="">InvNr:</label>
-		<ui-select		    enterfocus
-					    ng-model="majetek.selected" 
+		<div id="ui-select-wrapper">
+		<ui-select		    ng-model="majetek.selected" 
 					    ng-model-options="{updateOn: 'default blur',debounce: { 'default': 500, 'blur': 0 }}"
 					    ng-disabled="disabled" 
 					    reset-search-input="true" 
@@ -25,6 +24,7 @@
 					    close-on-select="true"
 					    on-select="majetekSelectAction($item,$model)"
 					    id="majinvnr"
+					    autofocus="true"
 					    ><ui-select-match enterfocus placeholder="vyhledani majetku">{{$select.selected.CISLO}} - {{$select.selected.POPIS}}</ui-select-match>
 					    <ui-select-choices repeat="p in majetekArray track by $index"
 							       refresh="refreshMajetek($select.search)"
@@ -32,23 +32,25 @@
 						<div ng-bind-html="p.CISLO + ' ' + p.POPIS + ' ' + p.TEXT_2 + ' (' + p.POZNAMKA + ')'| highlight: $select.search"></div>
 					    </ui-select-choices>
 					</ui-select>
-		<apl-help editable="isEditor"   helpTextUpdater="./updateHelpText.php" el="hIArray['amnr']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+		<apl-help editable="isEditor"   helpTextUpdater="./updateHelpText.php" el="hIArray['invnr']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	    <!--datum-->
-	    <div class="form-group col-sm-2 form-group-sm valign_top">
+	    <div class="form-group col-sm-2 form-group-sm">
 		<label class="control-label" for="">Datum:</label>
 		<input enterfocus ng-model="datum" style="width:8em;" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="datum">
 		<apl-help  editable="isEditor"  helpTextUpdater="./updateHelpText.php" el="hIArray['datum']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	    
 	    
-	    <div class="form-group col-sm-2 form-group-sm valign_top">
+	    <div class="form-group col-sm-2 form-group-sm">
 		<label class="control-label" for="persnr">PersNr:</label>
 		<input ng-change="persnrChanged()"  enterfocus maxlength="5" ng-model="persnr" type="text" class="form-control" id="persnr" placeholder="PersNr">
 		    <span>{{persinfo.vorname}} {{persinfo.name}}</span>
 		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['persnr']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
-	    <div class="form-group col-sm-2 form-group-sm valign_top">
+	    
+	    <div class="form-group col-sm-2 form-group-sm">
 		    <label class="control-label" for="">OE:</label>
 		    <select id="oe" enterfocus ng-change="" ng-options="option.tat+' - '+option.tatBezeichnung for option in oeArray track by option.tat" 
 			    class="form-control" 
@@ -57,19 +59,20 @@
 		    <apl-help  editable="isEditor"  helpTextUpdater="./updateHelpText.php" el="hIArray['oe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	    
-	    <div class="form-group col-sm-2 form-group-sm valign_top">
+	    <div class="form-group col-sm-2 form-group-sm">
 		<label class="control-label" for="">Ausgabe:</label>
-		<input disabled enterfocus maxlength="8" ng-model="ausgabe" type="text" class="form-control text-right" id="ausgabe" placeholder="ausgabe">
+		<input enterfocus maxlength="8" ng-model="ausgabe" type="text" class="form-control text-right" id="ausgabe" placeholder="ausgabe">
 		<apl-help editable="isEditor"   helpTextUpdater="./updateHelpText.php" el="hIArray['ausgabe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
 	    
-	    <div class="form-group col-sm-2 form-group-sm valign_top">
+	    <div class="form-group col-sm-2 form-group-sm">
 		<label class="control-label" for="">Ruckgabe:</label>
-		<input disabled enterfocus maxlength="8" ng-model="ruckgabe" type="text" class="form-control text-right" id="ruckgabe" placeholder="ruckgabe">
+		<input enterfocus maxlength="8" ng-model="ruckgabe" type="text" class="form-control text-right" id="ruckgabe" placeholder="ruckgabe">
 		<apl-help editable="isEditor"   helpTextUpdater="./updateHelpText.php" el="hIArray['ruckgabe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 	    </div>
-	    
-	    <div class="form-group col-sm-4 form-group-sm valign_top">
+	    </div>
+	    <div class="row">
+	    <div class="form-group col-sm-4 form-group-sm">
 		<label class="control-label" for="">Bemerkung:</label>
 		<input enterfocus maxlength="255" ng-model="bemerkung" type="text" class="form-control" id="bemerkung" placeholder="bemerkung">
 		<apl-help editable="isEditor"   helpTextUpdater="./updateHelpText.php" el="hIArray['bemerkung']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
@@ -78,40 +81,49 @@
 	    <div class="form-group col-sm-2 form-group-sm valign_bottom">
 		<button ng-disabled="!isFormValid()" type="submit" class="btn btn-primary" >erfassen / vložit</button>
 		<apl-help editable="isEditor"   helpTextUpdater="./updateHelpText.php" el="hIArray['erfassen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
-<!--		<button type="reset" class="btn" >reset</button>-->
 	    </div>
-	</div>
-<!--	<div ng-if="insertedRows.length>0" class='row'>
-	    <div class='col-sm-12'>
-		<table class="table table-condensed table-striped">
+	    </div>
+	<div ng-if="insertedRows.length>0" class="row">
+	    <div class="col-sm-12">
+		<table class="table table-condensed table-responsive table-striped">
 		    <thead>
 			<tr>
+			    <th>invnr</th>
 			    <th>datum</th>
 			    <th>persnr</th>
 			    <th>oe</th>
-			    <th>amnr</th>
-			    <th>sklad</th>
-			    <th>ausgabe</th>
-			    <th>ruckgabe</th>
+			    <th>ausgabe stk</th>
+			    <th>rueckgabe stk</th>
 			    <th>bemerkung</th>
-			    <th>u</th>
 			</tr>
 		    </thead>
 		    <tbody>
 			<tr ng-repeat="r in insertedRows">
-			    <td>{{r.datum}}</td>
-			    <td>{{r.persnr}}</td>
-			    <td>{{r.oe}}</td>
-			    <td>{{r.amnr}}</td>
-			    <td>{{r.sklad}}</td>
-			    <td>{{r.ausgabe}}</td>
-			    <td>{{r.ruckgabe}}</td>
-			    <td>{{r.bemerkung}}</td>
-			    <td>{{r.u}}</td>
+			    <td>
+				{{r.m.CISLO}}
+			    </td>
+			    <td>
+				{{r.datum}}
+			    </td>
+			    <td>
+				{{r.persnr}}
+			    </td>
+			    <td>
+				{{r.oe}}
+			    </td>
+			    <td>
+				{{r.ausgabe}}
+			    </td>
+			    <td>
+				{{r.ruckgabe}}
+			    </td>
+			    <td>
+				{{r.bemerkung}}
+			    </td>
 			</tr>
 		    </tbody>
 		</table>
 	    </div>
-	</div>-->
+	</div>
     </form>
 </div>

@@ -121,6 +121,7 @@
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.phpexcel};" type="button" value="PHPExcel - Exporte" id="phpexcel" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/excelreports.php'" /></div>
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.showquery};" type="button" value="Schlüsseltabellen zeigen" id="showquery" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php?form_typ=schltabelle'" /></div>
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.eforms};" type="button" value="eForms zeigen" id="eforms" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php?form_typ=eform'" /></div>
+			    <div class="col-sm-6">   <input class="btn btn-default btn-block"  style="display:{$display_sec.sonstforms};" type="button" value="Formulare - Sonst" id="sonstforms" class="abyStartButton" onClick="okno=window.open();okno.location.href='./Reports/st.php?form_typ=sonstform'" /></div>
 			</div>
 		    </div>
 		</div>

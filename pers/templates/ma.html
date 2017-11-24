@@ -1527,7 +1527,7 @@
 						</tr>
 					    </thead>
 					    <tbody>
-						<tr ng-repeat="pa in persIdentifikatoryArray">
+						<tr ng-repeat="pa in persIdentifikatoryArray track by pa.id">
 						    <td >{{pa.oe}}</td>
 						    <td class="text-right">
 							{{pa.kunde}}
@@ -1539,7 +1539,7 @@
 							{{pa.vydano}}
 						    </td>
 						    <td class="">
-							<input ng-change="dpersidentifikatoryChanged(pa, 'vraceno')" ng-model="pa.vraceno" ui-date="dateOptions" type="text" class="form-control" id="identifikatorvraceno" placeholder="datum vrácení">
+							<input ng-change="dpersidentifikatoryChanged(pa, 'vraceno')" ng-model="pa.vraceno" ui-date="dateOptions" type="text" class="form-control" placeholder="datum vrácení">
 						    </td>
 						    <td class="">
 							<input ng-change="dpersidentifikatoryChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">

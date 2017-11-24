@@ -285,7 +285,7 @@ $pdf->MultiCell(0, 2*10 , 'Unterschrift / podpis:', 'B', 'L', FALSE, FALSE,'',''
 $pdf->Text(PDF_MARGIN_LEFT, $pdf->GetY()+2*10, "Kemper");
 $pdf->Text(PDF_MARGIN_LEFT+50+20, $pdf->GetY(), "Kemper");
 
-$pdf->Text(PDF_MARGIN_LEFT-3, $pdf->GetY()+12, "QMF G 19/3");
+$pdf->Text(PDF_MARGIN_LEFT-3, $pdf->GetY()+12, "QMF G 19/5");
 // pokud mam vyplneny i import, pridam dalsi stranku
 if(!$bLeer){
     $pdf->setPrintHeader(FALSE);

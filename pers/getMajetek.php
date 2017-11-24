@@ -13,6 +13,7 @@ $sqlDB = sqldb::getInstance();
 $a = AplDB::getInstance();
 
 // vsechen majetek, drobny hmotny = DH
+$search = iconv('UTF-8','windows-1250',$search);
 $ispSql = " SELECT INTER,CISLO,DRUH,POPIS,TEXT_2,CENA,DATUM_P,UMISTENI,POZNAMKA,STKOD,ZKKOD,DATUM_V,IDEN1,JMENO_ODP,VYRCISLO,CENA_KS,DOKLAD FROM MAJETEK";
 $ispSql.=" WHERE (DOKLAD='DH') AND (IDEN5='1') AND (CISLO LIKE '%$search%' OR POPIS LIKE '%$search%' OR TEXT_2 LIKE '%$search%') ORDER BY CISLO";
 $veskeryMajetek = array(); //klic bude inventarni cislo
@@ -22,10 +23,15 @@ $vydanyMajetek = array();
 
 if(strlen(trim($search))>0){
     $res = $sqlDB->getResult($ispSql);
+    $resVeskeryMajetek = $res;
     if($res!==NULL){
 	foreach ($res as $r1){
 	    $invnr = trim($r1['CISLO']);
 	    $stkod = trim(intval($r1['STKOD']));
+	    $r1['POPIS'] = iconv('windows-1250', 'UTF-8', trim($r1['POPIS']));
+	    $r1['TEXT_2'] = iconv('windows-1250', 'UTF-8', trim($r1['TEXT_2']));
+	    $r1['UMISTENI'] = iconv('windows-1250', 'UTF-8', trim($r1['UMISTENI']));
+	    $r1['POZNAMKA'] = iconv('windows-1250', 'UTF-8', trim($r1['POZNAMKA']));
 	    //seznam roli pro stredisko
 	    $rA = $a->getRolesForStredisko($stkod);
 	    $veskeryMajetek[$invnr] = $r1;
@@ -125,7 +131,9 @@ if($persnr>0){
 	    $ispSql.=" WHERE (CISLO='$invnr')";
 	    $res = $sqlDB->getResult($ispSql);
 	    if($res!==NULL){
-		$popisMajetku = $res[0]['POPIS'].' '.$res[0]['TEXT_2'];
+		$popis = iconv('windows-1250', 'UTF-8', trim($res[0]['POPIS']));
+		$text2 = iconv('windows-1250', 'UTF-8', trim($res[0]['TEXT_2']));
+		$popisMajetku = $popis.' '.$text2;
 	    }
 	    $majetekPersArray[$index]['canreturn'] = $canReturn;
 	    $majetekPersArray[$index]['popismajetku'] = $popisMajetku;
@@ -134,7 +142,8 @@ if($persnr>0){
 }
 
 $returnArray = array(
-    'veskeryMajetek'=>$veskeryMajetek,
+    //'res'=>$resVeskeryMajetek,
+    //'veskeryMajetek'=>$veskeryMajetek,
 //    'majetekArrayPocet'=>count($res),
     //'userRolesArray'=>$userRolesArray,
     'userRoles'=>$userRoles,
@@ -143,6 +152,7 @@ $returnArray = array(
     'majetekArrayPocetBezVydanych'=>count($nevydanyMajetek),
     'majetekPersArray'=>$majetekPersArray,
     'u'=>$u,
+    'ispSql'=>$ispSql,
     'params'=>$params,
     'search'=>$search,
 );

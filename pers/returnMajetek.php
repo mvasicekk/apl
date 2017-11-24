@@ -20,8 +20,8 @@ $oe = $pa->oe;
 $ident = $a->get_user_pc();
 
 if(($persnr>0) && ($invnr>0)){
-    $sql = "insert into dambew (PersNr,Datum,oe,AMNr,RueckgabeStk,invnr,comp_user_accessuser,insert_stamp)";
-    $sql.=" values ('$persnr','$nowDate','$oe','$amnr',1,'$invnr','$ident',NOW())";
+    $sql = "insert into dambew (PersNr,Datum,oe,AMNr,amnr_typ,RueckgabeStk,invnr,comp_user_accessuser,insert_stamp)";
+    $sql.=" values ('$persnr','$nowDate','$oe','$amnr',2,1,'$invnr','$ident',NOW())";
     $insertId = $a->insert($sql);
 }
 $returnArray = array(

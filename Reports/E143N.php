@@ -131,7 +131,8 @@ if($rows!=NULL){
 	//test na datum vystupu podle premiera
 	$s = "select persnr,austritt";
 	$s.= " from dpersvertrag_isp";
-	$s.= " where persnr='$persnr'";
+	$s.= " where (persnr='$persnr')";
+	$s.=" AND (isp_pp_kate='HPP')";
 	$s.= " order by eintritt desc";
 	$s.= " limit 1";
 	$rs1 = $a->getQueryRows($s);

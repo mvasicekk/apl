@@ -99,7 +99,13 @@ function insertAplVertrag($ppRow, $persnr, $table = 'dpersvertrag_isp') {
  */
 function updateAplVertrag($idVertrag, $field, $value, $table = 'dpersvertrag_isp') {
     global $a;
-    $sql = "update `$table` set `$field`='$value' where id='$idVertrag'";
+    if($value==NULL){
+	$sql = "update `$table` set `$field`=NULL where id='$idVertrag'";
+    }
+    else{
+	$sql = "update `$table` set `$field`='$value' where id='$idVertrag'";
+    }
+    
     $ar = $a->query($sql);
     if ($ar > 0) {
 	echo "\nUPDATEFIELD $field = $value for id=$idVertrag (ar=$ar),table = $table";
@@ -567,7 +573,7 @@ foreach ($persArray as $zCislo => $persRow) {
 			    $ppVystupTime = strtotime($ppRow[$ispKey]);
 			    $dobaUrcita = $ppRow['smlDobaUrcita'];
 			    $dobaUrcitaTime = strtotime($ppRow['smlDatVystup']);
-			    //echo "\n austrittTime=$austrittTime, ppVystupTime=$ppVystupTime,dobaurcita=$dobaUrcita,dobaurcitatime=$dobaUrcitaTime";
+			    echo "\n austrittTime=$austrittTime, ppVystupTime=$ppVystupTime,dobaurcita=$dobaUrcita,dobaurcitatime=$dobaUrcitaTime";
 			    if (
 				    (($austrittTime < $ppVystupTime) && ($dobaUrcitaTime != $ppVystupTime)) //zadan vystup
 				    ||
@@ -576,6 +582,15 @@ foreach ($persArray as $zCislo => $persRow) {
 				//splneny podminky pro ukonceni prac pomeru, bud zadan datum ukonceni nebo uplynula doba pro dobu urcitou
 				updateAplVertrag($r['id'], 'austritt', $ispValue);
 				updateAplPersnr($zCislo, 'dpersstatus', 'BEENDET', $aplPersArray[$zCislo]['dpersstatus'], 'dpers_isp');
+			    }
+			    //2017-11-15, osetreni pripadu, ze ppVystupTime bude vymazan, nastavit austritt na null a dpersstatus opet na MA
+			    if($austrittTime>0 && $ppVystupTime==FALSE){
+				$ppKate = $ppRow['ppKate'];
+				if($ppKate=="HPP"){
+				    echo "\n,ppKate=$ppKate, vymazan Austritt\n";
+				    updateAplVertrag($r['id'], 'austritt', NULL);
+				    updateAplPersnr($zCislo, 'dpersstatus', 'MA', $aplPersArray[$zCislo]['dpersstatus'], 'dpers_isp');
+				}
 			    }
 			}
 			//------------------------------------------------------

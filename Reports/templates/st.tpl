@@ -34,7 +34,14 @@
 
 	<script src="../libs/bower_components/tinymce-dist/tinymce.min.js"></script>
 	<script src="../libs/bower_components/angular-ui-tinymce/dist/tinymce.min.js"></script>
-    
+
+	<script src="../libs/bower_components/numeral/min/numeral.min.js"></script>
+	<script src="../libs/bower_components/angular-numeraljs/dist/angular-numeraljs.min.js"></script>
+	
+	<script src="./bower_components/angular-ui-select/dist/select.min.js"></script>
+	<link href="./bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
+	
+	
 	<script src="./js/app.js"></script>
 	<script src="./js/controllers.js"></script>
 	<script src="./js/directives.js"></script>
@@ -73,6 +80,36 @@
 		    </div>
 		</div>
 		{/if}	    
+		
+		{if $typcountarray.sonstform>0}
+		<div class='panel panel-success' id='buttoncontainer'>
+		    <div class='panel-heading'>
+			<h3 class="panel-title">
+			    Formulare - Sonst
+			</h3>
+		    </div>
+		    <div class='panel-body'>
+			<div id='st_Sefom'>
+			    <div class='row'>
+				<div class="col-sm-3">
+				    {foreach from=$querys item=q key=k}
+				    {if $q.showButton && $q.form_typ=='sonstform'}
+					    <a style='text-align:left;' class='btn btn-sm btn-default btn-block' id="{$k}" href="#/{$q.form_typ}/{$q.tabid}">
+						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {$q.buttonName}
+					    </a>
+				    {/if}
+				{/foreach}
+				</div>
+				{literal}
+				<div ng-view class="col-sm-9">
+				</div>
+				{/literal}
+			    </div>
+			</div>
+		    </div>
+		</div>
+		{/if}
+		
 		{if $typcountarray.eform>0}
 		<div class='panel panel-success' id='buttoncontainer'>
 		    <div class='panel-heading'>

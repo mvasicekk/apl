@@ -5,9 +5,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/cli/updateSeznamSkladuFromPremier.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dambew/getLists.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/dambew/templates/dambewjs.tpl</file>
+            <file>file:/home/jr/NetBeansProjects/apl/utils/monterkyprijem.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/cli/updateDpersFromPremier.php</file>
         </group>
     </open-files>
 </project-private>
