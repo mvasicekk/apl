@@ -65,9 +65,11 @@ $u = $_SESSION['user'];
 // seznam roli pro prihlaseneho uzivatele
 $userRolesArray = $a->getUserRolesArray($u);
 $userRoles = array();
+$userRolesStr = array();
 if($userRolesArray!==NULL){
     foreach ($userRolesArray as $ur){
 	array_push($userRoles, $ur['role_id']);
+	array_push($userRolesStr, $ur['rolename']);
     }
 }
 
@@ -141,12 +143,15 @@ if($persnr>0){
     }
 }
 
+$bSearched = strlen(trim($search))>0?TRUE:FALSE;
+	
 $returnArray = array(
     //'res'=>$resVeskeryMajetek,
     //'veskeryMajetek'=>$veskeryMajetek,
 //    'majetekArrayPocet'=>count($res),
     //'userRolesArray'=>$userRolesArray,
     'userRoles'=>$userRoles,
+    'userRolesStr'=>$userRolesStr,
 //    'vydanyMajetek'=>$vydanyMajetek,
     'majetekArrayBezVydanych'=>$nevydanyMajetek,
     'majetekArrayPocetBezVydanych'=>count($nevydanyMajetek),
@@ -155,6 +160,8 @@ $returnArray = array(
     'ispSql'=>$ispSql,
     'params'=>$params,
     'search'=>$search,
+    'bSearched'=> $bSearched,
+    'persnr'=>$persnr
 );
 
 echo json_encode($returnArray);

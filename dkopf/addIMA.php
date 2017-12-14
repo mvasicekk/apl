@@ -40,6 +40,7 @@ require_once '../db.php';
 	array(
 	    "hl@abydos.cz",
 	    "jr@abydos.cz",
+	    "pe@abydos.cz",
 	    "sv@abydos.cz",
 	    "bb@abydos.cz",
 	    "rb@abydos.cz",

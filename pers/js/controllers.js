@@ -448,6 +448,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 		    {
 			persnr: $scope.ma.maInfo.PersNr,
 			value: v,
+			timezoneOffset: new Date().getTimezoneOffset(),
 			field: field
 		    }
 	    ).then(function (response) {
@@ -1023,8 +1024,8 @@ $scope.commentClicked = function(e,p){
 		}
 	    });
 	$('#extra_password_modal').modal('hide');
-    }
-    /**
+    } 
+   /**
      * 
      * @param {type} panelid
      * @returns {undefined}

@@ -41,6 +41,7 @@ $recipients = $apl->getRecipientsArray(
 	    "ho@abydos.cz",
 	    "kp@abydos.cz",
 	    "pva@abydos.cz",
+	    "pe@abydos.cz",
 	    "ne@abydos.cz")
 	,FALSE
 	);

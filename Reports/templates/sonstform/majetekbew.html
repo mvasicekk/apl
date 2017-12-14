@@ -19,7 +19,7 @@
 		<ui-select		    ng-model="majetek.selected" 
 					    ng-model-options="{updateOn: 'default blur',debounce: { 'default': 500, 'blur': 0 }}"
 					    ng-disabled="disabled" 
-					    reset-search-input="true" 
+					    reset-search-input="false" 
 					    theme="bootstrap"
 					    close-on-select="true"
 					    on-select="majetekSelectAction($item,$model)"
@@ -126,4 +126,43 @@
 	    </div>
 	</div>
     </form>
+</div>
+
+<!-- Modal pro pripad, ze nedostavam zadne vysledky pro majetek -->
+<div class="modal fade" id="nomajetek_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">žádný majetek k vydání</h4>
+      </div>
+      <div class="modal-body">
+	  <div class="row">
+	      <div class="col-sm-6">
+		  <img src="../pers/img/wtf.jpg" alt="co to ?" class="img-rounded img-responsive">
+	      </div>
+	      <div class="col-sm-6">
+		  <div class="alert alert-warning">
+		      žádný majetek k vydání
+		  </div>
+		  <div ng-show="!userRoles.length>0" class="alert alert-warning">
+		      uživatel nemá žádné role
+		  </div>
+		  <div ng-show="u==''" class="alert alert-warning">
+		      uživatel není přihlášený
+		  </div>
+		  <div class="alert alert-info">
+		      uzivatel: {{u}}
+		  </div>
+		  <div class="alert alert-info">
+		       role:<i>({{userRolesStrStr}})</i>
+		  </div>
+	      </div>
+	  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">zavřít</button>
+      </div>
+    </div>
+  </div>
 </div>

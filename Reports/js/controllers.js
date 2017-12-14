@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var aplApp = angular.module('stApp');
 
 aplApp.directive("enterfocus", function () {
@@ -16,8 +10,6 @@ aplApp.directive("enterfocus", function () {
                     if (code === 13) {
                         var current = focusables.index(this);
                         var next = focusables.eq(current + 1).length ? focusables.eq(current + 1) : focusables.eq(0);
-			//console.log('current='+current+' next=');
-			//console.log(next);
                         next.focus();
 			next.select();
                         e.preventDefault();
@@ -26,6 +18,7 @@ aplApp.directive("enterfocus", function () {
             }
         }
 });
+
 aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
     $scope.tinyMceOptions = {
 	inline:true,
@@ -195,11 +188,6 @@ $scope.getStkSumme = function(){
 	var p = {
 	    form_id: 'f355_mangelbericht'
 	};
-//	return $http.post('./getSecurityInfo.php',p).then(
-//		    function(response){
-//			$scope.securityInfo = response.data.securityInfo;
-//		    }
-//		);
 	return $http.post('../getSecurityInfo.php', p).then(
 		function (response) {
 		    $scope.securityInfo = response.data.securityInfo;
@@ -602,17 +590,12 @@ aplApp.controller('majetekbewController', function ($scope, $routeParams,$http,$
 		getMajetekArray({});
 		$scope.insertedRows.unshift(insertItem);
 	    }
-//	    
 //    		// pripravit na dalsi zadani
     		$scope.majetek.selected = {};
 		$scope.persinfo = {};
 		$scope.persnr = '';
 		$scope.oe.tat='';
 		$scope.amnr = '';
-//		$scope.amnrinfo = {};
-//		$scope.amnrSklady = [];
-//		$scope.skladyArray = $scope.skladyArrayAll;
-//		$scope.sklad.cislo = $scope.skladyArray[0].cislo;
 		$scope.ausgabe = 1;
 		$scope.ruckgabe = 0;
 		$scope.bemerkung = '';
@@ -623,15 +606,6 @@ aplApp.controller('majetekbewController', function ($scope, $routeParams,$http,$
 		var focusser = uiSelectWrapper.querySelector('.ui-select-focusser');
 		var focusser = angular.element(uiSelectWrapper.querySelector('.ui-select-focusser'));
 		focusser.focus();
-		
-//		// a focus na osobni cislo
-//		var such = $window.document.getElementById('persnr');
-//		if (such) {
-//		    such.focus();
-//		    such.select();
-//		}
-//
-//
 	});
 }
 
@@ -647,6 +621,13 @@ aplApp.controller('majetekbewController', function ($scope, $routeParams,$http,$
 		    }
 	    ).then(function (response) {
 		$scope.majetekArray = response.data.majetekArrayBezVydanych;
+		if(($scope.majetekArray.length==0) && (response.data.persnr==0) && (response.data.bSearched===true)){
+		    $scope.userRoles = response.data.userRoles;
+		    $scope.userRolesStr = response.data.userRoles.join();
+		    $scope.userRolesStrStr = response.data.userRolesStr.join();
+		    $scope.u = response.data.u;
+		    $('#nomajetek_modal').modal();
+		}
 	    });
     }
     /**

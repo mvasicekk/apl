@@ -5,8 +5,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/utils/monterkyprijem.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/cli/updateDpersFromPremier.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/js/controllers.js</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/templates/sonstform/majetekbew.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/templates/ma.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/pers/getMajetek.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/Reports/js/controllers.js</file>
         </group>
     </open-files>
 </project-private>

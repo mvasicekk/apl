@@ -8,6 +8,7 @@ $o = json_decode($data);
 
 
 $value = $o->value;
+$timezoneOffsetMinutes = $o->timezoneOffset;
 $field = $o->field;
 $valid = FALSE;
 $persnr = intval($o->persnr);
@@ -15,7 +16,7 @@ $persnr = intval($o->persnr);
 $a = AplDB::getInstance();
 $u = $_SESSION['user'];
 
-
+date_default_timezone_set('Europe/Prague');
 
 if($field=='bewerbe_datum'){
     $value1 = date('Y-m-d',strtotime($value));
@@ -32,7 +33,7 @@ if($field=='adaptace_bis'){
 }
 
 if($field=='geboren'){
-    $value1 = $value!==NULL?date('Y-m-d',strtotime($value)):NULL;
+    $value1 = $value!==NULL?date('Y-m-d',strtotime($value)-$timezoneOffsetMinutes*60):NULL;
     if(strtotime($value)!==FALSE || $value==NULL){
 	$valid = TRUE;
     }
@@ -130,7 +131,8 @@ $returnArray = array(
     'field'=>$field,
     'u' => $u,
     'sql' => $sql,
-    'persnr'=>$persnr
+    'persnr'=>$persnr,
+    'default_timezone'=>date_default_timezone_get(),
 );
 
 // HID Card Info

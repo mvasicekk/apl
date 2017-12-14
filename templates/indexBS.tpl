@@ -144,6 +144,7 @@
 		    <div class="panel-body ">
 			<div class="row">
 			    <div class="col-sm-6">   <input class="btn btn-default btn-block" style="display:{$display_sec.eink_anforderung};" type="button" value="Anforderung/požadavek" id="eink_anforderung" class="abyStartButton" onClick="okno=window.open();okno.location.href='./einkauf/anforderung.php'" /></div>
+			    <div class="col-sm-6">   <input class="btn btn-default btn-block" style="display:{$display_sec.fasovani};" type="button" value="fasování" id="fasovani" class="abyStartButton" onClick="okno=window.open();okno.location.href='./fasovani/'" /></div>
 			</div>
 		    </div>
 		</div>
