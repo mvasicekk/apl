@@ -68,11 +68,16 @@ $pt .= "    ,durlaub1.gekrzt";
 $pt .= " ,'$bis' as datumbis";
 $pt .= " ,'$von' as datumvon";
 $pt .= " from dpers";
+$pt.= " join lohnabrechtyp on dpers.lohnabrechtyp=lohnabrechtyp.lohntyp";
 $pt .= " left join dpersvertrag on dpersvertrag.persnr=dpers.persnr";
 $pt .= " left join durlaub1 on durlaub1.`PersNr`=dpers.`PersNr`";
 $pt .= " where ((dpers.persnr between '$persvon' and '$persbis')";
 //$pt .= " and (dpers.austritt is null or dpers.austritt<dpers.eintritt or dpers.austritt between '$von' and '$bis') and (dpers.persnr<>69052 and dpers.persnr<>69058 and dpers.persnr<>69061 and dpers.persnr<>69093))";
-$pt .= " and (dpers.austritt is null or dpers.austritt<dpers.eintritt or dpers.austritt between '$von' and '$bis' or dpers.austritt>='$bis'))";
+$pt .= " and (dpers.austritt is null or dpers.austritt<dpers.eintritt or dpers.austritt between '$von' and '$bis' or dpers.austritt>='$bis')";
+if($lohnabrechtyp!==NULL){
+    $pt.="    and (lohnabrechtyp.beschr_kurz='$lohnabrechtyp')";
+}
+$pt.= " )";
 $pt .= " group by dpers.persnr";
 //echo "pt=".$pt."<br>";
 $db->query($pt);

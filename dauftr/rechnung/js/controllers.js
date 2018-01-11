@@ -65,6 +65,24 @@ aplApp.controller('rechnungController', function ($scope, $routeParams, $http, $
     $scope.ausLiefError = true;
 
 
+
+/**
+ * 
+ * @param {type} t
+ * @returns {undefined}
+ */
+$scope.updateTaetigkeitText = function(t){
+    console.log(t);
+    $http.post(
+		'./updateDRechRow.php',
+		{
+		    t:t
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    //$scope.initRechnung();
+    });
+}
 /**
  * aktualizuje text v hlavicce, ktery se zobrazuje na fakture
  * @returns {undefined}

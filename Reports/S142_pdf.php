@@ -17,6 +17,11 @@ $jahr = $_GET['jahr'];
 $persvon = $_GET['persvon'];
 $persbis = $_GET['persbis'];
 $reporttyp = $_GET['reporttyp'];
+$lohnabrechtyp = $_GET['lohnabrechtyp'];
+if($lohnabrechtyp=='*'){
+    $lohnabrechtyp=NULL;
+}
+
 $a = AplDB::getInstance();
 
 if ($reporttyp == 'infoVonBis') {

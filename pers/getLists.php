@@ -117,6 +117,10 @@ $autoleistungAbgnrArray = $a->getQueryRows($sql);
 $sql = "select anwgruppe,bezeichnung from anwesenheitgruppen order by anwgruppe";
 $anwgruppenArray = $a->getQueryRows($sql);
 
+//lohnabrechtyp
+$sql = "select lohntyp,beschr_kurz from lohnabrechtyp order by lohntyp";
+$lohnabrechtypArray = $a->getQueryRows($sql);
+
 // vystup ----------------------------------------------------------------------
 
 $returnArray = array(
@@ -141,6 +145,7 @@ $returnArray = array(
     'identifikatorSelected'=>$identifikatorSelected,
     'autoleistungAbgnrArray'=>$autoleistungAbgnrArray,
     'anwgruppenArray'=>$anwgruppenArray,
+    'lohnabrechtypArray'=>$lohnabrechtypArray,
     'u' => $u
 );
 

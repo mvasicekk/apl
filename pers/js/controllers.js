@@ -139,6 +139,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 
     $scope.autoleistungAbgnr = {};
     $scope.anwgruppe = {};
+    $scope.lohnabrechtyp = {};
     
     $scope.showPanel = {
 	grundinfo:true,
@@ -441,6 +442,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	}
 	if(field=='anwgruppe'){
 	    v = $scope.anwgruppe;
+	}
+	if(field=='lohnabrechtyp'){
+	    v = $scope.lohnabrechtyp;
 	}
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
@@ -1488,6 +1492,7 @@ $scope.updateAmBewDatum = function(pa){
 		$scope.ma.maInfo = response.data.ma[0];
 		$scope.autoleistungAbgnr.abgnr = $scope.ma.maInfo.auto_leistung_abgnr;
 		$scope.anwgruppe.anwgruppe = $scope.ma.maInfo.anwgruppe;
+		$scope.lohnabrechtyp.lohntyp = $scope.ma.maInfo.lohnabrechtyp;
 		
 		$scope.ma.bewerberInfo = response.data.bewerber[0];
 		if(response.data.dpersdetail!==null){
@@ -1776,6 +1781,7 @@ $scope.updateAmBewDatum = function(pa){
 	    $scope.identifikator = $scope.identifikatorSelected;
 	    $scope.autoleistungAbgnrArray = response.data.autoleistungAbgnrArray;
 	    $scope.anwgruppenArray = response.data.anwgruppenArray;
+	    $scope.lohnabrechtypArray = response.data.lohnabrechtypArray;
 	    $scope.oesArray = response.data.oesArray;
 	    $scope.oes.oeArray = response.data.oeArray;
 	    $scope.oes.oeSelected = response.data.oeSelected;

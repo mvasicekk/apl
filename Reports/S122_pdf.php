@@ -24,6 +24,11 @@ if($reporttyp=='Anwesenheit')
 else
     $nurAnw = FALSE;
 
+$lohnabrechtyp = $_GET['lohnabrechtyp'];
+if($lohnabrechtyp=='*'){
+    $lohnabrechtyp=NULL;
+}
+
 if(!$tagvon) $tagvon = 1;
 if(!$tagbis) $tagbis = 31;
 // vymenim hvezdicky za procenta

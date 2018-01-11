@@ -12,13 +12,15 @@ $a = AplDB::getInstance();
 $u = $_SESSION['user'];
 
 if ($auftragsnr>0) {
-    $sql = " select dkopf.rechnung_edit,dauftr.id_dauftr as id,dauftr.teil, dauftr.auftragsnr, `stück` as importstk, `mehrarb-kz` as tatkz, preis, `pos-pal-nr` as pal,";
-    $sql .= " `stk-exp` as exportstk, fremdauftr, fremdpos, preis*`stk-exp` as gespreis, `stk-exp`-`stück` as diff,auss4_stk_exp as auss, teilbez,";
-    $sql .= " dtaetkz.text, daufkopf.bestellnr, kzgut, `auftragsnr-exp` as export,dauftr.abgnr";
+    $sql = " select dkopf.rechnung_edit,drech.drech_id,dauftr.id_dauftr as id,dauftr.teil, dauftr.auftragsnr, dauftr.`stück` as importstk, dauftr.`mehrarb-kz` as tatkz, dauftr.preis, dauftr.`pos-pal-nr` as pal,";
+    $sql .= " `stk-exp` as exportstk, dauftr.fremdauftr, dauftr.fremdpos, dauftr.preis*dauftr.`stk-exp` as gespreis, dauftr.`stk-exp`-dauftr.`stück` as diff,auss4_stk_exp as auss, dkopf.teilbez,";
+    $sql .= " if(drech.text1 is not null,drech.text1,dtaetkz.text) as text,daufkopf.bestellnr, dauftr.kzgut, `auftragsnr-exp` as export,dauftr.abgnr";
     $sql .= " from dauftr";
     $sql .= " join dkopf using(teil)";
     $sql .= " join dtaetkz on dauftr.`mehrarb-kz`=dtaetkz.dtaetkz";
     $sql .= " join daufkopf on dauftr.auftragsnr=daufkopf.auftragsnr";
+    // 2018-01-11 pridam informate z drech pokud existuji odpovidajici radky
+    $sql .= " left join drech on dauftr.`auftragsnr-exp`=drech.auftragsnr and dauftr.teil=drech.teil and dauftr.`pos-pal-nr`=drech.`pos-pal-nr` and dauftr.abgnr=drech.abgnr";
     $sql .= " where (`auftragsnr-exp`='$auftragsnr')";
     $sql .= " order by dauftr.teil,dauftr.auftragsnr,pal";
 
@@ -72,6 +74,7 @@ $returnArray = array(
     'u' => $u,
     'auftragsnr'=>$auftragsnr,
     'dauftrRows'=>$dauftrRows,
+    //'s1'=>$s1,
     'auftrInfo'=>$auftrInfo,
     'minpreis'=>$minpreis,
     'hatMARechnung'=>$hatMARechnung,

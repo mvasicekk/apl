@@ -67,13 +67,19 @@ if($field=='anwgruppe'){
     $value1 = $value->anwgruppe;
     $valid = TRUE;
 }
+
+if($field=='lohnabrechtyp'){
+    $value1 = $value->lohntyp;
+    $valid = TRUE;
+}
+
 if($field=='dpersstatus'){
     $value1 = trim($value);
     $valid = TRUE;
 }
 
 if($field=='lohnfaktor'){
-    $value1 = intval(trim($value));
+    $value1 = floatval(strtr(trim($value), ',', '.'));
     if($value1>=0 && $value<1000)
     $valid = TRUE;
 }

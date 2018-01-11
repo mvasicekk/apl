@@ -70,6 +70,7 @@ $pt.="    ,durlaub1.gekrzt";
 $pt.=" from dpers";
 $pt.=" join dzeit using(persnr)";
 $pt.=" join dtattypen on dzeit.tat=dtattypen.tat";
+$pt.=" join lohnabrechtyp on dpers.lohnabrechtyp=lohnabrechtyp.lohntyp";
 $pt.=" left join dpersdetail1 on dpersdetail1.persnr=dpers.`PersNr`";
 $pt.=" left join dpersbewerber on dpersbewerber.persnr=dpers.`PersNr`";
 $pt.=" left join durlaub1 on durlaub1.`PersNr`=dpers.`PersNr`";
@@ -78,12 +79,15 @@ $pt.=" (";
 $pt.="    (dpers.austritt is null or dpers.austritt>='$von' or dpers.eintritt>dpers.austritt)";
 $pt.="    and (dzeit.`Datum` between '$von' and '$bis')";
 $pt.="    and (dpers.persnr between '$persvon' and '$persbis')";
+if($lohnabrechtyp!==NULL){
+    $pt.="    and (lohnabrechtyp.beschr_kurz='$lohnabrechtyp')";
+}
 $pt.=" )";
 $pt.=" group by dpers.`PersNr`";
 
 $db->query($pt);
 
-
+//echo $pt;
 //$viewname=$pcip.$views[1];
 //$db->query("drop view $viewname");
 //$pt="create view $viewname";

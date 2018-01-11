@@ -1193,6 +1193,13 @@
 						    </div>
 						</div>
 						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['leistfaktor_input']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						<div class="form-group">
+						    <label for="lohnabrechtyp" class="col-sm-2 control-label">typ zpracování mzdy</label>
+						    <div class="col-sm-2">
+							<select title="lohnabrechtyp" ng-options="option.lohntyp+' '+option.beschr_kurz for option in lohnabrechtypArray track by option.lohntyp" ng-model="lohnabrechtyp" class="form-control" ng-change="dpersFieldChanged('lohnabrechtyp')"></select>
+						    </div>
+						</div>
+						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['lohnabrechtyp']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 					    </div>
 					</fieldset>
 				    </div>

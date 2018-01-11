@@ -83,6 +83,16 @@ if ($qTA !== NULL) {
 }
 $smarty->assign("qtypenS171", join(',', $qtypenA));
 
+//lohnabrechtyp
+$lohnabrechtypA = array();
+array_push($lohnabrechtypA, '*');
+$rows = $apl->getQueryRows("select beschr_kurz from lohnabrechtyp order by lohntyp");
+if ($rows !== NULL) {
+    foreach ($rows as $r)
+	array_push($lohnabrechtypA, $r['beschr_kurz']);
+}
+$smarty->assign("lohnabrechtyp", join(',', $lohnabrechtypA));
+
 
 // seznam vsech OES
 $oes = array();

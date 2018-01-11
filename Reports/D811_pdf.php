@@ -527,7 +527,13 @@ function zapati_bericht($pdf, $cells, $childs, $vyskaRadku, $rgb) {
     );
     
     $pdf->SetFont("FreeSans", "B", 6.5);
-    $r = 100*(1-$sumFrachtBericht['kosten_czk']/$sumFrachtBericht['preis_czk']);
+    if($sumFrachtBericht['preis_czk']!=0){
+	$r = 100*(1-$sumFrachtBericht['kosten_czk']/$sumFrachtBericht['preis_czk']);
+    }
+    else{
+	$r = 0;
+    }
+    
     $obsah = number_format($r, 2, ',', ' ')."%";
     $pdf->Cell(
 	    8, $vyskaRadku, $obsah, 'LB', 0, // odradkovat

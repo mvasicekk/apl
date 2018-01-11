@@ -101,8 +101,8 @@
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">{{t.auftragsnr}}</td>
 			    <td ng-class="{'mehrSelected':isForTeilenSelected(t)}">
 				<!--<input ng-if="(rechnungInfo.auftrInfo[0].hatrechnung=='0')&&(t.rechnung_edit=='1')" type="text" class="form-control" ng-model="t.text">-->
-				<input ng-if="(t.rechnung_edit=='1')" type="text" class="form-control input-sm" ng-model="t.text">
-				<span ng-if="(t.rechnung_edit=='0')">{{t.text}}</span>
+				<input ng-change="updateTaetigkeitText(t)" ng-show="(securityInfo.showArray['taetigkeit_edit'])&&(rechnungInfo.auftrInfo[0].hatrechnung=='1')" type="text" class="form-control input-sm" ng-model="t.text">
+				<span ng-show="!securityInfo.showArray['taetigkeit_edit']">{{t.text}}</span>
 			    </td>
 			</tr>
 		    </tbody>

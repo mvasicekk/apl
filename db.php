@@ -2565,6 +2565,26 @@ class AplDB {
 	return $stk;
     }
 
+    
+    /**
+     * 
+     * @param type $export
+     * @param type $teil
+     * @param type $pal
+     * @param type $abgnr
+     * @return type
+     */
+    public function getDrechIdForExTeilPalAbgnr($export, $teil, $pal,$abgnr) {
+	$sql = "select drech.drech_id as id from drech where (AuftragsNr='$export' and Teil='$teil' and `pos-pal-nr`='$pal' and abgnr='$abgnr')";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    $id = $rs[0]['id'];
+	}
+	else{
+	    $id = NULL;
+	}
+	return $id;
+    }
     /**
      * 
      * @param type $import
@@ -8729,7 +8749,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
      * @return type
      */
     public function updateDRechField($dbField, $value, $drechId) {
-	$sql = "update drech set `$dbField`='$dbValue' where drech_id=$drechId limit 1";
+	$sql = "update drech set `$dbField`='$value' where drech_id=$drechId limit 1";
 	mysql_query($sql);
 	return mysql_affected_rows();
     }
