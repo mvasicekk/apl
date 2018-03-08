@@ -68,7 +68,7 @@ $smarty->assign("display_sec", $display_sec);
 
 
 // spocitam hodnoty pro tabulku s aktualnima vykonama pro tento mesic
-$zielPG1 = 50000;
+$zielPG1 = 62000;
 $zielPG4 = 17000;
 $zielSum = $zielPG1 + $zielPG4;
 

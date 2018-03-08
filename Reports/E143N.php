@@ -123,6 +123,8 @@ $sql.=" group by ";
 $sql.="     dpers.`PersNr`";
 
 $rows = $a->getQueryRows($sql);
+//AplDB::varDump($rows);
+
 $persRows = array();
 
 if($rows!=NULL){
@@ -136,11 +138,13 @@ if($rows!=NULL){
 	$s.= " order by eintritt desc";
 	$s.= " limit 1";
 	$rs1 = $a->getQueryRows($s);
+	//AplDB::varDump($rs1);
 	$austrittCheck = TRUE;
 	if($rs1!==NULL){
 	    //echo "$persnr isp austritt:".$rs1[0]['austritt'];
 	    // test na ukonceni prac pomeru
 	    $austrittStr=trim($rs1[0]['austritt']);
+	    //echo "austrittStr=$austrittStr<br>";
 	    // nemusi byt jen null, v pripade invalid datumu se ulozi 0000-00-00 00:00:00
 	    // nastavit jako by tam byl null
 	    if($austrittStr=="0000-00-00 00:00:00"){
@@ -152,7 +156,16 @@ if($rows!=NULL){
 	}
 	//$checkStr = $austrittCheck?'ok':'nok';
 	//echo "$checkStr<br>";
-	if($austrittCheck){
+	//
+	//2018-02-07
+	//kontrola na lohnabrechtyp = kategorie zpracovani mzdy
+	//10 - MS MooreSptphens se nebude exportovat
+	
+	$lohnabrechtyp = $lohnArray['personen'][$persnr]['grundinfo']['lohnabrechtyp'];
+	$lohnAbrechTypCheck = intval($lohnabrechtyp)==10?FALSE:TRUE;
+	
+//	if($austrittCheck&&$lohnAbrechTypCheck){
+	if($lohnAbrechTypCheck){
 	    $persRows[$persnr]['grundinfo'] = $lohnArray['personen'][$persnr]['grundinfo'];
 	}
     }

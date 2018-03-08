@@ -152,7 +152,7 @@ function updateAplPersnr($zCislo, $field, $value, $oldValue, $table = 'dpers_isp
 
 // vybrat vsechny lidi z premiera
 
-$res = $sqlDB->getResult("select * from fl_PERSONAL_APL_view order by Z_CISLO,PP_CISLO");
+$res = $sqlDB->getResult("select * from fl_PERSONAL_APL_view order by Z_CISLO,PP_CISLO,PP_VSTUP");
 
 // polovicni pole
 

@@ -128,7 +128,7 @@ function makeGraph(daysBack){
 	
 	var normy = [
 	    {
-		hranice:50000,
+		hranice:62000,
 		trida:'pg1norma',
 		label:'Guss'
 	    },
@@ -138,7 +138,7 @@ function makeGraph(daysBack){
 		label:'NE'
 	    },
 	    {
-		hranice:67000,
+		hranice:79000,
 		trida:'celkemnorma',
 		label:'Sum'
 	    },

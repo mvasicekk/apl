@@ -774,11 +774,17 @@ class AplDB {
 	 */
 	function getStdLohnForAdaptace($adaptace) {
 	    if ($adaptace > 2) {
-		return 130;
+		//2018-01-16
+		return 150;
+		//return 130;
 	    } elseif ($adaptace > 1) {
-		return 120;
+		//2018-01-16
+		return 140;
+		//return 120;
 	    } elseif ($adaptace > 0) {
-		return 110;
+		//2018-01-16
+		return 130;
+		//return 110;
 	    }
 	    return 0;
 	}
@@ -829,7 +835,7 @@ class AplDB {
 	);
 
 	
-
+//2018-02-07 pridano vytazeni informace lohnabrechtyp
 //grundinfo z E143
 	$sql.=" select";
 	$sql.="     dpers.persnr,";
@@ -848,6 +854,7 @@ class AplDB {
 	$sql.="     dpers.premie_za_3_mesice,";
 	$sql.="     dpers.MAStunden,";
 	$sql.="     dpers.dpersstatus,";
+	$sql.="     dpers.lohnabrechtyp,";
 	$sql.="     if(dpersbewerber.exekution is null,0,dpersbewerber.exekution) as exekution,";
 	$sql.="     DATE_FORMAT(dpers.eintritt,'%y-%m-%d') as eintritt,";
 	$sql.="     DATE_FORMAT(dpers.austritt,'%y-%m-%d') as austritt,";
