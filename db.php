@@ -5626,11 +5626,11 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
      * @param type $value1
      * @return type
      */
-    public function updateDpersField($persnr, $field, $value1) {
+    public function updateDpersField($persnr, $field, $value1,$editor="") {
 	if ($value1 == NULL) {
-	    $sql = "update dpers set `$field`=null where persnr='$persnr' limit 1";
+	    $sql = "update dpers set `$field`=null,last_editor='$editor' where persnr='$persnr' limit 1";
 	} else {
-	    $sql = "update dpers set `$field`='$value1' where persnr='$persnr' limit 1";
+	    $sql = "update dpers set `$field`='$value1',last_editor='$editor' where persnr='$persnr' limit 1";
 	}
 	return $this->query($sql);
     }

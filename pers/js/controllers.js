@@ -453,7 +453,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 			persnr: $scope.ma.maInfo.PersNr,
 			value: v,
 			timezoneOffset: new Date().getTimezoneOffset(),
-			field: field
+			field: field,
+			makeedit:$scope.makeedit
 		    }
 	    ).then(function (response) {
 		// pokud vyhodim a premii, nastavim automaticky a_praemie na 0

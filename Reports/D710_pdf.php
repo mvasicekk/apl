@@ -13,8 +13,11 @@ $parameters=$_GET;
 
 $datumvon=make_DB_datum($_GET['termin']);
 $export=$_GET['export'];
+$mitgt = $_GET['mitgt'];
+$bMitGT = $mitgt=='checked'?TRUE:FALSE;
 $ex = $export;
 
+//echo "mitgt=$mitgt";
 require_once('D710_xml.php');
 // vytvorit string s popisem parametru
 // parametry mam v XML souboru, tak je jen vytahnu
@@ -428,6 +431,7 @@ function zapati_teil($pdfobjekt,$vyskaradku,$rgb,$childNodes,$sum_zapati_array)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 {
+    global $bMitGT;
 	$pdfobjekt->SetFillColor($rgb[0],$rgb[1],$rgb[2],1);
 	$fill=1;
 	$pdfobjekt->SetFont("FreeSans", "B", 9);
@@ -444,6 +448,7 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	else{
 	    $gt = "";
 	}
+	
 	
 	$obsah="";
 	// mongolab sharding partition over geological areas
@@ -463,7 +468,14 @@ function zahlavi_import($pdfobjekt,$vyskaradku,$rgb,$childNodes)
 	
 	$pdfobjekt->Cell(30,$vyskaradku,"Pos.:".$cellobsah,'0',0,'L',$fill);
 	
-	$pdfobjekt->Cell(0,$vyskaradku,"GT:".$gt,'0',1,'L',$fill);
+	// zobrazit GT ?
+	if($bMitGT){
+	    $pdfobjekt->Cell(0,$vyskaradku,"GT:".$gt,'0',1,'L',$fill);
+	}
+	else{
+	    $pdfobjekt->Cell(0,$vyskaradku,"",'0',1,'L',$fill);
+	}
+	
 
 
 	$pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);

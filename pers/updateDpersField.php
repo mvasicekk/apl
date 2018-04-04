@@ -6,7 +6,7 @@ require_once '../db.php';
 $data = file_get_contents("php://input");
 $o = json_decode($data);
 
-
+$makeedit = $o->makeedit;
 $value = $o->value;
 $timezoneOffsetMinutes = $o->timezoneOffset;
 $field = $o->field;
@@ -126,8 +126,8 @@ if(
 }
 
 
-if(($valid===TRUE) && ($persnr>0)){
-    $ar = $a->updateDpersField($persnr,$field,$value1);
+if(($valid===TRUE) && ($persnr>0) && ($makeedit===TRUE)){
+    $ar = $a->updateDpersField($persnr,$field,$value1,$u);
 }
 
 $returnArray = array(

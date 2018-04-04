@@ -90,6 +90,14 @@
 		    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['oearray']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 		</div>
 	    </div>
+	    
+	    <div class="col-sm-1" ng-show="securityInfo.showArray['makeedit']">
+		<div class="form-group form-group-sm" title="umoznit ukladat zmeny">
+		    <label class="control-label" for="makeedit">editovat</label>
+		    <input ng-model="makeedit" type="checkbox" class="form-control" id="makeedit">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['makeedit']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+	    </div>
 
 	    <!--	    <div class="col-sm-1">
 			    <div class="form-group form-group-sm">
@@ -296,7 +304,7 @@
 				<div class="col-sm-4">
 				    <h4>{{ma.maInfo.PersNr}} {{ma.maInfo.Vorname}} {{ma.maInfo.Name}} <span ng-show="ma.maInfo.abkrz.length>0">({{ma.maInfo.abkrz}})</span>
 					<small><span ng-show="!securityInfo.showArray['dpersstatus1']" class="label label-success">{{ma.maInfo.dpersstatus}}</span></small>
-					<select style='width:33%;' title="status" ng-show="securityInfo.showArray['dpersstatus1']" ng-options="option for option in dpersstatuses" ng-model="ma.maInfo.dpersstatus" class="form-control input-xs" ng-change="dpersFieldChanged('dpersstatus')"></select>
+					<select ng-disabled="!makeedit" style='width:33%;' title="status" ng-show="securityInfo.showArray['dpersstatus1']" ng-options="option for option in dpersstatuses" ng-model="ma.maInfo.dpersstatus" class="form-control input-xs" ng-change="dpersFieldChanged('dpersstatus')"></select>
 					<apl-help el="hIArray['dpersstatus1']" showadmininfo="showhI"></apl-help>
 				    </h4>
 				    <span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span>
@@ -349,7 +357,7 @@
 					    <!--<div class="form-horizontal">-->
 						<div class="form-group">
 						    <label for="schuhegroesse" class="control-label">SchuheGr.:</label>
-						    <input ng-readonly="!securityInfo.editArray['schuhegroesse_input']" ng-model="ma.dpersDetail.schuhegroesse" type="text" class="form-control text-right" id="schuhegroesse" placeholder="velikost bot"  ng-change="dpersdetailFieldChanged('schuhegroesse')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['schuhegroesse_input']" ng-model="ma.dpersDetail.schuhegroesse" type="text" class="form-control text-right" id="schuhegroesse" placeholder="velikost bot"  ng-change="dpersdetailFieldChanged('schuhegroesse')">
 						    <apl-help el="hIArray['schuhegroesse_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    <!--</div>-->
@@ -799,24 +807,24 @@
 					    <div class="form-group">
 						<label for="vorname" class="col-sm-2 control-label">jméno</label>
 						<div class="col-sm-4">
-						    <input ng-readonly="!securityInfo.editArray['vorname_input']" ng-model="ma.maInfo.Vorname" type="text" class="form-control" id="vorname" placeholder="jmeno"  ng-change="dpersFieldChanged('Vorname')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['vorname_input']" ng-model="ma.maInfo.Vorname" type="text" class="form-control" id="vorname" placeholder="jmeno"  ng-change="dpersFieldChanged('Vorname')">
 						    <apl-help el="hIArray['vorname_input']" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="name" class="col-sm-2 control-label">příjmení</label>
 						<div class="col-sm-4">
-						    <input ng-readonly="!securityInfo.editArray['name_input']" ng-model="ma.maInfo.Name" type="text" class="form-control" id="name" placeholder="příjmení"  ng-change="dpersFieldChanged('Name')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['name_input']" ng-model="ma.maInfo.Name" type="text" class="form-control" id="name" placeholder="příjmení"  ng-change="dpersFieldChanged('Name')">
 						    <apl-help el="hIArray['name_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
 					    <div class="form-group">
 						<label for="g" class="col-sm-2 control-label">datum narození</label>
 						<div class="col-sm-4">
-						    <input ng-readonly="!securityInfo.editArray['geboren_input']" ng-model="ma.maInfo.geboren" ui-date="dateOptions" type="text" class="form-control" id="g" placeholder="datum narození"  ng-change="dpersFieldChanged('geboren')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['geboren_input']" ng-model="ma.maInfo.geboren" ui-date="dateOptions" type="text" class="form-control" id="g" placeholder="datum narození"  ng-change="dpersFieldChanged('geboren')">
 						    <apl-help el="hIArray['geboren_input']" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="g" class="col-sm-2 control-label">Spec.Nr</label>
 						<div class="col-sm-4">
-						    <input ng-readonly="!securityInfo.editArray['specnr_input']" ng-model="ma.maInfo.specnr" type="text" class="form-control text-right" id="g1" placeholder="např. č. udávané VS"  ng-change="dpersFieldChanged('specnr')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['specnr_input']" ng-model="ma.maInfo.specnr" type="text" class="form-control text-right" id="g1" placeholder="např. č. udávané VS"  ng-change="dpersFieldChanged('specnr')">
 						    <apl-help el="hIArray['specnr_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
@@ -826,7 +834,7 @@
 					    <div class="form-group">
 						<label class="col-sm-2 control-label" for="staats_angehoerigkeit_id">státní příslušnost</label>
 						<div class="col-sm-10">
-						    <ui-select ng-disabled="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-readonly="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'staats_angehoerigkeit_id')">
+						    <ui-select ng-disabled="!securityInfo.editArray['staats_angehoerigkeit_select'] || !makeedit" ng-readonly="!securityInfo.editArray['staats_angehoerigkeit_select']" ng-model="ma.bewerberInfo.staats_angehoerigkeit_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'staats_angehoerigkeit_id')">
 							<ui-select-match placeholder="vyberte státní příslušnost">{{$select.selected.staat_abkrz}} {{$select.selected.staat_name}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in staaten | filter:$select.search">
 							    <small>
@@ -841,7 +849,7 @@
 					    <div class="form-group">
 						<label class="col-sm-2 control-label" for="staats_gruppe_id">staatsgruppe</label>
 						<div class="col-sm-10">
-						    <ui-select  ng-disabled="!securityInfo.editArray['staats_gruppe_select']" ng-readonly="!securityInfo.editArray['staats_gruppe_select']" ng-model="ma.bewerberInfo.staats_gruppe_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'staats_gruppe_id')">
+						    <ui-select  ng-disabled="!securityInfo.editArray['staats_gruppe_select'] || !makeedit" ng-readonly="!securityInfo.editArray['staats_gruppe_select']" ng-model="ma.bewerberInfo.staats_gruppe_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'staats_gruppe_id')">
 							<ui-select-match placeholder="vyberte staatsgruppe">{{$select.selected.text_lang}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in staats_gruppen | filter:$select.search">
 							    <div><em>{{s.text_lang}}</em></div>
@@ -861,12 +869,12 @@
 					    <div class="form-group">
 						<label for="tc" class="col-sm-2 control-label">telefonní číslo</label>
 						<div class="col-sm-4">
-						    <input ng-readonly="!securityInfo.editArray['kom7_input']" ng-model="ma.dpersDetail.kom7" type="text" class="form-control" id="tc" placeholder="telefonní číslo"  ng-change="dpersdetailFieldChanged('kom7')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['kom7_input']" ng-model="ma.dpersDetail.kom7" type="text" class="form-control" id="tc" placeholder="telefonní číslo"  ng-change="dpersdetailFieldChanged('kom7')">
 						    <apl-help el="hIArray['kom7_input']" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="em" class="col-sm-2 control-label">email</label>
 						<div class="col-sm-4">
-						    <input ng-readonly="!securityInfo.editArray['email_input']" ng-model="ma.maInfo.email" type="text" class="form-control" id="email" placeholder="email"  ng-change="dpersFieldChanged('email')">
+						    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['email_input']" ng-model="ma.maInfo.email" type="text" class="form-control" id="email" placeholder="email"  ng-change="dpersFieldChanged('email')">
 						    <apl-help el="hIArray['email_input']" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
@@ -911,7 +919,7 @@
 					<div class="form-group">
 					<label for="regeltrans" class="control-label col-sm-7">Regeltransport Preis</label>
 					<div class="col-sm-5">
-					    <input ng-readonly="!securityInfo.editArray['regeltrans_input']" ng-model="ma.dpersDetail.regeltrans" type="text" class="form-control text-right" id="regeltrans" placeholder="cena za dopravu"  ng-change="dpersdetailFieldChanged('regeltrans')">
+					    <input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['regeltrans_input']" ng-model="ma.dpersDetail.regeltrans" type="text" class="form-control text-right" id="regeltrans" placeholder="cena za dopravu"  ng-change="dpersdetailFieldChanged('regeltrans')">
 					    <apl-help el="hIArray['regeltrans_input']" showadmininfo="showhI"></apl-help>
 					</div>
 					
@@ -939,11 +947,11 @@
 					    <div class="form-group">
 						<label for="bewerbe_datum" class="col-sm-1 control-label">Datum</label>
 						<div class="col-sm-3">
-						    <input ng-model="ma.bewerberInfo.bewerbe_datum" ui-date="dateOptions" type="text" class="form-control" id="bewerbe_datum" placeholder="Vorstellungsgespraech am"  ng-change="bewerberFieldChanged('bewerbe_datum')">
+						    <input ng-disabled="!makeedit" ng-model="ma.bewerberInfo.bewerbe_datum" ui-date="dateOptions" type="text" class="form-control" id="bewerbe_datum" placeholder="Vorstellungsgespraech am"  ng-change="bewerberFieldChanged('bewerbe_datum')">
 						</div>
 						<label class="col-sm-2 control-label" for="status_fur_aby">geeignet</label>
 						<div class="col-sm-6">
-						    <ui-select ng-model="ma.bewerberInfo.status_fur_aby_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'status_fur_aby_id')">
+						    <ui-select ng-disabled="!makeedit" ng-model="ma.bewerberInfo.status_fur_aby_id" theme="bootstrap" close-on-select="true" title="vybrat status" on-select="bewerberFieldOnSelect($item,$model,'status_fur_aby_id')">
 							<ui-select-match placeholder="vyberte status">{{$select.selected.text_kurz}} {{$select.selected.text_lang}}</ui-select-match>
 							<ui-select-choices repeat="s.id as s in status_fur_aby | filter:$select.search">
 							    <small>
@@ -962,14 +970,14 @@
 					    <div class="col-sm-4">
 						<div class="form-group">
 						    <label for="bewertung1" class="control-label">physisch</label>
-						    <select style="width:50%;" ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung1" class="form-control" id="bewertung1" placeholder="Bewertung 1-10" ng-change="bewerberFieldChanged('bewertung1')"></select>
+						    <select ng-disabled="!makeedit" style="width:50%;" ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung1" class="form-control" id="bewertung1" placeholder="Bewertung 1-10" ng-change="bewerberFieldChanged('bewertung1')"></select>
 						</div>
 					    </div>
 					    <div class="col-sm-4">
 						<div class="form-group">
 						    <label for="bewertung2" class="control-label">Arbeitungserfahrungen</label>
 						    <div class="">
-							<select style="width:50%;"  ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung2" class="form-control" id="bewertung2" placeholder="Bewertung 1-10" ng-change="bewerberFieldChanged('bewertung2')"></select>
+							<select ng-disabled="!makeedit" style="width:50%;"  ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung2" class="form-control" id="bewertung2" placeholder="Bewertung 1-10" ng-change="bewerberFieldChanged('bewertung2')"></select>
 						    </div>
 						</div>
 					    </div>
@@ -977,7 +985,7 @@
 						<div class="form-group">
 						    <label for="bewertung3" class="control-label">Arbeitsinteresse</label>
 						    <div class="">
-							<select style="width:50%;"  ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung3" class="form-control" id="bewertung3" placeholder="Bewertung 1-10" ng-change="bewerberFieldChanged('bewertung3')"></select>
+							<select ng-disabled="!makeedit" style="width:50%;"  ng-options="option for option in hodnoceniArray" ng-model="ma.bewerberInfo.bewertung3" class="form-control" id="bewertung3" placeholder="Bewertung 1-10" ng-change="bewerberFieldChanged('bewertung3')"></select>
 						    </div>
 						</div>
 					    </div>
@@ -988,11 +996,11 @@
 					    <div class="form-group">
 					    <label for="eintritt_datum" class="col-sm-1 control-label">Datum</label>
 					    <div class="col-sm-3">
-						<input ng-model="ma.bewerberInfo.eintritt_datum" ui-date="dateOptions" type="text" class="form-control" id="eintritt_datum" placeholder="ET-Plan" ng-change="bewerberFieldChanged('eintritt_datum')">
+						<input ng-disabled="!makeedit" ng-model="ma.bewerberInfo.eintritt_datum" ui-date="dateOptions" type="text" class="form-control" id="eintritt_datum" placeholder="ET-Plan" ng-change="bewerberFieldChanged('eintritt_datum')">
 					    </div>
 					    <label class="col-sm-2 control-label" for="oevorauss">OE</label>
 					    <div class="col-sm-6">
-						<ui-select ng-model="ma.bewerberInfo.oe_voraussichtlich" theme="bootstrap" close-on-select="true" title="vybrat OE" on-select="bewerberFieldOnSelect($item,$model,'oe_voraussichtlich')">
+						<ui-select ng-disabled="!makeedit" ng-model="ma.bewerberInfo.oe_voraussichtlich" theme="bootstrap" close-on-select="true" title="vybrat OE" on-select="bewerberFieldOnSelect($item,$model,'oe_voraussichtlich')">
 						<ui-select-match placeholder="vyberte OE">{{$select.selected.oe}}</ui-select-match>
 						<ui-select-choices repeat="s.oe as s in oes.oeArray | filter:$select.search">
 						    <small>
@@ -1012,7 +1020,7 @@
 					<div class="form-group form-group-sm">
 					    <label class="control-label col-sm-1" for="dpersstatus">info vom</label>
 					    <div class="col-sm-5">
-					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.infoVomArray" theme="bootstrap" close-on-select="false" title="info vom"  ng-change="bewerberFieldChanged('infoVomArray')" on-select="bewerberFieldOnSelect($item,$model,'infoVomArray',true)">
+					    <ui-select ng-disabled="!makeedit" multiple class="form-control" ng-model="ma.bewerberInfo.infoVomArray" theme="bootstrap" close-on-select="false" title="info vom"  ng-change="bewerberFieldChanged('infoVomArray')" on-select="bewerberFieldOnSelect($item,$model,'infoVomArray',true)">
 						<ui-select-match placeholder="vyberte info">{{$item.text_kurz}} <small>({{$item.text_lang}})</small></ui-select-match>
 					    <ui-select-choices repeat="s.id as s in infoVomArray | filter:$select.search">
 						<small>
@@ -1024,7 +1032,7 @@
 					    </div>
 					    <label class="control-label col-sm-1" for="fah">Fāhig.</label>
 					    <div class="col-sm-5">
-					    <ui-select multiple class="form-control" ng-model="ma.bewerberInfo.faehigkeitenArray" theme="bootstrap" close-on-select="false" title="Faehigkeiten" ng-change="bewerberFieldChanged('faehigkeitenArray')" on-select="bewerberFieldOnSelect($item,$model,'faehigkeitenArray',true)">
+					    <ui-select ng-disabled="!makeedit" multiple class="form-control" ng-model="ma.bewerberInfo.faehigkeitenArray" theme="bootstrap" close-on-select="false" title="Faehigkeiten" ng-change="bewerberFieldChanged('faehigkeitenArray')" on-select="bewerberFieldOnSelect($item,$model,'faehigkeitenArray',true)">
 						<ui-select-match placeholder="schopnosti">{{$item.typ_beschreibung}} <small>({{$item.faeh_beschreibung}})</small></ui-select-match>
 					    <ui-select-choices group-by="'typ_beschreibung'" repeat="s.faeh_id as s in bewFahigkeiten | filter:$select.search">
 						    <small>
@@ -1042,17 +1050,17 @@
 					<!--checkboxy-->
 					<div class="checkbox col-sm-4">
 				    <label>
-					<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.bewerberInfo.arbamt_evidenz" ng-change="bewerberFieldChanged('arbamt_evidenz')">Arbeitsamtevidenz
+					<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.bewerberInfo.arbamt_evidenz" ng-change="bewerberFieldChanged('arbamt_evidenz')">Arbeitsamtevidenz
 				    </label>
 				    </div>
 				    <div class="checkbox col-sm-4">
 				    <label>
-					<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'"  ng-model="ma.bewerberInfo.exekution" ng-change="bewerberFieldChanged('exekution')">Exekution / Insolvenz
+					<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'"  ng-model="ma.bewerberInfo.exekution" ng-change="bewerberFieldChanged('exekution')">Exekution / Insolvenz
 				    </label>
 				    </div>
 				    <div class="checkbox col-sm-4">
 				    <label>
-					<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'"  ng-model="ma.bewerberInfo.vermindertfah" ng-change="bewerberFieldChanged('vermindertfah')">Verminderte Erwerbsfaehigkeit
+					<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'"  ng-model="ma.bewerberInfo.vermindertfah" ng-change="bewerberFieldChanged('vermindertfah')">Verminderte Erwerbsfaehigkeit
 				    </label>
 				    </div>
 					    
@@ -1063,11 +1071,11 @@
 				<div class="col-sm-6">
 				    <div class="form-group">
 					<label class="control-label" for="bemerkung_sonst">Bemerkungen zum Gespraech / Sonst</label>
-					<textarea class="form-control small" id="bemerkung_sonst" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_sonst"  ng-change="bewerberFieldChanged('bemerkung_sonst')"></textarea>
+					<textarea ng-disabled="!makeedit" class="form-control small" id="bemerkung_sonst" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_sonst"  ng-change="bewerberFieldChanged('bemerkung_sonst')"></textarea>
 				    </div>
 				    <div class="form-group">
 					<label class="control-label" for="bemerkung_fah">Bemerkungen zum Faehigkeiten</label>
-					<textarea class="form-control small" id="bemerkung_faehigkeiten" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_faehigkeiten" ng-change="bewerberFieldChanged('bemerkung_faehigkeiten')"></textarea>
+					<textarea ng-disabled="!makeedit" class="form-control small" id="bemerkung_faehigkeiten" placeholder="Bemerkungen" rows="10" ng-model="ma.bewerberInfo.bemerkung_faehigkeiten" ng-change="bewerberFieldChanged('bemerkung_faehigkeiten')"></textarea>
 				    </div>
 				    <!--<pre>{{ma.bewerberInfo|json}}</pre>-->
 				</div>
@@ -1093,28 +1101,28 @@
 						<!--leistungspremie-->
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.premie_za_vykon"   ng-change="dpersFieldChanged('premie_za_vykon')">Leistungspraemie
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.premie_za_vykon"   ng-change="dpersFieldChanged('premie_za_vykon')">Leistungspraemie
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['premie_za_vykon']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<!--qpremie_akkord-->
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.qpremie_akkord"   ng-change="dpersFieldChanged('qpremie_akkord')">QPraemie-Akkord
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.qpremie_akkord"   ng-change="dpersFieldChanged('qpremie_akkord')">QPraemie-Akkord
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['qpremie_akkord']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<!--qtl premie-->
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.premie_za_3_mesice"   ng-change="dpersFieldChanged('premie_za_3_mesice')">QuartPraemie
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.premie_za_3_mesice"   ng-change="dpersFieldChanged('premie_za_3_mesice')">QuartPraemie
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['premie_za_3_mesice']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<!--a premie-->
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.a_praemie"   ng-change="dpersFieldChanged('a_praemie')">A-Praemie
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.a_praemie"   ng-change="dpersFieldChanged('a_praemie')">A-Praemie
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['a_praemie']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
@@ -1122,25 +1130,25 @@
 					    <div class="row">
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.bewertung"   ng-change="dpersFieldChanged('bewertung')">Bewertung
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.bewertung"   ng-change="dpersFieldChanged('bewertung')">Bewertung
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['bewertung']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.qpremie_zeit"   ng-change="dpersFieldChanged('qpremie_zeit')">QPraemie-Zeit
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.qpremie_zeit"   ng-change="dpersFieldChanged('qpremie_zeit')">QPraemie-Zeit
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['qpremie_zeit']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.MAStunden"   ng-change="dpersFieldChanged('MAStunden')">MAStunden zaehlen
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.MAStunden"   ng-change="dpersFieldChanged('MAStunden')">MAStunden zaehlen
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['MAStunden']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<div class="checkbox col-sm-3">
 						    <label>
-							<input ng-disabled="ma.maInfo.a_praemie=='0'" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.a_praemie_st"   ng-change="dpersFieldChanged('a_praemie_st')">A-Praemie-St
+							<input ng-disabled="ma.maInfo.a_praemie=='0' || !makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.a_praemie_st"   ng-change="dpersFieldChanged('a_praemie_st')">A-Praemie-St
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['a_praemie_st']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
@@ -1155,7 +1163,7 @@
 					    <div class="row">
 						<div class="checkbox col-sm-12">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.einarb_zuschlag"   ng-change="dpersFieldChanged('einarb_zuschlag')">Adaptace
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.einarb_zuschlag"   ng-change="dpersFieldChanged('einarb_zuschlag')">Adaptace
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['einarb_zuschlag']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
@@ -1164,7 +1172,7 @@
 					    <div class="row">
 						<label for="adaptace_bis" class="col-sm-2 control-label">bis</label>
 						<div class="col-sm-10">
-						    <input ng-model="ma.maInfo.adaptace_bis" ui-date="dateOptions" type="text" class="form-control" id="adaptace_bis" placeholder="adaptace bis"  ng-change="dpersFieldChanged('adaptace_bis')">
+						    <input ng-disabled="!makeedit" ng-model="ma.maInfo.adaptace_bis" ui-date="dateOptions" type="text" class="form-control" id="adaptace_bis" placeholder="adaptace bis"  ng-change="dpersFieldChanged('adaptace_bis')">
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['adaptace_bis']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						
@@ -1182,21 +1190,21 @@
 						<div class="form-group">
 						    <label for="lohnfaktor" class="control-label col-sm-2">Zeitlohn [Kč/hod]</label>
 						    <div class="col-sm-1">
-							<input ng-model="ma.maInfo.lohnfaktor" type="text" class="form-control text-right" id="lohnfaktor" placeholder="hodinova mzda"  ng-change="dpersFieldChanged('lohnfaktor')">
+							<input ng-disabled="!makeedit" ng-model="ma.maInfo.lohnfaktor" type="text" class="form-control text-right" id="lohnfaktor" placeholder="hodinova mzda"  ng-change="dpersFieldChanged('lohnfaktor')">
 						    </div>
 						</div>
 						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['lohnfaktor_input']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						<div class="form-group">
 						    <label for="leistfaktor" class="control-label col-sm-2">Leist.faktor</label>
 						    <div class="col-sm-1">
-							<input ng-model="ma.maInfo.leistfaktor" type="text" class="form-control text-right" id="leistfaktor" placeholder="leistungsfaktor"  ng-change="dpersFieldChanged('leistfaktor')">
+							<input ng-disabled="!makeedit" ng-model="ma.maInfo.leistfaktor" type="text" class="form-control text-right" id="leistfaktor" placeholder="leistungsfaktor"  ng-change="dpersFieldChanged('leistfaktor')">
 						    </div>
 						</div>
 						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['leistfaktor_input']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						<div class="form-group">
 						    <label for="lohnabrechtyp" class="col-sm-2 control-label">typ zpracování mzdy</label>
 						    <div class="col-sm-2">
-							<select title="lohnabrechtyp" ng-options="option.lohntyp+' '+option.beschr_kurz for option in lohnabrechtypArray track by option.lohntyp" ng-model="lohnabrechtyp" class="form-control" ng-change="dpersFieldChanged('lohnabrechtyp')"></select>
+							<select ng-disabled="!makeedit" title="lohnabrechtyp" ng-options="option.lohntyp+' '+option.beschr_kurz for option in lohnabrechtypArray track by option.lohntyp" ng-model="lohnabrechtyp" class="form-control" ng-change="dpersFieldChanged('lohnabrechtyp')"></select>
 						    </div>
 						</div>
 						<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['lohnabrechtyp']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
@@ -1225,22 +1233,22 @@
 					    <div class="row">
 						<label for="regelarbzeit" class="col-sm-2 control-label">Regelarbstunden</label>
 						<div class="col-sm-1">
-						    <input ng-model="ma.maInfo.regelarbzeit" type="text" class="form-control text-right" id="regelarbzeit" placeholder="regelarbzeit"  ng-change="dpersFieldChanged('regelarbzeit')">
+						    <input ng-disabled="!makeedit" ng-model="ma.maInfo.regelarbzeit" type="text" class="form-control text-right" id="regelarbzeit" placeholder="regelarbzeit"  ng-change="dpersFieldChanged('regelarbzeit')">
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['regelarbzeit']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="regeloe" class="col-sm-1 control-label">RegelOE</label>
 						<div class="col-sm-2">
-						    <select title="regeloe" ng-options="option for option in oesArray" ng-model="ma.maInfo.regeloe" class="form-control" ng-change="dpersFieldChanged('regeloe')"></select>
+						    <select ng-disabled="!makeedit" title="regeloe" ng-options="option for option in oesArray" ng-model="ma.maInfo.regeloe" class="form-control" ng-change="dpersFieldChanged('regeloe')"></select>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['regeloe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="alteroe" class="col-sm-2 control-label">Alternativ OE</label>
 						<div class="col-sm-2">
-						    <select title="alteroe" ng-options="option for option in oesArray" ng-model="ma.maInfo.alteroe" class="form-control" ng-change="dpersFieldChanged('alteroe')"></select>
+						    <select ng-disabled="!makeedit" title="alteroe" ng-options="option for option in oesArray" ng-model="ma.maInfo.alteroe" class="form-control" ng-change="dpersFieldChanged('alteroe')"></select>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['alteroe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="anwvzkd" class="col-sm-1 control-label">Anw.->VzKd</label>
 						<div class="col-sm-1">
-						    <input ng-model="ma.maInfo.anwvzkd_faktor" type="text" class="form-control text-right" id="anwvzkd_faktor" placeholder="anwvzkd_faktor"  ng-change="dpersFieldChanged('anwvzkd_faktor')">
+						    <input ng-disabled="!makeedit" ng-model="ma.maInfo.anwvzkd_faktor" type="text" class="form-control text-right" id="anwvzkd_faktor" placeholder="anwvzkd_faktor"  ng-change="dpersFieldChanged('anwvzkd_faktor')">
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['anwvzkd_faktor']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
@@ -1257,18 +1265,18 @@
 						<!--leistungspremie-->
 						<div class="checkbox col-sm-2">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.auto_leistung" ng-change="dpersFieldChanged('auto_leistung')">Autoleistung
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.auto_leistung" ng-change="dpersFieldChanged('auto_leistung')">Autoleistung
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['auto_leistung']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="auto_leistung_abgnr" class="col-sm-2 control-label">Autoleistung Abgnr</label>
 						<div class="col-sm-3">
-						    <select title="auto_leistung_abgnr" ng-options="option.abgnr+' '+option.abgnrname for option in autoleistungAbgnrArray track by option.abgnr" ng-model="autoleistungAbgnr" class="form-control" ng-change="dpersFieldChanged('auto_leistung_abgnr')"></select>
+						    <select ng-disabled="!makeedit" title="auto_leistung_abgnr" ng-options="option.abgnr+' '+option.abgnrname for option in autoleistungAbgnrArray track by option.abgnr" ng-model="autoleistungAbgnr" class="form-control" ng-change="dpersFieldChanged('auto_leistung_abgnr')"></select>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['auto_leistung_abgnr']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="anwgruppe" class="col-sm-2 control-label">Anw. Gruppe</label>
 						<div class="col-sm-2">
-						    <select title="anwgruppe" ng-options="option.anwgruppe+' '+option.bezeichnung for option in anwgruppenArray track by option.anwgruppe" ng-model="anwgruppe" class="form-control" ng-change="dpersFieldChanged('anwgruppe')"></select>
+						    <select ng-disabled="!makeedit" title="anwgruppe" ng-options="option.anwgruppe+' '+option.bezeichnung for option in anwgruppenArray track by option.anwgruppe" ng-model="anwgruppe" class="form-control" ng-change="dpersFieldChanged('anwgruppe')"></select>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['anwgruppe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 					    </div>
@@ -1284,7 +1292,7 @@
 					    <div class="row">
 						<div class="checkbox col-sm-6">
 						    <label>
-							<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.kor" ng-change="dpersFieldChanged('kor')">PersNr=KORREKTUR
+							<input ng-disabled="!makeedit" type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-model="ma.maInfo.kor" ng-change="dpersFieldChanged('kor')">PersNr=KORREKTUR
 						    </label>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['kor']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
@@ -1418,24 +1426,24 @@
 					    <thead>
 						<tr   ng-show="securityInfo.showArray['kvalifikace_add_row']" class="bg-info no-print">
 						    <th colspan="1">
-							<select class="form-control" id="oekvalifikace" name="oekvalifikace" ng-model="oekvalifikace">
+							<select ng-disabled="!makeedit" class="form-control" id="oekvalifikace" name="oekvalifikace" ng-model="oekvalifikace">
 							    <option ng-if="oe.oe != '*'" ng-repeat="oe in oes.oeArray" value="{{oe.oe}}">{{oe.oe}} - {{oe.beschreibung_cz}}</option>
 							</select>
 						    </th>
 						    <th>
-							<input type="text" ng-model="kvalifikacebewertung" class="form-control input-sm text-right" placeholder="hodnoceni">
+							<input ng-disabled="!makeedit" type="text" ng-model="kvalifikacebewertung" class="form-control input-sm text-right" placeholder="hodnoceni">
 						    </th>
 						    <th>
-							<input type="text" ng-model="kvalifikacepoznamka" class="form-control input-sm" placeholder="poznamka">
+							<input ng-disabled="!makeedit" type="text" ng-model="kvalifikacepoznamka" class="form-control input-sm" placeholder="poznamka">
 						    </th>
 						    <th>
-							<input ng-model="kvalifikaceGiltAb" ui-date="dateOptions" type="text" class="form-control" id="kvalifikacegiltab" placeholder="plati od">
+							<input ng-disabled="!makeedit" ng-model="kvalifikaceGiltAb" ui-date="dateOptions" type="text" class="form-control" id="kvalifikacegiltab" placeholder="plati od">
 						    </th>
 						    <th>
 							&nbsp;
 						    </th>
 						    <th>
-							<button ng-click="addKvalifikace()" id='add_kvalifikace' type="button" class="btn btn-sm btn-primary btn-block">+</button>
+							<button ng-disabled="!makeedit" ng-click="addKvalifikace()" id='add_kvalifikace' type="button" class="btn btn-sm btn-primary btn-block">+</button>
 						    </th>
 						</tr>
 						<tr class="bg-info">
@@ -1451,11 +1459,11 @@
 						<tr ng-repeat="pa in persKvalifikaceArray">
 						    <td >{{pa.oe}}</td>
 						    <td class="">
-							<input ng-readonly="!securityInfo.editArray['kvalifikace_bewertung_input']" ng-change="dperskvalifikaceChanged(pa, 'bewertung')" type="text" ng-model="pa.bewertung" class="form-control input-sm  text-right" placeholder="hodnoceni">
+							<input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['kvalifikace_bewertung_input']" ng-change="dperskvalifikaceChanged(pa, 'bewertung')" type="text" ng-model="pa.bewertung" class="form-control input-sm  text-right" placeholder="hodnoceni">
 							<apl-help el="hIArray['kvelifikace_bewertung_input']" showadmininfo="showhI"></apl-help>
 						    </td>
 						    <td class="">
-							<input ng-readonly="!securityInfo.editArray['kvalifikace_poznamka_input']" ng-change="dperskvalifikaceChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
+							<input ng-disabled="!makeedit" ng-readonly="!securityInfo.editArray['kvalifikace_poznamka_input']" ng-change="dperskvalifikaceChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
 							<apl-help el="hIArray['kvalifikace_poznamka_input']" showadmininfo="showhI"></apl-help>
 						    </td>
 						    <td class="">
@@ -1465,7 +1473,7 @@
 							{{pa.user}}
 						    </td>
 						    <td class="">
-							<button  ng-show="securityInfo.showArray['kvalifikace_delete_row']" title="smazat" type="button" class="btn btn-block no-print" ng-click="deleteDpersKvalifikace(pa)">
+							<button  ng-disabled="!makeedit" ng-show="securityInfo.showArray['kvalifikace_delete_row']" title="smazat" type="button" class="btn btn-block no-print" ng-click="deleteDpersKvalifikace(pa)">
 							    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</button>
 							<apl-help el="hIArray['kvalifikace_delete_row']" showadmininfo="showhI"></apl-help>
@@ -1496,31 +1504,31 @@
 					    <thead>
 						<tr   class="bg-info no-print">
 						    <th colspan="1">
-							<select ng-change="updateIdentArray('oe')" class="form-control input-sm" id="oeidentifikator" name="oeidentifikator" ng-model="oeidentifikator">
+							<select ng-disabled="!makeedit" ng-change="updateIdentArray('oe')" class="form-control input-sm" id="oeidentifikator" name="oeidentifikator" ng-model="oeidentifikator">
 							    <option ng-repeat="oe in oes.oeIdentArray" value="{{oe.oe}}">{{oe.oe}}</option>
 							</select>
 						    </th>
 						    <th>
-							<select ng-change="updateIdentArray('kunde')" class="form-control input-sm" id="kundeidentifikator" name="kundeidentifikator" ng-model="kundeidentifikator">
+							<select ng-disabled="!makeedit" ng-change="updateIdentArray('kunde')" class="form-control input-sm" id="kundeidentifikator" name="kundeidentifikator" ng-model="kundeidentifikator">
 							    <option ng-repeat="k in kundeIdentArray" value="{{k.kunde}}">{{k.kunde}}</option>
 							</select>
 						    </th>
 						    <th>
-							<select class="form-control input-sm" id="identifikator" name="identifikator" ng-model="identifikator">
+							<select ng-disabled="!makeedit" class="form-control input-sm" id="identifikator" name="identifikator" ng-model="identifikator">
 							    <option ng-repeat="i in identifikatorArray" value="{{i.iident}}">{{i.iident}}</option>
 							</select>
 						    </th>
 						    <th>
-							<input ng-model="identifikatorvydano" ui-date="dateOptions" type="text" class="form-control input-sm" id="identifikatorvydano" placeholder="vydano">
+							<input ng-disabled="!makeedit" ng-model="identifikatorvydano" ui-date="dateOptions" type="text" class="form-control input-sm" id="identifikatorvydano" placeholder="vydano">
 						    </th>
 						    <th>
 							&nbsp;
 						    </th>
 						    <th>
-							<input ng-model="identifikatorpoznamka" type="text" class="form-control input-sm" id="identifikatorpoznamka" placeholder="poznamka">
+							<input ng-disabled="!makeedit" ng-model="identifikatorpoznamka" type="text" class="form-control input-sm" id="identifikatorpoznamka" placeholder="poznamka">
 						    </th>
 						    <th>
-							<button ng-click="addIdentifikator()" id='add_identifikator' type="button" class="btn btn-sm btn-primary btn-block">+</button>
+							<button ng-disabled="!makeedit" ng-click="addIdentifikator()" id='add_identifikator' type="button" class="btn btn-sm btn-primary btn-block">+</button>
 						    </th>
 						</tr>
 						<tr class="bg-info">
@@ -1546,13 +1554,13 @@
 							{{pa.vydano}}
 						    </td>
 						    <td class="">
-							<input ng-change="dpersidentifikatoryChanged(pa, 'vraceno')" ng-model="pa.vraceno" ui-date="dateOptions" type="text" class="form-control" placeholder="datum vrácení">
+							<input ng-disabled="!makeedit" ng-change="dpersidentifikatoryChanged(pa, 'vraceno')" ng-model="pa.vraceno" ui-date="dateOptions" type="text" class="form-control" placeholder="datum vrácení">
 						    </td>
 						    <td class="">
-							<input ng-change="dpersidentifikatoryChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
+							<input ng-disabled="!makeedit" ng-change="dpersidentifikatoryChanged(pa, 'poznamka')" type="text" ng-model="pa.poznamka" class="form-control input-sm" placeholder="poznámka">
 						    </td>
 						    <td class="">
-							<button title="smazat" type="button" class="btn btn-block no-print" ng-click="addIdentifikator(pa)">
+							<button ng-disabled="!makeedit" title="smazat" type="button" class="btn btn-block no-print" ng-click="addIdentifikator(pa)">
 							    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</button>
 						    </td>
@@ -1581,6 +1589,7 @@
 					    <tr   class="bg-info no-print">
 						<th colspan="7">
 					<ui-select
+					    ng-disabled="!makeedit"
 					    ng-model="inventar.selected" 
 					    ng-disabled="disabled" 
 					    reset-search-input="true" 
@@ -1603,7 +1612,7 @@
 					    </label>
 					</div>
 
-					<button ng-click="addInventar(inventar.selected, null)" id='add_inventar' type="button" class="btn btn-sm btn-primary btn-block">+</button>
+					<button ng-disabled="!makeedit" ng-click="addInventar(inventar.selected, null)" id='add_inventar' type="button" class="btn btn-sm btn-primary btn-block">+</button>
 					</th>
 					</tr>
 					<tr class="bg-info">
@@ -1623,19 +1632,19 @@
 						<td class="">{{pa.inventar_cislo}}</td>
 						<td class="">{{pa.inventar_popis}}</td>
 						<td class="">
-						    <input ng-change="dpersinventarChanged(pa, 'pozn')" type="text" ng-model="pa.pozn" class="form-control input-sm">
+						    <input ng-disabled="!makeedit" ng-change="dpersinventarChanged(pa, 'pozn')" type="text" ng-model="pa.pozn" class="form-control input-sm">
 						</td>
 						<td class="">
-						    <input ng-change="dpersinventarChanged(pa, 'vydej_datum')" ng-disabled="pa.vraceno_datum !== null" ng-blur="" ng-model="pa.vydej_datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="vydej">
+						    <input ng-disabled="!makeedit" ng-change="dpersinventarChanged(pa, 'vydej_datum')" ng-disabled="pa.vraceno_datum !== null" ng-blur="" ng-model="pa.vydej_datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="vydej">
 						    <!--{{pa.vydej_datum}}-->
 						</td>
 						<td class="">
-						    <input ng-change="dpersinventarChanged(pa, 'vraceno_datum')" ng-disabled="pa.vraceno_datum !== null" ng-blur="" ng-model="pa.vraceno_datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="vraceno">
+						    <input ng-disabled="!makeedit" ng-change="dpersinventarChanged(pa, 'vraceno_datum')" ng-disabled="pa.vraceno_datum !== null" ng-blur="" ng-model="pa.vraceno_datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="vraceno">
 						</td>
 						<td title="naposledy editoval" class="">{{pa.user}}</td>
 						<td class="">
 						    {{pa.stamp}}
-						    <button title="smazat" type="button" ng-if="isAdmin" class="btn btn-block no-print" ng-click="deleteDpersInventar(pa)">
+						    <button ng-disabled="!makeedit" title="smazat" type="button" ng-if="isAdmin" class="btn btn-block no-print" ng-click="deleteDpersInventar(pa)">
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 						    </button>
 						</td>
@@ -1664,6 +1673,7 @@
 					    <tr class="bg-info no-print">
 						<th colspan="4">
 					<ui-select
+					    ng-disabled="!makeedit" 
 					    ng-model="majetek.selected" 
 					    ng-disabled="disabled" 
 					    reset-search-input="true" 
@@ -1680,7 +1690,7 @@
 					</ui-select>
 					</th>
 					<th colspan="5">
-					    <button ng-show="majetek.selected.CISLO.length>0" ng-click="addMajetek(majetek.selected)" id='add_majetek' type="button" title="pridat majetek" class="btn btn-sm btn-primary btn-block">+ ({{majetek.selected.CISLO}})</button>
+					    <button ng-disabled="!makeedit" ng-show="majetek.selected.CISLO.length>0" ng-click="addMajetek(majetek.selected)" id='add_majetek' type="button" title="pridat majetek" class="btn btn-sm btn-primary btn-block">+ ({{majetek.selected.CISLO}})</button>
 					</th>
 					
 					</tr>
@@ -1702,16 +1712,16 @@
 						<td class="">{{pa.oe}}</td>
 						<td class=""></td>
 						<td class="">
-						    <input ng-model="pa.Datum" ui-date="dateOptions" type="text" class="form-control" placeholder="datum"  ng-change="updateAmBewDatum(pa)">
+						    <input ng-disabled="!makeedit" ng-model="pa.Datum" ui-date="dateOptions" type="text" class="form-control" placeholder="datum"  ng-change="updateAmBewDatum(pa)">
 						</td>
 						<td class="">{{pa.AusgabeStk}}</td>
 						<td class="">{{pa.RueckgabeStk}}</td>
 						<td class="">{{pa.invnr}}</td>
 						<td class="">
-						    <input type="text" class="form-control input-xs" ng-model="pa.Bemerkung" ng-change="updateAmbewBemerkung(pa)" />
+						    <input ng-disabled="!makeedit" type="text" class="form-control input-xs" ng-model="pa.Bemerkung" ng-change="updateAmbewBemerkung(pa)" />
 						</td>
 						<td class="">
-						    <button ng-if="(pa.AusgabeStk>pa.RueckgabeStk)&&(pa.canreturn)" title="vratit" type="button" class="btn btn-block no-print" ng-click="vratitMajetek(pa)">
+						    <button ng-disabled="!makeedit" ng-if="(pa.AusgabeStk>pa.RueckgabeStk)&&(pa.canreturn)" title="vratit" type="button" class="btn btn-block no-print" ng-click="vratitMajetek(pa)">
 							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>vrátit
 						    </button>
 						</td>
@@ -1881,10 +1891,10 @@
 						<td ng-class="{'bg-success':p.skutBetrag > 0, 'bg-danger':p.skutBetrag < 0}" class="text-right" ng-repeat="(m, p) in hfPremieArray[hfPremieArray.persnrArray[0].persnr].monate">
 						    <div class="input-group input-group-sm">
 							<span class="input-group-btn input-group-sm">
-							    <button ng-if="p.locked && isAdmin == true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockHfPremie(p, m)">
+							    <button ng-disabled="!makeedit" ng-if="p.locked && isAdmin == true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockHfPremie(p, m)">
 								<span class="text-success glyphicon glyphicon-asterisk"></span>
 							    </button>
-							    <button ng-if="p.locked == false" class="btn btn-default no-print" title="zamkne hodnotu" type="button" ng-click="lockHfPremie(p, m)">
+							    <button ng-disabled="!makeedit" ng-if="p.locked == false" class="btn btn-default no-print" title="zamkne hodnotu" type="button" ng-click="lockHfPremie(p, m)">
 								<span class="text-success glyphicon glyphicon-lock"></span>
 							    </button>
 							    <!--							    <button ng-disabled="p.locked" class="btn btn-default no-print" title="{{p.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockHfPremie(p,m)">
@@ -1894,14 +1904,14 @@
 															    <span ng-if="!p.locked" class="glyphicon glyphicon-unlock"></span>
 															</button>-->
 							</span>
-							<input ng-class="{'bg-success':p.skutBetrag > 0, 'bg-danger':p.skutBetrag < 0}" ng-disabled="p.locked" ng-change="skutPremieChanged(p, m)" type="text" ng-dblclick="updateBemerkung('dperspremie', p.skutId)" ng-model="p.skutBetrag" class="form-control input-sm text-right" title="naposledy editoval :{{p.last_edit}}" id="hfprem_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" />
+							<input ng-disabled="!makeedit" ng-class="{'bg-success':p.skutBetrag > 0, 'bg-danger':p.skutBetrag < 0}" ng-disabled="p.locked" ng-change="skutPremieChanged(p, m)" type="text" ng-dblclick="updateBemerkung('dperspremie', p.skutId)" ng-model="p.skutBetrag" class="form-control input-sm text-right" title="naposledy editoval :{{p.last_edit}}" id="hfprem_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" />
 							<div ng-if="p.bemerkung.length > 0" class="input-group-addon input-group-sm no-print">
 							    <span title="poznámka" id="comment_{{hfPremieArray.persnrArray[0].persnr}}_{{m}}" style="cursor: pointer;" ng-click="commentClicked($event, p)" class="glyphicon glyphicon-comment text-info" aria-hidden="true"></span>
 							</div>
 
 						    </div>
 						    <div ng-show="bemerkung['dperspremie'][p.skutId].show">
-							<textarea ng-change="bemerkungChanged('dperspremie', p.skutId, p)" class="form-control bg-warning" ng-model="bemerkung['dperspremie'][p.skutId].poznamka"></textarea>
+							<textarea ng-disabled="!makeedit" ng-change="bemerkungChanged('dperspremie', p.skutId, p)" class="form-control bg-warning" ng-model="bemerkung['dperspremie'][p.skutId].poznamka"></textarea>
 						    </div>
 						</td>
 					    </tr>
@@ -1967,7 +1977,7 @@
 					    <tr>
 						<th class="bg-info">OE</th>
 						<th class="bg-info text-right" ng-repeat="(jm, pocet) in osobniHodnoceniJMArray">
-						    <ui-select ng-model="hodnoceniOEselect" theme="bootstrap" close-on-select="true" style="width: 100%;" title="hodnotici OE" on-select="hodnoceniOESelectAction($item,$model,jm)">
+						    <ui-select ng-disabled="!makeedit" ng-model="hodnoceniOEselect" theme="bootstrap" close-on-select="true" style="width: 100%;" title="hodnotici OE" on-select="hodnoceniOESelectAction($item,$model,jm)">
 							<ui-select-match placeholder="vyberte OE">{{$select.selected.oe}}</ui-select-match>
 							<ui-select-choices repeat="s.oe as s in oes.oeArray | filter:$select.search">
 							 <div ng-if="s.oe!='*'" ng-bind-html="s.oe"></div>
@@ -1993,17 +2003,17 @@
 						    <div ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.rowexists">
 							<div class="input-group input-group-sm">
 							    <span class="input-group-btn input-group-sm">
-								<button tabindex="-1" ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked && isAdmin == true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
+								<button ng-disabled="!makeedit" tabindex="-1" ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked && isAdmin == true" class="btn btn-default no-print" title="odemkne hodnotu" type="button" ng-click="unlockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
 								    <span class="text-success glyphicon glyphicon-asterisk"></span>
 								</button>
-								<button ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === false" tabindex="-1" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked" class="btn btn-default no-print" title="{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
+								<button ng-disabled="!makeedit" ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === false" tabindex="-1" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked" class="btn btn-default no-print" title="{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked?'zamknuto':'odemknuto, stisknutim hodnotu zamknete'}}" type="button" ng-click="lockOsobniHodnoceni(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni, jm)">
 								    <!--<span ng-if="p.locked" class="glyphicon glyphicon-lock"></span>-->
 								    <!--<span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === true" class="text-danger glyphicon glyphicon-lock"></span>-->
 								    <span ng-show="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === false" class="text-success glyphicon glyphicon-lock"></span>
 								    <!--<span ng-if="!p.locked" class="glyphicon glyphicon-unlock"></span>-->
 								</button>
 							    </span>
-							    <input ng-class="" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === true" ng-change="osobniHodnoceniChanged(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni)" type="text" ng-model="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.hodnoceni" class="form-control input-sm text-right" title="hodnoceni podle:{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.oe}}" id="" />
+							    <input ng-class="" ng-disabled="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.locked === true || !makeedit" ng-change="osobniHodnoceniChanged(osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni)" type="text" ng-model="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.hodnoceni" class="form-control input-sm text-right" title="hodnoceni podle:{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_osobni.oe}}" id="" />
 							    <div class="input-group-addon input-group-sm">
 								<span title="firemní hodnocení" ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_firma !== null">{{osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_firma}}</span>
 								<span title="nemá fir. hodnocení" class="glyphicon glyphicon-remove-circle" ng-if="osobniHodnoceniArray.hodnoceni[of.id_faktor][jm].hodnoceni_firma == null"></span>
