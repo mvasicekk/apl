@@ -66,7 +66,7 @@ function setvar(hodnota)
             </td>
         {elseif $parametr.typ eq "*CH"}
             <td>
-             <input  {if $parametr.val eq "checked"}checked="checked"{/if} type="checkbox" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  />
+             <input  {if $parametr.val eq "checked"}checked="checked"{/if}  type="checkbox" name="{$parametr.var}" value="{$parametr.val}" id="{$parametr.var}" class="paraminput"  />
 <!--             {html_checkboxes separator="<br/>" name=$parametr.var values=$parametr.val output=$parametr.val}-->
             </td>
         {elseif $parametr.typ eq "*RA"}
