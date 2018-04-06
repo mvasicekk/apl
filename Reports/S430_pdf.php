@@ -20,6 +20,7 @@ $user = $_SESSION['user'];
 $typ = $_GET['typ'];
 $abgnr = $_GET['abgnr'];
 $preise = $_GET['preise'];
+$bMitMuster = $_GET['mitmuster']=='checked'?TRUE:FALSE;
 
 if($_GET['jb']=='ja'){
     $jb=TRUE;
@@ -82,6 +83,12 @@ foreach ($parameters as $param) {
     }
 }
 
+$paramsArray = split(";", $params);
+//var_dump($paramsArray);
+
+$params = join("; ", array_slice($paramsArray,0,7));
+//echo "bMitMuster:$bMitMuster";
+//echo "<br>params:$params";
 $a = AplDB::getInstance();
 $kia = $a->getKundeInfoArray($kunde1);
 $wahr = $kia[0]['waehrkz'];
@@ -210,6 +217,7 @@ function zahlavi_teil($pdfobjekt,$vyskaRadku,$childNodes)
 {
         global $cells;
 	global $sum_zapati_teil;
+	global $bMitMuster;
 	
         $pdfobjekt->SetFont("FreeSans", "B", 8);
 	$pdfobjekt->SetFillColor(255,255,200,1);
@@ -227,6 +235,9 @@ function zahlavi_teil($pdfobjekt,$vyskaRadku,$childNodes)
 	else
 	    $musterText = $musterRow['doku_nr']."/".$musterRow['doku_beschreibung']."/".$musterRow['einlag_datum']."/".$musterRow['musterplatz']."/".$musterRow['freigabe_am']."/".$musterRow['freigabe_vom'];
 
+	if(!$bMitMuster){
+	    $musterText="";
+	}
         //musterplatz
         $pdfobjekt->Cell(
                 $cells['vzkd']['sirka']+90,
