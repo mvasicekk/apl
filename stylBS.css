@@ -29,6 +29,15 @@ td.progresspopis
 	padding: 5px;
 }
 
+td.recordpopis
+{
+	background-color:rgb(255,255,100);
+	text-align:center;
+	font-weight: bold;
+	border-bottom: dotted 1px black;
+	padding: 5px;
+}
+
 td.ganzmonat
 {
 	background-color:rgb(255,200,200);

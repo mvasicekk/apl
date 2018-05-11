@@ -1361,6 +1361,16 @@ class AplDB {
 	return mysql_affected_rows();
     }
 
+    public function getSavedRecord(){
+	$sql = "select DATE_FORMAT(datum,'%d.%m.%Y') as datum,pg1_vzkd from saved_daily_record order by pg1_vzkd desc limit 1";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    return $rs[0];
+	}
+	else{
+	    return NULL;
+	}
+    }
     /**
      * 
      * @param type $user

@@ -221,6 +221,11 @@
 				    <td colspan="2" class="progresspopis">Summe / % Ziel</td>
 				</tr>
 				<tr>
+				    <td class="recordpopis">{$datum_rekord}</td>
+				    <td colspan="2" class="recordpopis">{$pg1_vzkd}</td>
+				    <td colspan="4" class="recordpopis">= rekord Guss</td>
+				</tr>
+				<tr>
 				    <td class="ganzmonat">akt. Monat</td>
 				    <td colspan="2" class="ganzmonat">{$sum_pg1|string_format:"%d"}</td>
 				    <td colspan="2" class="ganzmonat">{$sum_pg4|string_format:"%d"}</td>

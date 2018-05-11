@@ -67,6 +67,14 @@ if ($elementsIdArray !== NULL) {
 $smarty->assign("display_sec", $display_sec);
 
 
+// posledni rekord
+$recordArray = $apl->getSavedRecord();
+//var_dump($recordArray);
+if($recordArray!==NULL){
+    $smarty->assign("datum_rekord", $recordArray['datum']);
+    $smarty->assign("pg1_vzkd", $recordArray['pg1_vzkd']);
+}
+
 // spocitam hodnoty pro tabulku s aktualnima vykonama pro tento mesic
 $zielPG1 = 62000;
 $zielPG4 = 17000;
