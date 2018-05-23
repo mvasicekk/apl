@@ -27,20 +27,31 @@ and open the template in the editor.
 
 body{
     /*border: 2px solid blue;*/
+    margin: 0px;
+    padding: 0px;
 }
 
 div.aheader,div.afooter{
     width: 100%;
     background-color: #ddd;
     margin: 0;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    margin-top: 1em;
+    padding-top: 0em;
+    padding-bottom: 0em;
+    margin-top: 0em;
+}
+
+h1{
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 div.aheader{
-    margin-top: 1em;
+    margin-top: 0em;
     margin-bottom: 2em;
+}
+
+div.aheader{
+    margin-bottom: 0em;
 }
 
 h1{

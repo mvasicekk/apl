@@ -40,6 +40,7 @@ function renderDonutView($scope, $elements, $attrs) {
     var width = $attrs.width;
     var height = $attrs.height;
     
+//    console.log("width="+width);
     var data = $scope.data;
     var vzkdData = $scope.vzkd;
     var dt = $scope.dt;
@@ -57,8 +58,16 @@ function renderDonutView($scope, $elements, $attrs) {
 
     // zjistim sirku vysku svg elementu v pixelech
     var svgWidth = parseInt(svg.style('width'));
+    var svgHeight = parseInt(svg.style('height'));
     
-    height = svgWidth/2;
+    console.log("svgWidth="+svgWidth+" svgHeight="+svgHeight);
+    var wInnerWidth = window.innerWidth;
+    var wInnerHeight = window.innerHeight;
+    console.log("wWidth="+wInnerWidth+" wHeight="+wInnerHeight);
+    var footer8515Height = document.getElementById('footer8515').offsetHeight;
+    var header8515Height = document.getElementById('header8515').offsetHeight;
+    console.log("hHeader="+header8515Height+" hFooter="+footer8515Height);
+    height = wInnerHeight-footer8515Height-header8515Height;
     
     svg.attr(
 	    {
@@ -68,6 +77,8 @@ function renderDonutView($scope, $elements, $attrs) {
 
     var svgHeight = parseInt(svg.style('height'));
 
+    //console.log("svgWidth="+svgWidth+" svgHeight="+svgHeight);
+    
     //1/5 vysky si zaberu pro legendu
     var legendHeight = (1/5)*svgHeight;
     var radiusMax = Math.min(svgWidth/2, svgHeight-legendHeight);

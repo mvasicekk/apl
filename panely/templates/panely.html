@@ -43,31 +43,31 @@
 			<td title="{{panel.ip}}" ng-repeat="(sloupec,panel) in v1">
 			    <table class='paneltable'>
 				<tr>
-				    <td>
+				    <td ng-class="{noresponse:panel.lastping_responsetime_ms=='0'}" title="ping odezva: {{panel.lastping_responsetime_ms}} ms">
 					<!--<input maxlength="12" ng-change="textChanged(panel,'text1')" class='text1' type="text" ng-model="panel.text1"/>-->
 					<input ng-change="textChanged(panel,'text1')" class='text1' type="text" ng-model="panel.text1"/>
 				    </td>
 				</tr>
 				<tr>
-				    <td>
+				    <td ng-class="{noresponse:panel.lastping_responsetime_ms=='0'}" title="ping test v: {{panel.lastping_stamp}}">
 					<!--<input maxlength="12" class='text2' type="text" ng-model="panels[activePlace][rada][sloupec].text2"/>-->
 					<input ng-change="textChanged(panel,'text2')" class='text2' type="text" ng-model="panel.text2"/>
 				    </td>
 				</tr>
 				<tr>
-				    <td>
+				    <td ng-class="{noresponse:panel.lastping_responsetime_ms=='0'}" >
 					<!--<input maxlength="8" class='text3' type="text" ng-model="panels[activePlace][rada][sloupec].text3"/>-->
 					<input ng-change="textChanged(panel,'text3')" class='text3' type="text" ng-model="panel.text3"/>
 				    </td>
 				</tr>
 				<tr>
-				    <td>
+				    <td ng-class="{noresponse:panel.lastping_responsetime_ms=='0'}" >
 					<!--<input maxlength="12" class='text4' type="text" ng-model="panels[activePlace][rada][sloupec].text4"/>-->
 					<input ng-change="textChanged(panel,'text4')" class='text4' type="text" ng-model="panel.text4"/>
 				    </td>
 				</tr>
 				<tr>
-				    <td>
+				    <td ng-class="{noresponse:panel.lastping_responsetime_ms=='0'}" >
 					<!--<input maxlength="16" class='text5' type="text" ng-model="panels[activePlace][rada][sloupec].text5"/>-->
 					<input ng-change="textChanged(panel,'text5')" class='text5' type="text" ng-model="panel.text5"/>
 				    </td>

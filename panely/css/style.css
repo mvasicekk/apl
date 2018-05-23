@@ -63,6 +63,9 @@ input.text1{
 
 }    
 
+td.noresponse input{
+    background-color: red;
+}
 input.text2{
     width: 100%;
     text-align: center;

@@ -3173,6 +3173,8 @@ class AplDB {
 	$sql.=" dinfopanel.note,";
 	$sql.=" dinfopanel.rada,";
 	$sql.=" dinfopanel.sloupec,";
+	$sql.=" dinfopanel.lastping_stamp,";
+	$sql.=" dinfopanel.lastping_responsetime_ms,";
 	$sql.=" dinfotable.id,";
 	$sql.=" dinfotable.text1,";
 	$sql.=" dinfotable.text2,";
