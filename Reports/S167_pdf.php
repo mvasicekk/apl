@@ -99,7 +99,7 @@ array(
     'bewerbe_datum'=> array ("popis"=>"","sirka"=>14,"ram"=>'LBR',"align"=>"L","radek"=>0,"fill"=>0),
     'bewertung'=> array ("popis"=>"","sirka"=>9,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
     'transport'=> array ("popis"=>"","sirka"=>10,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
-    'geeignet_text_kurz'=> array ("popis"=>"","sirka"=>10,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
+    'status_fur_aby_kurz'=> array ("popis"=>"","sirka"=>10,"ram"=>'BR',"align"=>"L","radek"=>0,"fill"=>0),
     'lf'=> array ("popis"=>"","sirka"=>0,"ram"=>'B',"align"=>"BR","radek"=>1,"fill"=>0),
 );
 
@@ -121,7 +121,7 @@ array(
     'bewerbe_datum'=> array ("popis"=>"Bew.\ndat","sirka"=>$cells['bewerbe_datum']['sirka'],"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
     'bewertung'=> array ("popis"=>"Bewert.\n1/2/3","sirka"=>$cells['bewertung']['sirka'],"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
     'transport'=> array ("popis"=>"\nTransp.","sirka"=>$cells['transport']['sirka'],"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
-    'geeignet_text_kurz'=> array ("popis"=>"\ngeeign.","sirka"=>$cells['transport']['sirka'],"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
+    'status_fur_aby_kurz'=> array ("popis"=>"\ngeeign.","sirka"=>$cells['transport']['sirka'],"ram"=>'B',"align"=>"L","radek"=>0,"fill"=>1),
     'lf'=> array ("popis"=>"\n","sirka"=>$cells['lf']['sirka'],"ram"=>'B',"align"=>"BR","radek"=>1,"fill"=>1),
 );
 

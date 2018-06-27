@@ -481,6 +481,18 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 				<input type='button' value='abbrechen / zrusit' onclick='insertpositionCancel();' />
 			</td>
 		</tr>
+		<tr>
+			<td colspan="2">
+				<hr>
+			</td>
+		</tr>
+		<tr>
+		    <td colspan='1'>laut TeilNr:</td>
+		    <td colspan='1'>
+			<input style='text-align:left;' type='text' id='laut_teilnr_tat' size='10' maxlength='10' />
+			<input type='button' acturl='./addTatLautTeil.php' id='n_tat_add_laut_teil' value='+' />
+		    </td>
+		</tr>
 
 	</table>
 </form>

@@ -29,6 +29,7 @@ $sql.= "     ,dpers.`Name` as name";
 $sql.= "     ,dpers.Vorname as vorname";
 $sql.= "     ,dpers.regeloe";
 $sql.= "     ,dtb1.text_kurz as geeignet_text_kurz";
+$sql.= "     ,dtb3.text_kurz as status_fur_aby_kurz";
 $sql.= "     ,SUBSTR(dpers.dpersstatus,1,3) as dpersstatus";
 $sql.= "     ,DATE_FORMAT(dpers.eintritt,'%y-%m-%d') as eintritt_datum_aktual";
 $sql.= "     ,if(CHAR_LENGTH(dpersdetail1.kom7)>12,CONCAT(SUBSTR(dpersdetail1.kom7,1,12),'...'),dpersdetail1.kom7) as handy";
@@ -41,6 +42,7 @@ $sql.= " from dpersbewerber";
 $sql.= " join dpers on dpers.PersNr=dpersbewerber.persnr";
 $sql.= " join dtextbuch dtb1 on dtb1.id=dpersbewerber.geeignet_id";
 $sql.= " left join dtextbuch dtb2 on dtb2.id=dpersbewerber.eigen_transport_id";
+$sql.= " left join dtextbuch dtb3 on dtb3.id=dpersbewerber.status_fur_aby_id";
 $sql.= " join dpersdetail1 on dpersdetail1.persnr=dpersbewerber.persnr";
 $sql.= " where";
 $sql.= "     (dpers.dpersstatus='BEWERBER' or dpers.dpersstatus='BEENDET' or dpers.dpersstatus='MA')";
@@ -86,6 +88,7 @@ $options = array(
                     'eingang_untersuchung',
                     'transport',
                     'geeignet_text_kurz',
+		    'status_fur_aby_kurz',
 		),
 );
 

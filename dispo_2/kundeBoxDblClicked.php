@@ -33,7 +33,7 @@ $apl = AplDB::getInstance();
     $div.= "IM Soll Zeit:";
     $div.="</td>";
     $div.="<td>";
-    $importSollTimeVorschlag = $apl->getLastImportSollTime($kunde);
+    $importSollTimeVorschlag = $apl->getLastImportSollTime($kunde, AplDB::TIMESOLL_VOMAUFTRAG);
     $div.="<input type='text' id='imzeit_$kundeBoxId' maxlength='5' size='5' value='$importSollTimeVorschlag' />";
     $div.="</td>";
     $div.="</tr>";
@@ -120,6 +120,7 @@ $apl = AplDB::getInstance();
 	'kunde'=>$kunde,
 	'div'=>$div,
 	'divid'=>"newimp_$kundeBoxId",
+	'importSollTimeVorschlag'=>$importSollTimeVorschlag,
     );
 
     

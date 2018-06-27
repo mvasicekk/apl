@@ -27,7 +27,7 @@ dbConnect();
 
         $aplDB = AplDB::getInstance();
         //2010-01-06
-	$sql="select  PersNr,Name,Vorname,Schicht from dpers where ((`PersNr`='".$value."') and ((`austritt` is null) or (eintritt>austritt)) and (dpers.dpersstatus='MA'))";
+	$sql="select  PersNr,Name,Vorname,Schicht from dpers where ((`PersNr`='".$value."') and ((`austritt` is null) or (eintritt>austritt)) and (dpers.dpersstatus='MA' or dpers.dpersstatus='DOHODA'))";
 //        $sql="select  PersNr,Name,Vorname,Schicht from dpers where ((`PersNr`='".$value."'))";
 	$result=mysql_query($sql);
 	$output = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';

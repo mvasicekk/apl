@@ -69,6 +69,29 @@ $(document).ready(function(){
                 );
     });
     
+    $("#laut_teilnr_tat" ).autocomplete({
+			source: "./getLautTeilnr.php?kunde="+$('#kunde').val(),
+			minLength: 0,
+                        autoFocus: true,
+			select: function( event, ui ) {
+                                    if(ui.item){
+                                    }
+                                    else{
+                                        // polozka neni v seznamu
+                                    }
+			},
+			open: function(event, ui) {
+				$(this).autocomplete("widget").css(
+				    {"width": "500px","color":"black","font-size":"12px","height":"200px","overflow-y":"auto"}
+				);
+			}
+		}).focus(function(){
+		    if ($(this).autocomplete("widget").is(":visible")) {
+			return;
+		    }
+		    $(this).data("autocomplete").search($(this).val());
+		    });		    
+    $('#n_tat_add_laut_teil').bind('click',tatAddLautTeil);		    
     $('input[id^=schwierigkeitsgrad_S]').blur(function(event){
         var id = $(this).attr('id');
         var acturl = $(this).attr('acturl');
@@ -1812,7 +1835,33 @@ function updateshowVPM(data){
 		    $(this).data("autocomplete").search($(this).val());
 		    });
 		
+    $( "#laut_teilnr" ).autocomplete({
+			source: "./getLautTeilnr.php?kunde="+$('#kunde').val(),
+			minLength: 0,
+                        autoFocus: true,
+			select: function( event, ui ) {
+                                    if(ui.item){
+                                    }
+                                    else{
+                                        // polozka neni v seznamu
+                                    }
+			},
+			open: function(event, ui) {
+				$(this).autocomplete("widget").css(
+				    {"width": "500px","color":"black","font-size":"12px","height":"200px","overflow-y":"auto"}
+				);
+			}
+		}).focus(function(){
+		    if ($(this).autocomplete("widget").is(":visible")) {
+			return;
+		    }
+		    $(this).data("autocomplete").search($(this).val());
+		    });
+		    
+	
+		    
    $('#n_vpm_add').bind('click',vpmAdd);
+   $('#n_vpm_add_laut_teil').bind('click',vpmAddLautTeil);
    $('input[id^=i_vpm_del_]').bind('click',vpmDel);
    $('input[id^=r_stk_]').bind('blur',vpmFieldChange);
    $('input[id^=r_bemerkung_]').bind('blur',vpmFieldChange);
@@ -2074,6 +2123,41 @@ function vpmAdd(event){
         },
         function(data){
             updatevpmAdd(data);
+        },
+        'json'
+        );        
+}
+
+function vpmAddLautTeil(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    //alert(acturl);
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val(),
+	    lautteil:$('#laut_teilnr').val()
+        },
+        function(data){
+            updatevpmAdd(data);
+        },
+        'json'
+        );        
+}
+
+function tatAddLautTeil(event){
+    var id=$(this).attr('id');
+    var acturl = $(this).attr('acturl');
+    //alert(acturl);
+    $.post(acturl,
+        {
+            id:id,
+	    teil:$('#teil').val(),
+	    lautteil:$('#laut_teilnr_tat').val()
+        },
+        function(data){
+	    //TODO stejny update jako po pridani operace
+	    document.location.href='./dkopf.php?teil='+document.getElementById('teil').value;
         },
         'json'
         );        

@@ -49,6 +49,16 @@ require_once '../db.php';
     $formDiv.="</td>";
 
     $formDiv.="</tr>";
+    
+    $formDiv.="<tr style='display:".$display_sec['n_vpm_add'].";background-color:#eef;'><td colspan='5'><hr></td></tr>";
+    $formDiv.="<tr style='display:".$display_sec['n_vpm_add'].";background-color:#eef;'>";
+    $formDiv.="<td colspan='1'>laut TeilNr:</td>";
+    $formDiv.="<td colspan='1'><input style='text-align:left;' type='text' id='laut_teilnr' size='10' maxlength='10' /></td>";
+    $formDiv.="<td colspan='3'>";
+    $formDiv.="<input type='button' acturl='./addVPMLautTeil.php' id='n_vpm_add_laut_teil' value='+' />";
+    $formDiv.="</td>";
+    $formDiv.="</tr>";
+    
     $formDiv.="<tr style='display:".$display_sec['n_vpm_add'].";'><td colspan='4'>&nbsp</td></tr>";
 
     $formDiv.="<tr style='background-color:#eef;'>";

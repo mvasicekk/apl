@@ -43,6 +43,7 @@ class sqldb {
 	//$query = 'SELECT * FROM test1 where cislo>?';
 	$statement = $this->con->prepare($query);
 	$statement->execute($params);
+	var_dump($statement);
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 	return $result;
     }

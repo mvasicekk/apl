@@ -4,11 +4,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/jr/NetBeansProjects/apl/utils/createTeilDirs.php</file>
+            <file>file:/home/jr/NetBeansProjects/apl/sqldb.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/db.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/js/controllers.js</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/updateDpersDetailField.php</file>
-            <file>file:/home/jr/NetBeansProjects/apl/pers/templates/ma.html</file>
+            <file>file:/home/jr/NetBeansProjects/apl/api/admin/newjson.json</file>
+            <file>file:/home/jr/NetBeansProjects/apl/api/admin/getDbenutzer.php</file>
             <file>file:/home/jr/NetBeansProjects/apl/cli/updateDpersFromPremier.php</file>
         </group>
     </open-files>

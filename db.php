@@ -36,6 +36,8 @@ class AplDB {
     const TABLE_DKOPF = 'dkopf';
     const TABLE_DOG = 'dog';
     const DOKUNR_MUSTER = 12; // soll 12
+    
+    const TIMESOLL_VOMAUFTRAG  = 1;	// import time taken from 
 
     static $ATT2FOLDERARRAY = array(
 	"muster" => "010",
@@ -454,6 +456,14 @@ class AplDB {
 	return $retStr;
     }
 
+    /**
+     * 
+     */
+    public function getBenutzers()
+    {
+	return $this->getQueryRows("select * from dbenutzer");
+    }
+    
     /**
      * 
      * @param array $rolesArray - pole s id roli jejichz clenove s emailovou adresou budou vybrani do seznamu
@@ -8604,7 +8614,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
 	$sql.=" dkopf.kunde,";
 	$sql.=" dkopf.verpackungmenge";
 	$sql.=" from dkopf";
-	$sql.=" join dauftr on dauftr.teil=dkopf.Teil";
+	$sql.=" left join dauftr on dauftr.teil=dkopf.Teil";
 	$sql.=" where";
 	$sql.=" (dkopf.Kunde=$kunde)";
 	if ($ohneEx === TRUE) {
@@ -13254,17 +13264,32 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
     /**
      * 
      */
-    public function getLastImportSollTime($kunde) {
+    public function getLastImportSollTime($kunde,$importTimeTakenFrom=NULL) {
 	$imnr = "00:00";
-	$sql.=" select";
-	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as time";
-	$sql.=" from daufkopf";
-	$sql.=" where";
-	$sql.=" daufkopf.kunde=$kunde";
-	$sql.=" order by ";
-	$sql.=" DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') desc,";
-	$sql.=" daufkopf.auftragsnr desc";
-	$sql.=" limit 1";
+	if ($importTimeTakenFrom === NULL) {
+	    $sql .= " select";
+	    $sql .= " DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as time";
+	    $sql .= " from daufkopf";
+	    $sql .= " where";
+	    $sql .= " daufkopf.kunde=$kunde";
+	    $sql .= " having time<>'00:00'";
+	    $sql .= " order by ";
+	    $sql .= " DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') desc,";
+	    $sql .= " daufkopf.auftragsnr desc";
+	    $sql .= " limit 1";
+	} else {
+	    $sql .= " select";
+	    $sql .= " DATE_FORMAT(daufkopf.im_datum_soll,'%H:%i') as time";
+	    $sql .= " from daufkopf";
+	    $sql .= " where";
+	    $sql .= " daufkopf.kunde=$kunde";
+	    $sql .= " having time<>'00:00'";
+	    $sql .= " order by ";
+	    $sql .= " DATE_FORMAT(daufkopf.im_datum_soll,'%Y-%m-%d') desc,";
+	    $sql .= " daufkopf.auftragsnr desc";
+	    $sql .= " limit 1";
+	}
+
 	$r = $this->getQueryRows($sql);
 	if ($r !== NULL) {
 	    $imnr = $r[0]['time'];
