@@ -20,7 +20,7 @@ if ($ucetniJednotka == "") {
 echo "----- START updateDpersFromPremier ($ucetniJednotka) on :" . date('Y-m-d H:i:s') . " ----- \n";
 $sqlDB = sqldb::getInstance($ucetniJednotka);
 
-//var_dump($sqlDB);
+var_dump($sqlDB);
 //pod
 // cele pole pujde dolu
 // vnitrni cyklus foreach
@@ -152,18 +152,35 @@ function updateAplPersnr($zCislo, $field, $value, $oldValue, $table = 'dpers_isp
     }
 }
 
-// vybrat vsechny lidi z premiera
+// vybrat vsechny lidi z premiera po 25 lidech, pokud ctu po vetsim mnozstvi dostanu prazdne pole
+$zCisloOd = 1;$pocetLidi = 25;
+$zCisloDo = $zCisloOd+$pocetLidi;
+$r1 = array();
 
-$res = $sqlDB->getResult("select * from fl_PERSONAL_APL_view order by Z_CISLO,PP_CISLO,PP_VSTUP");
+$res = $sqlDB->getResult("SELECT * from fl_PERSONAL_APL_view where Z_CISLO between ".$zCisloOd." and ".$zCisloDo." order by Z_CISLO,PP_CISLO,PP_VSTUP");
+$length = intval(sizeof($res));
+while($length>0){
+    foreach ($res as $r){
+	array_push($r1, $r);
+    }
+    $zCisloOd+=$pocetLidi+1;
+    $zCisloDo = $zCisloOd+$pocetLidi;
+    $s = "SELECT * from fl_PERSONAL_APL_view where Z_CISLO between ".$zCisloOd." and ".$zCisloDo." order by Z_CISLO,PP_CISLO,PP_VSTUP";
+    echo "s=$s\n\r";
+    $res = $sqlDB->getResult($s);
+    $length = intval(sizeof($res));
+    echo "length=$length\n\r";
+}
 //$res = $sqlDB->getResult("select * from fl_PERSONAL_APL_view");
 //$res = $sqlDB->getResult("select * from PER_MAIN");
-//var_dump($res);
-exit(1);
+//var_dump($r1);
+echo "pocet nactenych radku z ISP :".count($r1);
+//exit(1);
 // polovicni pole
 
 $persArray = array();
-if ($res !== NULL) {
-    foreach ($res as $r) {
+if (count($r1)>0) {
+    foreach ($r1 as $r) {
 	$zCislo = $ucetniJednotka . '_' . intval($r['Z_CISLO']);
 	echo "zCislo = $zCislo\n";
 	if (!array_key_exists($zCislo, $persArray)) {

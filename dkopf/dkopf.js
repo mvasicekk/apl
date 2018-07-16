@@ -825,7 +825,8 @@ function updateshowSelectPalArray(data){
 	    $('#ema_dauftrid_gem').val(data.dauftrIdValue_anf);
 	    imaEditFieldChanged('ema_dauftrid_gem');
 	}
-    }    
+    }
+    $('input:checkbox[id^=ckbCheckAll_]').bind('click',palselectAllclick);
     $('input:checkbox[id^=selpal]').bind('click',palselectclick);
     updateIMAGenehmigenButton();
 }
@@ -947,6 +948,89 @@ function imselectclick(event){
     updateDauftrPositionenErstellen();
 }
 
+
+function palselectAllclick(event){
+    var idcko = $(this).attr('id');
+    var checkvalue = $(this).attr('checked');
+    console.log('palselectAllclick'+',idcko='+idcko+',checkvalue='+checkvalue);
+    
+    //musim najit posledni podtrzitko v retezci
+    posledniPodtrzitkoIndex = idcko.lastIndexOf('_');
+    prvniPodtrzitkoIndex = idcko.indexOf('_');
+    druhePodtrzitkoIndex = idcko.indexOf('_',prvniPodtrzitkoIndex+1);
+    //test jestli pred podtrzitkem e
+    
+    var e = idcko.substr(prvniPodtrzitkoIndex+1,1);
+    
+    console.log('e='+e);
+    
+    var suffix='';
+    var selector = 'input:checkbox[id^=selpal_]';
+    var palfieldid = '#ima_palarray';
+    var dauftrIdfieldid = '#ima_dauftrid';
+    
+    if(e=='e'){
+	suffix='_e';
+	selector = 'input:checkbox[id^=selpale_]';
+    }
+    if(e=='n'){
+	suffix='_gen';
+	selector = 'input:checkbox[id^=selpalgen_]';
+    }
+
+    if(e=='f'){
+	suffix='_anf';
+	selector = 'input:checkbox[id^=selpalanf_]';
+	var palfieldid = '#ema_palarray';
+	var dauftrIdfieldid = '#ema_dauftrid';
+    }
+
+    if(e=='m'){
+	suffix='_gem';
+	selector = 'input:checkbox[id^=selpalgem_]';
+	var palfieldid = '#ema_palarray';
+	var dauftrIdfieldid = '#ema_dauftrid';
+    }
+
+    console.log('suffix='+suffix+',selector='+selector);
+    if(checkvalue===true){
+	$(selector).attr('checked',true);
+    }
+    else{
+	$(selector).attr('checked',false);
+    }
+    
+    
+    //seznam vsech zaskrtnutych checkboxu
+    var pallist = '';
+    var idlist = '';
+    $(selector+':checked').each(function(){
+	i = $(this).attr('id');
+	posledniPodtrzitkoIndex = i.lastIndexOf('_');
+	prvniPodtrzitkoIndex = i.indexOf('_');
+	druhePodtrzitkoIndex = i.indexOf('_',prvniPodtrzitkoIndex+1);
+	dauftrid = i.substring(prvniPodtrzitkoIndex+1,druhePodtrzitkoIndex);
+	pal = i.substr(posledniPodtrzitkoIndex+1);
+	pallist+=pal+';';
+	idlist+=dauftrid+';';
+    });
+    if(pallist.length>0) pallist = pallist.substring(0,pallist.length-1);
+    if(idlist.length>0) idlist = idlist.substring(0,idlist.length-1);
+    $(palfieldid+suffix).val(pallist);
+    $(dauftrIdfieldid+suffix).val(idlist);
+    if(e=='e'||e=='n'||e=='f'||e=='m'){
+	imaEditFieldChanged(idcko);
+	imaEditFieldChanged((dauftrIdfieldid+suffix).substr(1));
+    }
+    updateIMAGenehmigenButton();
+    updateDauftrPositionenErstellen();
+    console.log('pallist='+pallist+'idlist='+idlist);
+}
+/**
+ * 
+ * @param {type} event
+ * @returns {undefined}
+ */
 function palselectclick(event){
     var idcko = $(this).attr('id');
     //musim najit posledni podtrzitko v retezci

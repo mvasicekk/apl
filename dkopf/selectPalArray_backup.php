@@ -8,12 +8,12 @@ require_once '../db.php';
 
     $id=$_POST['id'];
     $teil = $_POST['teil'];
-
+    
     $imarray = trim($_POST['imarray']);
     $imarray_g = trim($_POST['imarray_g']);
     $imarray_a = trim($_POST['imarray_a']);
     $imarray_gem = trim($_POST['imarray_gem']);
-
+    
     $palarray = trim($_POST['palarray']);
     $palarray_g = trim($_POST['palarray_g']);
     $palarray_a = trim($_POST['palarray_a']);
@@ -26,15 +26,16 @@ require_once '../db.php';
     $dauftrIdValue_gen = trim($_POST['dauftrIdValue_gen']);
     $dauftrIdValue_anf = trim($_POST['dauftrIdValue_anf']);
     $dauftrIdValue_gem = trim($_POST['dauftrIdValue_gem']);
+    
     $genehmigt = $_GET['genehmigt'];
     $anforderung = $_GET['anforderung'];
     $ma = $_GET['ma'];
 
-
+    
     //test pokud ma id koncovku _e musim pridat tuto koncovku i k ostatnim id-ckum
     $e =  substr($id, strrpos($id, '_')+1);
     $editSuffix = '';
-    if($e=='e')
+    if($e=='e') 
 	$editSuffix = 'e';
     if ($e == 'gen')
 	$editSuffix = 'gen';
@@ -43,7 +44,7 @@ require_once '../db.php';
     if ($e == 'gem')
 	$editSuffix = 'gem';
 
-
+    
     $palArrayBox = NULL;
     $palArrayBoxRaw = $palarray;
     $palArrayBoxRaw_a = $palarray_a;
@@ -51,15 +52,15 @@ require_once '../db.php';
     $palArrayBox_a = NULL;
     $palArrayBox_gem = NULL;
 
-
+    
     if(strlen($palarray)>0) $palArrayBox = split (';', $palarray);
     if(strlen($palarray_g)>0) $palArrayBox_g = split (';', $palarray_g);
     if(strlen($palarray_a)>0) $palArrayBox_a = split (';', $palarray_a);
     if(strlen($palarray_gem)>0) $palArrayBox_gem = split (';', $palarray_gem);
-
+    
     $imArrayBox = NULL;
     if(strlen($imarray)>0) $imArrayBox = split (';', $imarray);
-
+    
     // zjistim zda mam hodnotu value ulozenou v databazi artiklu
 
     $apl = AplDB::getInstance();
@@ -96,15 +97,13 @@ if (($anforderung==0) && ($ma=='ema')) {
 	}
     }
     $formDiv.="<div id='imaselectpalform'>";
-      $formDiv.="<label>"."Vybrat vše:";
-      $formDiv.='<input name="allpal" id="ckbCheckAll_'.$editSuffix.'"   type="checkbox">';
     if ($palArrayBox !== NULL) {
 	$arrayOldStr = $dauftrIdValue_gem;
 	$arrayOld = NULL;
 	if(strlen($arrayOldStr)>0){
 	    $arrayOld = explode(';', $arrayOldStr);
 	}
-
+	
 	foreach ($palArrayBox as $pal) {
 	    $formDiv.="<div>";
 	    $p = sprintf("%d - %04d", $pal['im'],$pal['pal']);
@@ -120,15 +119,14 @@ if (($anforderung==0) && ($ma=='ema')) {
 	    else{
 		$checked='checked';
 	    }
-
-	    $formDiv.="<input $checked type='checkbox' class='checkBoxClass' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
 	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
-    $formDiv.="</div>";
+    $formDiv.="</div>";    
 }
-
+    
 if (($anforderung==1) && ($ma=='ema')) {
     $palArrayBox = array();
     if(strlen($dauftrIdValue_e)>0){
@@ -143,16 +141,13 @@ if (($anforderung==1) && ($ma=='ema')) {
 	}
     }
     $formDiv.="<div id='imaselectpalform'>";
-            $formDiv.="<label>"."Vybrat vše:";
-    //$formDiv.='<input name="allpal" onclick="myFunction()"  id="ckbCheckAll" type="checkbox">';
-    $formDiv.='<input name="allpal" id="ckbCheckAll_'.$editSuffix.'"   type="checkbox">';
     if ($palArrayBox !== NULL) {
 	$arrayOldStr = $dauftrIdValue_anf;
 	$arrayOld = NULL;
 	if(strlen($arrayOldStr)>0){
 	    $arrayOld = explode(';', $arrayOldStr);
 	}
-
+	
 	foreach ($palArrayBox as $pal) {
 	    $formDiv.="<div>";
 	    $p = sprintf("%d - %04d", $pal['im'],$pal['pal']);
@@ -168,12 +163,12 @@ if (($anforderung==1) && ($ma=='ema')) {
 	    else{
 		$checked='checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' class='checkBoxClass' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
 	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
     }
-    $formDiv.="</div>";
+    $formDiv.="</div>";    
 }
 
 //------------------------------------------------------------------------------
@@ -192,16 +187,13 @@ if (($genehmigt == 1)&&($anforderung==0) && ($ma=='ima')) {
 	}
     }
     $formDiv.="<div id='imaselectpalform'>";
-          $formDiv.="<label>"."Vybrat vše:";
-      //$formDiv.='<input name="allpal"  onclick="myFunction()"  id="ckbCheckAll"  type="checkbox">';
-      $formDiv.='<input name="allpal" id="ckbCheckAll_'.$editSuffix.'"   type="checkbox">';
     if ($palArrayBox !== NULL) {
 	$arrayOldStr = $dauftrIdValue_gen;
 	$arrayOld = NULL;
 	if(strlen($arrayOldStr)>0){
 	    $arrayOld = explode(';', $arrayOldStr);
 	}
-
+	
 	foreach ($palArrayBox as $pal) {
 	    $formDiv.="<div>";
 	    $p = sprintf("%d - %04d", $pal['im'],$pal['pal']);
@@ -217,7 +209,7 @@ if (($genehmigt == 1)&&($anforderung==0) && ($ma=='ima')) {
 	    else{
 		$checked='checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' class='checkBoxClass' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] ."_".$pal['im']."_".$pal['pal']."' />";
 	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}
@@ -229,9 +221,6 @@ if (($genehmigt == 1)&&($anforderung==0) && ($ma=='ima')) {
 //pozadavek na imu
 if(($anforderung==1) && ($ma=='ima')){
     $formDiv.="<div id='imaselectpalform'>";
-          $formDiv.="<label>"."Vybrat vše:";
-      //$formDiv.='<input name="allpal" onclick="myFunction()"   id="ckbCheckAll" type="checkbox">';
-      $formDiv.='<input name="allpal" id="ckbCheckAll_'.$editSuffix.'"   type="checkbox">';
     if ($palArray !== NULL) {
 	foreach ($palArray as $pal) {
 	    $formDiv.="<div>";
@@ -242,7 +231,7 @@ if(($anforderung==1) && ($ma=='ima')){
 		if (in_array($pal['pal'], $palArrayBox))
 		    $checked = 'checked';
 	    }
-	    $formDiv.="<input $checked type='checkbox' class='checkBoxClass' id='selpal" . $editSuffix . "_" . $pal['id'] . "_".$pal['auftragsnr']."_".$pal['pal']."' />";
+	    $formDiv.="<input $checked type='checkbox' id='selpal" . $editSuffix . "_" . $pal['id'] . "_".$pal['auftragsnr']."_".$pal['pal']."' />";
 	    $formDiv.="</label>";
 	    $formDiv.="</div>";
 	}

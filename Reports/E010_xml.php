@@ -52,6 +52,7 @@ $sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0011',(`stk-exp`+auss4_stk_exp
 $sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0041',(`stk-exp`+auss4_stk_exp)*VzKd,0))) as sum_vzkd_S0041,";
 $sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0051',(`stk-exp`+auss4_stk_exp)*VzKd,0))) as sum_vzkd_S0051,";
 $sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0061',(`stk-exp`+auss4_stk_exp)*VzKd,0))) as sum_vzkd_S0061,";
+$sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0062',(`stk-exp`+auss4_stk_exp)*VzKd,0))) as sum_vzkd_S0062,";
 $sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0081',(`stk-exp`+auss4_stk_exp)*VzKd,0))) as sum_vzkd_S0081,";
 $sql .="     round(sum(if(`dtaetkz-abg`.Stat_Nr='S0091',(`stk-exp`+auss4_stk_exp)*VzKd,0))) as sum_vzkd_S0091,";
 $sql .="     round(sum((`stk-exp`+auss4_stk_exp)*VzKd)) as sum_vzkd";
@@ -86,6 +87,7 @@ $options = array(
                     'sum_vzkd_S0041',
                     'sum_vzkd_S0051',
                     'sum_vzkd_S0061',
+		    'sum_vzkd_S0062',
                     'sum_vzkd_S0081',
                     'sum_vzkd_S0091',
                     'sum_vzkd',
