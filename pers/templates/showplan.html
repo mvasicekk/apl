@@ -1,0 +1,37 @@
+
+<div class="container-fluid" ng-controller="showPlanController">
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-12">
+		<h2>Personal Plan - den / Tag / day Datum: {{datum}} ( {{jmenoDneCZ}}, {{jmenoDneE}} ) OE: {{oe}}</h2>
+	    </div>
+	</div>
+    </div>
+
+
+<!--    <div class="row">
+	<div class="col-sm-6">
+	    <div class="alert alert-info" role="alert">
+		<h1 class="text-center planoedatumheader">Datum: {{datum}} ( {{jmenoDneCZ}}, {{jmenoDneE}} )</h1>
+	    </div>
+	</div>
+	<div class="col-sm-6">
+	    <div class="alert alert-info" role="alert">
+		<h1 class="text-center planoedatumheader">OE: {{oe}}</h1>
+		TODO vychytavka barvu oe podle toho jeka je definovano v apl
+	    </div>
+	</div>
+    </div>-->
+   
+    <div ng-if="ma.length>0" class="row">
+	<div ng-repeat="m in ma" class="col-lg-3 col-md-4 col-sm-6">
+	    <!--vychytavka - cervene lidi, kteri nejsou podle dochazky :-)-->
+	    <div class="panel"  ng-class='{"panel-warning":m.edata_min===null,"panel-success":m.edata_min!==null}'>
+		<div class="panel-heading">
+		    <h4>{{m.persnr}} <span ng-show="m.edata_min!==null" class='edatabadge badge badge-important'>(od:{{jencas(m.edata_min)}})</span></h4>
+		    <h5>{{m.vorname}} {{m.name}} <span class="label label-primary">{{m.oe}}</span></h5>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>

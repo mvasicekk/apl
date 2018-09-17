@@ -25,6 +25,20 @@ and open the template in the editor.
     }
 }
 
+#activities {
+    height:inherit;
+}
+
+.widget{
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+}
+
+#activities .content{
+    height: auto;
+    max-height: none;
+}
 body{
     /*border: 2px solid blue;*/
     margin: 0px;

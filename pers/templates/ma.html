@@ -307,6 +307,51 @@
 					<select ng-disabled="!makeedit" style='width:33%;' title="status" ng-show="securityInfo.showArray['dpersstatus1']" ng-options="option for option in dpersstatuses" ng-model="ma.maInfo.dpersstatus" class="form-control input-xs" ng-change="dpersFieldChanged('dpersstatus')"></select>
 					<apl-help el="hIArray['dpersstatus1']" showadmininfo="showhI"></apl-help>
 				    </h4>
+				    <div class="btn-group btn-group-xs btn-group-justified btn-small" role="group" aria-label="...">
+					<div ng-show="securityInfo.showArray['S122']" class="btn-group btn-group-xs" role="group">
+					    <a target="_blank" href="../get_parameters.php?popisky=Password,password;Tag von;Tag bis;Monat;Jahr;Persnr von;Persnr bis;OE;Reporttyp,*RA;LohnabrechTyp,*CB&promenne=password;tagvon;tagbis;monat!number;jahr!number;persvon!number;persbis!number;oe;reporttyp;lohnabrechtyp&values=;{{tagvon}};{{tagbis}};{{aktualniMesic}};{{aktualniRok}};{{ma.maInfo.PersNr}};{{ma.maInfo.PersNr}};*;Leistung/Anwesenheit,Anwesenheit;*&report=S122" type="button" class="btn btn-default btn-info btn-small">
+					    S122
+					    </a>
+					</div>
+					<div ng-show="securityInfo.showArray['S142']" class="btn-group btn-group-xs" role="group">
+					    <a target="_blank" href="../get_parameters.php?popisky=Password,password;Monat;Jahr;Datum von,*DATE;Datum bis,*DATE;Persnr von;Persnr bis;Reporttyp,*RA;LohnabrechTyp,*CB&promenne=password;monat!number;jahr!number;von;bis;persvon!number;persbis!number;reporttyp;lohnabrechtyp&values=;{{aktualniMesic}};{{aktualniRok}};{{prvnidenAktualnihoMesice}};{{dnes}};{{ma.maInfo.PersNr}};{{ma.maInfo.PersNr}};lohn,info,infoVonBis;*&report=S142" ng-click="" type="button" class="btn btn-default btn-info btn-small">
+					    S142
+					    </a>
+					</div>
+					<div ng-show="securityInfo.showArray['S132']" class="btn-group btn-group-xs" role="group">
+					    <a target="_blank" href="../get_parameters.php?popisky=Password,password;Tag von;Tag bis;Monat;Jahr;Persnr von;Persnr bis;OE;Reporttyp,*RA&promenne=password;tagvon!number;tagbis!number;monat!number;jahr!number;persvon!number;persbis!number;oe;reporttyp&values=;{{tagvon}};{{tagbis}};{{aktualniMesic}};{{aktualniRok}};{{ma.maInfo.PersNr}};{{ma.maInfo.PersNr}};*;soll,ist,sollist&report=S132" ng-click="" type="button" class="btn btn-default btn-info btn-small">
+					    S132
+					    </a>
+					</div>
+					<div ng-show="securityInfo.showArray['S190']" class="btn-group btn-group-xs" role="group">
+					    <a target="_blank" href="../get_parameters.php?popisky=Persnr von;Persnr bis;Datum von,*DATE;Datum bis,*DATE;AmNr;OE;Benutzer;Bemerkung;Reporttyp,*RA&promenne=persnrvon!number;persnrbis!number;datumvon;datumbis;amnr;oe;benutzer;bemerkung;reporttyp&values={{ma.maInfo.PersNr}};{{ma.maInfo.PersNr}};;;*;*;*;*;summe,detail,sort lt.og-oe&report=S190" ng-click="" type="button" class="btn btn-default btn-info btn-small">
+					    S190
+					    </a>
+					</div>
+					<div ng-show="securityInfo.showArray['S147']" class="btn-group btn-group-xs" role="group">
+					    <a target="_blank" href="../get_parameters.php?popisky=Password,password;Monat;Jahr;Persnr von;Persnr bis;StammOE&promenne=password;monat!number;jahr!number;persvon!number;persbis!number;stammoe&values=;{{aktualniMesic}};{{aktualniRok}};{{ma.maInfo.PersNr}};{{ma.maInfo.PersNr}};*&report=S147" ng-click="" type="button" class="btn btn-default btn-info btn-small">
+					    S147
+					    </a>
+					</div>
+				    </div>
+				    <!--helpy k tlacitkum-->
+				    <div class="btn-group btn-group-xs btn-group-justified btn-small" role="group" aria-label="...">
+					<div ng-show="securityInfo.showArray['S122']" class="btn-group btn-group-xs" role="group">
+					    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" showhelp="showHelp" el="hIArray['S122']" showadmininfo="showhI"></apl-help>
+					</div>
+					<div ng-show="securityInfo.showArray['S142']" class="btn-group btn-group-xs" role="group">
+					    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" showhelp="showHelp" el="hIArray['S142']" showadmininfo="showhI"></apl-help>
+					</div>
+					<div ng-show="securityInfo.showArray['S132']" class="btn-group btn-group-xs" role="group">
+					    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" showhelp="showHelp" el="hIArray['S132']" showadmininfo="showhI"></apl-help>
+					</div>
+					<div ng-show="securityInfo.showArray['S190']" class="btn-group btn-group-xs" role="group">
+					    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" showhelp="showHelp" el="hIArray['S190']" showadmininfo="showhI"></apl-help>
+					</div>
+					<div ng-show="securityInfo.showArray['S147']" class="btn-group btn-group-xs" role="group">
+					    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" showhelp="showHelp" el="hIArray['S147']" showadmininfo="showhI"></apl-help>
+					</div>
+				    </div>
 				    <span class="label label-info">{{ma.maInfo.regeloe}} (OE:{{ma.oeInfo.oe}})</span>
 				    
 				    <!--obrazek -------------------------------> 
@@ -1237,14 +1282,19 @@
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['regelarbzeit']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="regeloe" class="col-sm-1 control-label">RegelOE</label>
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 						    <select ng-disabled="!makeedit" title="regeloe" ng-options="option for option in oesArray" ng-model="ma.maInfo.regeloe" class="form-control" ng-change="dpersFieldChanged('regeloe')"></select>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['regeloe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="alteroe" class="col-sm-2 control-label">Alternativ OE</label>
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 						    <select ng-disabled="!makeedit" title="alteroe" ng-options="option for option in oesArray" ng-model="ma.maInfo.alteroe" class="form-control" ng-change="dpersFieldChanged('alteroe')"></select>
 						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['alteroe']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+						</div>
+						<label for="oe3" class="col-sm-1 control-label">OE 3</label>
+						<div class="col-sm-1">
+						    <select ng-disabled="!makeedit" title="oe3" ng-options="option for option in oesArray" ng-model="ma.maInfo.oe3" class="form-control" ng-change="dpersFieldChanged('oe3')"></select>
+						    <apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['oe3']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
 						</div>
 						<label for="anwvzkd" class="col-sm-1 control-label">Anw.->VzKd</label>
 						<div class="col-sm-1">

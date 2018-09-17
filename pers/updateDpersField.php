@@ -46,7 +46,7 @@ if($field=='Name'||$field=='Vorname'){
     }
 }
 
-if($field=='regeloe'||$field=='alteroe'){
+if($field=='regeloe'||$field=='alteroe'||$field=='oe3'){
     $value1 = strlen(trim($value))>0?trim($value):NULL;
     if($value1!==NULL){
 	$valid = TRUE;

@@ -2820,6 +2820,61 @@ class AplDB {
 	return $bewertung;
     }
 
+    public function getSvatkyArray($jahr,$monat) {
+            $datvon = $jahr."-".$monat."-01";
+            // get number of days in month
+            $pocetDnuVMesici = cal_days_in_month(CAL_GREGORIAN, $monat, $jahr);
+            $datbis = $jahr."-".$monat."-".$pocetDnuVMesici;
+
+            $sql = "select calendar.datum from calendar where calendar.svatek<>0 and calendar.datum between '$datvon' and '$datbis'";
+            //    echo $sql;
+            $result = $this->getQueryRows($sql);
+            $i=0;
+            $pole = array();
+	    if($result!==NULL){
+		foreach ($result as $row){
+		    $pole[$i++] = trim(substr($row['datum'],8,2));
+		}
+	    }
+            return $pole;
+        }
+	
+	/**
+	 * 
+	 * @param type $persnr
+	 * @param type $datum
+	 */
+	public function getPersPlanDatumOECount($persnr,$datum){
+	   $count = 0;
+	   $sql.=" select persnr";
+	    $sql.=" from dzeitsoll";
+	    $sql.=" where";
+	    $sql.=" persnr='$persnr'";
+	    $sql.=" and";
+	    $sql.=" datum = '$datum'";
+	    $rs = $this->getQueryRows($sql);
+	    if($rs!==NULL){
+		foreach ($rs as $r){
+		    $count++;
+		}
+	    }
+	   return $count;
+	}
+	/**
+	 * 
+	 * @param type $persnr
+	 * @param type $datum
+	 * @return type
+	 */
+    public function getStundenPlanTagPersnr($persnr,$datum){
+	$s = 0;
+	$sql = "select sum(stunden) as s from dzeitsoll where persnr='$persnr' and datum='$datum'";
+	$rs = $this->getQueryRows($sql);
+	if($rs!==NULL){
+	    $s = floatval($rs[0]['s']);
+	}
+	return $s;
+    }
     /**
      * 
      * @param type $von
@@ -12384,7 +12439,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
      */
     public function getOESForOEStatus($oestatus, $gleich = TRUE) {
 	if ($gleich == TRUE)
-	    $query = "select dtattypen.tat from dtattypen where oestatus='$oestatus' order by dtattypen.tat";
+	    $query = "select dtattypen.tat from dtattypen where oestatus like '$oestatus' order by dtattypen.tat";
 	else
 	    $query = "select dtattypen.tat from dtattypen where oestatus<>'$oestatus'";
 

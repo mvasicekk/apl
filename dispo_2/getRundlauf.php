@@ -9,8 +9,11 @@ $spediteur = $_POST['spediteur'];
 
 $action = $_POST['action'];
 
-$datumVon = $a->make_DB_datum(trim($_POST['datum_val_von']));
-$datumBis = $a->make_DB_datum(trim($_POST['datum_val_bis']))." 23:59:59";
+//$datumVon = $a->make_DB_datum(trim($_POST['datum_val_von']));
+//$datumBis = $a->make_DB_datum(trim($_POST['datum_val_bis']))." 23:59:59";
+
+$datumVon = trim($_POST['datum_val_von']);
+$datumBis = trim($_POST['datum_val_bis'])." 23:59:59";
 
 if($action=="delRundlauf"){
     $rundlaufId = substr($id, strrpos($id, '_')+1);

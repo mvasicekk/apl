@@ -34,12 +34,14 @@ $kundeIdentSelected = $kundeIdentArray[0]['kunde'];
 //identifikatorArray
 $identifikatorArray = $a->getIdentifikatorArrayForOEKunde($oeIdentSelected,$kundeIdentSelected);
 $identifikatorSelected = $identifikatorArray[0]['iident'];
+
 // oeArray
 $sql = "";
 $sql.=" select doe.oe,doe.beschreibung_cz from doe where stredisko_isp is not null order by doe.oe";
 $oeArray = $a->getQueryRows($sql);
 array_unshift($oeArray, array('oe'=>'*','beschreibung_cz'=>'vše'));
 $oeSelected = '*';
+
 
 //inventar
 $sql = "";
@@ -109,6 +111,10 @@ $staaten = $a->getQueryRows($sql);
 
 //oeschicht
 $oesArray = $a->getOESForOEStatus('a');
+
+//oeschichtAll
+$oesArrayAll = $a->getOESForOEStatus('%');
+
 //autoleistungAbgnrArray
 $sql = "select `abg-nr` as abgnr,`Name` as abgnrname from `dtaetkz-abg` where `abg-nr` between 7000 and 7999 order by `abg-nr`";
 $autoleistungAbgnrArray = $a->getQueryRows($sql);
@@ -136,6 +142,7 @@ $returnArray = array(
     'inventarArray' => $inventarArray,
     'oeArray' => $oeArray,
     'oesArray' => $oesArray,
+    'oesArrayAll' => $oesArrayAll,
     'oeSelected' => $oeSelected,
     'oeIdentArray'=>$oeIdentArray,
     'oeIdentSelected'=>$oeIdentSelected,

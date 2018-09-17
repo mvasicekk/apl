@@ -51,6 +51,7 @@
 			    <div class="col-sm-6" ><input class="btn btn-default btn-block" style="display:{$display_sec.dpersnew};" type="button" value="Personal pflegen" id="dpers" onClick="okno=window.open();okno.location.href='./pers/pers.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.dzeit};" type="button" value="Anwesenheitserfassung" id="dzeit" onClick="location.href='./dzeit/dzeit.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung" id="anwesenheitplan"  onClick="location.href='./personal/doc_root/index.php?action=planAnwesenheit&presenter=DpersAnwesenheit'" /></div>
+			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.anwesenheitplan};" type="button" value="Anwesenheitplanung Neu" id="anwesenheitplanneu"  onClick="location.href='./pers/persplan.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.vorschuss} ;" type="button" value="Vorschuss" id="vorschuss"  onClick="location.href='./dpers/vorschuss.php'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_firemni} ;" type="button" value="Bewertung - Firma" id="hodnoceni_firemni"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_firemni'" /></div>
 			    <div class="col-sm-6" ><input class="btn btn-default  btn-block" style="display:{$display_sec.hodnoceni_faktory_oe} ;" type="button" value="Bewertung - OE-Matrix" id="hodnoceni_faktory_oe"  onClick="okno=window.open();okno.location.href='./hodnoceni/hodnoceni.php#/hodnoceni_faktory_oe'" /></div>
@@ -151,6 +152,29 @@
 	    </div>
 			
 	    <div class="container-fluid col-md-6">
+		
+		<div class="row">
+		    <div class="col-xs-12">
+			<div id="chatwindow" style="width:100%;">
+			    <div class="panel panel-info">
+				<a role="button" data-toggle="collapse" href="#chatinfo" aria-expanded="true" aria-controls="chatinfo">
+				    <div class="panel-heading">
+					<h4 class="panel-title panel-info">
+					    <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
+					    &nbsp;Chat
+					</h4>
+				    </div>
+				</a>
+				<div id="chatinfo" class="panel-collapse collapse">
+				    <div class="panel-body">
+					<iframe src="http://172.16.1.113:8080/channel/apl" width="100%" height="600px"></iframe>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</div>
+		
 		<div class="row">
 		    <div class="col-xs-12">
 			<div id="tvfiles" style="width:100%;">

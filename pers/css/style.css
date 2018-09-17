@@ -23,6 +23,136 @@ and open the template in the editor.
     a[href]:after {
 	content: none;
     }
+    
+}
+
+.edatabadge{
+    display: inline;
+}
+h1.planoedatumheader{
+    font-size: 20px;
+    margin: 0px;
+    padding: 0px;
+    font-weight: 800;
+}
+
+h1.osobaplanheader{
+    background-color: lightblue;
+width: 100%;
+margin: 0;
+text-align: center;
+font-size: x-large;
+padding: 0.2em;
+}
+
+.calendarMonthYear{
+    grid-column-start: 1;
+    grid-column-end: 8;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.5em;
+    border: solid 1px blue;
+}
+
+.calendarDayNames.So {
+    background-color: lightgray;
+}
+.calendarDayNames.Ne {
+    background-color: lightgray;
+}
+
+.calendarDay.prevmonth {
+    background-color: lightgoldenrodyellow;
+    font-weight: lighter;
+}
+
+.calendarDay.curmonth {
+    background-color: white;
+    font-weight: normal;
+}
+
+.calendarDay.nextmonth {
+    background-color: lightgoldenrodyellow;
+    font-weight: lighter;
+}
+
+.calendarDay.So {
+    background-color: lightgray;
+}
+
+.calendarDay.Ne {
+    background-color: lightgray;
+}
+
+.calendarDay.editable {
+    background-color: lightgreen;
+}
+
+div.calendar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 0.7fr 0.7fr;
+    margin-bottom: 2em;
+}
+
+div.calendarDayNames {
+    font-weight: bold;
+    padding: 0.3em;
+    border-bottom: 1px solid blue;
+}
+
+div.caledarDay{
+    
+}
+
+.dayNumber{
+    display: box;
+    padding: .2em .6em .3em;
+    font-size: 116%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    margin-bottom: 0px;
+    cursor: pointer;
+}
+
+.btn-ruzova {
+    color: #fff;
+    background-color: pink;
+    border-color: pink;
+}
+
+input.calendarStunden{
+    font-size: 1em;
+    text-align: right;
+    padding: 0px;
+    height: inherit;
+}
+
+select.calendarOE{
+    font-size: 0.8em;
+    text-align: center;
+    padding: 0px;
+    height: inherit;
+    background-color: #5bc0de;
+    color: white;
+    border-radius: 1.25em;
+    font-weight: 700;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.dayoeplan {
+    border: 1px solid #cbcfce;
+}
+
+.dayoeplan .label {
+    display: block;
+    border-radius: 1.25em;
 }
 
 div.page-header{

@@ -20,7 +20,7 @@ if ($ucetniJednotka == "") {
 echo "----- START updateDpersFromPremier ($ucetniJednotka) on :" . date('Y-m-d H:i:s') . " ----- \n";
 $sqlDB = sqldb::getInstance($ucetniJednotka);
 
-var_dump($sqlDB);
+//var_dump($sqlDB);
 //pod
 // cele pole pujde dolu
 // vnitrni cyklus foreach
@@ -182,7 +182,7 @@ $persArray = array();
 if (count($r1)>0) {
     foreach ($r1 as $r) {
 	$zCislo = $ucetniJednotka . '_' . intval($r['Z_CISLO']);
-	echo "zCislo = $zCislo\n";
+//	echo "zCislo = $zCislo\n";
 	if (!array_key_exists($zCislo, $persArray)) {
 	    $persArray[$zCislo]['pp'] = array();
 	    // persnr dwedhiwuedh d  wdhqwoeiduh
