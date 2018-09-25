@@ -3,7 +3,7 @@
     <div class="page-header">
 	<div class="row">
 	    <div class="col-sm-12">
-		<h2>Personal Plan - den / Tag / day Datum: {{datum}} ( {{jmenoDneCZ}}, {{jmenoDneE}} ) OE: {{oe}}</h2>
+		<h2>Personal Plan - den / Tag / day <span class="label label-danger">{{datum}} ( {{jmenoDneCZ}}, {{jmenoDneE}} )</span> <span class="label label-info">OE: {{oe}}</span></h2>
 	    </div>
 	</div>
     </div>
@@ -28,7 +28,10 @@
 	    <!--vychytavka - cervene lidi, kteri nejsou podle dochazky :-)-->
 	    <div class="panel"  ng-class='{"panel-warning":m.edata_min===null,"panel-success":m.edata_min!==null}'>
 		<div class="panel-heading">
-		    <h4>{{m.persnr}} <span ng-show="m.edata_min!==null" class='edatabadge badge badge-important'>(od:{{jencas(m.edata_min)}})</span></h4>
+		    <h4>{{m.persnr}} 
+			<span ng-show="m.edata_min!==null" class='edatabadge badge badge-important'>(od:{{jencas(m.edata_min)}})</span>
+			<span ng-show="m.edata_max!==null && m.edata_max!=m.edata_min" class='edatabadge badge badge-important'>(do:{{jencas(m.edata_max)}})</span>
+		    </h4>
 		    <h5>{{m.vorname}} {{m.name}} <span class="label label-primary">{{m.oe}}</span></h5>
 		</div>
 	    </div>

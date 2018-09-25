@@ -50,6 +50,13 @@ aplApp.config(['$routeProvider','$sceProvider',
 		    }
 		    //controller:'eformController'
 		})
+		.when('/showplan/:oe',{
+		    templateUrl:function(p){
+			//console.log(p);
+			return 'templates/showplan.html';
+		    }
+		    //controller:'eformController'
+		})
 		.when('/showplan/',{
 		    templateUrl:function(p){
 			//console.log(p);
@@ -99,6 +106,13 @@ persPlanApp.config(['$routeProvider','$sceProvider',
 		    templateUrl:function(p){
 			//console.log(p);
 			return 'templates/maplan.html';
+		    }
+		    //controller:'eformController'
+		})
+		.when('/matagplan/',{
+		    templateUrl:function(p){
+			//console.log(p);
+			return 'templates/matagplan.html';
 		    }
 		    //controller:'eformController'
 		})

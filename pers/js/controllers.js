@@ -128,6 +128,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
     };
     var curdate = new Date();
 
+    $scope.planTag = curdate;
     $scope.persplanVon = new Date(curdate.getFullYear(), curdate.getMonth(), 1);
     $scope.persplanBis = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0);
     $scope.curJahr = curdate.getFullYear();
@@ -151,7 +152,47 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
     $scope.dnes = curdate.getDay()+'.'+(curdate.getMonth()+1)+'.'+curdate.getFullYear();
     
     
+    $scope.jencas = function(dt){
+	if(dt!==null){
+	    return dt.substring(10,16);
+	}
+	else{
+	    return "";
+	}
+	
+    }
     
+    /**
+     * 
+     * @param {type} m
+     * @returns {undefined}
+     */
+    $scope.deleteFromPlan = function(m){
+	console.log('deleteFromPlan');
+	console.log(m);
+    }
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.planTagChanged = function(){
+	$http.post(
+		'./getShowPlan.php',
+		{ 
+		    routeParams: {
+			oe:$scope.oeplantag,
+			datum:$scope.planTag
+		    }
+		}
+	).then(function (response) {
+	    //console.log(response.data);
+	    $scope.datum = response.data.datum;
+	    $scope.oe = response.data.oeOriginal;
+	    $scope.jmenoDneE = response.data.jmenoDneE;
+	    $scope.jmenoDneCZ = response.data.jmenoDneCZ;
+	    $scope.ma = response.data.osoby;
+	});
+    }
     /**
      * 
      * @returns {undefined}

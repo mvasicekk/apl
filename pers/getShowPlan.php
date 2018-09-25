@@ -21,7 +21,7 @@ else{
 }
 
 $dny = array(
-    "Neděle","twl, zase Prndělí","Úterý","Středa, je ho tam ..","Čtvrtek Bedřichu","předfikend Pátek","fikend So","fikend Ne"
+    "Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota","Neděle"
 );
 
 $jmenoDneE = date('l', strtotime($datumDB));
@@ -42,11 +42,12 @@ $oe= strtoupper($oe);
 
 $sql = " select dzeitsoll.id,dzeitsoll.persnr,dzeitsoll.oe,dzeitsoll.stunden,dpers.`name`,dpers.vorname,dpers.dpersstatus,dpers.eintritt";
 $sql.= " ,min(edata_access_events.dt) as edata_min";
+$sql.= " ,max(edata_access_events.dt) as edata_max";
 $sql.= " from dzeitsoll";
 $sql.= " left join edata_access_events on edata_access_events.persnr=dzeitsoll.persnr and DATE_FORMAT(edata_access_events.dt,'%Y-%m-%d')=dzeitsoll.datum";
 $sql.= " join dpers on dpers.persnr=dzeitsoll.persnr";
 $sql.= " where";
-$sql.= "     dzeitsoll.oe like '%$oe%'";
+$sql.= "     dzeitsoll.oe like '$oe'";
 $sql.= "     and";
 $sql.= "     dzeitsoll.datum='$datumDB'";
 $sql.= "     and";

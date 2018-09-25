@@ -76,9 +76,21 @@
     <div class="row" ng-if="osoby.length>0 && !showFullenTable">
         <div class="col-sm-6 osobacalendar" ng-repeat="osoba in osoby">
 	    <h1 class="osobaplanheader">{{osoba.persnr}} {{osoba.vorname}} {{osoba.name}}
-		<span title="regel OE" class="label label-success small">{{osoba.regeloe}}</span>
-		<span title="alternativ OE" class="label label-info">{{osoba.alteroe}}</span>
-		<span title="OE3" class="label label-default">{{osoba.oe3}}</span>
+		<span title="regel OE" class="label label-success small">
+		    <a title='zobrazí přehled naplánovaných MA pro OE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.regeloe}}">
+			{{osoba.regeloe}}
+		    </a>
+		</span>
+		<span title="alternativ OE" class="label label-info">
+		    <a title='zobrazí přehled naplánovaných MA pro OE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.alteroe}}">
+		    {{osoba.alteroe}}
+		    </a>
+		</span>
+		<span title="OE3" class="label label-default">
+		    <a title='zobrazí přehled naplánovaných MA pro OE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.oe3}}">
+		    {{osoba.oe3}}
+		    </a>
+		</span>
 	    </h1>
 	    <!--kalendare--> 
 	    <div class="row">
@@ -90,7 +102,7 @@
 		    <div ng-repeat="d in dayNames" ng-class="d" class="calendarDayNames">{{d}}</div>
 		    <div ng-class="{curmonth:day.curMonth,prevmonth:day.prevMonth,nextmonth:day.nextMonth}" class="calendarDay {{day.weekDay}}" ng-repeat="day in calArr">
 			<div title="dvojite kliknuti mysi pridá další OE" style="width:100%;" ng-if="day.curMonth" class="dayNumber label-success" ng-dblclick="onDayDblClick(osoba.persnr,ch.year,ch.monthIndex,day.dayNumber,day.editable)">
-			    <a title='zobrazí přehled naplánovaných MA pro vybraný den a RegelOE' target="_blank" ng-href="./pers.php#/showplan/{{osoba.regeloe}}/{{day.year}}-{{day.month+1}}-{{day.dayNumber}}">{{day.dayNumber}}</a>
+			    <a title='zobrazí přehled naplánovaných MA pro vybraný den a RegelOE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.regeloe}}/{{day.year}}-{{day.month+1}}-{{day.dayNumber}}">{{day.dayNumber}}</a>
 			</div>
 			<div style="width:100%;"  ng-if="!day.curMonth" class="dayNumber label-default">{{day.dayNumber}}</div>
 			<div class="calendarDayContent">

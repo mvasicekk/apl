@@ -1,0 +1,76 @@
+
+<div class="container-fluid" ng-controller="persPlanController">
+    <div class="no-print">
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+	<apl-help el="hIArray['admininfo_btn']" showadmininfo="showhI"></apl-help>
+    </div>
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-10">
+		<h4>Personal Plan Tag / OE</h4>
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
+	<div class="row">
+	    <div class="col-sm-8 form-horizontal" style="border-right: 1px solid black;">
+		<div class="form-group col-md-4 form-group-sm">
+		    <label class="control-label"  for="plantag">den / Tag</label>
+		    <div class="input-group">
+			<input ng-change="planTagChanged()" ng-model="planTag" ui-date="dateOptions" type="text" class="form-control" id="persplanvon" placeholder="den">
+		    </div>
+		</div>
+		<div class="form-group col-md-2 form-group-sm">
+		    <label class="control-label"  for="oeplantag">OE</label>
+		    <select class="form-control" ng-change="planTagChanged()" ng-model="oeplantag" ng-options="option for option in oesArrayAll"></select>
+		</div>
+	    </div>
+	    <div class="col-sm-4 form-horizontal">
+		<div class="form-group col-md-12 form-group-sm">
+		    <label class="control-label" for="osoba">seznam osobních čísel</label>
+		    <input ng-change="persnrListChanged()" ng-model="persnrList" type="text" class="form-control" id="persnrList" placeholder="hledání pracovníka, zadejte osobní seznam osobních čísel">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['osoba_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+	    </div>
+	</div>
+    </form>
+
+
+    <div class="row">
+        <div class="col-sm-8">
+	    <ul ng-if="ma.length>0">
+		<li ng-repeat="m in ma" ng-class='{"background-warning":m.edata_min===null,"background-success":m.edata_min!==null}'>
+		    <div class="row">
+			<!--vychytavka - cervene lidi, kteri nejsou podle dochazky :-)-->
+			<div class="col-md-5">
+			    				<h4>{{m.persnr}} 
+				    <span ng-show="m.edata_min!==null" class='edatabadge badge badge-important'>(od:{{jencas(m.edata_min)}})</span>
+				    <span ng-show="m.edata_max!==null && m.edata_max!=m.edata_min" class='edatabadge badge badge-important'>(do:{{jencas(m.edata_max)}})</span>
+				</h4>
+			</div>
+			<div class="col-md-6">
+			    	<h5>
+				    {{m.vorname}} {{m.name}} <span class="label label-primary">{{m.oe}}</span>
+				    
+				</h5>
+			</div>
+			<div class="col-md-1">
+			    <button title="odstranit z plánu" ng-click="deleteFromPlan(m)" class="btn btn-danger btn-xs">-</button>
+			</div>
+		    </div>
+		</li>
+	    </ul>
+	</div>
+	<div class="col-sm-4">
+	</div>
+    </div>
+
+    
+</div>
