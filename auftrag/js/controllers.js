@@ -316,6 +316,37 @@ aplApp.controller('detailController', function ($scope, $routeParams,$http,$time
 	console.log($scope.dauftragOriginalArray);
 	//+ zmenit na tlacitko pro ulozeni radku
     }
+    
+    /**
+     * 
+     * @param {type} r
+     * @returns {undefined}
+     */
+    $scope.toggleActivePos = function(r){
+	if(r.hatrechnung!=="1"){
+	    console.log('toggleActivePos');
+	    console.log(r);
+	    if(r.kz_aktiv=="1"){
+		r.kz_aktiv="0";
+	    }
+	    else{
+		r.kz_aktiv="1";
+	    }
+	    return $http.post(
+		    './toggleAktivDauftrRow.php',
+		    {r: r}
+	    ).then(function (response) {
+		console.log(response.data);
+		//$scope.dauftrPos = response.data.dauftragPositionen;
+	    });
+	}
+    }
+    
+    /**
+     * 
+     * @param {type} r
+     * @returns {unresolved}
+     */
     $scope.saveDposRow = function(r){
 	// pomoct http.post ulozit radek a pote nastevit edit=0
 	r.edit=0;

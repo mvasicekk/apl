@@ -14,6 +14,7 @@
 		"placeholder": {}
 	    }
 	},
+	"md-toolbar": {},
 	"ui-select-choices": {
 	    "attributes": {
 		"repeat": {}
@@ -27,11 +28,19 @@
 		"multiple": {},
 		"theme": {},
 		"style": {},
-		"title": {}
+		"title": {},
+		"on-select": {}
 	    }
-	}
+	},
+	"md-content": {}
     },
     "attributes": {
+	"layout": {
+	    "context": "div"
+	},
+	"ng-view": {
+	    "context": "div"
+	},
 	"ng-repeat": {
 	    "context": "tr"
 	},

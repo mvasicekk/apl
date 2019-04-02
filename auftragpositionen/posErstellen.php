@@ -42,6 +42,7 @@ for ($i = 0; $i < $pal_nr; $i++) {
 	$tatkz = $position->tat;
 	$abgnr = $position->abgnr;
 	$kz_druck = intval($position->kz_druck);
+	$kz_aktiv = intval($position->kz_aktiv);
 	$Gtat = strtoupper($position->kzgut);
 	$preis = $position->preis;
 	$vzkd = $position->vzkd;
@@ -50,14 +51,14 @@ for ($i = 0; $i < $pal_nr; $i++) {
 	// TODO do dauftr nezapisovat operace 3
 	if (($kz_druck != 0)&&($abgnr!=3)) {
 	    if ($Gtat == 'G') {
-		$sql = "insert into dauftr (bemerkung,giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,kg_stk_bestellung,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
+		$sql = "insert into dauftr (kz_aktiv,bemerkung,giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,kg_stk_bestellung,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
 		$sql.="vzkd,vzaby,comp_user_accessuser,inserted,termin) values";
-		$sql.="	('$bemerkung','$gt','$auftragsnr','$teil','$stk_pro_pal','$preis','$fremdauftr','$fremdpos','$netgewicht','$tatkz',";
+		$sql.="	('$kz_aktiv','$bemerkung','$gt','$auftragsnr','$teil','$stk_pro_pal','$preis','$fremdauftr','$fremdpos','$netgewicht','$tatkz',";
 		$sql.="'$paleta','$abgnr','$Gtat','$vzkd','$vzaby','$user',NOW(),'$exgeplannt')";
 	    } else {
-		$sql = "insert into dauftr (giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
+		$sql = "insert into dauftr (kz_aktiv,giesstag,auftragsnr,teil,`Stück`,preis,fremdauftr,fremdpos,`mehrarb-kz`,`pos-pal-nr`,abgnr,kzgut,";
 		$sql.="vzkd,vzaby,comp_user_accessuser,inserted,termin) values";
-		$sql.="	('$gt','$auftragsnr','$teil','$stk_pro_pal','$preis','$fremdauftr','$fremdpos','$tatkz',";
+		$sql.="	('$kz_aktiv','$gt','$auftragsnr','$teil','$stk_pro_pal','$preis','$fremdauftr','$fremdpos','$tatkz',";
 		$sql.="'$paleta','$abgnr','$Gtat','$vzkd','$vzaby','$user',NOW(),'$exgeplannt')";
 	    }
 	    array_push($dauftrSqlArray, $sql);

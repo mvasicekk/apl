@@ -1,0 +1,198 @@
+<div class="container-fluid" ng-controller="f1910Controller">
+    <button type="button" class="btn btn-warning no-print" ng-model="showHelp" uib-btn-checkbox>
+	?
+    </button>
+    <div class="page-header">
+	<h4>F1910 - Projekt zdraví
+	</h4>
+	<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+    </div>
+
+    <!--sekce pro hledani MA + tabulka-->
+
+    <div class="row no-print">
+	<div class="col-sm-12">
+	    <div class="form-group">
+		<label for="ma_search">osobní číslo, jméno, příjmení</label>
+		<input ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-model="ma_search" ng-change="getMaMatch()" autofocus type="text" maxlength="10" class="form-control input-lg text-center" id="ma_search" placeholder="osobní číslo číslo, jméno, příjmení">
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['search_field']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    
+    <!--seznam polozek-->
+    <div ng-show="ma.length > 0 && maAktual===null" class="col-sm-12">
+	<table id='searchtable' class="table table-condensed table-striped table-hover table-responsive">
+	    <thead>
+		<tr class="bg-primary">
+		    <th>
+			Persnr
+		    </th>
+		    <th>jmeno</th>
+		    <th>RegelOE</th>
+		</tr>
+	    </thead>
+	    <tbody>
+		<tr ng-repeat="p in ma">
+		    <td ng-click="listRowClicked($index)">
+			{{p.persnr}}
+		    </td>
+		    <td ng-click="listRowClicked($index)">{{p.name}} {{p.vorname}}</td>
+		    <td ng-click="listRowClicked($index)">{{p.regeloe}}</td>
+		</tr>
+	    </tbody>
+	</table>
+    </div>
+
+    <div ng-if="maAktual!==null" class="row">
+	<div class="col-sm-12">
+	    <div class="row">
+		<div class="col-sm-8">
+		    <h2 title="osobni cislo, jmeno, prijmeni">{{maAktual.persnr}} {{maAktual.vorname}} {{maAktual.name}} ({{healthInfo.persinfo.vek}} let)</h2>
+		</div>
+		<div class="col-sm-4">
+		    <h2 title="datum nastupu">{{maAktual.eintritt}}</h2>
+		</div>
+	    </div>
+	</div>
+	<div class="col-sm-12">
+	    <div class="row">
+		<div class="col-sm-8">
+		    <h2 title="oe, oe popis">{{maAktual.regeloe}} - {{healthInfo.persinfo.tatBezeichnung}}</h2>
+		</div>
+		<div class="col-sm-4">
+		    <h2 title="pohlaví">{{maAktual.sex}}</h2>
+		</div>
+	    </div>
+	</div>
+	<div class="col-sm-12">
+	    <fieldset class="health">
+		<legend>výška, váha, BMI, BMR</legend>
+		<div class="row">
+		    <div class="col-sm-4">
+			<div class="input-group">
+			    <span title="vyska"><input ng-change="htChanged('vyska')" ng-model="healthInfo.healthtable.vyska" type="text" class="form-control text-right" id="" placeholder="vyska v cm"></span>
+			    <span class="input-group-addon">cm</span>
+			</div>
+		    </div>
+		</div>
+		<div class="row">
+		    <div class="col-sm-4">
+			<h2 title="datum1"><input ng-change="htChanged('datum1')" ng-model="healthInfo.healthtable.datum1" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="datum1"></h2>
+			<div title="váha"  class="input-group">
+			    <input ng-change="htChanged('vaha1')" ng-model="healthInfo.healthtable.vaha1" type="text" class="form-control text-right" id="" placeholder="vaha v kg">
+			    <span class="input-group-addon">kg</span>
+			</div>
+			<h3 class="text-right"><span class="label label-warning text-right" title="bmi">{{bmi(healthInfo.healthtable.vyska,healthInfo.healthtable.vaha1)|numeraljs:'#.#'}}</span></h3>
+			<h3 class="text-right"><span class="label label-success text-right" title="bmr">{{bmr(maAktual.sex,healthInfo.persinfo.vek,healthInfo.healthtable.vyska,healthInfo.healthtable.vaha1)|numeraljs:'#.#'}} kcal/den</span></h3>
+		    </div>
+		    <div class="col-sm-4">
+			<h2 title="datum2"><input ng-change="htChanged('datum2')" ng-model="healthInfo.healthtable.datum2" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="datum2"></h2>
+			<div title="váha" class="input-group">
+			    <input ng-change="htChanged('vaha2')" ng-model="healthInfo.healthtable.vaha2" type="text" class="form-control text-right" id="" placeholder="vaha v kg">
+			    <span class="input-group-addon">kg</span>
+			</div>
+			<h3 class="text-right"><span class="label label-warning text-right" title="bmi">{{bmi(healthInfo.healthtable.vyska,healthInfo.healthtable.vaha2)|numeraljs:'#.#'}}</span></h3>
+			<h3 class="text-right"><span class="label label-success text-right" title="bmr">{{bmr(maAktual.sex,healthInfo.persinfo.vek,healthInfo.healthtable.vyska,healthInfo.healthtable.vaha2)|numeraljs:'#.#'}} kcal/den</span></h3>
+		    </div>
+		    <div class="col-sm-4">
+			<h2 title="datum3"><input ng-change="htChanged('datum3')" ng-model="healthInfo.healthtable.datum3" ui-date="dateOptions" type="text" class="form-control" id="" placeholder="datum3"></h2>
+			<div title="váha" class="input-group">
+			    <input ng-change="htChanged('vaha3')" ng-model="healthInfo.healthtable.vaha3" type="text" class="form-control text-right" id="" placeholder="vaha v kg">
+			    <span class="input-group-addon">kg</span>
+			</div>
+			<h3 class="text-right"><span class="label label-warning text-right" title="bmi">{{bmi(healthInfo.healthtable.vyska,healthInfo.healthtable.vaha3)|numeraljs:'#.#'}}</span></h3>
+			<h3 class="text-right"><span class="label label-success text-right" title="bmr">{{bmr(maAktual.sex,healthInfo.persinfo.vek,healthInfo.healthtable.vyska,healthInfo.healthtable.vaha3)|numeraljs:'#.#'}} kcal/den</span></h3>
+		    </div>
+		</div>
+	    </fieldset>
+	</div>
+	<div class="col-sm-12">
+	    <fieldset class="health">
+		<legend>zdravotní stav / poznamky</legend>
+		<div class="row">
+		    <div title="zdravotni stav" class="col-sm-6"><textarea ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-change="htChanged('zdrstav_pozn')" placeholder="zdravotní stav" rows="10" class="form-control" ng-model="healthInfo.healthtable.zdrstav_pozn"></textarea></div>
+		    <div title="poznamky" class="col-sm-6"><textarea ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 }}" ng-change="htChanged('health_pozn')" placeholder="poznamky" rows="10" class="form-control"  ng-model="healthInfo.healthtable.health_pozn"></textarea></div>
+		</div>
+	    </fieldset>
+	</div>
+	<div class="col-sm-12">
+	    <fieldset class="health">
+		<legend>zdravotní problemy</legend>
+		<div class="row form-inline">
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_hlava')" ng-model="healthInfo.healthtable.chb_hlava"><br>hlava
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_krk')" ng-model="healthInfo.healthtable.chb_krk"><br>krk
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_ramena')" ng-model="healthInfo.healthtable.chb_ramena"><br>ramena
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_zada')" ng-model="healthInfo.healthtable.chb_zada"><br>záda
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_loket')" ng-model="healthInfo.healthtable.chb_loket"><br>loket
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_karpaly')" ng-model="healthInfo.healthtable.chb_karpaly"><br>karpály
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_kycle')" ng-model="healthInfo.healthtable.chb_kycle"><br>kyčle
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_koleno')" ng-model="healthInfo.healthtable.chb_koleno"><br>koleno
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_lytka')" ng-model="healthInfo.healthtable.chb_lytka"><br>lýtka
+			    </label>
+			</div>
+		    </div>
+		    <div class="col-sm-1">
+			<div class="checkbox">
+			    <label>
+				<input type="checkbox" ng-true-value="'1'" ng-false-value="'0'" ng-change="htChanged('chb_chodidla')" ng-model="healthInfo.healthtable.chb_chodidla"><br>chodidla
+			    </label>
+			</div>
+		    </div>
+		</div>
+	    </fieldset>
+	</div>
+    </div>	
+</div>

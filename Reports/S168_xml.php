@@ -98,7 +98,7 @@ $sql.=" on $v_drueck.persnr=$v_anwesenheit.persnr and $v_drueck.datum=$v_anwesen
 $sql.=" left join $v_drueck_gesamt on dpers.persnr=$v_drueck_gesamt.persnr";
 //$sql.=" left join $v_anwesenheit_gesamt on $v_drueck.persnr=$v_anwesenheit_gesamt.persnr and $v_drueck.datum=$v_anwesenheit_gesamt.datum";
 $sql.=" left join $v_anwesenheit_gesamt on dpers.persnr=$v_anwesenheit_gesamt.persnr";
-$sql.=" where (dpers.dpersstatus='MA')";
+$sql.=" where (dpers.dpersstatus='MA' or dpers.dpersstatus='DOHODA')";
 $sql.=" and ($v_anwesenheit_gesamt.anwesenheitgesamt<>0 or $v_drueck_gesamt.verbgesamt<>0 or $v_drueck.verb<>0 or $v_drueck.vzaby<>0 or $v_drueck.vzkd<>0)";
 $sql.=" ORDER BY og,$v_drueck.oe,dpers.persnr";
 

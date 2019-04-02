@@ -237,6 +237,7 @@
 		<th>Lag Von</th>
 		<th>Lag Nach</th>
 		<th>Bedarf</th>
+		<th>aktiv</th>
 	    </tr>
 	    </thead>
 	    <tbody>
@@ -256,6 +257,7 @@
 		    <td>{{r.lager_von}}</td>
 		    <td>{{r.lager_nach}}</td>
 		    <td>{{r.bedarf_typ}}</td>
+		    <td ng-class="{kz_aktiv:(r.kz_aktiv!='0'),kz_notaktiv:(r.kz_aktiv=='0')}" ng-click="dposAktivRowClicked(r)">&nbsp;</td>
 		</tr>
 	    </tbody>
 	    </table>

@@ -218,59 +218,59 @@
 	    </tr>
 	    </thead>
 	    <tbody>
-		<tr ng-if="r.KzGut=='G' || (showAlleTat)" ng-class="{kzgut:(r.KzGut=='G')&&(showAlleTat),edited:r.edit==1}" ng-repeat="r in displayDauftrPos">
-		    <td class="" ng-class="{newpal:r.newpal==1}">
+		<tr ng-if="r.KzGut=='G' || (showAlleTat)" ng-class="{notaktive:r.kz_aktiv=='0',kzgut:(r.KzGut=='G')&&(showAlleTat),edited:r.edit==1}" ng-repeat="r in displayDauftrPos">
+		    <td class="" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<a target="_blank" href="../dkopf/dkopf.php?teil={{r.teil}}">{{r.teil}}</a>
 		    </td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.imp_pal}}</td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">
+		    <td class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">{{r.imp_pal}}</td>
+		    <td class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input maxlength="4" ng-if="r.edit==1" ng-model="r.imp_stk" type="text" class="form-control input-sm text-right">
 			<span ng-if="r.edit==0" >{{r.imp_stk}}</span>
 		    </td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.im_stk}}</td>
-		    <td ng-show="securityInfo.showArray.dauftrpreis" ng-dblclick="preisUpdate(r)" class="text-right" ng-class="{newpal:r.newpal==1}">
+		    <td class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">{{r.im_stk}}</td>
+		    <td ng-show="securityInfo.showArray.dauftrpreis" ng-dblclick="preisUpdate(r)" class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 <!--			<input ng-if="r.edit==1" ng-model="r.preis" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.preis|number:4}}</span>-->
 			{{r.preis|number:4}}
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">{{r.tatkz}}</td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">{{r.abgnr}}</td>
-		    <td ng-class="{newpal:r.newpal==1}">{{r.KzGut}}</td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-click="toggleActivePos(r)" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}" title="kliknete pro aktivaci/deaktivaci pozice v zakazce">{{r.tatkz}}</td>
+		    <td ng-click="toggleActivePos(r)" class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}"  title="kliknete pro aktivaci/deaktivaci pozice v zakazce">{{r.abgnr}}</td>
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">{{r.KzGut}}</td>
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input maxlength="9" ng-if="r.edit==1" ng-model="r.termin" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.termin}}</span>
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input maxlength="8" ng-if="r.edit==1" ng-model="r.ex" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >
 			    <a href="#/det/{{r.ex}}">{{r.ex}}</a>
 			</span>
 		    </td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">
+		    <td class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input maxlength="4" ng-if="r.edit==1" ng-model="r.palex" type="text" class="form-control input-sm text-right">
 			<span ng-if="r.edit==0" >{{r.palex}}</span>
 		    </td>
-		    <td class="text-right" ng-class="{newpal:r.newpal==1}">
+		    <td class="text-right" ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input maxlength="5" ng-if="r.edit==1" ng-model="r.stkex" type="text" class="form-control input-sm text-right">
 			<span ng-if="r.edit==0" >{{r.stkex}}</span>
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input ng-if="r.edit==1" ng-model="r.fremdauftr" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.fremdauftr}}</span>
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input ng-if="r.edit==1" ng-model="r.fremdpos" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.fremdpos}}</span>
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input ng-if="r.edit==1" ng-model="r.giesstag" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.giesstag}}</span>
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<input ng-if="r.edit==1" ng-model="r.bemerkung" type="text" class="form-control input-sm">
 			<span ng-if="r.edit==0" >{{r.bemerkung}}</span>
 		    </td>
-		    <td ng-class="{newpal:r.newpal==1}">
+		    <td ng-class="{newpal:r.newpal==1,notaktive:r.kz_aktiv=='0'}">
 			<span ng-if="r.hatrechnung==1" class="text-danger badge text-justify">RECHNUNG</span>
 			<div class="btn-group btn-group-xs btn-group-justified" role="group" ng-if="r.hatrechnung==0">
 			    <div ng-if="r.edit==0" class="btn-group btn-group-xs" role="group">

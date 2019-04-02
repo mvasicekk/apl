@@ -1,0 +1,70 @@
+
+<div ng-controller="statoryController">
+    <md-toolbar class="md-hue-2">
+	<div class="md-toolbar-tools">
+	    <h2 class="md-flex">Drueck Plus</h2>
+	</div>
+    </md-toolbar>
+
+    <md-content flex layout-padding>
+	<div layout='row'>
+	    <form>
+		<div layout='column' layout-align="start start">
+		    <md-input-container class='md-block'>
+			<label>Sys</label>
+			<input ng-model="sys" ng-change="sysChanged()" md-autofocus>
+		    </md-input-container>
+		    
+		    <md-chips ng-model="statory" md-autocomplete-snap
+			      md-transform-chip="transformChip($chip)"
+			      md-on-remove="removeChip($chip,$index,$event)"
+			      md-require-match="false"
+			      input-aria-label="cisla statoru">
+			<md-autocomplete
+			    md-select-on-focus
+			    md-select-on-match
+			    md-selected-item="selectedStator"
+			    md-search-text="searchStator"
+			    md-items="stator in querySearchStatory(searchStator)"
+			    md-item-text="stator.et_invnummer"
+			    md-require-match="true"
+			    md-autoselect="true"
+			    md-autocomplete-snap="width"
+			    placeholder="inventarni cislo statoru">
+			    <span md-highlight-text="searchStator">{{stator.stator}}</span>
+			    <md-not-found>
+				nic nenalezeno
+			    </md-not-found>
+			</md-autocomplete>
+			<md-chip-template>
+			    <span>
+				<strong>{{$chip.et_invnummer}}</strong>
+				<em>({{$chip.id}})</em>
+			    </span>
+			</md-chip-template>
+		    </md-chips>
+		</div>
+	    </form>
+	</div>
+	<div ng-if='drueckInfo !== null' layout='row'>
+	    <md-card>
+		<md-card-title>
+		    <md-card-title-text>
+			<span class="md-headline">{{drueckInfo.persnr}} {{drueckInfo.jmeno}}</span>
+		    </md-card-title-text>
+		</md-card-title>
+		<md-card-content>
+		    <p>
+			Datum: {{drueckInfo.Datum}}
+		    </p>
+		    <p>
+			{{drueckInfo.typ}} {{drueckInfo.TaetNr}} - {{drueckInfo.oper_CZ}}
+		    </p>
+		    <p>
+			stk: {{drueckInfo.stk}}
+		    </p>
+		</md-card-content>
+	    </md-card>
+	</div>
+    </md-content>
+</div>

@@ -7,7 +7,11 @@
       DKopf
     </title>
 
-<link rel="stylesheet" href="../styl_common.css" type="text/css">    
+{*	Bootstrap*}
+    <link href="./bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+{*<link rel="stylesheet" href="../styl_common.css" type="text/css">    *}
 <link rel="stylesheet" href="./styl.css" type="text/css">
 <link rel="stylesheet" href="../colorbox.css" type="text/css">
 <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.14.custom.css" type="text/css">
@@ -22,9 +26,9 @@
 <script src="js_functions.js" type="text/javascript"></script>
 <script type = "text/javascript" src = "../js/ajaxgold.js"></script>
 <script>
-var promenne = new Array("kz_druck","taetnr","bez_d","bez_t","mittel","vzkd","vzaby","KzGut","bedarf_typ","lager_von","lager_nach");
-var onblur_function = new Array("","getDataReturnXml('./validate_taetnr.php?value='+this.value, validate_taetnr);savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);");
-var editovat = new Array(0,0,1,1,1,1,1,1,1,0,0);
+var promenne = new Array("kz_druck","kz_aktiv","taetnr","bez_d","bez_t","mittel","vzkd","vzaby","KzGut","bedarf_typ","lager_von","lager_nach");
+var onblur_function = new Array("","","getDataReturnXml('./validate_taetnr.php?value='+this.value, validate_taetnr);savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);","savevalue(this);");
+var editovat = new Array(0,0,0,1,1,1,1,1,1,1,0,0);
 </script>
 <script type = "text/javascript" src = "js_tablegrid.js"></script>
 <script type="text/javascript" src="../js/colorbox/jquery.colorbox-min.js"></script>
@@ -312,6 +316,7 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 		<table id='apltable' class='apl_table' border='0'>
 		<tr class='apl_table_header'>
 			<td>druck</td>
+			<td>aktiv</td>
 			<td>teatnr</td>
 			<td>Bezeichnung (Deutsch)</td>
 			<td>oznaceni (cesky)</td>
@@ -342,6 +347,12 @@ Arbeitsplan pflegen / Sprava pracovniho planu - {$teil_value}
 				<td onmouseover="this.style.cursor='pointer';" onclick="getDataReturnText('./toggle_kz_druck.php?dpos_id={$polozka.dpos_id}', toggle_kz_druck);" id='druck{$polozka.dpos_id}' {if $polozka.kz_druck==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
 			{else}
 				<td id='druck{$polozka.dpos_id}' {if $polozka.kz_druck==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
+			{/if}
+			
+			{if $display_sec.kzdruck_sec=="inline-block"}
+				<td onmouseover="this.style.cursor='pointer';" onclick="getDataReturnText('./toggle_kz_aktiv.php?dpos_id={$polozka.dpos_id}', toggle_kz_aktiv);" id='aktiv{$polozka.dpos_id}' {if $polozka.kz_aktiv==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
+			{else}
+				<td id='aktiv{$polozka.dpos_id}' {if $polozka.kz_aktiv==0} bgcolor='grey'{else} bgcolor='red'{/if}>&nbsp;</td>
 			{/if}
 			
 			<td id='td_select_taetnr{$polozka.dpos_id}' align='right'>{$polozka.taetnr}</td>

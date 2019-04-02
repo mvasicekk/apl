@@ -133,6 +133,22 @@ aplApp.controller('detailController', function (setfocus,$filter,$scope, $routeP
      * @param {type} r
      * @returns {undefined}
      */
+        $scope.dposAktivRowClicked = function(r){
+	console.log(r);
+	if(r.kz_aktiv==0){
+	    r.kz_aktiv=1;
+	}
+	else{
+	    r.kz_aktiv=0;
+	}
+    }
+
+
+    /**
+     * 
+     * @param {type} r
+     * @returns {undefined}
+     */
     $scope.vzChanged = function(r,c){
 	console.log('vzChanged: ' + c);
 	var vzValue = numeral().unformat(r[c].replace(',','.'));

@@ -1,0 +1,120 @@
+<div id="main_div" class="container-fluid" ng-controller="fasApp" >
+
+<div>
+    <button type="button" class="btn btn-warning hidden-print" ng-model="showHelp" uib-btn-checkbox>
+        ?
+    </button>
+    <button title="admin info" type="button" class="btn btn-info hidden-print" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+        AI
+    </button>
+    <button title="Tisk" ng-click="printPage(dt,tab_active)" type="button" class="btn btn-success hidden-print"   >
+        <i class="glyphicon glyphicon-print"></i> <i>F460</i>
+    </button>
+        <p class="input-group" style="width:20%;margin-left: auto;margin-right: auto;">
+            <input id="datum" type="text"  ng-click="open1()" uib-datepicker-popup="{{format}}" ng-model="dt" ng-change="getActitems()"  is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+            <span class="input-group-btn">
+          </span>
+        </p>
+    </div>
+
+
+<!-- Formular -->
+    <div class="page-header">
+
+        <!--
+                 <div class="form-group">
+                <label for="exampleInputName2">Name</label>
+                <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+            </div>
+
+        -->
+
+        <form class="form-inline hidden-print" id="fasovani">
+            <div class="input-group">
+                <label for="skl">Z:</label>
+                <select class="form-control input-sm" name="repeatSelect" id="skl" ng-model="cSklad" ng-change="getItem(cSklad)">
+                     <option ng-repeat="option in sklady" value="{{option.cislo}}">{{option.popis}}</option>
+                </select>
+                <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['skl']"  showhelp="showHelp" showadmininfo="showhI"></apl-help>
+
+            </div>
+            <div class="input-group">
+                <label for="skl2">Do:</label>
+                <select class="form-control input-sm" name="repeatSet" id="skl2" ng-model="cSklad2">
+                    <option ng-repeat="opt in sklady2" value="{{opt.cislo}}">{{opt.popis}}</option>
+                </select>
+                <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['skl2']"  showhelp="showHelp" showadmininfo="showhI"></apl-help>
+
+            </div>
+            <div class="input-group " ng-style="{'has-error':AlertMessage}">
+                <label for="pol">Položka:</label>
+                <input id="pol" type="text" ng-model="selected" typeahead-editable='false' uib-typeahead="it.cislo for it in availableItems | filter:$viewValue | limitTo:15" class="form-control input-sm" enterfocus autocomplete="off"/>
+                <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['pol']"  showhelp="showHelp" showadmininfo="showhI"></apl-help>
+
+            </div>
+
+            <div class="input-group">
+                <label for="ks">Počet:</label>
+                <input type="text" class="form-control input-sm" ng-model="ks" id="ks" enterfocus>
+                <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['ks']"  showhelp="showHelp" showadmininfo="showhI"></apl-help>
+
+            </div>
+            <div class="input-group">
+                <label for="pozn">Poznámka:</label>
+                <input type="text" class="form-control input-sm" ng-model="pozn" id="pozn" enterfocus>
+                <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['pozn']"  showhelp="showHelp" showadmininfo="showhI"></apl-help>
+
+            </div>
+            <input type="button" class="btn btn-sm btn-success" ng-click="addToTable(cSklad,cSklad2,selected,ks,pozn,dt)" value="Vložit">
+
+        </form>
+
+
+    </div>
+
+
+
+    <uib-tabset active="activeJustified" justified="true">
+        <uib-tab ng-repeat="a in sklady2"  select="alertMe(a.cislo)" index="$index+1" heading="{{a.popis}}">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>INV</th>
+                        <th>Počet (požadavek)</th>
+                        <th>Počet (ze skladu)</th>
+                        <th>Kdo</th>
+                        <th>Poznámka</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-class="{'danger': act.sch == '1', 'success':act.sch== '2','active': act.rekl== '1'}" ng-repeat="act in actItems | filter: {'show_to': a.cislo}">
+                        <td>{{act.inv}} - {{act.popis}}</td>
+                        <td>{{act.ks}}</td>
+                        <td><input type="text" ng-model="dks" class="form-control input-sm" ng-disabled="{{!role}}" placeholder="{{act.ks_vydano}}"></td>
+                        <td>{{act.pers}}</td>
+                        <td>{{act.poznamka}}</td>
+                        <td> <i class="glyphicon glyphicon-ok hidden-print iconP" ng-click="updateStatus(act.id,'2',dks)" ng-show="{{role}}"></i>
+                            <i ng-show="{{role}}" ng-click="updateStatus(act.id,'1','0')" class="glyphicon glyphicon-remove iconP hidden-print"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <input type="button" ng-show="showOd"  class="btn btn.sm btn-info hidden-print" ng-click="sendMail($index+1)" value="Odeslat požadavek" />
+
+        </uib-tab>
+    </uib-tabset>
+
+
+    <!-- konec -->
+
+
+
+
+
+
+</div>
+
+

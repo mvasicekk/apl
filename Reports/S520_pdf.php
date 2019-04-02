@@ -763,6 +763,7 @@ function zapati_sestava_repariertVom($pdfobjekt,$vyskaradku,$rgb,$sumArray)
 {
     global $cells;
     global $von,$bis;
+    $sumRow = array();
 
     $a = AplDB::getInstance();
 
@@ -790,30 +791,45 @@ function zapati_sestava_repariertVom($pdfobjekt,$vyskaradku,$rgb,$sumArray)
         $pdfobjekt->Cell(0,$vyskaradku,'','B',1,'R',$fill);
 
         foreach ($sumArray as $persnr => $values) {
-        $fill = 0;
+	    $fill = 0;
 
-        //repariertvom PersNr
-        $pdfobjekt->Cell(25, $vyskaradku, $persnr, 'B', 0, 'R', $fill);
+	    //repariertvom PersNr
+	    $pdfobjekt->Cell(25, $vyskaradku, $persnr, 'B', 0, 'R', $fill);
 
-        //repariertvom Name
-        $nameA = $a->getNameVorname($persnr);
-        $name = $nameA['name'].' '.$nameA['vorname'];
-        $pdfobjekt->Cell(50, $vyskaradku, $name, 'B', 0, 'L', $fill);
+	    //repariertvom Name
+	    $nameA = $a->getNameVorname($persnr);
+	    $name = $nameA['name'] . ' ' . $nameA['vorname'];
+	    $pdfobjekt->Cell(50, $vyskaradku, $name, 'B', 0, 'L', $fill);
 
-        //repariertvom repzeit
-        $pdfobjekt->Cell(30, $vyskaradku, $values['repzeit'], 'B', 0, 'R', $fill);
+	    //repariertvom repzeit
+	    $pdfobjekt->Cell(30, $vyskaradku, $values['repzeit'], 'B', 0, 'R', $fill);
+	    $sumRow['repzeit'] += intval($values['repzeit']);
 
-        //repariertvom pocet
-        $pdfobjekt->Cell(30, $vyskaradku, $values['pocet'], 'B', 0, 'R', $fill);
+	    //repariertvom pocet
+	    $pdfobjekt->Cell(30, $vyskaradku, $values['pocet'], 'B', 0, 'R', $fill);
+	    $sumRow['pocet'] += intval($values['pocet']);
 
-        //repariertvom doba 1 opravy
-	$repZeit = $values['pocet']!=0?$values['repzeit']/$values['pocet']:0;
+	    //repariertvom doba 1 opravy
+	    $repZeit = $values['pocet'] != 0 ? $values['repzeit'] / $values['pocet'] : 0;
+	    $repZeit = number_format($repZeit, 1, ',', ' ');
+	    $pdfobjekt->Cell(30, $vyskaradku, $repZeit, 'B', 0, 'R', $fill);
+
+	    //novy radek
+	    $pdfobjekt->Cell(0, $vyskaradku, '', 'B', 1, 'R', $fill);
+	}
+	$fill = 1;
+	//zadek se sumou a prumerem
+	$pdfobjekt->Cell(75, $vyskaradku, 'SUM', 'B', 0, 'L', $fill);
+	//repariertvom repzeit
+	$pdfobjekt->Cell(30, $vyskaradku, $sumRow['repzeit'], 'B', 0, 'R', $fill);
+	//repariertvom pocet
+	$pdfobjekt->Cell(30, $vyskaradku, $sumRow['pocet'], 'B', 0, 'R', $fill);
+	//repariertvom doba 1 opravy
+	$repZeit = $sumRow['pocet'] != 0 ? $sumRow['repzeit'] / $sumRow['pocet'] : 0;
 	$repZeit = number_format($repZeit, 1, ',', ' ');
-        $pdfobjekt->Cell(30, $vyskaradku, $repZeit, 'B', 0, 'R', $fill);
-
-        //novy radek
-        $pdfobjekt->Cell(0, $vyskaradku, '', 'B', 1, 'R', $fill);
-    }
+	$pdfobjekt->Cell(30, $vyskaradku, $repZeit, 'B', 0, 'R', $fill);
+	//novy radek
+	$pdfobjekt->Cell(0, $vyskaradku, '', 'B', 1, 'R', $fill);
 
     $pdfobjekt->SetFillColor($prevFillColor[0],$prevFillColor[1],$prevFillColor[2]);
 }

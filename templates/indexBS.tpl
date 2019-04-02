@@ -153,7 +153,7 @@
 			
 	    <div class="container-fluid col-md-6">
 		
-		<div class="row">
+		{*<div class="row">
 		    <div class="col-xs-12">
 			<div id="chatwindow" style="width:100%;">
 			    <div class="panel panel-info">
@@ -173,9 +173,15 @@
 			    </div>
 			</div>
 		    </div>
-		</div>
+		</div>*}
 		
 		<div class="row">
+		    <div class="col-xs-12">
+			<img class="img-responsive img-thumbnail" src="http://172.16.1.111:3000/render/d-solo/w8_3cVamz/strava?orgId=1&from=1538344800000&to=1546257115355&panelId=2&theme=light&width=300&height=300&tz=Europe%2FPrague"/>
+		    </div>
+		</div>
+					
+		{*<div class="row">
 		    <div class="col-xs-12">
 			<div id="tvfiles" style="width:100%;">
 			    <div class="panel panel-info">
@@ -203,7 +209,7 @@
 			    </div>
 			</div>
 		    </div>
-		</div>
+		</div>*}
 		
 	    <div class="row">
 		<div class="col-xs-12">

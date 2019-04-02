@@ -83,6 +83,7 @@ fieldset.genehmigt{
 body{
 		background-color: rgb(179,179,179);
 		font-family: Arial;
+		margin: auto;
 		}
 
 		
@@ -91,7 +92,7 @@ body{
 #formular_telo {
 			background-color:rgb(179,179,179);
 			position: absolute;
-			width: 800px;
+			width: 90%;
 			top: 60px;
 			left: 0px;
 			visibility: visible;
@@ -364,7 +365,7 @@ td{
 
 #formular_header {
 			position: absolute;
-			width: 800px;
+			width: 90%;
 			height: 40px;
 			top: 20px;
 			left: 0px;
@@ -378,7 +379,7 @@ td{
 	  
 #header {
 			position: absolute;
-			width: 800px;
+			width: 90%;
 			height: 65px;
 			top: 0px;
 			left: 0px;
@@ -389,7 +390,7 @@ td{
 
 #podheader {
 			position: absolute;
-			width: 800px;
+			width: 90%;
 			height: 20px;
 			top: 0px;
 			left: 0px;
@@ -429,7 +430,7 @@ td{
 
 #dkopf_form_footer {
 			position: absolute;
-			width: 800px;
+			width: 90%;
 			height: 55px;
 			left: 0px;
 			bottom:10px;
@@ -443,7 +444,7 @@ table.formulartable
 {
 	position:relative;
 	top:10px;
-	width:800px;
+	width:100%;
 	background-color:rgb(220,220,220);
 	border: solid 1px black;
 	padding: 10px;
@@ -527,7 +528,7 @@ div#dposnew
 
 #apl_table {
 			position: absolute;
-			width: 800px;
+			width: 90%;
 			left: 0px;
 			top: 550px;
 			background-color:rgb(220,220,220);
@@ -605,7 +606,7 @@ table.apl_table
 	background-color:rgb(220,220,220);
 	border: solid 1px black;
 	padding: 0px;
-	font-size:11px;
+	font-size:14px;
 }
 
 .hidden

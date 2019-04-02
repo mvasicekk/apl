@@ -1,0 +1,128 @@
+
+<div class="container-fluid" ng-controller="persPlanController">
+    <div class="no-print">
+	<button type="button" class="btn btn-warning btn-xs no-print" ng-model="showHelp" uib-btn-checkbox>
+	    ?
+	</button>
+	<button title="admin info" type="button" class="btn btn-info btn-xs" ng-model="showhI" uib-btn-checkbox ng-show="securityInfo.showArray['admininfo_btn']"  >
+	    AI
+	</button>
+	<apl-help el="hIArray['admininfo_btn']" showadmininfo="showhI"></apl-help>
+    </div>
+    <div class="page-header">
+	<div class="row">
+	    <div class="col-sm-10">
+		<h4>Personal Plan</h4>
+		<apl-help editable="isEditor" helpTextUpdater="./updateHelpText.php" el="hIArray['form_help']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+	    </div>
+	</div>
+    </div>
+
+    <form name="persForm" ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 500, 'blur': 0 }}" ng-submit="formSubmitted()">
+	<div class="row no-print well-sm well">
+	    <div class="col-sm-12 form-horizontal">
+		<div class="form-group col-md-3 form-group-sm">
+		    <label class="control-label" for="osoba">seznam osobních čísel</label>
+		    <input ng-change="persnrListChanged()" ng-model="persnrList" type="text" class="form-control" id="persnrList" placeholder="hledání pracovníka, zadejte osobní seznam osobních čísel">
+		    <apl-help  editable="isEditor" helpTextUpdater="./updateHelpText.php"  el="hIArray['osoba_suchen']" showhelp="showHelp" showadmininfo="showhI"></apl-help>
+		</div>
+		<div class="form-group col-md-2 form-group-sm">
+		    <label class="control-label"  for="persplanvon">od:</label>
+		    <div class="input-group">
+			<input ng-change="planDatumChanged('von')" ng-model="persplanVon" ui-date="dateOptions" type="text" class="form-control" id="persplanvon" placeholder="od">
+		    </div>
+		</div>
+		<div class="form-group col-md-2 form-group-sm">
+		    <label class="control-label"  for="persplanbis">do:</label>
+		    <div class="input-group">
+			<input ng-change="planDatumChanged('bis')" ng-model="persplanBis" ui-date="dateOptions" type="text" class="form-control" id="persplanbis" placeholder="do">
+		    </div>
+		</div>
+		<div ng-show="osoby.length>0" class="form-group col-md-1 form-group-sm">
+		    <div class="checkbox">
+		    <label>
+		    <input ng-model="planPodleRegelOE" type="checkbox">podle Regel OE
+		    </label>
+		    </div>
+		</div>
+		<div ng-show="!planPodleRegelOE && osoby.length>0" class="form-group col-md-1 form-group-sm">
+		    <label class="control-label"  for="oeneu">OE</label>
+		    <select class="form-control" ng-model="oeneu" ng-options="option for option in oesArrayAll"></select>
+		</div>
+		<div ng-show="osoby.length>0" class="form-group col-md-1 form-group-sm">
+		    <button ng-click="planZmenit()" class="btn btn-info">plán změnit</button>
+		</div>
+		<div ng-show="osoby.length==0" class="form-group col-md-1 form-group-sm">
+		    <button ng-click="planNaplnit()" class="btn btn-info">plán naplnit</button>
+		</div>
+	    </div>
+	</div>
+    </form>
+    
+    <div ng-show="showProgressFullen" class="row">
+	<div class="col-sm-12">
+	    <div class="alert alert-warning" role="alert">
+		<h1> pracuji ... </h1>
+	    </div>
+	</div>
+    </div>
+    
+    <div ng-if="showFullenTable" class="row">
+	<div class="col-sm-12" ng-repeat="osoba in osoby">
+	    {{osoba.persnr}} {{osoba.vorname}} {{osoba.name}}
+	</div>
+    </div>
+    
+    <div class="row" ng-if="osoby.length>0 && !showFullenTable">
+        <div class="col-sm-6 osobacalendar" ng-repeat="osoba in osoby">
+	    <h1 class="osobaplanheader">{{osoba.persnr}} {{osoba.vorname}} {{osoba.name}}
+		<span title="regel OE" class="label label-success small">
+		    <a title='zobrazí přehled naplánovaných MA pro OE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.regeloe}}">
+			{{osoba.regeloe}}
+		    </a>
+		</span>
+		<span title="alternativ OE" class="label label-info">
+		    <a title='zobrazí přehled naplánovaných MA pro OE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.alteroe}}">
+		    {{osoba.alteroe}}
+		    </a>
+		</span>
+		<span title="OE3" class="label label-default">
+		    <a title='zobrazí přehled naplánovaných MA pro OE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.oe3}}">
+		    {{osoba.oe3}}
+		    </a>
+		</span>
+	    </h1>
+	    <!--kalendare--> 
+	    <div class="row">
+		<div class="col-md-12">
+		    <div class="calendar" ng-repeat="ch in calHeaders" ng-init="calArr=calendarArray(ch.monthIndex,ch.year,osoba.persnr)">
+		    <div class="calendarMonthYear">
+			{{ch.monthName}} / {{ch.year}}
+		    </div>
+		    <div ng-repeat="d in dayNames" ng-class="d" class="calendarDayNames">{{d}}</div>
+		    <div ng-class="{curmonth:day.curMonth,prevmonth:day.prevMonth,nextmonth:day.nextMonth}" class="calendarDay {{day.weekDay}}" ng-repeat="day in calArr">
+			<div title="dvojite kliknuti mysi pridá další OE" style="width:100%;" ng-if="day.curMonth" class="dayNumber label-success" ng-dblclick="onDayDblClick(osoba.persnr,ch.year,ch.monthIndex,day.dayNumber,day.editable)">
+			    <a title='zobrazí přehled naplánovaných MA pro vybraný den a RegelOE' target="_blank" ng-href="./persna.php#/showplan/{{osoba.regeloe}}/{{day.year}}-{{day.month+1}}-{{day.dayNumber}}">{{day.dayNumber}}</a>
+			</div>
+			<div style="width:100%;"  ng-if="!day.curMonth" class="dayNumber label-default">{{day.dayNumber}}</div>
+			<div class="calendarDayContent">
+			    <div ng-if="day.editable">
+				<div ng-repeat="p in persPlanObj[osoba.persnr][ch.year][ch.monthIndex+1][day.dayNumber]" class="dayoeplan">
+				    <select class="form-control calendarOE" ng-change="calendarValueChanged(p,'oe')" ng-model="p.oe" ng-options="option for option in oesArrayAll"></select>
+				    <div class="input-group">
+					<input ng-model-options="{ updateOn: 'blur default' , debounce: { 'default': 3000, 'blur': 0 }}" type="text" class="calendarStunden form-control" ng-change="calendarValueChanged(p,'stunden')" ng-model="p.stunden"/>
+					<span class="input-group-btn no-print">
+					    <button tabindex="-1" class="btn btn-xs btn-danger" ng-click="calendarValueChanged(p,'__delete')">-</button>
+					</span>
+				    </div>
+				</div>				
+			    </div>
+			</div>
+		    </div>
+		    </div>
+		    <div>{{persPlanObj[osoba.persnr][ch.year][ch.monthIndex+1]|json}}</div>
+		</div>
+	    </div>
+        </div>
+    </div>
+</div>

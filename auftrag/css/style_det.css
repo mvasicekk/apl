@@ -45,5 +45,13 @@ label.vcentercheckbox{
 
 }
 
+td.notaktive{
+    text-decoration: line-through;
+    background-color: lightgray;
+}
 
+tr.notaktive{
+    text-decoration: line-through;
+    background-color: lightgray;
+}
 

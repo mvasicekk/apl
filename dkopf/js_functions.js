@@ -583,6 +583,15 @@ function toggle_kz_druck(text)
 	
 }
 
+function toggle_kz_aktiv(text)
+{
+	var id=text.substr(0,text.indexOf(":"));
+	var barva=text.substr(text.indexOf(":")+1);
+	//alert('druck'+id);
+	var control = document.getElementById('aktiv'+eval(id));
+	control.style.backgroundColor=barva;
+}
+
 
 function validate_taetnr(xml)
 {

@@ -28,7 +28,7 @@ aplApp.directive("enterfocus", function () {
 		if (code === 13) {
 		    var current = focusables.index(this);
 		    var next = focusables.eq(current + 1).length ? focusables.eq(current + 1) : focusables.eq(0);
-		    console.log('current=' + current + ' next=');
+//		    console.log('current=' + current + ' next=');
 		    //console.log(next);
 		    next.focus();
 		    next.select();
@@ -62,7 +62,7 @@ persPlanApp.directive("enterfocus", function () {
 		if (code === 13) {
 		    var current = focusables.index(this);
 		    var next = focusables.eq(current + 1).length ? focusables.eq(current + 1) : focusables.eq(0);
-		    console.log('current=' + current + ' next=');
+//		    console.log('current=' + current + ' next=');
 		    //console.log(next);
 		    next.focus();
 		    next.select();
@@ -164,24 +164,64 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
     
     /**
      * 
+     * @param {type} o
+     * @returns {undefined}
+     */
+    $scope.addToPlan = function(o){
+//	console.log('addToPlan');
+//	console.log(o);
+	$http.post(
+		'./addPersPlanSollDatumOE.php',
+		{ 
+		    p: {
+			oe:$scope.oeplantag,
+			datum:$scope.planTag,
+		    },
+		    o:o
+		}
+	).then(function (response) {
+	    //console.log(response.data);
+	    if(response.data.ar>0){
+		$scope.planTagChanged('matagplan');
+	    }
+	});
+    }
+    /**
+     * 
      * @param {type} m
      * @returns {undefined}
      */
     $scope.deleteFromPlan = function(m){
-	console.log('deleteFromPlan');
-	console.log(m);
+//	console.log('deleteFromPlan');
+//	console.log(m);
+		$http.post(
+		'./deletePersPlanSollDatumOE.php',
+		{ 
+		    p: {
+			oe:$scope.oeplantag,
+			datum:$scope.planTag,
+		    },
+		    o:m
+		}
+	).then(function (response) {
+//	    console.log(response.data);
+	    if(response.data.ar>0){
+		$scope.planTagChanged('matagplan');
+	    }
+	});
     }
     /**
      * 
      * @returns {undefined}
      */
-    $scope.planTagChanged = function(){
+    $scope.planTagChanged = function(view){
 	$http.post(
 		'./getShowPlan.php',
 		{ 
 		    routeParams: {
 			oe:$scope.oeplantag,
-			datum:$scope.planTag
+			datum:$scope.planTag,
+			view:view
 		    }
 		}
 	).then(function (response) {
@@ -190,6 +230,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
 	    $scope.oe = response.data.oeOriginal;
 	    $scope.jmenoDneE = response.data.jmenoDneE;
 	    $scope.jmenoDneCZ = response.data.jmenoDneCZ;
+	    $scope.oeplantag = response.data.oeOriginal;
+	    $scope.osobypodleoe = response.data.osobypodleoe;
 	    $scope.ma = response.data.osoby;
 	});
     }
@@ -198,7 +240,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.planNaplnit = function(){
-	console.log('planNaplnit');
+//	console.log('planNaplnit');
 	$scope.showProgressFullen = true;
 	$http.post(
 		    './changePersPlanSoll.php',
@@ -218,7 +260,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
 		//$scope.persPlanObj = {};
 		//$scope.persnrListChanged();
 	    });
-    }
+    };
     /**
      * 
      * @param {type} $item
@@ -229,7 +271,21 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
 	//console.log($item);
 	//console.log($model);
 	$scope.filt.dstatus.push($item);
-    }
+    };
+
+    /**
+     * 
+     * @param {type} i
+     * @param {type} m
+     * @param {type} volba
+     * @returns {undefined}
+     */
+    $scope.oefilterSelectAction = function(i,m,volba){
+//	console.log('oefilterSelectAction');
+//	console.log(i);
+//	console.log(m);
+	$scope.filt.oearray.push(i.oe);
+    };
     
     /**
      * 
@@ -238,9 +294,9 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.hodnoceniOESelectAction = function($item,$model,jm){
-	console.log($item);
-	console.log($model);
-	console.log(jm);
+//	console.log($item);
+//	console.log($model);
+//	console.log(jm);
 	$http.post(
 		    './createOsobniHodnoceni.php',
 		    {
@@ -333,8 +389,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * 
      */
     $scope.updateLohn = function(){
-	console.log($scope.lohnMonat);
-	console.log($scope.lohnJahr);
+//	console.log($scope.lohnMonat);
+//	console.log($scope.lohnJahr);
 	getPersLohn();
     }
     /**
@@ -368,8 +424,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
  * @returns {undefined}
  */
     $scope.dpersstatusChanged = function(){
-	console.log('dstatus Changed');
-	console.log($scope.filt.dstatus);
+//	console.log('dstatus Changed');
+//	console.log($scope.filt.dstatus);
 	$scope.osobaChanged();
     }
     
@@ -420,7 +476,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.formSubmitted = function () {
-	console.log('submit');
+//	console.log('submit');
     }
 
     $scope.getShowPanel = function(panelid){
@@ -434,7 +490,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.dpersFieldChanged = function(field){
-	console.log('dpersFieldChanged: ' + field);
+//	console.log('dpersFieldChanged: ' + field);
 	var v = $scope.ma.maInfo[field];
 	if(field=='auto_leistung_abgnr'){
 	    v = $scope.autoleistungAbgnr;
@@ -473,7 +529,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {unresolved}
      */
     $scope.dpersdetailFieldChanged = function(field){
-	console.log('dpersdetailFieldChanged: ' + field);
+//	console.log('dpersdetailFieldChanged: ' + field);
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
 		    './updateDpersDetailField.php',
@@ -488,12 +544,12 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
     }
     
     $scope.bewerberFieldOnSelect = function(i,m,field,isArray=false){
-	console.log('bewerberFieldOnSelect');
-	console.log('item');
-	console.log(i);
-	console.log('model');
-	console.log(m);
-	console.log('field = '+field);
+//	console.log('bewerberFieldOnSelect');
+//	console.log('item');
+//	console.log(i);
+//	console.log('model');
+//	console.log(m);
+//	console.log('field = '+field);
 	if(isArray===true){
 	    if($scope.ma.bewerberInfo[field]===null){
 		$scope.ma.bewerberInfo[field] = [];
@@ -504,7 +560,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
 	    $scope.ma.bewerberInfo[field] = m;
 	}
 	
-	console.log($scope.ma.bewerberInfo[field]);
+//	console.log($scope.ma.bewerberInfo[field]);
 	$scope.bewerberFieldChanged(field);
     }
     /**
@@ -513,7 +569,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.bewerberFieldChanged = function (field) {
-	console.log('bewerberFieldChanged: ' + field);
+//	console.log('bewerberFieldChanged: ' + field);
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
 		    './updateBewerberField.php',
@@ -529,8 +585,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
     }
     
     $scope.dpersidentifikatoryChanged = function (pa, field) {
-	console.log(field);
-	console.log(pa);
+//	console.log(field);
+//	console.log(pa);
 	return	$http.post(
 		'./updateDpersIdentifikatory.php',
 		{
@@ -548,8 +604,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.dperskvalifikaceChanged = function (pa, field) {
-	console.log(field);
-	console.log(pa);
+//	console.log(field);
+//	console.log(pa);
 	return	$http.post(
 		'./updateDpersKvalifikace.php',
 		{
@@ -566,8 +622,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.dpersinventarChanged = function (pa, field) {
-	console.log(field);
-	console.log(pa);
+//	console.log(field);
+//	console.log(pa);
 	return	$http.post(
 		'./updateDpersInventar.php',
 		{
@@ -584,8 +640,8 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {unresolved}
      */
     $scope.addMajetek = function(m){
-	console.log('addMajetek');
-	console.log(m);
+//	console.log('addMajetek');
+//	console.log(m);
 	$scope.majetek.selected = {};
 	return	$http.post(
 		'./addMajetek.php',
@@ -607,7 +663,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.addInventar = function (i, pa) {
-	console.log(i);
+//	console.log(i);
 	return	$http.post(
 		'./addInventar.php',
 		{
@@ -683,7 +739,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {unresolved}
      */
     $scope.fillOsobniHodnoceni = function () {
-	console.log('fillOsobniHodnoceni');
+//	console.log('fillOsobniHodnoceni');
 	$scope.fillOHButtonDisabled = true;
 	$scope.lockOHButtonDisabled = true;
 	return	$http.post(
@@ -706,7 +762,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.fillHFPremie = function () {
-	console.log('fillHFPremie');
+//	console.log('fillHFPremie');
 	$scope.fillHFButtonDisabled = true;
 	$scope.lockHFButtonDisabled = true;
 	return	$http.post(
@@ -726,7 +782,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
     }
 
     $scope.lockHFPremie = function (lockvalue) {
-	console.log('fillHFPremie');
+//	console.log('fillHFPremie');
 	$scope.lockHFButtonDisabled = true;
 	$scope.fillHFButtonDisabled = true;
 	return	$http.post(
@@ -753,7 +809,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.lockOsobniHodnoceniAll = function (lockvalue) {
-	console.log('fillOsobniHodnoceni');
+//	console.log('fillOsobniHodnoceni');
 	$scope.fillOHButtonDisabled = true;
 	$scope.lockOHButtonDisabled = true;
 	return	$http.post(
@@ -779,7 +835,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.unlockHfPremie = function (p, monat) {
-	console.log(p);
+//	console.log(p);
 	p.locked = false;
 	premie = p;
 	return	$http.post(
@@ -804,7 +860,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {undefined}
      */
     $scope.lockHfPremie = function (p, monat) {
-	console.log(p);
+//	console.log(p);
 	p.locked = true;
 	premie = p;
 	return	$http.post(
@@ -831,7 +887,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {unresolved}
      */
     $scope.lockOsobniHodnoceni = function (oh, monat) {
-	console.log(oh);
+//	console.log(oh);
 	oh.locked = true;
 	return	$http.post(
 		'./updateOsobniHodnoceni.php',
@@ -898,7 +954,7 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {unresolved}
      */
     $scope.unlockOsobniHodnoceni = function (oh, monat) {
-	console.log(oh);
+//	console.log(oh);
 	oh.locked = false;
 	return	$http.post(
 		'./updateOsobniHodnoceni.php',
@@ -927,10 +983,10 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
      * @returns {unresolved}
      */
     $scope.skutPremieChanged = function (premie, monat) {
-	console.log('skutPremieChanged');
-	console.log(premie);
-	console.log(monat);
-	console.log($scope.ma.maInfo.PersNr);
+//	console.log('skutPremieChanged');
+//	console.log(premie);
+//	console.log(monat);
+//	console.log($scope.ma.maInfo.PersNr);
 	return	$http.post(
 		'./updateSkutPremie.php',
 		{
@@ -954,9 +1010,9 @@ persPlanApp.controller('persPlanController', function ($scope, $routeParams, $ht
  * @returns {undefined}
  */
 $scope.commentClicked = function(e,p){
-    console.log('comment clicked ');
+//    console.log('comment clicked ');
     var eId = e.target.id;
-    console.log('eId='+eId);
+//    console.log('eId='+eId);
 	//zlikvidovat popovery
 	if($('div[id^=popover]').length>0){
 	    $('div[id^=popover]').popover('destroy');
@@ -1009,11 +1065,11 @@ $scope.commentClicked = function(e,p){
  * @returns {undefined}
  */
     $scope.formKeyDown = function($event){
-	console.log($event);
+//	console.log($event);
     }
     
     $scope.checkExtraPassword = function(){
-	console.log('checkExtraPassword, kontroluji panel '+$scope.checkedPanelId + ', resourceid=' + $scope.checkedResourceId);
+//	console.log('checkExtraPassword, kontroluji panel '+$scope.checkedPanelId + ', resourceid=' + $scope.checkedResourceId);
 	$http.post(
 		'./resourceSecurity.php',
 		{
@@ -1035,7 +1091,7 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.panelSwitch = function (panelid,resourceid=0) {
-	console.log(panelid);
+//	console.log(panelid);
 	
 	for (var prop in $scope.showPanel) {
 	    if( $scope.showPanel.hasOwnProperty( prop ) ) {
@@ -1055,7 +1111,7 @@ $scope.commentClicked = function(e,p){
 	    
 	    // zobrazit modal dialog s vyzvou k zadani dodatecneho hesla
 	    $('#extra_password_modal').modal();
-	    console.log('ukoncen modal');
+//	    console.log('ukoncen modal');
 	    $scope.showPanel[oldpanel] = true;
 	}
 	else{
@@ -1065,12 +1121,12 @@ $scope.commentClicked = function(e,p){
 	
 	//pri zvoleni lohnberechnung nacist pole s udaji
 	if(panelid=='lohnberechnung'){
-	    console.log('volam getPersLohn');
+//	    console.log('volam getPersLohn');
 	    getPersLohn();
 	}
 	
 	if(panelid=='majetek'){
-	    console.log('volam getMajetek');
+//	    console.log('volam getMajetek');
 	    getPersMajetekArray();
 	}
     }
@@ -1080,7 +1136,7 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.osobniHodnoceniChanged = function (oh) {
-	console.log(oh);
+//	console.log(oh);
 	return	$http.post(
 		'./updateOsobniHodnoceni.php',
 		{
@@ -1104,7 +1160,7 @@ $scope.commentClicked = function(e,p){
      * @returns {unresolved}
      */
     $scope.bemerkungChanged = function (t, rid,p) {
-	console.log('bemerkung Changed t:' + t + ',rid:' + rid);
+//	console.log('bemerkung Changed t:' + t + ',rid:' + rid);
 	p.bemerkung = $scope.bemerkung[t][rid].poznamka;
 	if (rid > 0) {
 	    return	$http.post(
@@ -1131,19 +1187,19 @@ $scope.commentClicked = function(e,p){
 	    //console.log("table:"+t+", rowid:"+rid);
 	    //console.log('show = '+$scope.bemerkung[table][rowid].show);
 	    if (!$scope.bemerkung.hasOwnProperty(t)) {
-		console.log('nema ownproperty table ' + t);
+//		console.log('nema ownproperty table ' + t);
 		$scope.bemerkung[t] = {};
 		$scope.bemerkung[t][rid] = {};
 	    }
 	    else {
 		if (!$scope.bemerkung[t].hasOwnProperty(rid)) {
-		    console.log('nema ownproperty rowid ' + rid);
+//		    console.log('nema ownproperty rowid ' + rid);
 		    $scope.bemerkung[t][rid] = {};
 		}
 	    }
 
 	    if ($scope.bemerkung[t][rid].show !== true) {
-		console.log('nastavuji show true');
+//		console.log('nastavuji show true');
 		//zkusit natahnout obsah z db
 		$http.post(
 			'./getBemerkungValue.php',
@@ -1157,13 +1213,13 @@ $scope.commentClicked = function(e,p){
 		});
 	    }
 	    else {
-		console.log('nastavuji show false');
+//		console.log('nastavuji show false');
 		$scope.bemerkung[t][rid].show = false;
 	    }
 	}
 	else {
-	    console.log('bunka jeste nema svuj radek v tabulce');
-	    console.log('nejprve je potreba insert hodnoty');
+//	    console.log('bunka jeste nema svuj radek v tabulce');
+//	    console.log('nejprve je potreba insert hodnoty');
 	}
     }
 
@@ -1186,7 +1242,7 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.getPersPlanArr = function(persnr,month,year,day){
-	console.log('getPersPlanArr, persnr='+persnr+', month='+month+', year='+year+', day='+day);
+//	console.log('getPersPlanArr, persnr='+persnr+', month='+month+', year='+year+', day='+day);
     }
 /**
  * 
@@ -1195,7 +1251,7 @@ $scope.commentClicked = function(e,p){
  * @returns {undefined}
  */
     $scope.calendarArray = function(month,year,persnr) {
-	console.log('calendarArray, year=' + year + ', month=' + month + ', persnr=' + persnr);
+//	console.log('calendarArray, year=' + year + ', month=' + month + ', persnr=' + persnr);
 
 	var nextMonth = month + 1;
 	var nextYear = year;
@@ -1206,7 +1262,7 @@ $scope.commentClicked = function(e,p){
 	var curMonthDays = new Date(nextYear, nextMonth, 0).getDate();
 
 
-	    console.log('stahnu ze serveru');
+//	    console.log('stahnu ze serveru');
 	    $http.post(
 		    './getPersPlanArray.php',
 		    {
@@ -1216,7 +1272,7 @@ $scope.commentClicked = function(e,p){
 		    }
 	    ).then(function (response) {
 		// budu pridavat casti k objektu, podle toho, co uz obsahuje
-		console.log('response from getPersPlanArray');
+//		console.log('response from getPersPlanArray');
 		
 		if($scope.persPlanObj[persnr] === undefined){
 		    $scope.persPlanObj[persnr] = response.data.planObj[persnr];
@@ -1234,8 +1290,8 @@ $scope.commentClicked = function(e,p){
 		    }
 		}
 		
-		console.log('persPlanObj after');
-		console.log($scope.persPlanObj);
+//		console.log('persPlanObj after');
+//		console.log($scope.persPlanObj);
 	    });
     //test zda uz mam pro persnr pole s planem
     daysArray = [];
@@ -1307,7 +1363,7 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.planZmenit = function(){
-	console.log('planZmenit');
+//	console.log('planZmenit');
 	$http.post(
 		    './changePersPlanSoll.php',
 		    {
@@ -1318,7 +1374,7 @@ $scope.commentClicked = function(e,p){
 			oeneu: $scope.oeneu
 		    }
 	    ).then(function (response) {
-		console.log(response.data);
+//		console.log(response.data);
 		$scope.persPlanObj = {};
 		$scope.persnrListChanged();
 	    });
@@ -1330,7 +1386,7 @@ $scope.commentClicked = function(e,p){
  * @returns {undefined}
  */
     $scope.calendarValueChanged = function(p,field){
-	console.log(p);
+//	console.log(p);
 	$http.post(
 		    './updatePersPlanSoll.php',
 		    {
@@ -1338,7 +1394,7 @@ $scope.commentClicked = function(e,p){
 			field:field
 		    }
 	    ).then(function (response) {
-		console.log(response.data);
+//		console.log(response.data);
 		var persnr = response.data.p.persnr;
 		var year = response.data.p.year;
 		var month = response.data.p.month;
@@ -1360,7 +1416,7 @@ $scope.commentClicked = function(e,p){
  */
     $scope.onDayDblClick = function(persnr,year,month,dayNumber,editable){
 	if(editable){
-	    console.log('onDayDblClk, persnr='+persnr+', year='+year+', month='+month+', dayNumber='+dayNumber);
+//	    console.log('onDayDblClk, persnr='+persnr+', year='+year+', month='+month+', dayNumber='+dayNumber);
 	    $http.post(
 		    './addPersPlanSoll.php',
 		    {
@@ -1372,7 +1428,7 @@ $scope.commentClicked = function(e,p){
 			}
 		    }
 	    ).then(function (response) {
-		console.log(response.data);
+//		console.log(response.data);
 		var persnr = response.data.p.persnr;
 		var year = response.data.p.year;
 		var month = response.data.p.month;
@@ -1406,19 +1462,19 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.planDatumChanged = function (grenze) {
-	console.log('planDatumChanged: '+grenze);
+//	console.log('planDatumChanged: '+grenze);
 	if($scope.persplanBis>$scope.persplanVon){
 	    var rAddOn = 0;
-	    console.log('bis>von, ok');
+//	    console.log('bis>von, ok');
 	    $scope.pocetKalendaru= 1 + $scope.persplanBis.getMonth() - $scope.persplanVon.getMonth() + (12 * ($scope.persplanBis.getFullYear() - $scope.persplanVon.getFullYear()));
 	    //vygeneruju hlavicky kalendaru Měsic / rok
 	    $scope.calHeaders = [];
 	    for(i=0;i<$scope.pocetKalendaru;i++){
 		var mIndex = ($scope.persplanVon.getMonth()+i)%12;
 		if(($scope.persplanVon.getMonth()+1+i)>12){
-		    console.log('pripocitat addon k roku');
+//		    console.log('pripocitat addon k roku');
 		    rAddOn = Math.floor(($scope.persplanVon.getMonth()+1+i)/12);
-		    console.log('rAddOn = '+rAddOn);
+//		    console.log('rAddOn = '+rAddOn);
 		}
 		var mName = MONTH_NAMES[mIndex];
 		var rok = $scope.persplanVon.getFullYear() + rAddOn;
@@ -1537,7 +1593,7 @@ $scope.commentClicked = function(e,p){
      * 
      */
     $scope.vratitMajetek = function(pa){
-	console.log(pa);
+//	console.log(pa);
 	return	$http.post(
 		    './returnMajetek.php',
 		    {
@@ -1752,7 +1808,7 @@ $scope.updateAmBewDatum = function(pa){
 		else{
 		    $scope.ma.maFotoUrl = null;
 		}
-		console.log($scope.ma.maFotoUrl);
+//		console.log($scope.ma.maFotoUrl);
 		$scope.ma.oeInfo = response.data.oeinfo;
 		// dodatecne informace
 		getHFPremie();
@@ -1827,7 +1883,7 @@ $scope.updateAmBewDatum = function(pa){
      * @returns {unresolved}
      */
     $scope.listRowClicked = function (i) {
-	console.log('listRowClicked ' + i);
+//	console.log('listRowClicked ' + i);
 	$scope.ma.selectedIndex = i;
 	getMAInfo($scope.osoby[i].persnr, 0);
     }
@@ -1868,12 +1924,13 @@ $scope.updateAmBewDatum = function(pa){
      * 
      * @returns {unresolved}
      */
-    $scope.persnrListChanged = function () {
-	console.log('persnrListChanged');
+    $scope.persnrListChanged = function (view) {
+//	console.log('persnrListChanged');
 	return $http.post(
 		'./getPersnrList.php',
 		{
-		    persnrList: $scope.persnrList
+		    persnrList: $scope.persnrList,
+		    view:view
 		}
 	).then(function (response) {
 	    $scope.showFullenTable = false;
@@ -1890,7 +1947,7 @@ $scope.updateAmBewDatum = function(pa){
  */
     $scope.refreshMajetek = function (e) {
 	var params = {e: e};
-	console.log('e='+e);
+//	console.log('e='+e);
 	getMajetekArray(params);
     };
     /**
@@ -1923,11 +1980,11 @@ $scope.updateAmBewDatum = function(pa){
 		    $scope.securityInfo.roles.forEach(function (v) {
 			if (v.rolename == 'helptexteditor') {
 			    $scope.isEditor = true;
-			    console.log('is helptexteditor');
+//			    console.log('is helptexteditor');
 			}
 			if (v.rolename == 'admin') {
 			    $scope.isAdmin = true;
-			    console.log('is admin');
+//			    console.log('is admin');
 			}
 		    });
 		}
@@ -1955,7 +2012,7 @@ $scope.updateAmBewDatum = function(pa){
      * @returns {undefined}
      */
     $scope.updateIdentArray = function(contrl){
-	console.log('updateIdentArray');
+//	console.log('updateIdentArray');
 	return $http.post(
 		'./updateIdentArray.php',
 		{
@@ -1964,7 +2021,7 @@ $scope.updateAmBewDatum = function(pa){
 		    ctrl:contrl
 		}
 	).then(function (response) {
-	    console.log(response.data);
+//	    console.log(response.data);
 	    if(response.data.ctrl=='oe'){
 		$scope.kundeIdentArray = response.data.kundeIdentArray;
 		$scope.kundeIdentSelected = response.data.kundeIdentSelected;
@@ -2143,7 +2200,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     $scope.prvnidenAktualnihoMesice = '1.'+(curdate.getMonth()+1)+'.'+curdate.getFullYear();
     $scope.dnes = curdate.getDay()+'.'+(curdate.getMonth()+1)+'.'+curdate.getFullYear();
     
-    console.log('tagvon='+$scope.tagvon+', tagbis='+$scope.tagbis);
+//    console.log('tagvon='+$scope.tagvon+', tagbis='+$scope.tagbis);
 //    NgMap.getMap().then(function(map) {
 //    console.log(map.getCenter());
 //    console.log('markers', map.markers);
@@ -2152,7 +2209,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
   
     $scope.addresses = [];
     $scope.refreshAddresses = function(address) {
-	console.log(address);
+//	console.log(address);
     var params = {address: address, sensor: false};
     if(address.length>0){
 	return $http.get('https://maps.googleapis.com/maps/api/geocode/json', {params: params})
@@ -2186,10 +2243,10 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.majetekSelectAction = function($item,$model){
-	console.log('$item');
-	console.log($item);
-	console.log('$model');
-	console.log($model);
+//	console.log('$item');
+//	console.log($item);
+//	console.log('$model');
+//	console.log($model);
 	$scope.majetek.selected = $item;
     }
     /**
@@ -2211,9 +2268,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.hodnoceniOESelectAction = function($item,$model,jm){
-	console.log($item);
-	console.log($model);
-	console.log(jm);
+//	console.log($item);
+//	console.log($model);
+//	console.log(jm);
 	$http.post(
 		    './createOsobniHodnoceni.php',
 		    {
@@ -2306,8 +2363,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * 
      */
     $scope.updateLohn = function(){
-	console.log($scope.lohnMonat);
-	console.log($scope.lohnJahr);
+//	console.log($scope.lohnMonat);
+//	console.log($scope.lohnJahr);
 	getPersLohn();
     }
     /**
@@ -2341,8 +2398,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
  * @returns {undefined}
  */
     $scope.dpersstatusChanged = function(){
-	console.log('dstatus Changed');
-	console.log($scope.filt.dstatus);
+//	console.log('dstatus Changed');
+//	console.log($scope.filt.dstatus);
 	$scope.osobaChanged();
     }
     
@@ -2393,7 +2450,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.formSubmitted = function () {
-	console.log('submit');
+//	console.log('submit');
     }
 
     $scope.getShowPanel = function(panelid){
@@ -2407,7 +2464,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.dpersFieldChanged = function(field){
-	console.log('dpersFieldChanged: ' + field);
+//	console.log('dpersFieldChanged: ' + field);
 	var v = $scope.ma.maInfo[field];
 	if(field=='auto_leistung_abgnr'){
 	    v = $scope.autoleistungAbgnr;
@@ -2446,7 +2503,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {unresolved}
      */
     $scope.dpersdetailFieldChanged = function(field){
-	console.log('dpersdetailFieldChanged: ' + field);
+//	console.log('dpersdetailFieldChanged: ' + field);
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
 		    './updateDpersDetailField.php',
@@ -2461,12 +2518,12 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     }
     
     $scope.bewerberFieldOnSelect = function(i,m,field,isArray=false){
-	console.log('bewerberFieldOnSelect');
-	console.log('item');
-	console.log(i);
-	console.log('model');
-	console.log(m);
-	console.log('field = '+field);
+//	console.log('bewerberFieldOnSelect');
+//	console.log('item');
+//	console.log(i);
+//	console.log('model');
+//	console.log(m);
+//	console.log('field = '+field);
 	if(isArray===true){
 	    if($scope.ma.bewerberInfo[field]===null){
 		$scope.ma.bewerberInfo[field] = [];
@@ -2477,7 +2534,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
 	    $scope.ma.bewerberInfo[field] = m;
 	}
 	
-	console.log($scope.ma.bewerberInfo[field]);
+//	console.log($scope.ma.bewerberInfo[field]);
 	$scope.bewerberFieldChanged(field);
     }
     /**
@@ -2486,7 +2543,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.bewerberFieldChanged = function (field) {
-	console.log('bewerberFieldChanged: ' + field);
+//	console.log('bewerberFieldChanged: ' + field);
 	if ($scope.ma.maInfo !== null) {
 	    return	$http.post(
 		    './updateBewerberField.php',
@@ -2502,8 +2559,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     }
     
     $scope.dpersidentifikatoryChanged = function (pa, field) {
-	console.log(field);
-	console.log(pa);
+//	console.log(field);
+//	console.log(pa);
 	return	$http.post(
 		'./updateDpersIdentifikatory.php',
 		{
@@ -2521,8 +2578,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.dperskvalifikaceChanged = function (pa, field) {
-	console.log(field);
-	console.log(pa);
+//	console.log(field);
+//	console.log(pa);
 	return	$http.post(
 		'./updateDpersKvalifikace.php',
 		{
@@ -2539,8 +2596,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.dpersinventarChanged = function (pa, field) {
-	console.log(field);
-	console.log(pa);
+//	console.log(field);
+//	console.log(pa);
 	return	$http.post(
 		'./updateDpersInventar.php',
 		{
@@ -2557,8 +2614,8 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {unresolved}
      */
     $scope.addMajetek = function(m){
-	console.log('addMajetek');
-	console.log(m);
+//	console.log('addMajetek');
+//	console.log(m);
 	$scope.majetek.selected = {};
 	return	$http.post(
 		'./addMajetek.php',
@@ -2580,7 +2637,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.addInventar = function (i, pa) {
-	console.log(i);
+//	console.log(i);
 	return	$http.post(
 		'./addInventar.php',
 		{
@@ -2656,7 +2713,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {unresolved}
      */
     $scope.fillOsobniHodnoceni = function () {
-	console.log('fillOsobniHodnoceni');
+//	console.log('fillOsobniHodnoceni');
 	$scope.fillOHButtonDisabled = true;
 	$scope.lockOHButtonDisabled = true;
 	return	$http.post(
@@ -2679,7 +2736,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.fillHFPremie = function () {
-	console.log('fillHFPremie');
+//	console.log('fillHFPremie');
 	$scope.fillHFButtonDisabled = true;
 	$scope.lockHFButtonDisabled = true;
 	return	$http.post(
@@ -2699,7 +2756,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
     }
 
     $scope.lockHFPremie = function (lockvalue) {
-	console.log('fillHFPremie');
+//	console.log('fillHFPremie');
 	$scope.lockHFButtonDisabled = true;
 	$scope.fillHFButtonDisabled = true;
 	return	$http.post(
@@ -2726,7 +2783,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.lockOsobniHodnoceniAll = function (lockvalue) {
-	console.log('fillOsobniHodnoceni');
+//	console.log('fillOsobniHodnoceni');
 	$scope.fillOHButtonDisabled = true;
 	$scope.lockOHButtonDisabled = true;
 	return	$http.post(
@@ -2752,7 +2809,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.unlockHfPremie = function (p, monat) {
-	console.log(p);
+//	console.log(p);
 	p.locked = false;
 	premie = p;
 	return	$http.post(
@@ -2777,7 +2834,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {undefined}
      */
     $scope.lockHfPremie = function (p, monat) {
-	console.log(p);
+//	console.log(p);
 	p.locked = true;
 	premie = p;
 	return	$http.post(
@@ -2804,7 +2861,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {unresolved}
      */
     $scope.lockOsobniHodnoceni = function (oh, monat) {
-	console.log(oh);
+//	console.log(oh);
 	oh.locked = true;
 	return	$http.post(
 		'./updateOsobniHodnoceni.php',
@@ -2871,7 +2928,7 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {unresolved}
      */
     $scope.unlockOsobniHodnoceni = function (oh, monat) {
-	console.log(oh);
+//	console.log(oh);
 	oh.locked = false;
 	return	$http.post(
 		'./updateOsobniHodnoceni.php',
@@ -2900,10 +2957,10 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
      * @returns {unresolved}
      */
     $scope.skutPremieChanged = function (premie, monat) {
-	console.log('skutPremieChanged');
-	console.log(premie);
-	console.log(monat);
-	console.log($scope.ma.maInfo.PersNr);
+//	console.log('skutPremieChanged');
+//	console.log(premie);
+//	console.log(monat);
+//	console.log($scope.ma.maInfo.PersNr);
 	return	$http.post(
 		'./updateSkutPremie.php',
 		{
@@ -2927,9 +2984,9 @@ aplApp.controller('persController', function ($scope, $routeParams, $http, $time
  * @returns {undefined}
  */
 $scope.commentClicked = function(e,p){
-    console.log('comment clicked ');
+//    console.log('comment clicked ');
     var eId = e.target.id;
-    console.log('eId='+eId);
+//    console.log('eId='+eId);
 	//zlikvidovat popovery
 	if($('div[id^=popover]').length>0){
 	    $('div[id^=popover]').popover('destroy');
@@ -2982,11 +3039,11 @@ $scope.commentClicked = function(e,p){
  * @returns {undefined}
  */
     $scope.formKeyDown = function($event){
-	console.log($event);
+//	console.log($event);
     }
     
     $scope.checkExtraPassword = function(){
-	console.log('checkExtraPassword, kontroluji panel '+$scope.checkedPanelId + ', resourceid=' + $scope.checkedResourceId);
+//	console.log('checkExtraPassword, kontroluji panel '+$scope.checkedPanelId + ', resourceid=' + $scope.checkedResourceId);
 	$http.post(
 		'./resourceSecurity.php',
 		{
@@ -3008,7 +3065,7 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.panelSwitch = function (panelid,resourceid=0) {
-	console.log(panelid);
+//	console.log(panelid);
 	
 	for (var prop in $scope.showPanel) {
 	    if( $scope.showPanel.hasOwnProperty( prop ) ) {
@@ -3028,7 +3085,7 @@ $scope.commentClicked = function(e,p){
 	    
 	    // zobrazit modal dialog s vyzvou k zadani dodatecneho hesla
 	    $('#extra_password_modal').modal();
-	    console.log('ukoncen modal');
+//	    console.log('ukoncen modal');
 	    $scope.showPanel[oldpanel] = true;
 	}
 	else{
@@ -3038,12 +3095,12 @@ $scope.commentClicked = function(e,p){
 	
 	//pri zvoleni lohnberechnung nacist pole s udaji
 	if(panelid=='lohnberechnung'){
-	    console.log('volam getPersLohn');
+//	    console.log('volam getPersLohn');
 	    getPersLohn();
 	}
 	
 	if(panelid=='majetek'){
-	    console.log('volam getMajetek');
+//	    console.log('volam getMajetek');
 	    getPersMajetekArray();
 	}
     }
@@ -3053,7 +3110,7 @@ $scope.commentClicked = function(e,p){
      * @returns {undefined}
      */
     $scope.osobniHodnoceniChanged = function (oh) {
-	console.log(oh);
+//	console.log(oh);
 	return	$http.post(
 		'./updateOsobniHodnoceni.php',
 		{
@@ -3096,7 +3153,7 @@ $scope.commentClicked = function(e,p){
      * @returns {unresolved}
      */
     $scope.bemerkungChanged = function (t, rid,p) {
-	console.log('bemerkung Changed t:' + t + ',rid:' + rid);
+//	console.log('bemerkung Changed t:' + t + ',rid:' + rid);
 	p.bemerkung = $scope.bemerkung[t][rid].poznamka;
 	if (rid > 0) {
 	    return	$http.post(
@@ -3123,19 +3180,19 @@ $scope.commentClicked = function(e,p){
 	    //console.log("table:"+t+", rowid:"+rid);
 	    //console.log('show = '+$scope.bemerkung[table][rowid].show);
 	    if (!$scope.bemerkung.hasOwnProperty(t)) {
-		console.log('nema ownproperty table ' + t);
+//		console.log('nema ownproperty table ' + t);
 		$scope.bemerkung[t] = {};
 		$scope.bemerkung[t][rid] = {};
 	    }
 	    else {
 		if (!$scope.bemerkung[t].hasOwnProperty(rid)) {
-		    console.log('nema ownproperty rowid ' + rid);
+//		    console.log('nema ownproperty rowid ' + rid);
 		    $scope.bemerkung[t][rid] = {};
 		}
 	    }
 
 	    if ($scope.bemerkung[t][rid].show !== true) {
-		console.log('nastavuji show true');
+//		console.log('nastavuji show true');
 		//zkusit natahnout obsah z db
 		$http.post(
 			'./getBemerkungValue.php',
@@ -3149,13 +3206,13 @@ $scope.commentClicked = function(e,p){
 		});
 	    }
 	    else {
-		console.log('nastavuji show false');
+//		console.log('nastavuji show false');
 		$scope.bemerkung[t][rid].show = false;
 	    }
 	}
 	else {
-	    console.log('bunka jeste nema svuj radek v tabulce');
-	    console.log('nejprve je potreba insert hodnoty');
+//	    console.log('bunka jeste nema svuj radek v tabulce');
+//	    console.log('nejprve je potreba insert hodnoty');
 	}
     }
     
@@ -3280,7 +3337,7 @@ $scope.commentClicked = function(e,p){
      * 
      */
     $scope.vratitMajetek = function(pa){
-	console.log(pa);
+//	console.log(pa);
 	return	$http.post(
 		    './returnMajetek.php',
 		    {
@@ -3495,7 +3552,7 @@ $scope.updateAmBewDatum = function(pa){
 		else{
 		    $scope.ma.maFotoUrl = null;
 		}
-		console.log($scope.ma.maFotoUrl);
+//		console.log($scope.ma.maFotoUrl);
 		$scope.ma.oeInfo = response.data.oeinfo;
 		// dodatecne informace
 		getHFPremie();
@@ -3570,7 +3627,7 @@ $scope.updateAmBewDatum = function(pa){
      * @returns {unresolved}
      */
     $scope.listRowClicked = function (i) {
-	console.log('listRowClicked ' + i);
+//	console.log('listRowClicked ' + i);
 	$scope.ma.selectedIndex = i;
 	getMAInfo($scope.osoby[i].persnr, 0);
     }
@@ -3612,7 +3669,7 @@ $scope.updateAmBewDatum = function(pa){
      * @returns {unresolved}
      */
     $scope.osobaChanged = function () {
-	console.log('osobaChanged');
+//	console.log('osobaChanged');
 	$scope.ma.selectedIndex = -1;
 	return $http.post(
 		'./getPersInfo.php',
@@ -3638,7 +3695,7 @@ $scope.updateAmBewDatum = function(pa){
  */
     $scope.refreshMajetek = function (e) {
 	var params = {e: e};
-	console.log('e='+e);
+//	console.log('e='+e);
 	getMajetekArray(params);
     };
     /**
@@ -3671,11 +3728,11 @@ $scope.updateAmBewDatum = function(pa){
 		    $scope.securityInfo.roles.forEach(function (v) {
 			if (v.rolename == 'helptexteditor') {
 			    $scope.isEditor = true;
-			    console.log('is helptexteditor');
+//			    console.log('is helptexteditor');
 			}
 			if (v.rolename == 'admin') {
 			    $scope.isAdmin = true;
-			    console.log('is admin');
+//			    console.log('is admin');
 			}
 		    });
 		}
@@ -3703,7 +3760,7 @@ $scope.updateAmBewDatum = function(pa){
      * @returns {undefined}
      */
     $scope.updateIdentArray = function(contrl){
-	console.log('updateIdentArray');
+//	console.log('updateIdentArray');
 	return $http.post(
 		'./updateIdentArray.php',
 		{
@@ -3712,7 +3769,7 @@ $scope.updateAmBewDatum = function(pa){
 		    ctrl:contrl
 		}
 	).then(function (response) {
-	    console.log(response.data);
+//	    console.log(response.data);
 	    if(response.data.ctrl=='oe'){
 		$scope.kundeIdentArray = response.data.kundeIdentArray;
 		$scope.kundeIdentSelected = response.data.kundeIdentSelected;
@@ -3742,6 +3799,7 @@ $scope.updateAmBewDatum = function(pa){
 	    $scope.bewFahigkeiten = response.data.bewFahigkeiten;
 	    $scope.infoVomArray = response.data.infoVomArray;
 	    $scope.dpersstatuses = response.data.dpersstatuses;
+	    $scope.sexArray = response.data.sexArray;
 	    $scope.status_fur_aby = response.data.status_fur_aby;
 	    $scope.oes.oeIdentArray = response.data.oeIdentArray;
 	    $scope.oes.oeIdentSelected = response.data.oeIdentSelected;

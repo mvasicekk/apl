@@ -10,6 +10,23 @@ and open the template in the editor.
 
 @media print
 {    
+    .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+        float: left;
+   }
+   .col-sm-9 {
+        width: 100%;
+   }
+   .container-fluid{
+       padding: 0px;
+   }
+    h2,h3{
+	font-size: 1em;
+    }
+    input{
+	font-size: 1em;
+	border: none;
+	padding: 0;
+    }
     * {
 	background: inherit;
 	color: inherit;
@@ -82,6 +99,16 @@ td.edited{
     word-wrap: break-word;
     font-weight: normal;
 	
+}
+
+fieldset.health{
+    margin-bottom: 20px;
+}
+
+fieldset.health>legend{
+    background-color: aliceblue;
+    font-size: 1em;
+    font-weight: bold;
 }
 
 /*

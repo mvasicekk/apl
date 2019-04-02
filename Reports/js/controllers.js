@@ -18,7 +18,216 @@ aplApp.directive("enterfocus", function () {
             }
         }
 });
+aplApp.controller('majetekbewController', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
+    $scope.isEditor = false;	//urcuje zda muze uzivatel editovat helptext
+    $scope.tinyMceOptions = {
+	inline:true,
+	menubar:false
+    };
+    $scope.tinymceModel = "tady se da psat pomoci zabudovaneho editoru, zkus to !";
+    $scope.dateOptions = {
+		dateFormat: 'dd.mm.yy',
+		firstDay: 1
+    };
+    $scope.showHelp = false;
+    $scope.datePickerFormat = 'dd.MM.yyyy';
+    $scope.securityInfo = undefined;
+    
+    $scope.oe = {};
+    $scope.ausgabe = 1;
+    $scope.ruckgabe = 0;
+    $scope.datum = new Date();
+    $scope.insertedRows = [];
+    $scope.majetekArray = [];
+    $scope.majetekPersArray = [];
+    $scope.majetek = {
+	selected:{}
+    };
+    $scope.invnrMajetek;
 
+    $scope.submitForm = function(){
+    console.log('formsubmit');
+    	return $http.post(
+		'./addMajetek.php',
+		{
+		    datum:$scope.datum,
+		    persnr:$scope.persnr,
+		    oe:$scope.oe,
+		    m:$scope.majetek.selected,
+		    ausgabe:$scope.ausgabe,
+		    ruckgabe:$scope.ruckgabe,
+		    bemerkung:$scope.bemerkung
+		}
+	).then(function (response) {
+	    console.log(response.data);
+	    if(response.data.insertId>0){
+		//rozsirim pole vlozenych zaznamu
+		var insertItem = {
+		    datum : response.data.datum,
+		    persnr : response.data.persnr,
+		    oe : response.data.oe,
+		    m : response.data.m,
+		    ausgabe : response.data.ausgabe_stk,
+		    ruckgabe : response.data.ruckgabe_stk,
+		    bemerkung : response.data.bemerkung,
+		    u : response.data.u
+		};
+		getMajetekArray({});
+		$scope.insertedRows.unshift(insertItem);
+	    }
+//    		// pripravit na dalsi zadani
+    		$scope.majetek.selected = {};
+		$scope.persinfo = {};
+		$scope.persnr = '';
+		$scope.oe.tat='';
+		$scope.amnr = '';
+		$scope.ausgabe = 1;
+		$scope.ruckgabe = 0;
+		$scope.bemerkung = '';
+		
+		
+		//dat focus na ui-select
+		var uiSelectWrapper = document.getElementById('ui-select-wrapper');
+		var focusser = uiSelectWrapper.querySelector('.ui-select-focusser');
+		var focusser = angular.element(uiSelectWrapper.querySelector('.ui-select-focusser'));
+		focusser.focus();
+	});
+}
+
+   
+   /**
+    * 
+    */
+   function getMajetekArray(params){
+	return	$http.post(
+		    '../pers/getMajetek.php',
+		    {
+			params: params
+		    }
+	    ).then(function (response) {
+		$scope.majetekArray = response.data.majetekArrayBezVydanych;
+		if(($scope.majetekArray.length==0) && (response.data.persnr==0) && (response.data.bSearched===true)){
+		    $scope.userRoles = response.data.userRoles;
+		    $scope.userRolesStr = response.data.userRoles.join();
+		    $scope.userRolesStrStr = response.data.userRolesStr.join();
+		    $scope.u = response.data.u;
+		    $('#nomajetek_modal').modal();
+		}
+	    });
+    }
+    /**
+     * 
+     * @param {type} $item
+     * @param {type} $model
+     * @returns {undefined}
+     */
+       $scope.majetekSelectAction = function($item,$model){
+	console.log('$item');
+	console.log($item);
+	console.log('$model');
+	console.log($model);
+	$scope.majetek.selected = $item;
+    }
+
+/**
+ * 
+ * @param {type} e
+ * @returns {undefined}
+ */
+    $scope.refreshMajetek = function (e) {
+	var params = {e: e};
+	console.log('e='+e);
+	getMajetekArray(params);
+    };
+
+    $scope.initSecurity = function(){
+	var p={
+	    form_id:'majetekbew'
+	};
+	return $http.post('../getSecurityInfo.php',p).then(
+		    function(response){
+			$scope.securityInfo = response.data.securityInfo;
+			//zkusim najit roli helptexteditor
+			$scope.securityInfo.roles.forEach(function(v){
+			    if(v.rolename=='helptexteditor'){
+				$scope.isEditor = true;
+				console.log('is helptexteditor');
+			    }
+			});
+		    }
+		);
+    }
+    
+    $scope.initHelp = function(){
+	var p={
+	    form_id:'majetekbew'
+	};
+	return $http.post('../getHelpInfo.php',p).then(
+		    function(response){
+			$scope.helpText = response.data.help.helpText;
+			$scope.hIArray = response.data.help.hiArray;
+		    }
+		);
+    }
+
+    /**
+     * 
+     */
+    $scope.initLists = function(){
+	return $http.post(
+		'../dambew/getLists.php',
+		{}
+	).then(function (response) {
+	    $scope.oeArray = response.data.oeArray;
+	});
+    }
+    // init
+    
+    $scope.initSecurity();
+    $scope.initLists();
+    $scope.initHelp();
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
+    $scope.isFormValid = function(){
+	
+	
+	var valid = ($scope.persnr>0)
+		&&($scope.ausgabe!==null)
+		&&($scope.ruckgabe!==null)
+		&&(parseInt($scope.majetek.selected.CISLO)>0)
+		&&(toString($scope.ausgabe).length>0)
+		&&(toString($scope.ruckgabe).length>0);
+	//console.log(valid);
+	return valid;
+	
+    }
+    
+    /**
+     * 
+     * @returns {unresolved}
+     */
+    $scope.persnrChanged = function(){
+	console.log('persnrChanged');
+	return $http.post(
+		'../dambew/getPersInfo.php',
+		{persnr:$scope.persnr}
+	).then(function (response) {
+	    $scope.persinfo = response.data.persinfo;
+	    $scope.persSklady = response.data.persSklady;
+    
+	    if($scope.persinfo===null){
+		$scope.persnr = '';
+	    }
+	    else{
+//		nastavim oe
+		$scope.oe.tat=$scope.persinfo.regeloe;
+	    }
+	});
+    }
+});
 aplApp.controller('f355Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
     $scope.tinyMceOptions = {
 	inline:true,
@@ -532,132 +741,44 @@ aplApp.controller('f1810Controller', function ($scope, $routeParams,$http,$timeo
 	such.select();
     }
 });
-
-aplApp.controller('majetekbewController', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
-    $scope.isEditor = false;	//urcuje zda muze uzivatel editovat helptext
+aplApp.controller('f1910Controller', function ($scope, $routeParams,$http,$timeout,$window,$location,$sanitize) {
     $scope.tinyMceOptions = {
 	inline:true,
 	menubar:false
     };
     $scope.tinymceModel = "tady se da psat pomoci zabudovaneho editoru, zkus to !";
-    $scope.dateOptions = {
-		dateFormat: 'dd.mm.yy',
-		firstDay: 1
-    };
     $scope.showHelp = false;
     $scope.datePickerFormat = 'dd.MM.yyyy';
     $scope.securityInfo = undefined;
+    $scope.isEditor = false;
+    $scope.ma = [];
+    $scope.maAktual = null;
+    $scope.now = new Date();
+    $scope.dateOptions = {
+	dateFormat: 'dd.mm.yy',
+	firstDay: 1
+    };
+    $scope.ma_search = '';
+    $scope.healthInfo = {
+	healthtable:{ datum1:$scope.now,datum2:$scope.now,datum3:$scope.now}
+    }
     
-    $scope.oe = {};
-    $scope.ausgabe = 1;
-    $scope.ruckgabe = 0;
-    $scope.datum = new Date();
-    $scope.insertedRows = [];
-    $scope.majetekArray = [];
-    $scope.majetekPersArray = [];
-    $scope.majetek = {
-	selected:{}
-    };
-    $scope.invnrMajetek;
+    
 
-    $scope.submitForm = function(){
-    console.log('formsubmit');
-    	return $http.post(
-		'./addMajetek.php',
-		{
-		    datum:$scope.datum,
-		    persnr:$scope.persnr,
-		    oe:$scope.oe,
-		    m:$scope.majetek.selected,
-		    ausgabe:$scope.ausgabe,
-		    ruckgabe:$scope.ruckgabe,
-		    bemerkung:$scope.bemerkung
-		}
-	).then(function (response) {
-	    console.log(response.data);
-	    if(response.data.insertId>0){
-		//rozsirim pole vlozenych zaznamu
-		var insertItem = {
-		    datum : response.data.datum,
-		    persnr : response.data.persnr,
-		    oe : response.data.oe,
-		    m : response.data.m,
-		    ausgabe : response.data.ausgabe_stk,
-		    ruckgabe : response.data.ruckgabe_stk,
-		    bemerkung : response.data.bemerkung,
-		    u : response.data.u
-		};
-		getMajetekArray({});
-		$scope.insertedRows.unshift(insertItem);
-	    }
-//    		// pripravit na dalsi zadani
-    		$scope.majetek.selected = {};
-		$scope.persinfo = {};
-		$scope.persnr = '';
-		$scope.oe.tat='';
-		$scope.amnr = '';
-		$scope.ausgabe = 1;
-		$scope.ruckgabe = 0;
-		$scope.bemerkung = '';
-		
-		
-		//dat focus na ui-select
-		var uiSelectWrapper = document.getElementById('ui-select-wrapper');
-		var focusser = uiSelectWrapper.querySelector('.ui-select-focusser');
-		var focusser = angular.element(uiSelectWrapper.querySelector('.ui-select-focusser'));
-		focusser.focus();
-	});
-}
-
-   
-   /**
-    * 
-    */
-   function getMajetekArray(params){
-	return	$http.post(
-		    '../pers/getMajetek.php',
-		    {
-			params: params
+    $scope.initHelp = function(){
+	var p={
+	    form_id:'f1910_health'
+	};
+	return $http.post('../getHelpInfo.php',p).then(
+		    function(response){
+			$scope.helpText = response.data.help.helpText;
+			$scope.hIArray = response.data.help.hiArray;
 		    }
-	    ).then(function (response) {
-		$scope.majetekArray = response.data.majetekArrayBezVydanych;
-		if(($scope.majetekArray.length==0) && (response.data.persnr==0) && (response.data.bSearched===true)){
-		    $scope.userRoles = response.data.userRoles;
-		    $scope.userRolesStr = response.data.userRoles.join();
-		    $scope.userRolesStrStr = response.data.userRolesStr.join();
-		    $scope.u = response.data.u;
-		    $('#nomajetek_modal').modal();
-		}
-	    });
+		);
     }
-    /**
-     * 
-     * @param {type} $item
-     * @param {type} $model
-     * @returns {undefined}
-     */
-       $scope.majetekSelectAction = function($item,$model){
-	console.log('$item');
-	console.log($item);
-	console.log('$model');
-	console.log($model);
-	$scope.majetek.selected = $item;
-    }
-
-/**
- * 
- * @param {type} e
- * @returns {undefined}
- */
-    $scope.refreshMajetek = function (e) {
-	var params = {e: e};
-	console.log('e='+e);
-	getMajetekArray(params);
-    };
-
     $scope.initSecurity = function(){
 	var p={
-	    form_id:'majetekbew'
+	    form_id:'f1910_health'
 	};
 	return $http.post('../getSecurityInfo.php',p).then(
 		    function(response){
@@ -672,74 +793,149 @@ aplApp.controller('majetekbewController', function ($scope, $routeParams,$http,$
 		    }
 		);
     }
-    
-    $scope.initHelp = function(){
-	var p={
-	    form_id:'majetekbew'
-	};
-	return $http.post('../getHelpInfo.php',p).then(
-		    function(response){
-			$scope.helpText = response.data.help.helpText;
-			$scope.hIArray = response.data.help.hiArray;
-		    }
-		);
-    }
 
+
+/**
+ * 
+ * @param {type} vyska v cm
+ * @param {type} vaha v kg
+ * @returns {Number}
+ */
+    $scope.bmi = function (vyska, vaha) {
+	bmi = 0;
+	if (vyska !== undefined && vaha !== undefined) {
+	    if (vyska != 0) {
+		vmetry = vyska / 100;
+		bmi = vaha / (vmetry * vmetry);
+	    }
+	}
+	return bmi;
+    }
+    
+    /**
+     * 
+     * @param {type} field
+     * @returns {undefined}
+     */
+    $scope.htChanged = function(field){
+	console.log('htChanged,field = '+field);
+	return $http.post(
+		'../pers/updateHealthInfo.php',
+		{
+		    field: field,
+		    healthInfo: $scope.healthInfo
+		}
+	).then(function (response) {
+	    if(response.data.ar>0){
+		$scope.healthInfo = response.data.healthInfo;
+	    }
+	});
+    }
+    /**
+     * 
+     * @param {type} vek
+     * @param {type} vyska
+     * @param {type} vaha
+     * * @param {type} sex
+     * @returns {undefined}
+     */
+    $scope.bmr = function (sex, vek, vyska, vaha) {
+	bmr = 0;
+	console.log('bmr:sex=' + sex + ', vek=' + vek + ',vyska=' + vyska + ',vaha=' + vaha);
+	if (sex !== undefined && vek !== undefined && vyska !== undefined && vaha !== undefined) {
+	    if (sex === 'M' || sex === 'O') {
+		// muzi a hermafroditi
+		bmr = 66.473 + (13.7516 * vaha) + (5.0033 * vyska) - (6.755 * vek);
+	    } else {
+		// zeny
+		bmr = 655.0955 + (9.5634 * vaha) + (1.8496 * vyska) - (4.6756 * vek);
+	    }
+	}
+	return bmr;
+    };
+    /**
+     * 
+     * @param {type} i
+     * @returns {undefined}
+     */
+        $scope.listRowClicked = function(i){
+	console.log(i);
+	$scope.ma_search = $scope.ma[i].persnr;// + ' - ' + $scope.ma[i].vorname + ' ' +  $scope.ma[i].name;
+	$scope.maAktual = $scope.ma[i];
+		
+	    return $http.post(
+		'../pers/getPersHealthInfo.php',
+		{
+		    persnr:$scope.maAktual.persnr
+		}
+	).then(function (response) {
+	    $scope.healthInfo = response.data.healthInfo;
+	});
+    }
+    
     /**
      * 
      */
-    $scope.initLists = function(){
-	return $http.post(
-		'../dambew/getLists.php',
-		{}
+    $scope.getMaMatch = function () {
+	$scope.maAktual = null;
+	$scope.healthInfo = {
+	    healthtable:{ datum1:$scope.now,datum2:$scope.now,datum3:$scope.now}
+	};
+	$scope.ma = [];
+	
+	
+	if($scope.ma_search.length>0){
+	    return $http.post(
+		'../pers/getPersInfo.php',
+		{
+		    osoba: $scope.ma_search,
+		    jenma:true,
+		    oeselected:'*'
+		}
 	).then(function (response) {
-	    $scope.oeArray = response.data.oeArray;
+	    $scope.ma = response.data.osoby;
+	    if($scope.ma!==null){
+		if($scope.ma.length==1){
+		$scope.listRowClicked(0);
+	    }
+	    }
+	    
 	});
+	}
+	else{
+	    $scope.ma = [];
+	}
+	
     }
-    // init
-    
-    $scope.initSecurity();
-    $scope.initLists();
-    $scope.initHelp();
     
     /**
      * 
      * @returns {undefined}
      */
-    $scope.isFormValid = function(){
-	
-	
-	var valid = ($scope.persnr>0)
-		&&($scope.ausgabe!==null)
-		&&($scope.ruckgabe!==null)
-		&&(parseInt($scope.majetek.selected.CISLO)>0)
-		&&(toString($scope.ausgabe).length>0)
-		&&(toString($scope.ruckgabe).length>0);
-	//console.log(valid);
-	return valid;
-	
+    $scope.createPdf = function(){
+    	    console.log('createPdf');
+	    var params = {
+		ma:$scope.maAktual,
+		urlaubinfo:$scope.urlaubInfo
+	    };
+		$scope.noFilteredTeile = false;
+		$http.post('../Reports/F1910_pdf.php', params).then(function (response) {
+		console.log('pdf generiert ' + response.data);
+		$scope.filename = response.data.filename;
+		$scope.pdfPath = response.data.pdfPath;
+		$scope.pdfReady = true;
+		
+	    });
     }
-    
-    /**
-     * 
-     * @returns {unresolved}
-     */
-    $scope.persnrChanged = function(){
-	console.log('persnrChanged');
-	return $http.post(
-		'../dambew/getPersInfo.php',
-		{persnr:$scope.persnr}
-	).then(function (response) {
-	    $scope.persinfo = response.data.persinfo;
-	    $scope.persSklady = response.data.persSklady;
-    
-	    if($scope.persinfo===null){
-		$scope.persnr = '';
-	    }
-	    else{
-//		nastavim oe
-		$scope.oe.tat=$scope.persinfo.regeloe;
-	    }
-	});
+    // init
+
+    $scope.initSecurity();
+    $scope.initHelp();
+
+    var such = $window.document.getElementById('ma_search');
+    if (such) {
+	such.focus();
+	such.select();
     }
 });
+

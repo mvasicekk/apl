@@ -122,7 +122,7 @@ $smarty = new Smarty;
 
   
 		// vytahnout informace o pracovnim planu
-		$sql="select dpos_id,`kz-druck` as kz_druck,mittel,`TaetNr-Aby` as taetnr,`TaetBez-Aby-D` as bez_d,
+		$sql="select dpos_id,`kz-druck` as kz_druck,kz_aktiv,mittel,`TaetNr-Aby` as taetnr,`TaetBez-Aby-D` as bez_d,
 		`TaetBez-Aby-T` as bez_t,`VZ-min-kunde` as vzkd,`VZ-min-aby` as vzaby,
 		KzGut,bedarf_typ,lager_von,lager_nach from dpos where (teil='".$_GET['teil']."') order by taetnr asc,stamp desc";
 		

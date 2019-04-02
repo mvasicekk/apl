@@ -53,7 +53,7 @@ $pt.=" from dauftr";
 $pt.=" join daufkopf as da1";
 $pt.=" on (da1.auftragsnr=dauftr.auftragsnr)";
 $pt.=" join daufkopf as da2 on (da2.auftragsnr=dauftr.`auftragsnr-exp`)";
-$pt.=" where ((da1.kunde between '$kunde_von' and '$kunde_bis') and (da1.aufdat>='$auftr_von') and (`mehrarb-kz`<>'F') and (`mehrarb-kz`<>'Lg') and (da2.ausliefer_datum<='$zeitpunkt'))";
+$pt.=" where ((da1.kunde between '$kunde_von' and '$kunde_bis') and (da1.aufdat>='$auftr_von') and (`mehrarb-kz`<>'F') and (`mehrarb-kz`<>'Lg') and (`mehrarb-kz`<>'Z') and (da2.ausliefer_datum<='$zeitpunkt'))";
 $pt.=" group by dauftr.auftragsnr,dauftr.`auftragsnr-exp`,da2.ausliefer_datum";
 $db->query($pt);
 //echo "<br>PT<br>$pt";
@@ -72,7 +72,7 @@ $pt.=" sum(if(da2.ausliefer_datum is not null and da2.ausliefer_datum<='$zeitpun
 $pt.=" from dauftr";
 $pt.=" join daufkopf as da1 on (da1.auftragsnr=dauftr.auftragsnr)";
 $pt.=" join daufkopf as da2 on (da2.auftragsnr=dauftr.`auftragsnr-exp`)";
-$pt.=" where ((da1.kunde between '$kunde_von' and '$kunde_bis') and (da1.aufdat>='$auftr_von') and (`mehrarb-kz`<>'F') and (`mehrarb-kz`<>'Lg'))";
+$pt.=" where ((da1.kunde between '$kunde_von' and '$kunde_bis') and (da1.aufdat>='$auftr_von') and (`mehrarb-kz`<>'F') and (`mehrarb-kz`<>'Z') and (`mehrarb-kz`<>'Lg'))";
 $pt.=" group by dauftr.auftragsnr";
 $db->query($pt);
 //echo "<br>PT<br>$pt";

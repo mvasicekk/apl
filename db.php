@@ -1550,6 +1550,38 @@ class AplDB {
 	}
     }
 
+/**
+ * 
+ * @param type $atyp
+ * @param type $von
+ * @param type $bis
+ * @param type $persnr
+ * @return int
+ */    
+    public function getGewAussTypVonBisPersnr($atyp, $von, $bis, $persnr) {
+	$sql.=" select";
+	$sql.=" drueck.PersNr,";
+	$sql.=" sum(drueck.`Auss-Stück`*dkopf.Gew) as auss_gew";
+	$sql.=" from";
+	$sql.=" drueck";
+	$sql.=" join dkopf on dkopf.Teil=drueck.Teil";
+	$sql.=" where";
+	$sql.=" persnr='$persnr'";
+	$sql.=" and";
+	$sql.=" drueck.Datum between '$von' and '$bis'";
+	$sql.=" and";
+	$sql.=" drueck.auss_typ='$atyp'";
+	$sql.=" group by";
+	$sql.=" drueck.PersNr";
+
+	$rows = $this->getQueryRows($sql);
+	if ($rows !== NULL) {
+	    return floatval($rows[0]['auss_gew']);
+	} else {
+	    return 0;
+	}
+    }
+
     /**
      *
      * @param int $persnr
@@ -5499,6 +5531,7 @@ public function getPersNrArrayHodnoceniMonatJahr($persvon,$persbis,$jahr,$monat,
 	    $sql.=" dpos.`VZ-min-aby` as vzaby,";
 	    $sql.=" dpos.`VZ-min-kunde` as vzkd,";
 	    $sql.=" dpos.`kz-druck` as kz_druck,";
+	    $sql.=" dpos.`kz_aktiv`,";
 	    $sql.=" dpos.lager_von,";
 	    $sql.=" dpos.bedarf_typ,";
 	    $sql.=" dpos.lager_nach";

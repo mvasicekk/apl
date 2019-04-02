@@ -26,7 +26,27 @@ $a = AplDB::getInstance();
 // nechci zobrazit parametry
 // vynuluju promennou $params
 $params = "";
+$lt = $_GET['typ'];
 
+if($mitdetail == true){
+  $mit = "mit";
+}else{
+  $mit = "ohne";
+}
+
+if($lt === "lt.Stk")
+{
+    $lts = "stk";
+    $ltx = "sum_auss6_stk";
+    $lta = "stk_exp_gut";
+    $ltb = "stk_exp_auss";
+}
+else{
+    $lts = "kg";
+    $ltx = "sum_auss6_kg";
+    $lta = "kg_exp_gut";
+    $ltb = "kg_exp_auss";
+}
 // pole s sirkama bunek v mm, poradi v poli urcuje i poradi sloupcu
 // v tabulce
 // "klic" => array ("popisek sloupce",sirka_sloupce_v_mm)
@@ -142,11 +162,11 @@ if ($aussArray !== NULL) {
 	$jahrMonat = date('Y-m', strtotime($auss['datum']));
 	$kw = date('W', strtotime($auss['datum']));
 	$kunde = $auss['kunde'];
-	$a6Array["$jahrMonat" . "-" . $kw][$kunde]["a6_rm"]["stk"] += intval($auss['sum_auss6_stk']);
-	$a6Array["$jahrMonat" . "-" . $kw][$kunde]["a6_rm"]["kg"] += floatval($auss['sum_auss6_kg']);
+	$a6Array["$jahrMonat" . "-" . $kw][$kunde]["a6_rm"][$lts] += intval($auss[$ltx]);
+	//$a6Array["$jahrMonat" . "-" . $kw][$kunde]["a6_rm"]["$lts"] += floatval($auss["$lts"]);
 
-	$a6ArrayMonatSummen[$jahrMonat][$kunde]["a6_rm"]["stk"] += intval($auss['sum_auss6_stk']);
-	$a6ArrayMonatSummen[$jahrMonat][$kunde]["a6_rm"]["kg"] += floatval($auss['sum_auss6_kg']);
+	$a6ArrayMonatSummen[$jahrMonat][$kunde]["a6_rm"][$lts] += intval($auss[$ltx]);
+	//$a6ArrayMonatSummen[$jahrMonat][$kunde]["a6_rm"]["kg"] += floatval($auss['sum_auss6_kg']);
 
 	$kundenNrArray[$kunde] += 1;
 	$jahrMonatArray[$jahrMonat] += 1;
@@ -154,7 +174,7 @@ if ($aussArray !== NULL) {
     }
 }
 
-//AplDB::varDump($a6ArrayMonatSummen);
+//AplDB::varDump($a6Array);
 //echo "<hr>";
 // hodnoty pro "jmenovatele" po tydnech ----------------------------------------
 $sql = "";
@@ -163,15 +183,15 @@ $sql.="     daufkopf.kunde as kunde,";
 $sql.="     daufkopf.ausliefer_datum as datum,";
 $sql.="     sum(if(dauftr.KzGut='G',`stk-exp`,0)) as stk_exp_gut,";
 $sql.="     sum(dauftr.auss2_stk_exp+dauftr.auss4_stk_exp+dauftr.auss6_stk_exp) as stk_exp_auss,";
-$sql.="     sum(if(dauftr.KzGut='G',`stk-exp`*dkopf.Gew,0)) as kg_exp_gut,";
-$sql.="     sum((dauftr.auss2_stk_exp+dauftr.auss4_stk_exp+dauftr.auss6_stk_exp)*dkopf.Gew) as kg_exp_auss";
+$sql.="     sum(if(dauftr.KzGut='G',`stk-exp`*dkopf.Gew,0)) as kg_exp_gut, dkopf.Teil as dkTeil,";
+$sql.="     sum((dauftr.auss2_stk_exp+dauftr.auss4_stk_exp+dauftr.auss6_stk_exp)*dkopf.Gew) as kg_exp_auss, dkopf.Gew";
 $sql.=" from dauftr";
 $sql.=" join daufkopf on daufkopf.auftragsnr=dauftr.`auftragsnr-exp`";
 $sql.=" join dkopf on dkopf.Teil=dauftr.Teil";
 $sql.=" where";
 $sql.="     (ausliefer_datum between '$von' and '$bis')";
 $sql.="     and (daufkopf.kunde between '$kdvon' and '$kdbis')";
-$sql.="     and (dkopf.dummy_flag=0)";
+$sql.="     and (dkopf.dummy_flag=0) ";
 $sql.="     and (dkopf.Gew<>0)";
 $sql.="     and (dkopf.Teilbez not like '%reisla%')";
 $sql.=" group by";
@@ -187,23 +207,26 @@ if ($exp1Array !== NULL) {
 	$jahrMonat = date('Y-m', strtotime($exp['datum']));
 	$kw = date('W', strtotime($exp['datum']));
 	$kunde = $exp['kunde'];
+	$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_gut"][$lts] += intval($exp[$lta]);
+	//$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_gut"]["kg"] += floatval($exp['kg_exp_gut']);
+	//$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_auss"]["stk"] += intval($exp['stk_exp_auss']);
+	$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_auss"][$lts] += floatval($exp[$ltb]);
+  //AplDB::varDump( $exp['Gew'] );
+  $gewSum[$jahrMonat][$teil][$kunde]['Gew'] += floatval($exp['Gew']);
+  //AplDB::varDump($teil);
 
-	$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_gut"]["stk"] += intval($exp['stk_exp_gut']);
-	$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_gut"]["kg"] += floatval($exp['kg_exp_gut']);
-	$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_auss"]["stk"] += intval($exp['stk_exp_auss']);
-	$expArray["$jahrMonat" . "-" . $kw][$kunde]["exp_auss"]["kg"] += floatval($exp['kg_exp_auss']);
-
-	$expArrayMonatSummen[$jahrMonat][$kunde]["exp_gut"]["stk"] += intval($exp['stk_exp_gut']);
-	$expArrayMonatSummen[$jahrMonat][$kunde]["exp_gut"]["kg"] += floatval($exp['kg_exp_gut']);
-	$expArrayMonatSummen[$jahrMonat][$kunde]["exp_auss"]["stk"] += intval($exp['stk_exp_auss']);
-	$expArrayMonatSummen[$jahrMonat][$kunde]["exp_auss"]["kg"] += floatval($exp['kg_exp_auss']);
-
+	$expArrayMonatSummen[$jahrMonat][$kunde]["exp_gut"][$lts] += intval($exp[$lta]);
+	//$expArrayMonatSummen[$jahrMonat][$kunde]["exp_gut"]["kg"] += floatval($exp['kg_exp_gut']);
+	//$expArrayMonatSummen[$jahrMonat][$kunde]["exp_auss"]["stk"] += intval($exp['stk_exp_auss']);
+	$expArrayMonatSummen[$jahrMonat][$kunde]["exp_auss"][$lts] += floatval($exp[$ltb]);
+	$exportArrayMonatSummen[$jahrMonat][$kunde]["exp_auss"]['stk'] += floatval($exp['stk_exp_gut']);
 	$kundenNrArray[$kunde] += 1;
 	$jahrMonatArray[$jahrMonat] += 1;
 	$jahrMonatKwArray["$jahrMonat" . "-" . $kw] += 1;
     }
 }
-
+//AplDB::varDump($gewSum);
+//AplDB::varDump( $teilArr );
 ksort($kundenNrArray);
 ksort($jahrMonatArray, SORT_STRING);
 ksort($jahrMonatKwArray, SORT_STRING);
@@ -213,12 +236,14 @@ $sql = "";
 $sql.=" select ";
 $sql.="     dreklamation.rekl_datum as datum,";
 $sql.="     dreklamation.kunde,";
-$sql.="     dreklamation.anerkannt_stk_ausschuss";
+$sql.="     dreklamation.anerkannt_stk_ausschuss,dreklamation.teil, dkopf.Gew as dkGew";
 $sql.=" from dreklamation";
+$sql.=" join dkopf on dkopf.Teil=dreklamation.teil";
 $sql.=" where";
 $sql.="     (dreklamation.rekl_datum between '$von' and '$bis')";
-$sql.="     and (rekl_nr like 'E%')"; // jen externi reklamace
-$sql.="     and (kunde between '$kdvon' and '$kdbis')";
+$sql.="     and (dreklamation.rekl_nr like 'E%')"; // jen externi reklamace
+$sql.="     and (dreklamation.anerkannt_stk_ausschuss NOT LIKE '0')"; // jen externi reklamace
+$sql.="     and (dreklamation.kunde between '$kdvon' and '$kdbis')";
 
 $extStk1Array = $a->getQueryRows($sql);
 
@@ -227,10 +252,17 @@ if ($extStk1Array !== NULL) {
     foreach ($extStk1Array as $es) {
 	$jahrMonat = date('Y-m', strtotime($es['datum']));
 	$kunde = $es['kunde'];
+  $teilRekl = $es['teil'];
+  //AplDB::varDump(	$teilRekl);
+  $cc = $es['anerkannt_stk_ausschuss'] * $es['dkGew'];
+  $vysl[$kunde][$jahrMonat] += $cc;
+  $extGew[$jahrMonat][$kunde]['dkGew'] += intval($es['dkGew']);
 	$extStkArray[$jahrMonat][$kunde]["extStk"]["stk"] += intval($es['anerkannt_stk_ausschuss']);
+
     }
 }
-
+//AplDB::varDump($extStkArray);
+//AplDB::varDump($vysl);
 
 // v pripade, ze chci detail
 //
@@ -289,8 +321,8 @@ if ($mitdetail === TRUE) {
 //AplDB::varDump($expArray);
 //AplDB::varDump($jahrMonatKwArray);
 //AplDB::varDump($kundenNrArray);
-
-function pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku) {
+//AplDB::varDump($lts);
+function pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku,$lts) {
     global $a;
     $pdf->SetFillColor(255, 255, 230);
     $pdf->Cell(10, $rowHeight, '', 'LRT', 0, 'R', 1);
@@ -299,8 +331,8 @@ function pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakaz
 // *************************************************************************************************** \\
     foreach ($kundenNrArray as $kd => $v1) {
 	$pdf->Cell($stkWidth, $rowHeight, $kd, 'LRTB', 0, 'C', 1);
-	//AplDB::varDump($kd);
     }
+    $pdf->Cell(10, $rowHeight, '', 'LRT', 0, 'C', 1);
     $pdf->Cell(10, $rowHeight, '', 'LRT', 0, 'C', 1);
     $pdf->Ln();
 // *************************************************************************************************** \\
@@ -315,13 +347,13 @@ function pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakaz
 
 	$maxBAInfo = $a->getBewertungKriteriumInfo($kd, 'ba_anteil_max', date('y-m'));
 	if ($maxBAInfo !== NULL) {
-	    $maxBA = $maxBAInfo[0]['grenze'] . "/" . $maxBAInfo[0]['interval_monate'];
+	    $maxBA = $maxBAInfo[0]['grenze'];
 	} else {
 	    $maxBA = '?';
 	}
-	$ba = $a->getKundeBAAnteilStk($kd);
-	$pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Kd: ' . $maxBA, 'LRTB', 0, 'L', 1);
+	$pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Kd: ' . $maxBA, 'LRTB', 0, 'C', 1);
     }
+    $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
     $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
     $pdf->Ln();
 
@@ -329,19 +361,35 @@ function pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakaz
 // *************************************************************************************************** \\
 
     $pdf->Cell(10, $rowHeight, 'KW', 'LR', 0, 'C', 1);
-    $pdf->Cell($stkWidth * $pocetZakazniku, $rowHeight, 'Max BA-Anteil Aby : 0,25', 'LTB', 0, 'C', 1);
+        foreach ($kundenNrArray as $kd => $v5) {
+	   $pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Aby : 0,25', 'L', 0, 'C', 1);
+    }
+
     $pdf->Cell(10, $rowHeight, 'Ø', 'LR', 0, 'C', 1);
+    $pdf->Cell(10, $rowHeight, 'Punkte', 'LR', 0, 'C', 1);
     $pdf->Ln();
+
+ //IST / STK & KG / KG (vzorec)
+// *************************************************************************************************** \\
+       $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
+       foreach ($kundenNrArray as $kd => $v) {
+	     $pdf->Cell($stkWidth, $rowHeight, $lts  . ' / ' .$lts , 'LRBT', 0, 'C', 1);
+    }
+     $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
+     $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
+    $pdf->Ln();
+
 
 //IST / STK & IST / KG
 // *************************************************************************************************** \\
-    $pdf->Cell(10, $rowHeight, '', 'LRB', 0, 'C', 1);
 
-    foreach ($kundenNrArray as $kd => $v) {
-	$ba = $a->getKundeBAAnteilStk($kd);
-	$pdf->Cell($stkWidth, $rowHeight, 'INT / ' . $ba, 'LRBT', 0, 'C', 1);
-    }
     $pdf->Cell(10, $rowHeight, '', 'LRB', 0, 'C', 1);
+    foreach ($kundenNrArray as $kd => $v) {
+	$pdf->Cell($stkWidth, $rowHeight, 'INT / '.$lts , 'LRBT', 0, 'C', 1);
+    }
+     $pdf->Cell(10, $rowHeight, '', 'LRB', 0, 'C', 1);
+     $pdf->Cell(10, $rowHeight, '', 'LRB', 0, 'C', 1);
+
 }
 
 //------------------------------------------------------------------------------
@@ -357,10 +405,10 @@ $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_subject);
 $pdf->SetKeywords($doc_keywords);
 
-$params = "Kunde $kdvon - $kdbis, Datum " . $_GET['von'] . "-" . $_GET['bis'];
-$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S370 - 50 Ausschuss", $params);
+$params = "Kunde $kdvon - $kdbis,Typ $lt, $mit Detail,  Datum " . $_GET['von'] . "-" . $_GET['bis'];
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "S370 - 50 Ausschuss",$params);
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP - 10, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(PDF_MARGIN_LEFT-13, PDF_MARGIN_TOP - 10, PDF_MARGIN_RIGHT);
 //set auto page breaks
 //$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
@@ -382,11 +430,11 @@ $pocetZakazniku = count($kundenNrArray);
 
 //AplDB::varDump($pocetZakazniku);
 //***************************************************************************************************************************\\
-$stkWidth = 26;
+$stkWidth = ($pdf->getPageWidth()-10-2*10-10)/$pocetZakazniku;
 $rowHeight = 4;
 //***************************************************************************************************************************\\
 $pdf->AddPage();
-pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku);
+pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku,$lts);
 
 /*
   $pdf->SetFillColor(255,255,230);
@@ -447,29 +495,46 @@ $pdf->Ln();
 // *************************************************************************************************** \\
 foreach ($jahrMonatKwArray as $jmk => $v) {
     if (test_pageoverflow_noheader($pdf, $rowHeight)) {
-	pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku);
+	pageHeaderMain($pdf, $rowHeight, $kundenNrArray, $stkWidth, $pocetZakazniku,$lts);
 	$pdf->Ln();
     }
     $pdf->Cell(10, $rowHeight, substr($jmk, 8), 'LRTB', 0, 'C', 0);
     $podilPctSum = 0;
+    $punkte = 0;
     foreach ($kundenNrArray as $kd => $v1) {
-	$ba = $a->getKundeBAAnteilStk($kd); //ba urcuje zda se podil pocita z kg nebo z kusu
-	//$ba='kg';
 
-	$citatel = floatval($a6Array[$jmk][$kd]['a6_rm'][$ba]);
-	$jmenovatel = floatval($expArray[$jmk][$kd]['exp_gut'][$ba] + $expArray[$jmk][$kd]['exp_auss'][$ba]);
+	$citatel = floatval($a6Array[$jmk][$kd]['a6_rm'][$lts]);
+  //AplDB::varDump($citatel);
+	$jmenovatel = floatval($expArray[$jmk][$kd]['exp_gut'][$lts] + $expArray[$jmk][$kd]['exp_auss'][$lts]);
+  //AplDB::varDump($jmenovatel);
 	$podilPct = $jmenovatel != 0 ? $citatel / $jmenovatel * 100 : 0;
 	//AplDB::varDump($citatel);
 	$podilPctSum += $podilPct;
 	$pod = number_format($podilPct, 2, ',', ' ');
 	$pdf->Cell($stkWidth, $rowHeight, $pod, 'LRBT', 0, 'C', 0);
-    }
+  }
+     $avgKw = count($kundenNrArray) != 0 ? $podilPctSum / count($kundenNrArray) : 0;
+     $avg = number_format($avgKw, 2, '.', ' ');
+     //AplDB::varDump($avg);
+    // *** punkte -- start *** //
 
-    $avgKw = count($kundenNrArray) != 0 ? $podilPctSum / count($kundenNrArray) : 0;
-    $avg = number_format($avgKw, 2, ',', ' ');
+    //AplDB::varDump($krRows);
+    $punkte = $a->getBewertungKriterium(100, "q_S370_ausschuss", $avg, 'bis', substr($jmk,2), 12);
+
+    //AplDB::varDump($bewE);
+
+
+    // *** punkte -- end *** //
+
+
+
     $pdf->Cell(10, $rowHeight, $avg, 'LRBT', 0, 'C', 0);
+
+    $pdf->Cell(10, $rowHeight, $punkte, 'LRBT', 0, 'C', 0);
+
     $pdf->Ln();
 }
+
 // AVG celkově
 // *************************************************************************************************** \\
 
@@ -478,15 +543,15 @@ $pdf->Cell(10, $rowHeight, 'Ø', 'LRBT', 0, 'C', 1);
 foreach ($kundenNrArray as $kd => $v1) {
     $podilPctSum = 0;
     foreach ($jahrMonatKwArray as $jmk => $v) {
-	$ba = $a->getKundeBAAnteilStk($kd); //ba urcuje zda se podil pocita z kg nebo z kusu
 
-	$citatel = floatval($a6Array[$jmk][$kd]['a6_rm'][$ba]);
-	$jmenovatel = floatval($expArray[$jmk][$kd]['exp_gut'][$ba] + $expArray[$jmk][$kd]['exp_auss'][$ba]);
+	$citatel = floatval($a6Array[$jmk][$kd]['a6_rm'][$lts]);
+  //AplDB::varDump($citatel);
+	$jmenovatel = floatval($expArray[$jmk][$kd]['exp_gut'][$lts] + $expArray[$jmk][$kd]['exp_auss'][$lts]);
 	$podilPct = $jmenovatel != 0 ? $citatel / $jmenovatel * 100 : 0;
 	$podilPctSum += $podilPct;
 	$pod = number_format($podilPctSum, 2, ',', ' ');
 
-	//AplDB::varDump($pod);
+
     }
 
     $vypocet = count($pod) != 0 ? $podilPctSum / count($jahrMonatKwArray) : 0;
@@ -499,8 +564,9 @@ foreach ($kundenNrArray as $kd => $v1) {
     $podilPctSum = 0;
 }
 $pdf->Cell(10, $rowHeight, '', 'LRTB', 0, 'C', 1);
-
+$pdf->Cell(10, $rowHeight,$avgPkt, 'LRTB', 0, 'C', 1);
 $pdf->Ln();
+
 
 $pdf->Cell($stkWidth, $rowHeight, 'Hodnocení:', '', 0, 'L', 0);
 $pdf->Ln();
@@ -514,14 +580,18 @@ foreach ($krRows as $kr) {
 
     $pdf->Ln();
 }
-$pdf->Cell($stkWidth, $rowHeight, '>' . '0,2 %', 'LRTB', 0, 'L', $fill);
+$pdf->Cell($stkWidth, $rowHeight, '>' . '0,25 %', 'LRTB', 0, 'L', $fill);
 $pdf->Cell($stkWidth / 4, $rowHeight, '6', 'LRTB', 0, 'R', $fill);
+$pdf->Ln();
+
 
 
 // *************************************************************************************************** \\
 $pdf->AddPage();
 // *************************************************************************************************** \\
-// Po mesicich
+// S370 - tabulka rozdelena na mesice
+
+// Zakaznici
 // *************************************************************************************************** \\
 $pdf->Cell(10, $rowHeight, '', 'LRT', 0, 'C', 1);
 foreach ($kundenNrArray as $kd => $v1) {
@@ -531,72 +601,98 @@ $pdf->Cell($stkWidth / 2, $rowHeight, '', 'LT', 0, 'C', 1);
 $pdf->Cell($stkWidth / 2, $rowHeight, '', 'TR', 0, 'C', 1);
 $pdf->Ln();
 
-//IST / STK & IST / KG
+//Max BA-Anteil Kd: ' . $maxBA
 // *************************************************************************************************** \\
 $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
 foreach ($kundenNrArray as $kd => $v2) {
 
     $maxBAInfo = $a->getBewertungKriteriumInfo($kd, 'ba_anteil_max', date('y-m'));
     if ($maxBAInfo !== NULL) {
-	$maxBA = $maxBAInfo[0]['grenze'] . "/" . $maxBAInfo[0]['interval_monate'];
+	$maxBA = $maxBAInfo[0]['grenze'];
     } else {
 	$maxBA = '?';
     }
-    $ba = $a->getKundeBAAnteilStk($kd);
-    $pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Kd: ' . $maxBA, 'LRTB', 0, 'L', 1);
+
+    $pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Kd: ' . $maxBA, 'LRTB', 0, 'C', 1);
 }
 $pdf->Cell($stkWidth / 2, $rowHeight, '', 'L', 0, 'C', 1);
 $pdf->Cell($stkWidth / 2, $rowHeight, '', 'R', 0, 'C', 1);
 $pdf->Ln();
-
+//Max BA-Anteil Aby : 0,25
+// *************************************************************************************************** \\
 $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
-$pdf->Cell($stkWidth * $pocetZakazniku, $rowHeight, 'Max BA-Anteil Aby : 0,25', 'LTB', 0, 'C', 1);
+foreach ($kundenNrArray as $kd => $v2) {
+    $pdf->Cell($stkWidth, $rowHeight, 'Max BA-Anteil Aby : 0,25', 'LTB', 0, 'C', 1);
+}
 
 $pdf->Cell($stkWidth / 2, $rowHeight, '', 'L', 0, 'C', 1);
 $pdf->Cell($stkWidth / 2, $rowHeight, '', 'R', 0, 'C', 1);
 $pdf->Ln();
+
+ //IST / STK & KG / KG (vzorec)
+// *************************************************************************************************** \\
+       $pdf->Cell(10, $rowHeight, '', 'LR', 0, 'C', 1);
+        foreach ($kundenNrArray as $kd => $v) {
+
+        //$ba = "stk";
+	$pdf->Cell($stkWidth, $rowHeight, $lts  . ' / ' . $lts , 'LRBT', 0, 'C', 1);
+    }
+$pdf->Cell($stkWidth / 2, $rowHeight, '', 'L', 0, 'C', 1);
+$pdf->Cell($stkWidth / 2, $rowHeight, '', 'R', 0, 'C', 1);
+    $pdf->Ln();
+
+
+
+//Rozdeleni na INT a EXT
+// *************************************************************************************************** \\
 $pdf->Cell(10, $rowHeight, 'MONAT', 'LR', 0, 'C', 1);
 foreach ($kundenNrArray as $kd => $v) {
-    $ba = $a->getKundeBAAnteilStk($kd); //ba urcuje zda se podil pocita z kg nebo z kusu
 
-    $pdf->Cell($stkWidth / 2, $rowHeight, 'INT / ' . $ba, 'LRBT', 0, 'C', 1);
-    $pdf->Cell($stkWidth / 2, $rowHeight, "Ext.Stk", 'LRBT', 0, 'C', 1);
+    $pdf->Cell($stkWidth / 2, $rowHeight, 'INT / ' .$lts , 'LRBT', 0, 'C', 1);
+    $pdf->Cell($stkWidth / 2, $rowHeight, "Ext.".$lts, 'LRBT', 0, 'C', 1);
 }
 $pdf->Cell($stkWidth / 2, $rowHeight, 'Ø', 'LB', 0, 'C', 1);
 $pdf->Cell($stkWidth / 2, $rowHeight, "Ext.Stk", 'RB', 0, 'C', 1);
 $pdf->Ln();
 
 // ********************************************************************************************//
-
+//Tabulka
 foreach ($jahrMonatArray as $jm => $v) {
     $pdf->Cell(10, $rowHeight, $jm, 'LRTB', 0, 'C', 0);
-
     $podilPctSum = 0;
+    $podilStkPctSum = 0;
     foreach ($kundenNrArray as $kd => $v) {
 	//ist
-	$ba = $a->getKundeBAAnteilStk($kd); //ba urcuje zda se podil pocita z kg nebo z kusu
 
-	$citatel = floatval($a6ArrayMonatSummen[$jm][$kd]['a6_rm'][$ba]);
-	$jmenovatel = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut'][$ba] + $expArrayMonatSummen[$jm][$kd]['exp_auss'][$ba]);
+	$citatel = floatval($a6ArrayMonatSummen[$jm][$kd]['a6_rm'][$lts ]);
+	$jmenovatel = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut'][$lts ] + $expArrayMonatSummen[$jm][$kd]['exp_auss'][$lts ]);
 	$podilPct = $jmenovatel != 0 ? $citatel / $jmenovatel * 100 : 0;
 	$podilPctSum += $podilPct;
 	$po = number_format($podilPct, 2, ',', ' ');
 	$pdf->Cell($stkWidth / 2, $rowHeight, $po, 'LRBT', 0, 'C', 0);
 	//extern
-
-	$citatel_stk = floatval($extStkArray[$jm][$kd]["extStk"]["stk"]);
-	$jmenovatel_stk = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut']['stk'] + $expArrayMonatSummen[$jm][$kd]['exp_auss']['stk']);
-	$podilStkPct = $jmenovatel_stk != 0 ? $citatel_stk / $jmenovatel_stk * 100 : 0;
+if($lts == "kg"){
+	$jmenovatel_stk = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut'][$lts ] + $expArrayMonatSummen[$jm][$kd]['exp_auss'][$lts ]);
+	$podilStkPct = ($jmenovatel_stk != 0 ? floatval($vysl[$kd][$jm]) / $jmenovatel_stk * 100 : 0);
 	$podilStkPctSum += $podilStkPct;
 	$pod = number_format($podilStkPct, 2, ',', ' ');
 	$pdf->Cell($stkWidth / 2, $rowHeight, $pod, 'LRBT', 0, 'C', 0);
+  //AplDB::varDump($vysl);
+}else{
+  $citatel_stk = floatval($extStkArray[$jm][$kd]["extStk"]['stk']);
+  $jmenovatel_stk = floatval(	$exportArrayMonatSummen[$jm][$kd]['exp_gut']['stk'] + 	$exportArrayMonatSummen[$jm][$kd]['exp_auss']['stk']);
+  $podilStkPct = $jmenovatel_stk != 0 ? $citatel_stk / $jmenovatel_stk * 100 : 0;
+  $podilStkPctSum += $podilStkPct;
+  $pod = number_format($podilStkPct, 2, ',', ' ');
+  $pdf->Cell($stkWidth / 2, $rowHeight, $pod, 'LRBT', 0, 'C', 0);
+}
     }
 
     $avgMnt = count($kundenNrArray) != 0 ? $podilPctSum / count($kundenNrArray) : 0;
     $av = number_format($avgMnt, 2, ',', ' ');
     $pdf->Cell($stkWidth / 2, $rowHeight, $av, 'LRBT', 0, 'C', 0);
-    $avgMnt = count($kundenNrArray) != 0 ? $podilStkPctSum / count($kundenNrArray) : 0;
-    $avg = number_format($avgMnt, 2, ',', ' ');
+    $avgMn = count($kundenNrArray) != 0 ? $podilStkPctSum / count($kundenNrArray) : 0;
+    $avg = number_format($avgMn, 2, ',', ' ');
     $pdf->Cell($stkWidth / 2, $rowHeight, $avg, 'LRBT', 0, 'C', 0);
     $pdf->Ln();
 }
@@ -605,23 +701,35 @@ foreach ($jahrMonatArray as $jm => $v) {
 //$pdf->Cell(10,$rowHeight,'AVG','LRBT',0,'C',1);
 $pdf->Cell(10, $rowHeight, 'Ø', 'LRBT', 0, 'C', 1);
 
+// Prumer
+// ********************************************************************************************//
 foreach ($kundenNrArray as $kd => $v1) {
     $podilPctSum = 0;
     $podilStkPctSum = 0;
     foreach ($jahrMonatArray as $jm => $v) {
-	$ba = $a->getKundeBAAnteilStk($kd); //ba urcuje zda se podil pocita z kg nebo z kusu
 
-	$citatel = floatval($a6ArrayMonatSummen[$jm][$kd]['a6_rm'][$ba]);
-	$jmenovatel = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut'][$ba] + $expArrayMonatSummen[$jm][$kd]['exp_auss'][$ba]);
+
+	$citatel = floatval($a6ArrayMonatSummen[$jm][$kd]['a6_rm'][$lts]);
+  //AplDB::varDump($citatel);
+	$jmenovatel = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut'][$lts] + $expArrayMonatSummen[$jm][$kd]['exp_auss'][$lts]);
+  //AplDB::varDump($jmenovatel);
 	$podilPct = $jmenovatel != 0 ? $citatel / $jmenovatel * 100 : 0;
 	$podilPctSum += $podilPct;
 	$po = number_format($podilPct, 2, ',', ' ');
 	//extern
-	$citatel_stk = floatval($extStkArray[$jm][$kd]["extStk"]["stk"]);
-	$jmenovatel_stk = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut']['stk'] + $expArrayMonatSummen[$jm][$kd]['exp_auss']['stk']);
-	$podilStkPct = $jmenovatel_stk != 0 ? $citatel_stk / $jmenovatel_stk * 100 : 0;
-	$podilStkPctSum += $podilStkPct;
-	$podS = number_format($podilStkPctSum, 2, ',', ' ');
+  if($lts == "kg"){
+  	$jmenovatel_stk = floatval($expArrayMonatSummen[$jm][$kd]['exp_gut'][$lts ] + $expArrayMonatSummen[$jm][$kd]['exp_auss'][$lts ]);
+  	$podilStkPct = ($jmenovatel_stk != 0 ? floatval($vysl[$kd][$jm])  / $jmenovatel_stk * 100 : 0);
+  	$podilStkPctSum += $podilStkPct;
+  	$podS = number_format($podilStkPct, 2, ',', ' ');
+    //AplDB::varDump($podilStkPct);
+  }else{
+    $citatel_stk = floatval($extStkArray[$jm][$kd]["extStk"]['stk']);
+    $jmenovatel_stk = floatval(	$exportArrayMonatSummen[$jm][$kd]['exp_gut']['stk'] + 	$exportArrayMonatSummen[$jm][$kd]['exp_auss']['stk']);
+    $podilStkPct = $jmenovatel_stk != 0 ? $citatel_stk / $jmenovatel_stk * 100 : 0;
+    $podilStkPctSum += $podilStkPct;
+    $podS = number_format($podilStkPct, 2, ',', ' ');
+  }
 	//AplDB::varDump($pod);
     }
 
@@ -650,6 +758,8 @@ $pdf->Ln();
 $pdf->Cell($stkWidth, $rowHeight, 'Hodnoceni:', '', 0, 'L', 0);
 $pdf->Ln();
 
+// Hodnoceni
+// ********************************************************************************************//
 foreach ($krRows as $kr) {
     $znaminko = $kr['bis_von'] == 'bis' ? '<=' : '>';
     $pdf->Cell($stkWidth, $rowHeight, $znaminko . $kr['grenze'] . '%', 'LRTB', 0, 'L', 0);
@@ -657,8 +767,10 @@ foreach ($krRows as $kr) {
 
     $pdf->Ln();
 }
-$pdf->Cell($stkWidth, $rowHeight, '>' . '0,2 %', 'LRTB', 0, 'L', $fill);
+$pdf->Cell($stkWidth, $rowHeight, '>' . '0,25 %', 'LRTB', 0, 'L', $fill);
 $pdf->Cell($stkWidth / 4, $rowHeight, '6', 'LRTB', 0, 'R', $fill);
+$pdf->Ln();
+
 
 // *************************************************************************************************** \\
 $xLeft = $pdf->GetX();
@@ -677,6 +789,7 @@ function pageheade($pdf, $pole, $headervyskaradku) {
 
 function test_pageoverflow_nohead($pdfobjekt, $vysradku) {
     // pokud bych prelezl s nasledujicim vystupem vysku stranky
+
     // tak vytvorim novou stranku i se zahlavim
     if (($pdfobjekt->GetY() + $vysradku) > ($pdfobjekt->getPageHeight() - $pdfobjekt->getBreakMargin())) {
 	//$pdfobjekt->AddPage();
@@ -684,11 +797,12 @@ function test_pageoverflow_nohead($pdfobjekt, $vysradku) {
     }
     return FALSE;
 }
+// Mit Detail
 
 // *************************************************************************************************** \\
 if ($mitdetail === TRUE) {
     $sumyKd = array();
-
+    $pdf->resetHeaderTemplate();
     $wTeil = $stkWidth / 2+10;
     $wPers = $stkWidth / 2;
     $wName = 1.5 * $stkWidth;
@@ -700,7 +814,9 @@ if ($mitdetail === TRUE) {
     $wRmOE = $stkWidth / 2;
     $wFull = $wTeil + $wPers + $wName + $wAussStk + $wGew + $wGewGes + $wAbgnr + $wRegOE + $wRmOE;
 
-    $pdf->AddPage("P");
+
+    $pdf->AddPage('P', 'A4');
+
     $pdf->SetFillColor(160, 160, 160);
 
     $pdf->Cell($wTeil, $rowHeight, "Teil", 'LRBT', 0, 'C', 1);

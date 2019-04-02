@@ -363,9 +363,14 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist,$gutStk,$aus
         //gutbetrag
         $nodename = 'gutbetrag';
         $obsah = "";
+	$preis = floatval (getValueForNode($nodelist, 'preis_stk_gut'));
         if(!$isMA) {
-            $obsah = number_format ($gutStk*floatval (getValueForNode($nodelist, 'preis')),2,',',' ');
-            $sum_zapati_teil_array['gutbetrag']+=$gutStk*floatval (getValueForNode($nodelist, 'preis'));
+            //$obsah = number_format ($gutStk*floatval (getValueForNode($nodelist, 'preis')),2,',',' ');
+	    //$obsah = number_format ($gutStk*$preis,2,',',' ');
+	    $obsah = "";
+            //$sum_zapati_teil_array['gutbetrag']+=$gutStk*floatval (getValueForNode($nodelist, 'preis'));
+	    //$sum_zapati_teil_array['gutbetrag']+=$gutStk*$preis;
+	    $sum_zapati_teil_array['gutbetrag']=$gutStk*$preis;
         }
         $cell = $pole[$nodename];
         $pdfobjekt->Cell($cell["sirka"],$zahlavivyskaradku,$obsah,$cell["ram"],$cell["radek"],$cell["align"],$cell["fill"]);
@@ -393,9 +398,13 @@ function detaily($pdfobjekt,$pole,$zahlavivyskaradku,$rgb,$nodelist,$gutStk,$aus
         //MA betrag
         $nodename = 'betrag';
         $obsah = "";
+	//$preis = floatval (getValueForNode($nodelist, 'preis_stk_gut'));
         if($isMA) {
             $obsah = number_format (intval (getValueForNode($nodelist, 'stk'))*floatval (getValueForNode($nodelist, 'preis')),2,',',' ');
+	    //$obsah = number_format (intval (getValueForNode($nodelist, 'stk'))*$preis,2,',',' ');
             $sum_zapati_teil_array['mabetrag']+=intval (getValueForNode($nodelist, 'stk'))*floatval (getValueForNode($nodelist, 'preis'));
+	    //$sum_zapati_teil_array['mabetrag']+=intval (getValueForNode($nodelist, 'stk'))*$preis;
+	    //$sum_zapati_teil_array['mabetrag']=intval (getValueForNode($nodelist, 'stk'))*$preis;
         }
         
         $cell = $pole[$nodename];

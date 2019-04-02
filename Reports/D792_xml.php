@@ -191,6 +191,8 @@ $options = array(
                                             'idColumn' => 'stk',
                                             'elements' => array(
                                                 'teilnr' => 'Teil',
+						'preis_stk_gut',
+						'preis_stk_auss',
                                                 'teilbez',
                                                 'tat',
                                                 'text1',

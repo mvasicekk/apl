@@ -49,7 +49,9 @@ dbConnect();
 		// nema export
 		if($hasExport==0)
 		{
-			$sql="select abgnr,dauftr.teil,teilbez from dauftr join dkopf on dkopf.teil=dauftr.teil where ((`pos-pal-nr`='".$value."') and (auftragsnr='".$auftragsnr."')) order by abgnr";
+		    //2018-12-18
+			//$sql="select abgnr,dauftr.teil,teilbez from dauftr join dkopf on dkopf.teil=dauftr.teil where ((`pos-pal-nr`='".$value."') and (auftragsnr='".$auftragsnr."')) order by abgnr";
+			$sql="select abgnr,dauftr.teil,teilbez from dauftr join dkopf on dkopf.teil=dauftr.teil where ((`pos-pal-nr`='".$value."') and (auftragsnr='".$auftragsnr."') and kz_aktiv<>0) order by abgnr";
 			$result=mysql_query($sql);
 			// pokud mi dotaz vrati nejake zaznamy, tak je projdu
 			if(mysql_affected_rows()>0)

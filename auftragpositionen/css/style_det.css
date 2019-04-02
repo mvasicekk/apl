@@ -45,5 +45,11 @@ label.vcentercheckbox{
 
 }
 
+td.kz_aktiv{
+    background-color: red;
+}
 
+td.kz_notaktiv{
+    background-color: '';
+}
 
